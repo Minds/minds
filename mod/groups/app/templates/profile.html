@@ -48,7 +48,7 @@
       </div>
 
       <!-- Avatars of latest users -->
-      <div class="mdl-card__supporting-text mdl-color-text--grey-600" style="min-height:0;">
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid" style="min-height:0;">
         <a *ng-for="#member of group.members" [router-link]="['/Channel', {username: member.username}]" >
           <img src="/icon/{{member.guid}}/small"/>
         </a>

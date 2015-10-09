@@ -9,6 +9,10 @@
     padding-bottom:$minds-padding*2;
   }
 }
+.members-grid{
+  @include flex-display();
+  @include flex-wrap(wrap);
+}
 
 minds-groups-create{
   form{
