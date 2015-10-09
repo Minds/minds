@@ -110,8 +110,9 @@ class start extends Components\Plugin{
 						if(!$entity->thumbnail){
 						  $cinemr = $entity->cinemr();
                           $uri = $cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail');
-                          var_dump($uri); exit;
-						}
+                          forward($uri);
+                          exit;
+                        }
 	                break;
 	                case 'audio':
 	                    $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
