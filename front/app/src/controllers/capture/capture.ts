@@ -120,13 +120,17 @@ export class Capture {
     var self = this;
     this._upload.post('api/v1/archive', [fileInfo], this.uploads[data.index], (progress) => {
         self.uploads[data.index].progress = progress;
+        if(progress == 100){
+          self.uploads[data.index].state = 'uploaded';
+        }
       })
       .then((response : any) => {
         self.uploads[data.index].guid = response.guid;
-        self.uploads[data.index].state = 'uploaded';
+        self.uploads[data.index].state = 'complete';
         self.uploads[data.index].progress = 100;
       })
       .catch(function(e){
+        self.uploads[data.index].state = 'failed';
         console.error(e);
       });
   }
@@ -162,7 +166,8 @@ export class Capture {
       return alert('You must select an album first');
     var self = this;
     var guids = this.uploads.map((upload) => {
-      return upload.guid;
+      if(upload.guid != null || upload.guid != 'null' || !upload.guid)
+        return upload.guid;
     });
     this.client.post('api/v1/archive/albums/' + this.postMeta.album_guid, { guids: guids })
       .then((response : any) => {

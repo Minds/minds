@@ -96,7 +96,9 @@
       <div class="mdl-progress mdl-js-progress"
         [mdl-upload]
         [progress]="upload.progress"
+        [ng-class]="{'failed': upload.state == 'failed', 'complete': upload.state == 'complete'}"
         ></div>
+
     </div>
   </div>
 

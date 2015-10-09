@@ -18,7 +18,6 @@ export class MaterialUpload{
   }
 
   set progress(value : number){
-    console.log(value, this.element);
     this.element.MaterialProgress.setProgress(value);
   }
 }

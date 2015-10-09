@@ -37,18 +37,18 @@ export class Upload  {
 		return new Promise((resolve, reject) => {
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', self.base + endpoint, true);
-			xhr.onprogress = function(e){
-				progress(e.loaded);
-			}
+			xhr.upload.addEventListener("progress", function(e : any){
+				progress(e.loaded / e.total * 100);
+			});
 			xhr.onload = function(){
     		if (this.status == 200) {
 					resolve(JSON.parse(this.response));
 				} else {
-					reject(JSON.parse(this.response));
+					reject(this.response);
 				}
 			}
 			xhr.onreadystatechange = function(){
-				console.log(this);
+				//console.log(this);
 			}
 			var XSRF_TOKEN = this.cookie.get('XSRF-TOKEN');
 			xhr.setRequestHeader('X-XSRF-TOKEN', XSRF_TOKEN);

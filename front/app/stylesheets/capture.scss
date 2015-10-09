@@ -3,6 +3,19 @@
 minds-capture{
   height:100%;
   display:block;
+
+  .mdl-js-progress{
+    &.failed{
+      .progressbar{
+        background-color:red !important;
+      }
+    }
+    &.complete{
+      .progressbar{
+        background-color:green !important;
+      }
+    }
+  }
 }
 
 .drag-animation{
