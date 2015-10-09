@@ -5,6 +5,9 @@
     position: absolute;
     margin: -38px 130px;
   }
+  &.group-card{
+    padding-bottom:$minds-padding*2;
+  }
 }
 
 minds-groups-create{
