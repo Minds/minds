@@ -9,7 +9,7 @@ import { Homepage } from 'src/controllers/homepage';
 import {Login} from './src/controllers/login';
 import {Logout} from './src/controllers/logout';
 import {Register} from './src/controllers/register';
-import {ResetPassword} from './src/controllers/resetPassword';
+import {ResetPassword} from './src/controllers/reset-password';
 import {ComingSoon} from './src/controllers/comingsoon';
 import {Newsfeed, NewsfeedSingle} from './src/controllers/newsfeed/newsfeed';
 import {Capture} from './src/controllers/capture/capture';

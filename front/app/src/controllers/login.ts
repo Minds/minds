@@ -1,5 +1,5 @@
 import { Component, View, Inject } from 'angular2/angular2';
-import { Router } from 'angular2/router';
+import { Router, RouterLink } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -11,7 +11,7 @@ import { Register } from './register';
 })
 @View({
   templateUrl: 'templates/login.html',
-  directives: [ Material, Register ]
+  directives: [ Material, Register, RouterLink]
 })
 
 export class Login {

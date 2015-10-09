@@ -9,7 +9,7 @@ import { SessionFactory } from 'src/services/session';
   viewBindings: [ Client ]
 })
 @View({
-  templateUrl: 'templates/resetPassword.html',
+  templateUrl: 'templates/reset-password.html',
   directives: [ Material ]
 })
 
@@ -23,17 +23,17 @@ export class ResetPassword {
 		window.componentHandler.upgradeDom();
 	}
 
-	resetPassword(password){
+	resetPassword(username){
     this.errorMessage = "";
     this.inProgress = true;
 		var self = this;
-		this.client.post('/api/v1/password-reset', {password: password.value})
+		this.client.post('/api/v1/password-reset/', {email: username.value})
 			.then((data : any) => {
-				password.value = '';
+				username.value = '';
 
         this.inProgress = false;
 				self.session.login(data.user);
-				self.router.navigate(['/Newsfeed', {}]);
+				self.router.navigate(['/Homepage', {}]);
 			})
 			.catch((e) => {
         console.log(e);

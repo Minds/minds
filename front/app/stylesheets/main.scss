@@ -216,6 +216,7 @@ minds-topbar{
 .minds-login-box{
   padding:$minds-padding * 2;
   margin:auto;
+  min-height: 100px;
 }
 
 .mdl-tabs__tab.is-active{
@@ -305,6 +306,16 @@ minds-topbar{
   padding: 8px;
   font-size: 13px;
   border-radius: 3px;
+}
+
+.minds-reset-password-title{
+  font-size: 16px;
+  text-align: center;
+  padding: 20px;
+}
+
+.minds-reset-password-link{
+  padding: 20px 0px;
 }
 
 blockquote { quotes: ''; }
