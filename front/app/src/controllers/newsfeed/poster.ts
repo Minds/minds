@@ -10,7 +10,7 @@ import { SessionFactory } from 'src/services/session';
 @Component({
   selector: 'minds-newsfeed-poster',
   viewBindings: [ Client, Upload ],
-  properties: ['_container_guid: containerGuid'],
+  inputs: [ '_container_guid: containerGuid', 'accessId'],
   events: ['loadHandler: load']
 })
 @View({
@@ -38,7 +38,8 @@ export class Poster {
     url: "",
     active: false,
     attachment_guid: null,
-    container_guid: 0
+    container_guid: 0,
+    access_id: 2
   }
 
 	constructor(public client: Client, public upload: Upload){
@@ -47,6 +48,10 @@ export class Poster {
 
   set _container_guid(value : any){
     this.postMeta.container_guid = value;
+  }
+
+  set accessId(value : any){
+    this.postMeta.access_id = value;
   }
 
 	/**

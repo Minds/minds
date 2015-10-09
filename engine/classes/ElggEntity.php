@@ -696,7 +696,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @return bool
 	 */
 	function canEdit($user_guid = 0) {
-		return can_edit_entity($this->getGUID(), $user_guid);
+		return Minds\Core\Security\ACL::write($this);
 	}
 
 	/**

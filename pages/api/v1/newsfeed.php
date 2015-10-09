@@ -185,6 +185,9 @@ class newsfeed implements Interfaces\Api{
                 if(isset($_POST['container_guid']))
                   $activity->container_guid = $_POST['container_guid'];
 
+                if(isset($_POST['access_id']))
+                  $activity->access_id = $_POST['access_id'];
+
                 if($guid = $activity->save()){
 
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(

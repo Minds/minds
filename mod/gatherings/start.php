@@ -61,8 +61,19 @@ class start extends Components\Plugin{
 					return new entities\CallEnded($row);
 			});
 
-			//@todo move to new oop style
-			\elgg_register_plugin_hook_handler('acl', 'all', array($this, 'acl'));
+
+			Core\Events\Dispatcher::register('acl:read', 'all', function($event){
+				$params = $event->getParameters();
+				$message = $params['entity'];
+				$user = $params['user'];
+
+				if($message instanceof \minds\plugin\gatherings\entities\message){
+					$key = "message:$user->guid";
+					if($message->$key)
+						$event->setResponse(true);
+				}
+
+			});
 
 	}
 
@@ -128,25 +139,6 @@ class start extends Components\Plugin{
 
 		}
 		return $conversations;
-	}
-
-
-	/**
-	 * Extends the acl to allow access to message users are supposed to see
-	 */
-	public function acl($event, $type, $return, $params){
-
-		$message = $params['entity'];
-		$user = $params['user'];
-
-		if($message instanceof \minds\plugin\gatherings\entities\message){
-			$key = "message:$user->guid";
-			if($message->$key)
-				return true;
-		}
-
-		return $return;
-
 	}
 
 }

@@ -23,7 +23,7 @@ interface MindsGroup {
 @Component({
   selector: 'minds-groups-profile-feed',
   viewBindings: [ Client ],
-  properties: ['_group: group']
+  inputs: [ '_group: group' ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/feed.html',
@@ -49,6 +49,10 @@ export class GroupsProfileFeed {
     this.group = value;
     this.guid = value.guid;
     this.load();
+  }
+
+  set prepend(activity : any){
+    this.activity.unshift(activity);
   }
 
   /**

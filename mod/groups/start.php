@@ -7,6 +7,7 @@ namespace Minds\plugin\groups;
 use Minds\Components;
 use Minds\Core;
 use Minds\Api;
+use Minds\Entities\Factory as EntityFactory;
 
 class start extends Components\Plugin{
 
@@ -70,6 +71,14 @@ class start extends Components\Plugin{
 		\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
 			if($row->type == 'group')
 				return new entities\Group($row);
+		});
+
+		Core\Events\Dispatcher::register('acl', 'all', function($e){
+			$params = $e->getParameters();
+			$entity = $params['entity'];
+			$user = $params['user'];
+
+			$e->setResponse(helpers\Membership::isMember($entity->access_id, $user->guid));
 		});
 	}
 

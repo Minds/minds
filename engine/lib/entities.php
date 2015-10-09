@@ -226,7 +226,7 @@ function _elgg_retrieve_cached_subtype($type, $subtype) {
  */
 function _elgg_populate_subtype_cache() {
 	global $CONFIG, $SUBTYPE_CACHE;
-	
+
 	return;
 }
 
@@ -251,7 +251,7 @@ function get_subtype_class($type, $subtype) {
 	if ($SUBTYPE_CACHE === null) {
 		_elgg_populate_subtype_cache();
 	}
-	
+
 	// use the cache before going to the database
 	$obj = _elgg_retrieve_cached_subtype($type, $subtype);
 	if ($obj) {
@@ -281,7 +281,7 @@ function get_subtype_class_from_id($subtype_id) {
 	if ($SUBTYPE_CACHE === null) {
 		_elgg_populate_subtype_cache();
 	}
-	
+
 	if (isset($SUBTYPE_CACHE[$subtype_id])) {
 		return $SUBTYPE_CACHE[$subtype_id]->class;
 	}
@@ -312,7 +312,7 @@ function get_subtype_class_from_id($subtype_id) {
  * @see get_entity()
  */
 function add_subtype($type, $subtype, $class = "") {
-	global $SUBTYPE_CACHE;	
+	global $SUBTYPE_CACHE;
 	$cache_obj = (object) array(
 			'type' => $type,
 			'subtype' => $subtype,
@@ -343,7 +343,7 @@ function add_subtype($type, $subtype, $class = "") {
  */
 function remove_subtype($type, $subtype) {
 	return;
-}	
+}
 /**
  * Update a registered ElggEntity type, subtype, and class name
  *
@@ -354,7 +354,7 @@ function remove_subtype($type, $subtype) {
  * @return bool
  */
 function update_subtype($type, $subtype, $class = '') {
-	return;	
+	return;
 }
 
 /**
@@ -533,19 +533,19 @@ function get_entity_as_row($guid, $type) {
  * @throws ClassException|InstallationException
  */
 function entity_row_to_elggstar($row, $cache = true) {
-	
+
 	return \Minds\Core\Entities::build($row, $cache);
-	
+
 	if (!($row instanceof stdClass)) {
 		return $row;
 	}
-	
+
 	if ((!isset($row->guid))) {
 		return $row;
 	}
 
 	$new_entity = false;
-	
+
 	$memcache = false;
 	// Create a memcache cache if we can
 	if (is_memcache_available()) {
@@ -556,10 +556,10 @@ function entity_row_to_elggstar($row, $cache = true) {
 	if ($new_entity) {
 		return $new_entity;
 	}
-	
+
 	if($new_entity = elgg_trigger_plugin_hook('entities_class_loader', 'all', $row))
 		return $new_entity;
-	
+
 	// load class for entity if one is registered
 	if(isset($row->subtype)){
 		$classname = get_subtype_class_from_id($row->subtype);
@@ -595,10 +595,10 @@ function entity_row_to_elggstar($row, $cache = true) {
 			case 'plugin' :
 				$new_entity = new ElggPlugin($row);
 				break;
-			case 'widget' : 
+			case 'widget' :
 				$new_entity = new ElggWidget($row);
 		                break;
-			case 'notification' : 
+			case 'notification' :
 				$new_entity = new minds\plugin\notifications\entities\notification($row);
 				break;
 			default:
@@ -606,7 +606,7 @@ function entity_row_to_elggstar($row, $cache = true) {
 				throw new InstallationException($msg);
 		}
 	}
-	
+
 	// Cache entity if we have a cache available
 	if (($memcache) && ($new_entity)) {
 		$memcache->save($new_entity->guid, $new_entity);
@@ -645,7 +645,7 @@ function get_entity($guid, $type = 'object') {
 		$memcache = new ElggMemcache('new_entity_cache');
 		$cached_entity = $memcache->load($guid);
 	}
-	
+
     if ($cached_entity) {
         error_log("loaded $guid from memcached");
 		// @todo use ACL and cached entity access_id to determine if user can see it
@@ -662,12 +662,12 @@ function get_entity($guid, $type = 'object') {
 		$row['type'] = $type;
 	}
 	$new_entity = entity_row_to_elggstar($db->createObject($row));
-	
+
 	//check access permissions
-	if(!elgg_check_access($new_entity)){
+	if(!Minds\Core\Security\ACL::read($new_entity)){
 		return false; //@todo return error too
 	}
-	
+
 	if ($new_entity) {
 		 if (is_memcache_available()) {
           //     		 $memcache = new ElggMemcache('new_entity_cache');
@@ -679,7 +679,7 @@ function get_entity($guid, $type = 'object') {
 }
 
 /**
- * @deprecated; 
+ * @deprecated;
  */
 function elgg_entity_exists($guid) {
 	return true;
@@ -753,17 +753,17 @@ function elgg_entity_exists($guid) {
  */
 function elgg_get_entities(array $options = array()) {
 	global $CONFIG;
-	
+
 	$entities = null;
-	
+
 	$defaults = array(
 		'types'					=>	array('object'),
 		'subtypes'				=>	ELGG_ENTITIES_ANY_VALUE,
-		
+
 		'timebased'	=> true,
 
 		'newest_first'	=> true,
-	
+
 		'guids'					=>	ELGG_ENTITIES_ANY_VALUE,
 		'owner_guids'			=>	ELGG_ENTITIES_ANY_VALUE,
 		'network'				=> NULL,
@@ -771,7 +771,7 @@ function elgg_get_entities(array $options = array()) {
 		'site_guids'			=>	$CONFIG->site_guid,
 
 		'limit'					=>	10,
-		'offset'				=> "", 
+		'offset'				=> "",
 		'count'					=>	FALSE,
 
 		'attrs' 			=> array(),
@@ -801,22 +801,22 @@ function elgg_get_entities(array $options = array()) {
 		//unset($options['limit']);
 		$options['limit'] = 999999;
 	}
-	
+
 	//hack to make ajax lists not show duplicates
 	if(elgg_get_viewtype() == 'json' && $options['offset'] > 0){
 		$options['limit']++;
 	}
 
 	$type = $options['types'] ? $options['types'][0] : "object";
-	
+
 		try{
 			//1. If guids are passed then return them all. Subtypes and other values don't matter in this case
 			if($options['guids']){
-			
+
 				$db = new Minds\Core\Data\Call('entities');
 				$rows = $db->getRows($options['guids']);
 
-			} else{ 
+			} else{
 				if($options['timebased']){
 					$namespace = isset($attrs['namespace']) ? $attrs['namespace'] : null;
 					if(!$namespace){
@@ -832,16 +832,16 @@ function elgg_get_entities(array $options = array()) {
 						}
 						if($network = $options['network']){
 							$namespace .= ':network:'.$network;
-						} 
+						}
 					}
 					if(!$options['count']){
 						$db = new Minds\Core\Data\Call('entities_by_time');
 						$guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
-			
+
 						if(!$guids){
 							return false;
 						}
-						
+
 						if(isset($guids[$options['offset']])){
 						//	unset($guids[$options['offset']]); //prevents looping...
 						}
@@ -851,7 +851,7 @@ function elgg_get_entities(array $options = array()) {
 						if(!$rows){
 							return false;
 						}
-					
+
 					} else {
 						$db = new Minds\Core\Data\Call('entities_by_time');
 						$count = $db->countRow($namespace);
@@ -874,19 +874,19 @@ function elgg_get_entities(array $options = array()) {
 					$newrow->guid = $guid;
 					if(!isset($row->type) || !$row->type){
 						$newrow->type = $type;
-					}  
+					}
 					foreach($row as $k=>$v){
 						$newrow->$k = $v;
 					}
-			
+
 					$entity = entity_row_to_elggstar($newrow);
-					if(elgg_check_access($entity))
+					if(Minds\Core\Security\ACL::read($entity))
 						$entities[] = $entity;
 				}
 			}
 		} catch(Exception $e){
 			var_dump($e);
-			//@todo report error to admin	
+			//@todo report error to admin
 		}
 		return $entities;
 
@@ -949,7 +949,7 @@ $time_created_lower = NULL, $time_updated_upper = NULL, $time_updated_lower = NU
  */
 function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entities',
 	$viewer = 'elgg_view_entity_list') {
-	
+
 	global $autofeed;
 	$autofeed = true;
 
@@ -978,7 +978,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	} else {
 		$entities = $getter($options);
 	}
-	
+
 	if(!$entities){
 		$entities = array();
 	}
