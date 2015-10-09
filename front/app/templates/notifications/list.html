@@ -14,7 +14,7 @@
 
           <!-- subscribed -->
           <template ng-switch-when="friends">
-            <a href="#/tab/newsfeed/channel/{{notification.fromObj.guid}}">
+            <a [router-link]="['/Channel', {username: notification.fromObj.username}]">
               <p *ng-if="notification.fromObj.subscribed">You have a match! {{notification.fromObj.name}} subscribed to you</p>
               <p *ng-if="!notification.fromObj.subscribed">{{notification.fromObj.name}} subscribed to you</p>
             </a>
@@ -28,7 +28,7 @@
           <!-- comment -->
           <template ng-switch-when="comment" *ng-if="notification.entityObj">
             <!-- Object-->
-            <a *ng-if="notification.entityObj && notification.entityObj.type == 'object'">
+            <a *ng-if="notification.entityObj && notification.entityObj.type == 'object' && notification.entityObj.subtype != 'blog'">
               <p>
                 {{notification.fromObj.name}} commented on
                 <span class="minds-blue" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
@@ -53,17 +53,9 @@
             </a>
 
             <!-- Blog -->
-            <a *ng-if="notification.entityObj.type == 'blog'"
-              [router-link]="['/Archive-View', {guid: notification.entityObj.guid}]">
-              <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="minds-blue">your blog</span>
-              </p>
-              <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="minds-blue">{{notification.entityObj.ownerObj.name}}'s blog</span>
-              </p>
-              <p *ng-if="notification.entityObj.title">
+            <a *ng-if="notification.entityObj.subtype == 'blog'"
+              [router-link]="['/Blog-View', {guid: notification.entityObj.guid}]">
+              <p>
                 {{notification.fromObj.name}} commented on
                 <span class="minds-blue">{{notification.entityObj.title}}</span>
               </p>
@@ -71,7 +63,7 @@
 
             <!-- Archive -->
             <a *ng-if="notification.entityObj.type == 'album'"
-              [router-link]="['/Blog-View', {guid: notification.entityObj.guid}]">
+              [router-link]="['/Archive-View', {guid: notification.entityObj.guid}]">
               <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
                 {{notification.fromObj.name}} commented on
                 <span class="minds-blue">your album</span>
@@ -96,14 +88,14 @@
 
           <!-- up voted content -->
           <template ng-switch-when="like" *ng-if="notification.entityObj">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'object'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'object'">
               <p>
                 {{notification.fromObj.name}} voted up
                 <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                 <span class="minds-blue" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'activity'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'activity'">
               <p *ng-if="notification.entityObj.title">
                 {{notification.fromObj.name}} voted up <span class="minds-blue">{{notification.entityObj.title}}</span>
               </p>
@@ -111,12 +103,12 @@
                 {{notification.fromObj.name}} voted up <span class="minds-blue">your activity</span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.parent_guid}}" *ng-if="notification.entityObj.type == 'comment'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.parent_guid}]" *ng-if="notification.entityObj.type == 'comment'">
               <p>
                 {{notification.fromObj.name}} voted up <span class="minds-blue"> your comment </span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="!notification.entityObj">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="!notification.entityObj">
               <p style="font-style:italic">
                       This post was deleted.
               </p>
@@ -125,13 +117,13 @@
 
           <!-- down voted content -->
           <template ng-switch-when="downvote" *ng-if="notification.entityObj">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'object'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'object'">
               <p>{{notification.fromObj.name}} down voted
                     <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                     <span class="minds-blue" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'activity'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'activity'">
               <p *ng-if="notification.entityObj.title">
                 {{notification.fromObj.name}} down voted <span class="minds-blue">{{notification.entityObj.title}}</span>
               </p>
@@ -139,12 +131,12 @@
                 {{notification.fromObj.name}} down voted <span class="minds-blue">your activity</span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.parent_guid}}" *ng-if="notification.entityObj.type == 'comment'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.parent_guid}]" *ng-if="notification.entityObj.type == 'comment'">
               <p>
                 {{notification.fromObj.name}} down voted <span class="minds-blue"> your comment </span>
               </p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="!notification.entityObj">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="!notification.entityObj">
               <p style="font-style:italic">
                     This post was deleted.
               </p>
@@ -153,13 +145,13 @@
 
           <!-- Remind -->
           <template ng-switch-when="remind" *ng-if="notification.entityObj">
-              <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'object'">
+              <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'object'">
                   <p>{{notification.fromObj.name}} reminded
                       <span class="minds-blue"  *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                       <span class="minds-blue"  *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
                  </p>
               </a>
-              <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type == 'activity'">
+              <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type == 'activity'">
                   <p *ng-if="notification.entityObj.title">
                     {{notification.fromObj.name}} reminded <span class="minds-blue">{{notification.entityObj.title}}</span>
                   </p>
@@ -171,7 +163,7 @@
 
           <!-- featured -->
           <template ng-switch-when="feature" *ng-if="notification.entityObj">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p><span class="minds-blue">{{notification.entityObj.title}}</span> was featured</p>
             </a>
           </template>
@@ -179,10 +171,10 @@
           <!-- mention -->
           <template ng-switch-when="tag" *ng-if="notification.entityObj">
               <!-- tags from comments link differently -->
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}" *ng-if="notification.entityObj.type != 'comment'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]" *ng-if="notification.entityObj.type != 'comment'">
               <p>{{notification.fromObj.name}} tagged you in a post</p>
             </a>
-            <a href="#/tab/notifications/entity/{{notification.entityObj.parent_guid}}" *ng-if="notification.entityObj.type == 'comment'">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.parent_guid}]" *ng-if="notification.entityObj.type == 'comment'">
               <p>{{notification.fromObj.name}} tagged you in a comment</p>
             </a>
           </template>
@@ -196,7 +188,7 @@
 
           <!-- boost_gift -->
           <template ng-switch-when="boost_gift">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p>
                 {{notification.fromObj.name}} gifted you {{notification.params.impressions}} views for
                 <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
@@ -207,7 +199,7 @@
 
           <!-- Standard boost notification for owner -->
           <template ng-switch-when="boost_submitted">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
              <p>{{notification.params.impressions}} views for
               <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
               <span class="minds-blue" *ng-if="!notification.entityObj.title">your post</span>
@@ -218,7 +210,7 @@
 
           <!-- P2P boost submitted -->
           <template ng-switch-when="boost_submitted_p2p">
-              <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+              <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
                 <p>{{notification.params.points}} points for
                   <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                   <span class="minds-blue" *ng-if="!notification.entityObj.title">your post</span>
@@ -239,7 +231,7 @@
 
           <!-- Boost reject -->
           <template ng-switch-when="boost_rejected">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p>{{notification.params.impressions}} views for
                 <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                  <span class="minds-blue" *ng-if="!notification.entityObj.title">your post</span>
@@ -250,7 +242,7 @@
 
           <!-- Boost accepted -->
           <template ng-switch-when="boost_accepted">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p *ng-if="notification.params.impressions">{{notification.params.impressions}} views for
                 <span class="minds-blue" *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                 <span class="minds-blue" *ng-if="!notification.entityObj.title">your post</span>
@@ -266,7 +258,7 @@
 
           <!-- Boost completed -->
           <template ng-switch-when="boost_completed">
-            <a href="#/tab/notifications/entity/{{notification.entityObj.guid}}">
+            <a [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p>{{notification.params.impressions}}/{{notification.params.impressions}} views for
                 <span class="minds-blue"  *ng-if="notification.entityObj.title">{{notification.entityObj.title}}</span>
                 <span class="minds-blue" *ng-if="!notification.entityObj.title">your post</span>
@@ -283,31 +275,31 @@
 
           <!-- Welcome points -->
           <template ng-switch-when="welcome_points">
-              <a href="#/tab/newsfeed/wallet">
+              <a [router-link]="['/Wallet']">
                   <p>Welcome to Minds. We have given you  <span class="minds-blue">100 points</span> to get you started.</p>
               </a>
           </template>
 
           <!-- tutorial/promts -->
           <template ng-switch-when="welcome_post">
-              <a href="#/tab/capture">
+              <a [router-link]="['/Capture']">
                   <p><span class="minds-blue">Tap here</span> to create a post</p>
               </a>
           </template>
 
           <!-- Welcome messages -->
           <template ng-switch-when="welcome_boost">
-              <a href="#/tab/newsfeed/channel/me">
+              <a [router-link]="['/Channel', {username: session.getLoggedInUser().username}]">
                   <p>You can gain more reach by boosting your content. Hit the blue boost icon on your posts.</p>
               </a>
           </template>
           <template ng-switch-when="welcome_chat">
-              <a href="#/tab/gatherings/conversations">
+              <a [router-link]="['/Messenger']" >
                   <p>Chat securely with your mutual subscriptions. <span class="minds-blue">Tap here.</span></p>
               </a>
           </template>
           <template ng-switch-when="welcome_discover">
-              <a href="#/tab/discover">
+              <a [router-link]="['/Discovery', {filter: 'all', type: null}]">
                   <p><span class="minds-blue">Tap here.</span> to discover new channels and media.</p>
               </a>
           </template>
