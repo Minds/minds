@@ -23,9 +23,10 @@ minds-channel{
     .minds-channel-title{
       @include flex-display();
       margin:0;
+      width: 320px;
 
       .avatar{
-
+        max-width:200px;
         img{
           max-height:220px;
           max-width:100%;
@@ -131,5 +132,35 @@ minds-channel{
     button{
       margin-left: 16px;
     }
+  }
+
+
+  @media screen and (max-width: 720px){
+
+    header {
+      &.isLocked{
+        height: 120px;
+      }
+      .channel-grid{
+        width: 100%;
+        .minds-channel-title{
+          width: 100% !important;
+
+          h1{
+            margin:0;
+            line-height:30px;
+            font-size:14px;
+          }
+        }
+        .minds-tabs{
+          width: 100%;
+          .mdl-tabs__tab{
+            padding:0 $minds-padding;
+          }
+
+        }
+      }
+    }
+
   }
 }

@@ -15,6 +15,7 @@
    }
 }*/
 
+
 .mdl-layout--fixed-drawer:not(.is-small-screen){
 
   > .mdl-layout__header{
@@ -22,11 +23,14 @@
     width:100%;
   }
 
-  .mdl-layout__header-row{
-    padding-left:28px;
-    padding-right:$minds-padding * 2;
+  @media screen and (min-width: 1040px){
+    .mdl-layout__header-row{
+      padding-left:28px;
+      padding-right:$minds-padding * 2;
+    }
   }
 }
+
 
 .mdl-progress{
   width:100%;
