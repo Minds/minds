@@ -28,7 +28,7 @@
           <!-- comment -->
           <template ng-switch-when="comment" *ng-if="notification.entityObj">
             <!-- Object-->
-            <a *ng-if="notification.entityObj && notification.entityObj.type == 'object' && notification.entityObj.subtype != 'blog'">
+            <a *ng-if="notification.entityObj.type == 'object' && notification.entityObj.subtype != 'blog'">
               <p>
                 {{notification.fromObj.name}} commented on
                 <span class="minds-blue" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
@@ -36,7 +36,7 @@
               </p>
             </a>
             <!-- Activity -->
-            <a *ng-if="notification.entityObj && notification.entityObj.type == 'activity'"
+            <a *ng-if="notification.entityObj.type == 'activity'"
               [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
                 {{notification.fromObj.name}} commented on
@@ -79,7 +79,7 @@
             </a>
 
             <!-- Default -->
-            <a *ng-if="notification.entityObj && notification.entityObj.type != 'object' && notification.entityObj.type != 'activity'">
+            <a *ng-if="notification.entityObj.type != 'object' && notification.entityObj.type != 'activity'">
               <p style="font-style:italic">
               There was an error viewing this notification.
               </p>
