@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<div class="mdl-cell mdl-cell--12-col mdl-card minds-comment minds-block" *ng-if="session.isLoggedIn()">
+<div class="mdl-cell mdl-cell--12-col mdl-card minds-comment minds-comment-post minds-block" *ng-if="session.isLoggedIn()">
 
     <div class="minds-avatar">
       <a [router-link]="['/Channel', {username: session.getLoggedInUser().username }]">

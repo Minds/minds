@@ -28,6 +28,10 @@
        white-space: pre-line;
      }
 
+     minds-comments{
+       margin-top:0;
+     }
+
      /**
       * Action tabs
       */
@@ -58,11 +62,6 @@
          font-size:22px;
        }
 
-     }
-
-     minds-comments .minds-comment{
-       padding:0;
-       border-bottom:0;
      }
 
      .impressions-tag{

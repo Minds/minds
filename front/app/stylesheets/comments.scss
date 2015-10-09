@@ -16,10 +16,15 @@ minds-comments{
     background-color: transparent;
     border-bottom:1px solid #DDD;
 
+    &.minds-comment-post{
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
     .minds-avatar{
       img{
-        width:50px;
-        border-radius:50%;
+        width:32px;
+        border-radius:5px;
       }
     }
 
@@ -27,6 +32,7 @@ minds-comments{
       margin-left:$minds-margin;
       a {
         text-decoration: none;
+        font-size:12px;
       }
       p{
         margin:0;

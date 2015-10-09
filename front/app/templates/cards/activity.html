@@ -84,9 +84,7 @@
 
 <span class="impressions-tag">{{activity.impressions}} views</span>
 
-<div class="mdl-card__supporting-text mdl-color--blue-grey-50" *ng-if="commentsToggle">
-	<minds-comments [object]="activity"></minds-comments>
-</div>
+<minds-comments  *ng-if="commentsToggle" [object]="activity" class=" mdl-color--blue-grey-50"></minds-comments>
 
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50" *ng-if="showBoostOptions">
 	<minds-boost [object]="activity" class="minds-boost-container" (done)="showBoostOptions = false"></minds-boost>
