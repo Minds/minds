@@ -61,7 +61,7 @@ class ACL {
       /**
        * Allow plugins to extend the ACL check
        */
-      if(Core\Events\Dispatcher::trigger('acl:read', $entity->type, array('entity'=>$entity, 'user'=>$user)))
+      if(Core\Events\Dispatcher::trigger('acl:read', $entity->type, array('entity'=>$entity, 'user'=>$user)) === true)
         return true;
 
       return false;
@@ -96,7 +96,7 @@ class ACL {
       /**
        * Allow plugins to extend the ACL check
        */
-      if(Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user)))
+      if(Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user)) === true)
         return true;
 
       return false;

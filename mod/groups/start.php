@@ -73,7 +73,7 @@ class start extends Components\Plugin{
 				return new entities\Group($row);
 		});
 
-		Core\Events\Dispatcher::register('acl', 'all', function($e){
+		Core\Events\Dispatcher::register('acl:read', 'all', function($e){
 			$params = $e->getParameters();
 			$entity = $params['entity'];
 			$user = $params['user'];
