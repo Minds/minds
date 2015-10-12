@@ -3,7 +3,7 @@ import {Storage} from 'src/services/storage';
 
 @Component({
   selector: 'minds-loggedin',
-  viewInjector: [Storage]
+  viewBindings: [Storage]
 })
 
 export class LoggedIn { 
