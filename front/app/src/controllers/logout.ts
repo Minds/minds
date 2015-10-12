@@ -1,5 +1,5 @@
 import { Component, View, Inject } from 'angular2/angular2';
-import { Router } from 'angular2/router';
+import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -9,7 +9,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/login.html',
-  directives: [ Material, RouterLink ]
+  directives: [ Material, ROUTER_DIRECTIVES ]
 })
 
 export class Logout {
