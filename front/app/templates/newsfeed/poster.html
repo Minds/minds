@@ -29,6 +29,7 @@
               <button
                 type="submit"
                 class="mdl-button"
+                [disabled]="!canPost"
                 >
                 Post
               </button>
@@ -52,17 +53,15 @@
     </div>
 
     <!-- Attachment preview -->
-    <div class="post-preview" *ng-if="attachment_preview" (click)="removeAttachment()">
-      <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="attachment_preview"></div>
-      <video *ng-if="type.isVideo"  width="580" height="420" autoplay muted loop>
-          <source [src]="attachment_preview" [type]='type.mimeType'>
-      </video>
-      <img *ng-if="!type.isVideo" [src]="attachment_preview" class="attachment-preview"/>
+    <div class="post-preview" *ng-if="attachment_preview || attachment_progress > 0"  (click)="removeAttachment()">
+      <div class="mdl-progress mdl-js-progress" [mdl-upload] [progress]="attachment_progress" [hidden]="attachment_progress == 0"></div>
+      <div *ng-if="attachment_mime == 'video'" class="attachment-preview video-placeholder mdl-color--blue-grey-600">
+          <i class="material-icons">videocam</i>
+      </div>
+      <img *ng-if="attachment_mime != 'video'" [src]="attachment_preview" class="attachment-preview"/>
       <div class="attachment-preview-delete">
         <i class="material-icons">delete</i>
       </div>
     </div>
-
-    <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" [mdl] [hidden]="!inProgress"></div>
 
 </div>

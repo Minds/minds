@@ -1,7 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
-import { Material } from 'src/directives/material';
+import { MDL_DIRECTIVES } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
@@ -15,7 +15,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/newsfeed/poster.html',
-  directives: [ Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  directives: [ Activity, MDL_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
 })
 
 export class Poster {
@@ -30,6 +30,9 @@ export class Poster {
   inProgress : boolean = false;
 
   attachment_preview;
+  attachment_progress : number = 0;
+  attachment_mime : string;
+  canPost : boolean = true;
 
   postMeta : any = {
     title: "",
@@ -85,8 +88,10 @@ export class Poster {
   uploadAttachment(){
     var self = this;
     var file : any = document.getElementById("file");
+    this.canPost = false;
+    this.attachment_progress = 0;
+    this.attachment_mime = "";
 
-    console.log(file);
     var fileInfo = file ? file.files[0] : null;
 
     if(!fileInfo)
@@ -95,8 +100,6 @@ export class Poster {
     /**
      * Give a live preview
      */
-    console.log(fileInfo);
-
     this.checkVideoType(fileInfo.type);
 
     var reader  = new FileReader();
@@ -108,9 +111,17 @@ export class Poster {
     /**
      * Upload to the archive and return the attachment guid
      */
-    this.upload.post('api/v1/archive', [fileInfo], this.postMeta)
+    this.upload.post('api/v1/archive', [fileInfo], this.postMeta, (progress) => { console.log(progress); this.attachment_progress = progress; })
       .then((response : any) => {
         self.postMeta.attachment_guid = response.guid;
+        file.files = [];
+        self.canPost = true;
+      })
+      .catch((e) => {
+        self.postMeta.attachment_guid = null;
+        file.files = [];
+        self.canPost = true;
+        self.attachment_progress = 0;
       });
 
   }
@@ -125,6 +136,8 @@ export class Poster {
       .then((response) => {
         self.postMeta.attachment_guid = null;
       });
+    this.canPost = true;
+    this.attachment_progress = 0;
   }
 
   /**
@@ -173,8 +186,7 @@ export class Poster {
 
   checkVideoType(mimeType) {
     if (mimeType.startsWith("video")){
-      this.type.isVideo=true;
-      this.type.mimeType=mimeType;
+      this.attachment_mime = "video";
     }
   }
 

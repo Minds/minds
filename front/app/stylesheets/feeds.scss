@@ -191,61 +191,6 @@
 
        }
 
-       .post-preview{
-         margin:-$minds-padding * 2;
-         position:relative;
-         width:110%;
-
-         .minds-rich-embed{
-           a{
-             width:100%;
-           }
-           img {
-             width:100%;
-           }
-
-           .meta{
-             padding:$minds-padding*2;
-             display:block;
-             text-decoration: none;
-             width: calc(100% - 32px);
-           }
-         }
-
-         .mdl-spinner{
-           margin: $minds-padding * 2 auto;
-           display:block;
-         }
-         .attachment-preview{
-           width:100%;
-         }
-         .attachment-preview-delete{
-           display:none;
-         }
-       }
-       .post-preview:hover{
-
-         .attachment-preview-delete{
-            display:block;
-           position:absolute;
-           top:0;
-           left:0;
-           width:100%;
-           height:100%;
-           background:rgba(0,0,0,0.6);
-           align-items: center;
-           -webkit-align-items: center;
-           i{
-            font-size:40px;
-            color:#FFF;
-            top: calc(50% - 20px);
-            left: calc(50% - 20px);
-            position: absolute;
-           }
-         }
-
-       }
-
        .mdl-card__actions{
          text-align:right;
 
@@ -293,6 +238,78 @@
      }
 
    }
+
+   .post-preview{
+     position:relative;
+     display:block !important;
+
+     .minds-rich-embed{
+       a{
+         width:100%;
+       }
+       img {
+         width:100%;
+       }
+
+       .meta{
+         padding:$minds-padding*2;
+         display:block;
+         text-decoration: none;
+         width: calc(100% - 32px);
+       }
+     }
+
+     .mdl-spinner{
+       margin: $minds-padding * 2 auto;
+       display:block;
+     }
+     .attachment-preview{
+       width:100%;
+       &.video-placeholder{
+         display:block;
+         width:100%;
+         height:200px;
+
+         align-items: center;
+         -webkit-align-items: center;
+         i{
+           font-size:40px;
+           color:#FFF;
+           top: calc(50% - 20px);
+           left: calc(50% - 20px);
+           position: absolute;
+         }
+       }
+     }
+     .attachment-preview-delete{
+       display:none;
+     }
+
+     &:hover{
+
+       .attachment-preview-delete{
+          display:block;
+          position:absolute;
+          top:0;
+          left:0;
+          width:100%;
+          height:100%;
+          background:rgba(0,0,0,0.6);
+          align-items: center;
+          -webkit-align-items: center;
+          i{
+            font-size:40px;
+            color:#FFF;
+            top: calc(50% - 20px);
+            left: calc(50% - 20px);
+            position: absolute;
+          }
+       }
+
+     }
+
+   }
+
  }
 
 
@@ -339,7 +356,7 @@
 
 .minds-video-thumbnail{
   cursor: pointer;
-  
+
   span{
     color: #FFF;
     font-size: 72px;
