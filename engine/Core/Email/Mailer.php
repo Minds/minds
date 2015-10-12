@@ -52,7 +52,7 @@ class Mailer{
     $this->mailer->Subject = $message->subject;
 
     $this->mailer->IsHTML(true);
-    $this->ailer->Body = $message->buildHtml();
+    $this->mailer->Body = $message->buildHtml();
 
     if($this->mailer->Send()){
       $this->stats['sent']++;

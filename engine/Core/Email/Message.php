@@ -44,7 +44,7 @@ class Message{
   public function setTo($user){
     $this->to[] = array(
       'name' => $user->name,
-      'user' => $user->getEmail()
+      'email' => $user->getEmail()
     );
     return $this;
   }
