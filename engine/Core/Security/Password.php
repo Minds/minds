@@ -51,4 +51,16 @@ class Password {
     public static function salt(){
       return substr(hash('sha256', microtime() . rand()), 0, 8);
     }
+
+    /**
+     * Return a reset code for a forgotten password
+     * @param entities\User $user
+     * @return string
+     */
+    public static function reset($user){
+      $code = self::generate($user, microtime() . rand());
+      $user->password_reset_code = $code;
+      $user->save();
+      return $code;
+    }
 }

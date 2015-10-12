@@ -10,24 +10,24 @@ use MongoCollection;
 use MongoId;
 
 class Client implements Interfaces\ClientInterface{
-    
+
     private $mongodb;
     private $prepared;
     private $db_name = 'minds';
-    
+
     public function __construct(array $options = array()){
         global $CONFIG;
 
         if(!class_exists('\MongoClient'))
             throw new \Exception("Mongo is not installed");
-    	
+
         $servers = isset($CONFIG->mongodb_servers) ?  $CONFIG->mongodb_servers : array('127.0.0.1');
         $servers = implode(',', $servers);
-        
+
         if(isset($CONFIG->mongodb_db)){
             $this->db_name = $CONFIG->mongodb_db;
         }
-        
+
         try{
             if(!$this->mongodb)
                 $this->mongodb = new MongoClient($servers);
@@ -42,15 +42,15 @@ class Client implements Interfaces\ClientInterface{
     }
 
     public function client(){
-        
+
     }
-    
+
     /**
      * Insert into MongoDB
      * @param string $table
      * @param array $data
      * @return string $_id
-     */    
+     */
     public function insert($table, $data = array()){
         if(!$this->mongodb)
             return false;
@@ -65,7 +65,7 @@ class Client implements Interfaces\ClientInterface{
 
     /**
      * Update MongoDB
-     * 
+     *
      * @param string $table
      * @param array $query
      * @param array $data
@@ -123,7 +123,7 @@ class Client implements Interfaces\ClientInterface{
          if(isset($query['_id']))
             $query['_id'] = new MongoId($query['_id']);
          return $collection->remove($query);
-    }    
+    }
 
     /**
      * Count from MongoDB
@@ -137,4 +137,4 @@ class Client implements Interfaces\ClientInterface{
         $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
         return $collection->count($query);
     }
-}    
+}

@@ -9,41 +9,44 @@ import { SessionFactory } from 'src/services/session';
   viewBindings: [ Client ]
 })
 @View({
-  templateUrl: 'templates/reset-password.html',
+  templateUrl: 'templates/forgot-password.html',
   directives: [ Material ]
 })
 
-export class ResetPassword {
+export class ForgotPassword {
 
 	session = SessionFactory.build();
-  errorMessage : string = "";
+  error : string = "";
   inProgress : boolean = false;
+  step : number = 1;
 
 	constructor(public client : Client, @Inject(Router) public router: Router){
 		window.componentHandler.upgradeDom();
 	}
 
-	resetPassword(username){
-    this.errorMessage = "";
+	request(username){
+    this.error = "";
     this.inProgress = true;
 		var self = this;
-		this.client.post('/api/v1/password-reset/', {email: username.value})
+		this.client.post('/api/v1/forgotpassword/', {
+        username: username.value
+      })
 			.then((data : any) => {
 				username.value = '';
 
         this.inProgress = false;
-				self.session.login(data.user);
-				self.router.navigate(['/Homepage', {}]);
+        self.step = 2;
+				//self.router.navigate(['/Homepage', {}]);
 			})
 			.catch((e) => {
-        console.log(e);
+
         this.inProgress = false;
         if(e.status == 'failed'){
-          self.errorMessage = "There was a problem trying to reset your password. Please try again.";
+          self.error = "There was a problem trying to reset your password. Please try again.";
         }
 
         if(e.status == 'error'){
-          self.errorMessage = e.message;
+          self.error = e.message;
         }
 
 			});

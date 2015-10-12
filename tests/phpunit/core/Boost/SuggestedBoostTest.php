@@ -13,6 +13,7 @@ class SuggestedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     }
 
     protected function mock(){
+      echo 3; exit;
       return $mock = $this->getMockBuilder('\Minds\Core\Data\MongoDB\Client')
         ->disableOriginalConstructor()
         ->getMock();

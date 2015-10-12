@@ -6,6 +6,7 @@ use Minds\Core;
 class countersTest extends \Minds_PHPUnit_Framework_TestCase {
 
     private function mock(){
+      echo 1; exit;
         return $mock = $this->getMockBuilder('\Minds\Core\Data\Cassandra\Client')
           ->disableOriginalConstructor()
           ->getMock();

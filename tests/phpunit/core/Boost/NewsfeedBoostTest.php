@@ -13,7 +13,7 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     }
 
     protected function mock(){
-      return $mock = $this->getMockBuilder('\Minds\Core\Data\MongoDB\Client')
+      return $this->getMockBuilder('\Minds\Core\Data\MongoDB\Client')
         ->disableOriginalConstructor()
         ->getMock();
     }
