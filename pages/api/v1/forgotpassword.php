@@ -49,6 +49,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
             break;
           }
           $code = Core\Security\Password::reset($user);
+          $link = elgg_get_site_url() . "forgot-password?guid=" . $user->guid . "&code=" . $code;
 
           //now send an email
           $mailer = new Core\Email\Mailer();
