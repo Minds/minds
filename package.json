@@ -12,6 +12,7 @@
     "systemjs": "^0.18.1",
     "zone.js": "^0.4.1",
     "reflect-metadata": "0.1.2",
+    "es6-shim": "^0.33.6",
     "intl": "^1.0.0"
   },
   "devDependencies": {

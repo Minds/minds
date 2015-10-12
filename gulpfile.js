@@ -54,15 +54,16 @@ var PATH = {
     all: APP_SRC,
     // Order is quite important here for the HTML tag injection.
     loader: [
-      './node_modules/angular2/node_modules/traceur/bin/traceur-runtime.js',
-      './node_modules/es6-module-loader/dist/es6-module-loader-sans-promises.js',
-      './node_modules/es6-module-loader/dist/es6-module-loader-sans-promises.js.map',
-      './node_modules/reflect-metadata/Reflect.js',
-      './node_modules/reflect-metadata/Reflect.js.map',
-      './node_modules/systemjs/dist/system-polyfills.src.js',
+      //'./node_modules/angular2/node_modules/traceur/bin/traceur-runtime.js',
+      //'./node_modules/es6-module-loader/dist/es6-module-loader-sans-promises.js',
+      //'./node_modules/es6-module-loader/dist/es6-module-loader-sans-promises.js.map',
+      './node_modules/es6-shim/es6-shim.min.js',
+      //'./node_modules/reflect-metadata/Reflect.js',
+      //'./node_modules/reflect-metadata/Reflect.js.map',
+      //'./node_modules/systemjs/dist/system-polyfills.src.js',
       './node_modules/systemjs/dist/system.src.js',
-      './node_modules/intl/dist/intl.min.js',
-      './node_modules/intl/locale-data/jsonp/en.js'
+      //'./node_modules/intl/dist/intl.min.js',
+      //'./node_modules/intl/locale-data/jsonp/en.js'
     ],
     loaderConfig: [
       APP_SRC + '/system.config.js'
