@@ -28,6 +28,79 @@
 }
 
 /**
+ * Minds video components
+ */
+minds-video{
+  position: relative;
+
+  video{
+    width:100%;
+  }
+  .minds-video-bar-min{
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    color: #FFF;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+  .minds-video-bar-full{
+    display:none;
+    position:absolute;
+    background-color: rgba(0,0,0,0.4);
+    color:#FFF;
+    bottom:0;
+    left:0;
+    width:100%;
+    box-sizing:border-box;
+    padding:$minds-padding;
+    text-align:center;
+
+    > span, i{
+      @include flex(1);
+      &.progress-bar{
+          @include flex(6);
+          position: relative;
+          bar{
+            position: absolute;
+            left: 0px;
+            height: 2px;
+            vertical-align: middle;
+            border-radius: 2px;
+            margin-top: 11px;
+            background-color: rgb(255, 255, 255);
+            &.total{
+              background-color: rgba(255, 255, 255, 0.5);
+              width:100%;
+            }
+          }
+      }
+      &.progress-stamps{
+        font-size: 12px;
+        font-weight: 300;
+        font-family: 'Lato';
+        flex: 2;
+      }
+      cursor:pointer;
+
+    }
+  }
+
+  &:hover{
+    .minds-video-bar-min{
+      display:none;
+    }
+    .minds-video-bar-full{
+      @include flex-display();
+    }
+  }
+}
+
+/**
  * Carousel
  */
  .minds-carousel{

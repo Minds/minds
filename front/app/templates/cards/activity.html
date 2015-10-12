@@ -33,20 +33,18 @@
 <div class="mdl-card__supporting-text message" [hidden]="!activity.title || activity.perma_url" [tags]>{{activity.title}}</div>
 
 <div class="item item-image item-image-video" *ng-if="activity.custom_type == 'video'">
-		 <video
-			 	id="video"
+		 <minds-video
 				width="100%"
 				height="300px"
 				style="background:#000;"
-				reload="auto"
-				loop
-				controls
-				muted
-				autoplay
-				poster="{{activity.custom_data.thumbnail_src}}"
+				[loop]="true"
+				[controls]="true"
+				[muted]="true"
+				[autoplay]="true"
+				[poster]="activity.custom_data.thumbnail_src"
+				[src]="[{ 'res': '720', 'uri': 'api/v1/archive/' + activity.custom_data.guid + '/play', 'type': 'video/mp4' }]"
 			>
-			<source src="api/v1/archive/{{activity.custom_data.guid}}/play"></source>
-		</video>
+		</minds-video>
  </div>
 
 <!-- Images -->

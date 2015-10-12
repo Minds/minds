@@ -1,5 +1,5 @@
 import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
-
+import { MindsVideo } from 'src/components/video';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
@@ -15,13 +15,11 @@ import { Material } from 'src/directives/material';
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
     <div class="minds-archive-stage" *ng-if="object.subtype == 'video'">
-      <video autoplay controls height="100%">
-        <source src="{{object.src['720.mp4']}}" type="video/mp4" data-res="720p"></source>
-        <source src="{{object.src['360.mp4']}}" type="video/mp4" data-res="360p"></source>
-      </video>
+      <minds-video [autoplay]="true" [src]="[{ 'uri': object.src['720.mp4'] }]" height="100%">
+      </minds-video>
     </div>
   `,
-  directives: [ CORE_DIRECTIVES,  Material ]
+  directives: [ CORE_DIRECTIVES, MindsVideo, Material ]
 })
 
 export class ArchiveTheatre {
