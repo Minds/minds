@@ -9,7 +9,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/login.html',
-  directives: [ Material ]
+  directives: [ Material, RouterLink ]
 })
 
 export class Logout {
