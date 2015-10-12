@@ -6,6 +6,7 @@ namespace Minds\Core\Email;
 
 use Minds\Core;
 use Minds\Entities;
+use PHPMailer;
 
 class Mailer{
 
@@ -42,18 +43,18 @@ class Mailer{
     $this->mailer->ClearAllRecipients();
     $this->mailer->ClearAttachments();
 
-    $mailer->From = $message->from['email'];
-    $mailer->FromName = $message->from['name'];
+    $this->mailer->From = $message->from['email'];
+    $this->mailer->FromName = $message->from['name'];
 
     foreach($message->to as $to)
-      $mailer->AddAddress($to['email'], $to['name']);
+      $this->mailer->AddAddress($to['email'], $to['name']);
 
-    $mailer->Subject = $message->subject;
+    $this->mailer->Subject = $message->subject;
 
-    $mailer->IsHTML(true);
-    $mailer->Body = $message->buildHtml();
+    $this->mailer->IsHTML(true);
+    $this->ailer->Body = $message->buildHtml();
 
-    if($mailer->Send()){
+    if($this->mailer->Send()){
       $this->stats['sent']++;
     } else {
       $this->stats['failed']--;

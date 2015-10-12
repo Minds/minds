@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Router } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
@@ -10,7 +10,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/forgot-password.html',
-  directives: [ Material ]
+  directives: [ CORE_DIRECTIVES, Material ]
 })
 
 export class ForgotPassword {
@@ -20,15 +20,14 @@ export class ForgotPassword {
   inProgress : boolean = false;
   step : number = 1;
 
-	constructor(public client : Client, @Inject(Router) public router: Router){
-		window.componentHandler.upgradeDom();
+	constructor(public client : Client, public router: Router){
 	}
 
 	request(username){
     this.error = "";
     this.inProgress = true;
 		var self = this;
-		this.client.post('/api/v1/forgotpassword/', {
+		this.client.post('api/v1/forgotpassword/request', {
         username: username.value
       })
 			.then((data : any) => {
