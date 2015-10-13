@@ -15,7 +15,7 @@ import { Material } from 'src/directives/material';
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
     <div class="minds-archive-stage" *ng-if="object.subtype == 'video'">
-      <minds-video [autoplay]="true" [src]="[{ 'uri': object.src['720.mp4'] }]" height="100%">
+      <minds-video [autoplay]="true" [muted]="false" [src]="[{ 'uri': object.src['720.mp4'] }]" >
       </minds-video>
     </div>
   `,
