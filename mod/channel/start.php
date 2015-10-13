@@ -7,6 +7,7 @@
 namespace minds\plugin\channel;
 
 use Minds\Core;
+use Minds\Helpers;
 use Minds\Entities;
 use Minds\Api;
 
@@ -39,8 +40,8 @@ class start extends \ElggPlugin{
 		    $params = $event->getParameters();
 		    $export = array();
 		    if($params['entity']->ownerObj && is_array($params['entity']->ownerObj)){
-			    $export['ownerObj'] = $params['entity']->ownerObj;
-			    $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];
+			    //$export['ownerObj'] = \Minds\Helpers\Export::sanitize($params['entity']->ownerObj);
+			  //  $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];
 		      $event->setResponse($export);
 				}
 		});
