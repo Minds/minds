@@ -81,6 +81,8 @@
         "./front/app/src/directives/tags.ts",
         "./front/app/src/interfaces/entities.ts",
         "./front/app/src/interfaces/responses.ts",
+        "./front/app/src/pipes/pipes.ts",
+        "./front/app/src/pipes/sanitize.ts",
         "./front/app/src/pipes/tags.ts",
         "./front/app/src/plugins/archive/archive.ts",
         "./front/app/src/plugins/archive/src/archive-edit.ts",
