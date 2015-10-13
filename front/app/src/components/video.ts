@@ -4,7 +4,7 @@ import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-video',
-  inputs: [ '_src: src', 'autoplay', 'loop', 'muted', 'controls', 'poster' ],
+  inputs: [ '_src: src', '_autoplay: autoplay', '_loop: loop', '_muted: muted', 'controls', 'poster' ],
   host: {
     //'(click)': 'onClick()',
     '(mouseenter)': 'onMouseEnter()',
@@ -49,21 +49,32 @@ export class MindsVideo{
   loop : boolean = true;
 
 
-	constructor(_element : ElementRef){
+  constructor(_element : ElementRef){
     this.element = _element.nativeElement.getElementsByTagName("video")[0];
-	}
+  }
 
   set _src(value : any){
     this.src = value[0].uri;
+    this.element.src = this.src;
     this.setUp();
   }
 
+  set _muted(value : boolean){
+    this.muted = value;
+    this.element.muted = value;
+  }
+
+  set _autoplay(value : boolean){
+    this.autoplay = value;
+    this.element.autoplay = value;
+  }
+
+  set _loop(value : boolean){
+    this.loop = value;
+    this.element.loop = value;
+  }
+
   setUp(){
-    this.element.src = this.src;
-    this.element.muted = this.muted;
-    this.element.autoplay = this.autoplay;
-    this.element.loop = this.loop;
-    //this.element.load();
     this.element.addEventListener('play', (e)=>{
       console.log('got play event');
     });
