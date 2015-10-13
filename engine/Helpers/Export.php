@@ -18,7 +18,7 @@ class Export{
           } else {
               $return[$k] = (string) $v;
           }
-          $return[$k] = htmlspecialchars_decode($v);
+          $return[$k] = htmlspecialchars_decode($v, ENT_QUOTES);
         } elseif(is_bool($v)){
             $return[$k] = $v;
         } elseif(is_object($v) || is_array($v)){
