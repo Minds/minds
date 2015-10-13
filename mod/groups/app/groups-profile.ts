@@ -1,7 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { Client } from 'src/services/api';
+import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Activity } from 'src/controllers/newsfeed/activity';
@@ -19,13 +19,14 @@ interface MindsGroup {
   guid : string,
   name : string,
   banner : boolean,
+  banner_position : number,
   members : Array<any>
 }
 
 
 @Component({
   selector: 'minds-groups-profile',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
@@ -42,6 +43,7 @@ export class GroupsProfile {
     message: '',
     container_guid: 0
   };
+  editing : boolean = false;
   session = SessionFactory.build();
 
   activity : Array<any> = [];
@@ -49,7 +51,7 @@ export class GroupsProfile {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public client: Client, public params: RouteParams){
+	constructor(public client: Client, public upload: Upload, public params: RouteParams){
       this.guid = params.params['guid'];
       if(params.params['filter'])
         this.filter = params.params['filter'];
@@ -66,6 +68,35 @@ export class GroupsProfile {
       .catch((e)=>{
 
       });
+  }
+
+  save(){
+    var self = this;
+    this.client.post('api/v1/groups/group/' + this.group.guid, {
+        name: this.group.name
+      })
+      .then((response : any) => {
+
+      })
+      .catch((e) => {
+
+      });
+    this.editing = false;
+  }
+
+  toggleEdit(){
+    this.editing = !this.editing;
+  }
+
+  set add_banner(file : any){
+    this.upload.post('api/v1/groups/group/' + this.group.guid + '/banner', [file.file], { banner_position: file.top })
+      .then((response : any) => {
+
+      })
+      .catch((e) => {
+
+      });
+    console.log('new banne added', file);
   }
 
 }

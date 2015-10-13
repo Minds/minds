@@ -12,6 +12,7 @@ use Minds\plugin\groups\entities;
 use Minds\plugin\groups\helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Entities as CoreEntities;
 
 class group implements Interfaces\Api{
 
@@ -40,6 +41,29 @@ class group implements Interfaces\Api{
         $group = new entities\Group($pages[0]);
       } else {
         $group = new entities\Group();
+      }
+
+      if(isset($pages[1]) && $group->guid){
+        $response = array();
+        switch($pages[1]){
+          case "avatar":
+            break;
+          case "banner":
+            if(is_uploaded_file($_FILES['file']['tmp_name'])){
+              $resized = get_resized_image_from_uploaded_file('file', 2000);
+              $file = new CoreEntities\File();
+              $file->owner_guid = $group->owner_guid;
+              $file->setFilename("group/{$group->guid}.jpg");
+              $file->open('write');
+              $file->write($resized);
+              $file->close();
+              $group->banner = true;
+              $group->banner_position = $_POST['banner_position'];
+              $group->save();
+            }
+            break;
+          }
+          return Factory::response($response);
       }
 
       $group->name = $_POST['name'];

@@ -26,6 +26,7 @@
        'description',
        'icontime',
        'banner',
+       'banner_position',
        'membership'
      ));
    }

@@ -3,9 +3,10 @@ import { UserCard } from './user';
 import { VideoCard } from './object/video';
 import { ImageCard } from './object/image';
 import { AlbumCard } from './object/album';
+import { Activity } from 'src/controllers/newsfeed/activity';
 
 export { UserCard } from './user';
 export { VideoCard } from './object/video';
 export { ImageCard } from './object/image';
 export { AlbumCard } from './object/album';
-export const CARDS: Type[] = [ UserCard, VideoCard, ImageCard, AlbumCard ];
+export const CARDS: Type[] = [ UserCard, VideoCard, ImageCard, AlbumCard, Activity ];

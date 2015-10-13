@@ -70,8 +70,22 @@ minds-groups-create{
   margin: auto;
   justify-content: unset !important;
 
+  minds-button-edit{
+    padding:$minds-padding;
+
+    button.material-icons{
+      padding: 4px 8px;
+      font-size: 23px;
+    }
+  }
   minds-groups-join-button{
     padding:$minds-padding $minds-padding*2;
+  }
+}
+
+.minds-group-title{
+  h1, input{
+    font-size: 56px;
   }
 }
 

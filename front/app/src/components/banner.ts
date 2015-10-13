@@ -1,33 +1,130 @@
-import { Component, View, NgIf} from 'angular2/angular2';
+import { Component, View, EventEmitter, CORE_DIRECTIVES} from 'angular2/angular2';
 import { Client } from "src/services/api";
 import { RouterLink } from 'angular2/router';
 import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-banner',
-  properties: ['_object: object']
+  inputs: ['_object: object', '_src: src', '_top: top', '_editMode: editMode'],
+  outputs: ['added']
 })
 @View({
   template: `
-  <div class="minds-banner" *ng-if="object">
-    <img *ng-if="object.subtype == 'blog' && object.header_bg == 1" src="/api/v1/blog/header/{{object.guid}}"/>
-    <img *ng-if="object.subtype != 'blog' && object.banner" src="{{minds.cdn_url}}/fs/v1/banners/{{object.guid}}"/>
+  <div class="minds-banner" *ng-if="!editing">
+    <img src="{{src}}" [ng-style]="{'top': top}"/>
+  </div>
+  <div *ng-if="editing" class="minds-banner minds-banner-editing">
+    <img src="{{src}}" (dragstart)="dragstart($event)" (dragover)="drag($event)" (dragend)="dragend($event)"/>
+    <div class="overlay" [hidden]="file">
+      <i class="material-icons">camera</i>
+      <span>Click here to add a new banner</span>
+    </div>
+    <div class="save-bar" [hidden]="!file">
+      <div class="mdl-layout-spacer"></div>
+      <p>Drag the banner vertically to change it's position</p>
+      <minds-button-edit class="cancel-button" (click)="cancel()">
+        <button>Cancel</button>
+      </minds-button-edit>
+      <minds-button-edit (click)="done()">
+        <button>Save</button>
+      </minds-button-edit>
+    </div>
+    <input type="file" (change)="add($event)" [hidden]="file" />
   </div>
   `,
-  directives: [ NgIf, RouterLink, Material ]
+  directives: [ CORE_DIRECTIVES, RouterLink, Material ]
 })
 
 export class MindsBanner{
 
+  minds : Minds = window.Minds;
   object;
-  minds : Minds;
+  editing : boolean = false;
+  src : string = "";
+
+  file : any;
+  startY : number = 0;
+  offsetY : any = 0;
+  top : number = 0;
+  dragging : boolean = false;
+  dragTimeout;
+  added : EventEmitter = new EventEmitter();
 
 	constructor(){
-    this.minds = window.Minds;
 	}
 
   set _object(value : any){
+    if(!value)
+      return;
     this.object = value;
+    this.src = "/fs/v1/banners/" + this.object.guid;
+  }
+
+  set _src(value : any){
+    this.src = value;
+  }
+
+  set _top(value : number){
+    this.top = value;
+  }
+
+  set _editMode(value : boolean){
+    this.editing = value;
+  }
+
+  add(e){
+    if(!this.editing)
+      return;
+
+    var element : any = e.target ? e.target : e.srcElement;
+    this.file = element ? element.files[0] : null;
+
+    /**
+     * Set a live preview
+     */
+    var reader  = new FileReader();
+    reader.onloadend = () => {
+      this.src = reader.result;
+    }
+    reader.readAsDataURL(this.file);
+
+    element.value = "";
+  }
+
+  cancel(){
+    this.file = null;
+  }
+
+  done(){
+    this.added.next({
+      file: this.file,
+      top: this.top
+    });
+    this.editing = false;
+  }
+
+  dragstart(e){
+    this.startY = e.target.style.top ? parseInt(e.target.style.top) : 0;
+    this.offsetY = e.clientY;
+    this.dragging = true;
+  }
+
+  drag(e){
+    e.preventDefault();
+    if(!this.dragging)
+      return false;
+
+    var target = e.target;
+    var top = this.startY + e.clientY - this.offsetY;
+    target.style.top = top + 'px';
+
+    this.top = top;
+    return false;
+  }
+
+  dragend(e){
+    this.dragging = false;
+    console.log('stopped dragging');
   }
 
 }

@@ -1,8 +1,12 @@
-<minds-banner [object]="group"></minds-banner>
+<header *ng-if="group">
+  <minds-banner [object]="group" [edit-mode]="editing" [top]="group.banner_position" [(added)]="add_banner" *ng-if="group.banner || editing"></minds-banner>
+</header>
+
 <div class="mdl-grid groups-grid" style="max-width:900px" *ng-if="group">
 
-  <div class="mdl-cell mdl-cell--12-col">
-    <h1>{{group.name}}</h1>
+  <div class="mdl-cell mdl-cell--12-col minds-group-title">
+    <h1 [hidden]="editing">{{group.name}}</h1>
+    <input type="text" [hidden]="!editing" [(ng-model)]="group.name" />
   </div>
 
 </div>
@@ -11,9 +15,15 @@
   <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'activity'}">Feed</a>
   <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'members'}">{{group['members:count']}} members</a>
   <a *ng-if="group.membership != 2" [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'requests'}">{{group['requests:count']}} requests</a>
-  <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'settings'}]" class="mdl-tabs__tab" [ng-class]="{'is-active': filter == 'settings'}">Settings</a>
 
-  <minds-groups-join-button [group]="group"></minds-groups-join-button>
+  <minds-button-edit (click)="toggleEdit()" [hidden]="editing" *ng-if="session.getLoggedInUser().guid == group.owner_guid">
+    <button class="material-icons">mode_edit</button>
+  </minds-button-edit>
+  <minds-button-edit (click)="save()" [hidden]="!editing" *ng-if="session.getLoggedInUser().guid == group.owner_guid">
+    <button>Save changes</button>
+  </minds-button-edit>
+
+  <minds-groups-join-button [group]="group" *ng-if="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
 
 </div>
 
@@ -34,13 +44,17 @@
   </minds-groups-profile-requests>
   <!-- END: Requests filter -->
 
-  <!-- Settings Filter -->
-  <minds-groups-profile-settings [group]="group" class="mdl-cell mdl-cell--8-col" *ng-if="filter == 'settings' && group.owner_guid == session.getLoggedInUser().guid">
-  </minds-groups-profile-settings>
-  <!-- END: Settings filter -->
-
   <!-- Sidebar -->
   <div class="mdl-cell mdl-cell--4-col">
+    <!-- Brief description -->
+    <div class="mdl-card mdl-shadow--4dp" style="width:auto; min-height:0;">
+
+      <div class="mdl-card__supporting-text mdl-color-text--grey-600" style="min-height:0;">
+        {{group.briefdescription}}
+      </div>
+
+    </div>
+
     <!-- Members -->
     <div class="mdl-card mdl-shadow--4dp" style="width:auto">
       <div class="mdl-card__title">
