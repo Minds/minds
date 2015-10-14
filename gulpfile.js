@@ -235,7 +235,7 @@ gulp.task('build.app.dev', function (done) {
 });
 
 gulp.task('build.dev', function (done) {
-  runSequence('clean.dev', 'build.lib.dev', 'build.app.dev', done);
+  runSequence( 'build.lib.dev', 'build.app.dev', done);
 });
 
 gulp.task('build.bundle', ['build.dev'], function (cb){
