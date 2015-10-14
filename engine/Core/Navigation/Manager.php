@@ -91,6 +91,27 @@ class Manager{
 			->addSubItem($discovery_my);
 		self::add($discovery);
 
+		$admin_boost = new Item();
+		$admin_boost
+			->setPriority(1)
+			->setIcon('trending_up')
+			->setName('Boost')
+			->setTitle('Boost (Admin)')
+			->setPath('/Admin')
+			->setParams(array(
+				'filter' => 'boosts'
+			));
+		$admin_analytics = new Item();
+		$admin_analytics
+			->setPriority(2)
+			->setIcon('insert_chart')
+			->setName('Analytics')
+			->setTitle('Analytics')
+			->setPath('/Admin')
+			->setParams(array(
+				'filter' => 'analytics'
+			));
+
 		$admin = new Item();
 		$admin->setPriority(100)
 			->setIcon('settings_input_component')
@@ -99,7 +120,9 @@ class Manager{
 			->setPath('/Admin')
 			->setParams(array(
 				'filter' => 'analytics'
-			));
+			))
+			->addSubItem($admin_boost)
+			->addSubItem($admin_analytics);
 		if(Core\Session::isLoggedIn() && Core\Session::getLoggedinUser()->isAdmin())
 			self::add($admin);
 	}
