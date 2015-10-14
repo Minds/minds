@@ -57,8 +57,15 @@ export class MindsTinymce {
     });
   }
 
+  onDestroy(){
+     tinymce.remove('minds-tinymce > textarea');
+  }
+
   set _content(value : string){
-    this.editor.setContent(value);
+    if (value){
+      this.editor.setContent(value);
+    }
+    else this.editor.setContent("");
   }
 
 }

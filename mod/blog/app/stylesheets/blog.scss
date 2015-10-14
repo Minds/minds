@@ -31,6 +31,10 @@ minds-blog-view{
   padding-top:$minds-padding * 2;
 }
 
+.minds-blog-save{
+  padding : 8px;
+}
+
 .minds-blog-actions{
   @include flex-display();
   @include flex-direction(row);

@@ -1,4 +1,6 @@
-<minds-banner [object]="blog"></minds-banner>
+<header *ng-if="blog">
+  <minds-banner [object]="blog" [top]="blog.banner_position" *ng-if="blog.header_bg"></minds-banner>
+</header>
 <div class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid">
 
   <div class="mdl-grid" style="width:100%">

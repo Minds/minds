@@ -1,21 +1,12 @@
+<header *ng-if="blog">
+  <minds-banner [object]="blog" [edit-mode]="editing" [top]="blog.banner_position" [(added)]="add_banner" *ng-if="blog.header_bg || editing"></minds-banner>
+</header>
 <div class="mdl-grid blogs-grid" style="max-width:900px" *ng-if="error">
   <h1>{{error}}</h1>
 </div>
 
-<div class="minds-blog-header">
-</div>
-
 <form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid">
 
-  <div>
-    <input
-      type="file"
-      id="file"
-      #file
-      (change)="addHeader(file)"
-    />
-
-  </div>
 
   <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-blog-title" [mdl-textfield]>
     <input

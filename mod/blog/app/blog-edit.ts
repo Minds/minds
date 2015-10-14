@@ -5,6 +5,7 @@ import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { MindsTinymce } from 'src/components/editors/tinymce';
+import { MindsBanner } from 'src/components/banner'
 
 @Component({
   selector: 'minds-blog-edit',
@@ -12,7 +13,7 @@ import { MindsTinymce } from 'src/components/editors/tinymce';
 })
 @View({
   templateUrl: 'templates/plugins/blog/edit.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, MindsBanner]
 })
 
 export class BlogEdit {
@@ -27,6 +28,7 @@ export class BlogEdit {
     access_id: 2
   };
   header : any;
+  editing : boolean = true;
 
   constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
       if(params.params['guid'])
@@ -55,30 +57,20 @@ export class BlogEdit {
     this.client.post('api/v1/blog/' + this.guid, this.blog)
       .then((response : any) => {
         console.log(response);
-        if(self.header)
-          self.uploadHeader();
-        else
-          self.router.navigate(['/Blog-View', {guid: response.guid}]);
+        self.router.navigate(['/Blog-View', {guid: response.guid}]);
       })
       .catch((e) => {
 
       });
   }
 
-  addHeader(file){
-    this.header = file.files[0];
-  }
-
-  uploadHeader() : boolean {
-    if(!this.header)
-      return true;
+  set add_banner(file : any){
     var self = this;
-    this.upload.post('api/v1/blog/' + this.guid, [this.header], { filekey: 'header'}, (progress) => {
+    this.upload.post('api/v1/blog/' + this.guid, [file.file], { filekey: 'header', banner_position: file.top }, (progress) => {
       console.log('progress update');
       console.log(progress);
       })
 			.then((response : any) => {
-        self.router.navigate(['/Blog-View', {guid: response.guid}]);
 			})
 			.catch(function(e){
 				console.error(e);
