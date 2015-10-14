@@ -84,6 +84,54 @@
 
       <div class="minds-spacer-2x"></div>
 
+      <!-- Media  -->
+      <div class="mdl-card mdl-shadow--2dp">
+
+        <div class="mdl-card mdl-shadow--4dp" style="width:auto">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Media</h2>
+          </div>
+
+          <!-- Avatars of latest users -->
+          <div class="mdl-card__supporting-text mdl-color-text--grey-600 minds-channel-media-sidebard" style="min-height:0;">
+            <a *ng-for="#object of media" [router-link]="['/Archive-View', {guid: object.guid}]" >
+              <img src="object.thumbnail_src"/>
+            </a>
+          </div>
+
+          <a class="mdl-card__supporting-text mdl-color-text--grey-600" [router-link]="['/Discovery', {filter:'owner', type:'all'}]">
+            View More
+          </a>
+
+        </div>
+
+      </div>
+
+      <div class="minds-spacer-2x"></div>
+
+      <!-- Blogs  -->
+      <div class="mdl-card mdl-shadow--2dp">
+
+        <div class="mdl-card mdl-shadow--4dp" style="width:auto">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Blogs</h2>
+          </div>
+
+          <!-- Blogs -->
+          <div *ng-for="#blog of blogs" class="mdl-card__supporting-text minds-channel-blog-sidebar-blogs"  style="min-height:0;">
+              <a class="mdl-color-text--grey-600" [router-link]="['/Blog-View', {guid: blog.guid}]" >
+                {{blog.title}}
+              </a>
+          </div>
+
+          <a class="mdl-card__supporting-text mdl-color-text--grey-600" [router-link]="['/Blog', {filter:'owner'}]">
+            View More
+          </a>
+        </div>
+
+      </div>
+
+      <div class="minds-spacer-2x"></div>
   </section>
 
   <!-- Feed list -->
