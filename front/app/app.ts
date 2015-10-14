@@ -72,7 +72,7 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
 
   { path: '/settings/:filter', component: Settings, as: 'Settings' },
 
-  { path: '/admin/analytics', component: AdminAnalytics, as: 'Admin-Analytics' },
+  { path: '/admin/:filter', component: AdminAnalytics, as: 'Admin' },
 
   { path: '/', component: Homepage, as: 'Homepage' }
 
@@ -88,6 +88,7 @@ export class Minds {
   constructor() {
     this.name = 'Minds';
   }
+
 }
 
 bootstrap(Minds, [ROUTER_PROVIDERS, provide(ROUTER_PRIMARY_COMPONENT, {useValue:Minds}), HTTP_PROVIDERS]);

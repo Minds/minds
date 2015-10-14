@@ -4,6 +4,8 @@
  */
 namespace Minds\Core\Navigation;
 
+use Minds\Core;
+
 class Manager{
 
 	static private $containers = array();
@@ -88,6 +90,18 @@ class Manager{
 			->addSubItem($discovery_featured)
 			->addSubItem($discovery_my);
 		self::add($discovery);
+
+		$admin = new Item();
+		$admin->setPriority(100)
+			->setIcon('settings_input_component')
+			->setName('Admin')
+			->setTitle('Admin')
+			->setPath('/Admin')
+			->setParams(array(
+				'filter' => 'analytics'
+			));
+		if(Core\Session::isLoggedIn() && Core\Session::getLoggedinUser()->isAdmin())
+			self::add($admin);
 	}
 
 	/**

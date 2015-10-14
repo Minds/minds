@@ -26,10 +26,16 @@ class active implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
       $db = new Core\Data\Call('entities_by_time');
 
-      $mam = array(
-        "month" => Helpers\Analytics::get("active", "month"),
-        "last-month" => Helpers\Analytics::get("active", "month", Helpers\Analytics::buildTS("last-month"))
-      );
+      $mam = array();
+      $time = (new DateTime('midnight first day of this month'))->modify("-6 months");
+      while($time->getTimestamp() < strtotime('midnight first day of this month')){
+        $timestamp = $time->modify("+1 month")->getTimestamp();
+        $mam[] = array(
+          'timestamp' => $timestamp,
+          'date' => date('m-Y', $timestamp),
+          'total' => Helpers\Analytics::get("active", "month", $timestamp)
+        );
+      }
 
       /**
        * Return daily active users
@@ -37,11 +43,13 @@ class active implements Interfaces\Api, Interfaces\ApiIgnorePam{
       $dam = array();
 
       $time = new DateTime('midnight last day of last month');
-      $day_of_month = 0;
       while($time->getTimestamp() < strtotime('midnight')){
-        $day_of_month++;
         $timestamp = $time->modify("+1 days")->getTimestamp();
-        $dam[$day_of_month] = Helpers\Analytics::get("active", "day", $timestamp);
+        $dam[] = array(
+          'timestamp' => $timestamp,
+          'date' => date('d-m-Y', $timestamp),
+          'total' => Helpers\Analytics::get("active", "day", $timestamp)
+        );
       }
 
       $response['monthly'] = $mam;
