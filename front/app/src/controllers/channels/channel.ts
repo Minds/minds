@@ -67,23 +67,8 @@ export class Channel {
       self.user = data.channel;
       if(self._filter == "feed")
       self.loadFeed(true);
-
-      this.client.get('api/v1/entities/owner/all/'+ self.user.guid, {limit:9, offset:""})
-      .then((data : any) => {
-        if(!data.entities)
-        return false;
-
-        self.media = data.entities;
-      });
-
-      this.client.get('api/v1/blog/owner/' + self.user.guid, { limit: 5, offset: ""})
-      .then((data : any) => {
-        if(!data.blogs)
-        return false;
-
-        self.blogs = data.blogs;
-      });
-
+      self.loadMedia();
+      self.loadBlogs();
     })
     .catch((e) => {
       console.log('couldnt load channel', e);
@@ -122,6 +107,28 @@ export class Channel {
         .catch(function(e){
           self.inProgress = false;
         });
+  }
+
+  loadMedia(){
+    var self = this;
+    this.client.get('api/v1/entities/owner/all/'+ this.user.guid, {limit:9, offset:""})
+    .then((data : any) => {
+      if(!data.entities)
+      return false;
+
+      self.media = data.entities;
+    });
+  }
+
+  loadBlogs(){
+    var self = this;
+    this.client.get('api/v1/blog/owner/' + self.user.guid, { limit: 5, offset: ""})
+    .then((data : any) => {
+      if(!data.blogs)
+      return false;
+
+      self.blogs = data.blogs;
+    });
   }
 
   isOwner(){
