@@ -31,7 +31,7 @@ export class LineGraph {
 
   y : number = 200;
   x : number = 500;
-  y_padding : number = 1;
+  y_padding : number = 0;
 
   constructor() {
     //this.calculate();
@@ -50,7 +50,7 @@ export class LineGraph {
       if(stat.total > max)
         max = stat.total;
     }
-    return max;
+    return max * 2;
   }
 
   calculate(){
@@ -62,12 +62,16 @@ export class LineGraph {
     var x_diff : number = this.x / x_count;
     var x_ticker : number = 0;
 
-    this.points = x_ticker + " " + this.y;
+    console.log('y bounds: ' + y_bounds, 'y_divi:' + y_divi);
+
+    //this.points = x_ticker + " " + this.y;
+    this.points = "";
     for(var stat of this.data){
-      x_ticker = x_ticker + x_diff;
-      var y_stat = this.y - (stat.total / y_divi) - (this.y_padding);
-      this.points += ", " + x_ticker + " " + y_stat;
-    }
+        var y_stat = this.y - (stat.total / y_divi) - (this.y_padding);
+        this.points +=  x_ticker + " " + y_stat + ",";
+         x_ticker = x_ticker + x_diff;
+     }
+    this.points = this.points.slice(0, -1);
 
   }
 
