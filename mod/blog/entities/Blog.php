@@ -33,10 +33,10 @@ class Blog extends \ElggObject {
 	public function getIconURL($size = ''){
 		if($this->header_bg){
 			global $CONFIG;
-			$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
-			$image = elgg_get_site_url() . 'fs/v1/banner/' .  $this->guid . '/'.$this->last_updated;
+			$base_url = Core\Config::build()->cdn_url ? Core\Config::build()->cdn_url : elgg_get_site_url();
+			$image = elgg_get_site_url() . 'fs/v1/banners/' .  $this->guid . '/'.$this->last_updated;
 
-			return $src;
+			return $image;
 		}
 
 		libxml_use_internal_errors(true);
