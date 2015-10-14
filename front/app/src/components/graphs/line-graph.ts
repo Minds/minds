@@ -8,25 +8,30 @@ import { GraphPoints } from './points';
 })
 @View({
   template: `
-    <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8" xmlns="http://www.w3.org/2000/svg" >
-      <!-- X Y, X Y (from top to bottom) -->
-      <polyline [points]="points"
-        style="fill:none;stroke-width:4"
-      />
+    <div [hidden]="!data"> <!-- Angular has svg problems... -->
+      <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8" xmlns="http://www.w3.org/2000/svg" >
+        <!-- X Y, X Y (from top to bottom) -->
+        <g class="points">
+          <polyline [points]="points"
+            style="fill:none;stroke-width:5;stroke-linejoin:round;"
+          />
+        </g>
 
-    </svg>
+      </svg>
+    </div>
+    <div class="mdl-spinner mdl-js-spinner is-active" [hidden]="data"></div>
   `,
   directives: [ CORE_DIRECTIVES, GraphSVG, GraphPoints ]
 })
 
 export class LineGraph {
 
-  data : Array<number>;
+  data : Array<any>;
   points : string = "0 200, 500 0";
 
   y : number = 200;
   x : number = 500;
-  y_padding : number = 20;
+  y_padding : number = 1;
 
   constructor() {
     //this.calculate();
@@ -41,14 +46,10 @@ export class LineGraph {
 
   getBounds(){
     var max = 0;
-    var min = this.data[0];
     for(var stat of this.data){
-      if(stat > max)
-        max = stat;
-      if(stat < min)
-        min = stat;
+      if(stat.total > max)
+        max = stat.total;
     }
-    //return max - min;
     return max;
   }
 
@@ -64,10 +65,10 @@ export class LineGraph {
     this.points = x_ticker + " " + this.y;
     for(var stat of this.data){
       x_ticker = x_ticker + x_diff;
-      var y_stat = this.y - (stat / y_divi);
+      var y_stat = this.y - (stat.total / y_divi) - (this.y_padding);
       this.points += ", " + x_ticker + " " + y_stat;
     }
-    console.log(this.points);
+
   }
 
 
