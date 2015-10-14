@@ -17,7 +17,7 @@ import { MindsBanner } from './banner';
       [src]="banner.src"
       [top]="banner.top_offset"
       [overlay]="true"
-      [hidden]="i != index"
+      [ng-class]="{'is-hidden': i != index}"
       [edit-mode]="editing"
       [done]="done"
       [(added)]="added"
@@ -40,12 +40,12 @@ export class MindsCarousel{
   done : boolean = false; //if set to true, tells the child component to return "added"
   rotate : boolean = true; //if set to true enabled rotation
   rotate_timeout; //the timeout for the rotator
-  interval : number = 1000; //the interval for each banner to stay before rotating
+  interval : number = 3000; //the interval for each banner to stay before rotating
   index : number = 0; //the current visible index of the carousel.
 
-	constructor(){
+  constructor(){
     this.run();
-	}
+  }
 
   /**
    * A list of banners are sent from the parent, if done are sent a blank one is entered
@@ -66,10 +66,13 @@ export class MindsCarousel{
   set _editMode(value : boolean){
     if(this.editing){
       this._done();
-      return true;
+      return;
     }
 
     this.editing = value;
+    if(!this.editing){
+      return;
+    }
     this.rotate = false;
     var blank_banner = false;
     for(var i in this.banners){
@@ -136,7 +139,7 @@ export class MindsCarousel{
           this.index++;
       }
       this.run();
-    },1000);
+    },this.interval);
   }
 
 }

@@ -185,8 +185,22 @@ minds-carousel{
   height: 380px;
   //z-index:-1;
 
-  .minds-banner{
-    max-height:none;
+  minds-banner{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    &.is-hidden .minds-banner{
+      opacity:0;
+    }
+    
+    .minds-banner{
+      max-height:none;
+      opacity:1;
+      transition: opacity .25s ease-in-out;
+      -moz-transition: opacity .25s ease-in-out;
+      -webkit-transition: opacity .25s ease-in-out;
+    }
   }
 
   > i{
