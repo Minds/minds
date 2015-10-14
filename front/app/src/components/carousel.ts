@@ -127,7 +127,7 @@ export class MindsCarousel{
   run(){
     if(this.rotate_timeout)
       clearTimeout(this.rotate_timeout);
-    setTimeout(() => {
+    this.rotate_timeout = setTimeout(() => {
       if(this.rotate){
         var max = this.banners.length -1;
         if(this.index >= max)
