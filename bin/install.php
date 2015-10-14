@@ -90,6 +90,7 @@ $guid = register_user(
                     $args['email']
                     );
 $user = new Minds\Entities\User($guid);
+$user->admin = "yes";
 $user->validated = true;
 $user->validated_method = 'admin_user';
 $user->save();
