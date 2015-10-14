@@ -1,4 +1,4 @@
-import { EventEmitter, Observable, Injector, bind } from 'angular2/angular2';
+import { EventEmitter, Observable, Injector, provide } from 'angular2/angular2';
 
 export class Scroll{
   scroll = new EventEmitter();
@@ -28,9 +28,7 @@ export class Scroll{
 
 
 var injector = Injector.resolveAndCreate([
-	bind(Scroll).toFactory(() => {
-		return new Scroll();
-	})
+	provide(Scroll, { useFactory: () => new Scroll() })
 ]);
 
 export class ScrollFactory {

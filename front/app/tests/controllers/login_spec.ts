@@ -13,8 +13,8 @@ import {
 } from 'angular2/test';
 
 import {Component, View, ViewMetadata, UrlResolver, bind} from 'angular2/angular2';
-import { HTTP_BINDINGS } from 'angular2/http';
-import { ROUTER_BINDINGS, ROUTER_DIRECTIVES } from 'angular2/router';
+import { HTTP_PROVIDERS } from 'angular2/http';
+import { ROUTER_PROVIDERS, ROUTER_DIRECTIVES } from 'angular2/router';
 
 import {DOM} from 'angular2/src/core/dom/dom_adapter';
 import { Login as LoginComponent } from 'src/controllers/login';

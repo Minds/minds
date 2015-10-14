@@ -1,6 +1,6 @@
-import {Component, View, bind, bootstrap} from 'angular2/angular2';
-import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_BINDINGS, ROUTER_PRIMARY_COMPONENT} from 'angular2/router';
-import {HTTP_BINDINGS} from 'angular2/http';
+import {Component, View, provide, bootstrap} from 'angular2/angular2';
+import {RouteConfig, Route, ROUTER_DIRECTIVES, ROUTER_PROVIDERS, ROUTER_PRIMARY_COMPONENT} from 'angular2/router';
+import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {Topbar} from './src/components/topbar';
 import {SidebarNavigation} from './src/components/sidebar-navigation';
@@ -19,6 +19,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
 import {Search} from './src/controllers/search/search';
 import {Wallet} from './src/controllers/wallet/wallet';
 import {Settings} from './src/controllers/settings/settings';
+import {AdminAnalytics} from './src/controllers/admin/analytics';
 
 /**
  * TODO: Load these automagically from gulp
@@ -71,6 +72,8 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
 
   { path: '/settings/:filter', component: Settings, as: 'Settings' },
 
+  { path: '/admin/analytics', component: AdminAnalytics, as: 'Admin-Analytics' },
+
   { path: '/', component: Homepage, as: 'Homepage' }
 
 ])
@@ -87,4 +90,4 @@ export class Minds {
   }
 }
 
-bootstrap(Minds, [ROUTER_BINDINGS, bind(ROUTER_PRIMARY_COMPONENT).toValue(Minds), HTTP_BINDINGS]);
+bootstrap(Minds, [ROUTER_PROVIDERS, provide(ROUTER_PRIMARY_COMPONENT, {useValue:Minds}), HTTP_PROVIDERS]);

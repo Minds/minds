@@ -1,0 +1,23 @@
+<div class="mdl-grid" style="max-width:990px">
+
+  <!-- Daily active users -->
+  <div class="mdl-cell mdl-cell--col-4 mdl-card">
+    <div class="mdl-card__title">
+      <h3>Daily Active User</h3>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <minds-graph-line [data]="dam"></minds-graph-line>
+    </div>
+  </div>
+
+  <!-- Monthly active users -->
+  <div class="mdl-cell mdl-cell--col-4 mdl-card">
+    <div class="mdl-card__title">
+      <h3>Monthly Active User</h3>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <minds-graph-line [data]="mam"></minds-graph-line>
+    </div>
+  </div>
+
+</div>
