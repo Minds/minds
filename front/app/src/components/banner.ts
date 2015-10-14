@@ -5,13 +5,14 @@ import { Material } from 'src/directives/material';
 
 @Component({
   selector: 'minds-banner',
-  inputs: ['_object: object', '_src: src', '_top: top', '_editMode: editMode'],
+  inputs: ['_object: object', '_src: src', '_top: top', 'overlay', '_editMode: editMode', '_done: done'],
   outputs: ['added']
 })
 @View({
   template: `
   <div class="minds-banner" *ng-if="!editing">
     <img src="{{src}}" [ng-style]="{'top': top}"/>
+    <div class="minds-banner-overlay"></div>
   </div>
   <div *ng-if="editing" class="minds-banner minds-banner-editing">
     <img src="{{src}}" (dragstart)="dragstart($event)" (dragover)="drag($event)" (dragend)="dragend($event)"/>
@@ -41,6 +42,7 @@ export class MindsBanner{
   object;
   editing : boolean = false;
   src : string = "";
+  index : number = 0;
 
   file : any;
   startY : number = 0;
@@ -95,8 +97,17 @@ export class MindsBanner{
     this.file = null;
   }
 
+  /**
+   * An upstream done event, which triggers the export process. Usually called from carousels
+   */
+  set _done(value : boolean){
+    if(value)
+      this.done();
+  }
+
   done(){
     this.added.next({
+      index: this.index,
       file: this.file,
       top: this.top
     });

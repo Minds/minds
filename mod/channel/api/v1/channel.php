@@ -64,7 +64,9 @@ class channel implements Interfaces\Api{
         if($carousels){
             foreach($carousels as $carousel){
                $response['channel']['carousels'][] = array(
-                    'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
+                  'guid' => $carousel->guid,
+                  'top_offset' => $carousel->top_offset,
+                  'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
                 );
             }
         }

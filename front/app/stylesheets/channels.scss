@@ -20,6 +20,10 @@ minds-channel{
       padding:0;
     }
 
+    .channel-header-bar{
+      z-index:2;
+    }
+
     .minds-channel-title{
       @include flex-display();
       margin:0;

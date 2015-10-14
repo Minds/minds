@@ -1,11 +1,12 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
 import { Router, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
-import { Client } from 'src/services/api';
+import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from 'src/services/session';
 import { ScrollFactory } from 'src/services/ux/scroll';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
+import { MindsCarousel } from 'src/components/carousel';
 
 import { AutoGrow } from 'src/directives/autogrow';
 import { Activity } from 'src/controllers/newsfeed/activity';
@@ -19,11 +20,12 @@ import { ChannelEdit } from './edit';
 
 @Component({
   selector: 'minds-channel',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity, AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit ]
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity,
+    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel ]
 })
 
 export class Channel {
@@ -39,11 +41,11 @@ export class Channel {
   offset : string = "";
   moreData : boolean = true;
   inProgress : boolean = false;
-  editing : string = "";
+  editing : boolean = false
   error: string = "";
 
 
-  constructor(public client: Client, params: RouteParams){
+  constructor(public client: Client, public upload: Upload, params: RouteParams){
       this.username = params.params['username'];
       if(params.params['filter'])
         this._filter = params.params['filter'];
@@ -54,18 +56,18 @@ export class Channel {
   load(){
     var self = this;
     this.client.get('api/v1/channel/' + this.username, {})
-              .then((data : MindsChannelResponse) => {
-                if(data.status != "success"){
-                  self.error = data.message;
-                  return false;
-                }
-                self.user = data.channel;
-                if(self._filter == "feed")
-                  self.loadFeed(true);
-                })
-              .catch((e) => {
-                console.log('couldnt load channel', e);
-                });
+      .then((data : MindsChannelResponse) => {
+        if(data.status != "success"){
+          self.error = data.message;
+          return false;
+        }
+        self.user = data.channel;
+        if(self._filter == "feed")
+          self.loadFeed(true);
+        })
+      .catch((e) => {
+        console.log('couldnt load channel', e);
+        });
   }
 
   loadFeed(refresh : boolean = false){
@@ -106,11 +108,8 @@ export class Channel {
     return this.session.getLoggedInUser().guid == this.user.guid;
   }
 
-  toggleEditing(section : string){
-    if(this.editing == section)
-      this.editing = "";
-    else
-      this.editing = section;
+  toggleEditing(){
+    this.editing = !this.editing;
   }
 
   onScroll(){
@@ -120,6 +119,11 @@ export class Channel {
       if(view.top < 250)
         this.isLocked = false;
     });
+  }
+
+  set carousel(value : any){
+    console.log('carousel editing done', value);
+    this.upload.post('api/v1/channel/' + this.user.guid + '/carousel');
   }
 
   updateField(field : string){
