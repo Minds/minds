@@ -20,7 +20,8 @@ export class AdminAnalytics {
   boost_newsfeed = {
     review: 0,
     approved: 0,
-    percent: 50
+    percent: 50,
+    total: 0
   };
 
   constructor(public client: Client, public params : RouteParams){

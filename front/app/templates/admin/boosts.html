@@ -1,0 +1,17 @@
+
+<div class="mdl-grid minds-boosts" style="max-width:600px">
+
+  <!-- Daily active users -->
+  <div class="mdl-cell mdl-cell--12-col">
+    <div class="mdl-card mdl-shadow-2dp boost" *ng-for="#entity of entities; #i = index" [hidden]="i != 0">
+
+      <minds-activity [object]="entity" class="mdl-card mdl-shadow--2dp"></minds-activity>
+
+      <div class="mdl-card__supporting-text">
+        Accept / Reject
+      </div>
+
+    </div>
+  </div>
+
+</div>

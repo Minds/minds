@@ -19,7 +19,7 @@ import {Notifications} from './src/controllers/notifications/notifications';
 import {Search} from './src/controllers/search/search';
 import {Wallet} from './src/controllers/wallet/wallet';
 import {Settings} from './src/controllers/settings/settings';
-import {AdminAnalytics} from './src/controllers/admin/analytics';
+import {Admin} from './src/controllers/admin/admin';
 
 /**
  * TODO: Load these automagically from gulp
@@ -72,7 +72,7 @@ import {Groups, GroupsProfile, GroupsCreator} from './src/plugins/groups/groups'
 
   { path: '/settings/:filter', component: Settings, as: 'Settings' },
 
-  { path: '/admin/:filter', component: AdminAnalytics, as: 'Admin' },
+  { path: '/admin/:filter', component: Admin, as: 'Admin' },
 
   { path: '/', component: Homepage, as: 'Homepage' }
 
