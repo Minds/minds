@@ -181,6 +181,12 @@ export class Channel {
                 });
   }
 
+  delete(activity){
+    for(var i in this.feed){
+      if(this.feed[i] == activity)
+        this.feed.splice(i,1);
+    }
+  }
 }
 
 export { ChannelSubscribers } from './subscribers';

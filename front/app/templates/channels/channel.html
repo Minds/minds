@@ -136,7 +136,7 @@
 
     <div class="minds-list">
 
-        <minds-activity *ng-for="#activity of feed" [object]="activity" class="mdl-card mdl-shadow--4dp item"></minds-activity>
+        <minds-activity *ng-for="#activity of feed" [object]="activity" class="mdl-card mdl-shadow--4dp item" (delete)="delete(activity)"></minds-activity>
         <infinite-scroll
             distance="25%"
             (load)="loadFeed()"
