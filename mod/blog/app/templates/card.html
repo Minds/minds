@@ -1,4 +1,7 @@
-<a [router-link]="['/Blog-View', {guid: blog.guid}]" class="mdl-card__title minds-blog-thumbnail" style="height:200px; background:#333" [ng-style]="{background: '#333 url(/api/v1/blog/header/' + blog.guid + ') center center'}">
+<a [router-link]="['/Blog-View', {guid: blog.guid}]"
+  class="mdl-card__title minds-blog-thumbnail"
+  style="height:200px; background:#333"
+  [ng-style]="{background: '#333 url(' + blog.thumbnail_src + ') center center'}">
 </a>
 
 <!-- Owner block -->

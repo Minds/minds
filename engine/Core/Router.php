@@ -13,6 +13,7 @@ class Router{
 		"/icon" => "minds\\pages\\icon",
 		"/api" => "minds\\pages\\api\\api",
 		"/fs" => "minds\\pages\\fs\\fs",
+		'/thumbProxy' => "minds\\pages\\thumbProxy",
     //  "/app" => "minds\\pages\\app",
     "/emails/unsubscribe" => "minds\\pages\\emails\\unsubscribe"
 	);

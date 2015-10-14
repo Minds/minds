@@ -1,6 +1,8 @@
 <?php
 namespace Minds\plugin\blog\entities;
 
+use Minds\Core;
+
 class Blog extends \ElggObject {
 
 	/**
@@ -32,13 +34,31 @@ class Blog extends \ElggObject {
 		if($this->header_bg){
 			global $CONFIG;
 			$base_url = $CONFIG->cdn_url ? $CONFIG->cdn_url : elgg_get_site_url();
-			$image = elgg_get_site_url() . 'blog/header/'.$this->guid . '/'.$this->last_updated;
-			$src = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2708';
-			if($size)
-				$src .= '&width='.$size;
+			$image = elgg_get_site_url() . 'fs/v1/banner/' .  $this->guid . '/'.$this->last_updated;
+
 			return $src;
 		}
-		return minds_fetch_image($this->description, $this->owner_guid, $size);
+
+		libxml_use_internal_errors(true);
+		$dom = new \DOMDocument();
+		$dom->strictErrorChecking = FALSE;
+		$dom->loadHTML($this->description);
+		$nodes = $dom->getElementsByTagName('img');
+		foreach ($nodes as $img) {
+			$image = $img->getAttribute('src');
+		}
+		$base_url = Core\Config::build()->cdn_url ? Core\Config::build()->cdn_url: elgg_get_site_url();
+		$image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2708';
+		if($width){
+			$image .= '&width=' . $width;
+		}
+		return $image;
+	}
+
+	public function export(){
+		$export = parent::export();
+		$export['thumbnail_src'] = $this->getIconUrl();
+		return $export;
 	}
 
 }
