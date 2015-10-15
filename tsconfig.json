@@ -122,7 +122,6 @@
         "front/app/src/services/api.ts",
         "front/app/src/services/api/client.ts",
         "front/app/src/services/api/upload.ts",
-        "front/app/src/services/browser-fixes.ts",
         "front/app/src/services/cookie.ts",
         "front/app/src/services/navigation.ts",
         "front/app/src/services/session.ts",
