@@ -23,6 +23,7 @@
         "front/app/src/components/banner.ts",
         "front/app/src/components/buttons.ts",
         "front/app/src/components/buttons/comment.ts",
+        "front/app/src/components/buttons/feature.ts",
         "front/app/src/components/buttons/remind.ts",
         "front/app/src/components/buttons/subscribe.ts",
         "front/app/src/components/buttons/thumbs-down.ts",

@@ -1,6 +1,7 @@
 // Type definitions for Minds
 interface Minds{
  LoggedIn : boolean;
+ Admin ?: boolean;
  user: any;
  wallet : any;
  navigation: MindsNavigation | any;

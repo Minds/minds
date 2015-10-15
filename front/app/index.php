@@ -53,6 +53,7 @@ ini_set( 'display_errors','1');
         <?php
             $minds = array(
                 "LoggedIn" => Minds\Core\Session::isLoggedIn() ? true : false,
+                "Admin" => Minds\Core\Session::isAdmin() ? true : false,
                 "cdn_url" => Minds\Core\Config::build()->cdn_url,
                 "navigation" => Minds\Core\Navigation\Manager::export()
               );
