@@ -20,25 +20,11 @@ minds-app{
 
 minds-topbar{
 
-  .mdl-layout__drawer-button{
-    color: rgba(0, 0, 0, 0.54) !important;
-  }
-  .mdl-layout__header-row{
-    padding-left:$minds-padding*4;
-  }
-
   .minds-logo{
-    /*position:absolute;
-    top:0;
-    left:0;
-    height:64px;
-    box-sizing: border-box;
-    padding:$minds-padding $minds-padding $minds-padding*2;*/
 
     height: 64px;
     box-sizing: border-box;
     padding: $minds-padding 0 $minds-padding*2;
-    margin-right: $minds-padding*4;
 
     img{
       height:100%;
@@ -89,123 +75,18 @@ minds-topbar{
     }
   }
 
-   .minds-menu-button {
-    display:none;
-
-    i{
-        padding:12px 0;
-    }
-  }
 }
 
-
-.mdl-layout__drawer {
-  /*width:100px;*/
-  width:80px;
-  //height:calc(100% - 64px);
-  //top: 64px;
-}
-.mdl-layout--fixed-drawer>.mdl-layout__content{
-  margin-left:80px;
-}
-
-
-.minds-sidebar{
-  border:0;
-  margin-top:64px;
-  height: calc(100% - 64px);
-
-  minds-sidebar-navigation{
-    padding-top:0 !important;
-
-    .minds-account{
-      padding:$minds-padding*2;
-
-      img{
-        border-radius:50%;
-      }
-
-      .minds-account-dropdown{
-        @include flex-display();
-
-        position: relative;
-        -webkit-box-orient: horizontal;
-        @include flex-direction(row);
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        width: 100%;
-      }
-    }
-
-    nav.minds-navigation{
-      padding-top:0 !important;
-      @include flex(1);
-      flex-grow: 1;
-
-      .mdl-navigation__link{
-        display: -webkit-box !important;
-        display: -webkit-flex !important;
-        display: -ms-flexbox !important;
-        display: flex !important;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        font-weight: 700;
-        padding: 24px 38px;
-        font-weight:200;
-        font-size:11px;
-        text-transform: lowercase;
-        font-family: 'Lato', 'Helvetica', sans-serif;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-
-        .material-icons {
-          font-size: 26px;
-          color: rgba(255, 255, 255, 0.56);
-        }
-      }
-
-      .mdl-navigation__link.subitem{
-        padding:$minds-padding*1.5 38px;
-        .material-icons {
-          font-size: 24px;
-        }
-      }
-
-    }
-
-  }
-}
-
-@media screen and (max-width: 1024px){
+@media screen and (max-width: $min-desktop){
   minds-topbar {
 
-    .minds-menu-button{
-      display:block;
-    }
-    .mdl-layout__header-row{
-      padding-left:72px;
-    }
     minds-search-bar{
       width:45%;
     }
   }
-  .mdl-layout__drawer {
-    margin-top:56px;
-  }
-  .mdl-layout--fixed-drawer>.mdl-layout__content {
-    margin-left:0;
-  }
 }
 
-@media screen and (max-width: 720px){
+@media screen and (max-width: $max-mobile){
   minds-topbar {
     .minds-logo{
       display:none;
@@ -257,10 +138,6 @@ minds-topbar{
     font-weight: 100;
     font-size: 41px;
   }
-}
-
-.mobile-ad{
-  min-height:0;
 }
 
 .minds-spacer{
@@ -322,19 +199,11 @@ blockquote { quotes: ''; }
 blockquote:before { content: '\201C'; }
 blockquote:after { content: '\201D'; }
 
-@import 'homepage.scss';
-@import 'feeds.scss';
-@import 'channels.scss';
-@import 'capture.scss';
-@import 'directives.scss';
-@import 'buttons.scss';
-@import 'cards.scss';
-@import 'comments.scss';
-@import 'boost.scss';
-@import 'settings.scss';
-@import 'wallet.scss';
-@import 'components.scss';
-@import 'admin.scss';
+@import 'core/*';
+
+@import 'components/*';
+@import 'controllers/*';
+
 
 @import 'plugins.scss';
 @import 'overrides.scss';
