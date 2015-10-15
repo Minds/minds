@@ -14,8 +14,8 @@ import { ScrollFactory } from 'src/services/ux/scroll';
 
 @Component({
   selector: 'minds-activity',
-  viewBindings: [ Client ],
-  properties: ['object'],
+  viewProviders: [ Client ],
+  inputs: ['object'],
   outputs: [ '_delete: delete']
 })
 @View({

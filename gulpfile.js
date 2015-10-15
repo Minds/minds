@@ -1,8 +1,10 @@
 'use strict';
 
 var gulp = require('gulp');
+var autoprefixer = require('gulp-autoprefixer');
 var bump = require('gulp-bump');
 var concat = require('gulp-concat');
+var cssGlobbing = require('gulp-css-globbing');
 var filter = require('gulp-filter');
 var inject = require('gulp-inject');
 var inlineNg2Template = require('gulp-inline-ng2-template');
@@ -78,6 +80,18 @@ PATH.src.lib = PATH.src.loader
 
 
 var HTMLMinifierOpts = { conditionals: true };
+
+var AUTOPREFIXER_BROWSERS = [
+  'ie >= 10',
+  'ie_mob >= 10',
+  'ff >= 30',
+  'chrome >= 34',
+  'safari >= 7',
+  'opera >= 23',
+  'ios >= 7',
+  'android >= 4.4',
+  'bb >= 10'
+];
 
 var tsProject = tsc.createProject('tsconfig.json', {
   typescript: require('typescript')
@@ -181,7 +195,9 @@ gulp.task('build.plugins.scss', function () {
  */
 gulp.task('build.scss', ['build.plugins.scss'], function () {
 	  var result = gulp.src('./front/app/**/*scss')
+      .pipe(cssGlobbing({  extensions: ['.scss'] }))
 	    .pipe(sass().on('error', sass.logError))
+      .pipe(autoprefixer(AUTOPREFIXER_BROWSERS))
 	    .pipe(gulp.dest(PATH.dest.dev.all));
 
 	  return result;

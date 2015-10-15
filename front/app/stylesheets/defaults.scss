@@ -14,6 +14,12 @@ $minds-margin: 8px;
 $minds-top-height: 50px;
 $minds-navigation-width: 232px;
 
+$min-mobile: 330px;
+$max-mobile: 480px;
+$min-tablet: 768px;
+$min-desktop: 992px;
+$min-huge: 1280px;
+
 
 @mixin flex-display(){
   display: -webkit-flex;

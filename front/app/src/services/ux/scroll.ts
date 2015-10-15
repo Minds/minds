@@ -5,8 +5,9 @@ export class Scroll{
   view : any;
 
   constructor(){
-    this.view = document.getElementsByClassName('mdl-layout__content')[0];
-    this.view.addEventListener('scroll', (position) => {
+    this.view = document.getElementsByTagName('body')[0];
+    this.view.scrollTop = 0;
+    document.addEventListener('scroll', (position) => {
       this.scroll.next({ top: this.view.scrollTop, height: this.view.clientHeight });
     });
   }

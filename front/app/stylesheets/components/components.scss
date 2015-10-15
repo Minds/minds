@@ -1,4 +1,4 @@
-@import 'defaults.scss';
+@import '../defaults.scss';
 
 .minds-banner{
   position:relative;
@@ -193,7 +193,7 @@ minds-carousel{
     &.is-hidden .minds-banner{
       opacity:0;
     }
-    
+
     .minds-banner{
       max-height:none;
       opacity:1;

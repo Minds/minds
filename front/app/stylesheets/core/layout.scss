@@ -1,0 +1,119 @@
+@import '../defaults.scss';
+
+$layout-header-height: 64px;
+$layout-sidebar-width: 80px;
+
+minds-app{
+
+  width: 100%;
+  min-width:$min-mobile;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  position: relative;
+
+  minds-topbar{
+    position:fixed;
+    top:0;
+    left:0;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    flex-shrink: 0;
+
+    width: 100%;
+    min-width:$min-mobile;
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-height: $layout-header-height;
+    max-height: 1000px;
+    z-index: 3;
+
+    background: #FFF;
+
+    .minds-menu-button {
+      display:none;
+
+      i{
+       padding:12px 0;
+      }
+    }
+
+    .minds-header-row{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      align-self: stretch;
+      align-items: center;
+      height: $layout-header-height;
+      margin: 0;
+      padding-left:28px;
+      padding-right:$minds-padding * 2;
+
+      @media screen and (max-width: $min-tablet){
+        padding-left:56px;
+      }
+    }
+
+    @media screen and (max-width: $min-tablet){
+      .minds-menu-button {
+        display:block;
+      }
+    }
+
+  }
+
+  minds-body{
+    display: inline-block;
+    overflow:visible;
+    flex-grow: 1;
+    z-index: 1;
+    margin-top:$layout-header-height;
+    margin-left:$layout-sidebar-width;
+
+    @media screen and (max-width: $min-tablet){
+      margin-left:0;
+    }
+  }
+
+  minds-sidebar{
+    border: 0;
+    position: fixed;
+    margin-top: $layout-header-height;
+    height: calc(100% - 64px);
+    width:$layout-sidebar-width;
+    transform: translateX(0px);
+    box-shadow:0;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    max-height: 100%;
+    top: 0;
+    left: 0;
+
+    box-sizing: border-box;
+    background: #fafafa;
+
+    transform: translateX(-250px);
+    transform-style: preserve-3d;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-property: transform;
+    color: #424242;
+    overflow: visible;
+    overflow-y: auto;
+    z-index: 5;
+
+    @media screen and (min-width: $min-tablet){
+      transform: translateX(0);
+    }
+  }
+}
