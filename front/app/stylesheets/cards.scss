@@ -255,6 +255,9 @@ minds-activity.mdl-card{
    */
   minds-remind{
     margin:$minds-margin * 2;
+    width:auto;
+    min-height:0;
+    overflow: visible;
   }
 
 
