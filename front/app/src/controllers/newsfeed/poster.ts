@@ -11,7 +11,7 @@ import { SessionFactory } from 'src/services/session';
   selector: 'minds-newsfeed-poster',
   viewBindings: [ Client, Upload ],
   inputs: [ '_container_guid: containerGuid', 'accessId'],
-  events: ['loadHandler: load']
+  outputs: ['load']
 })
 @View({
   templateUrl: 'templates/newsfeed/poster.html',
@@ -26,7 +26,7 @@ export class Poster {
     isVideo : false,
     mimeType : ""
   }
-  loadHandler: EventEmitter = new EventEmitter();
+  load: EventEmitter = new EventEmitter();
   inProgress : boolean = false;
 
   attachment_preview;
@@ -65,7 +65,7 @@ export class Poster {
     this.inProgress = true;
     this.client.post('api/v1/newsfeed', this.postMeta)
       .then(function(data){
-  			self.loadHandler.next(data.activity);
+  			self.load.next(data.activity);
         self.inProgress = false;
         //reset
         self.postMeta = {
@@ -79,6 +79,7 @@ export class Poster {
           container_guid: self.postMeta.container_guid
         }
         self.attachment_preview = null;
+        self.attachment_progress = 0;
   		})
   		.catch(function(e){
   			self.inProgress = false;
@@ -122,6 +123,7 @@ export class Poster {
         file.files = [];
         self.canPost = true;
         self.attachment_progress = 0;
+        self.attachment_preview = null;
       });
 
   }

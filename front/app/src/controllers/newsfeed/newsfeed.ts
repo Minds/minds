@@ -12,8 +12,7 @@ import { GraphImpressions } from 'src/components/graphs/impressions';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewBindings: [ Client, Upload ],
-//  inputs: [ "prepend" ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
@@ -87,7 +86,7 @@ export class Newsfeed {
 				});
 	}
 
-  set prepend(activity){
+  prepend(activity : any){
     this.newsfeed.unshift(activity);
   }
 

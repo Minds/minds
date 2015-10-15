@@ -2,7 +2,7 @@
 
     <div class="mdl-cell mdl-cell--8-col">
 
-        <minds-newsfeed-poster [(load)]="prepend"></minds-newsfeed-poster>
+        <minds-newsfeed-poster (load)="prepend($event)"></minds-newsfeed-poster>
 
         <div class="minds-list">
 
