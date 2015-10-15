@@ -60,7 +60,11 @@ minds-card-user, .minds-banner-card{
 
   minds-button-feature{
     position: absolute;
-    margin: -38px 247px;
+    top: 8px;
+    right: 8px;
+    button {
+      padding:0;
+    }
   }
 
   .minds-tabs{
