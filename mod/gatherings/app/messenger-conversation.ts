@@ -70,7 +70,7 @@ export class MessengerConversation {
         offset: this.offset,
         cachebreak: Date.now(),
         decrypt: true,
-        password: this.storage.get('private-key')
+        password: encodeURIComponent(this.storage.get('private-key'))
       })
       .then((data : MindsUserConversationResponse) =>{
 
