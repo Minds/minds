@@ -4,6 +4,7 @@ namespace Minds\Api;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Core\Security;
+use Minds\Core\Session;
 /**
  * The minds API factory
   */
@@ -51,6 +52,8 @@ class Factory{
             $class_name = "\\minds\\pages\\api\\$route";
             if(class_exists($class_name)){
                 $handler = new $class_name();
+                if($handler instanceof Interfaces\ApiAdminPam)
+                    self::adminCheck();
                 if(!$handler instanceof Interfaces\ApiIgnorePam)
                     self::pamCheck();
                 $pages = array_splice($segments, $loop) ?: array();
@@ -87,7 +90,7 @@ class Factory{
      * Check if a user is an admin
      */
     private static function adminCheck(){
-      if(Core\Session::isLoggedIn && Core\Session::getLoggedinUser()->isAdmin()){
+      if(Session::isLoggedIn() && Session::getLoggedinUser()->isAdmin()){
         return true;
       } else {
         error_log('security: unauthorized access to admin api');
@@ -96,6 +99,7 @@ class Factory{
         header("Access-Control-Allow-Origin: *");
         header('HTTP/1.1 401 Unauthorized', true, 401);
         echo json_encode(array('error'=>'You are not an admin', 'code'=>401));
+        exit;
       }
     }
 
