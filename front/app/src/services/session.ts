@@ -28,6 +28,15 @@ export class Session {
 		return false
 	}
 
+	isAdmin(){
+		if(!this.isLoggedIn)
+			return false;
+		if(window.Minds.Admin)
+			return true;
+
+		return false;
+	}
+
 	/**
 	 * Get the loggedin user
 	 */

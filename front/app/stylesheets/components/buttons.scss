@@ -1,6 +1,6 @@
 @import '../defaults.scss';
 
-minds-button-subscribe, minds-groups-join-button, minds-button-edit{
+minds-button-subscribe, minds-groups-join-button, minds-button-edit, minds-button-feature{
 
   button{
     cursor:pointer;
@@ -13,10 +13,19 @@ minds-button-subscribe, minds-groups-join-button, minds-button-edit{
     text-transform: uppercase;
   }
 
-  button:hover,button.subscribed{
-    background-color: #78909c;
-    color:#FFF;
+  &:focus,button:focus{
+    outline: none;
+    -webkit-appearance:none;
   }
+
+  button:hover,button.subscribed,button.selected{
+    background-color: #78909c;
+    color:#FFF !important;
+  }
+}
+
+minds-button-feature > button{
+  padding:4px;
 }
 
 .minds-boost-button{

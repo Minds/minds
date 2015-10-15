@@ -105,6 +105,20 @@ class Session extends base{
 	}
 
 	/**
+	 * Check if the user is an admin
+	 */
+	static public function isAdmin(){
+		if(!self::isLoggedin())
+			return false;
+
+		$user = self::getLoggedinUser();
+		if($user->isAdmin())
+			return true;
+
+		return false;
+	}
+
+	/**
 	 * Get the logged in user entity
 	 */
 	static public function getLoggedinUser(){

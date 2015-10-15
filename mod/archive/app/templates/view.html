@@ -29,10 +29,12 @@
       <minds-button-edit [router-link]="['/Archive-Edit', { guid: entity.guid }]" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
         <button>Edit</button>
       </minds-button-edit>
-      
+
       <minds-button-edit (click) ="delete()"  *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
-        <button>Delete</button>
+        <button>X</button>
       </minds-button-edit>
+
+      <minds-button-feature [object]="entity" *ng-if="session.isAdmin()"></minds-button-feature>
 
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="entity"></minds-button-remind>
