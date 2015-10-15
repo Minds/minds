@@ -152,8 +152,8 @@ minds-channel{
   }
 
   .minds-channel-blog-sidebar-blogs{
-    padding: 8px;
-    padding-left: 16px;
+    padding: $minds-padding;
+    padding-left: $minds-margin*2;
 
     a{
       text-decoration: none;
@@ -161,6 +161,10 @@ minds-channel{
     a:hover{
       text-decoration: underline;
     }
+  }
+
+  .minds-channel-sidebar-loader{
+    margin-left: $minds-margin*2;
   }
 
   @media screen and (max-width: 720px){

@@ -97,6 +97,7 @@
             <img src="object.thumbnail_src"/>
           </a>
         </div>
+        <div class="mdl-spinner mdl-js-spinner is-active minds-channel-sidebar-loader" [mdl] [hidden]="!loadingMedia"></div>
 
         <a class="mdl-card__supporting-text mdl-color-text--grey-600" [router-link]="['/Discovery', {filter:'owner', type:'all'}]">
           View More
@@ -119,6 +120,7 @@
             {{blog.title}}
           </a>
         </div>
+        <div class="mdl-spinner mdl-js-spinner is-active minds-channel-sidebar-loader" [mdl] [hidden]="!loadingBlogs"></div>
 
         <a class="mdl-card__supporting-text mdl-color-text--grey-600" [router-link]="['/Blog', {filter:'owner'}]">
           View More

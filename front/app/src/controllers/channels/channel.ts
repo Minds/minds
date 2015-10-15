@@ -45,7 +45,8 @@ export class Channel {
   error: string = "";
   media : Array<Object> = [];
   blogs : Array<Object> = [];
-
+  isLoadingMedia : boolean = false;
+  isLoadingBlogs : boolean = false;
 
   constructor(public client: Client, public upload: Upload, params: RouteParams){
       this.username = params.params['username'];
@@ -87,6 +88,8 @@ export class Channel {
     }
 
     this.inProgress = true;
+    this.isLoadingMedia = true;
+    this.isLoadingBlogs = true;
 
     this.client.get('api/v1/newsfeed/personal/' + this.user.guid, {limit:12, offset: this.offset}, {cache: true})
         .then((data : MindsActivityObject) => {
@@ -117,6 +120,10 @@ export class Channel {
       return false;
 
       self.media = data.entities;
+      self.isLoadingMedia = false;
+    })
+    .catch(function(e){
+      self.isLoadingMedia = false;
     });
   }
 
@@ -128,6 +135,10 @@ export class Channel {
       return false;
 
       self.blogs = data.blogs;
+      self.isLoadingBlogs = false;
+    })
+    .catch(function(e){
+      self.isLoadingBlogs = false;
     });
   }
 
