@@ -1,4 +1,4 @@
-import { Directive, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
+import { Directive, ElementRef, Inject } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
@@ -11,18 +11,16 @@ import { Material as MaterialService } from "src/services/ui";
 
 export class MaterialTextfield{
 
-  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
+  element : any;
 
-    MaterialService.updateElement(viewContainer.element.nativeElement);
-    setTimeout(() => {
-      if(viewContainer.element.nativeElement.MaterialTextfield)
-        viewContainer.element.nativeElement.MaterialTextfield.change();
-    }, 500);
+  constructor(_element : ElementRef) {
+    this.element = _element.nativeElement;
+
+    MaterialService.updateElement(this.element);
 
   }
 
   change(){
-    console.log('textfield changed');
   }
 
 }

@@ -6,7 +6,7 @@ declare var tinymce;
 @Component({
   selector: 'minds-tinymce',
   properties: [ '_content: content' ],
-  events: [ 'update: content' ]
+  events: [ 'update: contentChange' ]
 })
 @View({
   template: `
@@ -33,11 +33,11 @@ export class MindsTinymce {
       menubar: false,
       toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media",
       statusbar: false,
-      plugins: [
+    /*  plugins: [
 	         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-	         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+	         "wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 	         "save table directionality emoticons template paste autoresize"
-	   ],
+	   ],*/
       setup: (ed) => {
 
         this.editor = ed;
@@ -58,14 +58,18 @@ export class MindsTinymce {
   }
 
   onDestroy(){
-     tinymce.remove('minds-tinymce > textarea');
+    // if(this.editor)
+    //  this.editor.remove('minds-tinymce > textarea');
   }
 
   set _content(value : string){
-    if (value){
+    new Promise((resolve, reject) => {
+      if(this.editor)
+        resolve(value);
+    })
+    .then((value : string) => {
       this.editor.setContent(value);
-    }
-    else this.editor.setContent("");
+    });
   }
 
 }

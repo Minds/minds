@@ -111,8 +111,8 @@ class blog implements Interfaces\Api{
             $blog->$v = $_POST[$v];
         }
 
-        if(is_uploaded_file($_FILES['header']['tmp_name'])){
-          $resized = get_resized_image_from_uploaded_file('header', 2000);
+        if(is_uploaded_file($_FILES['file']['tmp_name'])){
+          $resized = get_resized_image_from_uploaded_file('file', 2000);
           $file = new \ElggFile();
           $file->owner_guid = $blog->owner_guid;
           $file->setFilename("blog/{$blog->guid}.jpg");
@@ -120,6 +120,7 @@ class blog implements Interfaces\Api{
           $file->write($resized);
           $file->close();
           $blog->header_bg = true;
+          $blog->header_top = $_POST['header_top'] ?: 0;
           $blog->last_updated = time();
         }
 

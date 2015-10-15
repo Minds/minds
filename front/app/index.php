@@ -36,6 +36,7 @@ ini_set( 'display_errors','1');
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700'>
     <link rel="stylesheet" href="stylesheets/main.css"/>
     <script src="//storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+    <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
 
   </head>
   <body>
@@ -70,7 +71,6 @@ ini_set( 'display_errors','1');
             'Report this error at https://github.com/mgechev/angular2-seed/issues')});
 
     </script>
-    <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
 
   </body>
 </html>

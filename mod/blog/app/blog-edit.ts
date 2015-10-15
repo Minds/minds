@@ -6,6 +6,7 @@ import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { MindsTinymce } from 'src/components/editors/tinymce';
 import { MindsBanner } from 'src/components/banner'
+import { AutoGrow } from 'src/directives/autogrow';
 
 @Component({
   selector: 'minds-blog-edit',
@@ -13,7 +14,7 @@ import { MindsBanner } from 'src/components/banner'
 })
 @View({
   templateUrl: 'templates/plugins/blog/edit.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, MindsBanner]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, AutoGrow, MindsBanner]
 })
 
 export class BlogEdit {
@@ -21,13 +22,15 @@ export class BlogEdit {
   minds;
 
   guid : string;
-  blog : Object = {
+  blog : any = {
     guid: 'new',
     title: '',
     description: '',
-    access_id: 2
+    access_id: 2,
+    fileKey: 'header'
   };
-  header : any;
+  banner : any;
+  banner_top : number = 0;
   editing : boolean = true;
 
   constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
@@ -54,9 +57,8 @@ export class BlogEdit {
 
   save(){
     var self = this;
-    this.client.post('api/v1/blog/' + this.guid, this.blog)
+    this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
       .then((response : any) => {
-        console.log(response);
         self.router.navigate(['/Blog-View', {guid: response.guid}]);
       })
       .catch((e) => {
@@ -64,17 +66,10 @@ export class BlogEdit {
       });
   }
 
-  set add_banner(file : any){
+  add_banner(banner : any){
     var self = this;
-    this.upload.post('api/v1/blog/' + this.guid, [file.file], { filekey: 'header', banner_position: file.top }, (progress) => {
-      console.log('progress update');
-      console.log(progress);
-      })
-			.then((response : any) => {
-			})
-			.catch(function(e){
-				console.error(e);
-			});
+    this.banner = banner.file;
+    this.blog.header_top = banner.top;
   }
 
 }

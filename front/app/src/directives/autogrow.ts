@@ -3,7 +3,10 @@ import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
   selector: '[auto-grow]',
-  inputs: ['autoGrow', 'for']
+  inputs: ['autoGrow', 'for'],
+  host: {
+    '(keydown)': 'grow()'
+  }
 })
 
 
@@ -14,12 +17,7 @@ export class AutoGrow{
 
   constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
 
-    var self = this;
-    this._listener = () => {
-      self.grow();
-    };
     this._element =  viewContainer.element.nativeElement;
-    this._element.addEventListener('keyup', this._listener);
     setTimeout(()=>{
       this.grow();
     });
@@ -27,6 +25,7 @@ export class AutoGrow{
 
   grow(){
     this._element.style.overflow = 'hidden';
+  //  if(!this._element.style.height)
     this._element.style.height = 'auto';
     this._element.style.height = this._element.scrollHeight + "px";
   }
