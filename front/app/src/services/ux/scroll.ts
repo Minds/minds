@@ -20,7 +20,6 @@ export class Scroll{
   }
 
   unListen(subscription : any){
-    console.log('unsubscribed', subscription);
     subscription.unsubscribe();
   }
 
