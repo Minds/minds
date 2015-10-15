@@ -94,7 +94,7 @@
         <!-- Avatars of latest users -->
         <div class="mdl-card__supporting-text mdl-color-text--grey-600 minds-channel-media-sidebard" style="min-height:0;">
           <a *ng-for="#object of media" [router-link]="['/Archive-View', {guid: object.guid}]" >
-            <img src="object.thumbnail_src"/>
+            <img [src]="object.thumbnail_src"/>
           </a>
         </div>
         <div class="mdl-spinner mdl-js-spinner is-active minds-channel-sidebar-loader" [mdl] [hidden]="!loadingMedia"></div>
