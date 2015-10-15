@@ -37,7 +37,7 @@ class boosts implements Interfaces\Api{
       }
 
       if($guids){
-        $entities = Core\entities::get(array('guids' => $guids));
+        $entities = Core\Entities::get(array('guids' => $guids));
         $db = new Core\Data\Call('entities_by_time');
         foreach($entities as $k => $entity){
           foreach($queue as $data){
