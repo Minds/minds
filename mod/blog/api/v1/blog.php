@@ -28,16 +28,21 @@ class blog implements Interfaces\Api{
         if(!isset($pages[0]))
           $pages[0] = "featured";
 
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
+        $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+
         switch($pages[0]){
           case "all":
             $entities = core\Entities::get(array(
-              'subtype' => 'blog'
+              'subtype' => 'blog',
+              'offset'=> $offset,
+              'limit'=> $limit
             ));
             $response['blogs'] = Factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
             break;
           case "featured":
-            $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> isset($_GET['offset']) ? $_GET['offset'] : "", 'limit'=> isset($_GET['limit']) ? $_GET['limit'] : 12 ));
+            $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> $offset, 'limit'=> $limit ));
   				  if(!$guids)
               break;
   				  $entities = core\Entities::get(array('guids'=>$guids));
@@ -55,7 +60,9 @@ class blog implements Interfaces\Api{
           case "owner":
             $entities = core\Entities::get(array(
               'subtype' => 'blog',
-              'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\Session::getLoggedInUser()->guid
+              'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\Session::getLoggedInUser()->guid,
+              'offset'=> $offset,
+              'limit'=> $limit
             ));
             $response['blogs'] = Factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
