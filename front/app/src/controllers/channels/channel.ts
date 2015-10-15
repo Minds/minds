@@ -43,7 +43,10 @@ export class Channel {
   inProgress : boolean = false;
   editing : boolean = false
   error: string = "";
-
+  media : Array<Object> = [];
+  blogs : Array<Object> = [];
+  isLoadingMedia : boolean = false;
+  isLoadingBlogs : boolean = false;
 
   constructor(public client: Client, public upload: Upload, params: RouteParams){
       this.username = params.params['username'];
@@ -55,19 +58,22 @@ export class Channel {
 
   load(){
     var self = this;
+
     this.client.get('api/v1/channel/' + this.username, {})
-      .then((data : MindsChannelResponse) => {
-        if(data.status != "success"){
-          self.error = data.message;
-          return false;
-        }
-        self.user = data.channel;
-        if(self._filter == "feed")
-          self.loadFeed(true);
-        })
-      .catch((e) => {
-        console.log('couldnt load channel', e);
-        });
+    .then((data : MindsChannelResponse) => {
+      if(data.status != "success"){
+        self.error = data.message;
+        return false;
+      }
+      self.user = data.channel;
+      if(self._filter == "feed")
+      self.loadFeed(true);
+      self.loadMedia();
+      self.loadBlogs();
+    })
+    .catch((e) => {
+      console.log('couldnt load channel', e);
+    });
   }
 
   loadFeed(refresh : boolean = false){
@@ -82,6 +88,8 @@ export class Channel {
     }
 
     this.inProgress = true;
+    this.isLoadingMedia = true;
+    this.isLoadingBlogs = true;
 
     this.client.get('api/v1/newsfeed/personal/' + this.user.guid, {limit:12, offset: this.offset}, {cache: true})
         .then((data : MindsActivityObject) => {
@@ -102,6 +110,36 @@ export class Channel {
         .catch(function(e){
           self.inProgress = false;
         });
+  }
+
+  loadMedia(){
+    var self = this;
+    this.client.get('api/v1/entities/owner/all/'+ this.user.guid, {limit:9, offset:""})
+    .then((data : any) => {
+      if(!data.entities)
+      return false;
+
+      self.media = data.entities;
+      self.isLoadingMedia = false;
+    })
+    .catch(function(e){
+      self.isLoadingMedia = false;
+    });
+  }
+
+  loadBlogs(){
+    var self = this;
+    this.client.get('api/v1/blog/owner/' + self.user.guid, { limit: 5, offset: ""})
+    .then((data : any) => {
+      if(!data.blogs)
+      return false;
+
+      self.blogs = data.blogs;
+      self.isLoadingBlogs = false;
+    })
+    .catch(function(e){
+      self.isLoadingBlogs = false;
+    });
   }
 
   isOwner(){

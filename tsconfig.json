@@ -18,6 +18,7 @@
         "./tsd_typings/**/*.d.ts"
     ],
     "compileOnSave": false,
+    "exclude": [],
     "files": [
         "front/app/app.ts",
         "front/app/src/components/banner.ts",
@@ -139,6 +140,5 @@
         "tsd_typings/jasmine/jasmine.d.ts",
         "tsd_typings/systemjs/systemjs.d.ts",
         "tsd_typings/tsd.d.ts"
-    ],
-    "exclude": []
+    ]
 }

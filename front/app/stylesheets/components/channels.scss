@@ -138,6 +138,34 @@ minds-channel{
     }
   }
 
+  .minds-channel-media-sidebard{
+    display: flex;
+    flex-wrap: wrap;
+    a {
+      max-width:80px;
+      display:inline-block;
+      width:33%;
+    }
+    img{
+      width: 100%;
+    }
+  }
+
+  .minds-channel-blog-sidebar-blogs{
+    padding: $minds-padding;
+    padding-left: $minds-margin*2;
+
+    a{
+      text-decoration: none;
+    }
+    a:hover{
+      text-decoration: underline;
+    }
+  }
+
+  .minds-channel-sidebar-loader{
+    margin-left: $minds-margin*2;
+  }
 
   @media screen and (max-width: 720px){
 
