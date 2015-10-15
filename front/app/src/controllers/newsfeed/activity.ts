@@ -37,6 +37,7 @@ export class Activity {
   visible : boolean = false;
 
   _delete: EventEmitter = new EventEmitter();
+  scroll_listener;
 
 	constructor(public client: Client, @Inject(ElementRef) _element: ElementRef){
     this.element = _element.nativeElement;
@@ -68,10 +69,10 @@ export class Activity {
   }
 
   isVisible(){
-    var listen = this.scroll.listen((view) => {
+    this.scroll_listener = this.scroll.listen((view) => {
       if(this.element.offsetTop - view.height <= view.top && !this.visible){
         //stop listening
-        this.scroll.unListen(listen);
+        this.scroll.unListen(this.scroll_listener);
         //make visible
         this.visible = true;
         //update the analytics
@@ -79,5 +80,9 @@ export class Activity {
       }
     });
     this.scroll.fire();
+  }
+
+  onDestruct(){
+    this.scroll.unListen(this.scroll_listener);
   }
 }
