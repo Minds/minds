@@ -37,6 +37,8 @@ class Factory{
                 $class_name = Routes::$routes[$actual];
                 if(class_exists($class_name)){
                     $handler = new $class_name();
+                    if($handler instanceof Interfaces\ApiAdminPam)
+                      self::adminCheck();
                     if(!$handler instanceof Interfaces\ApiIgnorePam)
                         self::pamCheck();
                     $pages = array_splice($segments, $loop) ?: array();
@@ -79,6 +81,22 @@ class Factory{
              exit;
 
         }
+    }
+
+    /**
+     * Check if a user is an admin
+     */
+    private static function adminCheck(){
+      if(Core\Session::isLoggedIn && Core\Session::getLoggedinUser()->isAdmin()){
+        return true;
+      } else {
+        error_log('security: unauthorized access to admin api');
+        ob_end_clean();
+        header('Content-type: application/json');
+        header("Access-Control-Allow-Origin: *");
+        header('HTTP/1.1 401 Unauthorized', true, 401);
+        echo json_encode(array('error'=>'You are not an admin', 'code'=>401));
+      }
     }
 
     /**

@@ -14,7 +14,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class boosts implements Interfaces\Api{
+class boosts implements Interfaces\Api, Interfaces\ApiAdminPam{
 
     private $rate = 1;
 

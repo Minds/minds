@@ -15,7 +15,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use DateTime;
 
-class active implements Interfaces\Api, Interfaces\ApiIgnorePam{
+class active implements Interfaces\Api, Interfaces\ApiAdminPam{
 
     /**
      * Return analytics data
