@@ -124,9 +124,9 @@ export class AdminBoosts {
   onKeyDown(e){
     e.preventDefault();
     e.stopPropagation()
-    if(e.keyIdentifier == "Left")
+    if(e.keyCode == 37)
       this.accept();
-    if(e.keyIdentifier == "Right")
+    if(e.keyCode == 39)
       this.reject();
   }
 
