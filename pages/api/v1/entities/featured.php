@@ -97,12 +97,18 @@ class featured implements Interfaces\Api{
         
         $options = array('guids'=>$guids);
         $entities = core\Entities::get($options);
- 	
+
+        usort($entities, function($a, $b){
+          if ((int)$a->featured_id == (int) $b->featured_id) {
+            return 0;
+          }
+          return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+        });
 
         if($entities){
             $response['entities'] = factory::exportable($entities);
-            $response['load-next'] = (string) end($entities)->guid;
-            $response['load-previous'] = (string) key($entities)->guid;
+            $response['load-next'] = (string) end($entities)->featured_id;
+            $response['load-previous'] = (string) key($entities)->featured_id;
         }
         
         return Factory::response($response);

@@ -39,10 +39,11 @@ export class Blog {
   }
 
   load(refresh : boolean = false){
-
+    if(this.inProgress)
+      return false;
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset})
+    this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset })
       .then((response : MindsBlogListResponse) => {
 
         if(!response.blogs){
@@ -64,7 +65,7 @@ export class Blog {
         self.inProgress = false;
       })
       .catch((e)=>{
-
+        self.inProgress = false;
       });
   }
 }

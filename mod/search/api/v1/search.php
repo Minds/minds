@@ -34,15 +34,9 @@ class search implements Interfaces\Api{
 
       $query = "$query~";
 
-      $category = isset($_GET['category']) ? $_GET['category'] : NULL;
-      if($category)
-        $query = "query AND $category";
-
-      if(isset($_GET['subtype']))
-        $query .= ' +subtype:"'. $_GET['subtype'] .'"';
-
-      $body['query']['query_string']['query'] = $query;
-      $body['query']['query_string']['fields'] = array('_all', 'name^5', 'title^8', 'username^16');
+      //$category = isset($_GET['category']) ? $_GET['category'] : NULL;
+      //if($category)
+      //  $query = "query AND $category";
 
       $params['index'] = $CONFIG->cassandra->keyspace; //we use the keyspace as this is unique to each site. why complicate things?
 
@@ -58,10 +52,16 @@ class search implements Interfaces\Api{
             $params['type'] = 'user';
             break;
           case "videos":
-            $params['type'] = 'video';
+            $params['type'] = 'object'; 
+            $query .= ' +subtype:"video"';
             break;
           case "images":
-            $params['type'] = 'image';
+            $params['type'] = 'object';
+            $query .= ' +subtype:"image"';
+            break;
+          case "blogs":
+            $params['type'] = 'object';
+            $query .= ' +subtype:"blog"';
             break;
         }
       }
@@ -69,6 +69,12 @@ class search implements Interfaces\Api{
       $params['size'] = $_GET['limit'] ?: 12;
       if(isset($_GET['offset']))
         $params['from'] = $_GET['offset'];
+
+      $body['query']['query_string']['query'] = $query;
+      $body['query']['query_string']['default_operator'] = "AND";
+      $body['query']['query_string']['minimum_should_match'] = "75%";
+      $body['query']['query_string']['fields'] = array('_all', 'name^6', 'title^8', 'username^8');
+
       $params['body']  = $body;
 
       try{
@@ -84,6 +90,7 @@ class search implements Interfaces\Api{
       $response = array();
       if($guids)
         $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
+    $response['hits'] = $results['hits']['hits'];
 
       return Factory::response($response);
 

@@ -36,7 +36,7 @@ export class InfiniteScroll{
     this._listener = this.scroll.listen((view) => {
       if(this.element.offsetTop - view.height <= view.top){
         //stop listening
-        this.scroll.unListen(this._listener);
+        //   this.scroll.unListen(this._listener);
         this.loadHandler.next(true);
       }
     });

@@ -76,7 +76,10 @@ export class Discovery {
         self.offset = data['load-next'];
         self.inProgress = false;
 
-      });
+       })
+       .catch((e) => {
+         self.inProgress = false;
+       });
   }
 
 }
