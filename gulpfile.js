@@ -231,7 +231,7 @@ gulp.task('build.index.dev', function() {
 });
 
 gulp.task('build.app.dev', function (done) {
-  runSequence('clean.app.dev', 'build.plugins', 'build.assets.dev', 'build.index.dev', done);
+  runSequence( 'build.plugins', 'build.assets.dev', 'build.index.dev', done);
 });
 
 gulp.task('build.dev', function (done) {
