@@ -28,6 +28,12 @@ minds-button-feature > button{
   padding:4px;
 }
 
+minds-button-remind, minds-button-thumbs-up, minds-button-thumbs-down{
+  a{
+    cursor:pointer;
+  }
+}
+
 .minds-boost-button{
   background-color: #4690D6 !important;
   font-size: 12px;
