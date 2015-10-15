@@ -26,9 +26,10 @@ class boosts implements Interfaces\Api{
 
       $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
       $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
-      $type = isset($_GET['type']) ? $_GET['type'] : 'Newsfeed';
+      $type = isset($pages[0]) ? $pages[0] : 'newsfeed';
       $queue = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
-      $count =  Core\Boost\Factory::build(ucfirst($type))->getReviewQueueCount();
+      $newsfeed_count =  Core\Boost\Factory::build(ucfirst("newsfeed"))->getReviewQueueCount();
+      $suggested_count =  Core\Boost\Factory::build(ucfirst("suggested"))->getReviewQueueCount();
 
       $guids = array();
       foreach($queue as $data){
@@ -48,7 +49,9 @@ class boosts implements Interfaces\Api{
           }
         }
         $response['entities'] = Factory::exportable($entities, array('boost_impressions', 'boost_id'));
-        $response['count'] = $count;
+        $response['count'] = $type == "newsfeed" ? $newsfeed_count : $suggested_count;
+        $response['newsfeed_count'] = (int) $newsfeed_count;
+        $response['suggested_count'] = (int) $suggested_count;
         $response['load-next'] = $_id;
     }
 
@@ -64,12 +67,29 @@ class boosts implements Interfaces\Api{
 
       $response = array();
 
-      $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
-      if($_POST['action'] == 'accept'){
-        Core\Boost\Factory::build(ucfirst($type))->accept($_POST['_id']);
-		  } elseif($_POST['action'] == 'reject') {
+      $_id = $pages[0];
+      $action = $pages[1];
 
-        Core\Boost\Factory::build(ucfirst($type))->reject($_POST['_id']);
+      if(!$_id){
+        return Factory::response(array(
+          'status' => 'error',
+          'message' => "We couldn't find that boost"
+        ));
+      }
+
+      if(!$action){
+        return Factory::response(array(
+          'status' => 'error',
+          'message' => "You must provide an action: accept or reject"
+        ));
+      }
+
+      $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
+      if($action == 'accept'){
+        Core\Boost\Factory::build(ucfirst($type))->accept($_id);
+		  } elseif($action == 'reject') {
+
+        Core\Boost\Factory::build(ucfirst($type))->reject($_id);
         $entity = \Minds\entities\Factory::build($_POST['guid']);
         if($entity->type == "user"){
             $user_guid = $entity->guid;
