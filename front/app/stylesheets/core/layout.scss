@@ -34,6 +34,8 @@ minds-app{
     max-height: 1000px;
     z-index: 3;
 
+    transform: translateZ(0);
+
     background: #FFF;
 
     .minds-menu-button {
