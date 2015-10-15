@@ -64,7 +64,8 @@ class conversations implements Interfaces\Api{
 
                     foreach($messages as $k => $message){
                       if(isset($_GET['decrypt']) && $_GET['decrypt']){
-                        $messages[$k]->decryptMessage(Core\Session::getLoggedInUser()->guid, $_GET['password']);
+                        //sets the internal pointer to the decrypted message
+                        $messages[$k]->decryptMessage(Core\Session::getLoggedInUser()->guid, urldecode($_GET['password']));
                       } else {
                         $key = "message:".elgg_get_logged_in_user_guid();
                         $messages[$k]->message = $messages[$k]->$key;
@@ -103,11 +104,11 @@ class conversations implements Interfaces\Api{
 
     public function post($pages){
         //error_log("got a message to send");
-        $conversation = new entities\conversation(elgg_get_logged_in_user_guid(), $pages[0]);
+        $conversation = new entities\conversation(Core\Session::getLoggedInUser()->guid, $pages[0]);
 
         $message = new entities\message($conversation);
         if(isset($_POST['encrypt']) && $_POST['encrypt']){
-          $message->message = $_POST['message'];
+          $message->encryptMessage($_POST['message']);
         } else {
           $message->client_encrypted = true;
           foreach($conversation->participants as $guid){
@@ -121,11 +122,13 @@ class conversations implements Interfaces\Api{
         $conversation->update();
         $conversation->notify();
 
-        if($message->client_encrypted)
+        if($message->client_encrypted){
           $key = "message:".elgg_get_logged_in_user_guid();
-        else
+          $message->message = $message->$key;
+        } else {
           $key = "message";
-        $message->message = $message->$key;
+          $message->message = $_POST['message'];
+        }
         $response["message"] = $message->export();
 
         return Factory::response($response);
@@ -176,7 +179,7 @@ class conversations implements Interfaces\Api{
 
     public function delete($pages){
 
-      $message = \Minds\entities\Factory::build($pages[1]);        
+      $message = \Minds\entities\Factory::build($pages[1]);
       if($message->canEdit()){
           $message->delete();
       }
