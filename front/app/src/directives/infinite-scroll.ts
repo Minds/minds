@@ -1,5 +1,6 @@
-import { Directive, View, EventEmitter, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
+import { Directive, View, EventEmitter, ElementRef, Inject } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
+import { ScrollFactory } from 'src/services/ux/scroll';
 
 @Directive({
   selector: 'infinite-scroll',
@@ -12,25 +13,38 @@ import { Material as MaterialService } from "src/services/ui";
 })
 
 export class InfiniteScroll{
-  viewContainer: ViewContainerRef;
+
+  scroll = ScrollFactory.build();
+
+  element : any;
   loadHandler: EventEmitter = new EventEmitter();
   _distance : any;
   _inprogress : boolean = false;
   _content : any;
-  _listener : Function;
+  _listener;
 
-  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
-    this.scroll();
+  constructor(_element: ElementRef) {
+    this.element = _element.nativeElement;
+    this.init();
   }
 
   set distance(value : any){
     this._distance = parseInt(value);
   }
 
-  scroll(){
-    this._content = document.getElementsByClassName('mdl-layout__content')[0];
+  init(){
+    this._listener = this.scroll.listen((view) => {
+      if(this.element.offsetTop - view.height <= view.top){
+        //stop listening
+        this.scroll.unListen(this._listener);
+        this.loadHandler.next(true);
+      }
+    });
+  }
+
+  /*scroll(){
     var self = this;
-    this._listener = () => {
+    this._listener = (e) => {
       var height = self._content.scrollHeight,
           maxHeight = height - self._content.clientHeight,
           top = self._content.scrollTop,
@@ -43,11 +57,11 @@ export class InfiniteScroll{
         self.loadHandler.next(true);
       }
     };
-    this._content.addEventListener('scroll', this._listener);
-  }
+    document.addEventListener('scroll', this._listener);
+  }*/
 
   onDestroy(){
-    this._content.removeEventListener('scroll', this._listener)
+    document.removeEventListener('scroll', this._listener)
   }
 
 }

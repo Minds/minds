@@ -31,18 +31,18 @@ ini_set( 'display_errors','1');
       }
     ?>
 
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.blue_grey-amber.min.css" />
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.blue_grey-amber.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700'>
     <link rel="stylesheet" href="stylesheets/main.css"/>
-    <script src="//storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+    <script src="//storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
 
   </head>
   <body>
 
 
     <!-- The app component created in app.ts -->
-    <minds-app  class="mdl-layout mdl-layout--fixed-drawer mdl-layout--fixed-header  mdl-layout--overlay-drawer-button">
+    <minds-app  class="">
         <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate initial-loading"></div>
     </minds-app>
 

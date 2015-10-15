@@ -1,0 +1,43 @@
+@import "../defaults.scss";
+
+minds-sidebar-navigation{
+  padding-top:0 !important;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 16px;
+
+  nav.minds-navigation{
+    padding-top:0 !important;
+    display:flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    padding-top: 16px;
+
+    .mdl-navigation__link{
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 700;
+      padding: 24px 38px;
+      font-weight:200;
+      font-size:11px;
+      text-transform: lowercase;
+      font-family: 'Lato', 'Helvetica', sans-serif;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+
+      .material-icons {
+        font-size: 26px;
+        color: rgba(255, 255, 255, 0.56);
+      }
+    }
+
+    .mdl-navigation__link.subitem{
+      padding:$minds-padding*1.5 38px;
+      .material-icons {
+        font-size: 24px;
+      }
+    }
+
+  }
+
+}
