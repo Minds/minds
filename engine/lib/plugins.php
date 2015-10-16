@@ -69,7 +69,7 @@ function elgg_get_plugin_from_id($plugin_id) {
  * @deprecated
  */
 function elgg_plugin_exists($id) {
-	//use isActive instead. 
+	//use isActive instead.
 }
 
 /**
@@ -80,7 +80,7 @@ function elgg_plugin_exists($id) {
  * @access private
  */
 function elgg_get_max_plugin_priority() {
-	return Minds\Core\plugins\priorities::getMax();
+	return Minds\Core\Plugins\Priorities::getMax();
 }
 
 /**
@@ -505,7 +505,7 @@ function elgg_unset_plugin_user_setting($name, $user_guid = null, $plugin_id = n
 	} else {
 		$plugin = elgg_get_calling_plugin_entity();
 	}
-	
+
 	if (!$plugin) {
 		return false;
 	}
@@ -575,7 +575,7 @@ function elgg_set_plugin_setting($name, $value, $plugin_id = null) {
  * @todo make $plugin_id required in future version
  */
 function elgg_get_plugin_setting($name, $plugin_id = null) {
-	
+
 	if ($plugin_id) {
 		if(!Minds\Core\plugins::isActive($plugin_id)){
 			return false;
@@ -588,7 +588,7 @@ function elgg_get_plugin_setting($name, $plugin_id = null) {
 	if (!$plugin) {
 		return false;
 	}
-	
+
 	if($plugin instanceof ElggPlugin && $plugin->isActive()){
 		return $plugin->getSetting($name);
 	}
@@ -661,14 +661,14 @@ function elgg_plugins_loaded_event_hook($event, $object_type, $params){
 /**
  * Initialize the plugin system
  * Listens to system init and registers actions
- * 
+ *
  * @todo move these into the oop section
  *
  * @return void
  * @access private
  */
 function plugin_init() {
-	
+
 	elgg_register_event_handler('plugins_loaded', 'plugin', 'elgg_plugins_loaded_event_hook');
 
 	elgg_register_action("plugins/settings/save", '', 'admin');

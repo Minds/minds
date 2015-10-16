@@ -2,7 +2,7 @@
 
 namespace Minds\Core\Events;
 
-use Minds\Core\exceptions;
+use Minds\Exceptions;
 class Dispatcher {
 
     /**
@@ -18,11 +18,11 @@ class Dispatcher {
      * @param type $priority Priority - lower numbers executed first.
      */
     public static function register($event, $namespace, $handler, $priority = 500) {
-        
+
     	if (empty($namespace) || empty($event) || !is_callable($handler)) {
     	    return false;
     	}
-    
+
     	if (!isset(self::$events)) {
     	    self::$events = array();
     	}
@@ -32,10 +32,10 @@ class Dispatcher {
     	if (!isset(self::$events[$namespace][$event])) {
     	    self::$events[$namespace][$event] = array();
     	}
-    
-    
+
+
     	$priority = max((int) $priority, 0);
-    
+
     	while (isset(self::$events[$namespace][$event][$priority])) {
     	    $priority++;
     	}
@@ -69,8 +69,8 @@ class Dispatcher {
      * @param mixed $default_return Default return value, if not set by the handler.
      */
     public static function trigger($event, $namespace, $params, $default_return = true) {
-    	$calls = array();           
-        
+    	$calls = array();
+
         if (isset(self::$events[$namespace][$event])){
             $calls[] = self::$events[$namespace][$event];
         }
@@ -82,8 +82,8 @@ class Dispatcher {
 	    if(isset(self::$events[$ns][$event])){
 	        $calls[] = self::$events[$ns][$event];
 	    }
-        } 
-   
+        }
+
         //parent propogation
         /*foreach(self::$events as $ns => $es){
             if ($event == 'all'){
@@ -96,7 +96,7 @@ class Dispatcher {
         }*/
 
         $calls = array_unique($calls);
-        
+
         // New event format, expects event object
     	$eventobj = new Event(array(
     	    'namespace' => $namespace,
@@ -104,23 +104,23 @@ class Dispatcher {
     	    'parameters' => $params
     	));
     	$eventobj->setResponse($default_return);
-    	
+
         try {
-    	    
+
     	    // Dispatch event
             foreach ($calls as $callbacks) {
-                
+
                 if (!is_array($callbacks))
                     continue;
-                
+
                 foreach ($callbacks as $callback) {
                     if (!is_callable($callback))
                         continue;
 
                     $ns = $namespace;
                     $ev = $event;
-		    
-                    // There's a potential namespace collision on old style elgg events/hooks, so we namespace them off, however some hooks/events check this parameter. 
+
+                    // There's a potential namespace collision on old style elgg events/hooks, so we namespace them off, however some hooks/events check this parameter.
                     // Therefore we need to normalise the namespace before dispatch
                     if (strpos($ns, 'elgg/event/') === 0) {
                         // old style event
@@ -128,19 +128,19 @@ class Dispatcher {
 
                         $args = array($ev, $ns, $params);
                         if (call_user_func_array($callback, $args) === false) {
-                            throw new exceptions\StopEventException("Event propagation for old style $ns/$ev stopped by $callback");
+                            throw new Exceptions\StopEventException("Event propagation for old style $ns/$ev stopped by $callback");
                         }
                     } elseif (strpos($ns, 'elgg/hook/') === 0) {
                         // Old style hook
                         $ns = str_replace('elgg/hook/', '', $ns);
-                        
+
                         $args = array($ev, $ns, $eventobj->response(), $params);
                         $temp_return_value = call_user_func_array($callback, $args);
-                        if (!is_null($temp_return_value)) { 
+                        if (!is_null($temp_return_value)) {
                             $eventobj->setResponse($temp_return_value);
                         }
                     } else {
-                        $args = array($eventobj); 
+                        $args = array($eventobj);
                         call_user_func_array($callback, $args);
                     }
                 }
@@ -149,7 +149,7 @@ class Dispatcher {
     	    // Stop execution when we get this exception, all other exceptions bubble up.
             return false;
     	}
-    	
+
     	return $eventobj->response();
     }
 

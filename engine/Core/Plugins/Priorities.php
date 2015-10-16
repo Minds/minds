@@ -2,26 +2,26 @@
 /**
  * Handles the orderring a priorities (helper functions)
  */
- 
-namespace Minds\Core\plugins;
+
+namespace Minds\Core\Plugins;
 
 use Minds\Core;
 
-class priorities extends core\plugins{
-	
+class Priorities extends core\plugins{
+
 	static public function getMax(){
 		$plugins = parent::get();
-		$max = count($plugins);	
-		
+		$max = count($plugins);
+
 		// can't have a priority of 0.*/
 		return ($max) ? $max : 1;
 	}
-	
+
 	static public function set($plugin, $priority){
-			
+
 		if (!$plugin->guid)
 			return false;
-		
+
 		// if no priority assume a priority of 1
 		$old_priority = (int) $plugin->priority;
 		$max_priority = self::getMax();
@@ -40,7 +40,7 @@ class priorities extends core\plugins{
 
 		// should be a number by now
 		if ($priority > 0) {
-		
+
 			// there's nothing above the max.
 			if ($priority > $max_priority) {
 				$priority = $max_priority;
@@ -53,7 +53,7 @@ class priorities extends core\plugins{
 
 			$plugin_list = core\plugins::get('any');
 			$reorder = array();
-			
+
 			foreach($plugin_list as $plugin){
 				if($plugin->getPriority() ==  $old_priority-1 && $op=='-'){
 					$plugin->priority =  $old_priority;
@@ -68,7 +68,7 @@ class priorities extends core\plugins{
 			}
 			// set this priority
 			$this->priority = $priority;
-			
+
 			if ($plugin->save())
 				return true;
 			else
@@ -77,5 +77,5 @@ class priorities extends core\plugins{
 
 		return false;
 	}
-	
+
 }

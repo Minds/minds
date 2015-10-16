@@ -28,7 +28,7 @@ class ElggPlugin extends ElggEntity {
 		$this->attributes['title'] = "";
 		$this->attributes['active'] = 0;
 		$this->attributes['priority'] = 0;
-		
+
 		// plugins must be public.
 		$this->attributes['access_id'] = ACCESS_PUBLIC;
 	}
@@ -44,22 +44,22 @@ class ElggPlugin extends ElggEntity {
 	 * @throws PluginException
 	 */
 	public function __construct($plugin) {
-		
+
 		global $CONFIG, $PLUGINS_CACHE;
-	
+
 		if (!$plugin) {
 			throw new PluginException(elgg_echo('PluginException:NullInstantiated'));
 		}
-	
-		$this->initializeAttributes();		
+
+		$this->initializeAttributes();
 
 		if (is_object($plugin) || is_array($plugin)) {
 			//parent::__construct($plugin);
 			foreach($plugin as $k => $v){
 				$this->attributes[$k] = $v;
 			}
-	   
-			$this->pluginID = $this->attributes['guid'];	
+
+			$this->pluginID = $this->attributes['guid'];
 			$this->title = $this->pluginID;
 			$this->path = elgg_get_plugins_path() . $this->getID();
 			$PLUGINS_CACHE[$this->guid] = $this->attributes;
@@ -71,7 +71,7 @@ class ElggPlugin extends ElggEntity {
 			if (strpos($plugin, $plugin_path) !== 0) {
 				$this->path =  sanitise_filepath($plugin_path . $plugin);
 			}
-			
+
 			$plugin_id = $plugin;
 			$this->pluginID = $plugin;
 			$this->guid = $plugin;
@@ -86,11 +86,11 @@ class ElggPlugin extends ElggEntity {
 
 //			var_dump($PLUGINS_CACHE[$plugin], $plugin);
 			//exit;
-		}	
+		}
 			// check if we're loading an existing plugin
 			$db = new Minds\Core\Data\Call('plugin');
 			$existing_plugin = $db->getRow($this->guid);
-			if($existing_plugin){	
+			if($existing_plugin){
 				foreach($existing_plugin as $k => $v){
 					$this->attributes[$k] = $v;
 				}
@@ -98,7 +98,7 @@ class ElggPlugin extends ElggEntity {
 		}
 		if(!$plugin || !is_string($plugin))
 			$plugin = $this->guid;
-		
+
 		$PLUGINS_CACHE[$plugin] = $this;
 
 		//_elgg_cache_plugin_by_id($this);
@@ -110,7 +110,7 @@ class ElggPlugin extends ElggEntity {
 	public function init(){
 		//do nothing.. legacy
 	}
-	
+
 	/**
 	 * Save the plugin object.  Make sure required values exist.
 	 *
@@ -118,14 +118,14 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function save() {
-	
+
 		global $PLUGINS_CACHE;
 		$PLUGINS_CACHE = null;
-	//var_dump('tying to save yo');	
+	//var_dump('tying to save yo');
 		Minds\Core\plugins::purgeCache('plugins:all');
 		Minds\Core\plugins::purgeCache('plugins:active');
 		Minds\Core\plugins::$cache == array();
-	
+
 		$attributes = array();
 		foreach($this as $k=>$v){
 			if(is_null($v))
@@ -153,7 +153,7 @@ class ElggPlugin extends ElggEntity {
 
 	/**
 	 * Returns the manifest's name if available, otherwise the ID.
-	 * 
+	 *
 	 * @return string
 	 * @since 1.8.1
 	 */
@@ -187,7 +187,7 @@ class ElggPlugin extends ElggEntity {
 
 	/**
 	 * Returns an array of available markdown files for this plugin
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getAvailableTextFiles() {
@@ -225,7 +225,7 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function setPriority($priority, $site_guid = null) {
-		return Minds\Core\plugins\priorities::set($this, $priority);
+		return Minds\Core\Plugins\Priorities::set($this, $priority);
 	}
 
 
@@ -305,7 +305,7 @@ class ElggPlugin extends ElggEntity {
 		if (!$this->guid) {
 			return false;
 		}
-		
+
 		$this->$name = $value;
 		return $this->save();
 	}
@@ -428,7 +428,7 @@ class ElggPlugin extends ElggEntity {
 		} else {
 			$user = elgg_get_logged_in_user_entity();
 		}
-		
+
 		if (!($user instanceof ElggUser)) {
 			return false;
 		}
@@ -449,7 +449,7 @@ class ElggPlugin extends ElggEntity {
 		//update session... @todo, make this work better. Probably put through User class
         if(isset( $_SESSION['user'] ))
             $_SESSION['user']->$name = $value;
-        
+
 		return set_private_setting($user->guid, 'entities',$name, $value);
 	}
 
@@ -477,8 +477,8 @@ class ElggPlugin extends ElggEntity {
 		$name = elgg_namespace_plugin_private_setting('user_setting', $name, $this->getID());
 
 		unset($user->$name);
-		$_SESSION['user'] = $user;	
-	
+		$_SESSION['user'] = $user;
+
 		return remove_private_setting($user->guid, 'user', $name);
 	}
 
@@ -532,17 +532,17 @@ class ElggPlugin extends ElggEntity {
 	 * @return bool
 	 */
 	public function isValid() {
-		
+
 		if (!$this->getPackage() instanceof ElggPluginPackage) {echo 'no package';
 			$this->errorMsg = elgg_echo('ElggPlugin:NoPluginPackagePackage', array($this->getID(), $this->guid));
 			return false;
 		}
-		
+
 		if (!$this->getPackage()->isValid()) {echo 'package not valid';
 			$this->errorMsg = $this->getPackage()->getError();
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -596,11 +596,11 @@ class ElggPlugin extends ElggEntity {
 		if ($this->isActive($site_guid)) {
 			return true;
 		}
-		
+
 		if (!$this->canActivate()) {
 			return false;
 		}
-		
+
 		// set in the db, now perform tasks and emit events
 		if ($this->setSetting('active', 1)) {
 			// emit an event. returning false will make this not be activated.
@@ -624,7 +624,7 @@ class ElggPlugin extends ElggEntity {
 					$return = $this->includeFile('activate.php');
 				}
 			}
-			if ($return === false) { 
+			if ($return === false) {
 				$this->deactivate($site_guid);
 			}
 			return $return;
@@ -665,7 +665,7 @@ class ElggPlugin extends ElggEntity {
 			return 	$this->setSetting('active', "0");
 		}
 	}
-	
+
 	/**
 	 * Is the plugin enabled, this is different to active and should be set to true here
 	 */
@@ -692,9 +692,9 @@ class ElggPlugin extends ElggEntity {
 		$this->includeFile('start.php');
 
 		$this->registerViews();
-		
+
 		$this->registerLanguages();
-		
+
 		return true;
 	}
 
@@ -882,7 +882,7 @@ class ElggPlugin extends ElggEntity {
 		} else {
 			$site = get_config('site');
 		}
-		
+
 		return true;
 	}
 
