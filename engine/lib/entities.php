@@ -664,7 +664,7 @@ function get_entity($guid, $type = 'object') {
 	$new_entity = entity_row_to_elggstar($db->createObject($row));
 
 	//check access permissions
-	if(!Minds\Core\Security\ACL::read($new_entity)){
+	if(!Minds\Core\Security\ACL::_()->read($new_entity)){
 		return false; //@todo return error too
 	}
 
@@ -880,7 +880,7 @@ function elgg_get_entities(array $options = array()) {
 					}
 
 					$entity = entity_row_to_elggstar($newrow);
-					if(Minds\Core\Security\ACL::read($entity))
+					if(Minds\Core\Security\ACL::_()->read($entity))
 						$entities[] = $entity;
 				}
 			}

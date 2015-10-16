@@ -5,11 +5,26 @@
 namespace Minds\Core\Security;
 
 use Minds\Core;
-use Minds\Entities;
 
 class ACL {
 
+    private static $_;
     static $ignore = false;
+
+    public function __construct(){
+      $this->init();
+    }
+
+    /**
+     * Initialise default ACL constraints
+     */
+    private function init(){
+      ACL\Block::_()->listen();
+    }
+
+    public function setIgnore($ignore = false){
+      self::$ignore = $ignore;
+    }
 
     /**
      * Checks access read rights to entity
@@ -61,7 +76,7 @@ class ACL {
       /**
        * Allow plugins to extend the ACL check
        */
-      if(Core\Events\Dispatcher::trigger('acl:read', $entity->type, array('entity'=>$entity, 'user'=>$user)) === true)
+      if(Core\Events\Dispatcher::trigger('acl:read', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true)
         return true;
 
       return false;
@@ -96,11 +111,50 @@ class ACL {
       /**
        * Allow plugins to extend the ACL check
        */
-      if(Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user)) === true)
+      if(Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true)
         return true;
 
       return false;
     }
 
+    /**
+     * Check if a user can interact with the entity
+     * @param Entity $entity
+     * @param (optional) $user
+     * @return boolean
+     */
+    public function interact($entity, $user = NULL){
+      if(!$user)
+        $user = Core\Session::getLoggedinUser();
+
+      /**
+       * Logged out users can not interact
+       */
+      if(!$user){
+        return false;
+      }
+
+      /**
+       * Check if we are the owner
+       */
+      if($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid || $entity->guid == $user->guid){
+        return true;
+      }
+
+      /**
+       * Allow plugins to extend the ACL check
+       */
+      if(Core\Events\Dispatcher::trigger('acl:interact', $entity->type, array('entity'=>$entity, 'user'=>$user), null) === false)
+        return false;
+
+      return true;
+
+    }
+
+    public static function _(){
+      if(!self::$_)
+        self::$_ = new ACL();
+      return self::$_;
+    }
 
 }

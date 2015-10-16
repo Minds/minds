@@ -77,8 +77,8 @@ class start extends Components\Plugin{
 			$params = $e->getParameters();
 			$entity = $params['entity'];
 			$user = $params['user'];
-
-			$e->setResponse(helpers\Membership::isMember($entity->access_id, $user->guid));
+			if($entity->type == "group")
+				$e->setResponse(helpers\Membership::isMember($entity->access_id, $user->guid));
 		});
 	}
 

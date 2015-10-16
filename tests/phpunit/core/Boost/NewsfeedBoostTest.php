@@ -3,7 +3,7 @@
 use Minds\Core\Data;
 use Minds\Core\Boost;
 
-class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
+class NewsfeedBoostTest extends Minds_PHPUnit_Framework_TestCase {
 
     /**
      * Run before each test
@@ -13,9 +13,9 @@ class NewsfeedBoostTest extends \Minds_PHPUnit_Framework_TestCase {
     }
 
     protected function mock(){
-      return $this->getMockBuilder('\Minds\Core\Data\MongoDB\Client')
-        ->disableOriginalConstructor()
-        ->getMock();
+      var_dump($this); exit;
+      return $this->getMock('\Minds\Core\Data\MongoDB\Client')
+        ->disableOriginalConstructor();
     }
 
     public function testCanLoadFromFactory() {

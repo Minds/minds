@@ -25,9 +25,6 @@ class minds extends base{
 		$this->loadConfigs();
 		$this->loadLegacy();
 
-		//@todo check configs before loading clusters
-		new clusters();
-
 		/*
 		 * If this is a multisite, then load the specific database settings
 		 */
@@ -50,7 +47,7 @@ class minds extends base{
 		 * Load the plugins
 		 */
 		new plugins();
-
+	
 		/**
 		 * Complete the boot process for both engine and plugins
 		 */
@@ -100,7 +97,7 @@ class minds extends base{
 			'configuration.php', 'cron.php',
 			'entities.php', 'extender.php', 'filestore.php', 'group.php',
 			'input.php', 'languages.php', 'location.php',
-			'memcache.php', 
+			'memcache.php',
 			'notification.php', 'objects.php', 'output.php',
 			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
 			'private_settings.php', 'sessions.php',

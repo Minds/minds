@@ -12,6 +12,8 @@
 
 tsd_typings
 
+bin/phpspec
+
 /.htaccess
 .htaccess
 /2

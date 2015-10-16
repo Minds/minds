@@ -34,7 +34,11 @@
 	"autoload": {
 		"files": ["engine/autoload.php"]
 	},
+	"config": {
+		"bin-dir": "bin"
+	},
   "require-dev":{
-      "apigen/apigen": "4.1.1"
+		"phpspec/phpspec": "~2.0",
+    "apigen/apigen": "4.1.1"
   }
 }

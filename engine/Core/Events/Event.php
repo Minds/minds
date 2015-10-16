@@ -6,13 +6,13 @@ namespace Minds\Core\Events;
  * Data passed to new style plugin event/hook handlers
  */
 class Event {
-    
+
     private $namespace;
-    private $event; 
+    private $event;
     private $parameters = array();
     private $data;
-    private $return = true;
-    
+    private $return = false;
+
     function __construct($data) {
         $this->data = $data;
         if(isset($data['namespace']))
@@ -22,13 +22,13 @@ class Event {
         if(isset($data['parameters']))
             $this->parameters = $data['parameters'];
     }
-    
+
     public function setResponse($return) {
         $this->return = $return;
     }
-    
+
     public function response() {
-        return $this->return; 
+        return $this->return;
     }
 
     /**

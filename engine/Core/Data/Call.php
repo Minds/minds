@@ -19,35 +19,33 @@ use phpcassa\UUID;
 use Minds\Core;
 use Minds\Core\config;
 
-class Call extends core\base{
+class Call {
 
 	static $keys = array();
 	static $reads = 0;
 	static $writes = 0;
 	static $deletes = 0;
 	static $counts = 0;
-    private $pool;
+	private $pool;
 
-	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000){
+	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000, $pool = NULL){
 		global $CONFIG;
 
 		$this->servers = $servers ?: $CONFIG->cassandra->servers;
 		$this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
-
-		//nasty hack... @todo think of something not as dumb
-		if($this->keyspace == "unit_tests"){
-			$this->cf = \Minds\tests\phpunit\mocks\MockCassandra::build($cf);
-			return;
-		}
+		$this->cf_name = $cf;
 
 
+		if($this->keyspace != 'phpspec')
+			$this->ini();
+
+	}
+
+	private function ini(){
 		try{
-      if(!$this->pool)
-          $this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2, $sendTimeout, $receiveTimeout);
-
-			if($cf){
-				$this->cf_name = $cf;
-				$this->cf = $this->getCf($cf);
+			$this->pool = Pool::build($this->keyspace, $this->servers, NULL, 2);
+			if($this->cf_name){
+				$this->cf = $this->getCf($this->cf_name);
 			}
 		}catch(\Exception $e){
 
@@ -71,8 +69,6 @@ class Call extends core\base{
 			'friends' => array(), //@replace with relationships soon
 			'friendsof' => array(), //@replace with relationships soon
 			'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
-			//'token' => array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ),
-                    	//'log' => array(),
 		);
 
 		$ks = $this->pool->describe_keyspace();
