@@ -13,6 +13,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { MindsUser } from 'src/interfaces/entities';
 import { MindsChannelResponse } from 'src/interfaces/responses';
+import { Poster } from 'src/controllers/newsfeed/poster';
 
 import { ChannelSubscribers } from './subscribers';
 import { ChannelSubscriptions } from './subscriptions';
@@ -25,7 +26,7 @@ import { ChannelEdit } from './edit';
 @View({
   templateUrl: 'templates/channels/channel.html',
   directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity,
-    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel ]
+    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster ]
 })
 
 export class Channel {
@@ -187,6 +188,11 @@ export class Channel {
         this.feed.splice(i,1);
     }
   }
+
+  prepend(activity : any){
+    this.feed.unshift(activity);
+  }
+
 }
 
 export { ChannelSubscribers } from './subscribers';
