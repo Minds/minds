@@ -88,7 +88,7 @@ export class GroupsProfile {
     this.editing = !this.editing;
   }
 
-  set add_banner(file : any){
+  add_banner(file : any){
     this.upload.post('api/v1/groups/group/' + this.group.guid + '/banner', [file.file], { banner_position: file.top })
       .then((response : any) => {
 

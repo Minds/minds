@@ -1,5 +1,5 @@
 <header *ng-if="group">
-  <minds-banner [object]="group" [edit-mode]="editing" [top]="group.banner_position" [(added)]="add_banner" *ng-if="group.banner || editing"></minds-banner>
+  <minds-banner [object]="group" [edit-mode]="editing" [top]="group.banner_position" (added)="add_banner($event)" *ng-if="group.banner || editing"></minds-banner>
 </header>
 
 <div class="mdl-grid groups-grid" style="max-width:900px" *ng-if="group">

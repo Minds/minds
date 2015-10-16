@@ -15,7 +15,7 @@ import { Material } from 'src/directives/material';
     <div class="minds-banner-overlay"></div>
   </div>
   <div *ng-if="editing" class="minds-banner minds-banner-editing">
-    <img src="{{src}}" (dragstart)="dragstart($event)" (dragover)="drag($event)" (dragend)="dragend($event)"/>
+    <img src="{{src}}" [ng-style]="{'top': top}" (dragstart)="dragstart($event)" (dragover)="drag($event)" (dragend)="dragend($event)"/>
     <div class="overlay" [hidden]="file">
       <i class="material-icons">camera</i>
       <span>Click here to add a new banner</span>
@@ -67,6 +67,8 @@ export class MindsBanner{
   }
 
   set _top(value : number){
+    if(!value)
+      return;
     this.top = value;
   }
 
