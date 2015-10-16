@@ -12,9 +12,8 @@ import { Client } from "src/services/api";
 })
 @View({
   template: `
-    <button class="" [ng-class]="{'selected': object.featured_id || object.featured }">
+    <button class="" [ng-class]="{'selected': isFeatured }">
       <i class="material-icons">star</i>
-      <counter *ng-if="object.reminds > 0">{{object.reminds}}</counter>
     </button>
   `,
   directives: [CORE_DIRECTIVES]
@@ -24,12 +23,16 @@ export class FeatureButton {
 
   object;
   session = SessionFactory.build();
+  isFeatured = false;
 
   constructor(public client : Client) {
   }
 
   set _object(value : any){
+    if(!value)
+      return;
     this.object = value;
+    this.isFeatured = value.featured_id || value.featured;
   }
 
   feature(){
