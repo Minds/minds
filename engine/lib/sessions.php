@@ -280,7 +280,7 @@ function login(ElggUser $user, $persistent = false) {
 		//throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
 	
-	if(!elgg_trigger_event('login', 'user', $user)){
+	if(elgg_trigger_event('login', 'user', $user) === false){
         return false;
 	}
 	
@@ -303,7 +303,7 @@ function login(ElggUser $user, $persistent = false) {
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
 	
-	if (!$user->save() || !elgg_trigger_event('login', 'user', $user)) {
+    if (!$user->save() || elgg_trigger_event('login', 'user', $user) === false) {
 		unset($_SESSION['username']);
 		unset($_SESSION['name']);
 		unset($_SESSION['guid']);
@@ -322,7 +322,7 @@ function login(ElggUser $user, $persistent = false) {
 
 	 setcookie('loggedin', 1, time() + 3600, '/');
 	 
-	if(!elgg_trigger_event('loggedin', 'user', $user)){
+	if(elgg_trigger_event('loggedin', 'user', $user) === FALSE){
 		return false;
 	}
 
