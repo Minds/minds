@@ -73,12 +73,11 @@ class start extends Components\Plugin{
 				return new entities\Group($row);
 		});
 
-		Core\Events\Dispatcher::register('acl:read', 'all', function($e){
+		Core\Events\Dispatcher::register('acl:read', 'activity', function($e){
 			$params = $e->getParameters();
 			$entity = $params['entity'];
 			$user = $params['user'];
-			if($entity->type == "group")
-				$e->setResponse(helpers\Membership::isMember($entity->access_id, $user->guid));
+			$e->setResponse(helpers\Membership::isMember($entity->access_id, $user->guid));
 		});
 	}
 
