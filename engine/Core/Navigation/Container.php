@@ -25,7 +25,7 @@ class Container {
 
 		$items = array();
 
-		usort($this->items, function($a, $b){
+		@usort($this->items, function($a, $b){
 			if($a->getPriority() > $b->getPriority())
 				return 1;
 			return -1;

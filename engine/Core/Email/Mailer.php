@@ -13,8 +13,11 @@ class Mailer{
   private $mailer;
   private $stats;
 
-  public function __construct(){
-    $this->mailer = new PHPMailer();
+  public function __construct($mailer = NULL){
+    if($mailer)
+      $this->mailer = $mailer;
+    else
+      $this->mailer = new PHPMailer();
     $this->mailer->isSMTP();
     $this->mailer->SMTPKeepAlive = true;
     $this->setup();

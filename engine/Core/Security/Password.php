@@ -24,7 +24,7 @@ class Password {
     		$algo = 'md5';
 
     	if ($user->password !== self::generate($user, $password, $algo)) {
-        log_login_failure($user->guid);
+        //log_login_failure($user->guid);
         return false;
       }
 
