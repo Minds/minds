@@ -3,6 +3,9 @@
  * Override the basic layout
  */
 
+.material-icons{
+  text-rendering: optimizeLegibility;
+}
 
 .mdl-progress{
   width:100%;

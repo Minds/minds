@@ -117,5 +117,8 @@ minds-app{
     @media screen and (min-width: $min-tablet){
       transform: translateX(0);
     }
+    &.is-visible{
+      transform: translateX(0);
+    }
   }
 }

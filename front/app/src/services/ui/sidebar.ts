@@ -1,7 +1,7 @@
 export class Sidebar{
 	open(){
 		var self = this;
-		var drawer : any = document.getElementsByClassName('mdl-layout__drawer')[0];
+		var drawer : any = document.getElementsByTagName('minds-sidebar')[0];
 		drawer.classList.toggle("is-visible");
 
 		//we have a delay so we don't close after click
@@ -14,7 +14,7 @@ export class Sidebar{
 		}, 300);
 	}
 	close(){
-		var drawer : any = document.getElementsByClassName('mdl-layout__drawer')[0];
+		var drawer : any = document.getElementsByTagName('minds-sidebar')[0];
 		drawer.classList.toggle("is-visible");
 	}
 }
