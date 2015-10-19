@@ -21,8 +21,8 @@ export class Logout {
 	}
 
 	logout(){
-		this.router.navigate(['/Login', {}]);
 		this.client.delete('api/v1/authenticate');
 		this.session.logout();
+    this.router.navigate(['/Login', {}]);
 	}
 }

@@ -8,9 +8,9 @@
  * @subpackage Session
  */
 
-/** 
- * Elgg magic session 
- * 
+/**
+ * Elgg magic session
+ *
  * There is nothing magic about this. @deprecated
  */
 global $SESSION;
@@ -93,8 +93,8 @@ function elgg_is_admin_user($user_guid) {
 	$version = (int) datalist_get('version');
 
 	if ($version < 2010040201) {
-		
-		$user = new ElggUser($user_guid);	
+
+		$user = new ElggUser($user_guid);
 		if($user->isAdmin()){
 			return true;
 		}
@@ -200,10 +200,10 @@ function log_login_failure($user_guid) {
 function reset_login_failure_count($user_guid) {
 	$user_guid = (int)$user_guid;
 	$user = get_entity($user_guid, 'user');
-	
+
 	if (($user_guid) && ($user) && ($user instanceof ElggUser)) {
 		$fails = (int)$user->getPrivateSetting("login_failures");
-		
+
 		if ($fails) {
 			for ($n = 1; $n <= $fails; $n++) {
 				$user->removePrivateSetting("login_failure_" . $n);
@@ -279,11 +279,11 @@ function login(ElggUser $user, $persistent = false) {
         $user->enabled = "yes"; //renable on login
 		//throw new LoginException(elgg_echo('LoginException:DisabledUser'));
 	}
-	
+
 	if(elgg_trigger_event('login', 'user', $user) === false){
         return false;
 	}
-	
+
     $_SESSION['user'] = $user;
 	$_SESSION['guid'] = $user->getGUID();
 	$_SESSION['id'] = $_SESSION['guid'];
@@ -302,7 +302,7 @@ function login(ElggUser $user, $persistent = false) {
 		$db = new Minds\Core\Data\Call('user_index_to_guid');
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
 	}
-	
+
     if (!$user->save() || elgg_trigger_event('login', 'user', $user) === false) {
 		unset($_SESSION['username']);
 		unset($_SESSION['name']);
@@ -321,7 +321,7 @@ function login(ElggUser $user, $persistent = false) {
 	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	 setcookie('loggedin', 1, time() + 3600, '/');
-	 
+
 	if(elgg_trigger_event('loggedin', 'user', $user) === FALSE){
 		return false;
 	}
@@ -339,7 +339,7 @@ function login(ElggUser $user, $persistent = false) {
 function logout() {
 	global $CONFIG;
 
-	/** 
+	/**
 	 * Cookie cleanup
 	 */
 	$user = elgg_get_logged_in_user_entity();
@@ -350,9 +350,9 @@ function logout() {
             }
         }
     }
-	
+
 	if (isset($_SESSION['user'])) {
-		if (!elgg_trigger_event('logout', 'user', $_SESSION['user'])) {
+		if (elgg_trigger_event('logout', 'user', $_SESSION['user']) === false) {
 			return false;
 		}
 		$_SESSION['user']->code = "";
@@ -374,9 +374,9 @@ function logout() {
         session_regenerate_id(true);
     }
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
-	
+
 	elgg_trigger_event('loggedout', 'user', $user);
-		
+
 	return TRUE;
 }
 

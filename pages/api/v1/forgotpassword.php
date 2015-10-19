@@ -49,7 +49,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
             break;
           }
           $code = Core\Security\Password::reset($user);
-          $link = elgg_get_site_url() . "forgot-password?guid=" . $user->guid . "&code=" . $code;
+          $link = elgg_get_site_url() . "forgot-password?username=" . $user->username . "&code=" . $code;
 
           //now send an email
           $mailer = new Core\Email\Mailer();
@@ -61,6 +61,26 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
           break;
         case "reset":
+          $user = new Entities\User($_POST['username']);
+          if(!$user->guid){
+            $response['status'] = "error";
+            $response['message'] = "Could not find @" . $_POST['username'];
+            break;
+          }
+
+          if($user->password_reset_code && $user->password_reset_code != $_POST['code']){
+            $response['status'] = "error";
+            $response['message'] = "The reset code is invalid";
+            break;
+          }
+
+          $user->salt = Core\Security\Password::salt();
+          $user->password = Core\Security\Password::generate($user, $_POST['password']);
+          $user->password_reset_code = "";
+          $user->save();
+
+          $response['user'] = $user->export();
+
           break;
         default:
           $response = array('status'=>'error', 'message'=>'Unknown endpoint');

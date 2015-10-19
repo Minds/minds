@@ -23,7 +23,8 @@ export class Login {
   inProgress : boolean = false;
 
 	constructor(public client : Client, public router: Router){
-		window.componentHandler.upgradeDom();
+		if(this.session.isLoggedIn())
+      router.navigate(['/Newsfeed']);
 	}
 
 	login(username, password){
