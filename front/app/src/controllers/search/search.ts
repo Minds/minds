@@ -3,7 +3,7 @@ import { Router, RouteParams, Location, ROUTER_DIRECTIVES } from 'angular2/route
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { UserCard, VideoCard, ImageCard } from 'src/controllers/cards/cards';
+import { CARDS } from 'src/controllers/cards/cards';
 import { BlogCard } from 'src/plugins/blog/blog-card';
 
 @Component({
@@ -13,7 +13,7 @@ import { BlogCard } from 'src/plugins/blog/blog-card';
 @View({
   templateUrl: 'templates/search/list.html',
   directives: [ CORE_DIRECTIVES, Material, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    UserCard, VideoCard, ImageCard, BlogCard, InfiniteScroll ]
+    CARDS , InfiniteScroll ]
 })
 
 export class Search {
