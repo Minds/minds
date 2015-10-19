@@ -22,8 +22,14 @@ class banners implements Interfaces\FS{
       case "user":
         $size = isset($pages[1]) ? $pages[1] : 'fat';
         $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$entity->guid));
-        if($carousels)
-          $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+        if($carousels){
+          $f = new Entities\File();
+          $f->owner_guid = $entity->guid;
+          $f->setFilename("banners/{$carousels[0]->guid}.jpg");
+          $filepath = $f->getFilenameOnFilestore();
+          if(!file_exists($filepath))
+            $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+        }
         break;
       case "group":
         $f = new Entities\File();
@@ -45,7 +51,12 @@ class banners implements Interfaces\FS{
         break;
       case "carousel":
         $size = isset($pages[1]) ? $pages[1] : 'fat';
-        $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
+        $f = new Entities\File();
+        $f->owner_guid = $entity->owner_guid;
+        $f->setFilename("banners/{$entity->guid}.jpg");
+        $filepath = $f->getFilenameOnFilestore();
+        if(!file_exists($filepath))
+          $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
         break;
     }
 

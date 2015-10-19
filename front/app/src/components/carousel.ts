@@ -20,7 +20,7 @@ import { MindsBanner } from './banner';
       [ng-class]="{'is-hidden': i != index}"
       [edit-mode]="editing"
       [done]="done"
-      [(added)]="added"
+      (added)="added($event, i)"
       ></minds-banner>
     <i class="material-icons right" (click)="next()" [hidden]="banners.length <= 1">keyboard_arrow_right</i>
   `,
@@ -89,25 +89,25 @@ export class MindsCarousel{
   /**
    * Fired when the child component adds a new banner
    */
-  set added(value : any){
-    var index = value.index;
+  added(value : any, index){
+    if(!this.banners[index].guid && !value.file)
+      return; //this is our 'add new' post
     this.modified[index] = {
       guid: this.banners[index].guid,
       file: value.file,
       top: value.top
     }
-    console.log('banner changed, recieved update', value);
   }
 
   /**
    * Once we retreive all the modified banners, we fire back to the parent the new list
    */
   _done(){
+    this.editing = false; //this should update each banner (I'd prefer even driven but change detection works..)
     this.done = true;
     //after one second?
     setTimeout(() => {
       this.done_event.next(this.modified);
-      this.editing = false;
     }, 1000);
   }
 

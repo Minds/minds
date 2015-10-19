@@ -160,9 +160,14 @@ export class Channel {
     });
   }
 
-  set carousel(value : any){
+  updateCarousels(value : any){
     console.log('carousel editing done', value);
-    this.upload.post('api/v1/channel/' + this.user.guid + '/carousel');
+    for(var banner of value){
+      var options : any = { top: banner.top };
+      if(banner.guid)
+        options.guid = banner.guid;
+      this.upload.post('api/v1/channel/carousel', [banner.file], options);
+    }
   }
 
   updateField(field : string){

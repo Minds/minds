@@ -85,6 +85,8 @@ class channel implements Interfaces\Api{
         if(Core\Session::getLoggedinUser()->legacy_guid)
             $guid = Core\Session::getLoggedinUser()->legacy_guid;
 
+        $response = array();
+
         switch($pages[0]){
             case "avatar":
                 $icon_sizes = elgg_get_config('icon_sizes');
@@ -128,10 +130,7 @@ class channel implements Interfaces\Api{
                 //remove all older banners
                 try{
                     $db = new Core\Data\Call('entities_by_time');
-                    //$banners = $db->getRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
-                    //if($banners){
                     $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
-                    //}
                 }catch(\Exception $e){}
 
                 $item = new \Minds\Entities\Carousel();
@@ -180,7 +179,29 @@ class channel implements Interfaces\Api{
                     $item->background = true;
                 }
                 $item->save();
-            break;
+                break;
+            case "carousel":
+              $item = new \Minds\Entities\Carousel(isset($_POST['guid']) ? $_POST['guid'] : null);
+              $item->access_id = ACCESS_PUBLIC;
+              $item->top_offset = $_POST['top'];
+              $item->save();
+
+              $response['saved'] = true;
+
+              if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                $resized = get_resized_image_from_uploaded_file('file', 2000);
+                $file = new Entities\File();
+                $file->owner_guid = $item->owner_guid;
+                $file->setFilename("banners/{$item->guid}.jpg");
+                $file->open('write');
+                $file->write($resized);
+                $file->close();
+
+                $response['uploaded'] = true;
+              }
+
+
+              break;
             case "info":
             default:
                 if(!$owner->canEdit()){
@@ -208,7 +229,7 @@ class channel implements Interfaces\Api{
                 Core\Session::regenerate();
        }
 
-       return Factory::response(array());
+       return Factory::response($response);
 
     }
 
