@@ -68,6 +68,12 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
             break;
           }
 
+          if(!$user->password_reset_code){
+            $response['status'] = "error";
+            $response['message'] = "Please try again with a new reset code.";
+            break;
+          }
+
           if($user->password_reset_code && $user->password_reset_code != $_POST['code']){
             $response['status'] = "error";
             $response['message'] = "The reset code is invalid";
