@@ -13,7 +13,7 @@ import { BlogCard } from 'src/plugins/blog/blog-card';
 @View({
   templateUrl: 'templates/search/list.html',
   directives: [ CORE_DIRECTIVES, Material, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    CARDS , InfiniteScroll ]
+    CARDS, BlogCard, InfiniteScroll ]
 })
 
 export class Search {
