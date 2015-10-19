@@ -72,6 +72,7 @@ export class ForgotPassword {
       })
       .then((response : any) => {
         self.session.login(response.user);
+        self.router.navigate(['/Newsfeed']);
       })
       .catch((e) => {
         self.error = e.message;
