@@ -2,6 +2,7 @@ import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter } from 
 import { ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { MDL_DIRECTIVES } from 'src/directives/material';
+import { AutoGrow } from 'src/directives/autogrow';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Activity } from './activity';
 import { MindsActivityObject } from 'src/interfaces/entities';
@@ -15,7 +16,7 @@ import { SessionFactory } from 'src/services/session';
 })
 @View({
   templateUrl: 'templates/newsfeed/poster.html',
-  directives: [ Activity, MDL_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, InfiniteScroll ]
+  directives: [ Activity, MDL_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, AutoGrow, InfiniteScroll ]
 })
 
 export class Poster {

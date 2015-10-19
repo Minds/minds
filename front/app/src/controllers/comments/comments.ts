@@ -3,6 +3,7 @@ import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { AutoGrow } from 'src/directives/autogrow';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { TagsPipe } from 'src/pipes/tags';
 import { TagsLinks } from 'src/directives/tags';
@@ -14,7 +15,7 @@ import { TagsLinks } from 'src/directives/tags';
 })
 @View({
   templateUrl: 'templates/comments/list.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, FORM_DIRECTIVES, TagsLinks ],
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, FORM_DIRECTIVES, TagsLinks, AutoGrow ],
   pipes: [ TagsPipe ]
 })
 
