@@ -49,12 +49,16 @@
 
 <!-- Images -->
 <div class="item item-image allow-select" *ng-if="activity.thumbnail_src && !activity.perma_url">
-	<img [src]="activity.thumbnail_src">
+	<a [router-link]="['/Archive-View', {guid: activity.entity_guid}]">
+		<img [src]="activity.thumbnail_src">
+	</a>
 </div>
 
 <!-- Custom type:: batch -->
 <div class="item item-image allow-select" *ng-if="activity.custom_type == 'batch'">
-	<img [src]="activity.custom_data[0].src" style="width:100%">
+	<a [router-link]="['/Archive-View', {guid: activity.entity_guid}]">
+		<img [src]="activity.custom_data[0].src" style="width:100%">
+	</a>
 </div>
 
 <!-- Reminds -->
