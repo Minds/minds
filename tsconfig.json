@@ -30,6 +30,7 @@
         "front/app/src/components/buttons/subscribe.ts",
         "front/app/src/components/buttons/thumbs-down.ts",
         "front/app/src/components/buttons/thumbs-up.ts",
+        "front/app/src/components/buttons/user-dropdown.ts",
         "front/app/src/components/carousel.ts",
         "front/app/src/components/editors/tinymce.ts",
         "front/app/src/components/graphs.ts",

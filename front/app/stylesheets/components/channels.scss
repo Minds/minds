@@ -12,7 +12,7 @@ minds-channel{
     height:330px;
     box-sizing:content-box;
     position:relative;
-    overflow:hidden;
+    overflow:visible;
 
     .channel-grid{
       align-items:flex-end;
@@ -96,21 +96,37 @@ minds-channel{
       }
     }
 
-    minds-button-subscribe, minds-button-edit{
+    .mdl-tabs__action-buttons{
       padding-top: 12px;
+      display: flex;
+      flex-flow: row nowrap;
+      overflow:visible;
 
-      button{
-        color:#eceff1;
-        border:1px solid #eceff1;
+      > * {
+        margin-right: 4px;
+        button{
+          color:#eceff1;
+          border:1px solid #eceff1;
+        }
       }
     }
-    minds-button-edit > button{
-      padding: 6px 12px;
+    minds-button-edit > button, minds-button-user-dropdown > button{
+      padding: 6px;
       font-size: 18px;
-      margin: 0px 30px;
+  //    margin: 0px 30px;
     }
 
   }
+ }
+
+ .channel-blocked{
+   h3{
+     font-size: 26px;
+      text-align: center;
+      width: 100%;
+      margin: 80px 0;
+      font-weight: bolder;
+   }
  }
 
  .minds-channel-sidebar{

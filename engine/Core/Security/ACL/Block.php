@@ -54,8 +54,11 @@ class Block {
      * @return boolean
      */
     public function isBlocked($user, $from){
-      if(!$user)
-        $user = Core\Session::getLoggedinUser();
+      if(!$from)
+        $from = Core\Session::getLoggedinUser();
+
+      if($from instanceof Entities\User)
+        $from = $from->guid;
 
       if($user instanceof Entities\User)
         $user = $user->guid;

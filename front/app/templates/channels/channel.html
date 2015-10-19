@@ -6,7 +6,6 @@
 
 <header  *ng-if="user" [ng-class]="{'isLocked': isLocked}">
   <minds-carousel [banners]="user.carousels" [edit-mode]="editing" [(done)]="carousel"></minds-carousel>
-</div>
 
   <div class="mdl-grid channel-grid channel-header-bar" style="max-width:900px">
     <div class="mdl-cell mdl-cell--4-col minds-channel-title">
@@ -41,18 +40,28 @@
           <span>Views</span>
           <b>{{user.impressions}}</b>
         </a>
-        <minds-button-subscribe [user]="user" class="mdl-tabs__tab" *ng-if="session.isLoggedIn() && session.getLoggedInUser().guid != user.guid"></minds-button-subscribe>
-        <minds-button-edit (click)="toggleEditing()" class="mdl-tabs__t"  [hidden]="editing" *ng-if="session.getLoggedInUser().guid == user.guid">
-          <button class="material-icons">edit</button>
-        </minds-button-edit>
-        <minds-button-edit (click)="toggleEditing()" class="mdl-tabs__t"  [hidden]="!editing" *ng-if="session.getLoggedInUser().guid == user.guid">
-          <button>Save</button>
-        </minds-button-edit>
+        <div class="mdl-tabs__tab mdl-tabs__action-buttons">
+          <minds-button-subscribe [user]="user"  *ng-if="session.isLoggedIn() && session.getLoggedInUser().guid != user.guid && !user.blocked"></minds-button-subscribe>
+          <minds-button-user-dropdown [(user)]="user" *ng-if="session.getLoggedInUser().guid != user.guid"></minds-button-user-dropdown>
+
+          <minds-button-edit (click)="toggleEditing()" [hidden]="editing" *ng-if="session.getLoggedInUser().guid == user.guid">
+            <button class="material-icons">edit</button>
+          </minds-button-edit>
+          <minds-button-edit (click)="toggleEditing()"  [hidden]="!editing" *ng-if="session.getLoggedInUser().guid == user.guid">
+            <button>Save</button>
+          </minds-button-edit>
+        </div>
     </div>
   </div>
 </header>
 
-<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="user">
+
+<div class="mdl-grid channel-grid channel-blocked" style="max-width:900px" *ng-if="user && user?.blocked">
+  <h3 class="mdl-color-text--blue-grey-300">You have blocked @{{user.username}}</h3>
+</div>
+
+
+<div class="mdl-grid channel-grid" style="max-width:900px" *ng-if="user && !user?.blocked">
 
   <section class="mdl-cell mdl-cell--4-col minds-channel-sidebar">
       <div class="mdl-card mdl-shadow--2dp minds-channel-bio">

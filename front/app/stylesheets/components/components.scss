@@ -257,3 +257,12 @@ minds-carousel{
  }
 
 }
+
+minds-button-user-dropdown{
+  .minds-dropdown-menu{
+    top: 50px;
+    margin-top: 0;
+    position: absolute;
+    text-transform: capitalize;
+  }
+}

@@ -71,6 +71,9 @@ class channel implements Interfaces\Api{
             }
         }
 
+        $block = Core\Security\ACL\Block::_();
+        $response['channel']['blocked'] = $block->isBlocked($user);
+
         return Factory::response($response);
 
     }

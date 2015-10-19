@@ -19,18 +19,33 @@ class block implements Interfaces\Api, Interfaces\ApiIgnorePam{
      */
     public function get($pages){
 
-      $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
-      $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+      $response = array();
 
-      $block = Core\Security\ACL\Block::_();
-      $guids = $block->getBlockList(Core\Session::getLoggedinUser(), $limit, $offset);
+      if(!isset($pages[0]))
+        $pages[0] = "list";
 
-      if($guids){
-        $entities = Core\Entities::get(array('guids'=>$guids));
-        $response['entities'] = Api\Factory::exportable($entities);
+      switch($pages[0]){
+        case "list":
+          $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
+          $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+
+          $block = Core\Security\ACL\Block::_();
+          $guids = $block->getBlockList(Core\Session::getLoggedinUser(), $limit, $offset);
+
+          if($guids){
+            $entities = Core\Entities::get(array('guids'=>$guids));
+            $response['entities'] = Api\Factory::exportable($entities);
+          }
+          break;
+        case is_numeric($pages[0]):
+          $block = Core\Security\ACL\Block::_();
+          $response['blocked'] = $block->isBlocked($pages[0]);
+          break;
       }
 
-      return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
+
+
+      return Factory::response($response);
     }
 
     /**
