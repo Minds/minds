@@ -111,7 +111,7 @@ class newsfeed implements Interfaces\Api{
                 $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
 
                 //check to see if we can interact with the parent
-                if(!Security\ACL::interact($embeded))
+                if(!Security\ACL::_()->interact($embeded))
                   return false;
 
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');

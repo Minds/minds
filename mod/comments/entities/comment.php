@@ -31,7 +31,7 @@ class comment extends Entities\Entity{
     public function save(){
 
         //check to see if we can interact with the parent
-        if(!Security\ACL::interact($this->parent))
+        if(!Security\ACL::_()->interact($this->parent))
           return false;
 
         parent::save(false);

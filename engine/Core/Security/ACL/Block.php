@@ -116,6 +116,9 @@ class Block {
   			$entity = $params['entity'];
   			$user = $params['user'];
 
+        if($this->isBlocked($user, $entity->owner_guid))
+          $e->setResponse(false);
+
   		});
 
     }

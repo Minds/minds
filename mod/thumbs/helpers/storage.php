@@ -17,7 +17,7 @@ class storage{
     public static function insert($direction = 'up', $entity){
 
         //check to see if we can interact with the parent
-        if(!Security\ACL::interact($entity))
+        if(!Security\ACL::_()->interact($entity))
           return false;
 
         $db = new Data\Call('entities');
