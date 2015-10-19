@@ -142,6 +142,8 @@
 
   <!-- Feed list -->
   <section class="mdl-cell mdl-cell--8-col" *ng-if="_filter == 'feed'">
+    
+    <minds-newsfeed-poster (load)="prepend($event)"></minds-newsfeed-poster>
 
     <div class="minds-list">
 
