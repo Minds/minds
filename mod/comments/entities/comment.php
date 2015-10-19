@@ -7,8 +7,11 @@ namespace minds\plugin\comments\entities;
 
 use Minds\Entities;
 use Minds\Core;
+use Minds\Core\Security;
 
 class comment extends Entities\Entity{
+
+    private $parent;
 
     public function initializeAttributes(){
         parent::initializeAttributes();
@@ -19,15 +22,24 @@ class comment extends Entities\Entity{
         ));
     }
 
+    public function setParent($parent){
+      $this->parent = $parent;
+      $this->parent_guid = $parent->guid;
+      return $this;
+    }
 
     public function save(){
+
+        //check to see if we can interact with the parent
+        if(!Security\ACL::interact($this->parent))
+          return false;
 
         parent::save(false);
         $indexes = new \Minds\Core\Data\indexes('comments');
         $indexes->set($this->parent_guid, array($this->guid=>$this->guid));
 
-    $cacher = Core\Data\cache\factory::build();
-    $cacher->destroy("comments:count:$this->parent_guid");
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->destroy("comments:count:$this->parent_guid");
 
         return $this->guid;
     }

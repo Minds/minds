@@ -59,7 +59,7 @@ class comments implements Interfaces\Api{
         $parent = new \Minds\Entities\Entity($pages[0]);
         $comment = new \Minds\plugin\comments\entities\comment();
         $comment->description = urldecode($_POST['comment']);
-        $comment->parent_guid = $pages[0];
+        $comment->setParent($parent);
         if($comment->save()){
             $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
             $subscribers[$parent->owner_guid] = $parent->owner_guid;
@@ -79,9 +79,15 @@ class comments implements Interfaces\Api{
 
             $indexes = new data\indexes();
             $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
+            $comment->ownerObj = Core\Session::getLoggedinUser()->export();
+            $response['comment'] = $comment->export();
+        } else {
+          $response = array(
+            'status' => 'error',
+            'message' => 'The comment couldn\'t be saved'
+          );
         }
-        $comment->ownerObj = Core\Session::getLoggedinUser()->export();
-        $response['comment'] = $comment->export();
+
 
         return Factory::response($response);
     }

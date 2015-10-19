@@ -8,6 +8,7 @@
 namespace minds\pages\api\v1;
 
 use Minds\Core;
+use Minds\Core\Security;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -108,6 +109,11 @@ class newsfeed implements Interfaces\Api{
             case 'remind':
                 $embeded = new Entities\Entity($pages[1]);
                 $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
+
+                //check to see if we can interact with the parent
+                if(!Security\ACL::interact($embeded))
+                  return false;
+
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
 
@@ -216,13 +222,13 @@ class newsfeed implements Interfaces\Api{
             return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
         switch($pages[1]){
-            case 'view':
-                try{
-                    \Minds\Helpers\Counters::increment($activity->guid, "impression");
-                    \Minds\Helpers\Counters::increment($activity->owner_guid, "impression");
-                } catch(\Exception $e){
-                }
-                break;
+          case 'view':
+            try{
+                \Minds\Helpers\Counters::increment($activity->guid, "impression");
+                \Minds\Helpers\Counters::increment($activity->owner_guid, "impression");
+            } catch(\Exception $e){
+            }
+            break;
         }
 
         return Factory::response(array());
@@ -230,17 +236,18 @@ class newsfeed implements Interfaces\Api{
     }
 
     public function delete($pages){
-	$activity = new Entities\Activity($pages[0]);
-	if(!$activity->guid)
-		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
+      $activity = new Entities\Activity($pages[0]);
+      if(!$activity->guid)
+        return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
 
-    if(!$activity->canEdit()){
+      if(!$activity->canEdit()){
         return Factory::response(array('status'=>'error', 'message'=>'you don\'t have permission'));
-    }
+      }
 
- 	if($activity->delete())
-        	return Factory::response(array('message'=>'removed ' . $pages[0]));
-        	return Factory::response(array('status'=>'error', 'message'=>'could not delete'));
+      if($activity->delete())
+        return Factory::response(array('message'=>'removed ' . $pages[0]));
+
+      return Factory::response(array('status'=>'error', 'message'=>'could not delete'));
     }
 
 }

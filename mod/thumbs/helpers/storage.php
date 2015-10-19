@@ -7,6 +7,7 @@ namespace minds\plugin\thumbs\helpers;
 
 use Minds\Core;
 use Minds\Core\Data;
+use Minds\Core\Security;
 use Minds\Core\entities;
 use Minds\Helpers;
 
@@ -14,6 +15,10 @@ class storage{
 
 
     public static function insert($direction = 'up', $entity){
+
+        //check to see if we can interact with the parent
+        if(!Security\ACL::interact($entity))
+          return false;
 
         $db = new Data\Call('entities');
         $indexes = new Data\Call('entities_by_time');
