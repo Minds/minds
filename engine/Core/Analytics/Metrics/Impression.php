@@ -39,7 +39,7 @@ class Impression implements AnalyticsMetric{
   * @return array
   */
   public function get($span = 3, $unit = 'day', $timestamp = NULL){
-    $timestamps = Timestamps::span(3, $unit);
+    $timestamps = Timestamps::span($span, $unit);
     $data = array();
     foreach($timestamps as $ts){
       $data[] = array(

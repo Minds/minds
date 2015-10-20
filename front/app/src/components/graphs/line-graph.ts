@@ -9,7 +9,7 @@ import { GraphPoints } from './points';
 @View({
   template: `
     <div [hidden]="!data"> <!-- Angular has svg problems... -->
-      <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8" xmlns="http://www.w3.org/2000/svg" >
+      <svg fill="currentColor" [viewBox]="'0 0 ' + x + ' ' + y" style="stroke:#757575; opacity:0.8; overflow:visible" xmlns="http://www.w3.org/2000/svg" >
         <!-- X Y, X Y (from top to bottom) -->
         <g class="points">
           <polyline [points]="points"
@@ -50,7 +50,7 @@ export class LineGraph {
       if(stat.total > max)
         max = stat.total;
     }
-    return max * 2;
+    return max;
   }
 
   calculate(){
@@ -58,11 +58,11 @@ export class LineGraph {
     var y_bounds = this.getBounds();
     var y_divi = (y_bounds + this.y_padding) / this.y;
 
-    var x_count : number = this.data.length;
-    var x_diff : number = this.x / x_count;
-    var x_ticker : number = 0;
+    console.log(y_bounds, y_divi);
 
-    console.log('y bounds: ' + y_bounds, 'y_divi:' + y_divi);
+    var x_count : number = this.data.length;
+    var x_diff : number = this.x / (x_count -1);
+    var x_ticker : number = 0;
 
     //this.points = x_ticker + " " + this.y;
     this.points = "";

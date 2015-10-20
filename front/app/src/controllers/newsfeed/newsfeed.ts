@@ -4,11 +4,11 @@ import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Poster } from './poster';
-import { Activity } from './activity';
+import { CARDS } from 'src/controllers/cards/cards';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { SessionFactory } from 'src/services/session';
 
-import { GraphImpressions } from 'src/components/graphs/impressions';
+import { AnalyticsImpressions } from 'src/components/analytics/impressions';
 
 @Component({
   selector: 'minds-newsfeed',
@@ -16,8 +16,8 @@ import { GraphImpressions } from 'src/components/graphs/impressions';
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
-  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    InfiniteScroll, GraphImpressions ]
+  directives: [ Poster, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
+    InfiniteScroll, AnalyticsImpressions, CARDS ]
 })
 
 export class Newsfeed {

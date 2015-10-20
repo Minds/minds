@@ -22,6 +22,7 @@
     "exclude": [],
     "files": [
         "front/app/app.ts",
+        "front/app/src/components/analytics/impressions.ts",
         "front/app/src/components/banner.ts",
         "front/app/src/components/buttons.ts",
         "front/app/src/components/buttons/comment.ts",

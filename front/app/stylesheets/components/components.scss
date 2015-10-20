@@ -267,3 +267,27 @@ minds-button-user-dropdown{
     text-transform: capitalize;
   }
 }
+
+minds-graph-line{
+  display: block;
+  margin-bottom: 16px;
+}
+
+.graph-labels{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  > .graph-label{
+    flex:1;
+    text-align:center;
+    font-weight:light;
+
+    b{
+      display:block;
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+  }
+
+}

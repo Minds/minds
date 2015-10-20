@@ -22,13 +22,16 @@
 
     <div class="mdl-cell mdl-cell--4-col">
 
+      <minds-card-user [object]="session.getLoggedInUser()" class="mdl-card mdl-shadow--2dp" style="margin-bottom:16px;"></minds-card-user>
+
       <div class="mdl-card mdl-color--white mdl-shadow--2dp">
+
         <div class="mdl-card__title">
           <h2 class="mdl-card__title-text">Your stats</h2>
         </div>
     		<div class="mdl-card__supporting-text mdl-color-text--blue-grey-700">
-          <b>Impressions this week: 6000</b>
-          <minds-graph-impressions [impressions]="[1000, 500, 2000, 2200, 2500, 3000]" [height]="200"></minds-graph-impressions>
+
+          <minds-analytics-impressions [key]="session.getLoggedInUser().guid" [span]="5" [unit]="day"></minds-analytics-impressions>
 
     		</div>
     	</div>
