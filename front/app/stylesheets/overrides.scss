@@ -11,7 +11,7 @@
   width:100%;
 }
 
-.mdl-card{
+.mdl-card:not(.mdl-cell){
   width:auto;
   min-height:0;
 }
