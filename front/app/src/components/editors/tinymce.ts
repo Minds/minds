@@ -34,9 +34,9 @@ export class MindsTinymce {
       toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media",
       statusbar: false,
       plugins: [
-	         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-	         "wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-	         "save table directionality emoticons template paste autoresize"
+	         "advlist autolink link image lists preview hr anchor pagebreak",
+	         "media nonbreaking",
+	         "table directionality autoresize"
 	    ],
       setup: (ed) => {
 
