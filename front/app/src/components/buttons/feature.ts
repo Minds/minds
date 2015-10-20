@@ -38,30 +38,30 @@ export class FeatureButton {
   feature(){
     var self = this;
 
-    if (this.object.featured)
+    if (this.isFeatured)
       return this.unFeature();
 
-    this.object.featured = true;
+    this.isFeatured = true;
 
     this.client.put('api/v1/admin/feature/' + this.object.guid, {})
       .then((response : any) => {
 
       })
       .catch((e) => {
-        this.object.featured = false;
+        this.isFeatured = false;
       });
   }
 
   unFeature(){
     var self = this;
+    this.isFeatured = false;
     this.object.featured = false;
-    this.object.featured_id = null;
     this.client.delete('api/v1/admin/feature/' + this.object.guid, {})
       .then((response : any) => {
 
       })
       .catch((e) => {
-        this.object.featured = true;
+        this.isFeatured = true;
       });
   }
 
