@@ -24,7 +24,7 @@
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
-    <div class="mdl-cell mdl-cell--6-col minds-actions-block">
+    <div class="mdl-cell mdl-cell--7-col minds-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
       <minds-button-edit [router-link]="['/Archive-Edit', { guid: entity.guid }]" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
         <button>Edit</button>
