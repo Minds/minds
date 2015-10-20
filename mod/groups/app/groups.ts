@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
 import { Client } from 'src/services/api';
@@ -28,6 +28,7 @@ export class Groups {
   groups : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
+  title : Title = new Title();
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -36,6 +37,8 @@ export class Groups {
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
+
+      this.title.setTitle("Groups | Minds");
   }
 
   load(refresh : boolean = false){

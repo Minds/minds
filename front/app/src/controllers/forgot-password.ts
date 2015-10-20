@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
@@ -22,12 +22,14 @@ export class ForgotPassword {
 
   username : string = "";
   code : string = "";
+  title : Title = new Title();
 
 	constructor(public client : Client, public router: Router, public params: RouteParams){
     if(params.params['code']){
       this.setCode(params.params['code']);
       this.username = params.params['username'];
     }
+    this.title.setTitle("Forgot Password | Minds");
 	}
 
 	request(username){

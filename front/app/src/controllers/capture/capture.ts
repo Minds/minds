@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router } from 'angular2/router';
 
 import { SessionFactory } from 'src/services/session';
@@ -32,6 +32,7 @@ export class Capture {
   inProgress : boolean = false;
 
   dragging : boolean = false;
+  title : Title = new Title();
 
 	constructor(public _upload: Upload, public client: Client, public router: Router){
     if(!this.session.isLoggedIn()){
@@ -40,6 +41,8 @@ export class Capture {
       this.domListeners();
       this.getAlbums();
     }
+
+    this.title.setTitle("Capture | Minds");
 	}
 
   domListeners(){

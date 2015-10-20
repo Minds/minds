@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
 import { MessengerConversation } from "./messenger-conversation";
@@ -36,7 +36,7 @@ export class Gatherings {
   search : any = {};
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
-
+  title : Title = new Title();
 
   constructor(public client: Client, public router: Router, public params: RouteParams){
     if(!this.session.isLoggedIn()){
@@ -48,6 +48,7 @@ export class Gatherings {
       this.checkSetup();
       this.load(true);
     }
+    this.title.setTitle("Messenger | Minds");
   }
 
   checkSetup(){

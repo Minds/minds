@@ -1,4 +1,4 @@
-import { Component, View, NgFor, NgIf, NgSwitch, NgSwitchWhen, NgSwitchDefault, Inject, NgClass } from 'angular2/angular2';
+import { Title, Component, View, NgFor, NgIf, NgSwitch, NgSwitchWhen, NgSwitchDefault, Inject, NgClass } from 'angular2/angular2';
 import { Router, RouterLink } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { SessionFactory } from '../../services/session';
@@ -21,6 +21,7 @@ export class Notifications {
   offset: string = "";
   inProgress : boolean = false;
   session = SessionFactory.build();
+  title : Title = new Title();
 
   constructor(public client: Client, public router: Router){
     if(!this.session.isLoggedIn()){
@@ -28,6 +29,8 @@ export class Notifications {
     } else {
       this.load(true);
     }
+
+    this.title.setTitle("Notifications | Minds");
   }
 
   load(refresh : boolean = false){

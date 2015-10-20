@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -29,6 +29,7 @@ export class Wallet {
   offset: string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+  title : Title = new Title();
 
 	constructor(public client: Client, public wallet: WalletService, public router: Router, public params: RouteParams){
     if(!this.session.isLoggedIn()){
@@ -36,6 +37,8 @@ export class Wallet {
     }
     if(params.params['filter'])
       this.filter = params.params['filter'];
+
+      this.title.setTitle("Wallet | Minds");
 	}
 
 }

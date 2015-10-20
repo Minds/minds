@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/angular2';
+import { Title, Component, View, Inject } from 'angular2/angular2';
 import { Router, RouterLink } from 'angular2/router';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
@@ -21,10 +21,13 @@ export class Login {
   twofactorToken : string = "";
   hideLogin : boolean = false;
   inProgress : boolean = false;
+  title : Title = new Title();;
 
 	constructor(public client : Client, public router: Router){
 		if(this.session.isLoggedIn())
       router.navigate(['/Newsfeed']);
+      
+      this.title.setTitle("Login | Minds");
 	}
 
 	login(username, password){

@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, Location, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -25,12 +25,15 @@ export class Search {
   offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+  title : Title = new Title();
 
   constructor(public client: Client, public params : RouteParams){
     this.q = params.params['q'];
     if(params.params['type'])
       this.type = params.params['type'];
   	this.search();
+
+    this.title.setTitle("Search | Minds");
   }
 
   /**

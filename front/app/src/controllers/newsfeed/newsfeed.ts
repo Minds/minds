@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -28,6 +28,7 @@ export class Newsfeed {
   moreData : boolean = true;
   session = SessionFactory.build();
   minds;
+  title : Title = new Title();
 
   attachment_preview;
 
@@ -47,6 +48,8 @@ export class Newsfeed {
   		this.load();
       this.minds = window.Minds;
     }
+    
+    this.title.setTitle("Newsfeed | Minds");
 	}
 
 	/**

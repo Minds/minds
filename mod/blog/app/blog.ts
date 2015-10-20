@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
 import { Client } from 'src/services/api';
@@ -28,6 +28,7 @@ export class Blog {
   blogs : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
+  title : Title = new Title();
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -36,6 +37,8 @@ export class Blog {
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
+
+      this.title.setTitle("Blogs | Minds");
   }
 
   load(refresh : boolean = false){

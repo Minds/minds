@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
+import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
 import { Router, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -36,6 +36,7 @@ export class Channel {
   scroll = ScrollFactory.build();
   isLocked : boolean = false;
 
+  title : Title = new Title();
   username : string;
   user : MindsUser;
   feed : Array<Object> = [];
@@ -53,8 +54,10 @@ export class Channel {
       this.username = params.params['username'];
       if(params.params['filter'])
         this._filter = params.params['filter'];
+      this.title.setTitle("Channel | Minds");
       this.load();
       this.onScroll();
+
   }
 
   load(){
@@ -67,6 +70,7 @@ export class Channel {
         return false;
       }
       self.user = data.channel;
+      this.title.setTitle(self.user.username + " | Minds");
       if(self._filter == "feed")
       self.loadFeed(true);
       self.loadMedia();

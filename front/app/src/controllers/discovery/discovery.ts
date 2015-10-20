@@ -1,4 +1,4 @@
- import { Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
+import { Title, Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from 'angular2/router';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
@@ -23,6 +23,7 @@ export class Discovery {
   moreData : boolean = true;
   offset: string = "";
   inProgress : boolean = false;
+  title : Title = new Title();
 
   constructor(public client: Client, public router: Router, public params: RouteParams){
     this._filter = params.params['filter'];
@@ -41,6 +42,9 @@ export class Discovery {
 
     if(params.params['type'])
       this._type = params.params['type'];
+
+    this.title
+    this.title.setTitle("Discovery | Minds");
 
     this.load(true);
   }
