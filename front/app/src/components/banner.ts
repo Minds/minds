@@ -120,6 +120,7 @@ export class MindsBanner{
     this.startY = e.target.style.top ? parseInt(e.target.style.top) : 0;
     this.offsetY = e.clientY;
     this.dragging = true;
+    e.dataTransfer.effectAllowed = 'none';
   }
 
   drag(e){
