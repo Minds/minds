@@ -13,6 +13,7 @@
 tsd_typings
 
 bin/phpspec
+bin/php*
 
 /.htaccess
 .htaccess
