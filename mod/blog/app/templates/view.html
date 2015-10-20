@@ -29,7 +29,7 @@
       <minds-button-edit (click)="delete()"  *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid">
         <button>X</button>
       </minds-button-edit>
-      <minds-button-feature [object]="entity" *ng-if="session.isAdmin()"></minds-button-feature>
+      <minds-button-feature [object]="blog" *ng-if="session.isAdmin()"></minds-button-feature>
 
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="blog"></minds-button-remind>
