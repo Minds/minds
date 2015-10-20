@@ -59,7 +59,7 @@ var PATH = {
       './node_modules/es6-shim/es6-shim.min.js',
       //'./node_modules/systemjs/dist/system-polyfills.src.js',
       './node_modules/systemjs/dist/system.src.js',
-      './node_modules/intl/dist/intl.min.js',
+      './node_modules/intl/dist/Intl.min.js',
       './node_modules/intl/locale-data/jsonp/en.js'
     ],
     loaderConfig: [
