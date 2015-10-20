@@ -243,7 +243,7 @@
 
   .avatar{
     display:flex;
-    flex-direction(column);
+    flex-direction:column;
 
     img{
       border-radius: 3px;
@@ -253,7 +253,7 @@
 
   .body{
     display:flex;
-    flex-direction(column);
+    flex-direction:column;
     flex:1;
 
     margin-left:$minds-margin * 2;
