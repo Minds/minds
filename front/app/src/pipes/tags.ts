@@ -15,10 +15,6 @@ export class TagsPipe {
     if(!value)
       return value;
 
-    var el : any = document.createElement("div");
-    el.innerHTML = value;
-    value = el.innerText;
-
     //<a>tag
     var url = /(\b(https?|http|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     value = value.replace(url, '<a href="$1" target="_blank">$1</a>');

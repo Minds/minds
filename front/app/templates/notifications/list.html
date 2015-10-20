@@ -27,56 +27,41 @@
 
           <!-- comment -->
           <template ng-switch-when="comment" *ng-if="notification.entityObj">
-            <!-- Object-->
-            <a *ng-if="notification.entityObj.type == 'object' && notification.entityObj.subtype != 'blog'">
-              <p>
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
-                <span class="pseudo-link mdl-color-text--blue-grey-400" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
-              </p>
-            </a>
+
             <!-- Activity -->
             <a *ng-if="notification.entityObj.type == 'activity'"
               [router-link]="['/Activity', {guid: notification.entityObj.guid}]">
               <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">your activity</span>
+                {{notification.fromObj.name}} commented on <span class="pseudo-link mdl-color-text--blue-grey-400">your activity</span>
               </p>
               <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.ownerObj.name}}'s activity</span>
+                {{notification.fromObj.name}} commented on <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.ownerObj.name}}'s activity</span>
               </p>
               <p *ng-if="notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.title}}</span>
+                {{notification.fromObj.name}} commented on <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.title}}</span>
               </p>
             </a>
 
-            <!-- Blog -->
-            <a *ng-if="notification.entityObj.subtype == 'blog'"
-              [router-link]="['/Blog-View', {guid: notification.entityObj.guid}]">
-              <p>
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.title}}</span>
-              </p>
-            </a>
+            <!-- Object-->
+            <div *ng-if="notification.entityObj.type == 'object'" [ng-switch]="notification.entityObj.subtype">
 
-            <!-- Archive -->
-            <a *ng-if="notification.entityObj.type == 'album'"
-              [router-link]="['/Archive-View', {guid: notification.entityObj.guid}]">
-              <p *ng-if="notification.entityObj.owner_guid == session.getLoggedInUser().guid && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">your album</span>
-              </p>
-              <p *ng-if="notification.entityObj.owner_guid != session.getLoggedInUser().guid  && !notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.ownerObj.name}}'s album</span>
-              </p>
-              <p *ng-if="notification.entityObj.title">
-                {{notification.fromObj.name}} commented on
-                <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.title}}</span>
-              </p>
-            </a>
+              <template ng-switch-when="blog">
+                <a [router-link]="['/Blog-View', {guid: notification.entityObj.guid}]">
+                  {{notification.fromObj.name}} commented on <span class="pseudo-link mdl-color-text--blue-grey-400">{{notification.entityObj.title}}</span>
+                </a>
+              </template>
+
+              <template ng-switch-default>
+                <a [router-link]="['/Archive-View', {guid: notification.entityObj.guid}]">
+                  <p>
+                    {{notification.fromObj.name}} commented on
+                    <span class="pseudo-link mdl-color-text--blue-grey-400" *ng-if="notification.entityObj.title" >{{notification.entityObj.title}}</span>
+                    <span class="pseudo-link mdl-color-text--blue-grey-400" *ng-if="!notification.entityObj.title">your {{notification.entityObj.subtype}}</span>
+                  </p>
+                </a>
+              </template>
+
+            </div>
 
             <!-- Default -->
             <a *ng-if="notification.entityObj.type != 'object' && notification.entityObj.type != 'activity'">
