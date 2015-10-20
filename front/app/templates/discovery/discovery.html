@@ -7,14 +7,14 @@
 
 <div class="mdl-grid newsfeed-grid" style="max-width:900px">
 
-    <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp" *ng-for="#entity of entities">
+    <div class="mdl-cell mdl-cell--4-col" *ng-for="#entity of entities">
 
-      <minds-card-video [object]="entity" *ng-if="entity.subtype == 'video'"></minds-card-video>
-      <minds-card-image [object]="entity" *ng-if="entity.subtype == 'image'"></minds-card-image>
-      <minds-card-album [object]="entity" *ng-if="entity.subtype == 'album'"></minds-card-album>
+      <minds-card-video [object]="entity" *ng-if="entity.subtype == 'video'" class="mdl-card mdl-shadow--2dp"></minds-card-video>
+      <minds-card-image [object]="entity" *ng-if="entity.subtype == 'image'" class="mdl-card mdl-shadow--2dp"></minds-card-image>
+      <minds-card-album [object]="entity" *ng-if="entity.subtype == 'album'" class="mdl-card mdl-shadow--2dp"></minds-card-album>
 
       <!-- START: User Only -->
-      <minds-card-user [object]="entity" *ng-if="entity.type == 'user'"></minds-card-user>
+      <minds-card-user [object]="entity" *ng-if="entity.type == 'user'" class="mdl-card mdl-shadow--2dp"></minds-card-user>
       <!-- END: User Only -->
     </div>
 

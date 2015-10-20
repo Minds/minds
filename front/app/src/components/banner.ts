@@ -11,7 +11,7 @@ import { Material } from 'src/directives/material';
 @View({
   template: `
   <div class="minds-banner" *ng-if="!editing">
-    <img src="{{src}}" [ng-style]="{'top': top}"/>
+    <img [src]="src" [ng-style]="{'top': top}"/>
     <div class="minds-banner-overlay"></div>
   </div>
   <div *ng-if="editing" class="minds-banner minds-banner-editing">

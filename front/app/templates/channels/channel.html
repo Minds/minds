@@ -2,6 +2,10 @@
   <h1>{{error}}</h1>
 </div>
 
+<div [hidden]="user" style="width:100%; text-align: center;">
+  <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+</div>
+
 <header [hidden]="!isLocked"></header>
 
 <header  *ng-if="user" [ng-class]="{'isLocked': isLocked}">

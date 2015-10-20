@@ -142,4 +142,8 @@ export class MindsCarousel{
     },this.interval);
   }
 
+  onDestroy(){
+    clearTimeout(this.rotate_timeout);
+  }
+
 }
