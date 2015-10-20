@@ -239,11 +239,11 @@
  */
 .owner-block{
   padding:$minds-padding * 2;
-  @include flex-display();
+  display:flex;
 
   .avatar{
-    @include flex-display();
-    @include flex-direction(column);
+    display:flex;
+    flex-direction(column);
 
     img{
       border-radius: 3px;
@@ -252,8 +252,10 @@
   }
 
   .body{
-    @include flex-display();
-    @include flex-direction(column);
+    display:flex;
+    flex-direction(column);
+    flex:1;
+
     margin-left:$minds-margin * 2;
     margin-top:$minds-margin;
   }
