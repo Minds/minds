@@ -33,19 +33,15 @@ export class MindsTinymce {
       menubar: false,
       toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media",
       statusbar: false,
-    /*  plugins: [
+      plugins: [
 	         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
 	         "wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 	         "save table directionality emoticons template paste autoresize"
-	   ],*/
+	    ],
       setup: (ed) => {
 
         this.editor = ed;
         ed.on('ExecCommand', (e) => {
-          this.update.next(ed.getContent());
-        });
-
-        ed.on('change', (e) => {
           this.update.next(ed.getContent());
         });
 
@@ -58,8 +54,8 @@ export class MindsTinymce {
   }
 
   onDestroy(){
-    // if(this.editor)
-    //  this.editor.remove('minds-tinymce > textarea');
+   if(tinymce)
+    tinymce.remove('minds-tinymce > textarea');
   }
 
   set _content(value : string){
