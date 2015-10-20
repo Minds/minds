@@ -620,7 +620,7 @@ function elgg_unregister_event_handler($event, $object_type, $callback) {
  * @deprecated Use Minds\Core\Events
  */
 function elgg_trigger_event($event, $object_type, $object = null) {
-    return \Minds\Core\Events\Dispatcher::trigger($event, "elgg/event/$object_type", $object);
+    return \Minds\Core\Events\Dispatcher::trigger($event, "elgg/event/$object_type", $object, true);
 	/*global $CONFIG;
 
 	$events = array();

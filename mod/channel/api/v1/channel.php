@@ -64,7 +64,7 @@ class channel implements Interfaces\Api{
         if($carousels){
             foreach($carousels as $carousel){
                $response['channel']['carousels'][] = array(
-                  'guid' => $carousel->guid,
+                  'guid' => (string) $carousel->guid,
                   'top_offset' => $carousel->top_offset,
                   'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
                 );
@@ -186,7 +186,11 @@ class channel implements Interfaces\Api{
               $item->top_offset = $_POST['top'];
               $item->save();
 
-              $response['saved'] = true;
+              $response['carousel'] = array(
+                 'guid' => (string) $item->guid,
+                 'top_offset' => $item->top_offset,
+                 'src'=> Core\Config::build()->cdn_url . "fs/v1/banners/$item->guid/fat/$item->last_updated"
+              );
 
               if(is_uploaded_file($_FILES['file']['tmp_name'])){
                 $resized = get_resized_image_from_uploaded_file('file', 2000);
@@ -248,9 +252,18 @@ class channel implements Interfaces\Api{
             return Factory::response(array('status'=>'error', 'message'=>'not logged in'));
         }
 
-        $channel = Core\Session::getLoggedinUser();
-        $channel->enabled = 'no';
-        $channel->save();
+        switch($pages[0]){
+          case "carousel":
+            $db = new Core\Data\Call('entities_by_time');
+          //  $db->removeAttributes("object:carousel:user:" . elgg_get_logged_in_user_guid());
+            $item = new \Minds\Entities\Carousel($pages[1]);
+            $item->delete();
+            break;
+          default:
+            $channel = Core\Session::getLoggedinUser();
+            $channel->enabled = 'no';
+            $channel->save();
+        }
 
         return Factory::response(array());
 

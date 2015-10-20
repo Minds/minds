@@ -166,8 +166,17 @@ export class Channel {
       var options : any = { top: banner.top };
       if(banner.guid)
         options.guid = banner.guid;
-      this.upload.post('api/v1/channel/carousel', [banner.file], options);
+      this.upload.post('api/v1/channel/carousel', [banner.file], options)
+        .then((response : any) => {
+          this.user.carousels.push(response.carousel);
+        });
     }
+    this.user.carousels = [];
+  }
+
+  removeCarousel(value : any){
+    if(value.guid)
+      this.client.delete('api/v1/channel/carousel/' + value.guid);
   }
 
   updateField(field : string){
@@ -178,13 +187,9 @@ export class Channel {
     let data = {};
     data[field] = this.user[field];
     this.client.post('api/v1/channel/info', data)
-              .then((data : any) => {
-                if(data.status != "success"){
-                  alert('error saving');
-                  return false;
-                }
-                self.editing = "";
-                });
+        .then((data : any) => {
+          self.editing = false;
+        });
   }
 
   delete(activity){

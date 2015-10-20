@@ -6,6 +6,7 @@
   overflow:hidden;
   img{
     width:100%;
+    min-width:2000px;
     position: relative;
   }
   .minds-banner-overlay{
@@ -198,11 +199,30 @@ minds-carousel{
       opacity:0;
     }
 
+    &.is-hidden.edit-mode {
+      display:none;
+    }
+
     .minds-banner{
       height:100%;
       max-height:100%;
       opacity:1;
       transition: opacity .25s ease-in-out;
+    }
+
+    .save-bar{
+      display:none !important;
+    }
+  }
+
+  .delete-button{
+    position:absolute;
+    top:8px;
+    right:8px;
+    z-index:9999;
+
+    > *{
+      font-size:11px;
     }
   }
 

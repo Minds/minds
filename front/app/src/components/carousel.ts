@@ -8,20 +8,26 @@ import { MindsBanner } from './banner';
 @Component({
   selector: 'minds-carousel',
   inputs: [ '_banners: banners', '_editMode: editMode'],
-  outputs: ['done_event: done']
+  outputs: ['done_event: done', 'delete_event: delete']
 })
 @View({
   template: `
     <i class="material-icons left" (click)="prev()" [hidden]="banners.length <= 1">keyboard_arrow_left</i>
-    <minds-banner *ng-for="#banner of banners; #i = index"
-      [src]="banner.src"
-      [top]="banner.top_offset"
-      [overlay]="true"
-      [ng-class]="{'is-hidden': i != index}"
-      [edit-mode]="editing"
-      [done]="done"
-      (added)="added($event, i)"
-      ></minds-banner>
+    <div *ng-for="#banner of banners; #i = index">
+      <minds-banner
+        [src]="banner.src"
+        [top]="banner.top_offset"
+        [overlay]="true"
+        [ng-class]="{'is-hidden': i != index, 'edit-mode': editing}"
+        [edit-mode]="editing"
+        [done]="done"
+        (added)="added($event, i)"
+        ></minds-banner>
+
+        <div class="delete-button" (click)="delete(i)" [hidden]="i != index || !editing">
+          <button class="mdl-button mdl-button--raised mdl-button--colored material-icons">X</button>
+        </div>
+      </div>
     <i class="material-icons right" (click)="next()" [hidden]="banners.length <= 1">keyboard_arrow_right</i>
   `,
   directives: [ CORE_DIRECTIVES, MindsBanner ]
@@ -37,6 +43,7 @@ export class MindsCarousel{
   modified : Array<any> = []; //all banners should be exported to here on the done event, and sent to parent
 
   done_event = new EventEmitter();
+  delete_event = new EventEmitter();
   done : boolean = false; //if set to true, tells the child component to return "added"
   rotate : boolean = true; //if set to true enabled rotation
   rotate_timeout; //the timeout for the rotator
@@ -90,13 +97,21 @@ export class MindsCarousel{
    * Fired when the child component adds a new banner
    */
   added(value : any, index){
+    console.log(this.banners[index].guid, value.file);
     if(!this.banners[index].guid && !value.file)
       return; //this is our 'add new' post
     this.modified[index] = {
       guid: this.banners[index].guid,
+      index: index,
       file: value.file,
       top: value.top
     }
+  }
+
+  delete(index){
+    this.delete_event.next(this.banners[index]);
+    this.banners.splice(index, 1);
+    this.next();
   }
 
   /**

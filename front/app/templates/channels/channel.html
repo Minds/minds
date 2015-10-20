@@ -9,7 +9,7 @@
 <header [hidden]="!isLocked"></header>
 
 <header  *ng-if="user" [ng-class]="{'isLocked': isLocked}">
-  <minds-carousel [banners]="user.carousels" [edit-mode]="editing" (done)="updateCarousels($event)"></minds-carousel>
+  <minds-carousel [banners]="user.carousels" [edit-mode]="editing" (done)="updateCarousels($event)" (delete)="removeCarousel($event)"></minds-carousel>
 
   <div class="mdl-grid channel-grid channel-header-bar" style="max-width:990px">
     <div class="mdl-cell mdl-cell--4-col minds-channel-title">
