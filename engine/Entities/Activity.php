@@ -6,6 +6,7 @@
 namespace Minds\Entities;
 use Minds\Helpers;
 use Minds\Core\Queue;
+use Minds\Core\Analytics;
 
 class Activity extends Entity{
 
@@ -285,7 +286,10 @@ class Activity extends Entity{
      * Return the count for this entity
      */
     public function getImpressions(){
-        return \Minds\Helpers\Counters::get($this, 'impression');
+			$app = Analytics\App::_()
+				->setMetric('impression')
+				->setKey($this->guid);
+			return $app->total();
     }
 
     /**

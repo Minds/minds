@@ -2,6 +2,8 @@
 
 global $CONFIG;
 
+date_default_timezone_set('UTC');
+
 $minds = new Minds\Core\Minds();
 $minds->loadLegacy();
 

@@ -136,9 +136,16 @@ class User extends \ElggUser{
         if($this->username != "minds")
             $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
-        $export['impressions'] = Helpers\Counters::get($this->guid, 'impression');
+        $export['impressions'] = $this->getImpressions();
     		return $export;
   	}
+
+    public function getImpressions(){
+      $app = Core\Analytics\App::_()
+				->setMetric('impression')
+				->setKey($this->guid);
+			return $app->total();
+    }
 
     public function getExportableValues() {
         return array_merge(parent::getExportableValues(), array(

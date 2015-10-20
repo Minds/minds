@@ -26,31 +26,11 @@ class active implements Interfaces\Api, Interfaces\ApiAdminPam{
 
       $db = new Core\Data\Call('entities_by_time');
 
-      $mam = array();
-      $time = (new DateTime('midnight first day of this month'))->modify("-6 months");
-      while($time->getTimestamp() < strtotime('midnight first day of this month')){
-        $timestamp = $time->modify("+1 month")->getTimestamp();
-        $mam[] = array(
-          'timestamp' => $timestamp,
-          'date' => date('m-Y', $timestamp),
-          'total' => Helpers\Analytics::get("active", "month", $timestamp)
-        );
-      }
+      $app = Core\Analytics\App::_()
+        ->setMetric('active');
 
-      /**
-       * Return daily active users
-       */
-      $dam = array();
-
-      $time = new DateTime('midnight last day of last month');
-      while($time->getTimestamp() < strtotime('midnight')){
-        $timestamp = $time->modify("+1 days")->getTimestamp();
-        $dam[] = array(
-          'timestamp' => $timestamp,
-          'date' => date('d-m-Y', $timestamp),
-          'total' => Helpers\Analytics::get("active", "day", $timestamp)
-        );
-      }
+      $mam = $app->get(6, "month");
+      $dam = $app->get(30, "day");
 
       $response['monthly'] = $mam;
       $response['daily'] = $dam;

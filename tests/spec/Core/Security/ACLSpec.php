@@ -27,12 +27,12 @@ class ACLSpec extends ObjectBehavior {
 
     function it_should_allow_read_of_public_entities(Entity $entity){
       $entity->get('access_id')->willReturn(2);
-      $this::_()->read($entity)->shouldReturn(true);
+      $this->read($entity)->shouldReturn(true);
     }
 
     function it_should_not_allow_read_of_private_entities(Entity $entity){
       $entity->get('access_id')->willReturn(0);
-      $this::_()->read($entity)->shouldReturn(false);
+      $this->read($entity)->shouldReturn(false);
     }
 
     function it_should_trigger_acl_read_event(Object $entity){
@@ -42,18 +42,18 @@ class ACLSpec extends ObjectBehavior {
         $event->setResponse(true);
 			});
 
-      $this::_()->read($entity)->shouldReturn(true);
+      $this->read($entity)->shouldReturn(true);
       $this->mock_session(false);
     }
 
     function it_should_not_allow_write_for_logged_out_users(Entity $entity){
-      $this::_()->write($entity)->shouldReturn(false);
+      $this->write($entity)->shouldReturn(false);
     }
 
     function it_should_not_allow_write_for_none_owned_entities(Entity $entity){
       $this->mock_session(true);
 
-      $this::_()->write($entity)->shouldReturn(false);
+      $this->write($entity)->shouldReturn(false);
       $this->mock_session(false);
     }
 
@@ -62,7 +62,7 @@ class ACLSpec extends ObjectBehavior {
 
       $entity->get('owner_guid')->willReturn($_SESSION['user']->guid);
 
-      $this::_()->write($entity)->shouldReturn(true);
+      $this->write($entity)->shouldReturn(true);
       $this->mock_session(false);
     }
 
@@ -73,18 +73,18 @@ class ACLSpec extends ObjectBehavior {
         $event->setResponse(true);
       });
 
-      $this::_()->read($entity)->shouldReturn(true);
+      $this->read($entity)->shouldReturn(true);
       $this->mock_session(false);
     }
 
     function it_should_not_allow_interaction_for_logged_out_users(Entity $entity){
-      $this::_()->interact($entity)->shouldReturn(false);
+      $this->interact($entity)->shouldReturn(false);
     }
 
     function it_should_allow_interaction(Entity $entity){
       $this->mock_session(true);
 
-      $this::_()->interact($entity)->shouldReturn(true);
+      $this->interact($entity)->shouldReturn(true);
       $this->mock_session(false);
     }
 
@@ -95,15 +95,15 @@ class ACLSpec extends ObjectBehavior {
         $event->setResponse(false);
       });
 
-      $this::_()->interact($entity)->shouldReturn(false);
+      $this->interact($entity)->shouldReturn(false);
       $this->mock_session(false);
     }
 
     function it_should_ignore(Entity $entity){
-        $this::_()->setIgnore(true);
-        $this::_()->read($entity)->shouldReturn(true);
-        $this::_()->write($entity)->shouldReturn(true);
-        $this::_()->setIgnore(false);
+        $this->setIgnore(true);
+        $this->read($entity)->shouldReturn(true);
+        $this->write($entity)->shouldReturn(true);
+        $this->setIgnore(false);
     }
 
 }

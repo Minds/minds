@@ -224,8 +224,15 @@ class newsfeed implements Interfaces\Api{
         switch($pages[1]){
           case 'view':
             try{
-                \Minds\Helpers\Counters::increment($activity->guid, "impression");
-                \Minds\Helpers\Counters::increment($activity->owner_guid, "impression");
+                Core\Analytics\App::_()
+                  ->setMetric('impression')
+                  ->setKey($activity->guid)
+                  ->increment();
+
+                Core\Analytics\User::_()
+                  ->setMetric('impression')
+                  ->setKey($activity->owner_guid)
+                  ->increment();
             } catch(\Exception $e){
             }
             break;

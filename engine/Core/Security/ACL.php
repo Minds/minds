@@ -12,7 +12,6 @@ class ACL {
     static $ignore = false;
 
     public function __construct(){
-      $this->init();
     }
 
     /**
@@ -152,8 +151,10 @@ class ACL {
     }
 
     public static function _(){
-      if(!self::$_)
+      if(!self::$_){
         self::$_ = new ACL();
+        self::$_->init();
+      }
       return self::$_;
     }
 
