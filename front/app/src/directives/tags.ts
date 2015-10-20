@@ -18,7 +18,7 @@ export class TagsLinks {
   }
 
   render() {
-
+    return false;
     if(this.element.classList.contains('rendered') === true)
       return;
 
