@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
+import { MindsTitle } from 'src/services/ux/title';
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
@@ -26,7 +27,8 @@ interface MindsGroup {
 
 @Component({
   selector: 'minds-groups-profile',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
@@ -51,7 +53,7 @@ export class GroupsProfile {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public client: Client, public upload: Upload, public params: RouteParams){
+	constructor(public client: Client, public upload: Upload, public params: RouteParams, public title: MindsTitle){
       this.guid = params.params['guid'];
       if(params.params['filter'])
         this.filter = params.params['filter'];
@@ -64,6 +66,7 @@ export class GroupsProfile {
     this.client.get('api/v1/groups/group/' + this.guid, {})
       .then((response : MindsGroupResponse) => {
           self.group = response.group;
+          self.title.setTitle(self.group.name);
       })
       .catch((e)=>{
 

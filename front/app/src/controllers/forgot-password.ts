@@ -1,12 +1,14 @@
-import { Title, Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams } from 'angular2/router';
+import { MindsTitle } from 'src/services/ux/title';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 
 @Component({
   selector: 'minds-register',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/forgot-password.html',
@@ -22,14 +24,13 @@ export class ForgotPassword {
 
   username : string = "";
   code : string = "";
-  title : Title = new Title();
 
-	constructor(public client : Client, public router: Router, public params: RouteParams){
+	constructor(public client : Client, public router: Router, public params: RouteParams, public title: MindsTitle){
     if(params.params['code']){
       this.setCode(params.params['code']);
       this.username = params.params['username'];
     }
-    this.title.setTitle("Forgot Password | Minds");
+    this.title.setTitle("Forgot Password");
 	}
 
 	request(username){

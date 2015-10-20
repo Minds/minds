@@ -1,6 +1,7 @@
-import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Inject } from 'angular2/angular2';
 import { Router, ROUTER_DIRECTIVES, RouteParams } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
+import { MindsTitle } from 'src/services/ux/title';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from 'src/services/session';
 import { ScrollFactory } from 'src/services/ux/scroll';
@@ -21,7 +22,8 @@ import { ChannelEdit } from './edit';
 
 @Component({
   selector: 'minds-channel',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
@@ -36,7 +38,6 @@ export class Channel {
   scroll = ScrollFactory.build();
   isLocked : boolean = false;
 
-  title : Title = new Title();
   username : string;
   user : MindsUser;
   feed : Array<Object> = [];
@@ -50,11 +51,12 @@ export class Channel {
   isLoadingMedia : boolean = false;
   isLoadingBlogs : boolean = false;
 
-  constructor(public client: Client, public upload: Upload, params: RouteParams){
+  constructor(public client: Client, public upload: Upload, params: RouteParams, public title: MindsTitle){
       this.username = params.params['username'];
       if(params.params['filter'])
         this._filter = params.params['filter'];
-      this.title.setTitle("Channel | Minds");
+
+      this.title.setTitle("Channel");
       this.load();
       this.onScroll();
 
@@ -70,7 +72,7 @@ export class Channel {
         return false;
       }
       self.user = data.channel;
-      this.title.setTitle(self.user.username + " | Minds");
+      this.title.setTitle(self.user.username);
       if(self._filter == "feed")
       self.loadFeed(true);
       self.loadMedia();

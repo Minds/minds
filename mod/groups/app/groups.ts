@@ -1,6 +1,7 @@
-import { Title, Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
+import { MindsTitle } from 'src/services/ux/title';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
@@ -11,7 +12,8 @@ import { GroupsJoinButton } from './groups-join-button';
 
 @Component({
   selector: 'minds-groups',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/groups.html',
@@ -28,17 +30,16 @@ export class Groups {
   groups : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
-  title : Title = new Title();
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+    @Inject(RouteParams) public params: RouteParams,
+    public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
 
-      this.title.setTitle("Groups | Minds");
+      this.title.setTitle("Groups");
   }
 
   load(refresh : boolean = false){

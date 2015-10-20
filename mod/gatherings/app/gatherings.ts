@@ -1,6 +1,7 @@
-import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
+import { MindsTitle } from 'src/services/ux/title';
 import { MessengerConversation } from "./messenger-conversation";
 import { MessengerSetup } from "./messenger-setup";
 import { Storage } from 'src/services/storage';
@@ -16,7 +17,8 @@ import { MindsUserSearchResponse } from 'src/interfaces/responses';
 
 @Component({
   selector: 'minds-gatherings',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/gatherings.html',
@@ -36,9 +38,8 @@ export class Gatherings {
   search : any = {};
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
-  title : Title = new Title();
 
-  constructor(public client: Client, public router: Router, public params: RouteParams){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     } else {
@@ -48,7 +49,7 @@ export class Gatherings {
       this.checkSetup();
       this.load(true);
     }
-    this.title.setTitle("Messenger | Minds");
+    this.title.setTitle("Messenger");
   }
 
   checkSetup(){

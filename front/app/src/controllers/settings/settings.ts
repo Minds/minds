@@ -1,6 +1,7 @@
-import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
+import { MindsTitle } from 'src/services/ux/title';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
@@ -11,7 +12,8 @@ import { SettingsTwoFactor } from './twoFactor';
 
 @Component({
   selector: 'minds-settings',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/settings/settings.html',
@@ -24,15 +26,14 @@ export class Settings{
   session =  SessionFactory.build();
   user : any;
   filter : string;
-  title : Title = new Title();;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     }
     this.minds = window.Minds;
 
-    this.title.setTitle("Settings | Minds");
+    this.title.setTitle("Settings");
 
     if(params.params['filter'])
       this.filter = params.params['filter'];

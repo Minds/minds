@@ -1,6 +1,7 @@
-import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router } from 'angular2/router';
 
+import { MindsTitle } from 'src/services/ux/title';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Upload } from 'src/services/api/upload';
@@ -9,6 +10,7 @@ import { Client } from 'src/services/api/client';
 @Component({
   selector: 'minds-capture',
   viewBindings: [ Upload, Client ],
+  bindings: [ MindsTitle ],
   host : {
     '(dragover)': 'dragover($event)',
     '(dragleave)': 'dragleave($event)',
@@ -32,9 +34,8 @@ export class Capture {
   inProgress : boolean = false;
 
   dragging : boolean = false;
-  title : Title = new Title();
 
-	constructor(public _upload: Upload, public client: Client, public router: Router){
+	constructor(public _upload: Upload, public client: Client, public router: Router, public title: MindsTitle){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     } else {
@@ -42,7 +43,7 @@ export class Capture {
       this.getAlbums();
     }
 
-    this.title.setTitle("Capture | Minds");
+    this.title.setTitle("Capture");
 	}
 
   domListeners(){

@@ -1,5 +1,6 @@
 import { Title, Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from 'angular2/router';
+import { MindsTitle } from 'src/services/ux/title';
 import { Client } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
@@ -9,7 +10,8 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
   selector: 'minds-discovery',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/discovery/discovery.html',
@@ -23,9 +25,8 @@ export class Discovery {
   moreData : boolean = true;
   offset: string = "";
   inProgress : boolean = false;
-  title : Title = new Title();
 
-  constructor(public client: Client, public router: Router, public params: RouteParams){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
     this._filter = params.params['filter'];
 
     switch(this._filter){
@@ -44,7 +45,7 @@ export class Discovery {
       this._type = params.params['type'];
 
     this.title
-    this.title.setTitle("Discovery | Minds");
+    this.title.setTitle("Discovery");
 
     this.load(true);
   }

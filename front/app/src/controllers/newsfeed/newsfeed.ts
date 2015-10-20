@@ -1,6 +1,7 @@
-import { Title, Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
+import { MindsTitle } from 'src/services/ux/title';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Poster } from './poster';
@@ -12,7 +13,8 @@ import { GraphImpressions } from 'src/components/graphs/impressions';
 
 @Component({
   selector: 'minds-newsfeed',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/newsfeed/list.html',
@@ -28,7 +30,6 @@ export class Newsfeed {
   moreData : boolean = true;
   session = SessionFactory.build();
   minds;
-  title : Title = new Title();
 
   attachment_preview;
 
@@ -41,15 +42,15 @@ export class Newsfeed {
     attachment_guid: null
   }
 
-	constructor(public client: Client, public upload: Upload, public router: Router){
+	constructor(public client: Client, public upload: Upload, public router: Router, public title: MindsTitle){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     } else {
   		this.load();
       this.minds = window.Minds;
     }
-    
-    this.title.setTitle("Newsfeed | Minds");
+
+    this.title.setTitle("Newsfeed");
 	}
 
 	/**
