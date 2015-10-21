@@ -5,7 +5,6 @@ import { Material } from 'src/directives/material';
 import { SessionFactory } from '../../services/session';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { CARDS } from 'src/controllers/cards/cards';
-import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
   selector: 'minds-discovery',

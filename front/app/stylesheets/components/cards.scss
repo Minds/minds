@@ -272,3 +272,18 @@ minds-activity.mdl-card, minds-activity{
 
 
 }
+
+.minds-editable-container{
+  box-sizing: border-box;
+  padding: $minds-padding;
+  text-align: right;
+
+  textarea{
+    border:1px solid #DDD;
+    padding:$minds-padding;
+  }
+
+  button{
+    margin: $minds-margin;
+  }
+}

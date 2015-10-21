@@ -17,7 +17,13 @@
 </div>
 
 <!-- Messages -->
-<div class="mdl-card__supporting-text message" [hidden]="!activity.message" [inner-html]="activity.message | tags"></div>
+<div class="mdl-card__supporting-text message" [hidden]="!activity.message || editing" [inner-html]="activity.message | tags"></div>
+<div class="minds-editable-container" *ng-if="activity.message && editing">
+	<!-- Please not the intentional single way binding for ng-model, we want to be able to cancel our changes -->
+	<textarea class="mdl-card__supporting-text message" [ng-model]="activity.message" #message-edit [auto-grow]></textarea>
+	<button class="mdl-button mdl-button--raised mdl-color--blue-grey-100" (click)="messageEdit.value = activity.message; editing=false;">Cancel</button>
+	<button class="mdl-button mdl-button--colored mdl-button--raised" (click)="activity.message = messageEdit.value; save();">Save</button>
+</div>
 
 <!-- Rich content -->
 <div class="minds-rich-embed" *ng-if="activity.perma_url && activity.title">
@@ -30,7 +36,13 @@
 	</a>
 </div>
 
-<div class="mdl-card__supporting-text message" [hidden]="!activity.title || activity.perma_url" [tags]>{{activity.title}}</div>
+<div class="mdl-card__supporting-text message" [hidden]="!activity.title || activity.perma_url || editing" [tags]>{{activity.title}}</div>
+<div class="minds-editable-container" *ng-if="(activity.title || activity.custom_type) && editing">
+	<!-- Please not the intentional single way binding for ng-model, we want to be able to cancel our changes -->
+	<textarea class="mdl-card__supporting-text message" [ng-model]="activity.title" #title-edit [auto-grow]></textarea>
+	<button class="mdl-button mdl-button--raised mdl-color--blue-grey-100" (click)="titleEdit.value = activity.title; editing=false;">Cancel</button>
+	<button class="mdl-button mdl-button--colored mdl-button--raised" (click)="activity.title = titleEdit.value; save();">Save</button>
+</div>
 
 <div class="item item-image item-image-video" *ng-if="activity.custom_type == 'video'">
 		 <minds-video
@@ -99,6 +111,7 @@
 	</button>
 
 	<ul class="minds-dropdown-menu" [hidden]="!toggle.value">
+		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid || session.isAdmin()" (click)="editing = true; toggle.value = false">Edit</li>
 		<li class="mdl-menu__item" disabled>Share</li>
 		<li class="mdl-menu__item" *ng-if="activity.owner_guid == session.getLoggedInUser().guid" (click)="delete(); toggle.value = !toggle.value">Delete</li>
 	</ul>

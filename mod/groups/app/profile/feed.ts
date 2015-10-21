@@ -6,7 +6,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
 import { Poster } from 'src/controllers/newsfeed/poster';
-import { Activity } from 'src/controllers/newsfeed/activity';
+import { CARDS } from 'src/controllers/cards/cards';
 
 
 interface MindsGroupResponse{
@@ -27,7 +27,7 @@ interface MindsGroup {
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/feed.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, Activity ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, CARDS ]
 })
 
 export class GroupsProfileFeed {

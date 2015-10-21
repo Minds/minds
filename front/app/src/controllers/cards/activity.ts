@@ -1,12 +1,13 @@
-import { Component, View, CORE_DIRECTIVES, EventEmitter, Inject, ElementRef} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter, ElementRef} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { AutoGrow } from 'src/directives/autogrow';
 import { Remind } from './remind';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { MindsVideo } from 'src/components/video';
-import { Boost } from './boost';
+import { Boost } from 'src/controllers/newsfeed/boost';
 import { Comments } from 'src/controllers/comments/comments';
 import { TagsPipe } from 'src/pipes/tags';
 import { TagsLinks } from 'src/directives/tags';
@@ -20,7 +21,7 @@ import { ScrollFactory } from 'src/services/ux/scroll';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, Remind, RouterLink, TagsLinks, MindsVideo ],
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, BUTTON_COMPONENTS, Boost, Comments, Material, AutoGrow, Remind, RouterLink, TagsLinks, MindsVideo ],
   pipes: [ TagsPipe ]
 })
 
@@ -36,10 +37,12 @@ export class Activity {
   element : any;
   visible : boolean = false;
 
+  editing : boolean = false;
+
   _delete: EventEmitter = new EventEmitter();
   scroll_listener;
 
-	constructor(public client: Client, @Inject(ElementRef) _element: ElementRef){
+	constructor(public client: Client, _element: ElementRef){
     this.element = _element.nativeElement;
     this.isVisible();
 	}
@@ -48,6 +51,15 @@ export class Activity {
     if(!value)
       return;
     this.activity = value;
+  }
+
+  save(){
+    console.log('trying to save your changes to the server', this.activity);
+    this.editing = false;
+    this.client.post('api/v1/newsfeed/' + this.activity.guid, this.activity)
+      .then((response : any) => {
+
+      });
   }
 
   delete(){

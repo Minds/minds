@@ -157,7 +157,20 @@ class newsfeed implements Interfaces\Api{
                             }
                 }
                 return Factory::response(array('guid'=>$activity->guid));
-            break;
+                break;
+            case is_numeric($pages[0]):
+              $activity = new Entities\Activity($pages[0]);
+              if(!$activity->canEdit())
+                return Factory::response(array('status'=>'error', 'message'=>'Post not editable'));
+
+              $allowed = array('message', 'title');
+              foreach($allowed as $allowed){
+                if(isset($_POST[$allowed]) && $_POST[$allowed] !== false)
+                  $activity->$allowed = $_POST[$allowed];
+              }
+              $activity->save();
+              return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export()));
+              break;
             default:
                 $activity = new Entities\Activity();
                 //error_log(print_r($_POST, true));

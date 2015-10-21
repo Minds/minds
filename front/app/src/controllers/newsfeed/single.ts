@@ -4,7 +4,7 @@ import { Client, Upload } from 'src/services/api';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Poster } from './poster';
-import { Activity } from './activity';
+import { CARDS } from 'src/controllers/cards/cards';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { SessionFactory } from 'src/services/session';
 
@@ -17,7 +17,7 @@ import { GraphImpressions } from 'src/components/graphs/impressions';
 })
 @View({
   templateUrl: 'templates/newsfeed/single.html',
-  directives: [ Poster, Activity, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
+  directives: [ Poster, CARDS, Material, CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES,
     InfiniteScroll, GraphImpressions ]
 })
 

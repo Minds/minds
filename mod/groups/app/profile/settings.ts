@@ -4,7 +4,6 @@ import { Router, RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
-import { Activity } from 'src/controllers/newsfeed/activity';
 
 @Component({
   selector: 'minds-groups-profile-settings',
@@ -13,7 +12,7 @@ import { Activity } from 'src/controllers/newsfeed/activity';
 })
 @View({
   templateUrl: 'templates/plugins/groups/profile/settings.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, Activity ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink ]
 })
 
 export class GroupsProfileSettings {

@@ -9,7 +9,7 @@ import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { MindsCarousel } from 'src/components/carousel';
 
 import { AutoGrow } from 'src/directives/autogrow';
-import { Activity } from 'src/controllers/newsfeed/activity';
+import { CARDS } from 'src/controllers/cards/cards';
 import { MindsActivityObject } from 'src/interfaces/entities';
 import { MindsUser } from 'src/interfaces/entities';
 import { MindsChannelResponse } from 'src/interfaces/responses';
@@ -25,7 +25,7 @@ import { ChannelEdit } from './edit';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, Activity,
+  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, CARDS,
     AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster ]
 })
 

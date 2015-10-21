@@ -3,7 +3,7 @@ import { UserCard } from './user';
 import { VideoCard } from './object/video';
 import { ImageCard } from './object/image';
 import { AlbumCard } from './object/album';
-import { Activity } from 'src/controllers/newsfeed/activity';
+import { Activity } from './activity';
 
 export { UserCard } from './user';
 export { VideoCard } from './object/video';
