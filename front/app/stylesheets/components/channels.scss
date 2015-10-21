@@ -160,11 +160,12 @@ minds-channel{
   .minds-channel-media-sidebard{
     display: flex;
     flex-wrap: wrap;
+    padding:0;
+    width:100%;
     a {
-      max-width:80px;
-      height: 80px;
+      height: 88px;
       display:inline-block;
-      width:33%;
+      width:calc(100% / 3);
       background-color:#333;
       background-position:
       center center;
