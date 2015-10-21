@@ -1,21 +1,21 @@
-import { Component, View, NgFor, NgIf, NgClass, FORM_DIRECTIVES, Observable} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, Observable} from 'angular2/angular2';
 import { RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { AutoGrow } from 'src/directives/autogrow';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { CommentCard } from 'src/controllers/cards/comment';
 import { TagsPipe } from 'src/pipes/tags';
-import { TagsLinks } from 'src/directives/tags';
 
 @Component({
   selector: 'minds-comments',
   viewBindings: [ Client ],
-  inputs: ['_object : object', '_reversed : reversed']
+  inputs: ['_object : object', '_reversed : reversed', 'limit']
 })
 @View({
   templateUrl: 'templates/comments/list.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, FORM_DIRECTIVES, TagsLinks, AutoGrow ],
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, CommentCard, InfiniteScroll, AutoGrow ],
   pipes: [ TagsPipe ]
 })
 
@@ -29,6 +29,9 @@ export class Comments {
   reversed : boolean = false;
   session = SessionFactory.build();
 
+  editing : boolean = false;
+
+  limit : number = 5;
   offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
@@ -54,7 +57,7 @@ export class Comments {
 
   load(refresh : boolean = false){
     var self = this;
-    this.client.get('api/v1/comments/' + this.guid, { limit: 3, offset: this.offset, reversed: true })
+    this.client.get('api/v1/comments/' + this.guid, { limit: this.limit, offset: this.offset, reversed: true })
       .then((response : any) => {
         if(!response.comments){
           self.moreData = false;
@@ -84,6 +87,11 @@ export class Comments {
       .catch((e) => {
 
       });
+  }
+
+
+  delete(index : number){
+    this.comments.splice(index, 1);
   }
 
 }

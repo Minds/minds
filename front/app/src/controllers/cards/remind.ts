@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { Activity } from './activity';
+import { AutoGrow } from 'src/directives/autogrow';
 import { TagsLinks } from 'src/directives/tags';
 import { TagsPipe } from 'src/pipes/tags';
 
@@ -14,7 +15,7 @@ import { TagsPipe } from 'src/pipes/tags';
 })
 @View({
   templateUrl: 'templates/cards/activity.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, TagsLinks],
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, AutoGrow, TagsLinks],
   pipes: [ TagsPipe ]
 })
 

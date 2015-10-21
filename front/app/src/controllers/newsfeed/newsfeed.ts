@@ -73,10 +73,9 @@ export class Newsfeed {
 						return false;
 					}
           if(self.newsfeed && !refresh){
-            for(let activity of data.activity)
-              self.newsfeed.push(activity);
+            self.newsfeed = self.newsfeed.concat(data.activity);
           } else {
-					     self.newsfeed = data.activity;
+					  self.newsfeed = data.activity;
           }
 					self.offset = data['load-next'];
           self.inProgress = false;

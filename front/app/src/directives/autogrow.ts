@@ -1,4 +1,4 @@
-import { Directive,  EventEmitter, ViewContainerRef, ProtoViewRef, Inject } from 'angular2/angular2';
+import { Directive,  EventEmitter, ElementRef } from 'angular2/angular2';
 import { Material as MaterialService } from "src/services/ui";
 
 @Directive({
@@ -15,9 +15,9 @@ export class AutoGrow{
   _listener : Function;
   _element : any;
 
-  constructor(@Inject(ViewContainerRef) viewContainer: ViewContainerRef) {
+  constructor(element: ElementRef) {
 
-    this._element =  viewContainer.element.nativeElement;
+    this._element =  element.nativeElement;
     setTimeout(()=>{
       this.grow();
     });
@@ -30,5 +30,8 @@ export class AutoGrow{
     this._element.style.height = this._element.scrollHeight + "px";
   }
 
+  set autoGrow(value){
+    
+  }
 
 }

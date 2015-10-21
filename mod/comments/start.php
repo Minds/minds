@@ -40,13 +40,13 @@ class start extends Components\Plugin{
 				  $guid = $params['entity']->guid;
 				}
 
-				$cached = $cacher->get("comments:count:$guid");
-				if($cached !== FALSE){
-					$count = $cached;
-				} else {
+			//	$cached = $cacher->get("comments:count:$guid");
+			//	if($cached !== FALSE){
+			//		$count = $cached;
+			//	} else {
 					$count = $db->countRow("comments:$guid");
 					$cacher->set("comments:count:$guid", $count);
-				}
+				//}
 
 
         $export['comments:count'] = $count;

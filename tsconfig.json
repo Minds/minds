@@ -50,6 +50,7 @@
         "front/app/src/controllers/capture/capture.ts",
         "front/app/src/controllers/cards/activity.ts",
         "front/app/src/controllers/cards/cards.ts",
+        "front/app/src/controllers/cards/comment.ts",
         "front/app/src/controllers/cards/object/album.ts",
         "front/app/src/controllers/cards/object/image.ts",
         "front/app/src/controllers/cards/object/video.ts",

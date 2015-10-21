@@ -56,40 +56,54 @@ class comments implements Interfaces\Api{
 
     public function post($pages){
 
-        $parent = new \Minds\Entities\Entity($pages[0]);
-        $comment = new \Minds\plugin\comments\entities\comment();
-        $comment->description = urldecode($_POST['comment']);
-        $comment->setParent($parent);
-        if($comment->save()){
-            $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
-            $subscribers[$parent->owner_guid] = $parent->owner_guid;
-            if(isset($subscribers[$comment->owner_guid]))
-                unset($subscribers[$comment->owner_guid]);
+      $response = array();
+      
+      switch($pages[0]){
+        case "update":
+          $comment = new \Minds\plugin\comments\entities\comment($pages[1]);
+          if(!$comment->canEdit()){
+            $response = array('status' => 'error', 'message' => 'This comment can not be edited');
+            break;
+          }
+          $comment->description = $_POST['description'];
+          $comment->save();
+          break;
+        case is_numeric($pages[0]):
+        default:
+          $parent = new \Minds\Entities\Entity($pages[0]);
+          $comment = new \Minds\plugin\comments\entities\comment();
+          $comment->description = urldecode($_POST['comment']);
+          $comment->setParent($parent);
+          if($comment->save()){
+              $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
+              $subscribers[$parent->owner_guid] = $parent->owner_guid;
+              if(isset($subscribers[$comment->owner_guid]))
+                  unset($subscribers[$comment->owner_guid]);
 
-	          \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+              \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
 
-            \elgg_trigger_plugin_hook('notification', 'all', array(
-                'to' => $subscribers,
-                'object_guid'=>$pages[0],
-                'description'=>$comment->description,
-                'notification_view'=>'comment'
-            ));
+              \elgg_trigger_plugin_hook('notification', 'all', array(
+                  'to' => $subscribers,
+                  'object_guid'=>$pages[0],
+                  'description'=>$comment->description,
+                  'notification_view'=>'comment'
+              ));
 
-            \elgg_trigger_event('comment:create', 'comment', $data);
+              \elgg_trigger_event('comment:create', 'comment', $data);
 
-            $indexes = new data\indexes();
-            $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
-            $comment->ownerObj = Core\Session::getLoggedinUser()->export();
-            $response['comment'] = $comment->export();
-        } else {
-          $response = array(
-            'status' => 'error',
-            'message' => 'The comment couldn\'t be saved'
-          );
-        }
+              $indexes = new data\indexes();
+              $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
+              $comment->ownerObj = Core\Session::getLoggedinUser()->export();
+              $response['comment'] = $comment->export();
+          } else {
+            $response = array(
+              'status' => 'error',
+              'message' => 'The comment couldn\'t be saved'
+            );
+          }
+      }
 
-
-        return Factory::response($response);
+      return Factory::response($response);
     }
 
     public function put($pages){

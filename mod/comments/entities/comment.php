@@ -51,8 +51,8 @@ class comment extends Entities\Entity{
         $indexes = new \Minds\Core\Data\indexes('comments');
         $indexes->remove($this->parent_guid, array($this->guid));
 
-    $cacher = Core\Data\cache\factory::build();
-    $cacher->destroy("comments:count:$this->parent_guid");
+        $cacher = Core\Data\cache\factory::build();
+        $cacher->destroy("comments:count:$this->parent_guid");
 
         return true;
     }
