@@ -162,8 +162,13 @@ minds-channel{
     flex-wrap: wrap;
     a {
       max-width:80px;
+      height: 80px;
       display:inline-block;
       width:33%;
+      background-color:#333;
+      background-position:
+      center center;
+      background-size:cover;
     }
     img{
       width: 100%;
