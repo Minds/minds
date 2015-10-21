@@ -69,8 +69,14 @@ class entities implements Interfaces\Api{
             $type="user";
             break;
           case "owner":
-            $owner = isset($pages[1]) && is_numeric($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
+            if(!is_numeric($pages[2])){
+              $lookup = new Core\Data\lookup();
+              $pages[2] = $lookup->get($pages[1]);
+            }
+            $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
+
             $subtype = "archive";
+            break;
         }
 
         if($pages[1] != "all"){

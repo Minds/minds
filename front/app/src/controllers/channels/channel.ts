@@ -123,7 +123,7 @@ export class Channel {
 
   loadMedia(){
     var self = this;
-    this.client.get('api/v1/entities/owner/'+ this.user.guid, {limit:9, offset:""})
+    this.client.get('api/v1/entities/owner/all/'+ this.user.guid, {limit:9, offset:""})
     .then((data : any) => {
       if(!data.entities)
       return false;
