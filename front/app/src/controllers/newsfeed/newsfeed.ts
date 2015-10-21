@@ -75,7 +75,7 @@ export class Newsfeed {
           if(self.newsfeed && !refresh){
             self.newsfeed = self.newsfeed.concat(data.activity);
           } else {
-					  self.newsfeed = data.activity;
+            self.newsfeed = data.activity;
           }
 					self.offset = data['load-next'];
           self.inProgress = false;
