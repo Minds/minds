@@ -1,4 +1,4 @@
-import { Title, Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
+import { Component, View, NgFor, NgIf, Inject, NgClass} from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from 'angular2/router';
 import { MindsTitle } from 'src/services/ux/title';
 import { Client } from 'src/services/api';
@@ -44,7 +44,6 @@ export class Discovery {
     if(params.params['type'])
       this._type = params.params['type'];
 
-    this.title
     this.title.setTitle("Discovery");
 
     this.load(true);
