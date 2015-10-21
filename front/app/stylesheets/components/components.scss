@@ -4,6 +4,17 @@
   position:relative;
   max-height:300px;
   overflow:hidden;
+
+  .minds-banner-img{
+    width:100%;
+    min-width:2000px;
+    position: relative;
+    height: inherit;
+    background-position: 0, 0;
+    background-size: fixed;
+    background-repeat: no-repeat;
+  }
+
   img{
     width:100%;
     min-width:2000px;
