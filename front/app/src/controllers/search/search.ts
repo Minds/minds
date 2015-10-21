@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, Location, ROUTER_DIRECTIVES } from 'angular2/router';
 import { Client, Upload } from 'src/services/api';
+import { MindsTitle } from 'src/services/ux/title';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { CARDS } from 'src/controllers/cards/cards';
@@ -8,7 +9,8 @@ import { BlogCard } from 'src/plugins/blog/blog-card';
 
 @Component({
   selector: 'minds-search',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/search/list.html',
@@ -26,11 +28,13 @@ export class Search {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-  constructor(public client: Client, public params : RouteParams){
+  constructor(public client: Client, public params : RouteParams, public title: MindsTitle){
     this.q = params.params['q'];
     if(params.params['type'])
       this.type = params.params['type'];
   	this.search();
+
+    this.title.setTitle("Search");
   }
 
   /**

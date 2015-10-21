@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
+import { MindsTitle } from 'src/services/ux/title';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
@@ -11,7 +12,8 @@ import { BlogCard } from './blog-card';
 
 @Component({
   selector: 'minds-blog',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/blog/list.html',
@@ -31,11 +33,13 @@ export class Blog {
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+    @Inject(RouteParams) public params: RouteParams,
+    public title: MindsTitle ){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
+
+      this.title.setTitle("Blogs");
   }
 
   load(refresh : boolean = false){

@@ -4,7 +4,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
-
+import { MindsTitle } from 'src/services/ux/title';
 import { MindsBanner } from 'src/components/banner';
 import { Comments } from 'src/controllers/comments/comments';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
@@ -14,7 +14,8 @@ import { MindsBlogEntity } from 'src/interfaces/entities';
 
 @Component({
   selector: 'minds-blog-view',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings:[ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/blog/view.html',
@@ -35,8 +36,8 @@ export class BlogView {
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+    @Inject(RouteParams) public params: RouteParams,
+    public title: MindsTitle){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;
@@ -50,6 +51,7 @@ export class BlogView {
       .then((response : MindsBlogResponse) => {
         if(response.blog)
           self.blog = response.blog;
+          self.title.setTitle(self.blog.title);
       })
       .catch((e) => {
 

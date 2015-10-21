@@ -1,5 +1,6 @@
 import { Component, View, Inject } from 'angular2/angular2';
 import { Router, RouterLink } from 'angular2/router';
+import { MindsTitle } from 'src/services/ux/title';
 import { Material } from 'src/directives/material';
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -7,7 +8,8 @@ import { Register } from './register';
 
 @Component({
   selector: 'minds-login',
-  viewBindings: [ Client ]
+  viewBindings: [ Client ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/login.html',
@@ -22,9 +24,11 @@ export class Login {
   hideLogin : boolean = false;
   inProgress : boolean = false;
 
-	constructor(public client : Client, public router: Router){
+	constructor(public client : Client, public router: Router, public title: MindsTitle){
 		if(this.session.isLoggedIn())
       router.navigate(['/Newsfeed']);
+
+      this.title.setTitle("Login");
 	}
 
 	login(username, password){

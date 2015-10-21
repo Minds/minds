@@ -2,13 +2,15 @@ import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angul
 import { Router, RouterLink } from "angular2/router";
 
 import { Client, Upload } from 'src/services/api';
+import { MindsTitle } from 'src/services/ux/title';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { MindsBanner } from 'src/components/banner';
 
 @Component({
   selector: 'minds-groups-create',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/create.html',
@@ -25,8 +27,8 @@ export class GroupsCreator {
     membership: 2
   };
 
-  constructor(public client: Client, public upload: Upload, public router: Router){
-
+  constructor(public client: Client, public upload: Upload, public router: Router, public title: MindsTitle){
+    this.title.setTitle("Create Group");
   }
 
   addBanner(banner : any){

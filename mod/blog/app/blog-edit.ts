@@ -1,6 +1,7 @@
 import { Component, View, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
+import { MindsTitle } from 'src/services/ux/title';
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
@@ -10,7 +11,8 @@ import { AutoGrow } from 'src/directives/autogrow';
 
 @Component({
   selector: 'minds-blog-edit',
-  viewBindings: [ Client, Upload ]
+  viewBindings: [ Client, Upload ],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/plugins/blog/edit.html',
@@ -33,10 +35,12 @@ export class BlogEdit {
   banner_top : number = 0;
   editing : boolean = true;
 
-  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
+  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;
+      this.title.setTitle("New Blog");
+
       if(this.guid != 'new')
         this.load();
   }
@@ -48,6 +52,7 @@ export class BlogEdit {
         if(response.blog){
           self.blog = response.blog;
           self.guid = response.blog.guid;
+          self.title.setTitle(self.blog.title);
         }
       })
       .catch((e) => {

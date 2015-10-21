@@ -1,5 +1,6 @@
 import { Component, View, NgFor, NgIf, NgSwitch, NgSwitchWhen, NgSwitchDefault, Inject, NgClass } from 'angular2/angular2';
 import { Router, RouterLink } from 'angular2/router';
+import { MindsTitle } from 'src/services/ux/title';
 import { Client } from 'src/services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from 'src/directives/material';
@@ -7,7 +8,8 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 @Component({
   selector: 'minds-notifications',
-  viewBindings: [ Client ]
+  viewBindings: [ Client],
+  bindings: [ MindsTitle ]
 })
 @View({
   templateUrl: 'templates/notifications/list.html',
@@ -22,12 +24,14 @@ export class Notifications {
   inProgress : boolean = false;
   session = SessionFactory.build();
 
-  constructor(public client: Client, public router: Router){
+  constructor(public client: Client, public router: Router, public title : MindsTitle ){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     } else {
       this.load(true);
     }
+
+    this.title.setTitle("Notifications");
   }
 
   load(refresh : boolean = false){
