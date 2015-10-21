@@ -24,6 +24,7 @@ export class Comments {
   minds;
   object;
   guid: string = "";
+  parent: any;
   comments : Array<any> = [];
   postMeta : any = {};
   reversed : boolean = false;
@@ -45,6 +46,7 @@ export class Comments {
     this.guid = this.object.guid;
     if(this.object.entity_guid)
       this.guid = this.object.entity_guid;
+    this.parent = this.object;
     this.load();
   }
 

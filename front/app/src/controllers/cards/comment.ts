@@ -9,7 +9,7 @@ import { TagsPipe } from 'src/pipes/tags';
 @Component({
   selector: 'minds-card-comment',
   viewProviders: [ Client ],
-  inputs: ['object'],
+  inputs: ['object', 'parent'],
   outputs: [ '_delete: delete'],
   host: {
     '(keydown.esc)': 'editing = false'
@@ -41,10 +41,12 @@ import { TagsPipe } from 'src/pipes/tags';
       </div>
 
       <div class="mdl-card__menu mdl-color-text--blue-grey-300">
-      	<button class="mdl-button minds-more mdl-button--icon" (click)="delete(i)" *ng-if="comment.owner_guid == session.getLoggedInUser()?.guid">
+      	<button class="mdl-button minds-more mdl-button--icon" (click)="delete(i)"
+          *ng-if="comment.owner_guid == session.getLoggedInUser()?.guid || session.isAdmin() || parent.owner_guid == session.getLoggedInUser()?.guid">
       		<i class="material-icons">delete</i>
       	</button>
-        <button class="mdl-button minds-more mdl-button--icon" (click)="editing = true">
+        <button class="mdl-button minds-more mdl-button--icon" (click)="editing = !editing"
+          *ng-if="comment.owner_guid == session.getLoggedInUser()?.guid || session.isAdmin()">
           <i class="material-icons">edit</i>
         </button>
       </div>

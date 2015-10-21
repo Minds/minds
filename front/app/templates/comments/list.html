@@ -3,7 +3,7 @@
   Load earlier
 </div>
 
-<minds-card-comment *ng-for="#comment of comments; #i = index" [object]="comment" (delete)="delete(i)" ></minds-card-comment>
+<minds-card-comment *ng-for="#comment of comments; #i = index" [object]="comment" [parent]="parent" (delete)="delete(i)" ></minds-card-comment>
 
 <div class="mdl-card minds-comment minds-comment-post minds-block" *ng-if="session.isLoggedIn()">
 

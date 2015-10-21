@@ -57,6 +57,13 @@ class comment extends Entities\Entity{
         return true;
     }
 
+    public function canEdit(){
+      $entity = \Minds\Entities\Factory::build($this->parent_guid);
+      if($entity->canEdit())
+        return true;
+      return parent::canEdit();
+    }
+
     public function view(){
         echo \elgg_view('comment/default', array('entity'=>$this));
     }
