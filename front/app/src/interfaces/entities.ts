@@ -22,7 +22,8 @@ export interface MindsUser {
 	username : string,
 	chat ?: boolean,
 	icontime : number,
-	blocked ?: boolean
+	blocked ?: boolean,
+	carousels ?: boolean
 }
 
 export interface MindsGroup {

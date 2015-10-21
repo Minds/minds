@@ -277,10 +277,12 @@ minds-activity.mdl-card, minds-activity{
   box-sizing: border-box;
   padding: $minds-padding;
   text-align: right;
+  width:100%;
 
   textarea{
     border:1px solid #DDD;
     padding:$minds-padding;
+    color: inherit;
   }
 
   button{

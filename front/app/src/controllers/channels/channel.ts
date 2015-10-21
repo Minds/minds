@@ -8,6 +8,7 @@ import { ScrollFactory } from 'src/services/ux/scroll';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { MindsCarousel } from 'src/components/carousel';
+import { TagsPipe } from 'src/pipes/tags';
 
 import { AutoGrow } from 'src/directives/autogrow';
 import { CARDS } from 'src/controllers/cards/cards';
@@ -28,7 +29,8 @@ import { ChannelEdit } from './edit';
 @View({
   templateUrl: 'templates/channels/channel.html',
   directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, CARDS,
-    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster ]
+    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster ],
+  pipes: [ TagsPipe ]
 })
 
 export class Channel {
@@ -154,6 +156,9 @@ export class Channel {
   }
 
   toggleEditing(){
+    if(this.editing){
+      this.update();
+    }
     this.editing = !this.editing;
   }
 
@@ -167,17 +172,20 @@ export class Channel {
   }
 
   updateCarousels(value : any){
-    console.log('carousel editing done', value);
+
+    if(!value.length)
+      return;
     for(var banner of value){
       var options : any = { top: banner.top };
       if(banner.guid)
         options.guid = banner.guid;
       this.upload.post('api/v1/channel/carousel', [banner.file], options)
         .then((response : any) => {
-          this.user.carousels.push(response.carousel);
+          response.index = banner.index;
+          this.user.carousels[banner.index] = response.carousel;
         });
     }
-    this.user.carousels = [];
+
   }
 
   removeCarousel(value : any){
@@ -185,17 +193,12 @@ export class Channel {
       this.client.delete('api/v1/channel/carousel/' + value.guid);
   }
 
-  updateField(field : string){
-    if(!field)
-      return false;
-
+  update(){
     var self = this;
-    let data = {};
-    data[field] = this.user[field];
-    this.client.post('api/v1/channel/info', data)
-        .then((data : any) => {
-          self.editing = false;
-        });
+    this.client.post('api/v1/channel/info', this.user)
+      .then((data : any) => {
+        self.editing = false;
+      });
   }
 
   delete(activity){

@@ -100,12 +100,23 @@ export class MindsCarousel{
     console.log(this.banners[index].guid, value.file);
     if(!this.banners[index].guid && !value.file)
       return; //this is our 'add new' post
-    this.modified[index] = {
+
+    //detect if we have changed
+    var changed = false;
+    if(value.top != this.banners[index].top)
+      changed = false;
+    if(value.file)
+      changed = true;
+
+    if(!changed)
+      return;
+
+    this.modified.push({
       guid: this.banners[index].guid,
       index: index,
       file: value.file,
       top: value.top
-    }
+    });
   }
 
   delete(index){
@@ -123,6 +134,7 @@ export class MindsCarousel{
     //after one second?
     setTimeout(() => {
       this.done_event.next(this.modified);
+      this.modified = [];
     }, 1000);
   }
 
@@ -132,6 +144,7 @@ export class MindsCarousel{
       this.index = max;
     else
       this.index--;
+    this.run();//resets the carousel
   }
 
   next(){
@@ -140,6 +153,7 @@ export class MindsCarousel{
       this.index = 0;
     else
       this.index++;
+    this.run();//resets the carousel
   }
 
   run(){
