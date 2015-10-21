@@ -70,6 +70,20 @@ class group implements Interfaces\Api{
       $group->access_id = 2;
       $group->membership = $_POST['membership'];
       $group->save();
+
+      if(is_uploaded_file($_FILES['file']['tmp_name'])){
+        $resized = get_resized_image_from_uploaded_file('file', 2000);
+        $file = new CoreEntities\File();
+        $file->owner_guid = $group->owner_guid;
+        $file->setFilename("group/{$group->guid}.jpg");
+        $file->open('write');
+        $file->write($resized);
+        $file->close();
+        $group->banner = true;
+        $group->banner_position = $_POST['banner_position'];
+        $group->save();
+      }
+
       //now join
       $group->join(Core\Session::getLoggedInUser());
 

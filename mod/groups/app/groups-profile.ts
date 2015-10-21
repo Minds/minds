@@ -10,7 +10,6 @@ import { GroupsJoinButton } from './groups-join-button';
 import { GroupsProfileMembers } from './profile/members';
 import { GroupsProfileRequests } from './profile/requests';
 import { GroupsProfileFeed } from './profile/feed';
-import { GroupsProfileSettings } from './profile/settings';
 
 interface MindsGroupResponse{
   group : MindsGroup
@@ -31,7 +30,7 @@ interface MindsGroup {
 @View({
   templateUrl: 'templates/plugins/groups/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, CARDS, GroupsJoinButton,
-    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileSettings, GroupsProfileRequests, MindsBanner ]
+    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner ]
 })
 
 export class GroupsProfile {
@@ -45,6 +44,7 @@ export class GroupsProfile {
   };
   editing : boolean = false;
   session = SessionFactory.build();
+  minds = window.Minds;
 
   activity : Array<any> = [];
   offset : string = "";

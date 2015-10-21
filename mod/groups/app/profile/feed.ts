@@ -51,7 +51,7 @@ export class GroupsProfileFeed {
     this.load();
   }
 
-  set prepend(activity : any){
+  prepend(activity : any){
     this.activity.unshift(activity);
   }
 

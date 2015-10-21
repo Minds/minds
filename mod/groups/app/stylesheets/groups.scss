@@ -14,6 +14,14 @@
   @include flex-wrap(wrap);
 }
 
+
+.group-avatar{
+  padding:$minds-padding;
+  img{
+    width:100%;
+  }
+}
+
 minds-groups-create{
   form{
     width:100%;
@@ -50,17 +58,19 @@ minds-groups-create{
   }
 
   .minds-groups-visibilty{
+    width:100%;
     .mdl-radio{
       display:block;
     }
   }
 
   .minds-groups-save{
-      margin-top:$minds-padding * 2;
+    width:100%;
+    margin-top:$minds-padding * 2;
 
-      button{
-        float:right;
-      }
+    button{
+      float:right;
+    }
   }
 
 }

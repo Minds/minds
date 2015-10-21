@@ -1,30 +1,37 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouterLink } from "angular2/router";
 
-import { Client } from 'src/services/api';
+import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
+import { MindsBanner } from 'src/components/banner';
 
 @Component({
   selector: 'minds-groups-create',
-  viewBindings: [ Client ]
+  viewBindings: [ Client, Upload ]
 })
 @View({
   templateUrl: 'templates/plugins/groups/create.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, FORM_DIRECTIVES ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner ]
 })
 
 export class GroupsCreator {
 
   session = SessionFactory.build();
-  group = {
+  banner;
+  group : any = {
     name: '',
     description: '',
     membership: 2
   };
 
-  constructor(public client: Client, @Inject(Router) public router: Router){
+  constructor(public client: Client, public upload: Upload, public router: Router){
 
+  }
+
+  addBanner(banner : any){
+    this.banner = banner.file;
+    this.group.banner_position = banner.top;
   }
 
   membershipChange(value){
@@ -33,12 +40,10 @@ export class GroupsCreator {
   }
 
   save(){
-    console.log(this.group);
-
     var self = this;
-    this.client.post('api/v1/groups/group', this.group)
-      .then((response) => {
-
+    this.upload.post('api/v1/groups/group', [this.banner], this.group)
+      .then((response : any) => {
+        self.router.navigate(['/Groups-Profile', {guid: response.guid, filter: ''}]);
       })
       .catch((e)=>{
 
