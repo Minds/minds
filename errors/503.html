@@ -1,21 +1,59 @@
 <html>
 	<head>
-		<title>Minds - Service outage.</title>
-		<link rel="stylesheet" href="/errors/style.css" type="text/css"/>
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300" type="text/css" />
+		<title>Minds - Service Outage.</title>
 		<style>
 			body{
+				/*background:#F2F2F2;*/
 				background:#111;
-				color:#FFF;
+				font-family:"Ubuntu";
+				color:#CCC;
+			}
+			.container{
+				width:auto;
+				margin:10% auto;
+				position:relative;
+			}
+			.logo{
+				width:300px;
+				text-align:center;
+				margin:auto;
+				position:relative;
+			}
+			.logo img{
+				width:225px;
+			}
+
+			.logo h1{
+				font-family: "Optima";
+				font-weight: 100;
+				font-size: 100px;
+				opacity:0.3;
+				text-transform: uppercase;
+			}
+
+			.message h1{
+				font-weight:normal;
+				font-size:46px;
+				text-align:center;
+			}
+			.message h3{
+				font-weight:lighter;
+				font-size:18px;
+				text-align:center;
+			}
+			a{
+				color: #4690D6;
+				text-decoration:none;
 			}
 		</style>
+		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu:300+Optima" type="text/css" />
 	</head>
 	<body>
 		<div class="container">
-			<div class="logo"><img src="/errors/logowhite.png"/></div>
+			<div class="logo"><h1>Minds</h1></div>
 			<div class="message">
-				<h1>Service outage.</h1>
-				<h3>Our engineers are working hard to restore service. Please check back soon.</h3>
+				<h1>There seems to be a problem.</h1>
+				<h3>Something broke along the way. We're onto it.. hold tight.</h3>
 			</div>
 		</div>
 	</body>
