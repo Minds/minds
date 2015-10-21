@@ -59,6 +59,7 @@ class Blog extends \ElggObject {
 	public function export(){
 		$export = parent::export();
 		$export['thumbnail_src'] = $this->getIconUrl();
+		$export['description'] = $this->description; //blogs need to be able to export html
 		return $export;
 	}
 

@@ -134,9 +134,6 @@ class Activity extends Entity{
    	$export['impressions'] = $this->getImpressions();
     $export['reminds'] = $this->getRemindCount();
 
-    if($this->message)
-        $export['message'] = strip_tags($this->message);
-
 		if($this->entity_guid && !$this->remind_object){
 		    $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:up');
 		    $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid,'thumbs:down');
