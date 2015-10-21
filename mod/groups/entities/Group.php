@@ -8,6 +8,13 @@
 
  class Group extends \ElggEntity{
 
+   public function initializeAttributes(){
+       parent::initializeAttributes();
+       $this->attributes = array_merge($this->attributes, array(
+           'type' => 'group'
+       ));
+   }
+
    public function isMember($user = NULL){
      return helpers\Membership::isMember($this, $user);
    }
