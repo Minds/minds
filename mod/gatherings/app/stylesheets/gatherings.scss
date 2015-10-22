@@ -1,35 +1,33 @@
 
 minds-messenger-conversation{
-  .mdl-card{
-    width:100%;
-    min-height:0;
-    margin-bottom:$minds-margin*2;
-  }
 
   .minds-messagenger-messenger{
-    max-height:500px;
-    max-height:60vh;
-    display:block;
+    padding:$minds-padding;
+    //padding-bottom:75px;
+    height:300px;
+    height:60vh;
+    display:flex;
     overflow-y: scroll;
+    flex-flow: column nowrap;
+
+    position:relative;
   }
 
   .minds-messenger-message{
-    padding:$minds-padding;
+    padding:$minds-padding ;
     margin-bottom:$minds-margin;
 
     .minds-body{
-      @include flex-display();
-      @include flex-direction(row);
+      display:flex;
+      flex-flow:row nowrap;
       align-items: center;
-      -webkit-align-items: center;
+      padding-left:$minds-padding;
 
       > p {
-        @include flex-display();
-        @include flex(3);
+        flex:3;
       }
       > span {
-        @include flex-display();
-        @include flex(1);
+        flex:1;
         font-size:10px;
       }
       .delete{
@@ -45,17 +43,18 @@ minds-messenger-conversation{
   }
 
   .minds-gatherings-send{
-    padding: $minds-padding;
+    padding:$minds-padding;
+    flex-flow:row nowrap;
+    width: 100% !important;
 
     input{
-      width: 80%;
-      padding: 12px;
+      flex:1;
+      padding: 8px;
       border: 0;
+      font-size:14px;
     }
     .mdl-button{
-      position: absolute;
-      right: 8px;
-      top: 8px;
+
     }
   }
 }

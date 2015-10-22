@@ -1,4 +1,4 @@
-import { Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
@@ -39,15 +39,18 @@ export class MessengerConversation {
 
   enabled : boolean = true;
 
+  element : any;
+
   timeout: any;
 
   isSending : boolean = false;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public _element: ElementRef){
     this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
     }
+    this.element = _element.nativeElement;
   }
 
   set _conversation(value : any){
@@ -66,7 +69,7 @@ export class MessengerConversation {
 
     this.client.get('api/v1/conversations/' + this.guid,
       {
-        limit: 6,
+        limit: 12,
         offset: this.offset,
         cachebreak: Date.now(),
         decrypt: true,
@@ -85,6 +88,8 @@ export class MessengerConversation {
         for(let message of data.messages){
           self.messages.push(message);
         }
+
+        self.scrollToBottom();
 
         self.offset = data['load-previous'];
         self.previous = data['load-next'];
@@ -116,6 +121,8 @@ export class MessengerConversation {
         self.messages.push(data.message);
         self.previous = data.message.guid;
 
+        self.scrollToBottom();
+
         message.value = null;
       })
       .catch(function(error) {
@@ -123,6 +130,12 @@ export class MessengerConversation {
         message.value = null;
         self.isSending = false;
       });
+  }
+
+  scrollToBottom(){
+    setTimeout(() => {
+      this.element.getElementsByClassName('minds-messagenger-messenger')[0].scrollTop = this.element.getElementsByClassName('minds-messagenger-messenger')[0].scrollHeight;
+    }, 300); //wait until the render?
   }
 
   doneTyping($event) {
