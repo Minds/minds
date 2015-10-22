@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var bump = require('gulp-bump');
 var concat = require('gulp-concat');
+var cp = require('child_process');
 var cssGlobbing = require('gulp-css-globbing');
 var filter = require('gulp-filter');
 var inject = require('gulp-inject');
@@ -144,7 +145,35 @@ gulp.task('karma.start', ['build.test'], function(done) {
   }, done);
 });
 
-gulp.task('test', ['karma.start'], function() {
+/*
+ * Connect to Saucelabs
+ */
+var sauceInstance;
+gulp.task('sauce-connect', function(done) {
+  require('sauce-connect-launcher')({
+    username: process.env.SAUCE_USERNAME,
+    accessKey: process.env.SAUCE_ACCESS_KEY,
+//    tunnelIdentifier: process.env.SAUCE_TUNNEL_ID || 0,
+    // verbose: true
+  }, function(err, instance) {
+    if (err) return done('Failed to launch sauce connect!');
+    sauceInstance = instance;
+    done();
+  });
+});
+
+function sauceDisconnect(done) {
+  sauceInstance ? sauceInstance.close(done) : done();
+}
+
+gulp.task('test.e2e', [], function() {
+  var child = cp.spawn('node', ['node_modules/.bin/protractor'].concat(['protractor.js']), {
+      stdio: [process.stdin, process.stdout, 'pipe']
+    });
+
+});
+
+gulp.task('test', ['karma.start', 'test.e2e'], function() {
 
 });
 

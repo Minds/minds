@@ -16,6 +16,7 @@
     "intl": "^1.0.0"
   },
   "devDependencies": {
+    "babel": "^5.8.23",
     "connect": "^3.3.5",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
@@ -42,7 +43,9 @@
     "karma-jasmine": "~0.3.6",
     "tsd": "^0.6.4",
     "open": "0.0.5",
+    "protractor": "2.5.x",
     "run-sequence": "^1.1.0",
+    "sauce-connect-launcher": "^0.2.2",
     "semver": "^4.3.6",
     "serve-static": "^1.9.2",
     "stream-series": "^0.1.1",
