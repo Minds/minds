@@ -9,7 +9,7 @@ Master | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHz
 Production | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=production)](https://magnum.travis-ci.com/Minds/Minds) | safe for use on production servers
 Angular | [![Build Status](https://magnum.travis-ci.com/Minds/Minds.png?token=vHzWaxguqXbJqkudCFTn&branch=angular)](https://magnum.travis-ci.com/Minds/Minds) | a new front end
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/minds.svg)](https://saucelabs.com/u/minds)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/minds.svg?auth=240a8242ffaed2a145f48323ab0762f9)](https://saucelabs.com/u/minds)
 
 ## Introduction
 Minds is the free and open-source social networking platform.
