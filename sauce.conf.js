@@ -15,11 +15,11 @@ var customLaunchers = {
     browserName: 'chrome',
     version: 'beta'
   },
-  'SL_CHROMEDEV': {
+  /*'SL_CHROMEDEV': {
     base: 'SauceLabs',
     browserName: 'chrome',
     version: 'dev'
-  },
+  },*/
   'SL_FIREFOX': {
     base: 'SauceLabs',
     browserName: 'firefox',
@@ -30,11 +30,11 @@ var customLaunchers = {
     browserName: 'firefox',
     version: 'beta'
   },
-  'SL_FIREFOXDEV': {
+  /*'SL_FIREFOXDEV': {
     base: 'SauceLabs',
     browserName: 'firefox',
     version: 'dev'
-  },
+  },*/
   'SL_SAFARI7': {
     base: 'SauceLabs',
     browserName: 'safari',
@@ -47,11 +47,11 @@ var customLaunchers = {
     platform: 'OS X 10.10',
     version: '8'
   },
-  'SL_SAFARI8.1': {
+  'SL_SAFARI9': {
     base: 'SauceLabs',
     browserName: 'safari',
     platform: 'OS X 10.11',
-    version: '8.1'
+    version: '9'
   },
   'SL_IOS7': {
     base: 'SauceLabs',
@@ -71,18 +71,12 @@ var customLaunchers = {
     platform: 'OS X 10.10',
     version: '9.0'
   },
-  'SL_IE9': {
-    base: 'SauceLabs',
-    browserName: 'internet explorer',
-    platform: 'Windows 2008',
-    version: '9'
-  },
-  'SL_IE10': {
+  /*'SL_IE10': {
     base: 'SauceLabs',
     browserName: 'internet explorer',
     platform: 'Windows 2012',
     version: '10'
-  },
+  },*/
   'SL_IE11': {
     base: 'SauceLabs',
     browserName: 'internet explorer',
@@ -95,7 +89,7 @@ var customLaunchers = {
     platform: 'Windows 10',
     version: '20.10240'
   },
-  'SL_ANDROID4.1': {
+  /*'SL_ANDROID4.1': {
     base: 'SauceLabs',
     browserName: 'android',
     platform: 'Linux',
@@ -106,7 +100,7 @@ var customLaunchers = {
     browserName: 'android',
     platform: 'Linux',
     version: '4.2'
-  },
+  },*/
   'SL_ANDROID4.3': {
     base: 'SauceLabs',
     browserName: 'android',
@@ -129,16 +123,17 @@ var customLaunchers = {
 
 var aliases = {
   'ALL': Object.keys(customLaunchers).filter(function(item) {return customLaunchers[item].base == 'SauceLabs';}),
-  'DESKTOP': ['SL_CHROME', 'SL_FIREFOX', 'SL_IE9', 'SL_IE10', 'SL_IE11', 'SL_EDGE', 'SL_SAFARI7', 'SL_SAFARI8', 'SL_SAFARI8.1'],
+  'DESKTOP': ['SL_CHROME', 'SL_FIREFOX', 'SL_IE10', 'SL_IE11', 'SL_EDGE', 'SL_SAFARI7', 'SL_SAFARI8', 'SL_SAFARI9'],
   'MOBILE': ['SL_ANDROID4.1', 'SL_ANDROID4.2', 'SL_ANDROID4.3', 'SL_ANDROID4.4', 'SL_ANDROID5.1', 'SL_IOS7', 'SL_IOS8', 'SL_IOS9'],
   'ANDROID': ['SL_ANDROID4.1', 'SL_ANDROID4.2', 'SL_ANDROID4.3', 'SL_ANDROID4.4', 'SL_ANDROID5.1'],
-  'IE': ['SL_IE9', 'SL_IE10', 'SL_IE11'],
+  'IE': [ 'SL_IE10', 'SL_IE11'],
   'IOS': ['SL_IOS7', 'SL_IOS8', 'SL_IOS9'],
   'SAFARI': ['SL_SAFARI7', 'SL_SAFARI8', 'SL_SAFARI8.1'],
+  'FIREFOX': ['SL_FIREFOX'],
   'BETA': ['SL_CHROMEBETA', 'SL_FIREFOXBETA'],
   'DEV': ['SL_CHROMEDEV', 'SL_FIREFOXDEV'],
   'CI': ['SL_CHROME', 'SL_ANDROID5.1', 'SL_SAFARI7', 'SL_SAFARI8', 'SL_SAFARI8.1', 'SL_IOS7', 'SL_IOS8', 'SL_IOS9',
-         'SL_FIREFOX', 'SL_IE9', 'SL_IE10', 'SL_IE11', 'SL_EDGE', 'SL_ANDROID4.1', 'SL_ANDROID4.2', 'SL_ANDROID4.3', 'SL_ANDROID4.4',
+         'SL_FIREFOX', 'SL_IE10', 'SL_IE11', 'SL_EDGE', 'SL_ANDROID4.1', 'SL_ANDROID4.2', 'SL_ANDROID4.3', 'SL_ANDROID4.4',
          'SL_CHROMEDEV', 'SL_FIREFOXBETA']
 };
 
