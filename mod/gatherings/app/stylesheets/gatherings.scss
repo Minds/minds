@@ -110,7 +110,8 @@ minds-gatherings{
   }
 
   .minds-gatherings-conversation-list{
-      height: 400px;
+      max-height: 400px;
+      max-height:60vh;
       overflow-y: scroll;
 
       .mdl-card{
@@ -145,6 +146,13 @@ minds-gatherings{
           float:right;
         }
       }
+  }
+
+  .gathering-footer-links{
+    a{
+      font-size:12px;
+      cursor: pointer;
+    }
   }
 
   .minds-gatherings-message-list{

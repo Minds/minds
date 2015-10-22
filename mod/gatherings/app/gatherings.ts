@@ -94,6 +94,11 @@ export class Gatherings {
       });
   }
 
+  logout(){
+    this.storage.destroy('private-key');
+    this.setup = false;
+  }
+
   doSearch(query: string) {
     this.inProgress = true;
     var self = this;
