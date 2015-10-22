@@ -76,7 +76,7 @@ export class Gatherings {
           return false;
         }
 
-        if(self.conversations.length == 0)
+        if(self.conversations.length == 0 && !self.conversation)
           self.conversation = data.conversations[0].guid;
 
         if(refresh){
