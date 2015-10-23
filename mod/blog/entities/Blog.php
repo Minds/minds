@@ -22,6 +22,7 @@ class Blog extends \ElggObject {
 	public function getExportableValues() {
 		return array_merge(parent::getExportableValues(), array(
 			'excerpt',
+			'license',
 			'ownerObj',
 			'header_bg',
 			'header_top'

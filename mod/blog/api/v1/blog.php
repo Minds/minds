@@ -116,7 +116,7 @@ class blog implements Interfaces\Api{
         else
           $blog = new entities\Blog();
 
-        $allowed = array('title', 'description', 'access_id', 'status');
+        $allowed = array('title', 'description', 'access_id', 'status', 'license');
 
         foreach($allowed as $v){
           if(isset($_POST[$v]))

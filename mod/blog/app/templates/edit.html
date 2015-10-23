@@ -10,11 +10,28 @@
   <div class="mdl-cell mdl-cell--12-col">
     <textarea
       [(ng-model)]="blog.title"
-      class="blog-title-input"
+      class="m-h1-input"
       placeholder="Your title"
       [auto-grow]
      ></textarea>
   </div>
+
+  <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
+
+    <div class="m-license-info">
+      <i class="material-icons">public</i>
+      <select [(ng-model)]="blog.license" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
+          <option *ng-for="#l of licenses" [value]="l.value">{{l.text}}</option>
+      </select>
+    </div>
+    <div class="m-visibility-info">
+      <i class="material-icons">visibility</i>
+      <select [(ng-model)]="blog.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ng-for="#a of access" [value]="a.value">{{a.text}}</option>
+      </select>
+    </div>
+  </div>
+
 
   <div class="mdl-cell mdl-cell--12-col minds-blog-descriptions" >
     <minds-tinymce [(content)]="blog.description"></minds-tinymce>

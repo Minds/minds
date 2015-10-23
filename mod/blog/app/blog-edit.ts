@@ -2,6 +2,7 @@ import { Component, View, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angul
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { MindsTitle } from 'src/services/ux/title';
+import { LICENSES, ACCESS } from 'src/services/list-options';
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
@@ -29,11 +30,15 @@ export class BlogEdit {
     title: '',
     description: '',
     access_id: 2,
+    license: 'all-rights-reserved',
     fileKey: 'header'
   };
   banner : any;
   banner_top : number = 0;
   editing : boolean = true;
+
+  licenses = LICENSES;
+  access = ACCESS;
 
   constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])

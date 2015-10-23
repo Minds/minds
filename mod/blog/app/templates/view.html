@@ -21,13 +21,13 @@
         <span>{{ blog.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
-    <div class="mdl-cell mdl-cell--7-col minds-actions-block">
+    <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="blog.ownerObj" *ng-if="blog.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
       <minds-button-edit [router-link]="['/Blog-Edit', { guid: blog.guid }]" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
-        <button>Edit</button>
+        <button class="material-icons">edit</button>
       </minds-button-edit>
       <minds-button-edit (click)="delete()"  *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid">
-        <button>X</button>
+        <button class="material-icons">close</button>
       </minds-button-edit>
       <minds-button-feature [object]="blog" *ng-if="session.isAdmin()"></minds-button-feature>
 
@@ -38,6 +38,22 @@
     </div>
 
   </div>
+  <!-- Additional block -->
+  <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
+
+    <div class="m-license-info">
+      <i class="material-icons">public</i>
+      <span [hidden]="!blog.license">{{blog.license}}</span>
+      <span [hidden]="blog.license">All Rights Reserved</span>
+    </div>
+    <div class="m-visibility-info" *ng-if="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <i class="material-icons">visibility</i>
+      <span [hidden]="blog.access_id != 2">Public</span>
+      <span [hidden]="blog.access_id != 0">Unlisted</span>
+    </div>
+
+  </div>
+
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col minds-blog-body" inner-html="{{blog.description}}">
