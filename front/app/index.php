@@ -11,6 +11,7 @@ ini_set( 'display_errors','1');
   <head>
 
     <base href="/" />
+    <link rel="icon" type="image/png" href="/assets/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <?php

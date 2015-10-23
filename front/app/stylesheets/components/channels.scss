@@ -29,16 +29,6 @@ minds-channel{
       margin:0;
       width: 320px;
 
-      .avatar{
-        max-width:200px;
-        img{
-          max-height:220px;
-          max-width:100%;
-          border-radius:3px;
-          flex-basis: 100%;
-        }
-      }
-
       > div{
         @include flex-display();
         align-items: flex-end;
@@ -173,6 +163,8 @@ minds-channel{
     }
     img{
       width: 100%;
+      max-width:80px;
+      max-height:80px;
     }
   }
 

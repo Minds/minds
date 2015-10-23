@@ -93,6 +93,52 @@
   }
 }
 
+.minds-avatar{
+  position: relative;
+  max-width: 200px;
+  margin: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background:#FFF;
+
+  img{
+    max-height: 220px;
+    max-width: 100%;
+    border-radius: 3px;
+    flex-basis: 100%;
+  }
+  .overlay{
+    color: #FFF;
+    background: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding: 8px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+
+    i{
+      padding-right:8px;
+    }
+    span{
+      font-weight: 300;
+      display: block;
+    }
+  }
+  input[type="file"]{
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+}
+
 .minds-dropdown-menu{
   padding: 0;
   width: 150px;

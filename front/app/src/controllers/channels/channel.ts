@@ -16,6 +16,7 @@ import { MindsActivityObject } from 'src/interfaces/entities';
 import { MindsUser } from 'src/interfaces/entities';
 import { MindsChannelResponse } from 'src/interfaces/responses';
 import { Poster } from 'src/controllers/newsfeed/poster';
+import { MindsAvatar } from 'src/components/avatar';
 
 import { ChannelSubscribers } from './subscribers';
 import { ChannelSubscriptions } from './subscriptions';
@@ -28,9 +29,9 @@ import { ChannelEdit } from './edit';
 })
 @View({
   templateUrl: 'templates/channels/channel.html',
+  pipes: [ TagsPipe ],
   directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, FORM_DIRECTIVES, Material, InfiniteScroll, CARDS,
-    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster ],
-  pipes: [ TagsPipe ]
+    AutoGrow, ChannelSubscribers, ChannelSubscriptions, BUTTON_COMPONENTS, ChannelEdit, MindsCarousel, Poster, MindsAvatar ]
 })
 
 export class Channel {
@@ -75,6 +76,7 @@ export class Channel {
       }
       self.user = data.channel;
       this.title.setTitle(self.user.username);
+
       if(self._filter == "feed")
       self.loadFeed(true);
       self.loadMedia();
@@ -210,6 +212,17 @@ export class Channel {
 
   prepend(activity : any){
     this.feed.unshift(activity);
+  }
+
+  upload_avatar(file){
+    var self = this;
+    this.upload.post('api/v1/channel/avatar', [file], {filekey : 'file'})
+      .then((response : any) => {
+        self.user.icontime = Date.now();
+        window.Minds.user.icontime = Date.now();
+      })
+      .catch((exception)=>{
+      });
   }
 
 }
