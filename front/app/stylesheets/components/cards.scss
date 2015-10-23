@@ -91,7 +91,25 @@ minds-card-user, .minds-banner-card{
   }
 }
 
+minds-card-image, minds-card-video{
+  min-height:242px !important;
+}
+
+.mdl-card{
+  .m-owner-block{
+    padding: 16px;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    box-sizing: border-box;
+    background-color: #FFF;
+  }
+}
+
 minds-card-album{
+  min-height:280px !important;
   .minds-album-tiles{
     margin: -16px;
     height: 200px;

@@ -12,7 +12,7 @@
 </div>
 
 <!-- Owner block -->
-<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="entity.ownerObj && entity.ownerObj.username">
+<div class="mdl-card__supporting-text mdl-color-text--grey-600 m-owner-block" *ng-if="entity.ownerObj && entity.ownerObj.username">
 
 	<div class="avatar">
 		<a [router-link]="['/Channel', {username: entity.ownerObj.username}]">
