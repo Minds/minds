@@ -110,38 +110,26 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if($entity->access_id == 0 && (isset($_POST['access_id']) && $_POST['access_id'] == 2))
           $activity_post = true;
 
-        if($entity->subtype == 'image'){
+        //need a better check for if this was a mobile post.
+        if($entity->subtype == 'image' && $entity->container_guid == $entity->owner_guid){
             if(isset($_POST['album_guid'])){
                 $album = new entities\album($_POST['album_guid']);
                 if(!$album->guid)
                     return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
                 //does the user already have and album?
-                $make_album = false;
                 $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
                 if(!$albums){
-                    if(isset($_POST['album_title'])){
-                        foreach($albums as $a){
-                            if($_POST['album_title'] == $a->title){
-                                $album = $a;
-                                break;
-                            }
-                        }
-                    }
+                  $album = new entities\album();
+                  $album->title = "My Album";
+                  $album->save();
+                } else {
+                  $album = $albums[0];
                 }
-
-                if(!$album){
-                    $album = new entities\album();
-                    if(isset($_POST['album_title'])){
-                        $album->title = $_POST['album_title'];
-                    } else {
-                        $album->title = "My Album";
-                    }
-                    $album->save();
-                    $ablums = array($album);
-                }
+                $album->addChildren(array($entity->guid => time()));
+                $entity->container_guid = $album->guid;
             }
-            $entity->container_guid = $album->guid;
+
             if($activity_post){
               $activity = new \Minds\Entities\Activity();
               $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
@@ -153,9 +141,6 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
               $response['activity_guid'] = $activity->guid;
             }
         }
-
-        $index = new core\Data\indexes('object:container');
-        $index->set($album->guid, array($guid=>$guid));
 
         $allowed = array('title', 'description', 'license');
         foreach($allowed as $key){

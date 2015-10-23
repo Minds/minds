@@ -89,6 +89,14 @@ export class Capture {
     this.postMeta.album_guid = album.guid;
   }
 
+  deleteAlbum(album){
+    for(var i in this.albums){
+      if(album.guid == this.albums[i].guid)
+        this.albums.splice(i, 1);
+    }
+    this.client.delete('api/v1/archive/albums/' + album.guid);
+  }
+
   /**
    * Add a file to the upload queue
    */

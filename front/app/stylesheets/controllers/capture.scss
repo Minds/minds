@@ -90,6 +90,14 @@ minds-capture{
         line-height:16px
       }
 
+      .mdl-card__menu{
+        visibility: hidden;
+      }
+      &:hover{
+        .mdl-card__menu{
+          visibility: visible;
+        }
+      }
 
     }
 

@@ -48,6 +48,9 @@
             <div class="mdl-card__title" [ng-class]="{'mdl-color-text--blue-grey-50': postMeta.album_guid == album.guid}">
               <h2>{{album.title}}</h2>
             </div>
+            <div class="mdl-card__menu">
+              <i class="material-icons" (click)="deleteAlbum(album)">delete</i>
+            </div>
 
         </div>
       </div>

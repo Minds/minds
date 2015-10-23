@@ -93,7 +93,11 @@ class albums implements Interfaces\Api{
      */
     public function delete($pages){
 
-         return Factory::response();
+      $album = new entities\album($pages[0]);
+      if($album->canEdit())
+        $album->delete();
+
+      return Factory::response();
 
     }
 
