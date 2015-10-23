@@ -21,7 +21,7 @@ class Manager{
 
 		$capture = new Item();
 		$capture->setPriority(2)
-			->setIcon('videocam')
+			->setIcon('file_upload')
 			->setName('Capture')
 			->setTitle('Capture')
 			->setPath('/Capture');
