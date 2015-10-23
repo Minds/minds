@@ -1,8 +1,11 @@
 @import '../defaults.scss';
 
 
-minds-card-user, .minds-banner-card{
+minds-card-user{
   min-height: 182px !important;
+}
+
+minds-card-user, .minds-banner-card{
 
   .minds-usercard-banner{
     width: 100%;
