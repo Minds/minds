@@ -48,11 +48,11 @@ class image extends Entities\File{
 		parent::save($index);
 
 		try{
-            $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
-            \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
-        }catch (\Exception $e){}
+        $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
+        \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
+    }catch (\Exception $e){}
 
-        return $this->guid;
+    return $this->guid;
 	}
 
 	/**
@@ -144,20 +144,21 @@ class image extends Entities\File{
 	}
 
 	 public function getExportableValues() {
-                return array_merge(parent::getExportableValues(), array(
-                        'thumbnail',
-			'cinemr_guid',
-		));
-	}
+		 return array_merge(parent::getExportableValues(), array(
+        'thumbnail',
+				'cinemr_guid',
+				'license'
+			));
+		}
 
-	/**
-         * Extend exporting
-         */
-        public function export(){
-                $export = parent::export();
-                $export['thumbnail_src'] = $this->getIconUrl();
-                $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
-                $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
-                return $export;
-        }
+		/**
+     * Extend exporting
+     */
+    public function export(){
+        $export = parent::export();
+        $export['thumbnail_src'] = $this->getIconUrl();
+        $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
+        $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
+        return $export;
+    }
 }

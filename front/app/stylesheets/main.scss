@@ -164,21 +164,6 @@ minds-topbar{
   }
 }
 
-.minds-actions-block{
-  @include flex-display();
-  @include flex-direction(row);
-  align-items: center;
-  -webkit-align-items: center;
-
-  > * {
-    margin-right:$minds-margin*2;
-
-    i {
-      vertical-align: middle;
-    }
-  }
-}
-
 .minds-error{
   display: inline-block;
   vertical-align: middle;

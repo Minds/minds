@@ -289,6 +289,34 @@ minds-carousel{
 
 }
 
+.m-actions-block{
+  display:flex;
+  flex-flow:row nowrap;
+  align-items: center;
+
+  > * {
+    margin-right:$minds-margin;
+
+    i {
+      vertical-align: middle;
+    }
+  }
+}
+.m-additional-block{
+  display:flex;
+  font-size:12px;
+
+  > * {
+    margin-right:$minds-margin;
+    display: flex;
+    align-items: center;
+
+    i {
+      padding:$minds-padding;
+    }
+  }
+}
+
 minds-button-user-dropdown{
   .minds-dropdown-menu{
     top: 50px;

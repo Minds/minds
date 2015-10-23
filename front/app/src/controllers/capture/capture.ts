@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router } from 'angular2/router';
 
+import { LICENSES, ACCESS } from 'src/services/list-options';
 import { MindsTitle } from 'src/services/ux/title';
 import { SessionFactory } from 'src/services/session';
 import { MDL_DIRECTIVES } from 'src/directives/material';
@@ -35,6 +36,11 @@ export class Capture {
 
   dragging : boolean = false;
 
+  control;
+
+  default_license : string = "all-rights-reserved";
+  licenses = LICENSES;
+  access = ACCESS;
 	constructor(public _upload: Upload, public client: Client, public router: Router, public title: MindsTitle){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
@@ -94,7 +100,8 @@ export class Capture {
       var data : any = {
         guid: null,
         state: 'created',
-        progress: 0
+        progress: 0,
+        license: this.default_license || 'all-rights-reserved'
       }
 
       var fileInfo = file.files[i];

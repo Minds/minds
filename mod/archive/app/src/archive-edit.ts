@@ -3,7 +3,10 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client, Upload } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
+import { LICENSES, ACCESS } from 'src/services/list-options';
+
 import { Material } from 'src/directives/material';
+import { AutoGrow } from 'src/directives/autogrow';
 import { MDL_DIRECTIVES } from 'src/directives/material';
 import { Comments } from 'src/controllers/comments/comments';
 import { BUTTON_COMPONENTS } from 'src/components/buttons';
@@ -17,7 +20,7 @@ import { ArchiveGrid } from './views/grid';
 })
 @View({
   templateUrl: 'templates/plugins/archive/edit.html',
-  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, AutoGrow, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 
 export class ArchiveEdit {
@@ -28,16 +31,16 @@ export class ArchiveEdit {
   entity : any  = {
     title: "",
     description: "",
-    subtype: ""
+    subtype: "",
+    license: "all-rights-reserved"
   };
   inProgress : boolean;
   error : string;
 
-  constructor(public client: Client,
-    public upload: Upload,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams
-    ){
+  licenses = LICENSES;
+  access = ACCESS;
+
+  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;

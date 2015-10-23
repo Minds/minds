@@ -5,10 +5,6 @@
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
       <h1>{{entity.title}}</h1>
-      <a class="album_backlink mdl-color-text--blue-grey-400"
-        [router-link]="['/Archive-View', {guid: entity.container_guid}]"
-        [hidden]="entity.subtype == 'album'"
-        >Back to album</a>
     </div>
 
     <!-- Owner box -->
@@ -24,14 +20,15 @@
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
-    <div class="mdl-cell mdl-cell--7-col minds-actions-block">
+    <!-- Actions block -->
+    <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
       <minds-button-edit [router-link]="['/Archive-Edit', { guid: entity.guid }]" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
-        <button>Edit</button>
+        <button class="material-icons">edit</button>
       </minds-button-edit>
 
       <minds-button-edit (click) ="delete()"  *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
-        <button>X</button>
+        <button class="material-icons">close</button>
       </minds-button-edit>
 
       <minds-button-feature [object]="entity" *ng-if="session.isAdmin()"></minds-button-feature>
@@ -41,14 +38,34 @@
       <minds-button-thumbs-up [object]="entity"></minds-button-thumbs-up>
       <minds-button-thumbs-down [object]="entity"></minds-button-thumbs-down>
     </div>
+    <!-- Additional block -->
+    <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
 
-  </div>
+      <div class="m-license-info">
+        <i class="material-icons">public</i>
+        <span [hidden]="!entity.license">{{entity.license}}</span>
+        <span [hidden]="entity.license">All Rights Reserved</span>
+      </div>
+      <div class="m-visibility-info" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+        <i class="material-icons">visibility</i>
+        <span [hidden]="entity.access_id != 2">Public</span>
+        <span [hidden]="entity.access_id != 0">Unlisted</span>
+      </div>
+
+      <a class="album_backlink mdl-color-text--blue-grey-400"
+        [router-link]="['/Archive-View', {guid: entity.container_guid}]"
+        [hidden]="entity.subtype == 'album'"
+        >
+        <i class="material-icons">photo_album</i>Back to album
+      </a>
+
+    </div>
 
 </div>
 
 <minds-archive-grid [object]="entity" *ng-if="entity.subtype == 'album'"></minds-archive-grid>
 
 <!-- Don't show comments for albums -->
-<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid && entity.subtype != 'album'">
+<div class="mdl-grid archive-grid" style="width:100%; max-width:660px" *ng-if="entity.guid && entity.subtype != 'album'">
   <minds-comments [object]="entity"></minds-comments>
 </div>

@@ -7,15 +7,34 @@
 <form (submit)="save()" class="mdl-grid archive-grid" style="max-width:660px">
 
 
-  <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label minds-archive-title" [mdl]>
-    <input
-      class="mdl-textfield__input"
+  <div class="mdl-cell mdl-cell--12-col minds-archive-title" [mdl]>
+    <textarea
+      class="m-h1-input"
       type="text"
       id="name"
       [(ng-model)]="entity.title"
-      />
+      [auto-grow]
+      placeholder="Title..."
+     ></textarea>
     <label class="mdl-textfield__label" for="name">{{entity.title}}</label>
   </div>
+
+  <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
+
+    <div class="m-license-info">
+      <i class="material-icons">public</i>
+      <select [(ng-model)]="entity.license" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ng-for="#l of licenses" [value]="l.value">{{l.text}}</option>
+      </select>
+    </div>
+    <div class="m-visibility-info">
+      <i class="material-icons">visibility</i>
+      <select [(ng-model)]="entity.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ng-for="#a of access" [value]="a.value">{{a.text}}</option>
+      </select>
+    </div>
+  </div>
+
 
   <div class="mdl-cell mdl-cell--12-col" >
     <minds-tinymce [(content)]="entity.description"></minds-tinymce>

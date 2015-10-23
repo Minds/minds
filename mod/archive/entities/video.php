@@ -124,10 +124,11 @@ class video extends object{
 	}
 
 	 public function getExportableValues() {
-                return array_merge(parent::getExportableValues(), array(
-                        'thumbnail',
-			'cinemr_guid',
-		));
+      return array_merge(parent::getExportableValues(), array(
+	      'thumbnail',
+				'cinemr_guid',
+				'license'
+			));
 	}
 
 	/**
@@ -140,8 +141,8 @@ class video extends object{
 			'360.mp4' => $this->getSourceUrl('360.mp4'),
 			'720.mp4' => $this->getSourceUrl('720.mp4')
         );
-        $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
-        $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
+    $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
+    $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
 		return $export;
 	}
 }

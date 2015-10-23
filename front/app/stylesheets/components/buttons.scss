@@ -11,6 +11,10 @@ minds-button-subscribe, minds-groups-join-button, minds-button-edit, minds-butto
     font-size: 12px;
     border-radius: 2px;
     text-transform: uppercase;
+
+    &.material-icons{
+      padding:$minds-padding / 2;
+    }
   }
 
   &:focus,button:focus{

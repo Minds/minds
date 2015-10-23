@@ -67,9 +67,9 @@ minds-capture{
     width:100%;
   }
 
-  .minds-albums-selector{
+  .m-albums-selector{
 
-    .mdl-button.minds-album-add{
+    .mdl-button.m-album-add{
       width:24px;
       min-width:0;
       height:24px;
@@ -80,7 +80,7 @@ minds-capture{
       }
     }
 
-    .minds-album{
+    .m-album{
       border-bottom:1px solid #DDD;
       cursor:pointer;
 
@@ -93,7 +93,7 @@ minds-capture{
 
     }
 
-    .minds-album-create{
+    .m-album-create{
       input{
         outline: none;
         border: 0;
@@ -136,7 +136,7 @@ minds-capture{
 
   }
 
-  .minds-upload{
+  .m-upload{
     input{
       outline: none;
       border: 0;
@@ -163,4 +163,14 @@ minds-capture{
     }
   }
 
+}
+
+.m-capture-edit-container{
+  input{
+    flex:2;
+  }
+  select{
+    width: auto;
+    flex: 1;
+  }
 }

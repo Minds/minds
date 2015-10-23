@@ -56,6 +56,8 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
      */
     public function post($pages){
 
+      $response = array();
+
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
@@ -102,8 +104,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
         $guid = $pages[0];
         $album = NULL;
+        $activity_post = NULL;
 
         $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
+        if($entity->access_id == 0 && (isset($_POST['access_id']) && $_POST['access_id'] == 2))
+          $activity_post = true;
 
         if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){
@@ -112,8 +117,9 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                     return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
                 //does the user already have and album?
+                $make_album = false;
                 $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
-                if($albums){
+                if(!$albums){
                     if(isset($_POST['album_title'])){
                         foreach($albums as $a){
                             if($_POST['album_title'] == $a->title){
@@ -129,20 +135,23 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                     if(isset($_POST['album_title'])){
                         $album->title = $_POST['album_title'];
                     } else {
-                        $album->title = "API Uploads";
+                        $album->title = "My Album";
                     }
                     $album->save();
                     $ablums = array($album);
                 }
             }
             $entity->container_guid = $album->guid;
-            $activity = new \Minds\Entities\Activity();
-                $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
-                        //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
-                    ->setFromEntity($entity)
-                    ->setTitle($_POST['title'])
-                    ->setBlurb($_POST['description'])
-                        ->save();
+            if($activity_post){
+              $activity = new \Minds\Entities\Activity();
+              $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
+                  //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
+                  ->setFromEntity($entity)
+                  ->setTitle($_POST['title'])
+                  ->setBlurb($_POST['description'])
+                  ->save();
+              $response['activity_guid'] = $activity->guid;
+            }
         }
 
         $index = new core\Data\indexes('object:container');
@@ -150,15 +159,15 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
         $allowed = array('title', 'description', 'license');
         foreach($allowed as $key){
-            if(isset($_POST[$key])){
+          if(isset($_POST[$key])){
             $entity->$key = $_POST[$key];
-            }
+          }
         }
 
-        $entity->access_id = 2;
+        $entity->access_id = !isset($_POST[$key]) ? 2 : $_POST['access_id'];
         $entity->save(true);
 
-        if($entity->subtype == 'video'){
+        if($entity->subtype == 'video' && $activity_post){
 
             $activity = new \Minds\Entities\Activity();
             $activity->setFromEntity($entity)
@@ -170,21 +179,27 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 ->save();
 
         }
-        //error_log(print_r($_POST,true));
-        //forward to facebook etc
-        Core\Events\Dispatcher::trigger('social', 'dispatch', array(
-            'services' => array(
-                'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
-                'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
-            ),
-            'data' => array(
-                'message' => $entity->title,
-                'thumbnail_src'=>$entity->getIconUrl(),
-                'perma_url' => $entity->getURL()
-            )
-        ));
-        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
-        return Factory::response(array('guid'=>$entity->guid, 'activity_guid'=>$activity->guid));
+
+        if($activity_post){
+          Core\Events\Dispatcher::trigger('social', 'dispatch', array(
+              'services' => array(
+                  'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
+                  'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false
+              ),
+              'data' => array(
+                  'message' => $entity->title,
+                  'thumbnail_src'=>$entity->getIconUrl(),
+                  'perma_url' => $entity->getURL()
+              )
+          ));
+
+          \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
+          $response['activity_guid'] = $activity->guid;
+        }
+
+        $response['guid']=$entity->guid;
+        $response['entity']=$entity->export();
+        return Factory::response($response);
 
     }
 

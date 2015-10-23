@@ -51,6 +51,12 @@ minds-archive-theatre{
   }
 }
 
+minds-archive-edit{
+  .m-form-select{
+    max-width:128px;
+    flex:auto;
+  }
+}
 
 minds-archive-grid{
   @include flex-display();
