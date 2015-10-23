@@ -119,6 +119,12 @@ minds-gatherings{
         width:auto;
         padding:$minds-padding;
 
+        .minds-body{
+          display:flex;
+          flex-flow:row nowrap;
+          align-items: center;
+        }
+
         a{
           text-decoration: none;
           display: block;
@@ -143,7 +149,7 @@ minds-gatherings{
           }
         }
         minds-button-subscribe{
-          float:right;
+          
         }
       }
   }
