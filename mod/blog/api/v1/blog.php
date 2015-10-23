@@ -58,12 +58,13 @@ class blog implements Interfaces\Api{
           case "trending":
             //this is temporary until we bring in neo4j sorting
             $db = new Core\Data\Call('entities_by_time');
-            $guids = $db->getRow('trending:month:object:blog', array('offset'=> $offset, 'limit'=> $limit ));
+            $guids = $db->getRow('trending:month:object:blog', array( 'limit'=> $limit, 'offset'=>$offset, 'reversed' => false ));
             if(!$guids)
               break;
+            ksort($guids);
             $entities = core\Entities::get(array('guids'=>$guids));
             $response['blogs'] = Factory::exportable($entities);
-            $response['load-next'] = (string) end($entities)->guid;
+            $response['load-next'] = (string) end(array_keys($guids));
             break;
           case "owner":
             if(!is_numeric($pages[1])){
