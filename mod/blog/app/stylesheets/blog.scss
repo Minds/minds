@@ -56,3 +56,18 @@ minds-blog-view{
 minds-blog-edit{
 
 }
+
+minds-card-blog{
+  min-height:242px !important;
+
+  .m-owner-block{
+    padding: 16px;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    box-sizing: border-box;
+    background-color: #FFF;
+  }
+}

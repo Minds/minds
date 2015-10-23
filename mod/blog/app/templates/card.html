@@ -5,7 +5,7 @@
 </a>
 
 <!-- Owner block -->
-<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block" *ng-if="blog.ownerObj && blog.ownerObj.username">
+<div class="mdl-card__supporting-text mdl-color-text--grey-600 owner-block m-owner-block" *ng-if="blog.ownerObj && blog.ownerObj.username">
 
   <div class="avatar">
     <a [router-link]="['/Channel', {username: blog.ownerObj.username}]">
