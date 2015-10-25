@@ -11,6 +11,8 @@
     "gulp": "^3.8.11",
     "gulp-git": "^1.6.0",
     "gulp-shell": "^0.5.0",
+    "run-sequence": "^1.1.0",
+    "tsd": "^0.6.4",
     "typescript": "~1.6.2"
   }
 }
