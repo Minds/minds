@@ -11,6 +11,14 @@ class Dispatcher {
     private static $events = array();
 
     /**
+     * Initialise Core event listeners
+     */
+    public static function init(){
+      Listeners\Channel::init();
+      Listeners\Comments::init();
+    }
+
+    /**
      * Register a handler for an event.
      * @param type $event The event
      * @param type $namespace Namespace for this event (e.g. object type)

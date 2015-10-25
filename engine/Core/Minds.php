@@ -7,7 +7,7 @@ namespace Minds\Core;
 class minds extends base{
 
 	public $root = __MINDS_ROOT__;
-	public $legacy_lib_dir = "/engine/lib/";
+	public $legacy_lib_dir = "/lib/";
 	static public $booted = false;
 
 	/**
@@ -38,6 +38,9 @@ class minds extends base{
 
     Security\XSRF::setCookie();
 
+		Events\Defaults::_();
+		SEO\Defaults::_();
+
 		/**
 		 * Boot the system, @todo this should be oop?
 		 */
@@ -47,7 +50,7 @@ class minds extends base{
 		 * Load the plugins
 		 */
 		new plugins();
-	
+
 		/**
 		 * Complete the boot process for both engine and plugins
 		 */
@@ -75,14 +78,14 @@ class minds extends base{
 			$CONFIG = Config::build();
 
 		// Load the system settings
-		if (file_exists(__MINDS_ROOT__ . '/engine/settings.php')){
-			include_once(__MINDS_ROOT__ . "/engine/settings.php");
+		if (file_exists(__MINDS_ROOT__ . '/settings.php')){
+			include_once(__MINDS_ROOT__ . "/settings.php");
 		}
 
 		// Load mulit globals if set
-		if(file_exists(__MINDS_ROOT__ . '/engine/multi.settings.php')) {
+		if(file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
 			define('multisite', true);
-			require_once(__MINDS_ROOT__ . '/engine/multi.settings.php');
+			require_once(__MINDS_ROOT__ . '/multi.settings.php');
 		}
 	}
 
@@ -129,7 +132,7 @@ class minds extends base{
 		if($this->detectMultisite()){
 			//we do this on db load.. not here
 		} else {
-			if (!file_exists(__MINDS_ROOT__ . '/engine/settings.php') && !defined('__MINDS_INSTALLING__')) {
+			if (!file_exists(__MINDS_ROOT__ . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
 				header("Location: install.php");
 				exit;
 			}

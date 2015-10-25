@@ -49,7 +49,7 @@ class Factory{
             }
 
             //autloaded routes
-            $class_name = "\\minds\\pages\\api\\$route";
+            $class_name = "\\Minds\\Controllers\api\\$route";
             if(class_exists($class_name)){
                 $handler = new $class_name();
                 if($handler instanceof Interfaces\ApiAdminPam)

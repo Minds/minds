@@ -10,12 +10,12 @@ class Router{
 
 	// these are core pages, other pages are registered by plugins
 	static $routes = array(
-		"/icon" => "minds\\pages\\icon",
-		"/api" => "minds\\pages\\api\\api",
-		"/fs" => "minds\\pages\\fs\\fs",
-		'/thumbProxy' => "minds\\pages\\thumbProxy",
+		"/icon" => "Minds\\Controllers\\icon",
+		"/api" => "Minds\\Controllers\\api\\api",
+		"/fs" => "Minds\\Controllers\\fs\\fs",
+		'/thumbProxy' => "Minds\\Controllers\\thumbProxy",
     //  "/app" => "minds\\pages\\app",
-    "/emails/unsubscribe" => "minds\\pages\\emails\\unsubscribe"
+    "/emails/unsubscribe" => "Minds\\Controllers\\emails\\unsubscribe"
 	);
 
 	/**

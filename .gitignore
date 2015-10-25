@@ -1,14 +1,8 @@
-# ignore Elgg configuration
-/engine/settings.php
-/engine/multi.settings.php
 
-# Ignore front end plugins
-/front/app/src/plugins
-/front/app/templates/plugins
-/front/app/stylesheets/plugins.scss
-/front/app/stylesheets/plugins
-/front/public
-/tests/ng-spec
+/docs
+/engine
+/front
+/sockets
 
 tsd_typings
 

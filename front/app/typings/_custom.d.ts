@@ -10,4 +10,4 @@
 /*
  * tsd generated types
  */
-/// <reference path="../../../tsd_typings/tsd.d.ts" />
+/// <reference path="../../tsd_typings/tsd.d.ts" />

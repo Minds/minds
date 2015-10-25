@@ -1,9 +1,0 @@
-suites:
-  main:
-    namespace: Minds
-    psr4_prefix: Minds
-    spec_prefix: Spec
-    src_path: engine
-    spec_path: tests
-
-bootstrap: tests/spec/bootstrap.php
