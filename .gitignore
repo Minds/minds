@@ -1,0 +1,27 @@
+# ignore Elgg configuration
+settings.php
+multi.settings.php
+
+bin
+
+/.htaccess
+.htaccess
+/2
+#ignore composer
+/vendor
+/components
+# ignore IDE/hidden/OS cache files
+.*
+*~
+!/.gitignore
+/nbproject
+/nb-configuration.xml
+Session.vim
+*.tmproj
+*.tmproject
+tmtags
+Thumbs.db
+Desktop.ini
+node_modules
+# don't ignore travis config
+!/.travis.yml
