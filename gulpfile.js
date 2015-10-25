@@ -10,7 +10,7 @@ gulp.task('init', function(done){
 });
 
 gulp.task('clone', function(done){
-  runSequence('clone.front', 'clone.engine', 'clone.sockets', 'clone.plugins', done);
+  runSequence('clone.front', 'clone.engine', 'clone.sockets', 'clone.plugins', 'clone.docs', done);
 });
 
 gulp.task('clone.front', function(done){
@@ -45,6 +45,15 @@ gulp.task('clone.plugins', function(done){
   done();
 });
 
+gulp.task('clone.docs', function(done){
+  git.clone('https://github.com/minds/docs.git',  { args: './docs' }, function(err){
+    if(!err)
+      return done();
+    console.error(err);
+    process.exit(1);
+  })
+})
+
 gulp.task('install', ['install.front', 'install.engine']);
 
 gulp.task('install.front', ['install.front-typings'], shell.task([
@@ -68,6 +77,9 @@ gulp.task('build.front', shell.task([
   'cd front; gulp build.prod'
 ]));
 
+gulp.task('build.docs', shell.task([
+  'cd docs; ../engine/bin/apigen generate --config apigen.neon'
+]));
 
 gulp.task('test', ['test.front', 'test.engine']);
 
