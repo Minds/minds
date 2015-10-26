@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bc7dfbb05b0ed51f16439ddd303ad6ab",
+    "hash": "32aee78803f20d0f38189853a9ff1eda",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -22,6 +22,50 @@
             },
             "description": "A php library for sending push notifications",
             "time": "2015-08-13 13:38:47"
+        },
+        {
+            "name": "braintree/braintree_php",
+            "version": "3.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/braintree/braintree_php.git",
+                "reference": "96e45a8587cac1995b1de4ea428d7ea1a6982115"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/96e45a8587cac1995b1de4ea428d7ea1a6982115",
+                "reference": "96e45a8587cac1995b1de4ea428d7ea1a6982115",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-hash": "*",
+                "ext-openssl": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Braintree": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Braintree",
+                    "homepage": "http://www.braintreepayments.com"
+                }
+            ],
+            "description": "Braintree PHP Client Library",
+            "time": "2015-09-10 21:05:42"
         },
         {
             "name": "bshaffer/oauth2-server-php",
@@ -3895,15 +3939,15 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "thobbs/phpcassa": 20,
         "duoshuo/php-cassandra": 20,
         "kramnorth/cinemr-php-sdk": 20,
         "minds/minds-php-sdk": 20,
+        "minds/surge": 20,
+        "thobbs/phpcassa": 20,
         "tijsverkoyen/twitteroauth": 20,
         "videlalvaro/php-amqplib": 20,
-        "minds/surge": 20,
-        "zircote/swagger-php": 20,
-        "vscn/cruftflake": 20
+        "vscn/cruftflake": 20,
+        "zircote/swagger-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
