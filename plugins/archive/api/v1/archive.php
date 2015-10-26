@@ -178,7 +178,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
               )
           ));
 
-          \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
+          Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'upload');
           $response['activity_guid'] = $activity->guid;
         }
 

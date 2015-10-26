@@ -6,6 +6,7 @@
 namespace minds\plugin\payments;
 
 use Minds\Api;
+use Minds\Entities;
 use Minds\Components;
 use Minds\Core;
 use Minds\Core\Events;
@@ -14,26 +15,7 @@ class start extends Components\Plugin{
 
 	public function init(){
 
-		$link = new Core\Navigation\Item();
-		Core\Navigation\Manager::add($link
-			->setPriority(7)
-			->setIcon('account_balance')
-			->setName('Wallet')
-			->setTitle('Wallet')
-			->setPath('/Wallet')
-			->setExtras(array(
-				'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
-			)),
-			"topbar"
-		);
 
-    \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
-        if($row->type == "object" && $row->subtype == 'points_transaction'){
-            return new entities\PointsTransaction($row);
-        }
-    });
-
-		Api\Routes::add('v1/wallet', "minds\\plugin\\payments\\api\\v1\\wallet");
 
 	}
 
@@ -65,21 +47,5 @@ class start extends Components\Plugin{
 		}
 		elgg_set_viewtype('default');
 	}
-
-    /**
-     * @return void
-     */
-    static public function createTransaction($user_guid, $points, $entity_guid = NULL, $description = ""){
-        $transaction = new entities\PointsTransaction();
-        $transaction->setPoints($points)
-            ->setOwnerGuid($user_guid)
-            ->setDescription($description)
-            ->setEntityGuid($entity_guid)
-            ->save();
-        /**
-         * Update the userscount
-         */
-        \Minds\Helpers\Counters::increment($user_guid, 'points', $points);
-    }
 
 }
