@@ -12,6 +12,7 @@ use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Helpers;
 
 class comments implements Interfaces\Api{
 
@@ -81,7 +82,7 @@ class comments implements Interfaces\Api{
               if(isset($subscribers[$comment->owner_guid]))
                   unset($subscribers[$comment->owner_guid]);
 
-              \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+              Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
 
               \elgg_trigger_plugin_hook('notification', 'all', array(
                   'to' => $subscribers,

@@ -122,8 +122,8 @@ class newsfeed implements Interfaces\Api{
                     if(!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")){
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
 
-                        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
-                        \Minds\plugin\payments\start::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
+                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
+                        Helpers\Wallet::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
                 }
 

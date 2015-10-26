@@ -6,6 +6,7 @@ namespace Minds\Controllers;
 
 use Minds\Core;
 use Minds\Interfaces;
+use Minds\Helpers;
 
 class boost extends core\page implements Interfaces\page{
     private $rate = 0.5;
@@ -77,7 +78,7 @@ class boost extends core\page implements Interfaces\page{
                     $user_guid = $entity->owner_guid;
                 }
                 //refund the point
-                \Minds\plugin\payments\start::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
+                Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
             }
 
             if (!elgg_is_xhr())

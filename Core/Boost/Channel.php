@@ -6,6 +6,7 @@ use Minds\Core;
 use Minds\Core\Data;
 use Minds\Interfaces;
 use Minds\Entities;
+use Minds\Helpers;
 
 /**
  * Channel boost handler
@@ -217,7 +218,7 @@ class Channel implements Interfaces\BoostHandlerInterface{
 
                 $entity =  new \Minds\Entities\Activity($guid);
 
-                \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
+                Helpers\Wallet::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
 
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                     'to'=>array($entity->owner_guid),

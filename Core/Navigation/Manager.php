@@ -125,6 +125,18 @@ class Manager{
 			->addSubItem($admin_analytics);
 		if(Core\Session::isLoggedIn() && Core\Session::getLoggedinUser()->isAdmin())
 			self::add($admin);
+
+		self::add((new Item())
+			->setPriority(7)
+			->setIcon('account_balance')
+			->setName('Wallet')
+			->setTitle('Wallet')
+			->setPath('/Wallet')
+			->setExtras(array(
+				'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
+			)),
+			"topbar"
+		);
 	}
 
 	/**

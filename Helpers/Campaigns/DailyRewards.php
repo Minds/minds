@@ -18,7 +18,7 @@ class DailyRewards{
         if(!$row || key($row) != Core\Session::getLoggedinUser()->guid){
           $db->insert("analytics:rewarded:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
 
-          \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, 10, Core\Session::getLoggedinUser()->guid, "Daily login reward.");
+          Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 10, Core\Session::getLoggedinUser()->guid, "Daily login reward.");
           $message = "You have received 10 points as a daily login reward.  Log back in again tomorrow to receive more points!";
           Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
               'to'=>array(Core\Session::getLoggedinUser()->guid),

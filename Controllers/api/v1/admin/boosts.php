@@ -97,7 +97,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam{
             $user_guid = $entity->owner_guid;
         }
         //refund the point
-        \Minds\plugin\payments\start::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
+        Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
       }
 
       return Factory::response($response);

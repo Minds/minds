@@ -117,7 +117,7 @@ class boost implements Interfaces\Api{
             else
                 $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
 
-            \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
             if(isset($pages[2]) && $pages[2] != Core\Session::getLoggedinUser()->guid){
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -156,7 +156,7 @@ class boost implements Interfaces\Api{
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
         }
 	    $points = reset($guids);
-        \Minds\plugin\payments\start::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
+        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
 	    $accept = $ctrl->accept($pages[0], $points);
 	    return Factory::response(array());
     }
@@ -172,7 +172,7 @@ class boost implements Interfaces\Api{
         }
         $points = reset($guids);
         $entity = new \Minds\Entities\Activity($pages[0]);
-        \Minds\plugin\payments\start::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
+        Helpers\Wallet::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
     	$ctrl->reject($pages[0]);
     }
 

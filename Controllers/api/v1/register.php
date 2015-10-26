@@ -11,6 +11,7 @@ use Minds\Core;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Helpers;
 
 class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
@@ -45,7 +46,7 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
             );
             elgg_trigger_plugin_hook('register', 'user', $params, TRUE);
 
-            \Minds\plugin\payments\start::createTransaction($guid, 100, $guid, "Welcome.");
+            Helpers\Wallet::createTransaction($guid, 100, $guid, "Welcome.");
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($guid),
                 'from' => 100000000000000519,
@@ -67,7 +68,7 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
             if(isset($_POST['referrer']) && $_POST['referrer']){
                 $user = new Entities\User(strtolower(ltrim($_POST['referrer'],'@')));
                 if($user->guid){
-                     \Minds\plugin\payments\start::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
+                     Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                 }
             }
 

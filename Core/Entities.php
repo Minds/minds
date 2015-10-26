@@ -45,7 +45,7 @@ class Entities extends base{
 			return $new_entity;
 
 		if(isset($row->subtype) && $row->subtype){
-			$sub = "Minds\\Entities\\" . ucfirst($row->subtype);
+			$sub = "Minds\\Entities\\" . ucfirst($row->type) . "\\" . ucfirst($row->subtype);
 			if(class_exists($sub)){
 				return new $sub($row, $cache);
 			}
