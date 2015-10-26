@@ -61,9 +61,9 @@ gulp.task('install.front', ['install.front-typings'], shell.task([
 ]));
 
 gulp.task('install.front-typings', shell.task([
-  'tsd reinstall --overwrite',
-  'tsd link',
-  'tsd rebundle'
+  'cd front; tsd reinstall --overwrite',
+  'cd front; tsd link',
+  'cd front; tsd rebundle'
 ]));
 
 gulp.task('install.engine', shell.task([
