@@ -42,7 +42,7 @@ class Factory {
             }
 
             //autloaded routes
-            $class_name = "\\minds\\pages\\fs\\$route";
+            $class_name = "\\Minds\\Controllers\\fs\\$route";
             if(class_exists($class_name)){
                 $handler = new $class_name();
                 self::pamCheck();
