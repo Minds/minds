@@ -153,7 +153,8 @@ class User extends \ElggUser{
             'briefdescription',
             'dob',
             'gender',
-            'city'
+            'city',
+            'merchant'
         ));
     }
 

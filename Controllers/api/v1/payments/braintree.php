@@ -50,6 +50,7 @@ class braintree implements Interfaces\Api{
           ->setAmount($amount)
           ->setMerchant($merchant)
           ->setFee($fee)
+          ->setCustomerId(Core\Session::getLoggedInUser()->guid)
           ->setNonce($_POST['nonce']);
 
         try{
