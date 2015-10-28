@@ -99,23 +99,25 @@ class boost implements Interfaces\Api{
         if(!isset($pages[1]))
             return Factory::response(array('status' => 'error', 'message' => ':guid must be passed in uri'));
 
-        if(!isset($_POST['impressions']))
+        $impressions = isset($_POST['impressions']) ? $_POST['impressions'] : $_POST['points'];
+
+        if(!isset($impressions))
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be sent in post body'));
 
-        //if($_POST['impressions'] != round($_POST['impressions']))
+        //if($impressions != round($impressions))
         //    return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
-        $_POST['impressions'] = round($_POST['impressions']);
-        if((!isset($_POST['destination']) || $_POST['destination'] == '') && round($_POST['impressions']) == 0)
+        $impressions = round($impressions);
+        if((!isset($_POST['destination']) || $_POST['destination'] == '') && round($impressions) == 0)
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
 
         $response = array();
-	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $_POST['impressions'])){
+	    if(Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : NULL))->boost($pages[1], $impressions)){
             //dont use rate for p2p boosts
             if(isset($_POST['destination']) && $_POST['destination'])
-                $points = 0 - $_POST['impressions'];
+                $points = 0 - $impressions;
             else
-                $points = 0 - ($_POST['impressions'] / $this->rate); //make it negative
+                $points = 0 - ($impressions / $this->rate); //make it negative
 
             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
@@ -124,16 +126,16 @@ class boost implements Interfaces\Api{
                 'to'=>array($pages[2]),
                 'object_guid' => $pages[1],
                 'notification_view' => 'boost_gift',
-                'params' => array('impressions'=>$_POST['impressions']),
-                'impressions' => $_POST['impressions']
+                'params' => array('impressions'=>$impressions),
+                'impressions' => $impressions
                 ));
             } elseif($pages[0] != 'channel') {
                 Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array(Core\Session::getLoggedinUser()->guid),
                 'object_guid' => $pages[1],
                 'notification_view' => 'boost_submitted',
-                'params' => array('impressions'=>$_POST['impressions']),
-                'impressions' => $_POST['impressions']
+                'params' => array('impressions'=>$impressions),
+                'impressions' => $impressions
                 ));
             }
         } else {
