@@ -77,6 +77,9 @@ class Sale{
   }
 
   public function getFee(){
+    if(!$this->fee){
+      $this->fee = $this->amount * 0.05 + 0.30;
+    }
     return $this->fee;
   }
 

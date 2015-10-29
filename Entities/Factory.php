@@ -12,18 +12,19 @@ class Factory{
 	 * @return Entity
 	 */
 	static public function build($value){
-	    if(is_numeric($value)){
-	        $db = new Data\Call('entities');
-
-        if(is_object($value) || is_array($value)){
-            $row = $value;
-        } else {
-		    $row = $db->getRow($value);
-		    $row['guid'] = $value;
-        }
+		if(is_numeric($value)){
+	    $db = new Data\Call('entities');
+			$row = $db->getRow($value);
+			$row['guid'] = $value;
+		} elseif(is_object($value) || is_array($value)){
+      $row = $value;
+    } elseif(is_string($value) && !is_numeroc) {
+			$row = json_decode($value, true);
+		} else {
+			return false;
+		}
 		return Core\Entities::build((object) $row);
-	    }
 	}
 
-    
+
 }

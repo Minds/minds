@@ -27,6 +27,7 @@ class Call {
 	static $deletes = 0;
 	static $counts = 0;
 	private $pool;
+	private $cf;
 
 	public function __construct($cf = NULL, $keyspace = NULL, $servers = NULL, $sendTimeout = 800, $receiveTimeout = 2000, $pool = NULL){
 		global $CONFIG;

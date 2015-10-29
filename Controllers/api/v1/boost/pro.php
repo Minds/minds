@@ -6,7 +6,7 @@
  * @author Mark Harding
  *
  */
-namespace Minds\Controllers\api\v1;
+namespace Minds\Controllers\api\v1\boost;
 
 use Minds\Core;
 use Minds\Helpers;
@@ -15,7 +15,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
 
-class boost implements Interfaces\Api{
+class pro implements Interfaces\Api{
 
     private $rate = 1;
 
@@ -46,63 +46,69 @@ class boost implements Interfaces\Api{
         $bid = $_POST['bid'];
 
         if(!$entity){
-          return Factory::response(array(
+          return Factory::response([
             'status' => 'error',
             'message' => 'We couldn\'t find the entity you wanted boost. Please try again.'
-          ));
+          ]);
         }
 
         if(!$destination){
-          return Factory::response(array(
+          return Factory::response([
             'status' => 'error',
             'message' => 'We couldn\'t find the user you wish to boost to. Please try another user.'
-          ));
+          ]);
         }
 
         if(!$destination->merchant){
-          return Factory::response(array(
+          return Factory::response([
             'status' => 'error',
             'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
-          ));
+          ]);
         }
 
-        //$sale = (new Payments\Sale)
-        //  ->  
+        $boost = (new Entities\Boost\Pro())
+          ->setEntity($entity)
+          ->setBid($_POST['bid'])
+          ->setDestination($destination)
+          ->setOwner(Core\Session::getLoggedInUser())
+          ->setState('created');
+          //->save();
+
+        $sale = (new Payments\Sale)
+          ->setAmount($boost->getBid())
+          ->setMerchant($boost->getDestination())
+          ->setCustomerId($boost->getOwner()->guid)
+          ->setNonce($_POST['nonce']);
+
+        try{
+          $transaction_id = Payments\Factory::build('braintree')->setSale($sale);
+        } catch(\Exception $e){
+          return Factory::response([
+            'status' => 'error',
+            'message' => $e->getMessage()
+          ]);
+        }
+
+        $boost->setTransactionId($transaction_id)
+          ->save();
+
+        $response['boost_guid'] = $boost->getGuid();
 
         return Factory::response($response);
 
     }
 
     /**
-     * Called when a boost is to be accepted (assume channels only right now
      * @param array $pages
      */
     public function put($pages){
-	    //validate the points
-    	$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
-	    $guids = $ctrl->getReviewQueue(1, $pages[0]);
-	    if(!$guids){
-            return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
-        }
-	    $points = reset($guids);
-        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
-	    $accept = $ctrl->accept($pages[0], $points);
-	    return Factory::response(array());
+
     }
 
     /**
-     * Called when a boost is rejected (assume channels only right now)
      */
     public function delete($pages){
-	    $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
-        $guids = $ctrl->getReviewQueue(1, $pages[0]);
-        if(!$guids){
-            return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
-        }
-        $points = reset($guids);
-        $entity = new \Minds\Entities\Activity($pages[0]);
-        Helpers\Wallet::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
-    	$ctrl->reject($pages[0]);
+
     }
 
 }

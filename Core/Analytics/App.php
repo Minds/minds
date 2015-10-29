@@ -60,7 +60,7 @@ class App{
   /**
    * Factory builder
    */
-  public function _(){
+  public static function _(){
     if(!self::$_)
       self::$_ = new App();
     return self::$_;
