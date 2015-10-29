@@ -179,6 +179,10 @@ class Peer implements BoostEntityInterface{
     return $this->state;
   }
 
+  public function getTransactionId($){
+    return $this->transactionId;
+  }
+
   public function setTransactionId($id){
     $this->transactionId = $id;
     return $this;

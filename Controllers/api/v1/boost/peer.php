@@ -118,13 +118,19 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
      * @param array $pages
      */
     public function put($pages){
-
+      $response = [];
+      $pro = Core\Boost\Factory::build('peer');
+      $response['status'] = $pro->accept($pages[0]);
+      return Factory::response($response);
     }
 
     /**
      */
     public function delete($pages){
-
+      $response = [];
+      $pro = Core\Boost\Factory::build('peer');
+      $response['status'] = $pro->reject($pages[0]);
+      return Factory::response($response);
     }
 
 }
