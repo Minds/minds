@@ -15,7 +15,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
 
-class pro implements Interfaces\Api{
+class pro implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     private $rate = 1;
 
@@ -27,7 +27,11 @@ class pro implements Interfaces\Api{
       $response = array();
 
       switch($pages[0]){
-
+        case "list":
+        default:
+          $pro = Core\Boost\Factory::build('pro', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+          $boosts = $pro->getReviewQueue(100);
+          $response['boosts'] = Factory::exportable($boosts);
       }
 
       return Factory::response($response);

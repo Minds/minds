@@ -33,50 +33,26 @@ class Pro implements Interfaces\BoostHandlerInterface{
      * @return boolean
      */
     public function boost($entity, $points){
-
-        if(is_object($entity)){
-            $guid = $entity->guid;
-        } else {
-            $guid = $entity;
-        }
-
-        $db = new Data\Call('entities_by_time');
-        $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
-
-        //send a notification of boost offer
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to' => array($this->guid),
-                'object_guid' => $guid,
-                'notification_view' => 'boost_request',
-                'params' => array('points'=>$points),
-                'points' => $points
-                ));
-
-        //send back to use
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                'to'=>array(Core\Session::getLoggedinUser()->guid),
-                'object_guid' => $guid,
-                'notification_view' => 'boost_submitted_p2p',
-                'params' => array(
-                    'points' => $points,
-                    'channel' => isset($_POST['destination']) ? $_POST['destination'] : $this->guid
-                 ),
-                'points' => $points
-                ));
-
-        return $result;
+      return null;
     }
 
      /**
-     * Return boosts for review
+     * Return all pro boosts
      * @param int $limit
      * @param string $offset
      * @return array
      */
     public function getReviewQueue($limit, $offset = ""){
         $db = new Data\Call('entities_by_time');
-        $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>false));
-        return $guids;
+        $data = $db->getRow("boost:pro:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>false]);
+
+        $boosts = [];
+        foreach($data as $guid => $raw_data){
+          //$raw_data['guid']
+          $boosts[] = (new Entities\Boost\Pro())
+            ->loadFromArray(json_decode($raw_data, true));
+        }
+        return $boosts;
     }
 
     /**
@@ -191,45 +167,6 @@ class Pro implements Interfaces\BoostHandlerInterface{
        ///
        //// THIS DOES NOT APPLY BECAUSE IT'S PRE-AGREED
        ///
-
-    }
-
-    public function autoExpire(){
-
-        $db = new Data\Call('entities_by_time');
-        $boosts = $db->getRow("boost:channel:all:review");
-        foreach($boosts as $boost => $ts){
-            list($destination, $guid) = explode(':',$boost);
-            if(time() > $ts + (3600 * 48)){
-                $this->guid = $destination;
-                $guids = $this->getReviewQueue(1, $guid);
-                $points = reset($guids);
-
-
-                if(!$destination){
-                    echo "$guid issue with destination.. \n";
-                    continue;
-                }
-                echo "$guid has expired. refunding ($points) points to $destination \n";
-
-                $db->removeAttributes("boost:channel:all:review", array($boost));
-                $db->removeAttributes("boost:channel:$destination:review", array($guid));
-
-                $entity =  new \Minds\Entities\Activity($guid);
-
-                Helpers\Wallet::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
-
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-                    'to'=>array($entity->owner_guid),
-                    'from'=> $destination,
-                    'object_guid' => $guid,
-                    'title' => $entity->title,
-                    'notification_view' => 'boost_rejected',
-                    ));
-            } else {
-                echo "$guid is ok... \n";
-            }
-        }
 
     }
 

@@ -44,39 +44,39 @@ class User extends \ElggUser{
     }
 
     public function isSubscriber($guid){
-        $cacher = Core\Data\cache\factory::build();
+      $cacher = Core\Data\cache\factory::build();
 
-        if($cacher->get("$this->guid:isSubscriber:$guid"))
-            return true;
-        if($cacher->get("$this->guid:isSubscriber:$guid") === 0)
-            return false;
+      if($cacher->get("$this->guid:isSubscriber:$guid"))
+          return true;
+      if($cacher->get("$this->guid:isSubscriber:$guid") === 0)
+          return false;
 
-        $return = 0;
-        $db = new Core\Data\Call('friendsof');
+      $return = 0;
+      $db = new Core\Data\Call('friendsof');
     	$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
-        if($row && key($row) == $guid)
-            $return = true;
+      if($row && key($row) == $guid)
+          $return = true;
 
-        $cacher->set("$this->guid:isSubscriber:$guid", $return);
+      $cacher->set("$this->guid:isSubscriber:$guid", $return);
 
-        return $return;
-    }
+      return $return;
+  }
 
 	public function isSubscribed($guid){
-        $cacher = Core\Data\cache\factory::build();
+    $cacher = Core\Data\cache\factory::build();
 
-        if($cacher->get("$this->guid:isSubscribed:$guid"))
-            return true;
-        if($cacher->get("$this->guid:isSubscribed:$guid") === 0)
-           return false;
+    if($cacher->get("$this->guid:isSubscribed:$guid"))
+        return true;
+    if($cacher->get("$this->guid:isSubscribed:$guid") === 0)
+       return false;
 
-        $return = 0;
-        $db = new Core\Data\Call('friends');
+    $return = 0;
+    $db = new Core\Data\Call('friends');
 		$row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
 		if($row && key($row) == $guid)
 			$return = true;
 
-        $cacher->set("$this->guid:isSubscribed:$guid", $return);
+    $cacher->set("$this->guid:isSubscribed:$guid", $return);
 
 		return $return ;
 	}
@@ -130,9 +130,9 @@ class User extends \ElggUser{
     		$export = parent::export();
         $export['guid'] = (string) $this->guid;
     		if(Core\Session::isLoggedIn()){
-              $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
-              $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
-          }
+          $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
+          $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
+        }
         if($this->username != "minds")
             $export['subscribers_count'] = $this->getSubscribersCount();
         $export['subscriptions_count'] = $this->getSubscriptionsCount();

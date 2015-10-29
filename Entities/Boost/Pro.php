@@ -15,7 +15,7 @@ class Pro implements BoostEntityInterface{
 
   private $db;
 
-  private $guid;
+  public $guid;
   private $entity;
   private $bid;
   private $destination;
@@ -73,8 +73,8 @@ class Pro implements BoostEntityInterface{
     ];
 
     $serialized = json_encode($data);
-    $this->db->insert("boost:pro:$this->destination->guid", [ $this->guid => $serialized ]);
-    $this->db->insert("boost:pro:requested:$this->owner->guid", [ $this->guid => $serialized ]);
+    $this->db->insert("boost:pro:{$this->destination->guid}", [ $this->guid => $serialized ]);
+    $this->db->insert("boost:pro:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
     return $this;
   }
 
@@ -179,6 +179,21 @@ class Pro implements BoostEntityInterface{
   public function setTransactionId($id){
     $this->transactionId = $id;
     return $this;
+  }
+
+  public function export(){
+    $export = [
+      'guid' => $this->guid,
+      'entity' => $this->entity ? $this->entity->export() : [],
+      'bid' => $this->bid,
+      'destination' => $this->destination ? $this->destination->export() : [],
+      'owner' => $this->owner ? $this->owner->export() : [],
+      'state' => $this->state,
+      'transactionId' => $this->transactionId
+    ];
+    $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
+		$export = \Minds\Helpers\Export::sanitize($export);
+		return $export;
   }
 
 }
