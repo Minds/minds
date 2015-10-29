@@ -5,7 +5,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 
-import { Poster } from 'src/controllers/newsfeed/poster';
+import { Poster } from 'src/controllers/newsfeed/poster/poster';
 import { CARDS } from 'src/controllers/cards/cards';
 
 
