@@ -53,6 +53,7 @@ class Peer implements BoostEntityInterface{
     $this->destination = Entities\Factory::build($array['destination']);
     $this->owner = Entities\Factory::build($array['owner']);
     $this->state = $array['state'];
+    $this->transactionId = $array['transactionId'];
     return $this;
   }
 
@@ -72,7 +73,8 @@ class Peer implements BoostEntityInterface{
       'bid' => $this->bid,
       'owner' => $this->owner->export(),
       'destination' => $this->destination->export(),
-      'state' => $this->state
+      'state' => $this->state,
+      'transactionId' => $this->transactionId
     ];
 
     $serialized = json_encode($data);
@@ -179,7 +181,7 @@ class Peer implements BoostEntityInterface{
     return $this->state;
   }
 
-  public function getTransactionId($){
+  public function getTransactionId(){
     return $this->transactionId;
   }
 

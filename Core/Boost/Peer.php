@@ -57,7 +57,7 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param int points
      * @return boolean
      */
-    public function accept($_id){
+    public function accept($_id, $impressions){
 
       $db = new Data\Call('entities_by_time');
       $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id ]);
@@ -72,6 +72,7 @@ class Peer implements Interfaces\BoostHandlerInterface{
         try{
           Payments\Factory::build('braintree')->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
         } catch(\Exception $e){
+          var_dump($e->getMessage()); exit;
           return false;
         }
       } else {
@@ -89,7 +90,7 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param object/int $entity
      * @return boolean
      */
-    public function reject($boost){
+    public function reject($boost, $impressions){
       $db = new Data\Call('entities_by_time');
       $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id ]);
       if(key($data) != $_id)

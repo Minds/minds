@@ -119,7 +119,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
      */
     public function put($pages){
       $response = [];
-      $pro = Core\Boost\Factory::build('peer');
+      $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
       $response['status'] = $pro->accept($pages[0]);
       return Factory::response($response);
     }
@@ -128,7 +128,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
      */
     public function delete($pages){
       $response = [];
-      $pro = Core\Boost\Factory::build('peer');
+      $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
       $response['status'] = $pro->reject($pages[0]);
       return Factory::response($response);
     }
