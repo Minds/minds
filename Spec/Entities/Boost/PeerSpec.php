@@ -10,17 +10,18 @@ use Minds\Core\Data\Call;
 use Minds\Entities\Entity;
 use Minds\Entities\User;
 
-class ProSpec extends ObjectBehavior {
+class PeerSpec extends ObjectBehavior {
 
   private $mockData = [];
 
   function it_is_initializable(){
-    $this->shouldHaveType('Minds\Entities\Boost\Pro');
+    $this->shouldHaveType('Minds\Entities\Boost\Peer');
   }
 
   function let(){
     $this->mockData = [
       'guid' => "mockguid",
+      'type' => 'points',
       'entity' => json_encode(['guid'=>'mock_entity_guid', 'type'=>'activity']),
       'bid' => 10,
       'destination' => json_encode(['guid'=>'mock_destination_guid', 'type'=>'user']),

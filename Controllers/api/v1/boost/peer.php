@@ -15,7 +15,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
 
-class pro implements Interfaces\Api, Interfaces\ApiIgnorePam{
+class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
     private $rate = 1;
 
@@ -27,11 +27,17 @@ class pro implements Interfaces\Api, Interfaces\ApiIgnorePam{
       $response = array();
 
       switch($pages[0]){
-        case "list":
+        case 'outbox':
+        //  $pro = Core\Boost\Factory::build('pro', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+        //  $boosts = $pro->getReviewQueue(100);
+        //  $response['boosts'] = Factory::exportable($boosts);
+          break;
+        case 'inbox':
         default:
-          $pro = Core\Boost\Factory::build('pro', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+          $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
           $boosts = $pro->getReviewQueue(100);
           $response['boosts'] = Factory::exportable($boosts);
+          $response['load-next'] = (string) end($boosts)->getGuid();
       }
 
       return Factory::response($response);
@@ -48,6 +54,7 @@ class pro implements Interfaces\Api, Interfaces\ApiIgnorePam{
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
         $bid = $_POST['bid'];
+        $type = $_POST['type'];
 
         if(!$entity){
           return Factory::response([
@@ -63,34 +70,39 @@ class pro implements Interfaces\Api, Interfaces\ApiIgnorePam{
           ]);
         }
 
-        if(!$destination->merchant){
+        if($type == "pro" && !$destination->merchant){
           return Factory::response([
             'status' => 'error',
             'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
           ]);
         }
 
-        $boost = (new Entities\Boost\Pro())
+        $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
+          ->setType($_POST['type'])
           ->setBid($_POST['bid'])
           ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
           ->setState('created');
           //->save();
 
-        $sale = (new Payments\Sale)
-          ->setAmount($boost->getBid())
-          ->setMerchant($boost->getDestination())
-          ->setCustomerId($boost->getOwner()->guid)
-          ->setNonce($_POST['nonce']);
+        if($type == 'pro'){
+          $sale = (new Payments\Sale)
+            ->setAmount($boost->getBid())
+            ->setMerchant($boost->getDestination())
+            ->setCustomerId($boost->getOwner()->guid)
+            ->setNonce($_POST['nonce']);
 
-        try{
-          $transaction_id = Payments\Factory::build('braintree')->setSale($sale);
-        } catch(\Exception $e){
-          return Factory::response([
-            'status' => 'error',
-            'message' => $e->getMessage()
-          ]);
+          try{
+            $transaction_id = Payments\Factory::build('braintree')->setSale($sale);
+          } catch(\Exception $e){
+            return Factory::response([
+              'status' => 'error',
+              'message' => $e->getMessage()
+            ]);
+          }
+        } else {
+          $transactions_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
         }
 
         $boost->setTransactionId($transaction_id)

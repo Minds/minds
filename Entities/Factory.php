@@ -18,7 +18,7 @@ class Factory{
 			$row['guid'] = $value;
 		} elseif(is_object($value) || is_array($value)){
       $row = $value;
-    } elseif(is_string($value) && !is_numeroc) {
+    } elseif(is_string($value)) {
 			$row = json_decode($value, true);
 		} else {
 			return false;

@@ -11,7 +11,7 @@ use Minds\Helpers;
 /**
  * Pro boost handler
  */
-class Pro implements Interfaces\BoostHandlerInterface{
+class Peer implements Interfaces\BoostHandlerInterface{
 
     private $guid;
 
@@ -44,12 +44,12 @@ class Pro implements Interfaces\BoostHandlerInterface{
      */
     public function getReviewQueue($limit, $offset = ""){
         $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:pro:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>false]);
+        $data = $db->getRow("boost:peer:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
 
         $boosts = [];
         foreach($data as $guid => $raw_data){
           //$raw_data['guid']
-          $boosts[] = (new Entities\Boost\Pro())
+          $boosts[] = (new Entities\Boost\Peer())
             ->loadFromArray(json_decode($raw_data, true));
         }
         return $boosts;

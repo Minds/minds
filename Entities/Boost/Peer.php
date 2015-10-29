@@ -1,6 +1,6 @@
 <?php
 /**
- * Pro Boost Entity
+ * Peer Boost Entity
  */
 namespace Minds\Entities\Boost;
 
@@ -11,7 +11,7 @@ use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Helpers;
 
-class Pro implements BoostEntityInterface{
+class Peer implements BoostEntityInterface{
 
   private $db;
 
@@ -22,6 +22,7 @@ class Pro implements BoostEntityInterface{
   private $owner;
   private $state = 'created';
   private $transactionId;
+  private $_type = 'pro';
 
   public function __construct($db = NULL){
     if($db)
@@ -46,6 +47,7 @@ class Pro implements BoostEntityInterface{
    */
   public function loadFromArray($array){
     $this->guid = $array['guid'];
+    $this->_type = $array['type'];
     $this->entity = Entities\Factory::build($array['entity']);
     $this->bid = $array['bid'];
     $this->destination = Entities\Factory::build($array['destination']);
@@ -65,6 +67,7 @@ class Pro implements BoostEntityInterface{
 
     $data = [
       'guid' => $this->guid,
+      'type' => $this->_type,
       'entity' => $this->entity->export(),
       'bid' => $this->bid,
       'owner' => $this->owner->export(),
@@ -73,8 +76,8 @@ class Pro implements BoostEntityInterface{
     ];
 
     $serialized = json_encode($data);
-    $this->db->insert("boost:pro:{$this->destination->guid}", [ $this->guid => $serialized ]);
-    $this->db->insert("boost:pro:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
+    $this->db->insert("boost:peer:{$this->destination->guid}", [ $this->guid => $serialized ]);
+    $this->db->insert("boost:peer:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
     return $this;
   }
 
@@ -181,6 +184,22 @@ class Pro implements BoostEntityInterface{
     return $this;
   }
 
+  /**
+   * Return the boost type
+   * @return string
+   */
+  public function getType(){
+    return $this->_type;
+  }
+
+  /**
+   * Set the boost type
+   */
+  public function setType($type){
+    $this->_type = $type;
+    return $this;
+  }
+
   public function export(){
     $export = [
       'guid' => $this->guid,
@@ -189,7 +208,8 @@ class Pro implements BoostEntityInterface{
       'destination' => $this->destination ? $this->destination->export() : [],
       'owner' => $this->owner ? $this->owner->export() : [],
       'state' => $this->state,
-      'transactionId' => $this->transactionId
+      'transactionId' => $this->transactionId,
+      'type' => $this->_type
     ];
     $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
 		$export = \Minds\Helpers\Export::sanitize($export);
