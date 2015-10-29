@@ -73,8 +73,8 @@ class Pro implements BoostEntityInterface{
     ];
 
     $serialized = json_encode($data);
-    $this->db->insert($this->destination->guid, [ $this->guid => $serialized ]);
-    $this->db->insert($this->owner->guid, [ $this->guid => $serialized ]);
+    $this->db->insert("boost:pro:$this->destination->guid", [ $this->guid => $serialized ]);
+    $this->db->insert("boost:pro:requested:$this->owner->guid", [ $this->guid => $serialized ]);
     return $this;
   }
 
