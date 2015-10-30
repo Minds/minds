@@ -165,7 +165,7 @@ class Braintree implements PaymentServiceInterface{
 
     $result = Braintree_MerchantAccount::create([
       'individual' => [
-        'firstName' => Braintree_Test_MerchantAccount::$approve ?: $merchant->getFirstName(),
+        'firstName' => $merchant->getFirstName(),
         'lastName' => $merchant->getLastName(),
         'email' => $merchant->getEmail(),
         'dateOfBirth' => $merchant->getDateOfBirth(),
