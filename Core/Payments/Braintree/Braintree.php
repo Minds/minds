@@ -63,6 +63,7 @@ class Braintree implements PaymentServiceInterface{
       'customer' => [
         'firstName' => $sale->getCustomerId()
       ],
+      'orderId' => $sale->getOrderId(),
       'options' => [
         //'holdInEscrow' => true,
         'submitForSettlement' => false //let the seller approve or deny
@@ -122,7 +123,12 @@ class Braintree implements PaymentServiceInterface{
    */
   public function getSales(Merchant $merchant, array $options = array()){
     $results = Braintree_Transaction::search([
-      Braintree_TransactionSearch::merchantAccountId()->is($merchant->getGuid())
+      Braintree_TransactionSearch::merchantAccountId()->is($merchant->getGuid()),
+      Braintree_TransactionSearch::status()->in([
+        Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
+        Braintree_Transaction::SETTLED,
+        Braintree_Transaction::VOIDED
+      ])
     ]);
 
     $sales = [];
@@ -132,6 +138,7 @@ class Braintree implements PaymentServiceInterface{
         ->setAmount($transaction->amount)
         ->setStatus($transaction->status)
         ->setMerchant($merchant)
+        ->setOrderId($transaction->orderId)
         ->setCustomerId($transaction->customer['firstName'])
         ->setCreatedAt($transaction->createdAt)
         ->setSettledAt($transaction->settledAt);

@@ -10,6 +10,7 @@ class Sale{
 
   private $status = "pending";
   private $id;
+  private $orderId;
 
   private $amount;
   private $fee;
@@ -90,6 +91,15 @@ class Sale{
 
   public function getMerchant(){
     return $this->merchant;
+  }
+
+  public function setOrderId($id){
+    $this->orderId = $id;
+    return $this;
+  }
+
+  public function getOrderId(){
+    return $this->orderId;
   }
 
   public function setNonce($nonce){

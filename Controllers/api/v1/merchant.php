@@ -33,13 +33,14 @@ class merchant implements Interfaces\Api{
         $sales = Payments\Factory::build('braintree')->getSales($merchant);
 
         foreach($sales as $sale){
-          $response['sales'][] = array(
+          $response['sales'][] = [
             'id' => $sale->getId(),
             'status' => $sale->getStatus(),
             'amount' => $sale->getAmount(),
             'fee' => $sale->getFee(),
+            'orderId' => $sale->getOrderId(),
             'customerId' => $sale->getCustomerId()
-          );
+          ];
         }
 
         break;

@@ -55,6 +55,8 @@ class Peer implements BoostEntityInterface{
     $this->destination = Entities\Factory::build($array['destination']);
     $this->owner = Entities\Factory::build($array['owner']);
     $this->state = $array['state'];
+    $this->time_created = $array['time_created'];
+    $this->last_updated = $array['last_updated'];
     $this->transactionId = $array['transactionId'];
     return $this;
   }
@@ -94,6 +96,10 @@ class Peer implements BoostEntityInterface{
    * @return string
    */
   public function getGuid(){
+    if(!$this->guid){
+      $this->guid = Core\Guid::build();
+      $this->time_created = time();
+    }
     return $this->guid;
   }
 

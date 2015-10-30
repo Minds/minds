@@ -91,6 +91,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
         if($type == 'pro'){
           $sale = (new Payments\Sale)
+            ->setOrderId('boost-' . $boost->getGuid())
             ->setAmount($boost->getBid())
             ->setMerchant($boost->getDestination())
             ->setCustomerId($boost->getOwner()->guid)
