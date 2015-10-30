@@ -52,31 +52,45 @@ class Peer implements Interfaces\BoostHandlerInterface{
     }
 
     /**
-     * Accept a boost and do a remind
-     * @param object/int $entity
-     * @param int points
-     * @return boolean
+     * Get our own submitted Boosts
+     * @param int $limit
+     * @param string $offset
+     * @return array
      */
-    public function accept($_id, $impressions){
-
+    public function getOutbox($limit, $offset = ""){
       $db = new Data\Call('entities_by_time');
-      $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id ]);
+      $data = $db->getRow("boost:peer:requested:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
+
+      $boosts = [];
+      foreach($data as $guid => $raw_data){
+        //$raw_data['guid']
+        $boosts[] = (new Entities\Boost\Peer())
+          ->loadFromArray(json_decode($raw_data, true));
+      }
+      return $boosts;
+    }
+
+    public function getBoostEntity($_id){
+      $db = new Data\Call('entities_by_time');
+      $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id]);
       if(key($data) != $_id)
         return false;
 
       $boost = (new Entities\Boost\Peer($db))
         ->loadFromArray(json_decode($data[$_id], true));
+      return $boost;
+    }
 
-      if($boost->getType() == "pro"){
-        //we need to void the transaction
-        try{
-          Payments\Factory::build('braintree')->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
-        } catch(\Exception $e){
-          var_dump($e->getMessage()); exit;
-          return false;
-        }
-      } else {
-        Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
+    /**
+     * Accept a boost and do a remind
+     * @param object/int $entity
+     * @param int points
+     * @return boolean
+     */
+    public function accept($boost, $impressions){
+
+      if(!$boost instanceof Entities\Boost\Peer){
+        $boost = $this->getBoostEntity($boost);
       }
 
       $boost->setState('accepted')
@@ -91,23 +105,9 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @return boolean
      */
     public function reject($boost, $impressions){
-      $db = new Data\Call('entities_by_time');
-      $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id ]);
-      if(key($data) != $_id)
-        return false;
 
-      $boost = (new Entities\Boost\Peer($db))
-        ->loadFromArray(json_decode($data[$_id], true));
-
-      if($boost->getType() == "pro"){
-        //we need to void the transaction
-        try{
-          Payments\Factory::build('braintree')->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
-        } catch(\Exception $e){
-          return false;
-        }
-      } else {
-        Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected boost");
+      if(!$boost instanceof Entities\Boost\Peer){
+        $boost = $this->getBoostEntity($boost);
       }
 
       $boost->setState('rejected')

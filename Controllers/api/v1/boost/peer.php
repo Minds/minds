@@ -28,9 +28,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
       switch($pages[0]){
         case 'outbox':
-        //  $pro = Core\Boost\Factory::build('pro', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-        //  $boosts = $pro->getReviewQueue(100);
-        //  $response['boosts'] = Factory::exportable($boosts);
+          $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+          $boosts = $pro->getOutbox(100);
+          $response['boosts'] = Factory::exportable($boosts);
           break;
         case 'inbox':
         default:
@@ -59,6 +59,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if(!$entity){
           return Factory::response([
             'status' => 'error',
+            'stage' => 'initial',
             'message' => 'We couldn\'t find the entity you wanted boost. Please try again.'
           ]);
         }
@@ -66,6 +67,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if(!$destination){
           return Factory::response([
             'status' => 'error',
+            'stage' => 'initial',
             'message' => 'We couldn\'t find the user you wish to boost to. Please try another user.'
           ]);
         }
@@ -73,6 +75,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if($type == "pro" && !$destination->merchant){
           return Factory::response([
             'status' => 'error',
+            'stage' => 'initial',
             'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
           ]);
         }
@@ -98,6 +101,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
           } catch(\Exception $e){
             return Factory::response([
               'status' => 'error',
+              'stage' => 'transaction',
               'message' => $e->getMessage()
             ]);
           }
@@ -120,7 +124,43 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
     public function put($pages){
       $response = [];
       $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-      $response['status'] = $pro->accept($pages[0]);
+      $boost = $pro->getBoostEntity($pages[0]);
+
+      if($boost->getType() == "pro"){
+        try{
+          Payments\Factory::build('braintree')->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
+        } catch(\Exception $e){
+          return Factory::response([
+            'status' => 'error',
+            'message' => $e->getMessage()
+          ]);
+          return false;
+        }
+      } else {
+        Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
+      }
+
+      //now add to the newsfeed
+      $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
+      \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+
+      $activity = new Entities\Activity();
+      $activity->p2p_boosted = true;
+      if($embeded->remind_object)
+        $activity->setRemind($embeded->remind_object)->save();
+      else
+        $activity->setRemind($embeded->export())->save();
+
+      Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
+        'to'=>array($boost->getOwner()->guid),
+        'object_guid' => $boost->getEntity()->guid,
+        'title' => $boost->getEntity()->title,
+        'notification_view' => 'boost_peer_accepted',
+        'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+      ]);
+
+      $pro->accept($pages[0]);
+      $response['status'] = 'success';
       return Factory::response($response);
     }
 
@@ -129,7 +169,32 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam{
     public function delete($pages){
       $response = [];
       $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-      $response['status'] = $pro->reject($pages[0]);
+      $boost = $pro->getBoostEntity($pages[0]);
+
+      if($boost->getType() == "pro"){
+        try{
+          Payments\Factory::build('braintree')->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
+        } catch(\Exception $e){
+          return Factory::response([
+            'status' => 'error',
+            'message' => $e->getMessage()
+          ]);
+          return false;
+        }
+      } else {
+        Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
+      }
+
+      Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
+        'to'=>array($boost->getOwner()->guid),
+        'object_guid' => $boost->getEntity()->guid,
+        'title' => $boost->getEntity()->title,
+        'notification_view' => 'boost_peer_rejected',
+        'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+      ]);
+
+      $pro->reject($pages[0]);
+      $response['status'] = 'success';
       return Factory::response($response);
     }
 

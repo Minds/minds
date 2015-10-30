@@ -21,6 +21,8 @@ class Peer implements BoostEntityInterface{
   private $destination;
   private $owner;
   private $state = 'created';
+  private $time_created;
+  private $last_updated;
   private $transactionId;
   private $_type = 'pro';
 
@@ -63,8 +65,10 @@ class Peer implements BoostEntityInterface{
    */
   public function save(){
 
-    if(!$this->guid)
+    if(!$this->guid){
       $this->guid = Core\Guid::build();
+      $this->time_created = time();
+    }
 
     $data = [
       'guid' => $this->guid,
@@ -74,6 +78,8 @@ class Peer implements BoostEntityInterface{
       'owner' => $this->owner->export(),
       'destination' => $this->destination->export(),
       'state' => $this->state,
+      'time_created' => $this->time_created,
+      'last_updated' => time(),
       'transactionId' => $this->transactionId
     ];
 
@@ -215,6 +221,8 @@ class Peer implements BoostEntityInterface{
       'owner' => $this->owner ? $this->owner->export() : [],
       'state' => $this->state,
       'transactionId' => $this->transactionId,
+      'time_created' => $this->time_created,
+      'last_updated' => $this->last_updated,
       'type' => $this->_type
     ];
     $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
