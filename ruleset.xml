@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset name="Minds">
+ <description>Minds PHP coding standards</description>
+
+ <rule ref="PSR2">
+   <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
+   <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis"/>
+   <exclude name="Squiz.ControlStructures.SwitchDeclaration.DefaultNoBreak"/>
+
+   <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine" />
+   <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+
+   <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+   <exclude name="Squiz.Classes.ValidClassName"/>
+
+   <exclude name="PEAR.Functions.FunctionCallSignature"/>
+   <exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket"/>
+   <exclude name="PEAR.WhiteSpace.ScopeIndent"/>
+ </rule>
+
+ <rule ref="Generic.WhiteSpace.ScopeIndent">
+   <properties>
+     <property name="indent" value="2"/>
+   </properties>
+ </rule>
+ <rule ref="Generic.WhiteSpace.ScopeIndent.Incorrect">
+   <severity>10</severity>
+ </rule>
+ <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+
+ <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
+  <type>warning</type>
+</rule>
+
+<rule ref="Generic.Files.LineLength">
+  <properties>
+   <property name="lineLimit" value="180"/>
+   <property name="absoluteLineLimit" value="0"/>
+  </properties>
+ </rule>
+
+<rule ref="Squiz.Classes.LowercaseClassKeywords" />
+<rule ref="Squiz.Commenting.DocCommentAlignment" />
+<rule ref="Squiz.Commenting.PostStatementComment" />
+<!--<rule ref="Squiz.ControlStructures.ControlSignature" />-->
+<!--<rule ref="Squiz.ControlStructures.ForLoopDeclaration" />
+<rule ref="Squiz.ControlStructures.ForEachLoopDeclaration" />
+<rule ref="Squiz.ControlStructures.SwitchDeclaration" />-->
+
+<rule ref="Squiz.WhiteSpace">
+  <exclude name="Squiz.WhiteSpace.FunctionSpacing.Before"/>
+  <exclude name="Squiz.WhiteSpace.FunctionSpacing.After"/>
+  <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+  <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
+  <!--<exclude name="Squiz.WhiteSpace.LanguageConstructSpacing.Incorrect"/>-->
+</rule>
+
+</ruleset>
