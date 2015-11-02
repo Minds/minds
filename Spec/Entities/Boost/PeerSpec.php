@@ -20,14 +20,17 @@ class PeerSpec extends ObjectBehavior
     public function let()
     {
         $this->mockData = [
-      'guid' => "mockguid",
-      'type' => 'points',
-      'entity' => json_encode(['guid'=>'mock_entity_guid', 'type'=>'activity']),
-      'bid' => 10,
-      'destination' => json_encode(['guid'=>'mock_destination_guid', 'type'=>'user']),
-      'owner' => json_encode(['guid'=>'mock_owner_guid', 'type'=>'user']),
-      'state' => 'testing'
-    ];
+          'guid' => "mockguid",
+          'type' => 'points',
+          'entity' => json_encode(['guid'=>'mock_entity_guid', 'type'=>'activity']),
+          'bid' => 10,
+          'destination' => json_encode(['guid'=>'mock_destination_guid', 'type'=>'user']),
+          'owner' => json_encode(['guid'=>'mock_owner_guid', 'type'=>'user']),
+          'state' => 'testing',
+          'transactionId' => null,
+          'time_created' => time(),
+          'last_updated' => time()
+        ];
     }
 
     public function it_should_load_from_array()
@@ -43,11 +46,11 @@ class PeerSpec extends ObjectBehavior
     //$this->save()->willReturn('foo');
   //}
 
-  public function it_should_set_the_entity(Entity $entity)
-  {
-      $this->setEntity($entity)->shouldReturn($this);
-      $this->getEntity()->shouldReturn($entity);
-  }
+    public function it_should_set_the_entity(Entity $entity)
+    {
+        $this->setEntity($entity)->shouldReturn($this);
+        $this->getEntity()->shouldReturn($entity);
+    }
 
     public function it_should_set_the_destination(User $user)
     {

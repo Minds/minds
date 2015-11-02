@@ -1,6 +1,6 @@
 <?php
 
-namespace Spec\Minds\Core\Seo;
+namespace Spec\Minds\Core\SEO;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -9,7 +9,7 @@ class ManagerSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Seo\Manager');
+        $this->shouldHaveType('Minds\Core\SEO\Manager');
     }
 
     public function it_should_return_metadata_on_route()
