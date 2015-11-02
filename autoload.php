@@ -29,7 +29,7 @@ function _minds_autoload($class)
         return true;
     }
 
-    $file = dirname(dirname(__FILE__)) . '/'. preg_replace('/minds/i', 'engine', str_replace('\\', '/', $class), 1) . '.php';
+    $file = dirname(__FILE__) . '/'. preg_replace('/minds/i', '', str_replace('\\', '/', $class), 1) . '.php';
     //echo $file;
     if (file_exists($file)) {
         require_once $file;
