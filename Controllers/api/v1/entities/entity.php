@@ -12,8 +12,8 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class entity implements Interfaces\Api{
-
+class entity implements Interfaces\Api
+{
     /**
      * Returns the entities
      * @param array $pages
@@ -31,20 +31,20 @@ class entity implements Interfaces\Api{
      *     ),
      *     @SWG\Response(name="200", description="Array")
      * )
-     */      
-    public function get($pages){
-        
-        if(!isset($pages[0])){
+     */
+    public function get($pages)
+    {
+        if (!isset($pages[0])) {
             $response['status'] = 'error';
         } else {
             $entity = Core\Entities::build(new Entities\Entity($pages[0]));
-            if($entity instanceof \ElggEntity){
+            if ($entity instanceof \ElggEntity) {
                 $response['entity'] = $entity->export();
                 $response['entity']['guid'] = (string) $entity->guid;
-                if($entity->entityObj){
+                if ($entity->entityObj) {
                     $response['entity']['entityObj']['guid'] = (string) $entity->entityObj->guid;
                 }
-                if($entity->type == "object"){
+                if ($entity->type == "object") {
                     $response['entity']['thumbnail_src'] = $entity->getIconUrl();
                     $response['entity']['perma_url'] = $entity->getURL();
                 }
@@ -52,14 +52,17 @@ class entity implements Interfaces\Api{
         }
 
         return Factory::response($response);
-        
     }
     
-    public function post($pages){}
+    public function post($pages)
+    {
+    }
     
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
     
-    public function delete($pages){}
-    
+    public function delete($pages)
+    {
+    }
 }
-        

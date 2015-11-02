@@ -12,15 +12,14 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
+class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
     /**
      * NOT AVAILABLE
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
-
     }
 
     /**
@@ -33,20 +32,21 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
      *     @SWG\Response(name="200", description="Array")
      * )
      */
-    public function post($pages){
+    public function post($pages)
+    {
+        $response = array();
 
-      $response = array();
+        if (!isset($pages[0])) {
+            $pages[0] = "request";
+        }
 
-      if(!isset($pages[0]))
-        $pages[0] = "request";
-
-      switch($pages[0]){
+        switch ($pages[0]) {
         case "request":
           $user = new Entities\User($_POST['username']);
-          if(!$user->guid){
-            $response['status'] = "error";
-            $response['message'] = "Could not find @" . $_POST['username'];
-            break;
+          if (!$user->guid) {
+              $response['status'] = "error";
+              $response['message'] = "Could not find @" . $_POST['username'];
+              break;
           }
           $code = Core\Security\Password::reset($user);
           $link = elgg_get_site_url() . "forgot-password?username=" . $user->username . "&code=" . $code;
@@ -62,22 +62,22 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
           break;
         case "reset":
           $user = new Entities\User($_POST['username']);
-          if(!$user->guid){
-            $response['status'] = "error";
-            $response['message'] = "Could not find @" . $_POST['username'];
-            break;
+          if (!$user->guid) {
+              $response['status'] = "error";
+              $response['message'] = "Could not find @" . $_POST['username'];
+              break;
           }
 
-          if(!$user->password_reset_code){
-            $response['status'] = "error";
-            $response['message'] = "Please try again with a new reset code.";
-            break;
+          if (!$user->password_reset_code) {
+              $response['status'] = "error";
+              $response['message'] = "Please try again with a new reset code.";
+              break;
           }
 
-          if($user->password_reset_code && $user->password_reset_code != $_POST['code']){
-            $response['status'] = "error";
-            $response['message'] = "The reset code is invalid";
-            break;
+          if ($user->password_reset_code && $user->password_reset_code != $_POST['code']) {
+              $response['status'] = "error";
+              $response['message'] = "The reset code is invalid";
+              break;
           }
 
           $user->salt = Core\Security\Password::salt();
@@ -92,12 +92,14 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam{
           $response = array('status'=>'error', 'message'=>'Unknown endpoint');
       }
 
-      return Factory::response($response);
-
+        return Factory::response($response);
     }
 
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
 
-    public function delete($pages){}
-
+    public function delete($pages)
+    {
+    }
 }

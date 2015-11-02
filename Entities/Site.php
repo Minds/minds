@@ -6,6 +6,6 @@
 
 namespace Minds\Entities;
 
-class Site extends \ElggSite{
-
+class Site extends \ElggSite
+{
 }

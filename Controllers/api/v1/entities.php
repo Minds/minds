@@ -11,8 +11,8 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class entities implements Interfaces\Api{
-
+class entities implements Interfaces\Api
+{
     /**
      * Returns the entities
      * @param array $pages
@@ -59,19 +59,19 @@ class entities implements Interfaces\Api{
      *     @SWG\Response(name="200", description="Array")
      * )
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         $type = "object";
-        $subtype = NULL;
-        $owner = NULL;
-        switch($pages[0]){
+        $subtype = null;
+        $owner = null;
+        switch ($pages[0]) {
           case "all":
             $type="user";
             break;
           case "owner":
-            if(!is_numeric($pages[2])){
-              $lookup = new Core\Data\lookup();
-              $pages[2] = $lookup->get($pages[1]);
+            if (!is_numeric($pages[2])) {
+                $lookup = new Core\Data\lookup();
+                $pages[2] = $lookup->get($pages[1]);
             }
             $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
 
@@ -79,8 +79,8 @@ class entities implements Interfaces\Api{
             break;
         }
 
-        if($pages[1] != "all"){
-          switch($pages[1]){
+        if ($pages[1] != "all") {
+            switch ($pages[1]) {
             case "images":
               $type = "object";
               $subtype = "image";
@@ -104,28 +104,33 @@ class entities implements Interfaces\Api{
             'offset'=>''
             );
 
-        foreach($options as $key => $value){
-            if(isset($_GET[$key]))
+        foreach ($options as $key => $value) {
+            if (isset($_GET[$key])) {
                 $options[$key] = $_GET[$key];
+            }
         }
 
 
         $entities = Core\Entities::get($options);
         $response = array();
-        if($entities){
+        if ($entities) {
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
             $response['load-previous'] = (string) key($entities)->guid;
         }
 
         return Factory::response($response);
-
     }
 
-    public function post($pages){}
+    public function post($pages)
+    {
+    }
 
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
 
-    public function delete($pages){}
-
+    public function delete($pages)
+    {
+    }
 }

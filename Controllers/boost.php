@@ -8,15 +8,16 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Helpers;
 
-class boost extends core\page implements Interfaces\page{
+class boost extends core\page implements Interfaces\page
+{
     private $rate = 0.5;
 
-	public function get($pages){
-
-        if($pages[0] == 'admin'){
-
-            if(!elgg_is_admin_logged_in())
+    public function get($pages)
+    {
+        if ($pages[0] == 'admin') {
+            if (!elgg_is_admin_logged_in()) {
                 return $this->forward("/");
+            }
 
             $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
             $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
@@ -25,18 +26,18 @@ class boost extends core\page implements Interfaces\page{
             $queue = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
             $count =  Core\Boost\Factory::build(ucfirst($type))->getReviewQueueCount();
             $guids = array();
-            foreach($queue as $data){
+            foreach ($queue as $data) {
                 $_id = (string) $data['_id'];
                 $guids[$_id] = $data['guid'];
             }
 
-            if($guids){
+            if ($guids) {
                 $entities = Core\Entities::get(array('guids' => $guids));
                 $db = new Core\Data\Call('entities_by_time');
 
-                foreach($entities as $k => $entity){
-                    foreach($queue as $data){
-                        if($data['guid'] == $entity->guid){
+                foreach ($entities as $k => $entity) {
+                    foreach ($queue as $data) {
+                        if ($data['guid'] == $entity->guid) {
                             $entities[$k]->boost_impressions = $data['impressions'];
                             $entities[$k]->boost_id = (string) $data['_id'];
                         }
@@ -47,52 +48,53 @@ class boost extends core\page implements Interfaces\page{
                 $content = "No new boosts";
             }
 
-    		$body = \elgg_view_layout('one_column', array(
-    			'title'=> 'Boost Admin',
-    			'content'=>$content
-    		));
+            $body = \elgg_view_layout('one_column', array(
+                'title'=> 'Boost Admin',
+                'content'=>$content
+            ));
 
-            if(get_input('ajax')){
+            if (get_input('ajax')) {
                 echo $content;
                 exit;
             }
-    		elgg_extend_view('page/elements/foot', 'cms/footer');
+            elgg_extend_view('page/elements/foot', 'cms/footer');
 
-    		echo $this->render(array('body'=>$body, 'class'=>'boost-page'));
+            echo $this->render(array('body'=>$body, 'class'=>'boost-page'));
         }
-	}
+    }
 
-	public function post($pages){
-
-        if($pages[0] == 'admin'){
+    public function post($pages)
+    {
+        if ($pages[0] == 'admin') {
             $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
-            if($_POST['action'] == 'accept' || isset($_POST['accept'])){
+            if ($_POST['action'] == 'accept' || isset($_POST['accept'])) {
                 Core\Boost\Factory::build(ucfirst($type))->accept($_POST['_id']);
-		    } elseif($_POST['action'] == 'reject' || isset($_POST['reject'])){
-		        echo 1;
+            } elseif ($_POST['action'] == 'reject' || isset($_POST['reject'])) {
+                echo 1;
                 Core\Boost\Factory::build(ucfirst($type))->reject($_POST['_id']);
                 $entity = \Minds\Entities\Factory::build($_POST['guid']);
-                if($entity->type == "user"){
+                if ($entity->type == "user") {
                     $user_guid = $entity->guid;
                 } else {
                     $user_guid = $entity->owner_guid;
                 }
                 //refund the point
-                Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, NULL, "boost refund");
+                Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, null, "boost refund");
             }
 
-            if (!elgg_is_xhr())
+            if (!elgg_is_xhr()) {
                 $this->forward('/boost/admin?type='.$type);
-
+            }
         }
-	}
+    }
 
-	public function put($pages){
-		throw new \Exception('Sorry, the put method is not supported for the page');
-	}
+    public function put($pages)
+    {
+        throw new \Exception('Sorry, the put method is not supported for the page');
+    }
 
-	public function delete($pages){
-		throw new \Exception('Sorry, the delete method is not supported for the page');
-	}
-
+    public function delete($pages)
+    {
+        throw new \Exception('Sorry, the delete method is not supported for the page');
+    }
 }

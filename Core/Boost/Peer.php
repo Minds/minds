@@ -12,14 +12,15 @@ use Minds\Core\Payments;
 /**
  * Pro boost handler
  */
-class Peer implements Interfaces\BoostHandlerInterface{
-
+class Peer implements Interfaces\BoostHandlerInterface
+{
     private $guid;
 
-    public function __construct($options){
-      if(isset($options['destination'])){
-      	$this->guid = $options['destination'];
-      }
+    public function __construct($options)
+    {
+        if (isset($options['destination'])) {
+            $this->guid = $options['destination'];
+        }
     }
 
    /**
@@ -28,8 +29,9 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param int $points
      * @return boolean
      */
-    public function boost($entity, $points){
-      return null;
+    public function boost($entity, $points)
+    {
+        return null;
     }
 
      /**
@@ -38,13 +40,14 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param string $offset
      * @return array
      */
-    public function getReviewQueue($limit, $offset = ""){
+    public function getReviewQueue($limit, $offset = "")
+    {
         $db = new Data\Call('entities_by_time');
         $data = $db->getRow("boost:peer:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
 
         $boosts = [];
-        foreach($data as $guid => $raw_data){
-          //$raw_data['guid']
+        foreach ($data as $guid => $raw_data) {
+            //$raw_data['guid']
           $boosts[] = (new Entities\Boost\Peer())
             ->loadFromArray(json_decode($raw_data, true));
         }
@@ -57,28 +60,31 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param string $offset
      * @return array
      */
-    public function getOutbox($limit, $offset = ""){
-      $db = new Data\Call('entities_by_time');
-      $data = $db->getRow("boost:peer:requested:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
+    public function getOutbox($limit, $offset = "")
+    {
+        $db = new Data\Call('entities_by_time');
+        $data = $db->getRow("boost:peer:requested:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
 
-      $boosts = [];
-      foreach($data as $guid => $raw_data){
-        //$raw_data['guid']
+        $boosts = [];
+        foreach ($data as $guid => $raw_data) {
+            //$raw_data['guid']
         $boosts[] = (new Entities\Boost\Peer())
           ->loadFromArray(json_decode($raw_data, true));
-      }
-      return $boosts;
+        }
+        return $boosts;
     }
 
-    public function getBoostEntity($_id){
-      $db = new Data\Call('entities_by_time');
-      $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id]);
-      if(key($data) != $_id)
-        return false;
+    public function getBoostEntity($_id)
+    {
+        $db = new Data\Call('entities_by_time');
+        $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id]);
+        if (key($data) != $_id) {
+            return false;
+        }
 
-      $boost = (new Entities\Boost\Peer($db))
+        $boost = (new Entities\Boost\Peer($db))
         ->loadFromArray(json_decode($data[$_id], true));
-      return $boost;
+        return $boost;
     }
 
     /**
@@ -87,16 +93,16 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param int points
      * @return boolean
      */
-    public function accept($boost, $impressions){
+    public function accept($boost, $impressions)
+    {
+        if (!$boost instanceof Entities\Boost\Peer) {
+            $boost = $this->getBoostEntity($boost);
+        }
 
-      if(!$boost instanceof Entities\Boost\Peer){
-        $boost = $this->getBoostEntity($boost);
-      }
-
-      $boost->setState('accepted')
+        $boost->setState('accepted')
         ->save();
 
-      return true;
+        return true;
     }
 
     /**
@@ -104,28 +110,27 @@ class Peer implements Interfaces\BoostHandlerInterface{
      * @param object/int $entity
      * @return boolean
      */
-    public function reject($boost, $impressions){
+    public function reject($boost, $impressions)
+    {
+        if (!$boost instanceof Entities\Boost\Peer) {
+            $boost = $this->getBoostEntity($boost);
+        }
 
-      if(!$boost instanceof Entities\Boost\Peer){
-        $boost = $this->getBoostEntity($boost);
-      }
-
-      $boost->setState('rejected')
+        $boost->setState('rejected')
         ->save();
 
-      return true;
+        return true;
     }
 
     /**
      * Return a boost
      * @return array
      */
-    public function getBoost($offset = ""){
+    public function getBoost($offset = "")
+    {
 
        ///
        //// THIS DOES NOT APPLY BECAUSE IT'S PRE-AGREED
        ///
-
     }
-
 }

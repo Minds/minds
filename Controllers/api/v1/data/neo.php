@@ -12,16 +12,17 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class neo implements Interfaces\Api{
-
+class neo implements Interfaces\Api
+{
     /**
      * Neo test functions
      * 
      * API:: /v1/neo/
-     */      
-    public function get($pages){
+     */
+    public function get($pages)
+    {
         $neo = \Minds\Core\Data\Client::build('neo4j');
-        $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();        
+        $cypher = new \Minds\Core\Data\Neo4j\Prepared\CypherQuery();
 
         $prepared =  new \Minds\Core\Data\Neo4j\Prepared\Common();
         //create john
@@ -33,25 +34,24 @@ class neo implements Interfaces\Api{
         $req = $neo->request($prepared);
 
         $req = $neo->request($prepared->getSubscribers(new Entities\User('john')));
-            
     }
     
-    public function post($pages){}
+    public function post($pages)
+    {
+    }
     
-    public function put($pages){
-        
+    public function put($pages)
+    {
         return Factory::response(array());
-        
     }
     
-    public function delete($pages){
-	$activity = new Entities\Activity($pages[0]); 
-	if(!$activity->guid)
-		return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));      
+    public function delete($pages)
+    {
+        $activity = new Entities\Activity($pages[0]);
+        if (!$activity->guid) {
+            return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
+        }
  
         return Factory::response(array());
-        
     }
-    
 }
-        

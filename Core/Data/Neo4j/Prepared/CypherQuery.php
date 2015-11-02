@@ -6,23 +6,23 @@ namespace Minds\Core\Data\Neo4j\Prepared;
 
 use  Minds\Core\Data\Interfaces;
 
-class CypherQuery implements Interfaces\PreparedInterface{
-    
+class CypherQuery implements Interfaces\PreparedInterface
+{
     private $template;
-    private $values; 
+    private $values;
     
-    public function build(){
+    public function build()
+    {
         return array(
             'string' => $this->template,
             'values'=>$this->values
             );
-            
     }
     
-    public function setQuery($template, $values = array()){
+    public function setQuery($template, $values = array())
+    {
         $this->template = $template;
         $this->values = $values;
         return $this;
     }
-    
 }

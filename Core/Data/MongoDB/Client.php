@@ -9,40 +9,44 @@ use MongoClient;
 use MongoCollection;
 use MongoId;
 
-class Client implements Interfaces\ClientInterface{
-
+class Client implements Interfaces\ClientInterface
+{
     private $mongodb;
     private $prepared;
     private $db_name = 'minds';
 
-    public function __construct(array $options = array()){
+    public function __construct(array $options = array())
+    {
         global $CONFIG;
 
-        if(!class_exists('\MongoClient'))
+        if (!class_exists('\MongoClient')) {
             throw new \Exception("Mongo is not installed");
+        }
 
         $servers = isset($CONFIG->mongodb_servers) ?  $CONFIG->mongodb_servers : array('127.0.0.1');
         $servers = implode(',', $servers);
 
-        if(isset($CONFIG->mongodb_db)){
+        if (isset($CONFIG->mongodb_db)) {
             $this->db_name = $CONFIG->mongodb_db;
         }
 
-        try{
-            if(!$this->mongodb)
+        try {
+            if (!$this->mongodb) {
                 $this->mongodb = new MongoClient($servers);
-        } catch(\Exception $e){
+            }
+        } catch (\Exception $e) {
             error_log("MongoDB Connection: " . $e->getMessage());
         }
 
-        register_shutdown_function(function(){
-            if($this->mongodb)
+        register_shutdown_function(function () {
+            if ($this->mongodb) {
                 $this->mongodb->close();
+            }
         });
     }
 
-    public function client(){
-
+    public function client()
+    {
     }
 
     /**
@@ -51,14 +55,16 @@ class Client implements Interfaces\ClientInterface{
      * @param array $data
      * @return string $_id
      */
-    public function insert($table, $data = array()){
-        if(!$this->mongodb)
+    public function insert($table, $data = array())
+    {
+        if (!$this->mongodb) {
             return false;
-        try{
+        }
+        try {
             $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
             return $collection->insert($data);
-        } catch (\Exception $e){
-           error_log("MongoDB Insert: " . $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("MongoDB Insert: " . $e->getMessage());
         }
         return false;
     }
@@ -71,16 +77,19 @@ class Client implements Interfaces\ClientInterface{
      * @param array $data
      * @return string $_id
      */
-    public function update($table, $query = array(), $data = array()){
-        if(!$this->mongodb)
+    public function update($table, $query = array(), $data = array())
+    {
+        if (!$this->mongodb) {
             return false;
-        try{
+        }
+        try {
             $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-            if(isset($query['_id']))
+            if (isset($query['_id'])) {
                 $query['_id'] = new MongoId($query['_id']);
+            }
 
             return $collection->update($query, array('$set' => $data), array("upsert" => true));
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             error_log("MongoDB Update: " . $e->getMessage());
         }
         return false;
@@ -92,20 +101,23 @@ class Client implements Interfaces\ClientInterface{
      * @param array $query
      * @return array of result
      */
-    public function find($table, $query = array(), $projections = array()){
-        if(!$this->mongodb)
+    public function find($table, $query = array(), $projections = array())
+    {
+        if (!$this->mongodb) {
             return false;
-        try{
+        }
+        try {
             $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-            if(isset($query['_id']) && isset($query['_id']['$gt']))
+            if (isset($query['_id']) && isset($query['_id']['$gt'])) {
                 $query['_id']['$gt'] = new MongoId($query['_id']['$gt']);
-            elseif(isset($query['_id']) && is_string($query['_id']))
+            } elseif (isset($query['_id']) && is_string($query['_id'])) {
                 $query['_id'] = new MongoId($query['_id']);
+            }
 
             $projections = array_merge($projections, array());
             return $collection->find($query, $projections);
-        }catch(\exception $e){
-           error_log("MongoDB Find: " . $e->getMessage());
+        } catch (\exception $e) {
+            error_log("MongoDB Find: " . $e->getMessage());
         }
         return false;
     }
@@ -116,13 +128,16 @@ class Client implements Interfaces\ClientInterface{
      * @param array $query
      * @return boolean
      */
-    public function remove($table, $query = array()){
-        if(!$this->mongodb)
+    public function remove($table, $query = array())
+    {
+        if (!$this->mongodb) {
             return false;
-         $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-         if(isset($query['_id']))
+        }
+        $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
+        if (isset($query['_id'])) {
             $query['_id'] = new MongoId($query['_id']);
-         return $collection->remove($query);
+        }
+        return $collection->remove($query);
     }
 
     /**
@@ -131,9 +146,11 @@ class Client implements Interfaces\ClientInterface{
      * @param array $query
      * @return array of result
      */
-    public function count($table, $query = array()){
-        if(!$this->mongodb)
+    public function count($table, $query = array())
+    {
+        if (!$this->mongodb) {
             return false;
+        }
         $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
         return $collection->count($query);
     }

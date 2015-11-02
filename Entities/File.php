@@ -6,6 +6,6 @@
 
 namespace Minds\Entities;
 
-class File extends \ElggFile{
-
+class File extends \ElggFile
+{
 }

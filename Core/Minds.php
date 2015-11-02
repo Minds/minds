@@ -4,142 +4,150 @@
  */
 namespace Minds\Core;
 
-class minds extends base{
+class Minds extends base
+{
+    public $root = __MINDS_ROOT__;
+    public $legacy_lib_dir = "/lib/";
+    public static $booted = false;
 
-	public $root = __MINDS_ROOT__;
-	public $legacy_lib_dir = "/lib/";
-	static public $booted = false;
+    /**
+     * Initialise the site
+     */
+    public function init()
+    {
+    }
 
-	/**
-	 * Initialise the site
-	 */
-	public function init(){}
+    /**
+     * Start the minds engine
+     */
+    public function start()
+    {
+        $this->checkInstalled();
 
-	/**
-	 * Start the minds engine
-	 */
-	public function start(){
+        $this->loadConfigs();
+        $this->loadLegacy();
 
-		$this->checkInstalled();
+        /*
+         * If this is a multisite, then load the specific database settings
+         */
+        if ($this->detectMultisite()) {
+            new multisite();
+        }
 
-		$this->loadConfigs();
-		$this->loadLegacy();
+        /**
+         * Load session info
+         */
+        new Session();
 
-		/*
-		 * If this is a multisite, then load the specific database settings
-		 */
-		if($this->detectMultisite())
-			new multisite();
+        Security\XSRF::setCookie();
 
-		/**
-		 * Load session info
-		 */
-		new Session();
+        Events\Defaults::_();
+        SEO\Defaults::_();
 
-    Security\XSRF::setCookie();
+        /**
+         * Boot the system, @todo this should be oop?
+         */
+        \elgg_trigger_event('boot', 'system');
 
-		Events\Defaults::_();
-		SEO\Defaults::_();
+        /**
+         * Load the plugins
+         */
+        new plugins();
 
-		/**
-		 * Boot the system, @todo this should be oop?
-		 */
-		\elgg_trigger_event('boot', 'system');
+        /**
+         * Complete the boot process for both engine and plugins
+         */
+        elgg_trigger_event('init', 'system');
 
-		/**
-		 * Load the plugins
-		 */
-		new plugins();
+        /**
+         * tell the system that we have fully booted
+         */
+        self::$booted = true;
 
-		/**
-		 * Complete the boot process for both engine and plugins
-		 */
-		elgg_trigger_event('init', 'system');
+        /**
+         * System loaded and ready
+         */
+        \elgg_trigger_event('ready', 'system');
+    }
 
-		/**
-		 * tell the system that we have fully booted
-		 */
-		self::$booted = true;
+    /**
+     * Load settings
+     */
+    public function loadConfigs()
+    {
+        global $CONFIG;
+        if (!isset($CONFIG)) {
+            $CONFIG = Config::build();
+        }
 
-		/**
-		 * System loaded and ready
-		 */
-		\elgg_trigger_event('ready', 'system');
+        // Load the system settings
+        if (file_exists(__MINDS_ROOT__ . '/settings.php')) {
+            include_once(__MINDS_ROOT__ . "/settings.php");
+        }
 
-	}
-
-	/**
-	 * Load settings
-	 */
-	public function loadConfigs(){
-
-		global $CONFIG;
-		if(!isset($CONFIG))
-			$CONFIG = Config::build();
-
-		// Load the system settings
-		if (file_exists(__MINDS_ROOT__ . '/settings.php')){
-			include_once(__MINDS_ROOT__ . "/settings.php");
-		}
-
-		// Load mulit globals if set
-		if(file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
-			define('multisite', true);
-			require_once(__MINDS_ROOT__ . '/multi.settings.php');
-		}
-	}
+        // Load mulit globals if set
+        if (file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
+            define('multisite', true);
+            require_once(__MINDS_ROOT__ . '/multi.settings.php');
+        }
+    }
 
 
-	/**
-	 * Load the legacy files for elgg
-	 */
-	public function loadLegacy(){
-		// load the rest of the library files from engine/lib/
-		$lib_files = array(
-			'elgglib.php', 'access.php', 'actions.php',
-			'configuration.php', 'cron.php',
-			'entities.php', 'extender.php', 'filestore.php', 'group.php',
-			'input.php', 'languages.php', 'location.php',
-			'memcache.php',
-			'notification.php', 'objects.php', 'output.php',
-			'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
-			'private_settings.php', 'sessions.php',
-			'sites.php', 'statistics.php',
-			'user_settings.php', 'users.php', 'views.php',
-			'widgets.php', 'xml.php', 'xml-rpc.php'
-		);
+    /**
+     * Load the legacy files for elgg
+     */
+    public function loadLegacy()
+    {
+        // load the rest of the library files from engine/lib/
+        $lib_files = array(
+            'elgglib.php', 'access.php', 'actions.php',
+            'configuration.php', 'cron.php',
+            'entities.php', 'extender.php', 'filestore.php', 'group.php',
+            'input.php', 'languages.php', 'location.php',
+            'memcache.php',
+            'notification.php', 'objects.php', 'output.php',
+            'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
+            'private_settings.php', 'sessions.php',
+            'sites.php', 'statistics.php',
+            'user_settings.php', 'users.php', 'views.php',
+            'widgets.php', 'xml.php', 'xml-rpc.php'
+        );
 
-		foreach ($lib_files as $file) {
-			$file = __MINDS_ROOT__ . $this->legacy_lib_dir . $file;
-			if (!include_once($file)) {
-				$msg = "Could not load $file";
-				throw new \InstallationException($msg);
-			}
-		}
-	}
+        foreach ($lib_files as $file) {
+            $file = __MINDS_ROOT__ . $this->legacy_lib_dir . $file;
+            if (!include_once($file)) {
+                $msg = "Could not load $file";
+                throw new \InstallationException($msg);
+            }
+        }
+    }
 
-	public function detectMultisite(){
-		if(file_exists(dirname(dirname(dirname(__MINDS_ROOT__))) ."/config.json"))
-			return true;
+    public function detectMultisite()
+    {
+        if (file_exists(dirname(dirname(dirname(__MINDS_ROOT__))) ."/config.json")) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public function checkInstalled(){
-		/**
-		 * If we are a multisite, we get the install status from the multisite settings
-		 */
-		if($this->detectMultisite()){
-			//we do this on db load.. not here
-		} else {
-			if (!file_exists(__MINDS_ROOT__ . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
-				header("Location: install.php");
-				exit;
-			}
-		}
-	}
+    public function checkInstalled()
+    {
+        /**
+         * If we are a multisite, we get the install status from the multisite settings
+         */
+        if ($this->detectMultisite()) {
+            //we do this on db load.. not here
+        } else {
+            if (!file_exists(__MINDS_ROOT__ . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
+                header("Location: install.php");
+                exit;
+            }
+        }
+    }
 
-	public static function getVersion(){
-		return false;
-	}
+    public static function getVersion()
+    {
+        return false;
+    }
 }

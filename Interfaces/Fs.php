@@ -4,8 +4,7 @@
  */
 namespace Minds\Interfaces;
 
-interface Fs{
-
-	public function get($pages);
-
+interface Fs
+{
+    public function get($pages);
 }

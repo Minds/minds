@@ -7,9 +7,9 @@ namespace Minds\Entities\Boost;
 
 use Minds\Entities\Entity;
 
-interface BoostEntityInterface{
-
-  /**
+interface BoostEntityInterface
+{
+    /**
    * Set the entity to boost
    * @param Entity $entity
    * @return $this
@@ -34,5 +34,4 @@ interface BoostEntityInterface{
    * @return string
    */
   public function getState();
-
 }

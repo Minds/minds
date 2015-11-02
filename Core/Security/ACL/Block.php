@@ -7,26 +7,30 @@ namespace Minds\Core\Security\ACL;
 use Minds\Core;
 use Minds\Entities;
 
-class Block {
-
+class Block
+{
     private static $_;
     private $db;
     private $cacher;
 
-    public function __construct($db = NULL, $cacher = NULL){
-      if($db)
-        $this->db = $db;
-      else
-        $this->db = new Core\Data\Call('entities_by_time');
+    public function __construct($db = null, $cacher = null)
+    {
+        if ($db) {
+            $this->db = $db;
+        } else {
+            $this->db = new Core\Data\Call('entities_by_time');
+        }
 
-      if($cacher)
-        $this->cacher = $cacher;
-      else
-        $this->cacher = Core\Data\cache\factory::build();
+        if ($cacher) {
+            $this->cacher = $cacher;
+        } else {
+            $this->cacher = Core\Data\cache\factory::build();
+        }
     }
 
-    public function setDb($db){
-      $this->db = $db;
+    public function setDb($db)
+    {
+        $this->db = $db;
     }
 
     /**
@@ -36,15 +40,18 @@ class Block {
      * @param string $offset
      * @return array
      */
-    public function getBlockList($from = NULL, $limit = 9999, $offset = ""){
-      if(!$from)
-        $from = Core\Session::getLoggedinUser();
+    public function getBlockList($from = null, $limit = 9999, $offset = "")
+    {
+        if (!$from) {
+            $from = Core\Session::getLoggedinUser();
+        }
 
-      if($from instanceof Entities\User)
-        $from = $from->guid;
+        if ($from instanceof Entities\User) {
+            $from = $from->guid;
+        }
 
-      $list = $this->db->getRow("acl:blocked:$from", array('limit' => $limit, 'offset' => $offset));
-      return array_keys($list);
+        $list = $this->db->getRow("acl:blocked:$from", array('limit' => $limit, 'offset' => $offset));
+        return array_keys($list);
     }
 
     /**
@@ -53,21 +60,26 @@ class Block {
      * @param mixed (Entities\User | string) - from this user
      * @return boolean
      */
-    public function isBlocked($user, $from){
-      if(!$from)
-        $from = Core\Session::getLoggedinUser();
+    public function isBlocked($user, $from)
+    {
+        if (!$from) {
+            $from = Core\Session::getLoggedinUser();
+        }
 
-      if($from instanceof Entities\User)
-        $from = $from->guid;
+        if ($from instanceof Entities\User) {
+            $from = $from->guid;
+        }
 
-      if($user instanceof Entities\User)
-        $user = $user->guid;
+        if ($user instanceof Entities\User) {
+            $user = $user->guid;
+        }
 
-      $list = $this->getBlockList($from, 1, $user);
-      if(isset($list[0]) && $list[0] == $user)
-        return true;
+        $list = $this->getBlockList($from, 1, $user);
+        if (isset($list[0]) && $list[0] == $user) {
+            return true;
+        }
 
-      return false;
+        return false;
     }
 
     /**
@@ -75,17 +87,21 @@ class Block {
      * @param Entities\User $user - check if this user is blocked
      * @param mixed (Entities\User | string) - from this user
      */
-    public function block($user, $from){
-      if(!$from)
-        $from = Core\Session::getLoggedinUser();
+    public function block($user, $from)
+    {
+        if (!$from) {
+            $from = Core\Session::getLoggedinUser();
+        }
 
-      if($from instanceof Entities\User)
-        $from = $from->guid;
+        if ($from instanceof Entities\User) {
+            $from = $from->guid;
+        }
 
-      if($user instanceof Entities\User)
-        $user = $user->guid;
+        if ($user instanceof Entities\User) {
+            $user = $user->guid;
+        }
 
-       return $this->db->insert("acl:blocked:$from", array($user => time()));
+        return $this->db->insert("acl:blocked:$from", array($user => time()));
     }
 
     /**
@@ -93,40 +109,45 @@ class Block {
      * @param Entities\User $user - check if this user is blocked
      * @param mixed (Entities\User | string) - from this user
      */
-    public function unBlock($user, $from){
-      if(!$from)
-        $from = Core\Session::getLoggedinUser();
+    public function unBlock($user, $from)
+    {
+        if (!$from) {
+            $from = Core\Session::getLoggedinUser();
+        }
 
-      if($from instanceof Entities\User)
-        $from = $from->guid;
+        if ($from instanceof Entities\User) {
+            $from = $from->guid;
+        }
 
-      if($user instanceof Entities\User)
-        $user = $user->guid;
+        if ($user instanceof Entities\User) {
+            $user = $user->guid;
+        }
 
-       return $this->db->removeAttributes("acl:blocked:$from", array($user));
+        return $this->db->removeAttributes("acl:blocked:$from", array($user));
     }
 
     /**
      * Listen to the acl
      */
-    public function listen(){
+    public function listen()
+    {
+        Core\Events\Dispatcher::register('acl:interact', 'all', function ($e) {
+            $params = $e->getParameters();
+            $entity = $params['entity'];
+            $user = $params['user'];
 
-      Core\Events\Dispatcher::register('acl:interact', 'all', function($e){
-  			$params = $e->getParameters();
-  			$entity = $params['entity'];
-  			$user = $params['user'];
+        if ($this->isBlocked($user, $entity->owner_guid)) {
+            $e->setResponse(false);
+        }
 
-        if($this->isBlocked($user, $entity->owner_guid))
-          $e->setResponse(false);
-
-  		});
-
+        });
     }
 
-    public static function _(){
-      if(!self::$_)
-        return new Block();
-      return self::$_;
+    public static function _()
+    {
+        if (!self::$_) {
+            return new Block();
+        }
+        return self::$_;
     }
-
 }

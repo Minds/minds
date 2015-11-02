@@ -4,8 +4,9 @@
  */
 
 namespace Minds\Fs;
-class Routes{
 
+class Routes
+{
     public static $routes = array();
 
     /**
@@ -14,8 +15,8 @@ class Routes{
      * @param string $class - the route of the class
      * @return void
      */
-    public function add($route, $class){
+    public function add($route, $class)
+    {
         self::$routes[$route] = $class;
     }
-
 }

@@ -9,35 +9,42 @@ use Minds\Core;
 use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
-class Active implements AnalyticsMetric{
+class Active implements AnalyticsMetric
+{
+    private $db;
+    private $namespace = "analytics:";
+    private $key;
 
-  private $db;
-  private $namespace = "analytics:";
-  private $key;
+    public function __construct($db = null)
+    {
+        if ($db) {
+            $this->db = $db;
+        } else {
+            $this->db = new Core\Data\Call('entities_by_time');
+        }
 
-  public function __construct($db = NULL){
-    if($db)
-      $this->db = $db;
-    else
-      $this->db = new Core\Data\Call('entities_by_time');
+        if (Core\Session::getLoggedinUser()) {
+            $this->key = Core\Session::getLoggedinUser()->guid;
+        }
+    }
 
-    if(Core\Session::getLoggedinUser())
-      $this->key = Core\Session::getLoggedinUser()->guid;
-  }
+    public function setNamespace($namesapce)
+    {
+        //$this->namespace = $namespace . ":";
+    }
 
-  public function setNamespace($namesapce){
-    //$this->namespace = $namespace . ":";
-  }
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
 
-  public function setKey($key){
-    $this->key = $key;
-  }
-
-  public function increment(){
-    foreach(Timestamps::get(array('day', 'month')) as $p => $ts)
-      $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => $time()));
-    return true;
-  }
+    public function increment()
+    {
+        foreach (Timestamps::get(array('day', 'month')) as $p => $ts) {
+            $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => $time()));
+        }
+        return true;
+    }
 
   /**
   * Return a set of analytics for a timespan
@@ -46,21 +53,22 @@ class Active implements AnalyticsMetric{
   * @param int $timestamp (optional) - sets the base to work off
   * @return array
   */
-  public function get($span = 3, $unit = 'day', $timestamp = NULL){
-    $timestamps = Timestamps::span($span, $unit);
-    $data = array();
-    foreach($timestamps as $ts){
-      $data[] = array(
+  public function get($span = 3, $unit = 'day', $timestamp = null)
+  {
+      $timestamps = Timestamps::span($span, $unit);
+      $data = array();
+      foreach ($timestamps as $ts) {
+          $data[] = array(
         'timestamp' => $ts,
         'date' => date('d-m-Y', $ts),
         'total' => $this->db->countRow("{$this->namespace}active:$unit:$ts")
       );
+      }
+      return $data;
+  }
+
+    public function total()
+    {
+        return 0;
     }
-    return $data;
-  }
-
-  public function total(){
-    return 0;
-  }
-
 }

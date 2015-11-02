@@ -8,21 +8,23 @@ use Minds\Core;
 use Minds\Entities;
 use Minds\Interfaces;
 
-class icon extends core\page implements Interfaces\page{
-
-	/**
-	 * Get requests
-	 */
-	public function get($pages){
+class icon extends core\page implements Interfaces\page
+{
+    /**
+     * Get requests
+     */
+    public function get($pages)
+    {
         global $CONFIG;
         $guid = $pages[0];
         $cacher = Core\Data\cache\factory::build('apcu');
-        if($cached = $cacher->get("usericon:$guid")){
-                $join_date = $cached;
+        if ($cached = $cacher->get("usericon:$guid")) {
+            $join_date = $cached;
         } else {
             $user = new Entities\User($guid);
-            if(isset($user->legacy_guid) && $user->legacy_guid)
+            if (isset($user->legacy_guid) && $user->legacy_guid) {
                 $guid = $user->legacy_guid;
+            }
             $join_date = $user->time_created;
             $cacher->set("usericon:$guid", $join_date);
         }
@@ -34,7 +36,7 @@ class icon extends core\page implements Interfaces\page{
         }
         $size = strtolower($pages[1]);
         if (!in_array($size, array('xlarge', 'large', 'medium', 'small', 'tiny', 'master', 'topbar'))) {
-                $size = "medium";
+            $size = "medium";
         }
         $data_root = $CONFIG->dataroot;
 
@@ -43,7 +45,7 @@ class icon extends core\page implements Interfaces\page{
         $contents = @file_get_contents($filename);
         if (!empty($contents)) {
             header("Content-type: image/jpeg");
-            header('Expires: ' . date('r',  strtotime("today+6 months")), true);
+            header('Expires: ' . date('r', strtotime("today+6 months")), true);
             header("Pragma: public");
             header("Cache-Control: public");
             header("Content-Length: " . strlen($contents));
@@ -59,13 +61,15 @@ class icon extends core\page implements Interfaces\page{
         $this->forward("/assets/avatars/default-$size.png");
     }
 
-	public function post($pages){
-	}
+    public function post($pages)
+    {
+    }
 
-	public function put($pages){
-	}
+    public function put($pages)
+    {
+    }
 
-	public function delete($pages){
-	}
-
+    public function delete($pages)
+    {
+    }
 }

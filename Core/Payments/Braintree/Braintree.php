@@ -10,43 +10,44 @@ use Minds\Core\Payments\PaymentServiceInterface;
 use Minds\Core\Payments\Sale;
 use Minds\Core\Payments\Merchant;
 use Minds\Entities;
-
 use Braintree_ClientToken;
 use Braintree_Configuration;
 use Braintree_MerchantAccount;
 use Braintree_Transaction;
 use Braintree_TransactionSearch;
-
 //for testing purposes
 use Braintree_Test_MerchantAccount;
 
-class Braintree implements PaymentServiceInterface{
+class Braintree implements PaymentServiceInterface
+{
+    private $config = array();
 
-  private $config = array();
+    public function __construct($options = array())
+    {
+        $this->setConfig($options);
+    }
 
-  public function __construct($options = array()){
-    $this->setConfig($options);
-  }
-
-  private function setConfig($config){
-    $defaults = array(
+    private function setConfig($config)
+    {
+        $defaults = array(
       'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
       'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
       'public_key' => Core\Config::_()->payments['braintree']['public_key'],
       'private_key' => Core\Config::_()->payments['braintree']['private_key']
     );
-    $this->config = array_merge($defaults, $config);
-    Braintree_Configuration::environment($this->config['environment']);
-    Braintree_Configuration::merchantId($this->config['merchant_id']);
-    Braintree_Configuration::publicKey($this->config['public_key']);
-    Braintree_Configuration::privateKey($this->config['private_key']);
-  }
+        $this->config = array_merge($defaults, $config);
+        Braintree_Configuration::environment($this->config['environment']);
+        Braintree_Configuration::merchantId($this->config['merchant_id']);
+        Braintree_Configuration::publicKey($this->config['public_key']);
+        Braintree_Configuration::privateKey($this->config['private_key']);
+    }
 
   /**
    * Return a client token
    */
-  public function getToken(){
-    return Braintree_ClientToken::generate();
+  public function getToken()
+  {
+      return Braintree_ClientToken::generate();
   }
 
   /**
@@ -54,8 +55,9 @@ class Braintree implements PaymentServiceInterface{
    * @param Sale $sale
    * @return string - the transaction id
    */
-  public function setSale(Sale $sale){
-    $result = Braintree_Transaction::sale([
+  public function setSale(Sale $sale)
+  {
+      $result = Braintree_Transaction::sale([
       'amount' => $sale->getAmount(),
       'paymentMethodNonce' => $sale->getNonce(),
       'serviceFeeAmount' => $sale->getFee(),
@@ -70,15 +72,14 @@ class Braintree implements PaymentServiceInterface{
       ]
     ]);
 
-    if($result->success){
-      return $result->transaction->id;
-    } else if ($result->transaction) {
-      throw new \Exception("Transaction failed: ({$result->transaction->processorResponseCode}) {$result->transaction->processorResponseText}");
-    } else {
-      $errors = $result->errors->deepAll();
-      throw new \Exception($errors[0]->message);
-    }
-
+      if ($result->success) {
+          return $result->transaction->id;
+      } elseif ($result->transaction) {
+          throw new \Exception("Transaction failed: ({$result->transaction->processorResponseCode}) {$result->transaction->processorResponseText}");
+      } else {
+          $errors = $result->errors->deepAll();
+          throw new \Exception($errors[0]->message);
+      }
   }
 
   /**
@@ -86,15 +87,16 @@ class Braintree implements PaymentServiceInterface{
    * @param Sale $sale
    * @return boolean
    */
-  public function chargeSale(Sale $sale){
-    $result = Braintree_Transaction::submitForSettlement($sale->getId());
+  public function chargeSale(Sale $sale)
+  {
+      $result = Braintree_Transaction::submitForSettlement($sale->getId());
 
-    if($result->success){
-      return true;
-    }
+      if ($result->success) {
+          return true;
+      }
 
-    $errors = $result->errors->deepAll();
-    throw new \Exception($errors[0]->message);
+      $errors = $result->errors->deepAll();
+      throw new \Exception($errors[0]->message);
   }
 
   /**
@@ -102,8 +104,9 @@ class Braintree implements PaymentServiceInterface{
    * @param Sale $sale
    * @return boolean
    */
-  public function voidSale(Sale $sale){
-    $result = Braintree_Transaction::void($sale->getId());
+  public function voidSale(Sale $sale)
+  {
+      $result = Braintree_Transaction::void($sale->getId());
   }
 
   /**
@@ -111,8 +114,9 @@ class Braintree implements PaymentServiceInterface{
    * @param Sale $sale
    * @return boolean
    */
-  public function refundSale(Sale $sale){
-    $result = Braintree_Transaction::refund($sale->getId());
+  public function refundSale(Sale $sale)
+  {
+      $result = Braintree_Transaction::refund($sale->getId());
   }
 
   /**
@@ -121,8 +125,9 @@ class Braintree implements PaymentServiceInterface{
    * @param array $options - limit, offset
    * @return array
    */
-  public function getSales(Merchant $merchant, array $options = array()){
-    $results = Braintree_Transaction::search([
+  public function getSales(Merchant $merchant, array $options = array())
+  {
+      $results = Braintree_Transaction::search([
       Braintree_TransactionSearch::merchantAccountId()->is($merchant->getGuid()),
       Braintree_TransactionSearch::status()->in([
         Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
@@ -131,9 +136,9 @@ class Braintree implements PaymentServiceInterface{
       ])
     ]);
 
-    $sales = [];
-    foreach($results as $transaction){
-      $sales[] = (new Sale)
+      $sales = [];
+      foreach ($results as $transaction) {
+          $sales[] = (new Sale)
         ->setId($transaction->id)
         ->setAmount($transaction->amount)
         ->setStatus($transaction->status)
@@ -142,9 +147,9 @@ class Braintree implements PaymentServiceInterface{
         ->setCustomerId($transaction->customer['firstName'])
         ->setCreatedAt($transaction->createdAt)
         ->setSettledAt($transaction->settledAt);
-    }
+      }
 
-    return $sales;
+      return $sales;
   }
 
   /**
@@ -152,8 +157,8 @@ class Braintree implements PaymentServiceInterface{
    * @param Merchant $merchant
    * @return string
    */
-  public function updateMerchant(Merchant $merchant){
-
+  public function updateMerchant(Merchant $merchant)
+  {
   }
 
   /**
@@ -161,9 +166,9 @@ class Braintree implements PaymentServiceInterface{
    * @param Merchant $merchant
    * @return string - the ID of the merchant
    */
-  public function addMerchant(Merchant $merchant){
-
-    $result = Braintree_MerchantAccount::create([
+  public function addMerchant(Merchant $merchant)
+  {
+      $result = Braintree_MerchantAccount::create([
       'individual' => [
         'firstName' => $merchant->getFirstName(),
         'lastName' => $merchant->getLastName(),
@@ -189,22 +194,23 @@ class Braintree implements PaymentServiceInterface{
       'id' => $merchant->getGuid()
     ]);
 
-    if($result->success){
-      return $result->merchantAccount->id;
-    }
+      if ($result->success) {
+          return $result->merchantAccount->id;
+      }
 
-    throw new \Exception($result->message);
+      throw new \Exception($result->message);
   }
 
   /**
    * Return a merchant from an id
    * @return Merchant
    */
-  public function getMerchant($id){
-    try{
-      $result = Braintree_MerchantAccount::find($id);
+  public function getMerchant($id)
+  {
+      try {
+          $result = Braintree_MerchantAccount::find($id);
 
-      $merchant = (new Merchant())
+          $merchant = (new Merchant())
         ->setStatus($result->status)
         ->setFirstName($result->individual['firstName'])
         ->setLastName($result->individual['lastName'])
@@ -219,16 +225,14 @@ class Braintree implements PaymentServiceInterface{
         ->setRoutingNumber($result->funding['routingNumber'])
         ->setDestination($result->funding['destination']);
 
-      return $merchant;
+          return $merchant;
+      } catch (\Exception $e) {
+          var_dump($e);
+          return false;
+      }
+  }
 
-    } catch (\Exception $e){
-      var_dump($e);
-      return false;
+    public function confirmMerchant(Merchant $merchant)
+    {
     }
-  }
-
-  public function confirmMerchant(Merchant $merchant){
-
-  }
-
 }

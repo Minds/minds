@@ -1,10 +1,11 @@
 <?php
 namespace Minds\Core\Queue\Interfaces;
+
 /**
  * Queue client interface
  */
-interface QueueClient{
-    
+interface QueueClient
+{
     /**
      * Set the queue to use
      * @return $this
@@ -14,5 +15,4 @@ interface QueueClient{
     public function send($callback);
     
     public function receive($callback);
-    
 };

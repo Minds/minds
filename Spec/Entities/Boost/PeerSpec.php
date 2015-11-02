@@ -4,22 +4,22 @@ namespace Spec\Minds\Entities\Boost;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-
 use Minds\Core\Data\Call;
-
 use Minds\Entities\Entity;
 use Minds\Entities\User;
 
-class PeerSpec extends ObjectBehavior {
+class PeerSpec extends ObjectBehavior
+{
+    private $mockData = [];
 
-  private $mockData = [];
+    public function it_is_initializable()
+    {
+        $this->shouldHaveType('Minds\Entities\Boost\Peer');
+    }
 
-  function it_is_initializable(){
-    $this->shouldHaveType('Minds\Entities\Boost\Peer');
-  }
-
-  function let(){
-    $this->mockData = [
+    public function let()
+    {
+        $this->mockData = [
       'guid' => "mockguid",
       'type' => 'points',
       'entity' => json_encode(['guid'=>'mock_entity_guid', 'type'=>'activity']),
@@ -28,13 +28,14 @@ class PeerSpec extends ObjectBehavior {
       'owner' => json_encode(['guid'=>'mock_owner_guid', 'type'=>'user']),
       'state' => 'testing'
     ];
-  }
+    }
 
-  function it_should_load_from_array(){
-    $this->loadFromArray($this->mockData)->shouldReturn($this);
-    $this->getBid()->shouldReturn(10);
-    $this->getState()->shouldReturn('testing');
-  }
+    public function it_should_load_from_array()
+    {
+        $this->loadFromArray($this->mockData)->shouldReturn($this);
+        $this->getBid()->shouldReturn(10);
+        $this->getState()->shouldReturn('testing');
+    }
 
   //function it_should_should_save(Call $db){
     //$db->insert(Argument::type('string'), Argument::type('array'))->willReturn(true);
@@ -42,30 +43,33 @@ class PeerSpec extends ObjectBehavior {
     //$this->save()->willReturn('foo');
   //}
 
-  function it_should_set_the_entity(Entity $entity){
-    $this->setEntity($entity)->shouldReturn($this);
-    $this->getEntity()->shouldReturn($entity);
+  public function it_should_set_the_entity(Entity $entity)
+  {
+      $this->setEntity($entity)->shouldReturn($this);
+      $this->getEntity()->shouldReturn($entity);
   }
 
-  function it_should_set_the_destination(User $user){
-    $this->setDestination($user)->shouldReturn($this);
-    $this->getDestination()->shouldReturn($user);
-  }
+    public function it_should_set_the_destination(User $user)
+    {
+        $this->setDestination($user)->shouldReturn($this);
+        $this->getDestination()->shouldReturn($user);
+    }
 
-  function it_should_set_the_owner(User $user){
-    $this->setOwner($user)->shouldReturn($this);
-    $this->getOwner()->shouldReturn($user);
-  }
+    public function it_should_set_the_owner(User $user)
+    {
+        $this->setOwner($user)->shouldReturn($this);
+        $this->getOwner()->shouldReturn($user);
+    }
 
-  function it_should_set_the_bid(){
-    $this->setBid(100)->shouldReturn($this);
-    $this->getBid()->shouldReturn(100);
-  }
+    public function it_should_set_the_bid()
+    {
+        $this->setBid(100)->shouldReturn($this);
+        $this->getBid()->shouldReturn(100);
+    }
 
-  function it_should_set_the_state(){
-    $this->setState('testing-set-state')->shouldReturn($this);
-    $this->getState()->shouldReturn('testing-set-state');
-  }
-
-
+    public function it_should_set_the_state()
+    {
+        $this->setState('testing-set-state')->shouldReturn($this);
+        $this->getState()->shouldReturn('testing-set-state');
+    }
 }

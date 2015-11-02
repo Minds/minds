@@ -12,21 +12,21 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
-    public function get($pages){
-
+class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
+    public function get($pages)
+    {
         $url = "http://nominatim.openstreetmap.org/search.php?q=" . urlencode($_GET['q']) . "&format=json&addressdetails=1";
                  
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        $output = curl_exec($ch); 
-        curl_close($ch);  
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
                                  
         $data = json_decode($output, true);
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case 'list':
                 return Factory::response(array('results'=>$data));
                 break;
@@ -41,14 +41,15 @@ class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam{
         }
     }
     
-    public function post($pages){
+    public function post($pages)
+    {
     }
     
-    public function put($pages){
+    public function put($pages)
+    {
     }
     
-    public function delete($pages){
+    public function delete($pages)
+    {
     }
-    
 }
-        

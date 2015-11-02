@@ -6,5 +6,4 @@
 
 require(dirname(__FILE__) . '/start.php');
 
-create_cfs('token',  array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ));
-
+create_cfs('token', array('owner_guid'=>'UTF8Type', 'expires' =>'IntegerType' ));

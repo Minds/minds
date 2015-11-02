@@ -9,12 +9,11 @@ use Neoxygen\NeoClient\Command\AbstractCommand;
 */
 class GeomLink extends AbstractCommand
 {
-
-
     public $node_id;
 
     private $nodeUri;
-    public function setArguments($nodeUri){
+    public function setArguments($nodeUri)
+    {
         $this->nodeUri = (string) $nodeUri;
     }
 
@@ -25,7 +24,7 @@ class GeomLink extends AbstractCommand
         $data = json_encode(array(
                     "value" => "dummy",
                     "key" => "dummy",
-                    "uri" => $this->nodeUri 
+                    "uri" => $this->nodeUri
                 ));
 
         // The arguments for the send method of the http client are
@@ -35,4 +34,3 @@ class GeomLink extends AbstractCommand
 //        return $this->httpClient->sendRequest($request);
     }
 }
-

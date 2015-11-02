@@ -6,17 +6,17 @@ namespace Minds\Core\Data\Cassandra\Prepared;
 
 use  Minds\Core\Data\Interfaces;
 
-class System implements Interfaces\PreparedInterface{
-    
+class System implements Interfaces\PreparedInterface
+{
     private $template;
-    private $values = array(); 
+    private $values = array();
     
-    public function build(){
+    public function build()
+    {
         return array(
             'string' => $this->template,
             'values'=>$this->values
             );
-            
     }
     
     /**
@@ -27,10 +27,11 @@ class System implements Interfaces\PreparedInterface{
      * @parAM array $primary_keys - $key
      * @return $this
      */
-    public function createTable($table, $columns = array(), $primary_keys = array()){
+    public function createTable($table, $columns = array(), $primary_keys = array())
+    {
         $cql = "CREATE TABLE $table";
         $s = array();
-        foreach($columns as $key => $validator){
+        foreach ($columns as $key => $validator) {
             $s[] = "$key $validator";
         }
         $s[] = " PRIMARY KEY (" . implode(', ', $primary_keys) . ")";
@@ -48,11 +49,11 @@ class System implements Interfaces\PreparedInterface{
      * @param string $column_type
      * @return $this
      */
-    public function alterTableAddColumn($table, $column_name, $column_type){
+    public function alterTableAddColumn($table, $column_name, $column_type)
+    {
         $template = "ALTER TABLE $table ADD $column_name $column_type";
         
         $this->template = $template;
         return $this;
     }
-    
 }

@@ -7,34 +7,35 @@
  *
  */
 namespace Minds\Controllers\api\v1;
-use Swagger\Annotations as SWG;
 
+use Swagger\Annotations as SWG;
 use Minds\Core;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class analytics implements Interfaces\Api{
+class analytics implements Interfaces\Api
+{
+    public function get($pages)
+    {
+        $span = isset($_GET['span']) ? $_GET['span'] : 5;
+        $unit = isset($_GET['unit']) ? $_GET['unit'] : 'day';
 
-    public function get($pages){
-
-      $span = isset($_GET['span']) ? $_GET['span'] : 5;
-      $unit = isset($_GET['unit']) ? $_GET['unit'] : 'day';
-
-      $data = Core\Analytics\User::_()
+        $data = Core\Analytics\User::_()
         ->setMetric('impression')
         ->setKey($pages[0])
         ->get($span, $unit);
 
-      $response = array(
+        $response = array(
         'data' => $data
       );
 
-      return Factory::response($response);
+        return Factory::response($response);
     }
 
-    public function post($pages){
+    public function post($pages)
+    {
     }
 
     /**
@@ -57,8 +58,9 @@ class analytics implements Interfaces\Api{
      *     }
      * )
      */
-    public function put($pages){
-        switch($pages[0]){
+    public function put($pages)
+    {
+        switch ($pages[0]) {
             case 'open':
                 Helpers\Analytics::increment("app-opens"); //@todo move this to a metric factory soon
             break;
@@ -67,7 +69,7 @@ class analytics implements Interfaces\Api{
         return Factory::response(array());
     }
 
-    public function delete($pages){
+    public function delete($pages)
+    {
     }
-
 }

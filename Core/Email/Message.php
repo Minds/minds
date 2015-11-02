@@ -4,23 +4,25 @@
  */
 namespace Minds\Core\Email;
 
-class Message{
+class Message
+{
+    public $from = array();
+    public $to = array();
+    public $subject = "";
+    public $html = "";
 
-  public $from = array();
-  public $to = array();
-  public $subject = "";
-  public $html = "";
+    public function __construct()
+    {
+        $this->init();
+    }
 
-  public function __construct(){
-    $this->init();
-  }
-
-  private function init(){
-    $this->from = array(
+    private function init()
+    {
+        $this->from = array(
       'name' => "Minds",
       'email' => "info@minds.com"
     );
-  }
+    }
 
   /**
    * Set from data
@@ -28,12 +30,13 @@ class Message{
    * @param string $name
    * @return $this
    */
-  public function setFrom($email, $name = "Minds"){
-    $this->from = array(
+  public function setFrom($email, $name = "Minds")
+  {
+      $this->from = array(
       'name' => $name,
       'email' => $email
     );
-    return $this;
+      return $this;
   }
 
   /**
@@ -41,12 +44,13 @@ class Message{
    * @param Entities\User $user
    * @return $this
    */
-  public function setTo($user){
-    $this->to[] = array(
+  public function setTo($user)
+  {
+      $this->to[] = array(
       'name' => $user->name,
       'email' => $user->getEmail()
     );
-    return $this;
+      return $this;
   }
 
   /**
@@ -54,9 +58,10 @@ class Message{
    * @param string $subject
    * @return $this
    */
-  public function setSubject($subject){
-    $this->subject = $subject;
-    return $this;
+  public function setSubject($subject)
+  {
+      $this->subject = $subject;
+      return $this;
   }
 
   /**
@@ -64,16 +69,17 @@ class Message{
    * @param string $html
    * @return $this
    */
-  public function setHtml($html){
-    $this->html = $html;
+  public function setHtml($html)
+  {
+      $this->html = $html;
   }
 
   /**
    * Set html data
    * @return $html
    */
-  public function buildHtml(){
-    return $this->html;
+  public function buildHtml()
+  {
+      return $this->html;
   }
-
 }

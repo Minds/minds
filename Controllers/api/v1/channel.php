@@ -14,29 +14,30 @@ use Minds\Entities;
 use Minds\Api\Factory;
 use ElggFile;
 
-class channel implements Interfaces\Api{
-
+class channel implements Interfaces\Api
+{
     /**
      * Return channel profile information
      * @param array $pages
      *
      * API:: /v1/channel/:username
      */
-    public function get($pages){
-
-        if($pages[0] == 'me')
+    public function get($pages)
+    {
+        if ($pages[0] == 'me') {
             $pages[0] = elgg_get_logged_in_user_guid();
+        }
 
-        if(is_string($pages[0]) && !is_numeric($pages[0])){
+        if (is_string($pages[0]) && !is_numeric($pages[0])) {
             $pages[0] = strtolower($pages[0]);
         }
 
         $user = new Entities\User($pages[0]);
-        if(!$user->username){
+        if (!$user->username) {
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
 
-        if($user->enabled != "yes"){
+        if ($user->enabled != "yes") {
             return Factory::response(array('status'=>'error', 'message'=>'The user is disabled'));
         }
 
@@ -61,9 +62,9 @@ class channel implements Interfaces\Api{
         $response['channel']['activity_count'] = $feed_count;
 
         $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
-        if($carousels){
-            foreach($carousels as $carousel){
-               $response['channel']['carousels'][] = array(
+        if ($carousels) {
+            foreach ($carousels as $carousel) {
+                $response['channel']['carousels'][] = array(
                   'guid' => (string) $carousel->guid,
                   'top_offset' => $carousel->top_offset,
                   'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
@@ -75,19 +76,19 @@ class channel implements Interfaces\Api{
         $response['channel']['blocked'] = $block->isBlocked($user);
 
         return Factory::response($response);
-
     }
 
-    public function post($pages){
-
+    public function post($pages)
+    {
         $owner = Core\Session::getLoggedinUser();
         $guid = Core\Session::getLoggedinUser()->guid;
-        if(Core\Session::getLoggedinUser()->legacy_guid)
+        if (Core\Session::getLoggedinUser()->legacy_guid) {
             $guid = Core\Session::getLoggedinUser()->legacy_guid;
+        }
 
         $response = array();
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "avatar":
                 $icon_sizes = elgg_get_config('icon_sizes');
 
@@ -128,10 +129,11 @@ class channel implements Interfaces\Api{
                 break;
             case "banner":
                 //remove all older banners
-                try{
+                try {
                     $db = new Core\Data\Call('entities_by_time');
                     $db->removeRow("object:carousel:user:" . elgg_get_logged_in_user_guid());
-                }catch(\Exception $e){}
+                } catch (\Exception $e) {
+                }
 
                 $item = new \Minds\Entities\Carousel();
                 $item->title = '';
@@ -160,7 +162,7 @@ class channel implements Interfaces\Api{
                     $h = $dimensions[1];
                     $x1 = 0;
                     $x2 = $dimensions[0];
-                    if($h <= 800 || $size_info['h'] != 800){
+                    if ($h <= 800 || $size_info['h'] != 800) {
                         $y1 = 0;
                         $y2 = $h;
                     } else {
@@ -173,7 +175,7 @@ class channel implements Interfaces\Api{
                         file_put_contents($theme_dir . $item->guid . $name, $resized);
                     }
                     if (isset($_FILES["file"]) && ($_FILES["file"]['error'] != UPLOAD_ERR_NO_FILE) && $_FILES["file"]['error'] != 0) {
-                    // register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
+                        // register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
                     }
                     $item->last_updated = time();
                     $item->background = true;
@@ -192,35 +194,36 @@ class channel implements Interfaces\Api{
                  'src'=> Core\Config::build()->cdn_url . "fs/v1/banners/$item->guid/fat/$item->last_updated"
               );
 
-              if(is_uploaded_file($_FILES['file']['tmp_name'])){
-                $resized = get_resized_image_from_uploaded_file('file', 2000);
-                $file = new Entities\File();
-                $file->owner_guid = $item->owner_guid;
-                $file->setFilename("banners/{$item->guid}.jpg");
-                $file->open('write');
-                $file->write($resized);
-                $file->close();
+              if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                  $resized = get_resized_image_from_uploaded_file('file', 2000);
+                  $file = new Entities\File();
+                  $file->owner_guid = $item->owner_guid;
+                  $file->setFilename("banners/{$item->guid}.jpg");
+                  $file->open('write');
+                  $file->write($resized);
+                  $file->close();
 
-                $response['uploaded'] = true;
+                  $response['uploaded'] = true;
               }
 
 
               break;
             case "info":
             default:
-                if(!$owner->canEdit()){
+                if (!$owner->canEdit()) {
                     return Factory::response(array('status'=>'error'));
                 }
                 $update = array();
-                foreach(array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field){
-                    if(isset($_POST[$field]))
+                foreach (array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field) {
+                    if (isset($_POST[$field])) {
                         $update[$field] = $_POST[$field];
+                    }
                 }
 
-                if(isset($_POST['coordinates'])){
+                if (isset($_POST['coordinates'])) {
                     //update neo4j with our coordinates
                     $prepared = new Core\Data\Neo4j\Prepared\Common();
-                    list($lat, $lon) = explode(',',$_POST['coordinates']);
+                    list($lat, $lon) = explode(',', $_POST['coordinates']);
                     $result = Core\Data\Client::build('Neo4j')->request($prepared->updateEntity($owner, array('lat'=> (double) $lat, 'lon'=> (double) $lon)));
                     $rows = $result->getRows();
                     $id = $rows["id(entity)"][0];
@@ -233,26 +236,24 @@ class channel implements Interfaces\Api{
                 Core\Session::regenerate();
        }
 
-       return Factory::response($response);
-
+        return Factory::response($response);
     }
 
-    public function put($pages){
-
+    public function put($pages)
+    {
         return Factory::response(array());
-
     }
 
     /**
      * Deactivate an account
      */
-    public function delete($pages){
-
-        if(!Core\Session::getLoggedinUser()){
+    public function delete($pages)
+    {
+        if (!Core\Session::getLoggedinUser()) {
             return Factory::response(array('status'=>'error', 'message'=>'not logged in'));
         }
 
-        switch($pages[0]){
+        switch ($pages[0]) {
           case "carousel":
             $db = new Core\Data\Call('entities_by_time');
           //  $db->removeAttributes("object:carousel:user:" . elgg_get_logged_in_user_guid());
@@ -266,7 +267,5 @@ class channel implements Interfaces\Api{
         }
 
         return Factory::response(array());
-
     }
-
 }

@@ -1,13 +1,14 @@
 <?php
 namespace Minds\Helpers;
+
 use Minds\Core;
 use Minds\Core\Data;
 
 /**
  * A helper class to provide request metrics
  */
-class Analytics{
-
+class Analytics
+{
     /**
      * Get MAU or DAU
      * @param $metric
@@ -15,31 +16,35 @@ class Analytics{
      * @param int $ts
      * @return int - the count
      */
-    static public function get($metric = "active", $reference = "day", $ts = NULL){
-      $db = new Core\Data\Call('entities_by_time');
-      $ts = self::buildTS($reference, $ts);
-      return $db->countRow("analytics:$metric:$reference:$ts");
+    public static function get($metric = "active", $reference = "day", $ts = null)
+    {
+        $db = new Core\Data\Call('entities_by_time');
+        $ts = self::buildTS($reference, $ts);
+        return $db->countRow("analytics:$metric:$reference:$ts");
     }
 
     /**
      * @return void
      */
-    static public function increment($metric = "active", $ts = NULL){
-      $db = new Core\Data\Call('entities_by_time');
-      $ts = self::buildTS("day", $ts);
-      $db->insert("analytics:$metric:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
-      $ts = self::buildTS("month", $ts);
-      $db->insert("analytics:$metric:month:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
+    public static function increment($metric = "active", $ts = null)
+    {
+        $db = new Core\Data\Call('entities_by_time');
+        $ts = self::buildTS("day", $ts);
+        $db->insert("analytics:$metric:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
+        $ts = self::buildTS("month", $ts);
+        $db->insert("analytics:$metric:month:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
     }
 
     /**
      * Get timestamp to nearest 5 minutes
      */
-    static public function buildTS($reference = "day", $ts = NULL){
+    public static function buildTS($reference = "day", $ts = null)
+    {
         date_default_timezone_set('UTC');
-        if(!$ts)
+        if (!$ts) {
             $ts = time();
-        switch($reference){
+        }
+        switch ($reference) {
           case "day":
             $reference = "midnight";
             break;
@@ -55,5 +60,4 @@ class Analytics{
         }
         return strtotime($reference, $ts);
     }
-
 }

@@ -7,18 +7,18 @@ namespace Minds\Controllers\emails;
 use Minds\Core;
 use Minds\Interfaces;
 
-class unsubscribe extends core\page implements Interfaces\page{
-
-	/**
-	 * Get requests
-	 */
-	public function get($pages){
-
+class unsubscribe extends core\page implements Interfaces\page
+{
+    /**
+     * Get requests
+     */
+    public function get($pages)
+    {
         \elgg_set_ignore_access();
         $username = $pages[0];
         $user = new \Minds\Entities\User($username);
 
-        if($user->getEmail() == $pages[1]){
+        if ($user->getEmail() == $pages[1]) {
             $user->disabled_emails = true;
             $user->save();
         }
@@ -30,17 +30,18 @@ class unsubscribe extends core\page implements Interfaces\page{
         ));
 
 
-         echo $this->render(array('body'=>$body));
-    
+        echo $this->render(array('body'=>$body));
     }
-	
-	public function post($pages){
-	}
-	
-	public function put($pages){
-	}
-	
-	public function delete($pages){
-	}
-	
+    
+    public function post($pages)
+    {
+    }
+    
+    public function put($pages)
+    {
+    }
+    
+    public function delete($pages)
+    {
+    }
 }

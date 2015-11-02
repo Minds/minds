@@ -1,4 +1,7 @@
 <?php
 
 namespace Minds\Exceptions;
-class StopEventException extends \Exception {}
+
+class StopEventException extends \Exception
+{
+}

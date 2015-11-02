@@ -1,5 +1,6 @@
 <?php
 namespace Minds\Core\Boost;
+
 use Minds\Interfaces\BoostHandlerInterface;
 use Minds\Core;
 use Minds\Core\Data;
@@ -8,12 +9,13 @@ use Minds\Helpers;
 /**
  * Newsfeed Boost handler
  */
-class Newsfeed implements BoostHandlerInterface{
-
+class Newsfeed implements BoostHandlerInterface
+{
     private $db;
 
-    public function __construct($options = array(), Data\Interfaces\ClientInterface $db = NULL){
-        if($db){
+    public function __construct($options = array(), Data\Interfaces\ClientInterface $db = null)
+    {
+        if ($db) {
             $this->db = $db;
         } else {
             $this->db = Data\Client::build('MongoDB');
@@ -26,8 +28,9 @@ class Newsfeed implements BoostHandlerInterface{
      * @param int $impressions
      * @return boolean
      */
-    public function boost($entity, $impressions){
-        if(is_object($entity)){
+    public function boost($entity, $impressions)
+    {
+        if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -41,13 +44,14 @@ class Newsfeed implements BoostHandlerInterface{
      * @param string $offset
      * @return array
      */
-    public function getReviewQueue($limit, $offset = ""){
+    public function getReviewQueue($limit, $offset = "")
+    {
         $query = array('state'=>'review', 'type'=>'newsfeed');
-        if($offset){
+        if ($offset) {
             $query['_id'] = array('$gt'=>$offset);
         }
         $boosts = $this->db->find("boost", $query);
-        if($boosts){
+        if ($boosts) {
             $boosts->limit($limit);
             $boosts->sort(array('_id'=> 1));
         }
@@ -58,7 +62,8 @@ class Newsfeed implements BoostHandlerInterface{
      * Return the review count
      * @return int
      */
-    public function getReviewQueueCount(){
+    public function getReviewQueueCount()
+    {
         $query = array('state'=>'review', 'type'=>'newsfeed');
         $count = $this->db->count("boost", $query);
         return $count;
@@ -70,12 +75,13 @@ class Newsfeed implements BoostHandlerInterface{
      * @param int impressions
      * @return boolean
      */
-    public function accept($_id, $impressions = 0){
+    public function accept($_id, $impressions = 0)
+    {
         $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
         $accept = $this->db->update("boost", array('_id' => $_id), array('state'=>'approved'));
-        if($accept){
+        if ($accept) {
             //remove from review
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
             //clear the counter for boost_impressions
@@ -101,8 +107,8 @@ class Newsfeed implements BoostHandlerInterface{
      * @param mixed $_id
      * @return boolean
      */
-    public function reject($_id){
-
+    public function reject($_id)
+    {
         $boost_data= $this->db->find("boost", array('_id' => $_id));
         $boost_data->next();
         $boost = $boost_data->current();
@@ -124,28 +130,30 @@ class Newsfeed implements BoostHandlerInterface{
      * Return a boost
      * @return array
      */
-    public function getBoost($offset = ""){
+    public function getBoost($offset = "")
+    {
         $boosts = $this->getBoosts(1);
         return $boosts[0];
     }
 
-    public function getBoosts($limit = 2){
+    public function getBoosts($limit = 2)
+    {
         $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: array();
 
         $boosts = $this->db->find("boost", array('type'=>'newsfeed', 'state'=>'approved'));
 
-        if(!$boosts){
+        if (!$boosts) {
             return null;
         }
         $boosts->sort(array('_id'=> 1));
         $boosts->limit(15);
         $return = array();
-        foreach($boosts as $boost){
-            if(count($return) >= $limit){
+        foreach ($boosts as $boost) {
+            if (count($return) >= $limit) {
                 break;
             }
-            if(in_array((string)$boost['_id'], $mem_log)){
+            if (in_array((string)$boost['_id'], $mem_log)) {
                 continue; // already seen
             }
 
@@ -156,7 +164,7 @@ class Newsfeed implements BoostHandlerInterface{
             Helpers\Counters::increment(0, "boost_impressions", 1);
             $count = Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
 
-            if($count > $impressions){
+            if ($count > $impressions) {
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = new \Minds\Entities\Activity($boost['guid']);
@@ -177,5 +185,4 @@ class Newsfeed implements BoostHandlerInterface{
         }
         return $return;
     }
-
 }

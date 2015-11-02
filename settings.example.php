@@ -53,8 +53,8 @@ $CONFIG->elasticsearch_prefix = 'mehmac_';
  /*$CONFIG->memcache = true;
 
 $CONFIG->memcache_servers = array (
-	array('server1', 11211),
-	array('server2', 11211)
+    array('server1', 11211),
+    array('server2', 11211)
 );*/
 
 
@@ -67,7 +67,7 @@ $CONFIG->memcache_servers = array (
  *
  * @global bool $CONFIG->broken_mta
  */
-$CONFIG->broken_mta = FALSE;
+$CONFIG->broken_mta = false;
 
 /**
  * Minimum password length

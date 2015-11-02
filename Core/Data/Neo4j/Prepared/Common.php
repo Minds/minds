@@ -7,17 +7,17 @@ namespace Minds\Core\Data\Neo4j\Prepared;
 use Minds\Core\Data\Interfaces;
 use Minds\Entities;
 
-class Common implements Interfaces\PreparedInterface{
-    
+class Common implements Interfaces\PreparedInterface
+{
     private $template;
-    private $values = array(); 
+    private $values = array();
     
-    public function build(){
+    public function build()
+    {
         return array(
             'string' => $this->template,
             'values'=>$this->values
             );
-            
     }
     
     /**
@@ -25,7 +25,8 @@ class Common implements Interfaces\PreparedInterface{
      * @param User $user
      * @return $this
      */
-    public function createUser($user){
+    public function createUser($user)
+    {
         $this->template = "MERGE (user:User { guid: {guid}, username:{username} })";
         $this->values = array('guid'=>$user->guid, 'username'=>$user->username);
         return $this;
@@ -34,9 +35,10 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Import bulk users
      */
-    public function createBulkUsers(array $users = array()){
-        foreach($users as $user){
-           $exp[] = array(
+    public function createBulkUsers(array $users = array())
+    {
+        foreach ($users as $user) {
+            $exp[] = array(
                     //    'username'=>$user->username,
                         'guid'=>$user
                         );
@@ -48,14 +50,15 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Import bulk subscriptions
      */
-     public function createBulkSubscriptions(array $subscriptions = array()){
-         foreach($subscriptions as $subscriber=> $array){
-              foreach($array as $subscription_guid => $ts){
-                  $exp[] = array(
+     public function createBulkSubscriptions(array $subscriptions = array())
+     {
+         foreach ($subscriptions as $subscriber=> $array) {
+             foreach ($array as $subscription_guid => $ts) {
+                 $exp[] = array(
                             'guid'=> (string) $subscriber,
                             'subscription_guid' => (string) $subscription_guid
                             );
-              }
+             }
          }
            
          $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
@@ -74,9 +77,10 @@ class Common implements Interfaces\PreparedInterface{
      * @param User or integer $to
      * @return $this
      */
-    public function createSubscription($user, $to){
+    public function createSubscription($user, $to)
+    {
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
-                            "(to:User {guid: {subscriber_guid}}) " . 
+                            "(to:User {guid: {subscriber_guid}}) " .
                             "MERGE (user)-[:SUBSCRIBED]->(to) MERGE (user)-[:ACTED]->(to)";
         $this->values = array(
             'user_guid' => is_numeric($user) ? (string) $user : $user->guid,
@@ -91,10 +95,11 @@ class Common implements Interfaces\PreparedInterface{
      * @param integer $to
      * @return $this
      */
-    public function createPass($user, $to){
-       //error_log("NEO4j PASS Created for $user :: $to");
-	   $this->template =   "MATCH (user:User {guid: {user_guid}})," .
-                            "(to {guid: {subscriber_guid}}) " . 
+    public function createPass($user, $to)
+    {
+        //error_log("NEO4j PASS Created for $user :: $to");
+       $this->template =   "MATCH (user:User {guid: {user_guid}})," .
+                            "(to {guid: {subscriber_guid}}) " .
                             "MERGE (user)-[:PASS]->(to) MERGE (user)-[:ACTED]->(to)";
         $this->values = array(
             'user_guid' => (string) $user,
@@ -108,7 +113,8 @@ class Common implements Interfaces\PreparedInterface{
      * @param User $user
      * @return $this
      */
-    public function getSubscribers(Entities\User $user){
+    public function getSubscribers(Entities\User $user)
+    {
         $this->template = "MATCH (user {guid: {guid}})<-[:SUBSCRIBED]-(subscriber) RETURN subscriber";
         $this->values = array('guid'=>$user->guid);
         return $this;
@@ -120,8 +126,9 @@ class Common implements Interfaces\PreparedInterface{
      * @param int $skip default 0
      * @return $this
      */
-    public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0){
-        if($user->getSubscriptionsCount() > 500){
+    public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0)
+    {
+        if ($user->getSubscriptionsCount() > 500) {
             //users with huge graphs take longer to discover friends of friends, so for now we just show who they aren't subscribed to for speed.
             //we can perhaps do background tasks for this in the future
             $this->template = "MATCH (user:User {guid: {guid}}), (fof:User) ".
@@ -132,16 +139,15 @@ class Common implements Interfaces\PreparedInterface{
                             //"ORDER BY COUNT(*) DESC ".
                             "SKIP {skip} " .
                             "LIMIT {limit}";
-
         } else {
             //error_log("loading default matches for $user->guid");
             $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
-                            "WHERE " . 
-			                 "NOT (user)-[:ACTED]->(fof) " .
-			                 "AND NOT (fof.guid = user.guid) " . 
+                            "WHERE " .
+                             "NOT (user)-[:ACTED]->(fof) " .
+                             "AND NOT (fof.guid = user.guid) " .
                             "RETURN fof ".
                             //"ORDER BY COUNT(*) DESC ".
-                            "SKIP {skip} " . 
+                            "SKIP {skip} " .
                             "LIMIT {limit}";
         }
         $this->values = array(
@@ -157,7 +163,8 @@ class Common implements Interfaces\PreparedInterface{
      * @param User $user
      * @return $this
      */
-    public function getDegree($a, $b){
+    public function getDegree($a, $b)
+    {
         $this->template = "MATCH (a {guid:{a_guid}}), (b {guid:{b_guid}}), " .
                             "p = shortestPath( a-[*..16]->b ) " .
                             "RETURN length(p)-1";
@@ -174,7 +181,8 @@ class Common implements Interfaces\PreparedInterface{
      * @param $b
      * @return $this;
      */
-    public function isMutual($a, $b){
+    public function isMutual($a, $b)
+    {
         $this->template = "MATCH (a {guid:{a_guid}}), (b {guid:{b_guid}}), " .
                             "p = shortestPath( a-[]->b ) " .
                             "RETURN length(p)-1";
@@ -188,7 +196,8 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Create objects
      */
-    public function createObject(\ElggObject $object){
+    public function createObject(\ElggObject $object)
+    {
         $this->template = "MERGE (object:$object->subtype { guid: {guid} })";
         $this->values = array('guid'=>(string) $object->guid);
         return $this;
@@ -197,9 +206,10 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Import bulk users
      */
-    public function createBulkObjects(array $objects = array(), $subtype="video"){
-        foreach($objects as $object){
-           $exp[] = array(
+    public function createBulkObjects(array $objects = array(), $subtype="video")
+    {
+        foreach ($objects as $object) {
+            $exp[] = array(
                         'guid'=> $object->guid,
                         'subtype'=>$object->subtype
                         );
@@ -211,7 +221,8 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Return suggested content, based on 
      */
-    public function getSuggestedObjects($user_guid, $subtype = 'video', $skip = 0){
+    public function getSuggestedObjects($user_guid, $subtype = 'video', $skip = 0)
+    {
         $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..2]-(object:$subtype) " .
                             "WHERE NOT a-[:ACTED]->(object) " .
                             "RETURN object SKIP {skip} LIMIT 16 ";
@@ -225,7 +236,8 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * To be used only when no suggested content is found..
      */
-    public function getObjects($user_guid, $subtype='video'){
+    public function getObjects($user_guid, $subtype='video')
+    {
         //error_log("getting $user_guid $subtype");
         $this->template = "MATCH (object:$subtype), (user:User {guid:{user_guid}}) " .
                             "WHERE NOT user-[:ACTED]->(object) " .
@@ -239,7 +251,8 @@ class Common implements Interfaces\PreparedInterface{
     /**
      * Get trending objects
      */
-    public function getTrendingObjects($subtype='video', $skip = 0){
+    public function getTrendingObjects($subtype='video', $skip = 0)
+    {
         $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT 12";
         $this->values = array(
             'skip' => (int) $skip,
@@ -254,12 +267,14 @@ class Common implements Interfaces\PreparedInterface{
      * @param int (optional) $user_guid
      * @return $this
      */
-    public function createVoteUP($guid, $subtype, $user_guid = NULL){
-        if(!$user_guid)
+    public function createVoteUP($guid, $subtype, $user_guid = null)
+    {
+        if (!$user_guid) {
             $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
+        }
         //error_log("NEO4j vote up for $guid :: $subtype :: $user_guid");
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
-                            "(object:$subtype {guid: {object_guid}}) " . 
+                            "(object:$subtype {guid: {object_guid}}) " .
                             "MERGE (user)-[:UP]->(object) MERGE (user)-[:ACTED]->(object)";
         $this->values = array(
             'user_guid' => (string) $user_guid,
@@ -275,9 +290,11 @@ class Common implements Interfaces\PreparedInterface{
      * @param int (optional) $user_guid
      * @return $this;
      */
-    public function createVoteDOWN($guid, $subtype, $user_guid = NULL){
-        if(!$user_guid)
+    public function createVoteDOWN($guid, $subtype, $user_guid = null)
+    {
+        if (!$user_guid) {
             $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
+        }
         //error_log("NEO4j vote down for $guid :: $subtype :: $user_guid");
 
         $this->template =   "MATCH (user:User {guid: {user_guid}})," .
@@ -288,7 +305,7 @@ class Common implements Interfaces\PreparedInterface{
             'object_guid' => (string) $guid,
             );
         return $this;
-    } 
+    }
 
     /**
      * Return matching guids
@@ -296,11 +313,13 @@ class Common implements Interfaces\PreparedInterface{
      * @param int $user_guid
      * @return $this
      */
-    public function getActed($guids, $user_guid = NULL){
-        if(!$user_guid)
-                        $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
+    public function getActed($guids, $user_guid = null)
+    {
+        if (!$user_guid) {
+            $user_guid = \Minds\Core\Session::getLoggedinUser()->guid;
+        }
 
-        foreach($guids as $k => $guid){
+        foreach ($guids as $k => $guid) {
             $guids[$k] = (string) $guid;
         }
 
@@ -310,7 +329,6 @@ class Common implements Interfaces\PreparedInterface{
             'guids' => $guids
             );
         return $this;
- 
     }
     
     /**
@@ -318,10 +336,11 @@ class Common implements Interfaces\PreparedInterface{
      * @param Entity $entity
      * @return $this
      */
-    public function updateEntity($entity, $properties = array()){
+    public function updateEntity($entity, $properties = array())
+    {
         $this->template = "MERGE (entity { guid: {guid}}) SET entity += {properties} RETURN id(entity)";
         $this->values = array(
-            'guid'=> (string) $entity->guid, 
+            'guid'=> (string) $entity->guid,
             'properties'=>$properties
             );
         return $this;
@@ -332,13 +351,13 @@ class Common implements Interfaces\PreparedInterface{
      * @param Entity $entity
      * @return $this
      */
-    public function removeEntity($guid){
+    public function removeEntity($guid)
+    {
         $this->template = "MATCH (n { guid: {guid} })-[r]-() DELETE n, r";
         $this->values = array(
             'guid' => (string) $guid
         );
         return $this;
-
     }
     
     /**
@@ -347,7 +366,8 @@ class Common implements Interfaces\PreparedInterface{
      * @param int $node_id
      * @return $this
      */
-    public function linkNodeToGeom($node_id){
+    public function linkNodeToGeom($node_id)
+    {
         $this->template = ':POST /db/data/index/node/geom 
 { 
     "value" : "dummy",
@@ -364,15 +384,18 @@ class Common implements Interfaces\PreparedInterface{
      * @param double (optional) $distance - distance to search
      * @return $this
      */
-    public function getUserByLocation($user, $latlon = NULL, $distance = 100.0, $limit = 12, $skip = 0){
-        if(!$latlon)
+    public function getUserByLocation($user, $latlon = null, $distance = 100.0, $limit = 12, $skip = 0)
+    {
+        if (!$latlon) {
             $latlon = $user->coordinates;
+        }
 
-        if(!$latlon)
-            return false; //should probably throw an exception instead
+        if (!$latlon) {
+            return false;
+        } //should probably throw an exception instead
 
-        $km = $distance * 1.609344;       
-        $distance =  number_format((float)$km, 2, '.', '');  
+        $km = $distance * 1.609344;
+        $distance =  number_format((float)$km, 2, '.', '');
        
         $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
         $this->values = array(
@@ -383,5 +406,4 @@ class Common implements Interfaces\PreparedInterface{
         );
         return $this;
     }
-
 }

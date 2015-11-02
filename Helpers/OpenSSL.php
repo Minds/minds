@@ -5,16 +5,16 @@
  
 namespace Minds\Helpers;
 
-class OpenSSL{
-    
+class OpenSSL
+{
     /**
      * Returns a new keypair
      * 
      * @param string $password
      * @return array - Public & Private
      */
-    static public function newKeypair($password = NULL){
-            
+    public static function newKeypair($password = null)
+    {
         $config = array(
             "digest_alg" => "sha512",
             "private_key_bits" => 4096,
@@ -44,12 +44,11 @@ class OpenSSL{
      * @param string $public_key
      * @return string
      */
-    static public function encrypt($data, $public_key){
-        
+    public static function encrypt($data, $public_key)
+    {
         openssl_public_encrypt($data, $encrypted, $public_key);
         
         return $encrypted;
-        
     }
     
     /**
@@ -60,11 +59,10 @@ class OpenSSL{
      * @param string @password - default = ''
      * @return string
      */
-    static public function decrypt($encrypted, $private_key, $password = NULL){
-            
+    public static function decrypt($encrypted, $private_key, $password = null)
+    {
         openssl_private_decrypt($encrypted, $decrypted, openssl_get_privatekey($private_key, $password));
         
         return $decrypted;
     }
-    
 }

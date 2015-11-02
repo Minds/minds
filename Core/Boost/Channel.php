@@ -11,18 +11,19 @@ use Minds\Helpers;
 /**
  * Channel boost handler
  */
-class Channel implements Interfaces\BoostHandlerInterface{
-
+class Channel implements Interfaces\BoostHandlerInterface
+{
     private $guid;
 
-    public function __construct($options){
-        if(isset($options['destination'])){
-        	if(is_numeric($options['destination'])){
-        	    $this->guid = $options['destination'];
-        	} elseif(is_string($options['destination'])) {
-        	    $lookup = new Data\lookup();
-        	    $this->guid = key($lookup->get(strtolower($options['destination'])));
-        	}
+    public function __construct($options)
+    {
+        if (isset($options['destination'])) {
+            if (is_numeric($options['destination'])) {
+                $this->guid = $options['destination'];
+            } elseif (is_string($options['destination'])) {
+                $lookup = new Data\lookup();
+                $this->guid = key($lookup->get(strtolower($options['destination'])));
+            }
         }
     }
 
@@ -32,9 +33,9 @@ class Channel implements Interfaces\BoostHandlerInterface{
      * @param int $points
      * @return boolean
      */
-    public function boost($entity, $points){
-
-        if(is_object($entity)){
+    public function boost($entity, $points)
+    {
+        if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -73,7 +74,8 @@ class Channel implements Interfaces\BoostHandlerInterface{
      * @param string $offset
      * @return array
      */
-    public function getReviewQueue($limit, $offset = ""){
+    public function getReviewQueue($limit, $offset = "")
+    {
         $db = new Data\Call('entities_by_time');
         $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>false));
         return $guids;
@@ -85,9 +87,9 @@ class Channel implements Interfaces\BoostHandlerInterface{
      * @param int points
      * @return boolean
      */
-    public function accept($entity, $points){
-
-        if(is_object($entity)){
+    public function accept($entity, $points)
+    {
+        if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -102,12 +104,13 @@ class Channel implements Interfaces\BoostHandlerInterface{
 
         $activity = new Entities\Activity();
         $activity->p2p_boosted = true;
-        switch($embeded->type){
+        switch ($embeded->type) {
             case 'activity':
-                if($embeded->remind_object)
+                if ($embeded->remind_object) {
                     $activity->setRemind($embeded->remind_object)->save();
-                else
+                } else {
                     $activity->setRemind($embeded->export())->save();
+                }
             break;
             case 'object':
 
@@ -118,13 +121,14 @@ class Channel implements Interfaces\BoostHandlerInterface{
                  /**
                    * The following are actually treated as embeded posts.
                    */
-                   switch($embeded->subtype){
+                   switch ($embeded->subtype) {
                        case 'blog':
                            $message = false;
-                            if($embeded->owner_guid != elgg_get_logged_in_user_guid())
+                            if ($embeded->owner_guid != elgg_get_logged_in_user_guid()) {
                                 $message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
+                            }
                                 $activity->p2p_boosted = true;
-				$activity->setTitle($embeded->title)
+                $activity->setTitle($embeded->title)
                                 ->setBlurb(elgg_get_excerpt($embeded->description))
                                 ->setURL($embeded->getURL())
                                 ->setThumbnail($embeded->getIconUrl())
@@ -157,14 +161,15 @@ class Channel implements Interfaces\BoostHandlerInterface{
      * @param object/int $entity
      * @return boolean
      */
-    public function reject($entity){
+    public function reject($entity)
+    {
 
         ///
         /// REFUND THE POINTS TO THE USER
         ///
 
 
-        if(is_object($entity)){
+        if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -187,27 +192,27 @@ class Channel implements Interfaces\BoostHandlerInterface{
      * Return a boost
      * @return array
      */
-    public function getBoost($offset = ""){
+    public function getBoost($offset = "")
+    {
 
        ///
        //// THIS DOES NOT APPLY BECAUSE IT'S PRE-AGREED
        ///
-
     }
 
-    public function autoExpire(){
-
+    public function autoExpire()
+    {
         $db = new Data\Call('entities_by_time');
         $boosts = $db->getRow("boost:channel:all:review");
-        foreach($boosts as $boost => $ts){
-            list($destination, $guid) = explode(':',$boost);
-            if(time() > $ts + (3600 * 48)){
+        foreach ($boosts as $boost => $ts) {
+            list($destination, $guid) = explode(':', $boost);
+            if (time() > $ts + (3600 * 48)) {
                 $this->guid = $destination;
                 $guids = $this->getReviewQueue(1, $guid);
                 $points = reset($guids);
 
 
-                if(!$destination){
+                if (!$destination) {
                     echo "$guid issue with destination.. \n";
                     continue;
                 }
@@ -231,7 +236,5 @@ class Channel implements Interfaces\BoostHandlerInterface{
                 echo "$guid is ok... \n";
             }
         }
-
     }
-
 }

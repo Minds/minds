@@ -5,12 +5,13 @@ namespace Minds\Core\Boost;
 /**
  * Provide core functionality for boosting items
  */
-class Queue{
-	
-    public static function add(){
+class Queue
+{
+    public static function add()
+    {
     }
     
-    public static function run(){
+    public static function run()
+    {
     }
-    
 }

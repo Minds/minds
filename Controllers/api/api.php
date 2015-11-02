@@ -43,30 +43,25 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class api implements Interfaces\Api{
-
-	public function get($pages){
-        
+class api implements Interfaces\Api
+{
+    public function get($pages)
+    {
         return Factory::build($pages);
-        
-	}
-	
-	public function post($pages){
-	    
+    }
+    
+    public function post($pages)
+    {
         return Factory::build($pages);
-        
-	}
-	
-	public function put($pages){
-	    
+    }
+    
+    public function put($pages)
+    {
         return Factory::build($pages);
-        
-	}
-	
-	public function delete($pages){
-	    
+    }
+    
+    public function delete($pages)
+    {
         return Factory::build($pages);
-        
-	}
-	
+    }
 }

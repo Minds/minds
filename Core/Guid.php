@@ -4,34 +4,37 @@
  */
 namespace Minds\Core;
 
-class Guid{
+class Guid
+{
+    public static $socket;
 
-    static $socket;
-
-    static function build(){
-        $guid = NULL;
+    public static function build()
+    {
+        $guid = null;
         //use ZMQ id generator if we can
-        if(class_exists('\ZMQContext')){
-            if(!self::$socket){
+        if (class_exists('\ZMQContext')) {
+            if (!self::$socket) {
                 self::$socket = self::connect();
             }
-            try{
+            try {
                 self::$socket->send('GEN');
                 $guid = self::$socket->recv();
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 error_log("Could not connect to GUID server, conflicts possible");
             }
         }
-        if(!$guid){
+        if (!$guid) {
             $g = new \GUID();
-            $guid = $g->generate();;
+            $guid = $g->generate();
+            ;
         }
         return $guid;
     }
 
-    static function connect(){
+    public static function connect()
+    {
         global $CONFIG;
-        $port = 5599; 
+        $port = 5599;
         
         $socket = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REQ);
         $socket->connect("tcp://localhost:{$port}");
@@ -40,5 +43,4 @@ class Guid{
         $socket->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 500);
         return $socket;
     }
-
 }

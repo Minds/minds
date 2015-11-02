@@ -4,15 +4,15 @@ namespace Minds\Interfaces;
 /**
  * Interface for Boost Handlers
  */
-interface BoostHandlerInterface{
-
+interface BoostHandlerInterface
+{
     /**
      * Boost an entity, place in a review queue first
      * @param object/int $entity - the entity to boost
      * @param int $impressions
      * @return boolean
      */
-	public function boost($entity, $impressions);
+    public function boost($entity, $impressions);
 
 
     /**

@@ -11,35 +11,38 @@ use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Helpers;
 
-class Peer implements BoostEntityInterface{
+class Peer implements BoostEntityInterface
+{
+    private $db;
 
-  private $db;
+    public $guid;
+    private $entity;
+    private $bid;
+    private $destination;
+    private $owner;
+    private $state = 'created';
+    private $time_created;
+    private $last_updated;
+    private $transactionId;
+    private $_type = 'pro';
 
-  public $guid;
-  private $entity;
-  private $bid;
-  private $destination;
-  private $owner;
-  private $state = 'created';
-  private $time_created;
-  private $last_updated;
-  private $transactionId;
-  private $_type = 'pro';
-
-  public function __construct($db = NULL){
-    if($db)
-      $this->db = $db;
-    else
-      $this->db = new Data\Call('entities_by_time');
-  }
+    public function __construct($db = null)
+    {
+        if ($db) {
+            $this->db = $db;
+        } else {
+            $this->db = new Data\Call('entities_by_time');
+        }
+    }
 
   /**
    * Load from the database
    * @param $guid
    * @return $this
    */
-  public function loadFromDB($guid){
-    throw new \Exception("Can not load a boost pro directly from the database, please loadFromArray()");
+  public function loadFromDB($guid)
+  {
+      throw new \Exception("Can not load a boost pro directly from the database, please loadFromArray()");
   }
 
   /**
@@ -47,32 +50,33 @@ class Peer implements BoostEntityInterface{
    * @param array $array
    * @return $this
    */
-  public function loadFromArray($array){
-    $this->guid = $array['guid'];
-    $this->_type = $array['type'];
-    $this->entity = Entities\Factory::build($array['entity']);
-    $this->bid = $array['bid'];
-    $this->destination = Entities\Factory::build($array['destination']);
-    $this->owner = Entities\Factory::build($array['owner']);
-    $this->state = $array['state'];
-    $this->time_created = $array['time_created'];
-    $this->last_updated = $array['last_updated'];
-    $this->transactionId = $array['transactionId'];
-    return $this;
+  public function loadFromArray($array)
+  {
+      $this->guid = $array['guid'];
+      $this->_type = $array['type'];
+      $this->entity = Entities\Factory::build($array['entity']);
+      $this->bid = $array['bid'];
+      $this->destination = Entities\Factory::build($array['destination']);
+      $this->owner = Entities\Factory::build($array['owner']);
+      $this->state = $array['state'];
+      $this->time_created = $array['time_created'];
+      $this->last_updated = $array['last_updated'];
+      $this->transactionId = $array['transactionId'];
+      return $this;
   }
 
   /**
    * Save to the database
    * @return string - $guid
    */
-  public function save(){
+  public function save()
+  {
+      if (!$this->guid) {
+          $this->guid = Core\Guid::build();
+          $this->time_created = time();
+      }
 
-    if(!$this->guid){
-      $this->guid = Core\Guid::build();
-      $this->time_created = time();
-    }
-
-    $data = [
+      $data = [
       'guid' => $this->guid,
       'type' => $this->_type,
       'entity' => $this->entity->export(),
@@ -85,22 +89,23 @@ class Peer implements BoostEntityInterface{
       'transactionId' => $this->transactionId
     ];
 
-    $serialized = json_encode($data);
-    $this->db->insert("boost:peer:{$this->destination->guid}", [ $this->guid => $serialized ]);
-    $this->db->insert("boost:peer:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
-    return $this;
+      $serialized = json_encode($data);
+      $this->db->insert("boost:peer:{$this->destination->guid}", [ $this->guid => $serialized ]);
+      $this->db->insert("boost:peer:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
+      return $this;
   }
 
   /**
    * Get the GUID of this boost
    * @return string
    */
-  public function getGuid(){
-    if(!$this->guid){
-      $this->guid = Core\Guid::build();
-      $this->time_created = time();
-    }
-    return $this->guid;
+  public function getGuid()
+  {
+      if (!$this->guid) {
+          $this->guid = Core\Guid::build();
+          $this->time_created = time();
+      }
+      return $this->guid;
   }
 
   /**
@@ -108,17 +113,19 @@ class Peer implements BoostEntityInterface{
    * @param Entity $entity
    * @return $this
    */
-  public function setEntity(Entity $entity){
-    $this->entity = $entity;
-    return $this;
+  public function setEntity(Entity $entity)
+  {
+      $this->entity = $entity;
+      return $this;
   }
 
   /**
    * Get the entity
    * @return Entity
    */
-  public function getEntity(){
-    return $this->entity;
+  public function getEntity()
+  {
+      return $this->entity;
   }
 
   /**
@@ -126,17 +133,19 @@ class Peer implements BoostEntityInterface{
    * @param Entity $destination
    * @return $this
    */
-  public function setDestination(User $destination){
-    $this->destination = $destination;
-    return $this;
+  public function setDestination(User $destination)
+  {
+      $this->destination = $destination;
+      return $this;
   }
 
   /**
    * Get the destination
    * @return Entity
    */
-  public function getDestination(){
-    return $this->destination;
+  public function getDestination()
+  {
+      return $this->destination;
   }
 
   /**
@@ -144,25 +153,28 @@ class Peer implements BoostEntityInterface{
    * @param Entity $owner
    * @return $this
    */
-  public function setOwner(User $owner){
-    $this->owner = $owner;
-    return $this;
+  public function setOwner(User $owner)
+  {
+      $this->owner = $owner;
+      return $this;
   }
 
   /**
    * Get the owner
    * @return User
    */
-  public function getOwner(){
-    return $this->owner;
+  public function getOwner()
+  {
+      return $this->owner;
   }
 
   /**
    * Return the bid
    * @return int
    */
-  public function getBid(){
-    return $this->bid;
+  public function getBid()
+  {
+      return $this->bid;
   }
 
   /**
@@ -170,9 +182,10 @@ class Peer implements BoostEntityInterface{
    * @param $bid
    * @return $this
    */
-  public function setBid($bid){
-    $this->bid = $bid;
-    return $this;
+  public function setBid($bid)
+  {
+      $this->bid = $bid;
+      return $this;
   }
 
   /**
@@ -180,46 +193,53 @@ class Peer implements BoostEntityInterface{
    * @param string $state
    * @return $this
    */
-  public function setState($state){
-    $this->state = $state;
-    return $this;
+  public function setState($state)
+  {
+      $this->state = $state;
+      return $this;
   }
 
   /**
    * Return the state of the boost
    * @return string
    */
-  public function getState(){
-    return $this->state;
+  public function getState()
+  {
+      return $this->state;
   }
 
-  public function getTransactionId(){
-    return $this->transactionId;
-  }
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
 
-  public function setTransactionId($id){
-    $this->transactionId = $id;
-    return $this;
-  }
+    public function setTransactionId($id)
+    {
+        $this->transactionId = $id;
+        return $this;
+    }
 
   /**
    * Return the boost type
    * @return string
    */
-  public function getType(){
-    return $this->_type;
+  public function getType()
+  {
+      return $this->_type;
   }
 
   /**
    * Set the boost type
    */
-  public function setType($type){
-    $this->_type = $type;
-    return $this;
+  public function setType($type)
+  {
+      $this->_type = $type;
+      return $this;
   }
 
-  public function export(){
-    $export = [
+    public function export()
+    {
+        $export = [
       'guid' => $this->guid,
       'entity' => $this->entity ? $this->entity->export() : [],
       'bid' => $this->bid,
@@ -231,9 +251,8 @@ class Peer implements BoostEntityInterface{
       'last_updated' => $this->last_updated,
       'type' => $this->_type
     ];
-    $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
-		$export = \Minds\Helpers\Export::sanitize($export);
-		return $export;
-  }
-
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
+        $export = \Minds\Helpers\Export::sanitize($export);
+        return $export;
+    }
 }

@@ -5,34 +5,37 @@
  */
 namespace Minds\Core\Data\cache;
 
-class factory{
+class factory
+{
+    private static $default  = 'Redis';
+    private static $cachers = [];
 
-	static private $default  = 'Redis';
-	static private $cachers = [];
+    /**
+     * Build the cacher
+     * @param $cacher - the cacher to use
+     * @throws EXCEPTION
+     * @return cacher object
+     */
+    public static function build($cacher = null)
+    {
+        if (!$cacher) {
+            $cacher = self::$default;
+        }
 
-	/**
-	 * Build the cacher
-	 * @param $cacher - the cacher to use
-	 * @throws EXCEPTION
-	 * @return cacher object
-	 */
-	static public function build($cacher = NULL){
-		if(!$cacher)
-			$cacher = self::$default;
+        if (!class_exists('\Redis') && $cacher = "Redis") {
+            $cacher = "apcu";
+        }
 
-    if(!class_exists('\Redis') && $cacher = "Redis")
-        $cacher = "apcu";
+        if (isset(self::$cachers[$cacher])) {
+            return self::$cachers[$cacher];
+        }
 
-		if(isset(self::$cachers[$cacher]))
-			return self::$cachers[$cacher];
+        $cacher_class = "\\Minds\\Core\\Data\\cache\\$cacher";
+        if (class_exists($cacher_class)) {
+            self::$cachers[$cacher] = new $cacher_class();
+            return self::$cachers[$cacher];
+        }
 
-		$cacher_class = "\\Minds\\Core\\Data\\cache\\$cacher";
-		if(class_exists($cacher_class)){
-			self::$cachers[$cacher] = new $cacher_class();
-			return self::$cachers[$cacher];
-		}
-
-		throw new \Exception('Cacher not found ' . $cacher);
-	}
-
+        throw new \Exception('Cacher not found ' . $cacher);
+    }
 }

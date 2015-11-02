@@ -12,8 +12,8 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class trending implements Interfaces\Api{
-
+class trending implements Interfaces\Api
+{
     /**
      * Returns the entities
      * @param array $pages
@@ -52,14 +52,16 @@ class trending implements Interfaces\Api{
      *     ),
      *     @SWG\Response(name="200", description="Array")
      * )
-     */      
-    public function get($pages){
+     */
+    public function get($pages)
+    {
         //temp hack..
         //if(isset($pages[1]) && $pages[1] == 'video')
           //  $pages[1] = 'kaltura_video';
-        if(!isset($pages[1]))
+        if (!isset($pages[1])) {
             $pages[1] = $pages[0];
-        switch($pages[1]){
+        }
+        switch ($pages[1]) {
             case 'image':
             case 'images':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
@@ -67,10 +69,10 @@ class trending implements Interfaces\Api{
                 $rows = $result->getRows();
                 
                 $guids = array();
-                foreach($rows['object'] as $object){
+                foreach ($rows['object'] as $object) {
                     $guids[] = $object['guid'];
-                } 
-                $entities = core\Entities::get(array('guids'=>$guids));       
+                }
+                $entities = core\Entities::get(array('guids'=>$guids));
                 break;
             case 'videos':
             case 'video':
@@ -79,14 +81,14 @@ class trending implements Interfaces\Api{
                 $rows = $result->getRows();
                 
                 $guids = array();
-                foreach($rows['object'] as $object){
+                foreach ($rows['object'] as $object) {
                     $guids[] = $object['guid'];
-                } 
-                $entities = core\Entities::get(array('guids'=>$guids));       
+                }
+                $entities = core\Entities::get(array('guids'=>$guids));
                 break;
             default:
                 
-                if(!$guids){
+                if (!$guids) {
                     return Factory::response(array('status'=>'error', 'message'=>'not found'));
                 }
                 $options['guids'] = $guids;
@@ -110,31 +112,34 @@ class trending implements Interfaces\Api{
         }
         
        
-	    $opts = array('timespan' => get_input('timespan', 'day'));
-    	$trending = new \MindsTrending(null, $opts);
-    	$guids = $trending->getList($options);
-    	if(!$guids){
+        $opts = array('timespan' => get_input('timespan', 'day'));
+        $trending = new \MindsTrending(null, $opts);
+        $guids = $trending->getList($options);
+        if(!$guids){
             return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
-    	$options['guids'] = $guids;
-    	$entities = core\Entities::get($options);
+        $options['guids'] = $guids;
+        $entities = core\Entities::get($options);
         }
          */
-        if($entities){
+        if ($entities) {
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
             $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
         }
         
         return Factory::response($response);
-        
     }
     
-    public function post($pages){}
+    public function post($pages)
+    {
+    }
     
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
     
-    public function delete($pages){}
-    
+    public function delete($pages)
+    {
+    }
 }
-        

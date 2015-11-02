@@ -5,8 +5,7 @@
 
 namespace Minds\Core\Data\Interfaces;
 
-interface ClientInterface{
-    
+interface ClientInterface
+{
     public function __construct(array $options = array());
-    
-}   
+}

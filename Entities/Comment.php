@@ -10,11 +10,12 @@ use Minds\Core;
 use Minds\Core\Data;
 use Minds\Core\Security;
 
-class Comment extends Entities\Entity{
-
+class Comment extends Entities\Entity
+{
     private $parent;
 
-    public function initializeAttributes(){
+    public function initializeAttributes()
+    {
         parent::initializeAttributes();
         $this->attributes = array_merge($this->attributes, array(
             'type' => 'comment',
@@ -23,17 +24,20 @@ class Comment extends Entities\Entity{
         ));
     }
 
-    public function setParent($parent){
-      $this->parent = $parent;
-      $this->parent_guid = $parent->guid;
-      return $this;
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        $this->parent_guid = $parent->guid;
+        return $this;
     }
 
-    public function save(){
+    public function save()
+    {
 
         //check to see if we can interact with the parent
-        if(!Security\ACL::_()->interact($this->parent))
-          return false;
+        if (!Security\ACL::_()->interact($this->parent)) {
+            return false;
+        }
 
         parent::save(false);
         $indexes = new Data\indexes('comments');
@@ -45,7 +49,8 @@ class Comment extends Entities\Entity{
         return $this->guid;
     }
 
-    public function delete(){
+    public function delete()
+    {
         $db = new Data\Call('entities');
         $db->removeRow($this->guid);
 
@@ -58,31 +63,34 @@ class Comment extends Entities\Entity{
         return true;
     }
 
-    public function canEdit(){
-      $entity = \Minds\Entities\Factory::build($this->parent_guid);
-      if($entity->canEdit())
-        return true;
-      return parent::canEdit();
+    public function canEdit()
+    {
+        $entity = \Minds\Entities\Factory::build($this->parent_guid);
+        if ($entity->canEdit()) {
+            return true;
+        }
+        return parent::canEdit();
     }
 
-    public function view(){
+    public function view()
+    {
         echo \elgg_view('comment/default', array('entity'=>$this));
     }
 
-    public function getURL(){
-
+    public function getURL()
+    {
         $entity = Entities::build(new Entities\Entity($this->parent_guid));
-        if($entity)
+        if ($entity) {
             return $entity->getURL();
-
+        }
     }
 
-    public function getExportableValues() {
+    public function getExportableValues()
+    {
         return array_merge(parent::getExportableValues(), array(
             'description',
             'ownerObj',
             'parent_guid'
         ));
     }
-
 }

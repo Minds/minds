@@ -14,47 +14,49 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class feature implements Interfaces\Api, Interfaces\ApiAdminPam{
-
-
+class feature implements Interfaces\Api, Interfaces\ApiAdminPam
+{
     /**
      *
      */
-    public function get($pages){
-      $response = array();
-      return Factory::response($response);
+    public function get($pages)
+    {
+        $response = array();
+        return Factory::response($response);
     }
 
     /**
      * @param array $pages
      */
-    public function post($pages){
-      return Factory::response(array());
+    public function post($pages)
+    {
+        return Factory::response(array());
     }
 
     /**
      * Feature a post
      * @param array $pages
      */
-    public function put($pages){
-      $entity = Entities\Factory::build($pages[0]);
+    public function put($pages)
+    {
+        $entity = Entities\Factory::build($pages[0]);
 
-      if(!$entity){
-        return Factory::response(array(
+        if (!$entity) {
+            return Factory::response(array(
           'status' => 'error',
           'message' => "Entity not found"
         ));
-      }
-      if(!$entity->featured_id || $entity->featured_id == 0){
-        $entity->feature();
-        $newsfeed = true;
+        }
+        if (!$entity->featured_id || $entity->featured_id == 0) {
+            $entity->feature();
+            $newsfeed = true;
 
-        $activity = new Entities\Activity();
-        switch($entity->subtype){
+            $activity = new Entities\Activity();
+            switch ($entity->subtype) {
           case 'blog':
             $activity->setTitle($entity->title)
-            	->setBlurb($entity->excerpt)
-            	->setUrl($entity->getURL())
+                ->setBlurb($entity->excerpt)
+                ->setUrl($entity->getURL())
               ->setThumbnail($entity->getIconURL());
             break;
           case 'video':
@@ -74,47 +76,47 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam{
             $newsfeed = false;
         }
 
-        if($newsfeed){
-          $activity->owner_guid = $entity->owner_guid;
-          $activity->indexes = array('activity:featured');
-          $activity->save();
-        }
+            if ($newsfeed) {
+                $activity->owner_guid = $entity->owner_guid;
+                $activity->indexes = array('activity:featured');
+                $activity->save();
+            }
 
-        $to_guid = $entity->getOwnerGuid();
-        $user = get_user_by_username('minds');
-        \elgg_trigger_plugin_hook('notification', 'all', array(
+            $to_guid = $entity->getOwnerGuid();
+            $user = get_user_by_username('minds');
+            \elgg_trigger_plugin_hook('notification', 'all', array(
           'to' => array($to_guid),
           'from'=> 100000000000000519,
-        	'object_guid'=>$guid,
-        	'description'=>$message,
-        	'notification_view'=>'feature'
+            'object_guid'=>$guid,
+            'description'=>$message,
+            'notification_view'=>'feature'
         ));
-      }else{
-      	$entity->unFeature();
-      }
+        } else {
+            $entity->unFeature();
+        }
 
-      $entity->save();
+        $entity->save();
 
-      return Factory::response(array());
+        return Factory::response(array());
     }
 
     /**
      * @param array $pages
      */
-    public function delete($pages){
-      $entity = Entities\Factory::build($pages[0]);
+    public function delete($pages)
+    {
+        $entity = Entities\Factory::build($pages[0]);
 
-      if(!$entity){
-        return Factory::response(array(
+        if (!$entity) {
+            return Factory::response(array(
           'status' => 'error',
           'message' => "Entity not found"
         ));
-      }
+        }
 
-      $entity->unFeature();
-      $entity->save();
+        $entity->unFeature();
+        $entity->save();
 
-      return Factory::response(array());
+        return Factory::response(array());
     }
-
 }

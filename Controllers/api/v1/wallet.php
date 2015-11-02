@@ -12,8 +12,8 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class wallet implements Interfaces\Api{
-
+class wallet implements Interfaces\Api
+{
     private $ex_rate = 0.005;
 
     /**
@@ -22,11 +22,11 @@ class wallet implements Interfaces\Api{
      *
      * API:: /v1/wallet/:slug
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         $response = array();
 
-        switch($pages[0]){
+        switch ($pages[0]) {
 
             case "count":
                 $count = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
@@ -49,10 +49,11 @@ class wallet implements Interfaces\Api{
 
             case "transactions":
                 $entities = Core\Entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\Session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
-                if(isset($_GET['offset']) && $_GET['offset'])
+                if (isset($_GET['offset']) && $_GET['offset']) {
                     array_shift($entities);
+                }
 
-                if($entities){
+                if ($entities) {
                     $response['transactions'] = factory::exportable($entities);
                     $response['load-next'] = (string) end($entities)->guid;
                 }
@@ -61,12 +62,12 @@ class wallet implements Interfaces\Api{
         }
 
         return Factory::response($response);
-
     }
 
-    public function post($pages){
+    public function post($pages)
+    {
         $response = array();
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "quote":
                 $ex_rate = $this->ex_rate;
                 $points = $_POST['points'];
@@ -90,28 +91,28 @@ class wallet implements Interfaces\Api{
                     'name2' => $_POST['name2']
                     ));
 
-                try{
-                  $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
-                  if($response['id']){
-                      Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, NULL, "purchase");
-                  }
-                } catch (\Exception $e){
-                  $response['status'] = 'error';
-                  $response['message'] = $e->getMessage();
+                try {
+                    $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
+                    if ($response['id']) {
+                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                    }
+                } catch (\Exception $e) {
+                    $response['status'] = 'error';
+                    $response['message'] = $e->getMessage();
                 }
 
                 break;
             case "paypal":
-                switch($pages[1]){
+                switch ($pages[1]) {
                     case "confirm":
                         $ex_rate = $this->ex_rate;
                         $points = $_POST['points'];
                         $usd = $ex_rate * $points;
 
                         $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
-                        if($payment->getId()){
-                             //ok, now charge!
-                             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, NULL, "purchase");
+                        if ($payment->getId()) {
+                            //ok, now charge!
+                             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
                         } else {
                             $response['status'] = 'error';
                         }
@@ -127,16 +128,13 @@ class wallet implements Interfaces\Api{
         return Factory::response($response);
     }
 
-    public function put($pages){
-
+    public function put($pages)
+    {
         return Factory::response(array());
-
     }
 
-    public function delete($pages){
-
+    public function delete($pages)
+    {
         return Factory::response(array());
-
     }
-
 }

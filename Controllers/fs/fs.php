@@ -12,12 +12,10 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Fs\Factory;
 
-class fs implements Interfaces\Fs{
-
-	public function get($pages){
-
-      return Factory::build($pages);
-
-	}
-
+class fs implements Interfaces\Fs
+{
+    public function get($pages)
+    {
+        return Factory::build($pages);
+    }
 }

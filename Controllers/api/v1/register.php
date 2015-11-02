@@ -13,15 +13,14 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
 
-class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
+class register implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
     /**
      * NOT AVAILABLE
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
-
     }
 
     /**
@@ -34,9 +33,9 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
      *     @SWG\Response(name="200", description="Array")
      * )
      */
-    public function post($pages){
-
-        try{
+    public function post($pages)
+    {
+        try {
             $guid = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $params = array(
                 'user' => new Entities\User($guid),
@@ -44,7 +43,7 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 'friend_guid' => "",
                 'invitecode' => ""
             );
-            elgg_trigger_plugin_hook('register', 'user', $params, TRUE);
+            elgg_trigger_plugin_hook('register', 'user', $params, true);
 
             Helpers\Wallet::createTransaction($guid, 100, $guid, "Welcome.");
             Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
@@ -56,8 +55,8 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 ));
 
             //@todo maybe put this in background process
-            foreach(array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type){
-               Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+            foreach (array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type) {
+                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
                 'to'=>array($guid),
                 'from' => "100000000000000519",
                 'notification_view' => $notif_type,
@@ -65,10 +64,10 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
             }
 
             //@todo again, maybe in a background task?
-            if(isset($_POST['referrer']) && $_POST['referrer']){
-                $user = new Entities\User(strtolower(ltrim($_POST['referrer'],'@')));
-                if($user->guid){
-                     Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
+            if (isset($_POST['referrer']) && $_POST['referrer']) {
+                $user = new Entities\User(strtolower(ltrim($_POST['referrer'], '@')));
+                if ($user->guid) {
+                    Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                 }
             }
 
@@ -77,15 +76,17 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam{
               'guid' => $guid,
               'user' => $params['user']->export()
             );
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $response = array('status'=>'error', 'message'=>$e->getMessage());
         }
         return Factory::response($response);
-
     }
 
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
 
-    public function delete($pages){}
-
+    public function delete($pages)
+    {
+    }
 }
