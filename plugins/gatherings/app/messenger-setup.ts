@@ -1,5 +1,5 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter} from 'angular2/angular2';
-import { RouterLink } from "angular2/router";
+import { RouterLink, RouteParams } from "angular2/router";
 import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
@@ -32,12 +32,16 @@ export class MessengerSetup {
   error : string = "";
   done : EventEmitter = new EventEmitter;
 
-  constructor(public client: Client){
+  constructor(public client: Client, public params: RouteParams){
     this.check();
   }
 
   check(){
     var self = this;
+    if(this.params.params['dry-run']){
+      this.show = true;
+      return true;
+    }
     if(this.session.getLoggedInUser().chat){
       self.configured = true;
       this.show = true;

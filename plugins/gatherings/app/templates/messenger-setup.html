@@ -17,7 +17,14 @@
       - It is important so that no one other than you and the people you are communicating with can access the content of your messages. <br/>
     </div>
 
-    <form #passwords="form" class="mdl-grid minds-messenger-setup-grid" (submit)="setup(passwords)">
+    <div [hidden]="!inProgress" class="m-messenger-inProgress">
+      <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
+      <div class="mdl-card__supporting-text">
+        Please wait one moment...
+      </div>
+    </div>
+
+    <form #passwords="form" class="mdl-grid minds-messenger-setup-grid" (submit)="setup(passwords)" [hidden]="inProgress">
 
         <div class="mdl-cell mdl-cell--6-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
@@ -55,9 +62,15 @@
     <div class="mdl-card__title" >
       <h2 class="mdl-card__title-text">Unlock Encrypted Chat</h2>
     </div>
-    <div class="mdl-card__supporting-text"  >
 
-      <form #password="form" class="mdl-grid minds-messenger-setup-grid" (submit)="unlock(password)">
+    <div [hidden]="!inProgress" class="m-messenger-inProgress">
+      <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
+      <div class="mdl-card__supporting-text">
+        Please wait one moment...
+      </div>
+    </div>
+
+      <form #password="form" class="mdl-grid minds-messenger-setup-grid" (submit)="unlock(password)" [hidden]="inProgress">
 
         <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
@@ -82,6 +95,5 @@
 
       </form>
 
-    </div>
   </div>
 </div>

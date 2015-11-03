@@ -22,7 +22,8 @@ import { AutoGrow } from 'src/directives/autogrow';
 
 export class BlogEdit {
 
-  minds;
+  minds = window.Minds;
+  session = SessionFactory.build();
 
   guid : string;
   blog : any = {
@@ -41,13 +42,17 @@ export class BlogEdit {
   access = ACCESS;
 
   constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams, public title: MindsTitle){
-      if(params.params['guid'])
-        this.guid = params.params['guid'];
-      this.minds = window.Minds;
-      this.title.setTitle("New Blog");
+    if(!this.session.isLoggedIn()){
+      router.navigate(['/Login']);
+      return;
+    }
 
-      if(this.guid != 'new')
-        this.load();
+    if(params.params['guid'])
+      this.guid = params.params['guid'];
+    this.title.setTitle("New Blog");
+
+    if(this.guid != 'new')
+      this.load();
   }
 
   load(){
