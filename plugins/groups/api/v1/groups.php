@@ -43,6 +43,9 @@ class groups implements Interfaces\Api{
             ));
             break;
           case "member":
+            if(!Core\Session::isLoggedIn()){
+              return Factory::response([]);
+            }
             $groups = helpers\Groups::getGroups(Core\Session::getLoggedInUser(), array(
               'limit' => 12,
               'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
