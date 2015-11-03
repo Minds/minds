@@ -11,8 +11,8 @@
   }
 }
 .members-grid{
-  @include flex-display();
-  @include flex-wrap(wrap);
+  display:flex;
+  flex-flow:column wrap;
 }
 
 

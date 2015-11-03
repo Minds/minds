@@ -59,11 +59,10 @@ minds-archive-edit{
 }
 
 minds-archive-grid{
-  @include flex-display();
+  display:flex;
   align-items: stretch;
   -webkit-align-items: stretch;
-  @include flex-wrap(wrap);
-  @include flex-direction(row);
+  flex-flow:row wrap;
 
   > a{
     width: 33.333%;
