@@ -14,7 +14,7 @@ gulp.task('clone', function(done){
 });
 
 gulp.task('clone.front', function(done){
-  git.clone('https://github.com/minds/front.git',  { args: './front' }, function(err){
+  git.clone('git@github.com:minds/front.git',  { args: './front' }, function(err){
     if(!err)
       return done();
     console.error(err);
@@ -23,7 +23,7 @@ gulp.task('clone.front', function(done){
 });
 
 gulp.task('clone.engine', function(done){
-  git.clone('https://github.com/minds/engine.git',  { args: './engine' }, function(err){
+  git.clone('git@github.com:minds/engine.git',  { args: './engine' }, function(err){
     if(!err)
       return done();
     console.error(err);
@@ -32,7 +32,7 @@ gulp.task('clone.engine', function(done){
 });
 
 gulp.task('clone.sockets', function(done){
-  git.clone('https://github.com/minds/sockets.git',  { args: './sockets' }, function(err){
+  git.clone('git@github.com:minds/sockets.git',  { args: './sockets' }, function(err){
     if(!err)
       return done();
     console.error(err);
@@ -46,7 +46,7 @@ gulp.task('clone.plugins', function(done){
 });
 
 gulp.task('clone.docs', function(done){
-  git.clone('https://github.com/minds/docs.git',  { args: './docs' }, function(err){
+  git.clone('git@github.com:minds/docs.git',  { args: './docs' }, function(err){
     if(!err)
       return done();
     console.error(err);
