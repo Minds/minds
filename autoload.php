@@ -37,7 +37,7 @@ function _minds_autoload($class)
     }
 
     //plugins follow a different path
-    $file = str_replace('/engine/plugin/', '/plugins/', $file);
+    $file = str_replace('/plugin/', '/../plugins/', $file);
     if (file_exists($file)) {
         require_once $file;
         return true;
