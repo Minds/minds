@@ -67,7 +67,7 @@ class blog implements Interfaces\Api{
             $response['load-next'] = (string) end(array_keys($guids));
             break;
           case "owner":
-            if(!is_numeric($pages[1])){
+            if(isset($pages[1]) && !is_numeric($pages[1])){
               $lookup = new Core\Data\lookup();
               $pages[1] = $lookup->get($pages[1]);
             }
