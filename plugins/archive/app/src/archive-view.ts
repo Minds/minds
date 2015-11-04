@@ -42,8 +42,13 @@ export class ArchiveView {
       .then((response : any) => {
         self.inProgress = false;
         console.log(response);
-        if(response.entity)
+        if(response.entity){
+          if (!response.entity.description)
+            response.entity.description = "";
+
           self.entity = response.entity;
+        }
+
       })
       .catch((e) => {
 

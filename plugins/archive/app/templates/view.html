@@ -7,6 +7,11 @@
       <h1>{{entity.title}}</h1>
     </div>
 
+    <div class="mdl-grid" style="width:100%">
+      <minds-archive-body class="mdl-cell mdl-cell--12-col" inner-html="{{entity.description}}">
+      </minds-archive-body>
+    </div>
+          
     <!-- Owner box -->
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
@@ -20,6 +25,7 @@
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
+
     <!-- Actions block -->
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
@@ -60,6 +66,7 @@
       </a>
 
     </div>
+
 
 </div>
 
