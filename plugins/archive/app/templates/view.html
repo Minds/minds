@@ -7,11 +7,9 @@
       <h1>{{entity.title}}</h1>
     </div>
 
-    <div class="mdl-grid" style="width:100%">
-      <minds-archive-body class="mdl-cell mdl-cell--12-col" inner-html="{{entity.description}}">
-      </minds-archive-body>
+    <div class="mdl-cell mdl-cell--12-col" [inner-html]="entity.description">
     </div>
-          
+
     <!-- Owner box -->
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
