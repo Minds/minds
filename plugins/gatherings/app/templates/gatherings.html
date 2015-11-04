@@ -23,6 +23,7 @@
               >
               <h3>{{user.username}}</h3>
               <span *ng-if="user.last_msg" class="mdl-color-text--grey-500">{{user.last_msg * 1000 | date:'shortTime'}} - {{user.last_msg * 1000 | date:'longDate'}}</span>
+              <unread [hidden]="!user.unread"></unread>
             </a>
             <minds-button-subscribe [user]="user" [hidden]="user.subscribed"></minds-button-subscribe>
           </div>
