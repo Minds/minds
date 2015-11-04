@@ -41,15 +41,6 @@ minds-messenger-conversation{
         }
       }
     }
-    unread{
-      display: block;
-      width: 8px;
-      height: 100%;
-      background: green;
-      top: 0;
-      right: 0;
-      position: absolute;
-    }
   }
 
   .minds-gatherings-send{
@@ -133,6 +124,16 @@ minds-gatherings{
           display:flex;
           flex-flow:row nowrap;
           align-items: center;
+        }
+
+        unread{
+          display: block;
+          width: 8px;
+          height: 100%;
+          background: green;
+          top: 0;
+          right: 0;
+          position: absolute;
         }
 
         a{
