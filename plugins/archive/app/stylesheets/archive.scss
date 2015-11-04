@@ -58,6 +58,10 @@ minds-archive-edit{
   }
 }
 
+minds-archive-body{
+  padding-top:$minds-padding * 2;
+}
+
 minds-archive-grid{
   display:flex;
   align-items: stretch;
