@@ -82,8 +82,13 @@ class storage{
             $cacher->destroy("counter:$remind_guid:thumbs:$direction");
         }
 
-        if($entity->owner_guid != Core\Session::getLoggedinUser()->guid)
-            elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'object_guid'=>$entity->guid));
+        if($entity->owner_guid != Core\Session::getLoggedinUser()->guid){
+            if($direction == 'up')
+              elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'object_guid'=>$entity->guid));
+            elseif($direction == 'down')
+              elgg_trigger_plugin_hook('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'downvote', 'title'=>$entity->title, 'object_guid'=>$entity->guid));
+        }
+
     }
 
     public static function cancel($direction = 'up', $entity){
