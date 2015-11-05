@@ -1,3 +1,4 @@
+@import "defaults";
 
 minds-archive-view{
   h1{
@@ -67,6 +68,10 @@ minds-archive-body{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    @media screen and (max-width: $max-mobile){
+      font-size: 28px;
+    }
   }
 }
 
