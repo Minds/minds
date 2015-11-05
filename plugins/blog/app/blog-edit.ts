@@ -36,7 +36,9 @@ export class BlogEdit {
   };
   banner : any;
   banner_top : number = 0;
+  banner_prompt : boolean = false;
   editing : boolean = true;
+  canSave : boolean = true;
 
   licenses = LICENSES;
   access = ACCESS;
@@ -71,20 +73,49 @@ export class BlogEdit {
   }
 
   save(){
-    var self = this;
-    this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
-      .then((response : any) => {
-        self.router.navigate(['/Blog-View', {guid: response.guid}]);
-      })
-      .catch((e) => {
+    this.check_for_banner().then(() =>{
+      this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
+        .then((response : any) => {
+          this.router.navigate(['/Blog-View', {guid: response.guid}]);
+        })
+        .catch((e) => {
 
-      });
+        });
+    })
+    .catch(() => {
+      this.client.post('api/v1/blog/' + this.guid, this.blog)
+        .then((response : any) => {
+          this.router.navigate(['/Blog-View', {guid: response.guid}]);
+        })
+        .catch((e) => {
+
+        });
+    });
   }
 
   add_banner(banner : any){
     var self = this;
     this.banner = banner.file;
     this.blog.header_top = banner.top;
+    this.canSave = true;
+    console.log('added banner');
+  }
+
+  //this is a nasty hack because people don't want to click save on a banner ;@
+  check_for_banner(){
+    if(!this.banner)
+      this.banner_prompt = true;
+
+    return new Promise((resolve, reject) => {
+      if(this.banner)
+        return resolve(true);
+      setTimeout(() => {
+        if(this.banner)
+          return resolve(true);
+        else
+          return reject(false);
+      },100);
+    });
   }
 
 }

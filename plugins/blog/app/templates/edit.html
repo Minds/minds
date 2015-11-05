@@ -1,5 +1,11 @@
 <header *ng-if="blog">
-  <minds-banner [object]="blog" [edit-mode]="editing" [top]="blog.banner_position" (added)="add_banner($event)" *ng-if="blog.header_bg || editing"></minds-banner>
+  <minds-banner [object]="blog"
+    [edit-mode]="editing"
+    [top]="blog.banner_position"
+    (added)="add_banner($event)"
+    [done]="banner_prompt"
+    *ng-if="blog.header_bg || editing"
+    ></minds-banner>
 </header>
 <div class="mdl-grid blogs-grid" style="max-width:900px" *ng-if="error">
   <h1>{{error}}</h1>
@@ -39,7 +45,7 @@
 
   <div class="minds-blog-save">
    <!--<button class="mdl-button mdl-button--raised mdl-button--accent" (click)="blog.status = 'draft'">Save (draft)</button>-->
-   <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="blog.status = 'published'">Publish</button>
+   <button class="mdl-button mdl-button--raised mdl-button--colored" (click)="blog.status = 'published'" >Publish</button>
   </div>
 
 </form>
