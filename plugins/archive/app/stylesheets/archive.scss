@@ -62,6 +62,14 @@ minds-archive-body{
   padding-top:$minds-padding * 2;
 }
 
+.archive-grid{
+  h1{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
 minds-archive-grid{
   display:flex;
   align-items: stretch;
@@ -84,7 +92,11 @@ minds-archive-grid{
       position: absolute;
       top: calc(50% - 36px);
     }
+
+
   }
+
+
 
   @media screen and (max-width: 780px){
     > a{
