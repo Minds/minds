@@ -1,1 +1,0 @@
-<iframe width="650" height="500" seamless="true" scrolling="auto" src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/comments/service/?url=<?php echo urlencode(get_input('url'));?>&embed=yes"></iframe>

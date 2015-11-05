@@ -26,8 +26,6 @@ function minds_connect_init() {
     // Extend the login form to add a Minds Connect button
     elgg_extend_view('forms/login', 'minds_connect/connect');
 
-    // Register actions
-    elgg_register_action('minds_connect/add_user', $base . '/actions/add_user.php', 'public');
 }
 
 function minds_connect_page_handler($page) {
@@ -39,11 +37,11 @@ function minds_connect_page_handler($page) {
     switch ($page[0]) {
 
         case 'authorized':
-            require $pages . "/authorized.php";        
+            require $pages . "/authorized.php";
             break;
 
         case 'login':
-            require $pages . "/login.php";        
+            require $pages . "/login.php";
             break;
     }
 
@@ -207,4 +205,3 @@ function minds_connect_register($name, $email, $username, $password=null, $acces
 
     return $guid;
 }
-

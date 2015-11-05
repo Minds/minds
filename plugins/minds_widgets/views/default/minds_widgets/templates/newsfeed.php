@@ -1,1 +1,0 @@
-<iframe width="650" height="700" seamless="true" scrolling="auto" src="<?php echo minds_widgets_remove_url_schema(elgg_get_site_url()); ?>widgets/<?php echo $vars['tab']; ?>/service/?feed_guid=<?php echo get_input('feed_guid', $vars['feed_guid']);?>&embed=yes"></iframe>
