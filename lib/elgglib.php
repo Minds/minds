@@ -2071,26 +2071,6 @@ function elgg_init() {
 
 	$base_url = isset($CONFIG->cdn_url) ? $CONFIG->cdn_url : elgg_get_site_url();
 
-	elgg_register_action('comments/add');
-	elgg_register_action('comments/delete');
-
-	elgg_register_page_handler('js', 'elgg_js_page_handler');
-	elgg_register_page_handler('css', 'elgg_css_page_handler');
-	elgg_register_page_handler('ajax', 'elgg_ajax_page_handler');
-
-	elgg_register_js('elgg.autocomplete', $base_url . 'js/lib/ui.autocomplete.js?cb='.$CONFIG->lastcache,'footer');
-	elgg_register_js('jquery.ui.autocomplete.html', $base_url . 'vendors/jquery/jquery.ui.autocomplete.html.js','footer');
-	elgg_register_js('elgg.userpicker', $base_url . 'js/lib/ui.userpicker.js','footer');
-	elgg_register_js('elgg.friendspicker', $base_url . 'js/lib/ui.friends_picker.js','head');//because of inline code
-
-	elgg_register_js('jquery.autocomplete', $base_url . 'vendors/jquery/jquery.autocomplete.min.js');
-	elgg_register_js('jquery.easing', $base_url . 'vendors/jquery/jquery.easing.1.3.packed.js');
-	elgg_register_js('elgg.avatar_cropper', $base_url . 'js/lib/ui.avatar_cropper.js', 'footer');
-	elgg_register_js('jquery.imgareaselect', $base_url . 'vendors/jquery/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js','footer');
-	elgg_register_js('elgg.ui.river', $base_url . 'js/lib/ui.river.js','footer');
-
-	elgg_register_css('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect-0.9.8/css/imgareaselect-deprecated.css');
-
 	// Trigger the shutdown:system event upon PHP shutdown.
 	register_shutdown_function('_elgg_shutdown_hook');
 

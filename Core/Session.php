@@ -21,10 +21,6 @@ class Session extends base
 
         session_cache_limiter('public');
 
-        //@todo move these to new page model
-        \elgg_register_action('login', '', 'public');
-        \elgg_register_action('logout');
-
         // Register a default PAM handler
         //@todo create an OOP pam handler
         \register_pam_handler('pam_auth_userpass');

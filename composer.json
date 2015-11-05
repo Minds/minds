@@ -39,7 +39,7 @@
 	},
   "require-dev":{
 		"phpspec/phpspec": "~2.0",
-		"squizlabs/php_codesniffer": "2.*",
+		"fabpot/php-cs-fixer": "dev-master@dev",
     "apigen/apigen": "4.1.1"
   }
 }

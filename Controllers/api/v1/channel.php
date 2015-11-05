@@ -86,12 +86,11 @@ class channel implements Interfaces\Api
             $guid = Core\Session::getLoggedinUser()->legacy_guid;
         }
 
-        $response = array();
+        $response = [];
 
         switch ($pages[0]) {
             case "avatar":
-                $icon_sizes = elgg_get_config('icon_sizes');
-
+                $icon_sizes = Core\Config::_()->get('icon_sizes');
                 // get the images and save their file handlers into an array
                 // so we can do clean up if one fails.
                 $files = array();
@@ -113,8 +112,10 @@ class channel implements Interfaces\Api
                             $file->delete();
                         }
 
-                        register_error(elgg_echo('avatar:resize:fail'));
-                        forward(REFERER);
+                        return Factory::response([
+                          'status' => 'error',
+                          'message' => 'Could not resize'
+                        ]);
                     }
                 }
 

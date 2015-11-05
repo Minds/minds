@@ -21,7 +21,7 @@ class Config
     public function init()
     {
         //$this->lastcache = 0;
-        $this->set('icon_sizes', array(
+        $this->config['icon_sizes'] = [
             'topbar' => array('w'=>16, 'h'=>16, 'square'=>true, 'upscale'=>true),
             'tiny' => array('w'=>25, 'h'=>25, 'square'=>true, 'upscale'=>true),
             'small' => array('w'=>40, 'h'=>40, 'square'=>true, 'upscale'=>true),
@@ -29,8 +29,8 @@ class Config
             'large' => array('w'=>425, 'h'=>425, 'square'=>false, 'upscale'=>false),
             //'xlarge'=> array('w'=>400, 'h'=>400, 'square'=>false, 'upscale'=>false),
             'master' => array('w'=>550, 'h'=>550, 'square'=>false, 'upscale'=>false)
-        ));
-        $this->set('minusername', 2);
+        ];
+        $this->config['minusername'] = 2;
     }
 
     public function get($key)
@@ -44,6 +44,10 @@ class Config
     public function set($key, $value)
     {
         $this->config[$key] = $value;
+    }
+
+    public function __get($key){
+      return $this->get($key);
     }
 
     /**

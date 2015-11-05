@@ -21,19 +21,19 @@
  * @since 1.8.0
  */
 function elgg_get_widgets($options, $context){
-	
+
 	if(!is_array($options)){
 		$user_guid = $options;
 		$options = array();
 		$options['owner_guid'] = $user_guid;
 		if(isset($context)){
                 	$attrs['context'] = $context;
-       		 }	
-	}	
+       		 }
+	}
 
 	$widgets = elgg_get_entities(
 		array(
-			'type'=>'widget', 
+			'type'=>'widget',
 			'owner_guid'=> $options['owner_guid'],
 			'limit'=>0
 		)
@@ -42,7 +42,7 @@ function elgg_get_widgets($options, $context){
 	if (!$widgets) {
 		return array();
 	}
-	
+
 	$sorted_widgets = array();
 	foreach ($widgets as $widget) {
 		if($widget->context != $context){
@@ -51,7 +51,7 @@ function elgg_get_widgets($options, $context){
 		if (!isset($sorted_widgets[(int)$widget->column])) {
 			$sorted_widgets[(int)$widget->column] = array();
 		}
-		
+
                 if (!isset($sorted_widgets[(int)$widget->column][$widget->order]))
                     $sorted_widgets[(int)$widget->column][$widget->order] = $widget;
                 else
@@ -75,7 +75,7 @@ function elgg_get_widgets($options, $context){
  * @since 1.8.0
  */
 function elgg_create_widget($owner_guid, $handler, $context, $access_id = null) {
-	
+
 	if (empty($owner_guid) || empty($handler) || !elgg_is_widget_type($handler)) {
 		return false;
 	}
@@ -96,7 +96,7 @@ function elgg_create_widget($owner_guid, $handler, $context, $access_id = null) 
 
 	$widget->handler = $handler;
         $widget->context = $context;
-	
+
 	if ($guid = $widget->save()) {
       		return $guid;
 	} else {
@@ -116,7 +116,7 @@ function elgg_create_widget($owner_guid, $handler, $context, $access_id = null) 
  * @since 1.8.0
  */
 function elgg_can_edit_widget_layout($context, $user_guid = 0) {
-	
+
 	$user = get_entity($user_guid, 'user');
 	if (!$user) {
 		$user = elgg_get_logged_in_user_entity();
@@ -155,7 +155,7 @@ function elgg_can_edit_widget_layout($context, $user_guid = 0) {
  * @since 1.8.0
  */
 function elgg_register_widget_type($handler, $name, $description, $context = "all", $multiple = false) {
-	
+
 	if (!$handler || !$name) {
 		return false;
 	}
@@ -189,7 +189,7 @@ function elgg_register_widget_type($handler, $name, $description, $context = "al
  * @since 1.8.0
  */
 function elgg_unregister_widget_type($handler) {
-	
+
 	global $CONFIG;
 
 	if (!isset($CONFIG->widgets)) {
@@ -214,7 +214,7 @@ function elgg_unregister_widget_type($handler) {
  * @since 1.8.0
  */
 function elgg_is_widget_type($handler) {
-	
+
 	global $CONFIG;
 
 	if (!empty($CONFIG->widgets) &&
@@ -240,7 +240,7 @@ function elgg_is_widget_type($handler) {
  * @since 1.8.0
  */
 function elgg_get_widget_types($context = "", $exact = false) {
-	
+
 	global $CONFIG;
 
 	if (empty($CONFIG->widgets) ||
@@ -288,12 +288,6 @@ return;
  * @access private
  */
 function elgg_widgets_init() {
-	
-	elgg_register_action('widgets/save');
-	elgg_register_action('widgets/add');
-	elgg_register_action('widgets/move');
-	elgg_register_action('widgets/delete');
-	elgg_register_action('widgets/upgrade', '', 'admin');
 
 	run_function_once("elgg_widget_run_once");
 }
@@ -303,7 +297,7 @@ function elgg_widgets_init() {
  * register menu items for default widgets with the admin section.
  *
  * A plugin that wants to register a new context for default widgets should
- * register for the plugin hook 'get_list', 'default_widgets'. The handler 
+ * register for the plugin hook 'get_list', 'default_widgets'. The handler
  * can register the new type of default widgets by adding an associate array to
  * the return value array like this:
  * array(
@@ -361,7 +355,7 @@ function elgg_default_widgets_init() {
  * @access private
  */
 function elgg_create_default_widgets($event, $type, $entity) {
-	
+
 	$default_widget_info = elgg_get_config('default_widget_info');
 
 	if (!$default_widget_info || !$entity) {
@@ -376,13 +370,13 @@ function elgg_create_default_widgets($event, $type, $entity) {
 	foreach ($default_widget_info as $info) {
 		if ($info['entity_type'] == $type) {
 			if ($info['entity_subtype'] == ELGG_ENTITIES_ANY_VALUE || $info['entity_subtype'] == $subtype) {
-				
+
 				// need to be able to access everything
 				$old_ia = elgg_set_ignore_access(true);
 				elgg_push_context('create_default_widgets');
-				
+
 				$guid = elgg_create_widget($entity->guid, $info['name'], $info['widget_context']);
-				
+
 				if ($guid) {
 					$widget = get_entity($guid, 'widget');
 					if(!$widget){
@@ -418,7 +412,7 @@ function elgg_create_default_widgets($event, $type, $entity) {
  * @access private
  */
 function elgg_default_widgets_permissions_override($hook, $type, $return, $params) {
-	
+
 	if ($type == 'object' && $params['subtype'] == 'widget') {
 		return elgg_in_context('create_default_widgets') ? true : null;
 	}

@@ -671,17 +671,6 @@ function plugin_init() {
 
 	elgg_register_event_handler('plugins_loaded', 'plugin', 'elgg_plugins_loaded_event_hook');
 
-	elgg_register_action("plugins/settings/save", '', 'admin');
-	elgg_register_action("plugins/usersettings/save");
-
-	elgg_register_action('admin/plugins/activate', '', 'admin');
-	elgg_register_action('admin/plugins/deactivate', '', 'admin');
-	elgg_register_action('admin/plugins/activate_all', '', 'admin');
-	elgg_register_action('admin/plugins/deactivate_all', '', 'admin');
-
-	elgg_register_action('admin/plugins/set_priority', '', 'admin');
-
-	elgg_register_library('elgg:markdown', elgg_get_root_path() . 'vendors/markdown/markdown.php');
 }
 
 elgg_register_event_handler('init', 'system', 'plugin_init');

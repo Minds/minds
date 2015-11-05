@@ -100,7 +100,7 @@ class Minds extends base
     {
         // load the rest of the library files from engine/lib/
         $lib_files = array(
-            'elgglib.php', 'access.php', 'actions.php',
+            'elgglib.php', 'access.php',
             'configuration.php', 'cron.php',
             'entities.php', 'extender.php', 'filestore.php', 'group.php',
             'input.php', 'languages.php', 'location.php',
