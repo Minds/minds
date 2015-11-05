@@ -54,9 +54,9 @@ export class ArchiveGrid {
     this.inProgress = true;
     this.client.get('api/v1/archive/albums/' + this.object.guid, { offset: this.offset })
       .then((response : any) => {
-        if(!response.entities){
+        if(!response.entities || response.entities.length == 0){
           self.inProgress = false
-          self.moreData = true;
+          self.moreData = false;
           return false;
         }
 

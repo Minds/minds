@@ -30,6 +30,12 @@ class albums implements Interfaces\Api{
           'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
           'offset' => isset($_GET['offset']) ? $_GET['offset'] : ""
         ));
+        if(isset($_GET['offset']))
+          unset($guids[$_GET['offset']]);
+
+        if(!$guids){
+          return Factory::response();
+        }
 
         $entities = Core\Entities::get(array(
           'guids' => array_keys($guids)
