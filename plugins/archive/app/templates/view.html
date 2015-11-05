@@ -7,8 +7,7 @@
       <h1>{{entity.title}}</h1>
     </div>
 
-    <div class="mdl-cell mdl-cell--12-col" [inner-html]="entity.description">
-    </div>
+    <div class="mdl-cell mdl-cell--12-col" [inner-html]="entity.description" [hidden]="!entity.description"></div>
 
     <!-- Owner box -->
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
