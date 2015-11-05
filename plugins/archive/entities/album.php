@@ -101,6 +101,7 @@ class album extends object{
 	 public function export(){
 		$export = parent::export();
 		$export['images'] = $this->getChildrenGuids(5);
+		$export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
 		return $export;
 	 }
 }

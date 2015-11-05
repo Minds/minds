@@ -159,6 +159,7 @@ class image extends Entities\File{
         $export['thumbnail_src'] = $this->getIconUrl();
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
+				$export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         return $export;
     }
 }
