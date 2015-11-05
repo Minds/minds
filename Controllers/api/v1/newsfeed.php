@@ -141,22 +141,53 @@ class newsfeed implements Interfaces\Api
                         }
                      break;
                      default:
+                        $message = false;
+                        if ($embeded->owner_guid != elgg_get_logged_in_user_guid()) {
+                            $message = 'via @'. $embeded->getOwnerEntity()->username;
+                        }
                          /**
                            * The following are actually treated as embeded posts.
                            */
                            switch ($embeded->subtype) {
                                case 'blog':
-                                   $message = false;
-                                    if ($embeded->owner_guid != elgg_get_logged_in_user_guid()) {
-                                        $message = 'via <a href="'.$embeded->getOwnerEntity()->getURL() . '">'. $embeded->getOwnerEntity()->name . '</a>';
-                                    }
-                                        $activity->setTitle($embeded->title)
-                                        ->setBlurb(elgg_get_excerpt($embeded->description))
-                                        ->setURL($embeded->getURL())
-                                        ->setThumbnail($embeded->getIconUrl())
-                                        ->setMessage($message)
-                                        ->setFromEntity($embeded)
-                                        ->save();
+                                   $activity->setRemind((new \Minds\Entities\Activity())
+                                      ->setTitle($embeded->title)
+                                      ->setBlurb(strip_tags($embeded->description))
+                                      ->setURL($embeded->getURL())
+                                      ->setThumbnail($embeded->getIconUrl())
+                                      ->setFromEntity($embeded)
+                                      ->export())
+                                    ->setMessage($message)
+                                    ->save();
+                                    break;
+                                case 'video':
+                                    $activity = new \Minds\Entities\Activity();
+                                    $activity->setRemind((new \Minds\Entities\Activity())
+                                      ->setFromEntity($embeded)
+                                      ->setCustom('video', [
+                                          'thumbnail_src'=>$embeded->getIconUrl(),
+                                          'guid'=>$embeded->guid
+                                        ])
+                                      ->setTitle($embeded->title)
+                                      ->setBlurb($embeded->description)
+                                      ->export())
+                                    ->setMessage($message)
+                                    ->save();
+
+                                    break;
+                                case 'image':
+                                    $activity = new \Minds\Entities\Activity();
+                                    $activity->setRemind((new \Minds\Entities\Activity())
+                                      ->setCustom('batch', [[
+                                          'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
+                                          'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid
+                                         ]])
+                                      ->setFromEntity($embeded)
+                                      ->setTitle($embeded->title)
+                                      ->setBlurb($embeded->description)
+                                      ->export())
+                                    ->setMessage($message)
+                                    ->save();
                                     break;
                             }
                 }

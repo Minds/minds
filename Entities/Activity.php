@@ -261,7 +261,7 @@ class Activity extends Entity
     public function setFromEntity($entity)
     {
         $this->entity_guid = $entity->guid;
-
+        $this->ownerObj = $entity->ownerObj;
         return $this;
     }
 
