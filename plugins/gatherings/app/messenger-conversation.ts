@@ -4,6 +4,7 @@ import { Client } from 'src/services/api';
 import { SessionFactory } from 'src/services/session';
 import { Storage } from 'src/services/storage';
 import { Material } from 'src/directives/material';
+import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { MindsUserConversationResponse } from './interfaces/responses';
 import { MindsMessageResponse } from './interfaces/responses';
 
@@ -14,7 +15,7 @@ import { MindsMessageResponse } from './interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/gatherings/messenger-conversation.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink ]
+  directives: [ CORE_DIRECTIVES, Material, InfiniteScroll, RouterLink ]
 })
 
 export class MessengerConversation {
@@ -77,22 +78,20 @@ export class MessengerConversation {
       })
       .then((data : MindsUserConversationResponse) =>{
 
-        self.inProgress = false;
-        self.ready = true;
+        this.inProgress = false;
+        this.ready = true;
 
         if (!data.messages) {
-          self.hasMoreData = false;
+          this.hasMoreData = false;
           return false;
         }
 
-        for(let message of data.messages){
-          self.messages.push(message);
-        }
+        this.messages = data.messages.concat(this.messages);
+        if(!this.offset)
+          this.scrollToBottom();
 
-        self.scrollToBottom();
-
-        self.offset = data['load-previous'];
-        self.previous = data['load-next'];
+        this.offset = data['load-previous'];
+        this.previous = data['load-next'];
       })
       .catch((e) => {
 
@@ -134,7 +133,7 @@ export class MessengerConversation {
 
   scrollToBottom(){
     setTimeout(() => {
-      this.element.getElementsByClassName('minds-messagenger-messenger')[0].scrollTop = this.element.getElementsByClassName('minds-messagenger-messenger')[0].scrollHeight;
+      this.element.getElementsByClassName('minds-messenger-messenger')[0].scrollTop = this.element.getElementsByClassName('minds-messenger-messenger')[0].scrollHeight;
     }, 300); //wait until the render?
   }
 

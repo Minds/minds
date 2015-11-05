@@ -2,7 +2,7 @@
 
 minds-messenger-conversation{
 
-  .minds-messagenger-messenger{
+  .minds-messenger-messenger{
     padding:$minds-padding;
     //padding-bottom:75px;
     height:300px;
@@ -12,6 +12,18 @@ minds-messenger-conversation{
     flex-flow: column nowrap;
 
     position:relative;
+  }
+
+  .m-messenger-load-earlier{
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    /* text-align: center; */
+    border: 1px solid #DDD;
+    max-width: 208px;
+    /* margin: auto; */
+    border-radius: 3px;
+    display: inline-block;
   }
 
   .minds-messenger-message{

@@ -1,4 +1,4 @@
-<div class="minds-messagenger-messenger mdl-color--white mdl-shadow--2dp">
+<div class="minds-messenger-messenger mdl-color--white mdl-shadow--2dp">
 
   <div  class="mdl-card mdl-shadow--2dp minds-messenger-message"  *ng-if="!isSubscriber || !isSubscribed">
     <div class="mdl-card__supporting-text" [hidden]="isSubscribed">
@@ -8,6 +8,12 @@
       You can only chat with @{{user.username}} when they subscribe to you
     </div>
   </div>
+
+  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
+
+  <div class="m-messenger-load-earlier" (click)="load()" [hidden]="!hasMoreData || inProgress">Load earlier messages</div>
+  <div class="m-messenger-load-earlier"  [hidden]="!inProgress">Loading...</div>
+  <div class="m-messenger-load-earlier" [hidden]="hasMoreData">We couldn't find any earlier messages</div>
 
   <div *ng-for="#message of messages; #i = index">
     <div class="mdl-card minds-messenger-message" *ng-if="message">
