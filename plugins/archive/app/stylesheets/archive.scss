@@ -84,7 +84,15 @@ minds-archive-grid{
       position: absolute;
       top: calc(50% - 36px);
     }
+
+    h1{
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
+
+
 
   @media screen and (max-width: 780px){
     > a{
