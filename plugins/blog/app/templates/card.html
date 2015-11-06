@@ -20,3 +20,11 @@
 		</div>
 
 </div>
+
+<div class="mdl-card__supporting-text mdl-color--blue-grey-50 m-action-tabs">
+	<minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
+	<minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
+	<minds-button-comment [object]="blog" [router-link]="['/Archive-View', {guid: blog.guid}]"></minds-button-comment>
+	<minds-button-remind [object]="blog"></minds-button-remind>
+	<minds-button-feature [object]="blog" *ng-if="session.isAdmin()"></minds-button-feature>
+</div>

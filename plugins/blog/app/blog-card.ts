@@ -6,6 +6,7 @@ import { SessionFactory } from 'src/services/session';
 import { Material } from 'src/directives/material';
 import { InfiniteScroll } from 'src/directives/infinite-scroll';
 import { MindsBlogListResponse } from 'src/interfaces/responses';
+import { BUTTON_COMPONENTS } from 'src/components/buttons';
 
 @Component({
   selector: 'minds-card-blog',
@@ -14,7 +15,7 @@ import { MindsBlogListResponse } from 'src/interfaces/responses';
 })
 @View({
   templateUrl: 'templates/plugins/blog/card.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, InfiniteScroll ]
 })
 
 export class BlogCard {
