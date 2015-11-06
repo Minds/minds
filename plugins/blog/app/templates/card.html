@@ -1,11 +1,11 @@
 <a [router-link]="['/Blog-View', {guid: blog.guid}]"
   class="mdl-card__title minds-blog-thumbnail"
-  style="height:180px; background:#333; background-size:cover;"
+  style="height:180px; margin-bottom:80px; background:#333; background-size:cover;"
   [ng-style]="{background: '#333 url(' + blog.thumbnail_src + ') center center / cover'}">
 </a>
 
 <!-- Owner block -->
-<div class="mdl-card__supporting-text mdl-color-text--grey-600 m-title-block" *ng-if="blog.ownerObj && blog.ownerObj.username">
+<div class="mdl-card__supporting-text mdl-color-text--grey-600 m-title-block m-title-block-fixed m-title-block-with-actions" *ng-if="blog.ownerObj && blog.ownerObj.username">
 
 		<a [router-link]="['/Blog-View', {guid: blog.guid}]" class="mdl-color-text--blue-grey-700">
 			<strong>{{ blog.title }}</strong>
@@ -21,7 +21,7 @@
 
 </div>
 
-<div class="mdl-card__supporting-text mdl-color--blue-grey-50 m-action-tabs">
+<div class="mdl-card__supporting-text mdl-color--blue-grey-50 m-action-tabs m-action-tabs-fixed">
 	<minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
 	<minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
 	<minds-button-comment [object]="blog" [router-link]="['/Archive-View', {guid: blog.guid}]"></minds-button-comment>
