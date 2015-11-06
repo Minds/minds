@@ -41,9 +41,12 @@ export class ArchiveView {
     this.client.get('api/v1/entities/entity/' + this.guid, { children: false })
       .then((response : any) => {
         self.inProgress = false;
-        console.log(response);
+        if(response.entity.type != 'object'){
+          return;
+        }
         if(response.entity)
           self.entity = response.entity;
+
       })
       .catch((e) => {
 
