@@ -65,9 +65,11 @@ minds-archive-body{
 
 .archive-grid{
   h1{
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    //overflow: hidden;
+    //white-space: nowrap;
+    //text-overflow: ellipsis;
+    font-size:36px;
+    font-weight:400;
 
     @media screen and (max-width: $max-mobile){
       font-size: 28px;
