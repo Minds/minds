@@ -13,7 +13,7 @@
 
 		<div class="m-inline-owner-block">
 			<a [router-link]="['/Channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-300">
-				<img src="/icon/{{blog.ownerObj.guid}}1/small" class="mdl-shadow--2dp"/>
+				<img src="/icon/{{blog.ownerObj.guid}}/small" class="mdl-shadow--2dp"/>
 				{{blog.ownerObj.username}}
 			</a>
 			<span>{{ blog.time_created * 1000 | date:'mediumDate' }}</span>
