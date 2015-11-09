@@ -184,7 +184,7 @@ class channel implements Interfaces\Api
                 $item->save();
                 break;
             case "carousel":
-              $item = new \Minds\Entities\Carousel(isset($_POST['guid']) ? $_POST['guid'] : null);
+              $item = new \Minds\Entities\Object\Carousel(isset($_POST['guid']) ? $_POST['guid'] : null);
               $item->access_id = ACCESS_PUBLIC;
               $item->top_offset = $_POST['top'];
               $item->save();

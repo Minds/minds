@@ -74,6 +74,8 @@ class comments implements Interfaces\Api
         case is_numeric($pages[0]):
         default:
           $parent = new \Minds\Entities\Entity($pages[0]);
+          if($parent instanceof Entities\Activity && $parent->remind_object)
+            $parent = (object) $parent->remind_object;
           $comment = new Entities\Comment();
           $comment->description = urldecode($_POST['comment']);
           $comment->setParent($parent);
