@@ -46,7 +46,7 @@ class DenormalizedEntity
         $row = $this->db->getRow($this->rowKey, ['offset' => $guid, 'limit'=>1]);
         if(!$row || !isset($row[$guid]))
             throw new \Exception("Entity not found");
-        return $this->loadFromArray($row);
+        return $this->loadFromArray($row[$guid]);
     }
 
     /**
@@ -91,7 +91,10 @@ class DenormalizedEntity
         $keys = array_merge($this->exportableDefaults, $keys);
         $export = [];
         foreach($keys as $key){
-            if(property_exists($this, $key))
+            $method = Helpers\Entities::buildGetter($key);
+            if(method_exists($this, $method))
+                $export[$key] = $this->$method();
+            elseif(property_exists($this, $key))
                 $export[$key] = $this->$key;
         }
         return $export;

@@ -63,10 +63,20 @@ class Manager
         $this->loadPages();
         $return = [];
         foreach($this->pages as $page){
-            if($pages->getMenuContainer() == $container)
+            if($page->getMenuContainer() == $container)
                 $return[] = $page;
         }
         return $return;
+    }
+
+    /**
+     * Return a list of all pages
+     * @return array
+     */
+    public function getPages()
+    {
+        $this->loadPages();
+        return $this->pages;
     }
 
     /**

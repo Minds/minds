@@ -22,15 +22,22 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
 
-        try{
-            $page = (new Entities\Page())
-                ->loadFromGuid($pages[0])
-                ->export();
-            $response = $page;
-        } catch(\Exception $e){
+        if(isset($pages[0])){
+            try{
+                $page = (new Entities\Page())
+                    ->loadFromGuid($pages[0])
+                    ->export();
+                $response = $page;
+            } catch(\Exception $e){
+                $response = [
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ];
+            }
+        } else {
+            $pages = Core\Pages\Manager::_()->getPages();
             $response = [
-                'status' => 'error',
-                'message' => $e->getMessage()
+                'pages' => Factory::exportable($pages)
             ];
         }
 

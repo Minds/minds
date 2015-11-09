@@ -57,7 +57,7 @@ class Page extends DenormalizedEntity
     }
 
     public function getMenuContainer(){
-        return $this->getMenuContainer();
+        return $this->menuContainer;
     }
 
     /**
