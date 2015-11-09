@@ -22,10 +22,17 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
 
-        $page = new Entities\Page()
-            ->loadFromGuid($pages[0])
-            ->export();
-        $response = $page;
+        try{
+            $page = (new Entities\Page())
+                ->loadFromGuid($pages[0])
+                ->export();
+            $response = $page;
+        } catch(\Exception $e){
+            $response = [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
 
         return Factory::response($response);
     }
@@ -47,7 +54,7 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'message' => 'You must supply a path'
             ]);
 
-        $page = new Entities\Page()
+        $page = (new Entities\Page())
             ->setTitle($_POST['title'])
             ->setBody($_POST['body'])
             ->setMenuContainer($_POST['menuContainer'])

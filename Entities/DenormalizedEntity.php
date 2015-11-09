@@ -43,7 +43,6 @@ class DenormalizedEntity
      */
     public function loadFromGuid($guid)
     {
-        var_dump($this->db);
         $row = $this->db->getRow($this->rowKey, ['offset' => $guid, 'limit'=>1]);
         if(!$row || !isset($row[$guid]))
             throw new \Exception("Entity not found");
