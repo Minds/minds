@@ -18,7 +18,7 @@ class Menu
         $footer = Manager::_()->getMenu('footer');
 
         usort($footer, function($a, $b){
-          return strcmp($a->getTitle(), $b->getTitle());
+          return strcmp($b->getTitle(), $a->getTitle());
         });
 
         foreach($footer as $page){
