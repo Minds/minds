@@ -17,6 +17,10 @@ class Menu
     {
         $footer = Manager::_()->getMenu('footer');
 
+        usort($footer, function($a, $b){
+          return strcmp($a->getTitle(), $b->getTitle());
+        });
+
         foreach($footer as $page){
             Navigation\Manager::add(
                 (new Navigation\Item())

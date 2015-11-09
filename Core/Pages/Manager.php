@@ -76,7 +76,7 @@ class Manager
     public function getPages()
     {
         $this->loadPages();
-        return $this->pages;
+        return array_values($this->pages);
     }
 
     /**

@@ -135,7 +135,7 @@ class Factory
     {
         foreach ($entities as $k => $entity) {
             $entities[$k] = $entity->export();
-            $entities[$k]['guid'] = (string) $entity->guid; //javascript doesn't like long numbers..
+            $entities[$k]['guid'] = (string) $entities[$k]['guid']; //javascript doesn't like long numbers..
             if (isset($entities[$k]['ownerObj']['guid'])) {
                 $entities[$k]['ownerObj']['guid'] = (string) $entity->ownerObj['guid'];
             }

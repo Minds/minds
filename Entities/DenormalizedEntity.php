@@ -83,6 +83,13 @@ class DenormalizedEntity
     }
 
     /**
+     * Delete the denormalized entity
+     */
+    public function delete(){
+        return (bool) $this->db->removeAttributes($this->rowKey, [$this->guid]);
+    }
+
+    /**
      * Export the entity
      * @param array $keys
      * @return array

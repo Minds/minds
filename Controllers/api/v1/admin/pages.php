@@ -83,5 +83,17 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function delete($pages)
     {
+        $response = [];
+        try{
+            $page = (new Entities\Page())
+                ->loadFromGuid($pages[0])
+                ->delete();
+        } catch(\Exception $e){
+            $response = [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+        return Factory::response($response);
     }
 }
