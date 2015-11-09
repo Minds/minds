@@ -19,4 +19,9 @@ trait Entity{
         return $this->guid;
     }
 
+    public function setGuid($guid){
+        $this->guid = $guid;
+        return $this->guid;
+    }
+
 }

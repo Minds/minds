@@ -34,6 +34,28 @@ class PageSpec extends ObjectBehavior
         $this->getPath()->shouldReturn('/foo');
     }
 
+    function it_should_load_from_array(){
+        $this->loadFromArray([
+            'title' => "spec tested",
+            'body' => "spec body",
+            'path' => "spec"
+            ])->shouldReturn($this);
+        $this->getTitle()->shouldReturn("spec tested");
+        $this->getBody()->shouldReturn("spec body");
+        $this->getPath()->shouldReturn("spec");
+    }
+
+    function it_should_load_from_json(){
+        $this->loadFromArray(json_encode([
+            'title' => "spec tested (json)",
+            'body' => "spec body (json)",
+            'path' => "spec-json"
+            ]))->shouldReturn($this);
+        $this->getTitle()->shouldReturn("spec tested (json)");
+        $this->getBody()->shouldReturn("spec body (json)");
+        $this->getPath()->shouldReturn("spec-json");
+    }
+
     function it_should_should_save(Call $db){
         $db->insert(Argument::type('string'), Argument::any())->willReturn($this->getGuid());
         $this->save()->shouldReturn($this);
@@ -42,5 +64,9 @@ class PageSpec extends ObjectBehavior
     function it_should_throw_an_exception_on_failed_save(Call $db){
         $db->insert(Argument::type('string'), Argument::any())->willReturn(false);
         $this->shouldThrow('\Exception')->during('save');
+    }
+
+    function it_should_export(){
+        $this->export()->shouldBeArray();
     }
 }

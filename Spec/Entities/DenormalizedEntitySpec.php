@@ -12,7 +12,19 @@ class DenormalizedEntitySpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Entities\DenormalizedEntity');
     }
 
-    function it_returns_a_guid(){
+    function it_returns_a_guid()
+    {
         $this->getGuid()->shouldBeNumeric();
     }
+
+    function it_can_set_the_rowKey()
+    {
+        $this->setRowKey('specs')->shouldReturn($this);
+        $this->getRowKey()->shouldReturn('specs');
+    }
+
+    function it_should_export(){
+        $this->export()->shouldBeArray();
+    }
+
 }

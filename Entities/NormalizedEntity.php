@@ -35,7 +35,7 @@ class NormalizedEntity
         $row = $this->db->getRow($guid);
         if(!$row)
             throw new \Exception("Entity not found");
-        return $this->loadFromArray();
+        return $this->loadFromArray($row);
     }
 
     /**
@@ -46,8 +46,8 @@ class NormalizedEntity
     public function loadFromArray($array)
     {
         foreach($array as $key => $value){
-            if(Helpers\Validation::isJson($v))
-                $v = json_decode($v, true);
+            if(Helpers\Validation::isJson($value))
+                $value = json_decode($value, true);
 
             if(property_exists($this, $key))
                 $this->$key = $value;

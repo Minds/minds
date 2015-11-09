@@ -139,6 +139,8 @@ class Manager
             )),
             "topbar"
         );
+
+        Core\Pages\Menu::_()->init();
     }
 
     /**

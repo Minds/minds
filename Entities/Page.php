@@ -7,12 +7,15 @@ namespace Minds\Entities;
 use Minds\Core;
 use Minds\Core\Data;
 
-class Page extends NormalizedEntity
+class Page extends DenormalizedEntity
 {
 
-    private $title;
-    private $body;
-    private $path;
+    protected $title;
+    protected $body;
+    protected $path;
+    protected $menuContainer;
+    protected $rowKey = 'pages';
+    protected $exportableDefaults = [ 'title', 'body', 'path', 'menuContainer' ];
 
     public function setTitle($title)
     {
@@ -39,12 +42,22 @@ class Page extends NormalizedEntity
     public function setPath($path)
     {
         $this->path = $path;
+        $this->guid = $path;
         return $this;
     }
 
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function setMenuContainer($container){
+        $this->menuContainer = $container;
+        return $this;
+    }
+
+    public function getMenuContainer(){
+        return $this->getMenuContainer();
     }
 
     /**
@@ -57,10 +70,11 @@ class Page extends NormalizedEntity
         $success = $this->saveToDb([
             'title' => $this->title,
             'body' => $this->body,
-            'path' => $this->path
+            'path' => $this->path,
+            'menuContainer' => $this->menuContainer
         ]);
         if(!$success)
-            throw new \Exception("We could save the entity to the database");
+            throw new \Exception("We couldn't save the entity to the database");
         //$this->saveToIndex();
         return $this;
     }
