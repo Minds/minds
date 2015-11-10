@@ -30,6 +30,7 @@ export class Blog {
   blogs : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
+  _filter2 : string = "";
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,
@@ -40,6 +41,20 @@ export class Blog {
       this.load();
 
       this.title.setTitle("Blogs");
+
+      switch(this._filter){
+        case "trending":
+          this.title.setTitle("Trending Blogs");
+          break;
+        case "featured":
+          this.title.setTitle("Featured Blogs");
+          break;
+        case "owner":
+          break;
+        default:
+          this._filter2 = this._filter;
+          this._filter = "owner";
+      }
   }
 
   load(refresh : boolean = false){
@@ -47,7 +62,7 @@ export class Blog {
       return false;
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/blog/' + this._filter, { limit: 12, offset: this.offset })
+    this.client.get('api/v1/blog/' + this._filter + '/' + this._filter2, { limit: 12, offset: this.offset })
       .then((response : MindsBlogListResponse) => {
 
         if(!response.blogs){
