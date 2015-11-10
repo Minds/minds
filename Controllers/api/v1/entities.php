@@ -71,7 +71,7 @@ class entities implements Interfaces\Api
           case "owner":
             if (!is_numeric($pages[2])) {
                 $lookup = new Core\Data\lookup();
-                $pages[2] = $lookup->get($pages[1]);
+                $pages[2] = key($lookup->get($pages[2]));
             }
             $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
 
