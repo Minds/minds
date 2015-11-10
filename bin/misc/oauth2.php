@@ -17,7 +17,9 @@ if (!$entity->save()) {
     echo "failed to set oauth keys... \n";
 }
 
+$db = new Minds\Core\Data\Call('plugin');
+$db->insert('oauth2', array('type'=>'plugin', 'active'=>1, 'access_id'=>2));
 
 echo "\n\n Your keys are: \n";
 echo "client_id: $entity->guid \n";
-echo "client_secret: $entity->client_secret \n"; 
+echo "client_secret: $entity->client_secret \n";
