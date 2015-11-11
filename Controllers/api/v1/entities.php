@@ -65,34 +65,34 @@ class entities implements Interfaces\Api
         $subtype = null;
         $owner = null;
         switch ($pages[0]) {
-          case "all":
-            $type="user";
-            break;
-          case "owner":
-            if (!is_numeric($pages[2])) {
-                $lookup = new Core\Data\lookup();
-                $pages[2] = key($lookup->get($pages[2]));
-            }
-            $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
+            case "all":
+                $type="user";
+                break;
+            case "owner":
+                if (!is_numeric($pages[2])) {
+                    $lookup = new Core\Data\lookup();
+                    $pages[2] = key($lookup->get($pages[2]));
+                }
+                $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
 
-            $subtype = "archive";
-            break;
+                $subtype = "archive";
+                break;
         }
 
         if ($pages[1] != "all") {
             switch ($pages[1]) {
-            case "images":
-              $type = "object";
-              $subtype = "image";
-              break;
-            case "albums":
-              $type = "object";
-              $subtype = "album";
-              break;
-            case "videos":
-              $type = "object";
-              $subtype = "video";
-          }
+                case "images":
+                    $type = "object";
+                    $subtype = "image";
+                    break;
+                case "albums":
+                    $type = "object";
+                    $subtype = "album";
+                    break;
+                case "videos":
+                    $type = "object";
+                    $subtype = "video";
+              }
         }
 
         //the allowed, plus default, options
