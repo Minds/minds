@@ -1,11 +1,11 @@
-<minds-archive-theatre [object]="entity" *ng-if="entity && entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
+<minds-archive-theatre [object]="entity" *ng-if="entity && entity.subtype == 'image'"></minds-archive-theatre>
+<minds-archive-thumbnail-selector (thumbnail)="setThumbnail($event)" [thumbnail-sec]="entity.thumbnail" [src]="[{ uri: entity.src['720.mp4']}]"  *ng-if="entity && entity.subtype == 'video'">></minds-archive-thumbnail-selector>
 
 <div class="mdl-grid archive-grid" style="max-width:900px" *ng-if="error">
   <h1>{{error}}</h1>
 </div>
 
 <form (submit)="save()" class="mdl-grid archive-grid" style="max-width:660px">
-
 
   <div class="mdl-cell mdl-cell--12-col minds-archive-title" [mdl]>
     <textarea
@@ -20,7 +20,6 @@
   </div>
 
   <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
-
     <div class="m-license-info">
       <i class="material-icons">public</i>
       <select [(ng-model)]="entity.license" class="mdl-color-text--blue-grey-300 m-form-select">
@@ -34,7 +33,6 @@
       </select>
     </div>
   </div>
-
 
   <div class="mdl-cell mdl-cell--12-col" >
     <minds-tinymce [(content)]="entity.description"></minds-tinymce>

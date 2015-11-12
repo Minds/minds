@@ -118,3 +118,53 @@ minds-archive-grid{
   }
 
 }
+
+minds-archive-thumbnail-selector{
+  display:block;
+  background:#000;
+  position:relative;
+
+  video{
+    display:block;
+    max-width:75%;
+    margin:auto;
+  }
+
+  .m-video-loading{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background: rgba(0,0,0,0.7);
+
+    .mdl-spinner{
+      margin:auto;
+    }
+  }
+
+  .m-scrubber{
+    width: 100%;
+    height: 50px;
+    position:relative;
+    cursor:pointer;
+    .m-scrubber-progress{
+      width:8px;
+      position: absolute;
+      top:0;
+      height:100%;
+    }
+  }
+  .m-scrubber-tip{
+    padding: 4px 22px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #FFF;
+    border-radius: 3px 3px 0 0;
+    position: absolute;
+    margin: -78px 0 0 40%;
+    font-size: 12px;
+  }
+
+
+}

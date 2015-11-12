@@ -13,6 +13,7 @@ import { BUTTON_COMPONENTS } from 'src/components/buttons';
 import { MindsTinymce } from 'src/components/editors/tinymce';
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
+import { ThumbnailSelector } from './components/thumbnail-selector';
 
 @Component({
   selector: 'minds-archive-edit',
@@ -20,7 +21,7 @@ import { ArchiveGrid } from './views/grid';
 })
 @View({
   templateUrl: 'templates/plugins/archive/edit.html',
-  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, AutoGrow, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, AutoGrow, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid, ThumbnailSelector  ]
 })
 
 export class ArchiveEdit {
@@ -76,6 +77,12 @@ export class ArchiveEdit {
       .catch((e) => {
         this.error ="There was an error while trying to update";
       });
+  }
+
+  setThumbnail(file){
+    console.log(file);
+    this.entity.file = file[0];
+    this.entity.thumbnail = file[1];
   }
 
 }

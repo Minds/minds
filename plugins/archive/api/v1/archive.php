@@ -10,6 +10,7 @@ namespace minds\plugin\archive\api\v1;
 use Minds\Core;
 use Minds\Helpers;
 use Minds\Interfaces;
+use Minds\Entities as CoreEntities;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
@@ -149,21 +150,38 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
           }
         }
 
+
+        /**
+         * Video specific actions
+         */
+        if($entity->subtype == 'video'){
+            if(isset($_POST['file'])){
+                $thumb = str_replace('data:image/jpeg;base64,', '', $_POST['file']);
+              	$thumb = str_replace(' ', '+', $thumb);
+              	$data = base64_decode($thumb);
+
+              	$file = new CoreEntities\File();
+              	$file->owner_guid = $entity->owner_guid;
+              	$file->setFilename("archive/thumbnails/{$entity->guid}.jpg");
+              	$file->open('write');
+              	$file->write($data);
+              	$file->close();
+              	$entity->thumbnail = $_POST['thumbnail'];
+            }
+            if($activity_post){
+                $activity = new \Minds\Entities\Activity();
+                $activity->setFromEntity($entity)
+                    ->setCustom('video', array(
+                    'thumbnail_src'=>$entity->getIconUrl(),
+                    'guid'=>$entity->guid))
+                    ->setTitle($entity->title)
+                    ->setBlurb($entity->description)
+                    ->save();
+            }
+        }
+
         $entity->access_id = !isset($_POST[$key]) ? 2 : $_POST['access_id'];
         $entity->save(true);
-
-        if($entity->subtype == 'video' && $activity_post){
-
-            $activity = new \Minds\Entities\Activity();
-            $activity->setFromEntity($entity)
-                ->setCustom('video', array(
-                'thumbnail_src'=>$entity->getIconUrl(),
-                'guid'=>$entity->guid))
-                ->setTitle($entity->title)
-                ->setBlurb($entity->description)
-                ->save();
-
-        }
 
         if($activity_post){
           Core\Events\Dispatcher::trigger('social', 'dispatch', array(
