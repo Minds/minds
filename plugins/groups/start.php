@@ -24,9 +24,19 @@ class start extends Components\Plugin{
 			);
 		});
 
+
+    $create_link = new Core\Navigation\Item();
+    $create_link
+      ->setPriority(1)
+      ->setIcon('add')
+      ->setName('Create')
+      ->setTitle('Create (Groups)')
+      ->setPath('/Groups-Create')
+      ->setParams(array())
+      ->setVisibility(0); //only show for loggedin
 		$featured_link = new Core\Navigation\Item();
 		$featured_link
-			->setPriority(1)
+			->setPriority(2)
 			->setIcon('star')
 			->setName('Featured')
 			->setTitle('Featured (Groups)')
@@ -34,22 +44,13 @@ class start extends Components\Plugin{
 			->setParams(array('filter'=>'featured'));
 		$my_link = new Core\Navigation\Item();
 		$my_link
-			->setPriority(2)
+			->setPriority(3)
 			->setIcon('person_pin')
 			->setName('My')
 			->setTitle('My (Groups)')
 			->setPath('/Groups')
 			->setParams(array('filter'=>'member'))
 			->setVisibility(2); //only show for loggedin
-		$create_link = new Core\Navigation\Item();
-		$create_link
-			->setPriority(3)
-			->setIcon('add')
-			->setName('Create')
-			->setTitle('Create (Groups)')
-			->setPath('/Groups-Create')
-			->setParams(array())
-			->setVisibility(0); //only show for loggedin
 
 		$root_link = new Core\Navigation\Item();
 		Core\Navigation\Manager::add($root_link
@@ -59,9 +60,9 @@ class start extends Components\Plugin{
 			->setTitle('Groups')
 			->setPath('/Groups')
 			->setParams(array('filter'=>'featured'))
+      ->addSubItem($create_link)
 			->addSubItem($featured_link)
 			->addSubItem($my_link)
-			->addSubItem($create_link)
 		);
 
 		Api\Routes::add('v1/groups', '\\minds\\plugin\\groups\\api\\v1\\groups');
