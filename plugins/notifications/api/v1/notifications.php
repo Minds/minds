@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Notifications API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -16,11 +16,15 @@ class notifications implements Interfaces\Api{
     /**
      * Return a list of notifications
      * @param array $pages
-     * 
+     *
      * API:: /v1/notifications
-     */      
+     */
     public function get($pages){
 	   $response = array();
+
+     if($pages[0] == 'count'){
+       return Factory::response(['count' => 0]);
+     }
 
 	   $db = new \Minds\Core\Data\Call('entities_by_time');
        $guids = $db->getRow('notifications:'.elgg_get_logged_in_user_guid(), array('limit'=> get_input('limit', 12), 'offset'=>get_input('offset','')));
@@ -50,9 +54,9 @@ class notifications implements Interfaces\Api{
         }
 
         return Factory::response($response);
-        
+
     }
-    
+
     /**
      * Not supported
      */
@@ -62,32 +66,31 @@ class notifications implements Interfaces\Api{
     //        error_log('not logged in, but trying to register push notification id');
       //     exit;
       //  }
-       
+
         $service = $_POST['service'];
         $device_id = $_POST['token'];
-        
+
         //register the push notification
         $token = \Surge\Token::create(array(
                     'service'=>$service,
                     'token'=>$device_id
                     ));
-       
+
         $user_guid = Core\Session::getLoggedinUser()->guid;
         $db = new Core\Data\Call('entities');
         $db->insert($user_guid, array('surge_token' => $token));
-        
+
         return Factory::response($response);
     }
-    
+
     /**
      * Not supported
      */
     public function put($pages){}
-    
+
     /**
      * Not supported
      */
     public function delete($pages){}
- 
+
 }
-        
