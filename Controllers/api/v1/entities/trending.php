@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Trending API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,7 +17,7 @@ class trending implements Interfaces\Api
     /**
      * Returns the entities
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"entities"},
      *     summary="Returns trending entities",
@@ -67,7 +67,7 @@ class trending implements Interfaces\Api
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
                 $rows = $result->getRows();
-                
+
                 $guids = array();
                 foreach ($rows['object'] as $object) {
                     $guids[] = $object['guid'];
@@ -79,7 +79,7 @@ class trending implements Interfaces\Api
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
                 $rows = $result->getRows();
-                
+
                 $guids = array();
                 foreach ($rows['object'] as $object) {
                     $guids[] = $object['guid'];
@@ -87,58 +87,37 @@ class trending implements Interfaces\Api
                 $entities = core\Entities::get(array('guids'=>$guids));
                 break;
             default:
-                
-                if (!$guids) {
-                    return Factory::response(array('status'=>'error', 'message'=>'not found'));
-                }
-                $options['guids'] = $guids;
-                $entities = core\Entities::get($options);
 
+                $db = new Core\Data\Call('entities_by_time');
+                $guids = $db->getRow('trending:month:USER', array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
+                if(!$guids)
+                  break;
+                ksort($guids);
+                $entities = core\Entities::get(array('guids'=>$guids));
+                $response['entities'] = Factory::exportable($entities);
+                $response['load-next'] = (string) end(array_keys($guids));
+  
+                return Factory::response($response);
 
         }
 
-        /*if(!$entities){
-        //the allowed, plus default, options
-        $options = array(
-            'type' => isset($pages[0]) ? $pages[0] : 'object',
-            'subtype' => isset($pages[1]) ? $pages[1] : NULL,
-            'limit'=>12,
-            'offset'=>''
-            );
-            
-        foreach($options as $key => $value){
-            if(isset($_GET[$key]))
-                $options[$key] = $_GET[$key];
-        }
-        
-       
-        $opts = array('timespan' => get_input('timespan', 'day'));
-        $trending = new \MindsTrending(null, $opts);
-        $guids = $trending->getList($options);
-        if(!$guids){
-            return Factory::response(array('status'=>'error', 'message'=>'not found'));
-        }
-        $options['guids'] = $guids;
-        $entities = core\Entities::get($options);
-        }
-         */
         if ($entities) {
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
             $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
         }
-        
+
         return Factory::response($response);
     }
-    
+
     public function post($pages)
     {
     }
-    
+
     public function put($pages)
     {
     }
-    
+
     public function delete($pages)
     {
     }
