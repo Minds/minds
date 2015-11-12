@@ -1,7 +1,7 @@
 <header *ng-if="blog">
   <minds-banner [object]="blog"
     [edit-mode]="editing"
-    [top]="blog.banner_position"
+    [top]="blog.header_top"
     (added)="add_banner($event)"
     [done]="banner_prompt"
     *ng-if="blog.header_bg || editing"
