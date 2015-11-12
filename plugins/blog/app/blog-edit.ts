@@ -73,22 +73,27 @@ export class BlogEdit {
   }
 
   save(){
+    if(!this.canSave)
+      return;
+    this.canSave = false;
     this.check_for_banner().then(() =>{
       this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
         .then((response : any) => {
           this.router.navigate(['/Blog-View', {guid: response.guid}]);
+          this.canSave = true;
         })
         .catch((e) => {
-
+          this.canSave = true;
         });
     })
     .catch(() => {
       this.client.post('api/v1/blog/' + this.guid, this.blog)
         .then((response : any) => {
           this.router.navigate(['/Blog-View', {guid: response.guid}]);
+          this.canSave = true;
         })
         .catch((e) => {
-
+          this.canSave = true;
         });
     });
   }
@@ -97,8 +102,6 @@ export class BlogEdit {
     var self = this;
     this.banner = banner.file;
     this.blog.header_top = banner.top;
-    this.canSave = true;
-    console.log('added banner');
   }
 
   //this is a nasty hack because people don't want to click save on a banner ;@
