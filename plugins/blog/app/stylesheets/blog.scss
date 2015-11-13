@@ -38,6 +38,10 @@ minds-blog-view{
   a {
     color:#607d8b;
   }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 .minds-blog-body{
   padding-top:$minds-padding * 2;
