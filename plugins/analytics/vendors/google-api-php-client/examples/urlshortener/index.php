@@ -16,8 +16,8 @@
  */
 session_start();
 
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_UrlshortenerService.php';
+require_once '../../Google_Client.php';
+require_once '../../contrib/Google_UrlshortenerService.php';
 
 // Visit https://code.google.com/apis/console to
 // generate your client id, client secret, and redirect uri.

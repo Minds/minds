@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 session_start();
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_PagespeedonlineService.php';
+require_once '../../Google_Client.php';
+require_once '../../contrib/Google_PagespeedonlineService.php';
 
 $client = new Google_Client();
 $client->setApplicationName("PageSpeedOnline_Example_App");

@@ -1,6 +1,6 @@
 import { Component, View, CORE_DIRECTIVES, ElementRef, EventEmitter } from 'angular2/angular2';
-import { Client } from "src/services/api";
-import { Material } from 'src/directives/material';
+import { Client } from '../../../../services/api';
+import { Material } from '../../../../directives/material';
 
 @Component({
   selector: 'minds-archive-thumbnail-selector',

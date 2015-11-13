@@ -19,7 +19,7 @@
  * Include the Ad Exchange Buyer service class and the HTML generation
  * functions.
  */
-require_once "../../src/contrib/Google_AdexchangebuyerService.php";
+require_once "../../contrib/Google_AdexchangebuyerService.php";
 require_once "htmlHelper.php";
 
 /**

@@ -22,8 +22,8 @@
 * @author David Torres <david.t@google.com>
 */
 
-require_once "../../src/Google_Client.php";
-require_once "../../src/contrib/Google_AdexchangebuyerService.php";
+require_once "../../Google_Client.php";
+require_once "../../contrib/Google_AdexchangebuyerService.php";
 require_once "htmlHelper.php";
 
 session_start();

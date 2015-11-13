@@ -1,6 +1,6 @@
 <?php
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_SiteVerificationService.php';
+require_once '../../Google_Client.php';
+require_once '../../contrib/Google_SiteVerificationService.php';
 session_start();
 
 $client = new Google_Client();

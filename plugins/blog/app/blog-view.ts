@@ -1,16 +1,16 @@
 import { Component, View, CORE_DIRECTIVES, Inject} from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
-import { MindsTitle } from 'src/services/ux/title';
-import { MindsBanner } from 'src/components/banner';
-import { Comments } from 'src/controllers/comments/comments';
-import { BUTTON_COMPONENTS } from 'src/components/buttons';
+import { Client } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { Material } from '../../directives/material';
+import { MindsTitle } from '../../services/ux/title';
+import { MindsBanner } from '../../components/banner';
+import { Comments } from '../../controllers/comments/comments';
+import { BUTTON_COMPONENTS } from '../../components/buttons';
 
-import { MindsBlogResponse } from 'src/interfaces/responses';
-import { MindsBlogEntity } from 'src/interfaces/entities';
+import { MindsBlogResponse } from '../../interfaces/responses';
+import { MindsBlogEntity } from '../../interfaces/entities';
 
 @Component({
   selector: 'minds-blog-view',

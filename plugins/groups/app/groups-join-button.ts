@@ -1,11 +1,11 @@
 import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { Client } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { MindsGroupListResponse } from 'src/interfaces/responses';
+import { MindsGroupListResponse } from '../../interfaces/responses';
 import { GroupsCreator } from './groups-creator';
 
 @Component({

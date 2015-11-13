@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once '../../src/Google_Client.php';
+require_once '../../Google_Client.php';
 session_start();
 
 $client = new Google_Client();

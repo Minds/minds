@@ -1,12 +1,12 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES, EventEmitter} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Storage } from 'src/services/storage';
-import { Material } from 'src/directives/material';
+import { Client } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { Storage } from '../../services/storage';
+import { Material } from '../../directives/material';
 
 import { MindsKeysResponse } from './interfaces/responses';
-import { MindsChannelResponse } from 'src/interfaces/responses';
+import { MindsChannelResponse } from '../../interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',

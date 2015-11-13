@@ -1,16 +1,16 @@
 import { Component, View, CORE_DIRECTIVES, Inject, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
-import { Client, Upload } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { LICENSES, ACCESS } from 'src/services/list-options';
+import { Client, Upload } from '../../../services/api';
+import { SessionFactory } from '../../../services/session';
+import { LICENSES, ACCESS } from '../../../services/list-options';
 
-import { Material } from 'src/directives/material';
-import { AutoGrow } from 'src/directives/autogrow';
-import { MDL_DIRECTIVES } from 'src/directives/material';
-import { Comments } from 'src/controllers/comments/comments';
-import { BUTTON_COMPONENTS } from 'src/components/buttons';
-import { MindsTinymce } from 'src/components/editors/tinymce';
+import { Material } from '../../../directives/material';
+import { AutoGrow } from '../../../directives/autogrow';
+import { MDL_DIRECTIVES } from '../../../directives/material';
+import { Comments } from '../../../controllers/comments/comments';
+import { BUTTON_COMPONENTS } from '../../../components/buttons';
+import { MindsTinymce } from '../../../components/editors/tinymce';
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
 import { ThumbnailSelector } from './components/thumbnail-selector';

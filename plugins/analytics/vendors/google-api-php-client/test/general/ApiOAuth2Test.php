@@ -18,7 +18,7 @@
  * under the License.
  */
 
-require_once "../src/Google_Client.php";
+require_once "../Google_Client.php";
 require_once "BaseTest.php";
 require_once "io/Google_REST.php";
 

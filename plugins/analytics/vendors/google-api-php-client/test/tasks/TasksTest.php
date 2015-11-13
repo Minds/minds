@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once '../src/contrib/Google_TasksService.php';
+require_once '../contrib/Google_TasksService.php';
 
 class TasksTest extends BaseTest {
   /** @var Google_TasksService */

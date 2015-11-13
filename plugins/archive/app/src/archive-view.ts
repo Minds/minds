@@ -1,12 +1,12 @@
 import { Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { Client } from '../../../services/api';
+import { SessionFactory } from '../../../services/session';
+import { Material } from '../../../directives/material';
 
-import { Comments } from 'src/controllers/comments/comments';
-import { BUTTON_COMPONENTS } from 'src/components/buttons';
+import { Comments } from '../../../controllers/comments/comments';
+import { BUTTON_COMPONENTS } from '../../../components/buttons';
 
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';

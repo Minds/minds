@@ -1,18 +1,18 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
-import { MindsTitle } from 'src/services/ux/title';
+import { MindsTitle } from '../../services/ux/title';
 import { MessengerConversation } from "./messenger-conversation";
 import { MessengerSetup } from "./messenger-setup";
-import { Storage } from 'src/services/storage';
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { BUTTON_COMPONENTS } from 'src/components/buttons';
-import { Material } from 'src/directives/material';
-import { InfiniteScroll } from 'src/directives/infinite-scroll';
+import { Storage } from '../../services/storage';
+import { Client } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { BUTTON_COMPONENTS } from '../../components/buttons';
+import { Material } from '../../directives/material';
+import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { Conversation } from './interfaces/entities';
 import { MindsConversationResponse } from './interfaces/responses';
-import { MindsUserSearchResponse } from 'src/interfaces/responses';
+import { MindsUserSearchResponse } from '../../interfaces/responses';
 
 
 @Component({

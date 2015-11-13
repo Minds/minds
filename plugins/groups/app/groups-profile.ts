@@ -1,27 +1,16 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { MindsTitle } from 'src/services/ux/title';
-import { Client, Upload } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { MDL_DIRECTIVES } from 'src/directives/material';
-import { CARDS } from 'src/controllers/cards/cards';
-import { MindsBanner } from 'src/components/banner'
+import { MindsTitle } from '../../services/ux/title';
+import { Client, Upload } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { MDL_DIRECTIVES } from '../../directives/material';
+import { CARDS } from '../../controllers/cards/cards';
+import { MindsBanner } from '../../components/banner'
 import { GroupsJoinButton } from './groups-join-button';
 import { GroupsProfileMembers } from './profile/members';
 import { GroupsProfileRequests } from './profile/requests';
 import { GroupsProfileFeed } from './profile/feed';
-
-interface MindsGroupResponse{
-  group : MindsGroup
-}
-interface MindsGroup {
-  guid : string,
-  name : string,
-  banner : boolean,
-  banner_position : number,
-  members : Array<any>
-}
 
 
 @Component({
@@ -39,7 +28,7 @@ export class GroupsProfile {
 
   guid;
   filter = "activity";
-  group : MindsGroup;
+  group;
   postMeta : any = {
     message: '',
     container_guid: 0
@@ -64,7 +53,7 @@ export class GroupsProfile {
   load(){
     var self = this;
     this.client.get('api/v1/groups/group/' + this.guid, {})
-      .then((response : MindsGroupResponse) => {
+      .then((response : any) => {
           self.group = response.group;
           self.title.setTitle(self.group.name);
       })

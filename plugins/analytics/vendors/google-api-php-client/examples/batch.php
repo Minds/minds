@@ -15,8 +15,8 @@
  * the License.
  */
 
-require_once '../src/Google_Client.php';
-require_once '../src/contrib/Google_PlusService.php';
+require_once '../Google_Client.php';
+require_once '../contrib/Google_PlusService.php';
 session_start();
 
 $client = new Google_Client();

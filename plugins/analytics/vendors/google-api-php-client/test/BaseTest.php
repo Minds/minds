@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once '../src/Google_Client.php';
+require_once '../Google_Client.php';
 class BaseTest extends PHPUnit_Framework_TestCase {
   /**
    * @var Google_Client

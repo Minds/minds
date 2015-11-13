@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '../../src/Google_Client.php';
+require_once '../../Google_Client.php';
 
 defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
 

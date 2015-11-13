@@ -1,12 +1,12 @@
 import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
-import { MindsTitle } from 'src/services/ux/title';
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
-import { InfiniteScroll } from 'src/directives/infinite-scroll';
-import { MindsBlogListResponse } from 'src/interfaces/responses';
+import { MindsTitle } from '../../services/ux/title';
+import { Client } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { Material } from '../../directives/material';
+import { InfiniteScroll } from '../../directives/infinite-scroll';
+import { MindsBlogListResponse } from '../../interfaces/responses';
 
 import { BlogCard } from './blog-card';
 
@@ -32,10 +32,7 @@ export class Blog {
   _filter : string = "featured";
   _filter2 : string = "";
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams,
-    public title: MindsTitle ){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();

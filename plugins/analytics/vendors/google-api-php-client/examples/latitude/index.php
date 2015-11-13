@@ -16,8 +16,8 @@
  */
 session_start();
 
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_LatitudeService.php';
+require_once '../../Google_Client.php';
+require_once '../../contrib/Google_LatitudeService.php';
 
 $client = new Google_Client();
 // Visit https://code.google.com/apis/console to generate your

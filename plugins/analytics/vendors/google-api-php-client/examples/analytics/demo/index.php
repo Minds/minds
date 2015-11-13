@@ -38,8 +38,8 @@
  * If successful, you should be able to run the Hello Analytics API sample.
  * @author Nick Mihailovski <api.nickm@gmail.com>
  */
-require_once '../../../src/Google_Client.php';
-require_once '../../../src/contrib/Google_AnalyticsService.php';
+require_once '../../../Google_Client.php';
+require_once '../../../contrib/Google_AnalyticsService.php';
 require_once 'storage.php';
 require_once 'authHelper.php';
 

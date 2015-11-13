@@ -1,14 +1,14 @@
 import { Component, View, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
-import { MindsTitle } from 'src/services/ux/title';
-import { LICENSES, ACCESS } from 'src/services/list-options';
-import { Client, Upload } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { MDL_DIRECTIVES } from 'src/directives/material';
-import { MindsTinymce } from 'src/components/editors/tinymce';
-import { MindsBanner } from 'src/components/banner'
-import { AutoGrow } from 'src/directives/autogrow';
+import { MindsTitle } from '../../services/ux/title';
+import { LICENSES, ACCESS } from '../../services/list-options';
+import { Client, Upload } from '../../services/api';
+import { SessionFactory } from '../../services/session';
+import { MDL_DIRECTIVES } from '../../directives/material';
+import { MindsTinymce } from '../../components/editors/tinymce';
+import { MindsBanner } from '../../components/banner'
+import { AutoGrow } from '../../directives/autogrow';
 
 @Component({
   selector: 'minds-blog-edit',

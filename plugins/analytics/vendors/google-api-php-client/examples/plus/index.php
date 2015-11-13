@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once '../../src/Google_Client.php';
-require_once '../../src/contrib/Google_PlusService.php';
+require_once '../../Google_Client.php';
+require_once '../../contrib/Google_PlusService.php';
 
 session_start();
 

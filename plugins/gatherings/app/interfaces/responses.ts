@@ -1,5 +1,5 @@
 import { MindsMessage } from './entities';
-import { MindsResponse } from 'src/interfaces/responses';
+import { MindsResponse } from '../../../interfaces/responses';
 
 export interface MindsMessageResponse extends MindsResponse{
   message : MindsMessage

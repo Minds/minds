@@ -1,8 +1,8 @@
 import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
-import { MindsVideo } from 'src/components/video';
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { MindsVideo } from '../../../../components/video';
+import { Client } from '../../../../services/api';
+import { SessionFactory } from '../../../../services/session';
+import { Material } from '../../../../directives/material';
 
 @Component({
   selector: 'minds-archive-theatre',

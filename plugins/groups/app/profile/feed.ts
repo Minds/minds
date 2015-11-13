@@ -1,12 +1,12 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { Client } from 'src/services/api';
-import { SessionFactory } from 'src/services/session';
-import { Material } from 'src/directives/material';
+import { Client } from '../../../services/api';
+import { SessionFactory } from '../../../services/session';
+import { Material } from '../../../directives/material';
 
-import { Poster } from 'src/controllers/newsfeed/poster/poster';
-import { CARDS } from 'src/controllers/cards/cards';
+import { Poster } from '../../../controllers/newsfeed/poster/poster';
+import { CARDS } from '../../../controllers/cards/cards';
 
 
 interface MindsGroupResponse{

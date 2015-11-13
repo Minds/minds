@@ -18,7 +18,7 @@
 /**
  * Include the AdSenseHost service class and the HTML generation functions.
  */
-require_once "../../src/contrib/Google_AdsensehostService.php";
+require_once "../../contrib/Google_AdsensehostService.php";
 require_once "htmlHelper.php";
 
 /**

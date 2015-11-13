@@ -1,11 +1,11 @@
 <phpunit colors="true">
     <filter>
         <blacklist>
-           <directory suffix=".php">../src/contrib/</directory>
-           <directory suffix=".php">../src/external/</directory>
+           <directory suffix=".php">../contrib/</directory>
+           <directory suffix=".php">../external/</directory>
            <directory suffix=".php">./</directory>
-           <file>../src/cache/googleApcCache.php</file>
-           <file>../src/cache/googleMemcacheCache.php</file>
+           <file>../cache/googleApcCache.php</file>
+           <file>../cache/googleMemcacheCache.php</file>
         </blacklist>
     </filter>
 </phpunit>
