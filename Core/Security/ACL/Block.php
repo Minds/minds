@@ -51,7 +51,7 @@ class Block
         }
 
         $list = $this->db->getRow("acl:blocked:$from", array('limit' => $limit, 'offset' => $offset));
-        return array_keys($list);
+        return $list ? array_keys($list) : array();
     }
 
     /**
