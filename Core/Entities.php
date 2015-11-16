@@ -52,14 +52,18 @@ class Entities extends base
 
         if (isset($row->subtype) && $row->subtype) {
             $sub = "Minds\\Entities\\" . ucfirst($row->type) . "\\" . ucfirst($row->subtype);
-            if (class_exists($sub)) {
+            if (class_exists($sub) && in_array('ElggEntity', class_implements($sub))) {
                 return new $sub($row, $cache);
+            } elseif(in_array("\\Minds\\Entities\\DenormalizedEntity", class_implements($sub))){
+                return (new $sub())->loadFromArray((array) $row);
             }
         }
 
         $default = "Minds\\Entities\\" . ucfirst($row->type);
-        if (class_exists($default)) {
+        if (class_exists($default) && is_subclass_of($default, 'ElggEntity')) {
             return new $default($row, $cache);
+        } elseif(is_subclass_of($default, "Minds\\Entities\\DenormalizedEntity")){
+            return (new $default())->loadFromArray((array) $row);
         }
     }
 }

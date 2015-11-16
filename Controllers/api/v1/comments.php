@@ -88,9 +88,9 @@ class comments implements Interfaces\Api
 
               Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
 
-              \elgg_trigger_plugin_hook('notification', 'all', array(
+              Core\Events\Dispatcher::trigger('notification', 'all', array(
                   'to' => $subscribers,
-                  'object_guid'=>$pages[0],
+                  'entity'=>$pages[0],
                   'description'=>$comment->description,
                   'notification_view'=>'comment'
               ));

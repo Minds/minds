@@ -5,6 +5,7 @@
 namespace Minds\Core\Navigation;
 
 use Minds\Core;
+use Minds\Helpers;
 
 class Manager
 {
@@ -133,7 +134,7 @@ class Manager
         }
 
         self::add((new Item())
-            ->setPriority(7)
+            ->setPriority(2)
             ->setIcon('account_balance')
             ->setName('Wallet')
             ->setTitle('Wallet')
@@ -141,7 +142,19 @@ class Manager
             ->setExtras(array(
                 'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
             )),
-            "topbar"
+            'topbar'
+        );
+
+        self::add((new Item())
+            ->setPriority(1)
+            ->setIcon('notifications')
+            ->setName('Notifications')
+            ->setTitle('Notifications')
+            ->setPath('/Notifications')
+            ->setExtras(array(
+                'counter' => Helpers\Notifications::getCount()
+            )),
+            'topbar'
         );
 
         Core\Pages\Menu::_()->init();

@@ -88,11 +88,10 @@ class Newsfeed implements BoostHandlerInterface
             //Helpers\Counters::clear($guid, "boost_impressions");
 
             $entity = new \Minds\Entities\Activity($boost['guid']);
-            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+            Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array($entity->owner_guid),
-                'object_guid' => $entity->guid,
+                'entity' => $entity,
                 'from'=> 100000000000000519,
-                'object_guid' => $entity->guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_accepted',
                 'params' => array('impressions'=>$boost['impressions']),
@@ -116,10 +115,10 @@ class Newsfeed implements BoostHandlerInterface
         $this->db->remove("boost", array('_id'=>$_id));
 
         $entity = new \Minds\Entities\Activity($boost['guid']);
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Core\Events\Dispatcher::trigger('notification', 'boost', array(
             'to'=>array($entity->owner_guid),
             'from'=> 100000000000000519,
-            'object_guid' => $entity->guid,
+            'entity' => $entity,
             'title' => $entity->title,
             'notification_view' => 'boost_rejected',
             ));
@@ -168,10 +167,10 @@ class Newsfeed implements BoostHandlerInterface
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = new \Minds\Entities\Activity($boost['guid']);
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array($entity->owner_guid),
                 'from'=> 100000000000000519,
-                'object_guid' => $entity->guid,
+                'entity' => $entity,
                 'title' => $entity->title,
                 'notification_view' => 'boost_completed',
                 'params' => array('impressions'=>$boost['impressions']),

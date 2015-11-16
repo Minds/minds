@@ -103,6 +103,9 @@ class DenormalizedEntity
                 $export[$key] = $this->$method();
             elseif(property_exists($this, $key))
                 $export[$key] = $this->$key;
+
+            if (is_object($export[$key]) && method_exists($export[$key], 'export'))
+                $export[$key] = $export[$key]->export();
         }
         return $export;
     }

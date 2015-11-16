@@ -7,6 +7,7 @@ namespace Minds\Core\Events;
 
 use Minds\Core;
 use Minds\Entities;
+use Minds\Helpers;
 
 class Defaults
 {
@@ -28,7 +29,7 @@ class Defaults
                 $export['ownerObj'] = Entities\Factory::build($params['entity']->ownerObj)->export();
                 //$export['ownerObj'] = \Minds\Helpers\Export::sanitize($params['entity']->ownerObj);
               //  $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];
-              $event->setResponse($export);
+                $event->setResponse($export);
             }
         });
 
@@ -60,6 +61,10 @@ class Defaults
             $export['comments:count'] = $count;
             $event->setResponse($export);
         });
+
+        // Notifications events
+        Core\Notification\Events::registerEvents();
+
     }
 
     public static function _()

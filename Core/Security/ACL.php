@@ -62,7 +62,7 @@ class ACL
       /**
        * Is the entity open for loggedin users?
        */
-      if (in_array($entity->access_id, array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))) {
+      if (in_array($entity->getAccessId(), array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))) {
           return true;
       }
 
@@ -81,7 +81,7 @@ class ACL
       /**
        * Allow plugins to extend the ACL check
        */
-      if (Core\Events\Dispatcher::trigger('acl:read', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true) {
+      if (Core\Events\Dispatcher::trigger('acl:read', $entity->getType(), array('entity'=>$entity, 'user'=>$user), false) === true) {
           return true;
       }
 

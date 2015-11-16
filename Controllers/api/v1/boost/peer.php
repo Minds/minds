@@ -154,9 +154,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             $activity->setRemind($embeded->export())->save();
         }
 
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
         'to'=>array($boost->getOwner()->guid),
-        'object_guid' => $boost->getEntity()->guid,
+        'entity' => $boost->getEntity(),
         'title' => $boost->getEntity()->title,
         'notification_view' => 'boost_peer_accepted',
         'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
@@ -189,9 +189,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
         }
 
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
         'to'=>array($boost->getOwner()->guid),
-        'object_guid' => $boost->getEntity()->guid,
+        'entity' => $boost->getEntity(),
         'title' => $boost->getEntity()->title,
         'notification_view' => 'boost_peer_rejected',
         'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]

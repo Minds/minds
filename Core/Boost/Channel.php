@@ -45,18 +45,18 @@ class Channel implements Interfaces\BoostHandlerInterface
         $result = $db->insert("boost:channel:$this->guid:review", array($guid => $points));
 
         //send a notification of boost offer
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to' => array($this->guid),
-                'object_guid' => $guid,
+                'entity' => $guid,
                 'notification_view' => 'boost_request',
                 'params' => array('points'=>$points),
                 'points' => $points
                 ));
 
         //send back to use
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array(Core\Session::getLoggedinUser()->guid),
-                'object_guid' => $guid,
+                'entity' => $guid,
                 'notification_view' => 'boost_submitted_p2p',
                 'params' => array(
                     'points' => $points,
@@ -145,9 +145,9 @@ class Channel implements Interfaces\BoostHandlerInterface
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
         $entity = new \Minds\Entities\Activity($guid);
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Core\Events\Dispatcher::trigger('notification', 'boost', array(
             'to'=>array($entity->owner_guid),
-            'object_guid' => $guid,
+            'entity' => $guid,
             'title' => $entity->title,
             'notification_view' => 'boost_accepted',
             'params' => array('points'=>$points),
@@ -179,9 +179,9 @@ class Channel implements Interfaces\BoostHandlerInterface
         $db->removeAttributes("boost:channel:all:review", array("$this->guid:$guid"));
 
         $entity = new \Minds\Entities\Activity($guid);
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Core\Events\Dispatcher::trigger('notification', 'boost', array(
             'to'=>array($entity->owner_guid),
-            'object_guid' => $guid,
+            'entity' => $guid,
             'title' => $entity->title,
             'notification_view' => 'boost_rejected',
             ));
@@ -225,10 +225,10 @@ class Channel implements Interfaces\BoostHandlerInterface
 
                 Helpers\Wallet::createTransaction($entity->owner_guid, $points, $guid, "boost refund");
 
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                     'to'=>array($entity->owner_guid),
                     'from'=> $destination,
-                    'object_guid' => $guid,
+                    'entity' => $entity,
                     'title' => $entity->title,
                     'notification_view' => 'boost_rejected',
                     ));

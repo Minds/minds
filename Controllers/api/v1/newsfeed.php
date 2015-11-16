@@ -118,7 +118,7 @@ class newsfeed implements Interfaces\Api
                 }
 
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
-                elgg_trigger_plugin_hook('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'object_guid'=>$embeded->guid));
+                Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
 
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     $cacher = \Minds\Core\Data\cache\Factory::build();

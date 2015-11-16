@@ -84,10 +84,10 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
 
             $to_guid = $entity->getOwnerGuid();
             $user = get_user_by_username('minds');
-            \elgg_trigger_plugin_hook('notification', 'all', array(
+            Core\Events\Dispatcher::trigger('notification', 'all', array(
           'to' => array($to_guid),
           'from'=> 100000000000000519,
-            'object_guid'=>$guid,
+            'entity'=>$entity,
             'description'=>$message,
             'notification_view'=>'feature'
         ));

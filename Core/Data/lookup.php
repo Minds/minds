@@ -45,10 +45,10 @@ class lookup
         return $this->call->removeAttributes($key, array($column));
     }
     
-    public function get($name)
+    public function get($name, array $options = [])
     {
         try {
-            return $this->call->getRow($this->namespace.$name);
+            return $this->call->getRow($this->namespace.$name, $options);
         } catch (\Exception $e) {
             return false;
         }

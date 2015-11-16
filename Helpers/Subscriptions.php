@@ -6,7 +6,7 @@ use Minds\Core\Events;
 
 /**
  * Subscriptions helpers
- * 
+ *
  * Helper methods for subscriptions
  */
 class Subscriptions
@@ -23,15 +23,15 @@ class Subscriptions
         if (empty($data)) {
             $data = time();
         }
-        
+
         $friends = new Core\Data\Call('friends');
         $friendsof = new Core\Data\Call('friendsof');
-        
-        
+
+
         if (is_array($data)) {
             $data = json_encode($data);
         }
-        
+
         if ($friends->insert($user_guid, array($to_guid=>$data)) && $friendsof->insert($to_guid, array($user_guid=>$data))) {
             $return =  true;
         }
@@ -60,27 +60,27 @@ class Subscriptions
 
         //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
         Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));
-        Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+        Events\Dispatcher::trigger('notification', 'subscription', array(
                 'to'=>array($to_guid),
-                'object_guid' => $user_guid,
+                'entity' => $user_guid,
                 'notification_view' => 'friends',
                 'params' => array()
                 ));
-                
+
         return (bool) $return;
     }
-    
+
     public static function unSubscribe($user, $from)
     {
         $return = false;
-        
+
         $friends = new Core\Data\Call('friends');
         $friendsof = new Core\Data\Call('friendsof');
         error_log("$user is unsubscribing from $from");
         $friends->removeAttributes($user, array($from));
         $friendsof->removeAttributes($from, array($user));
         $return = true;
-        
+
         //@todo make unsubscribe work with neo4j
         //$prepared = new Core\Data\Neo4j\Prepared\Common();
         //$return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
@@ -104,7 +104,7 @@ class Subscriptions
         //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;
     }
-    
+
     public static function isSubscribed($user, $to)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -115,19 +115,19 @@ class Subscriptions
         if ($cacher->get("$user:isSubscribed:$to") === 0) {
             return false;
         }
-        
+
         $return = 0;
         $db = new Core\Data\Call('friends');
         $row = $db->getRow($user, array('limit'=> 1, 'offset'=>$to));
         if ($row && key($row) == $to) {
             $return = true;
         }
-        
+
         $cacher->set("$user:isSubscribed:$to", $return);
 
         return (bool) $return ;
     }
-    
+
     public static function isSubscriber($user, $to)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -150,11 +150,11 @@ class Subscriptions
 
         return (bool) $return;
     }
-    
+
     public static function getSubscriptions($user)
     {
     }
-    
+
     public static function getSubscribers($user)
     {
     }

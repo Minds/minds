@@ -40,6 +40,7 @@
   "require-dev":{
 		"phpspec/phpspec": "~2.0",
 		"fabpot/php-cs-fixer": "dev-master@dev",
+        "bossa/phpspec2-expect": "*",
     "apigen/apigen": "4.1.1"
   }
 }

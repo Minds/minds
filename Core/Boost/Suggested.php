@@ -85,9 +85,9 @@ class Suggested implements Interfaces\BoostHandlerInterface
             $entity = \Minds\Entities\Factory::build($boost['guid']);
             if ($entity) {
                 $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                     'to'=>array($to_guid),
-                    'object_guid' => $entity->guid,
+                    'entity' => $entity,
                     'from'=> 100000000000000519,
                     'title' => $entity->title,
                     'notification_view' => 'boost_accepted',
@@ -116,11 +116,10 @@ class Suggested implements Interfaces\BoostHandlerInterface
         $entity = \Minds\Entities\Factory::build($boost['guid']);
         if ($entity) {
             $to_guid = $entity->type == 'user' ? $entity->guid : $entity->owner_guid;
-            Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+            Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array($to_guid),
-                'object_guid' => $entity->guid,
+                'entity' => $entity,
                 'from'=> 100000000000000519,
-                'object_guid' => $guid,
                 'title' => $entity->title,
                 'notification_view' => 'boost_rejected',
                 ));
@@ -170,10 +169,10 @@ class Suggested implements Interfaces\BoostHandlerInterface
                 //remove from boost queue
                 $this->db->remove("boost", array('_id' => $boost['_id']));
                 $entity = \Minds\Entities\Factory::build($boost['guid']);
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array($entity->owner_guid),
                 'from' => 100000000000000519,
-                'object_guid' => $entity->guid,
+                'entity' => $entity,
                 'title' => $entity->title,
                 'notification_view' => 'boost_completed',
                 'params' => array('impressions'=>$boost['impressions']),

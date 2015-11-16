@@ -127,17 +127,17 @@ class boost implements Interfaces\Api
             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
             //a boost gift
             if (isset($pages[2]) && $pages[2] != Core\Session::getLoggedinUser()->guid) {
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array($pages[2]),
-                'object_guid' => $pages[1],
+                'entity' => $pages[1],
                 'notification_view' => 'boost_gift',
                 'params' => array('impressions'=>$impressions),
                 'impressions' => $impressions
                 ));
             } elseif ($pages[0] != 'channel') {
-                Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                 'to'=>array(Core\Session::getLoggedinUser()->guid),
-                'object_guid' => $pages[1],
+                'entity' => $pages[1],
                 'notification_view' => 'boost_submitted',
                 'params' => array('impressions'=>$impressions),
                 'impressions' => $impressions
