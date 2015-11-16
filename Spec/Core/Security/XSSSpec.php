@@ -49,19 +49,28 @@ class XSSSpec extends ObjectBehavior
         $this->clean($dirty)->shouldReturn("<a href=\"https://www.minds.com\" target=\"_blank\">take me home</a>");
     }
 
-    function it_should_not_allow_bad_url_schemes(){
+    function it_should_not_allow_bad_url_schemes()
+    {
         $dirty = "<a href=\"javascript:alert('HEYHO')\">bad scheme here</a>";
         $this->clean($dirty)->shouldReturn("<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
     }
 
-    function it_should_set_an_image_src(){
+    function it_should_set_an_image_src()
+    {
         $dirty = "<img src=\"https://minds.com/fakeimg.png\">";
         $this->clean($dirty)->shouldReturn("<img src=\"https://minds.com/fakeimg.png\">");
     }
 
-    function it_should_set_width_and_height(){
+    function it_should_set_width_and_height()
+    {
         $dirty = "<img src=\"https://minds.com/fakeimg.png\" width=\"300\" height=\"600\">";
         $this->clean($dirty)->shouldReturn("<img src=\"https://minds.com/fakeimg.png\" width=\"300\" height=\"600\">");
+    }
+
+    function it_should_close_open_tags()
+    {
+        $dirty = "<p><p>";
+        $this->clean($dirty)->shouldReturn("<p><p></p></p>");
     }
 
 }
