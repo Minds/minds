@@ -6,6 +6,7 @@
  */
 namespace minds\plugin\archive\entities;
 
+use Minds\Core;
 use Minds\Entities\Object;
 use cinemr;
 use Minds\Helpers;
@@ -143,7 +144,7 @@ class video extends object{
         );
     $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
     $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
-		$export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
+		$export['description'] = (new Core\Security\XSS())->clean($this->description); //videos need to be able to export html.. sanitize soon!
 		return $export;
 	}
 }

@@ -86,6 +86,7 @@ class blog implements Interfaces\Api{
             //provide correct subscribe info for userobj (renormalize)
             $owner = new user($blog->ownerObj);
             $response['blog']['ownerObj'] = $owner->export();
+            $response['blog']['description'] = (new Core\Security\XSS())->clean($response['blog']['description']);
             break;
           case "header":
             $blog = new entities\Blog($pages[1]);
