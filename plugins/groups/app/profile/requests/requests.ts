@@ -1,11 +1,11 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { Client } from '../../../services/api';
-import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-import { InfiniteScroll } from '../../../directives/infinite-scroll';
-import { UserCard } from '../../../controllers/cards/cards';
+import { Client } from '../../../../services/api';
+import { SessionFactory } from '../../../../services/session';
+import { Material } from '../../../../directives/material';
+import { InfiniteScroll } from '../../../../directives/infinite-scroll';
+import { UserCard } from '../../../../controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-requests',
@@ -13,7 +13,7 @@ import { UserCard } from '../../../controllers/cards/cards';
   properties: ['_group : group']
 })
 @View({
-  templateUrl: 'templates/plugins/groups/profile/requests.html',
+  templateUrl: 'src/plugins/groups/profile/requests/requests.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, InfiniteScroll, UserCard ]
 })
 

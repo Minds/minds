@@ -1,11 +1,11 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { Router, RouterLink } from "angular2/router";
 
-import { Client, Upload } from '../../services/api';
-import { MindsTitle } from '../../services/ux/title';
-import { SessionFactory } from '../../services/session';
-import { Material } from '../../directives/material';
-import { MindsBanner } from '../../components/banner';
+import { Client, Upload } from '../../../services/api';
+import { MindsTitle } from '../../../services/ux/title';
+import { SessionFactory } from '../../../services/session';
+import { Material } from '../../../directives/material';
+import { MindsBanner } from '../../../components/banner';
 
 @Component({
   selector: 'minds-groups-create',
@@ -13,7 +13,7 @@ import { MindsBanner } from '../../components/banner';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/groups/create.html',
+  templateUrl: 'src/plugins/groups/create/create.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner ]
 })
 

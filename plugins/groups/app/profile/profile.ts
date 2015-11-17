@@ -1,16 +1,16 @@
 import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { MindsTitle } from '../../services/ux/title';
-import { Client, Upload } from '../../services/api';
-import { SessionFactory } from '../../services/session';
-import { MDL_DIRECTIVES } from '../../directives/material';
-import { CARDS } from '../../controllers/cards/cards';
-import { MindsBanner } from '../../components/banner'
-import { GroupsJoinButton } from './groups-join-button';
-import { GroupsProfileMembers } from './profile/members';
-import { GroupsProfileRequests } from './profile/requests';
-import { GroupsProfileFeed } from './profile/feed';
+import { MindsTitle } from '../../../services/ux/title';
+import { Client, Upload } from '../../../services/api';
+import { SessionFactory } from '../../../services/session';
+import { MDL_DIRECTIVES } from '../../../directives/material';
+import { CARDS } from '../../../controllers/cards/cards';
+import { MindsBanner } from '../../../components/banner'
+import { GroupsJoinButton } from '../groups-join-button';
+import { GroupsProfileMembers } from './members/members';
+import { GroupsProfileRequests } from './requests/requests';
+import { GroupsProfileFeed } from './feed/feed';
 
 
 @Component({
@@ -19,7 +19,7 @@ import { GroupsProfileFeed } from './profile/feed';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/groups/profile.html',
+  templateUrl: 'src/plugins/groups/profile/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, CARDS, GroupsJoinButton,
     GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner ]
 })

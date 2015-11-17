@@ -7,7 +7,7 @@ import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
-import { GroupsCreator } from './groups-creator';
+import { GroupsCreator } from './create/create';
 import { GroupsJoinButton } from './groups-join-button';
 
 @Component({
@@ -16,7 +16,7 @@ import { GroupsJoinButton } from './groups-join-button';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/groups/groups.html',
+  templateUrl: 'src/plugins/groups/groups.html',
   directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, GroupsJoinButton ]
 })
 
@@ -81,5 +81,5 @@ export class Groups {
 
 }
 
-export { GroupsProfile } from './groups-profile';
-export { GroupsCreator } from './groups-creator';
+export { GroupsProfile } from './profile/profile';
+export { GroupsCreator } from './create/create';
