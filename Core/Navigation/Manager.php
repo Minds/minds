@@ -165,7 +165,7 @@ class Manager
             ->setPath('/Groups-Profile')
             ->setParams([
               'guid' => '100000000000000681',
-              'filter' => 'feed'
+              'filter' => 'activity'
             ]),
             'topbar'
         );
