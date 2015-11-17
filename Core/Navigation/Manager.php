@@ -157,6 +157,19 @@ class Manager
             'topbar'
         );
 
+        self::add((new Item())
+            ->setPriority(0)
+            ->setIcon('bug_report')
+            ->setName('Bugs')
+            ->setTitle('Report bugs')
+            ->setPath('/Groups-Profile')
+            ->setParams([
+              'guid' => '100000000000000681',
+              'filter' => 'feed'
+            ]),
+            'topbar'
+        );
+
         Core\Pages\Menu::_()->init();
     }
 
