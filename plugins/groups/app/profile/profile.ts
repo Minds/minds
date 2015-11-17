@@ -7,6 +7,8 @@ import { SessionFactory } from '../../../services/session';
 import { MDL_DIRECTIVES } from '../../../directives/material';
 import { CARDS } from '../../../controllers/cards/cards';
 import { MindsBanner } from '../../../components/banner'
+import { MindsAvatar } from '../../../components/avatar'
+
 import { GroupsJoinButton } from '../groups-join-button';
 import { GroupsProfileMembers } from './members/members';
 import { GroupsProfileRequests } from './requests/requests';
@@ -21,7 +23,7 @@ import { GroupsProfileFeed } from './feed/feed';
 @View({
   templateUrl: 'src/plugins/groups/profile/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, CARDS, GroupsJoinButton,
-    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner ]
+    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar ]
 })
 
 export class GroupsProfile {
@@ -89,6 +91,17 @@ export class GroupsProfile {
 
       });
     console.log('new banne added', file);
+  }
+
+  upload_avatar(file : any){
+    console.log(file);
+    this.upload.post('api/v1/groups/group/' + this.group.guid + '/avatar', [file])
+      .then((response : any) => {
+
+      })
+      .catch((e) => {
+
+      });
   }
 
 }

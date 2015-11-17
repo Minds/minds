@@ -10,11 +10,18 @@
     min-height:0;
   }
 }
-.members-grid{
-  display:flex;
-  flex-flow:row wrap;
-}
 
+minds-groups-profile{
+
+  .members-grid{
+    display:flex;
+    flex-flow:row wrap;
+  }
+
+  .minds-avatar{
+    max-width: 100%;
+  }
+}
 
 .group-avatar{
   padding:$minds-padding;

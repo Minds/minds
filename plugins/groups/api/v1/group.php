@@ -22,7 +22,8 @@ class group implements Interfaces\Api{
      *
      * API:: /v1/group/group/:guid
      */
-    public function get($pages){
+    public function get($pages)
+    {
 
         $group = new entities\Group($pages[0]);
         $response['group'] = $group->export();
@@ -35,62 +36,79 @@ class group implements Interfaces\Api{
 
     }
 
-    public function post($pages){
+    public function post($pages)
+    {
 
-      if(isset($pages[0])){
-        $group = new entities\Group($pages[0]);
-      } else {
-        $group = new entities\Group();
-      }
-
-      if(isset($pages[1]) && $group->guid){
-        $response = array();
-        switch($pages[1]){
-          case "avatar":
-            break;
-          case "banner":
-            if(is_uploaded_file($_FILES['file']['tmp_name'])){
-              $resized = get_resized_image_from_uploaded_file('file', 2000);
-              $file = new CoreEntities\File();
-              $file->owner_guid = $group->owner_guid;
-              $file->setFilename("group/{$group->guid}.jpg");
-              $file->open('write');
-              $file->write($resized);
-              $file->close();
-              $group->banner = true;
-              $group->banner_position = $_POST['banner_position'];
-              $group->save();
-            }
-            break;
+        if(isset($pages[0])){
+          $group = new entities\Group($pages[0]);
+          } else {
+              $group = new entities\Group();
           }
-          return Factory::response($response);
-      }
 
-      $group->name = $_POST['name'];
-      $group->access_id = 2;
-      $group->membership = $_POST['membership'];
-      $group->save();
+        if(isset($pages[1]) && $group->guid){
+            $response = array();
+            switch($pages[1]){
+                case "avatar":
+                    if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                        $icon_sizes = Core\Config::_()->get('icon_sizes');
+                        foreach(['tiny', 'small', 'medium', 'large'] as $size){
+                            $resized = get_resized_image_from_uploaded_file('file', $icon_sizes[$size]['w'], $icon_sizes[$size]['h'], $icon_sizes[$size]['square']);
 
-      if(is_uploaded_file($_FILES['file']['tmp_name'])){
-        $resized = get_resized_image_from_uploaded_file('file', 2000);
-        $file = new CoreEntities\File();
-        $file->owner_guid = $group->owner_guid;
-        $file->setFilename("group/{$group->guid}.jpg");
-        $file->open('write');
-        $file->write($resized);
-        $file->close();
-        $group->banner = true;
-        $group->banner_position = $_POST['banner_position'];
+                            $file = new CoreEntities\File();
+                            $file->owner_guid = $group->owner_guid;
+                            $file->setFilename("groups/{$group->guid}{$size}.jpg");
+                            $file->open('write');
+                            $file->write($resized);
+                            $file->close();
+
+                        }
+                        $group->icontime = time();
+                        $group->save();
+                    }
+                    break;
+                case "banner":
+                    if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                        $resized = get_resized_image_from_uploaded_file('file', 2000);
+                        $file = new CoreEntities\File();
+                        $file->owner_guid = $group->owner_guid;
+                        $file->setFilename("group/{$group->guid}.jpg");
+                        $file->open('write');
+                        $file->write($resized);
+                        $file->close();
+                        $group->banner = true;
+                        $group->banner_position = $_POST['banner_position'];
+                        $group->save();
+                    }
+                    break;
+            }
+            return Factory::response($response);
+        }
+
+        $group->name = $_POST['name'];
+        $group->access_id = 2;
+        $group->membership = $_POST['membership'];
         $group->save();
-      }
 
-      //now join
-      $group->join(Core\Session::getLoggedInUser());
+        if(is_uploaded_file($_FILES['file']['tmp_name'])){
+            $resized = get_resized_image_from_uploaded_file('file', 2000);
+            $file = new CoreEntities\File();
+            $file->owner_guid = $group->owner_guid;
+            $file->setFilename("group/{$group->guid}.jpg");
+            $file->open('write');
+            $file->write($resized);
+            $file->close();
+            $group->banner = true;
+            $group->banner_position = $_POST['banner_position'];
+            $group->save();
+        }
 
-      $response = array();
-      $response['guid'] = $group->guid;
+        //now join
+        $group->join(Core\Session::getLoggedInUser());
 
-      return Factory::response($response);
+        $response = array();
+        $response['guid'] = $group->guid;
+
+        return Factory::response($response);
     }
 
     public function put($pages){
