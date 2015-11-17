@@ -1,5 +1,0 @@
-<?php
-/**
- * A topbar banner
- */
- 
