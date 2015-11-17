@@ -25,17 +25,18 @@ class avatars implements Interfaces\FS
 
         $filepath = "";
         switch ($entity->type) {
-      case "user":
-        //coming soon
-        break;
-      case "group":
-        $f = new Entities\File();
-        $f->owner_guid = $entity->owner_guid;
-        $f->setFilename("groups/{$entity->guid}{$size}.jpg");
-        $filepath = $f->getFilenameOnFilestore();
-      case "object":
-        break;
-    }
+            case "user":
+                //coming soon
+                break;
+            case "group":
+                $f = new Entities\File();
+                $f->owner_guid = $entity->owner_guid;
+                $f->setFilename("groups/{$entity->guid}{$size}.jpg");
+                $filepath = $f->getFilenameOnFilestore();
+
+            case "object":
+                break;
+        }
 
         if (!file_exists($filepath)) {
             $filepath =  Core\Config::build()->path . "front/public/assets/avatars/default-$size.png";
