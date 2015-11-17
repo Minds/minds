@@ -46,8 +46,14 @@ class Config
         $this->config[$key] = $value;
     }
 
-    public function __get($key){
-      return $this->get($key);
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
     }
 
     /**
@@ -55,10 +61,7 @@ class Config
      */
     public static function build()
     {
-        if (!self::$_) {
-            self::$_ = new Config();
-        }
-        return self::$_;
+        return self::_();
     }
 
     public static function _()

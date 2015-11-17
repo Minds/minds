@@ -77,7 +77,7 @@ class Minds extends base
     {
         global $CONFIG;
         if (!isset($CONFIG)) {
-            $CONFIG = Config::build();
+            $CONFIG = Config::_();
         }
 
         // Load the system settings
