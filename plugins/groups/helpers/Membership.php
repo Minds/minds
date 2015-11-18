@@ -15,11 +15,11 @@ class Membership{
   static public function getMembers($group, $options = array()){
 
     if(!$group)
-      return array();
+        return array();
 
     $options = array_merge(array(
-      'limit' => 12,
-      'offset' => ""
+        'limit' => 12,
+        'offset' => ""
     ), $options);
 
     $key = "$group->guid:member:inverted";
@@ -28,7 +28,7 @@ class Membership{
     $guids = $db->getRow($key, array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 
     if(!$guids)
-      return array();
+        return array();
 
     $users = Core\Entities::get(array('guids'=>array_keys($guids)));
 
@@ -41,10 +41,10 @@ class Membership{
    * @return int
    */
   static public function getMembersCount($group){
-    if(!$group)
-      return 0;
+      if(!$group)
+          return 0;
 
-    return Data\Relationships::build()->count($group->guid, "member", true);
+        return Data\Relationships::build()->count($group->guid, "member", true);
   }
 
   /**
@@ -55,26 +55,25 @@ class Membership{
    */
   static public function getRequests($group, $options){
 
-    if(!$group)
-      return array();
+      if(!$group)
+          return array();
 
-    $options = array_merge(array(
-      'limit' => 12,
-      'offset' => ""
-    ), $options);
+      $options = array_merge(array(
+          'limit' => 12,
+          'offset' => ""
+      ), $options);
 
-    $key = "$group->guid:membership_request:inverted";
+      $key = "$group->guid:membership_request:inverted";
 
-    $db = new Data\Call('relationships');
-    $guids = $db->getRow($key, array('offset'=>$options['offset'], 'limit'=>$options['limit']));
+      $db = new Data\Call('relationships');
+      $guids = $db->getRow($key, array('offset'=>$options['offset'], 'limit'=>$options['limit']));
 
-    if(!$guids)
-      return array();
+      if(!$guids)
+          return array();
 
-    $users = Core\Entities::get(array('guids'=>array_keys($guids)));
+      $users = Core\Entities::get(array('guids'=>array_keys($guids)));
 
-    return $users;
-
+      return $users;
   }
 
   /**
@@ -83,10 +82,10 @@ class Membership{
    * @return int
    */
   static public function getRequestsCount($group){
-    if(!$group)
-      return 0;
+      if(!$group)
+          return 0;
 
-    return Data\Relationships::build()->count($group->guid, "membership_request", true);
+      return Data\Relationships::build()->count($group->guid, "membership_request", true);
   }
 
   /**
@@ -96,19 +95,18 @@ class Membership{
    * @return bool
    */
   static public function join($group, $user = NULL){
-    if($user == NULL)
-      $user = Core\Session::getLoggedinUser();
+      if($user == NULL)
+          $user = Core\Session::getLoggedinUser();
 
-    if(!$group)
-      return false;
+      if(!$group)
+          return false;
 
-    if($group->membership == 2 || $group->canEdit()){
-      Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
-      return Data\Relationships::build()->create($user->guid, 'member', $group->guid);
-    }
+      if($group->membership == 2 || $group->canEdit()){
+          Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
+          return Data\Relationships::build()->create($user->guid, 'member', $group->guid);
+      }
 
-    return Data\Relationships::build()->create($user->guid, 'membership_request', $group->guid);
-
+      return Data\Relationships::build()->create($user->guid, 'membership_request', $group->guid);
   }
 
   /**
@@ -125,7 +123,6 @@ class Membership{
       return false;
 
     return Data\Relationships::build()->remove($user->guid, 'member', $group->guid);
-
   }
 
   /**
@@ -135,32 +132,34 @@ class Membership{
    * @return bool
    */
   static public function isMember($group, $user = NULL){
-    if($user == NULL)
-      $user = Core\Session::getLoggedinUser();
+      if($user == NULL)
+          $user = Core\Session::getLoggedinUser();
 
-    $user_guid = $user;
-    if(is_object($user))
-      $user_guid = $user->guid;
+      if(!$user)
+          return false;
 
-    if(!$group)
-      return false;
+      $user_guid = $user;
+      if(is_object($user))
+          $user_guid = $user->guid;
 
-    $group_guid = $group;
-    if(is_object($group))
-      $group_guid = $group->guid;
+      if(!$group)
+          return false;
 
-    return Data\Relationships::build()->check($user_guid, 'member', $group_guid);
+      $group_guid = $group;
+      if(is_object($group))
+          $group_guid = $group->guid;
+
+      return Data\Relationships::build()->check($user_guid, 'member', $group_guid);
   }
 
   static public function cancelRequest($group, $user = NULL){
-    if($user == NULL)
-      $user = Core\Session::getLoggedinUser();
+      if($user == NULL)
+          $user = Core\Session::getLoggedinUser();
 
-    if(!$group)
-      return false;
+      if(!$group)
+          return false;
 
-    return Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
-
+      return Data\Relationships::build()->remove($user->guid, 'membership_request', $group->guid);
   }
 
 }
