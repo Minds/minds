@@ -12,48 +12,44 @@ use minds\plugin\blog\entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class header implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
+class header implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
     /**
      * Returns the conversations or conversation
      * @param array $pages
      *
      * API:: /v1/blog/:filter
      */
-    public function get($pages){
+    public function get($pages)
+    {
+        $blog = new entities\Blog($pages[0]);
+        $header = new \ElggFile();
+        $header->owner_guid = $blog->owner_guid;
+        $header->setFilename("blog/{$blog->guid}.jpg");
+        header('Content-Type: image/jpeg');
+        header('Expires: ' . date('r', time() + 864000));
+        header("Pragma: public");
+        header("Cache-Control: public");
 
-      $blog = new entities\Blog($pages[0]);
-      $header = new \ElggFile();
-			$header->owner_guid = $blog->owner_guid;
-			$header->setFilename("blog/{$blog->guid}.jpg");
-			header('Content-Type: image/jpeg');
-			header('Expires: ' . date('r', time() + 864000));
-			header("Pragma: public");
- 			header("Cache-Control: public");
-
-			try{
-				echo file_get_contents($header->getFilenameOnFilestore());
-			}catch(\Exception $e){}
-			exit;
-
+        try {
+            echo file_get_contents($header->getFilenameOnFilestore());
+        } catch (\Exception $e) {
+        }
+        exit;
     }
 
-    public function post($pages){
-
+    public function post($pages)
+    {
         return Factory::response(array());
-
     }
 
-    public function put($pages){
-
+    public function put($pages)
+    {
         return Factory::response(array());
-
     }
 
-    public function delete($pages){
-
+    public function delete($pages)
+    {
         return Factory::response(array());
-
     }
-
 }
