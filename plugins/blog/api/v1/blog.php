@@ -69,7 +69,7 @@ class blog implements Interfaces\Api{
           case "owner":
             if(isset($pages[1]) && !is_numeric($pages[1])){
               $lookup = new Core\Data\lookup();
-              $pages[1] = $lookup->get($pages[1]);
+              $pages[1] = $lookup->get(strtolower($pages[1]));
             }
             $entities = core\Entities::get(array(
               'subtype' => 'blog',
