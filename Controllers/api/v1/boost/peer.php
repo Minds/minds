@@ -59,26 +59,26 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if (!$entity) {
             return Factory::response([
-            'status' => 'error',
-            'stage' => 'initial',
-            'message' => 'We couldn\'t find the entity you wanted boost. Please try again.'
-          ]);
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => 'We couldn\'t find the entity you wanted boost. Please try again.'
+            ]);
         }
 
         if (!$destination) {
             return Factory::response([
-            'status' => 'error',
-            'stage' => 'initial',
-            'message' => 'We couldn\'t find the user you wish to boost to. Please try another user.'
-          ]);
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => 'We couldn\'t find the user you wish to boost to. Please try another user.'
+            ]);
         }
 
         if ($type == "pro" && !$destination->merchant) {
             return Factory::response([
-            'status' => 'error',
-            'stage' => 'initial',
-            'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
-          ]);
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
+            ]);
         }
 
         $boost = (new Entities\Boost\Peer())
@@ -102,10 +102,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $transaction_id = Payments\Factory::build('braintree')->setSale($sale);
             } catch (\Exception $e) {
                 return Factory::response([
-              'status' => 'error',
-              'stage' => 'transaction',
-              'message' => $e->getMessage()
-            ]);
+                    'status' => 'error',
+                    'stage' => 'transaction',
+                    'message' => $e->getMessage()
+                ]);
             }
         } else {
             $transactions_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
@@ -113,6 +113,14 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $boost->setTransactionId($transaction_id)
           ->save();
+
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
+            'to'=> [$boost->getDestination()->guid],
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_peer_request',
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
 
         $response['boost_guid'] = $boost->getGuid();
 
@@ -133,9 +141,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 Payments\Factory::build('braintree')->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
-            'status' => 'error',
-            'message' => $e->getMessage()
-          ]);
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ]);
                 return false;
             }
         } else {
@@ -155,12 +163,12 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-        'to'=>array($boost->getOwner()->guid),
-        'entity' => $boost->getEntity(),
-        'title' => $boost->getEntity()->title,
-        'notification_view' => 'boost_peer_accepted',
-        'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
-      ]);
+            'to'=>array($boost->getOwner()->guid),
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_peer_accepted',
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
 
         $pro->accept($pages[0]);
         $response['status'] = 'success';
@@ -190,12 +198,12 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-        'to'=>array($boost->getOwner()->guid),
-        'entity' => $boost->getEntity(),
-        'title' => $boost->getEntity()->title,
-        'notification_view' => 'boost_peer_rejected',
-        'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
-      ]);
+            'to'=>array($boost->getOwner()->guid),
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_peer_rejected',
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
 
         $pro->reject($pages[0]);
         $response['status'] = 'success';
