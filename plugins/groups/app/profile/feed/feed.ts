@@ -4,6 +4,7 @@ import { RouterLink, RouteParams } from "angular2/router";
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
+import { InfiniteScroll } from '../../../../directives/infinite-scroll';
 
 import { Poster } from '../../../../controllers/newsfeed/poster/poster';
 import { CARDS } from '../../../../controllers/cards/cards';
@@ -27,7 +28,7 @@ interface MindsGroup {
 })
 @View({
   templateUrl: 'src/plugins/groups/profile/feed/feed.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, CARDS ]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, CARDS, InfiniteScroll ]
 })
 
 export class GroupsProfileFeed {
