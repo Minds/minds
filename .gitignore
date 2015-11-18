@@ -1,6 +1,6 @@
 # ignore Elgg configuration
-settings.php
-multi.settings.php
+/settings.php
+/multi.settings.php
 
 bin
 
