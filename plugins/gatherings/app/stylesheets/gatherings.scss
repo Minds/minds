@@ -1,5 +1,13 @@
 @import 'defaults.scss';
 
+minds-gatherings{
+  @media screen and (max-width: $min-tablet){
+    .mdl-grid{
+      flex-direction: column-reverse;
+    }
+  }
+}
+
 minds-messenger-conversation{
 
   .minds-messenger-messenger{
