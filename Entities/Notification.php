@@ -8,15 +8,12 @@ namespace Minds\Entities;
 
 use Minds\Core\Data;
 use Minds\Entities\DenormalizedEntity;
-
 use Minds\Core\Guid as CoreGuid;
 use Minds\Core\Queue\Client as QueueClient;
-
 use Minds\Helpers\Notifications;
 
 class Notification extends DenormalizedEntity
 {
-
     use \Minds\Traits\CurrentUser;
 
     protected $type = 'notification';
@@ -53,9 +50,9 @@ class Notification extends DenormalizedEntity
      */
     public function save()
     {
-
-        if (!$this->to)
+        if (!$this->to) {
             throw new \UnexpectedValueException('Missing target User');
+        }
 
         // generate a GUID (if not present) before saving
         $this->getGuid();
@@ -83,14 +80,14 @@ class Notification extends DenormalizedEntity
         Notifications::increaseCounter($this->to->guid);
 
         return $this;
-
     }
 
     /**
      * Returns the value of `type` property
      * @return mixed
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
@@ -99,7 +96,8 @@ class Notification extends DenormalizedEntity
      * @param $type mixed
      * @return Entities\Notification
      */
-    public function setType($type) {
+    public function setType($type)
+    {
         $this->type = $type;
         return $this;
     }
@@ -108,15 +106,14 @@ class Notification extends DenormalizedEntity
      * Returns the value of `type` property. Generates it if doesn't exist
      * @return mixed
      */
-    public function getGuid() {
-
+    public function getGuid()
+    {
         if (!$this->guid) {
             $this->guid = CoreGuid::build();
             $this->time_created = time();
         }
 
         return $this->guid;
-
     }
 
     /**
@@ -124,7 +121,8 @@ class Notification extends DenormalizedEntity
      * @param $guid mixed
      * @return Entities\Notification
      */
-    public function setGuid($guid) {
+    public function setGuid($guid)
+    {
         $this->guid = $guid;
         return $this;
     }
@@ -133,7 +131,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `notification_view` property
      * @return mixed
      */
-    public function getNotificationView() {
+    public function getNotificationView()
+    {
         return $this->notification_view;
     }
 
@@ -142,7 +141,8 @@ class Notification extends DenormalizedEntity
      * @param $notification_view mixed
      * @return Entities\Notification
      */
-    public function setNotificationView($notification_view) {
+    public function setNotificationView($notification_view)
+    {
         $this->notification_view = $notification_view;
         return $this;
     }
@@ -151,7 +151,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `description` property
      * @return mixed
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
@@ -160,7 +161,8 @@ class Notification extends DenormalizedEntity
      * @param $description mixed
      * @return Entities\Notification
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
         return $this;
     }
@@ -169,7 +171,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `read` property
      * @return mixed
      */
-    public function getRead() {
+    public function getRead()
+    {
         return $this->read;
     }
 
@@ -178,7 +181,8 @@ class Notification extends DenormalizedEntity
      * @param $read mixed
      * @return Entities\Notification
      */
-    public function setRead($read) {
+    public function setRead($read)
+    {
         $this->read = $read;
         return $this;
     }
@@ -187,7 +191,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `access_id` property
      * @return mixed
      */
-    public function getAccessId() {
+    public function getAccessId()
+    {
         return $this->access_id;
     }
 
@@ -196,7 +201,8 @@ class Notification extends DenormalizedEntity
      * @param $access_id mixed
      * @return Entities\Notification
      */
-    public function setAccessId($access_id) {
+    public function setAccessId($access_id)
+    {
         $this->access_id = $access_id;
         return $this;
     }
@@ -205,7 +211,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `params` property
      * @return mixed
      */
-    public function getParams() {
+    public function getParams()
+    {
         return $this->params;
     }
 
@@ -214,7 +221,8 @@ class Notification extends DenormalizedEntity
      * @param $params mixed
      * @return Entities\Notification
      */
-    public function setParams($params) {
+    public function setParams($params)
+    {
         $this->params = $params;
         return $this;
     }
@@ -223,7 +231,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `time_created` property
      * @return mixed
      */
-    public function getTimeCreated() {
+    public function getTimeCreated()
+    {
         return $this->time_created;
     }
 
@@ -232,7 +241,8 @@ class Notification extends DenormalizedEntity
      * @param $time_created mixed
      * @return Entities\Notification
      */
-    public function setTimeCreated($time_created) {
+    public function setTimeCreated($time_created)
+    {
         $this->time_created = $time_created;
         return $this;
     }
@@ -241,7 +251,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `to` property
      * @return mixed
      */
-    public function getTo() {
+    public function getTo()
+    {
         return $this->to;
     }
 
@@ -250,7 +261,8 @@ class Notification extends DenormalizedEntity
      * @param $to mixed
      * @return Entities\Notification
      */
-    public function setTo($to) {
+    public function setTo($to)
+    {
         $this->to = Factory::build($to) ?: false;
         return $this;
     }
@@ -259,7 +271,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `entity` property
      * @return mixed
      */
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
@@ -268,7 +281,8 @@ class Notification extends DenormalizedEntity
      * @param $entity mixed
      * @return Entities\Notification
      */
-    public function setEntity($entity) {
+    public function setEntity($entity)
+    {
         $this->entity = Factory::build($entity) ?: false;
         return $this;
     }
@@ -277,7 +291,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `from` property
      * @return mixed
      */
-    public function getFrom() {
+    public function getFrom()
+    {
         return $this->from;
     }
 
@@ -286,7 +301,8 @@ class Notification extends DenormalizedEntity
      * @param $from mixed
      * @return Entities\Notification
      */
-    public function setFrom($from) {
+    public function setFrom($from)
+    {
         $this->from = Factory::build($from) ?: false;
         return $this;
     }
@@ -295,7 +311,8 @@ class Notification extends DenormalizedEntity
      * Returns the value of `owner` property
      * @return mixed
      */
-    public function getOwner() {
+    public function getOwner()
+    {
         return $this->owner;
     }
 
@@ -304,7 +321,8 @@ class Notification extends DenormalizedEntity
      * @param $owner mixed
      * @return Entities\Notification
      */
-    public function setOwner($owner) {
+    public function setOwner($owner)
+    {
         $this->owner = Factory::build($owner);
         return $this;
     }

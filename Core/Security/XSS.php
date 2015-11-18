@@ -9,11 +9,11 @@ use Minds\Interfaces\XSSRule;
 
 class XSS
 {
-
     private $rules = [];
     private $allowed = [];
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->init();
     }
 
@@ -23,10 +23,10 @@ class XSS
      */
     private function init()
     {
-      $this->setAllowed();
-      $this->addRule(new XSS\TagsRule);
-      $this->addRule(new XSS\GenericRule);
-      $this->addRule(new XSS\UriSchemeRule);
+        $this->setAllowed();
+        $this->addRule(new XSS\TagsRule);
+        $this->addRule(new XSS\GenericRule);
+        $this->addRule(new XSS\UriSchemeRule);
     }
 
     /**
@@ -36,8 +36,8 @@ class XSS
      */
     private function addRule(XSSRule $rule)
     {
-      $this->rules[] = $rule;
-      return $this;
+        $this->rules[] = $rule;
+        return $this;
     }
 
     /**
@@ -63,7 +63,7 @@ class XSS
      */
     public function clean($string)
     {
-        foreach($this->rules as $rule){
+        foreach ($this->rules as $rule) {
             $string = $rule
               ->setString($string)
               ->setAllowed($this->allowed)
@@ -72,7 +72,5 @@ class XSS
         }
 
         return $string;
-
     }
-
 }

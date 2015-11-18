@@ -2,13 +2,11 @@
 namespace Minds\Core\Notification\Extensions;
 
 use Minds\Interfaces;
-
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Queue\Client as QueueClient;
 
 class Push implements Interfaces\NotificationExtensionInterface
 {
-
     /**
      * Singleton instance
      * @var Push
@@ -22,7 +20,6 @@ class Push implements Interfaces\NotificationExtensionInterface
      */
     public function queue(array $notification = [])
     {
-
         $notification = array_merge([
             'exchange' => 'mindsqueue',
             'queue' => 'Push',
@@ -33,8 +30,9 @@ class Push implements Interfaces\NotificationExtensionInterface
         ], $notification);
 
         // TODO: [emi] should I throw an \Exception?
-        if (!$notification['uri'] || !$notification['to'])
+        if (!$notification['uri'] || !$notification['to']) {
             return false;
+        }
 
         return QueueClient::build()
             ->setExchange($notification['exchange'])
@@ -44,7 +42,6 @@ class Push implements Interfaces\NotificationExtensionInterface
                 'message' => static::buildNotificationMesage($notification),
                 'uri' => $notification['uri']
             ]);
-
     }
 
     /**
@@ -73,15 +70,15 @@ class Push implements Interfaces\NotificationExtensionInterface
      */
     protected static function buildNotificationMesage(array $notification = [])
     {
-
         $from_user = EntitiesFactory::build($notification['from'] ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
         $message = 'You have a notification';
 
-        if (!isset($notification['params']['notification_view']))
+        if (!isset($notification['params']['notification_view'])) {
             return $message;
+        }
 
         $title = htmlspecialchars_decode($notification['params']['title']);
         $description = htmlspecialchars_decode($notification['params']['description']);
@@ -129,7 +126,6 @@ class Push implements Interfaces\NotificationExtensionInterface
         }
 
         return $message;
-
     }
 
     /**
@@ -142,5 +138,4 @@ class Push implements Interfaces\NotificationExtensionInterface
         }
         return self::$_;
     }
-
 }

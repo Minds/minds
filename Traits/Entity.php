@@ -6,22 +6,23 @@ namespace Minds\Traits;
 
 use Minds\Core;
 
-trait Entity{
-
+trait Entity
+{
     /**
      * Return the Guid of an entity
      */
     public function getGuid()
     {
-        if(!$this->guid)
+        if (!$this->guid) {
             $this->guid = Core\Guid::build();
+        }
         $this->time_created = time();
         return $this->guid;
     }
 
-    public function setGuid($guid){
+    public function setGuid($guid)
+    {
         $this->guid = $guid;
         return $this->guid;
     }
-
 }

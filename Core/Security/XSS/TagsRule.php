@@ -5,11 +5,10 @@
 
  namespace Minds\Core\Security\XSS;
 
- use Minds\Interfaces;
+use Minds\Interfaces;
 
- class TagsRule implements Interfaces\XSSRule
- {
-
+class TagsRule implements Interfaces\XSSRule
+{
     private $dirtyString = "";
     private $cleanString = "";
     private $allowedTags = "";
@@ -42,9 +41,10 @@
     public function setAllowed($allowed = [])
     {
         $this->allowedTags = "";
-        foreach($allowed as $tag){
-            if(strpos($tag, '<') === 0)
-               $this->allowedTags .= $tag;
+        foreach ($allowed as $tag) {
+            if (strpos($tag, '<') === 0) {
+                $this->allowedTags .= $tag;
+            }
         }
         return $this;
     }
@@ -58,5 +58,4 @@
         $this->cleanString = strip_tags($this->dirtyString, $this->allowedTags);
         return $this;
     }
-
- }
+}

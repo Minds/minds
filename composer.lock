@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ddc16e41828b8b28466b612e53d2f4b1",
-    "content-hash": "c6754bac55c53331c71a2e43d854f824",
+    "hash": "ee646c4d67081c348d9d9a47b9a90ab9",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -1965,12 +1964,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "9fab551f0b821ef067dfb02d7a619cb4ace2da80"
+                "reference": "6283fbe95a6883f0c38e84413e6ca98342913e72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/9fab551f0b821ef067dfb02d7a619cb4ace2da80",
-                "reference": "9fab551f0b821ef067dfb02d7a619cb4ace2da80",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/6283fbe95a6883f0c38e84413e6ca98342913e72",
+                "reference": "6283fbe95a6883f0c38e84413e6ca98342913e72",
                 "shasum": ""
             },
             "require": {
@@ -2016,7 +2015,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2015-11-03 19:15:40"
+            "time": "2015-11-17 19:41:37"
         },
         {
             "name": "herrera-io/json",

@@ -40,7 +40,7 @@ class comments implements Interfaces\Api
         }
 
         usort($comments, function ($a, $b) {
-          return $a->time_created - $b->time_created;
+            return $a->time_created - $b->time_created;
         });
         foreach ($comments as $k => $comment) {
             if (!$comment->guid) {
@@ -74,8 +74,9 @@ class comments implements Interfaces\Api
         case is_numeric($pages[0]):
         default:
           $parent = new \Minds\Entities\Entity($pages[0]);
-          if($parent instanceof Entities\Activity && $parent->remind_object)
-            $parent = (object) $parent->remind_object;
+          if ($parent instanceof Entities\Activity && $parent->remind_object) {
+              $parent = (object) $parent->remind_object;
+          }
           $comment = new Entities\Comment();
           $comment->description = urldecode($_POST['comment']);
           $comment->setParent($parent);

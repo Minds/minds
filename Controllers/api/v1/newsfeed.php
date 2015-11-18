@@ -284,7 +284,7 @@ class newsfeed implements Interfaces\Api
                   ->setKey($activity->guid)
                   ->increment();
 
-                if($activity->remind_object){
+                if ($activity->remind_object) {
                     Core\Analytics\App::_()
                       ->setMetric('impression')
                       ->setKey($activity->remind_object['guid'])

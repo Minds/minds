@@ -9,7 +9,6 @@ use Minds\Core\Navigation;
 
 class Menu
 {
-
     private static $_;
     private $containers = [];
 
@@ -17,11 +16,11 @@ class Menu
     {
         $footer = Manager::_()->getMenu('footer');
 
-        usort($footer, function($a, $b){
+        usort($footer, function ($a, $b) {
           return strcmp($b->getTitle(), $a->getTitle());
         });
 
-        foreach($footer as $page){
+        foreach ($footer as $page) {
             Navigation\Manager::add(
                 (new Navigation\Item())
                     ->setName($page->getTitle())
@@ -33,13 +32,13 @@ class Menu
                 "footer"
             );
         }
-
     }
 
     public static function _()
     {
-        if(!self::$_)
+        if (!self::$_) {
             self::$_ = new Menu();
+        }
         return self::$_;
     }
 }

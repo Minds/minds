@@ -9,13 +9,11 @@ use Minds\Entities;
 use Minds\Core;
 use Minds\Core\Events;
 use Minds\Core\Notification\Factory as NotificationFactory;
-
 use Minds\Entities\Factory;
 use Minds\Helpers\Counters;
 
 class Notifications
 {
-
     use \Minds\Traits\CurrentUser;
 
     /**
@@ -26,7 +24,6 @@ class Notifications
      */
     public static function getCount($user = null, array $options = [])
     {
-
         $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
@@ -34,11 +31,11 @@ class Notifications
         // FIXME: [emi] In legacy code this is defaulted to true, but the operation is commented out
         $cache = isset($options['cache']) ? $options['cache'] : false;
 
-        if ($cache)
+        if ($cache) {
             return $user->notifications_count;
+        }
 
         return Counters::get($user, 'notifications:count');
-
     }
 
     /**
@@ -48,13 +45,11 @@ class Notifications
      */
     public static function increaseCounter($user = null)
     {
-
         $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
         try {
-
             if ($user) {
                 elgg_set_ignore_access(true);
 
@@ -63,13 +58,11 @@ class Notifications
 
                 elgg_set_ignore_access(false);
             }
-
         } catch (Exception $e) {
             // NOOP
         }
 
         Counters::increment($user, 'notifications:count');
-
     }
 
     /**
@@ -79,13 +72,11 @@ class Notifications
      */
     public static function resetCounter($user = null)
     {
-
         $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
         try {
-
             if ($user) {
                 elgg_set_ignore_access(true);
 
@@ -94,13 +85,11 @@ class Notifications
 
                 elgg_set_ignore_access(false);
             }
-
         } catch (Exception $e) {
             // NOOP
         }
 
         Counters::clear($user, 'notifications:count');
-
     }
 
     // -------- Reading
@@ -112,7 +101,6 @@ class Notifications
      */
     public static function get(array $options = [])
     {
-
         $defaults = [
             'user_guid' => Core\Session::getLoggedinUserGuid(),
             'reversed' => true,
@@ -132,13 +120,13 @@ class Notifications
 
         $rows = $db->getRow('notifications:' . $options['user_guid'], $args);
 
-        if($args['offset'])
+        if ($args['offset']) {
             unset($rows[$args['offset']]);
+        }
 
         $rows = static::polyfillNotifications($rows);
 
         return NotificationFactory::buildFromArray($rows);
-
     }
 
     /**
@@ -146,21 +134,22 @@ class Notifications
      * @param  array &$rows
      * @return null
      */
-    protected static function polyfillNotifications($rows) {
-
+    protected static function polyfillNotifications($rows)
+    {
         $guids = [];
 
         // Pre-process (get all legacy notification references)
         foreach ($rows as $guid => $data) {
-
-            if (!is_numeric($data) || $guid != (int) $data)
+            if (!is_numeric($data) || $guid != (int) $data) {
                 continue;
+            }
 
             $guids[] = $guid;
         }
 
-        if (!$guids)
+        if (!$guids) {
             return $rows;
+        }
 
         // Fetch legacy notification rows
         $db = new Core\Data\Call('entities');
@@ -168,9 +157,9 @@ class Notifications
 
         // Post-process (apply notification rows)
         foreach ($rows as $guid => $data) {
-
-            if (!is_numeric($data) || !isset($notifications[$guid]))
+            if (!is_numeric($data) || !isset($notifications[$guid])) {
                 continue;
+            }
 
             $notification = $notifications[$guid];
 
@@ -188,10 +177,8 @@ class Notifications
                 'from' => $notification['from_guid'],
                 'owner' => $notification['owner_guid'],
             ];
-
         }
 
         return $rows;
-
     }
 }

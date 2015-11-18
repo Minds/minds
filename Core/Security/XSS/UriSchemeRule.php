@@ -5,11 +5,10 @@
 
  namespace Minds\Core\Security\XSS;
 
- use Minds\Interfaces;
+use Minds\Interfaces;
 
- class UriSchemeRule implements Interfaces\XSSRule
- {
-
+class UriSchemeRule implements Interfaces\XSSRule
+{
     private $dirtyString = "";
     private $cleanString = "";
     private $allowedSchemes = [];
@@ -43,9 +42,10 @@
     public function setAllowed($allowed = [])
     {
         $this->allowedSchemes = [];
-        foreach($allowed as $tag){
-            if(strpos($tag, '::') === 0)
-               $this->allowedSchemes[] = $tag;
+        foreach ($allowed as $tag) {
+            if (strpos($tag, '::') === 0) {
+                $this->allowedSchemes[] = $tag;
+            }
         }
         return $this;
     }
@@ -58,12 +58,12 @@
     {
         $this->cleanString = $this->dirtyString;
 
-        foreach($this->badSchemes as $scheme){
-            if(strpos($this->dirtyString, "$scheme:") !== FALSE)
+        foreach ($this->badSchemes as $scheme) {
+            if (strpos($this->dirtyString, "$scheme:") !== false) {
                 $this->cleanString = str_replace("$scheme:", '', $this->dirtyString);
+            }
         }
 
         return $this;
     }
-
- }
+}

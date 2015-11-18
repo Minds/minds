@@ -22,7 +22,6 @@ use Minds\Api\Factory;
 // @codingStandardsIgnoreStart
 class invite implements Interfaces\Api
 {
-
     // @codingStandardsIgnoreEnd
 
     use \Minds\Traits\HttpMethodsInput;
@@ -43,7 +42,6 @@ class invite implements Interfaces\Api
      */
     public function post($pages)
     {
-
         $response = [ 'done' => false ];
 
         if (static::hasPostValue('contacts') && is_array(static::getPostValue('contacts'))) {
@@ -65,7 +63,6 @@ class invite implements Interfaces\Api
         }
 
         return Factory::response($response);
-
     }
 
     /**
@@ -91,7 +88,6 @@ class invite implements Interfaces\Api
      */
     protected function sendInviteEmail($contact)
     {
-
         if (empty($contact['emails'][0]['value'])) {
             return false;
         }
@@ -112,7 +108,5 @@ class invite implements Interfaces\Api
         $sent = phpmailer_send($from->email, $from_name, $email, $name, $subject, $body, null, true);
 
         return $sent;
-
     }
-
 }

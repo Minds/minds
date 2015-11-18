@@ -90,8 +90,9 @@ class trending implements Interfaces\Api
 
                 $db = new Core\Data\Call('entities_by_time');
                 $guids = $db->getRow('trending:month:USER', array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
-                if(!$guids)
-                  break;
+                if (!$guids) {
+                    break;
+                }
                 ksort($guids);
                 $entities = core\Entities::get(array('guids'=>$guids));
                 $response['entities'] = Factory::exportable($entities);

@@ -16,38 +16,38 @@ use Minds\Helpers;
 use Braintree_WebhookNotification;
 use Braintree_WebhookNotification;
 
-class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
-  /**
+class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
+    /**
    * NOT AVAILABLE
    */
-  public function get($pages){
-
+  public function get($pages)
+  {
       return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
-
   }
 
   /**
    */
-  public function post($pages){
+  public function post($pages)
+  {
+      $notification = Braintree_WebhookNotification::parse($_POST['btSignature'], $_POST['btPayload']);
+      error_log(print_r($notification, true));
 
-    $notification = Braintree_WebhookNotification::parse($_POST['btSignature'], $_POST['btPayload']);
-    error_log(print_r($notification, true));
-
-    switch($notification->kind){
-      case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_APPROVED;
-
-        break;
-      case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_DECLINED;
+      switch ($notification->kind) {
+        case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_APPROVED:
+            break;
+        case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_DECLINED:
+            break;
     }
 
-
-    return Factory::response($response);
-
+      return Factory::response($response);
   }
 
-  public function put($pages){}
+    public function put($pages)
+    {
+    }
 
-  public function delete($pages){}
-
+    public function delete($pages)
+    {
+    }
 }

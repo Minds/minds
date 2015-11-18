@@ -9,7 +9,6 @@ use Minds\Core\Data;
 
 class Page extends DenormalizedEntity
 {
-
     protected $title;
     protected $body;
     protected $path;
@@ -51,12 +50,14 @@ class Page extends DenormalizedEntity
         return $this->path;
     }
 
-    public function setMenuContainer($container){
+    public function setMenuContainer($container)
+    {
         $this->menuContainer = $container;
         return $this;
     }
 
-    public function getMenuContainer(){
+    public function getMenuContainer()
+    {
         return $this->menuContainer;
     }
 
@@ -73,10 +74,10 @@ class Page extends DenormalizedEntity
             'path' => $this->path,
             'menuContainer' => $this->menuContainer
         ]);
-        if(!$success)
+        if (!$success) {
             throw new \Exception("We couldn't save the entity to the database");
+        }
         //$this->saveToIndex();
         return $this;
     }
-
 }

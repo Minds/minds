@@ -5,11 +5,10 @@
 
  namespace Minds\Core\Security\XSS;
 
- use Minds\Interfaces;
+use Minds\Interfaces;
 
- class GenericRule implements Interfaces\XSSRule
- {
-
+class GenericRule implements Interfaces\XSSRule
+{
     private $dirtyString = "";
     private $cleanString = "";
     private $allowedAttributes = "";
@@ -42,9 +41,10 @@
     public function setAllowed($allowed = [])
     {
         $this->allowedAttributes = [];
-        foreach($allowed as $tag){
-            if(strpos($tag, '=') === 1)
-               $this->allowedAttributes[] = $tag;
+        foreach ($allowed as $tag) {
+            if (strpos($tag, '=') === 1) {
+                $this->allowedAttributes[] = $tag;
+            }
         }
         return $this;
     }
@@ -68,31 +68,31 @@
             [$this, 'cleanSplit'],
             $this->dirtyString);
 
-          $this->cleanString  = $this->cleanAttributes($this->cleanString);
+        $this->cleanString  = $this->cleanAttributes($this->cleanString);
 
 
           //remove trailing line
-          if(strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== FALSE && strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === FALSE){
+          if (strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== false && strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === false) {
               $this->cleanString = substr($this->cleanString, 0, strlen($this->cleanString)-1);
           }
 
-          return $this;
+        return $this;
     }
 
     private function cleanSplit($matches = [])
     {
         $string = $matches[1];
 
-        if(substr($string, 0, 1) != '<') {
+        if (substr($string, 0, 1) != '<') {
             // We matched a lone ">" character.
             return '&gt;';
-        }elseif(strlen($string) == 1) {
+        } elseif (strlen($string) == 1) {
             // We matched a lone "<" character.
             return '&lt;';
         }
 
         if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9\-]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
-          // Seriously malformed.
+            // Seriously malformed.
           return '';
         }
 
@@ -102,15 +102,15 @@
         $comment = isset($matches[4]) ? $matches[4] : false;
 
         if ($comment) {
-          $element = '!--';
+            $element = '!--';
         }
 
         if ($comment) {
-          return $comment;
+            return $comment;
         }
 
         if ($slash != '') {
-          return "</$element>";
+            return "</$element>";
         }
 
         // Is there a closing XHTML slash at the end of the attributes?
@@ -128,7 +128,6 @@
 
     private function cleanAttributes($string)
     {
-
         $dom = new \DOMDocument();
         @$dom->loadHTML($string, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
@@ -136,30 +135,33 @@
         $xpath = new \DOMXPath($dom);
         $elements = $xpath->evaluate("//*");
 
-        foreach($elements as $element){
+        foreach ($elements as $element) {
 
             //check what we are allowed and store an internal pointer
             $safe = [];
-            foreach($this->allowedAttributes as $a){
-                $tag = substr($a, 0,1); //eg. * is all element, a is just anchor tags (<a>)
+            foreach ($this->allowedAttributes as $a) {
+                $tag = substr($a, 0, 1); //eg. * is all element, a is just anchor tags (<a>)
                 $attr = substr($a, 2);
 
-                if(($tag == '*' || $tag == $element->nodeName) && $element->getAttribute($attr))
+                if (($tag == '*' || $tag == $element->nodeName) && $element->getAttribute($attr)) {
                     $safe[$attr] = $element->getAttribute($attr);
+                }
             }
 
-            while ($element->attributes->length)
+            while ($element->attributes->length) {
                 $element->removeAttribute($element->attributes->item(0)->name);
+            }
 
-            foreach($safe as $k => $v)
+            foreach ($safe as $k => $v) {
                 $element->setAttribute($k, $v);
+            }
 
             //make all urls force open in a new tab/window
-            if($element->nodeName == 'a')
+            if ($element->nodeName == 'a') {
                 $element->setAttribute('target', '_blank');
+            }
         }
 
         return $dom->saveHtml();
     }
-
- }
+}
