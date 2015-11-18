@@ -14,8 +14,8 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities as CoreEntities;
 
-class group implements Interfaces\Api{
-
+class group implements Interfaces\Api
+{
     /**
      * Returns the conversations or conversation
      * @param array $pages
@@ -24,7 +24,6 @@ class group implements Interfaces\Api{
      */
     public function get($pages)
     {
-
         $group = new entities\Group($pages[0]);
         $response['group'] = $group->export();
         $response['group']['members'] = Factory::exportable(helpers\Membership::getMembers($group));
@@ -33,25 +32,23 @@ class group implements Interfaces\Api{
         $response['group']['requests:count'] = helpers\Membership::getRequestsCount($group);
 
         return Factory::response($response);
-
     }
 
     public function post($pages)
     {
+        if (isset($pages[0])) {
+            $group = new entities\Group($pages[0]);
+        } else {
+            $group = new entities\Group();
+        }
 
-        if(isset($pages[0])){
-          $group = new entities\Group($pages[0]);
-          } else {
-              $group = new entities\Group();
-          }
-
-        if(isset($pages[1]) && $group->guid){
+        if (isset($pages[1]) && $group->guid) {
             $response = array();
-            switch($pages[1]){
+            switch ($pages[1]) {
                 case "avatar":
-                    if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                    if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                         $icon_sizes = Core\Config::_()->get('icon_sizes');
-                        foreach(['tiny', 'small', 'medium', 'large'] as $size){
+                        foreach (['tiny', 'small', 'medium', 'large'] as $size) {
                             $resized = get_resized_image_from_uploaded_file('file', $icon_sizes[$size]['w'], $icon_sizes[$size]['h'], $icon_sizes[$size]['square']);
 
                             $file = new CoreEntities\File();
@@ -60,14 +57,13 @@ class group implements Interfaces\Api{
                             $file->open('write');
                             $file->write($resized);
                             $file->close();
-
                         }
                         $group->icontime = time();
                         $group->save();
                     }
                     break;
                 case "banner":
-                    if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                    if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                         $resized = get_resized_image_from_uploaded_file('file', 2000);
                         $file = new CoreEntities\File();
                         $file->owner_guid = $group->owner_guid;
@@ -89,7 +85,7 @@ class group implements Interfaces\Api{
         $group->membership = $_POST['membership'];
         $group->save();
 
-        if(is_uploaded_file($_FILES['file']['tmp_name'])){
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
             $resized = get_resized_image_from_uploaded_file('file', 2000);
             $file = new CoreEntities\File();
             $file->owner_guid = $group->owner_guid;
@@ -111,12 +107,13 @@ class group implements Interfaces\Api{
         return Factory::response($response);
     }
 
-    public function put($pages){
+    public function put($pages)
+    {
         return Factory::response(array());
     }
 
-    public function delete($pages){
+    public function delete($pages)
+    {
         return Factory::response(array());
     }
-
 }

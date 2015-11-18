@@ -12,24 +12,25 @@ $group_guid = get_input('group_guid');
 /* @var ElggGroup $group */
 $group = get_entity($group_guid, 'group');
 if (!($group instanceof ElggGroup)) {
-	header("HTTP/1.1 404 Not Found");
-	exit;
+    header("HTTP/1.1 404 Not Found");
+    exit;
 }
 
-if($group->legacy_guid){
-	$group_guid = $group->legacy_guid;
+if ($group->legacy_guid) {
+    $group_guid = $group->legacy_guid;
 }
 
 // If is the same ETag, content didn't changed.
 $etag = $group->icontime . $group_guid;
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == "\"$etag\"") {
-	header("HTTP/1.1 304 Not Modified");
-	exit;
+    header("HTTP/1.1 304 Not Modified");
+    exit;
 }
 
 $size = strtolower(get_input('size'));
-if (!in_array($size, array('large', 'medium', 'small', 'tiny', 'master', 'topbar')))
-	$size = "medium";
+if (!in_array($size, array('large', 'medium', 'small', 'tiny', 'master', 'topbar'))) {
+    $size = "medium";
+}
 
 $success = false;
 
@@ -39,14 +40,14 @@ $filehandler->setFilename("groups/" . $group_guid . $size . ".jpg");
 
 $success = false;
 if ($filehandler->open("read")) {
-	if ($contents = $filehandler->read($filehandler->size())) {
-		$success = true;
-	}
+    if ($contents = $filehandler->read($filehandler->size())) {
+        $success = true;
+    }
 }
 
 if (!$success) {
-	$location = elgg_get_plugins_path() . "groups/graphics/default{$size}.gif";
-	$contents = @file_get_contents($location);
+    $location = elgg_get_plugins_path() . "groups/graphics/default{$size}.gif";
+    $contents = @file_get_contents($location);
 }
 
 header("Content-type: image/jpeg");
