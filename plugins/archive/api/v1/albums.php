@@ -59,7 +59,7 @@ class albums implements Interfaces\Api{
                   unset($guids[$_GET['offset']]);
 
                 if(!$guids){
-                  return Factory::exportable([]);
+                  return Factory::response([]);
                 }
 
                 $entities = Core\Entities::get([
