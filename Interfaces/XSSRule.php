@@ -7,7 +7,6 @@ namespace Minds\Interfaces;
 
 interface XSSRule
 {
-
     /**
      * Set the dirty string to sanitize
      * @param $string
@@ -33,5 +32,4 @@ interface XSSRule
      * @return $this
      */
     public function clean();
-
 }

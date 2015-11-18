@@ -11,7 +11,6 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Api\Factory;
-
 use Minds\Entities\Notification as NotificationEntity;
 
 /**
@@ -38,11 +37,11 @@ class notifications implements Interfaces\Api
      */
     public function get($pages)
     {
-
         $response = [];
 
-        if (!isset($pages[0]))
+        if (!isset($pages[0])) {
             $pages = ['list'];
+        }
 
         switch ($pages[0]) {
 
@@ -55,16 +54,18 @@ class notifications implements Interfaces\Api
                 $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
 
-                if ($limit > static::MAX_NOTIFICATIONS_PER_PAGE)
+                if ($limit > static::MAX_NOTIFICATIONS_PER_PAGE) {
                     $limit = static::MAX_NOTIFICATIONS_PER_PAGE;
+                }
 
                 $notifications = Helpers\Notifications::get([
                     'limit' => $limit,
                     'offset' => $offset
                 ]);
 
-                if (!$notifications)
+                if (!$notifications) {
                     return Factory::response([]);
+                }
 
                 $response['notifications'] = Factory::exportable($notifications);
 
@@ -72,14 +73,13 @@ class notifications implements Interfaces\Api
                 // TODO: [ignacio] refactor frontend rendering
 
                 foreach ($response['notifications'] as $key => $data) {
-
                     $response['notifications'][$key]['ownerObj'] = $data['owner'];
                     $response['notifications'][$key]['fromObj'] = $data['from'];
                     $response['notifications'][$key]['from_guid'] = (string) $data['from']['guid'];
 
-                    if ($data['entity'])
+                    if ($data['entity']) {
                         $response['notifications'][$key]['entityObj'] = $data['entity'];
-
+                    }
                 }
 
                 $response['load-next'] = (string) end($notifications)->getGuid();
@@ -91,7 +91,6 @@ class notifications implements Interfaces\Api
         }
 
         return Factory::response($response);
-
     }
 
     /**
@@ -101,7 +100,6 @@ class notifications implements Interfaces\Api
      */
     public function post($pages)
     {
-
         $service = static::getPostValue('service', [ 'required' => true ]);
         $passed_token = static::getPostValue('token', [ 'required' => true ]);
 
@@ -114,7 +112,6 @@ class notifications implements Interfaces\Api
             ->insert(static::getCurrentUserGuid(), [ 'surge_token' => $token ]);
 
         return Factory::response(array());
-
     }
 
     /**

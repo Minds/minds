@@ -64,7 +64,6 @@ class Defaults
 
         // Notifications events
         Core\Notification\Events::registerEvents();
-
     }
 
     public static function _()

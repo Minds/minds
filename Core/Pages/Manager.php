@@ -9,7 +9,6 @@ use Minds\Entities;
 
 class Manager
 {
-
     private static $_;
     private $pages = [];
 
@@ -17,7 +16,7 @@ class Manager
     private $indexes;
     private $lookup;
 
-    public function __construct($db = NULL, $lookup = NULL)
+    public function __construct($db = null, $lookup = null)
     {
         $this->db = $db ?: new Core\Data\Call('entities_by_time');
         $this->lookup = $lookup ?: new Core\Data\Call('user_index_to_guid');
@@ -29,8 +28,9 @@ class Manager
      */
     public function getPageFromUri($uri)
     {
-        if(isset($this->pages[$uri]))
+        if (isset($this->pages[$uri])) {
             return $this->pages[$uri];
+        }
         $page = (new Entities\Page($this->db))
             ->loadFromGuid($uri);
         return $page;
@@ -43,9 +43,10 @@ class Manager
     public function loadPages()
     {
         $row = $this->db->getRow('pages');
-        if(!$row)
+        if (!$row) {
             return $this;
-        foreach($row as $column){
+        }
+        foreach ($row as $column) {
             $page = (new Entities\Page($this->db))
                 ->loadFromArray($column);
             $this->pages[$page->getPath()] = $page;
@@ -62,9 +63,10 @@ class Manager
     {
         $this->loadPages();
         $return = [];
-        foreach($this->pages as $page){
-            if($page->getMenuContainer() == $container)
+        foreach ($this->pages as $page) {
+            if ($page->getMenuContainer() == $container) {
                 $return[] = $page;
+            }
         }
         return $return;
     }
@@ -85,8 +87,9 @@ class Manager
      */
     public static function _()
     {
-        if(!self::$_)
+        if (!self::$_) {
             self::$_ = new Manager();
+        }
         return self::$_;
     }
 }

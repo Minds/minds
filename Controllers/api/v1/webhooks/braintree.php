@@ -16,15 +16,14 @@ use Minds\Core\Payments;
 
 use Braintree_WebhookNotification;
 
-class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam{
-
-  /**
+class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
+    /**
    * NOT AVAILABLE
    */
-  public function get($pages){
-
+  public function get($pages)
+  {
       return Factory::response(array('status'=>'error', 'message'=>'GET is not supported for this endpoint'));
-
   }
 
   /**
@@ -63,10 +62,11 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam{
     }
 
 
-  }
+    public function put($pages)
+    {
+    }
 
-  public function put($pages){}
-
-  public function delete($pages){}
-
+    public function delete($pages)
+    {
+    }
 }

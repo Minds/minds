@@ -35,7 +35,6 @@ trait HttpMethodsInput
      */
     protected static function getInputValue($key, array &$input, array $options = [])
     {
-
         if (!isset($input[$key]) && !empty($options['required'])) {
             throw new \UnexpectedValueException("Missing required key: {$key}");
         } elseif (!isset($input[$key])) {
@@ -45,7 +44,6 @@ trait HttpMethodsInput
         // TODO: [emi] Add sanitization (with a flag) when needed
 
         return $input[$key];
-
     }
 
     // TODO: [emi] Add a method to read a JSON payload data (json_decode via php://input)

@@ -2,16 +2,14 @@
 namespace Minds\Core\Notification;
 
 use Minds\Entities;
-
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
-
 use Minds\Core\Notification\Extensions\Push;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Notification\Factory as NotificationFactory;
 
-class Events {
-
+class Events
+{
     use \Minds\Traits\CurrentUser;
 
     /**
@@ -29,8 +27,9 @@ class Events {
             $params = $event->getParameters();
             $from = null;
 
-            if (isset($params['from']))
+            if (isset($params['from'])) {
                 $from = $params['from'];
+            }
 
             $notifications = [];
 
@@ -45,15 +44,17 @@ class Events {
             ], $params);
 
             foreach ($params['to'] as $to_user) {
-
-                if (!$to_user)
+                if (!$to_user) {
                     $to_user = $from_user;
+                }
 
-                if (is_numeric($to_user) || is_string($to_user))
+                if (is_numeric($to_user) || is_string($to_user)) {
                     $to_user = EntitiesFactory::build((int) $to_user);
+                }
 
-                if (!$to_user)
+                if (!$to_user) {
                     continue;
+                }
 
                 $notification = (new Entities\Notification())
                     ->setTo($to_user)
@@ -66,7 +67,6 @@ class Events {
                     ->setTimeCreated(time());
 
                 if (!$params['dry']) {
-
                     $notification->save();
 
                     Push::_()->queue([
@@ -75,11 +75,9 @@ class Events {
                         'to' => $to_user,
                         'params' => $params
                     ]);
-
                 }
 
                 $notifications[] = $notification;
-
             }
 
             $event->setResponse($notifications);
@@ -91,34 +89,35 @@ class Events {
          */
         Dispatcher::register('create', 'all', function ($hook, $type, $params = []) {
 
-            if ($type != 'activity' && $type != 'comment')
+            if ($type != 'activity' && $type != 'comment') {
                 return;
+            }
 
-            if ($params->message)
+            if ($params->message) {
                 $message = $params->message;
+            }
 
-            if ($type == 'comment')
+            if ($type == 'comment') {
                 $message = $params->description;
+            }
 
-            if ($params->title)
+            if ($params->title) {
                 $message .= $params->title;
+            }
 
             if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)) {
-
                 $usernames = $matches[1];
                 $to = [];
 
                 foreach ($usernames as $username) {
-
                     $user = new Entities\User(strtolower($username));
 
-                    if ($user->guid)
+                    if ($user->guid) {
                         $to[] = $user->guid;
-
+                    }
                 }
 
                 if ($to) {
-
                     Dispatcher::trigger('notification', 'all', [
                         'to' => $to,
                         'entity' => $params,
@@ -126,9 +125,7 @@ class Events {
                         'description' => $params->message,
                         'title' => $params->title
                     ]);
-
                 }
-
             }
 
         });
@@ -139,16 +136,14 @@ class Events {
         Dispatcher::register('cron', 'minute', [ __CLASS__, 'cronHandler' ]);
         Dispatcher::register('cron', 'daily', [ __CLASS__, 'cronHandler' ]);
         Dispatcher::register('cron', 'weekly', [ __CLASS__, 'cronHandler' ]);
-
     }
 
     public static function cronHandler($hook, $type, $params, $return = null)
     {
-
-        if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] != 'localhost')
+        if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] != 'localhost') {
             return false;
+        }
 
         // TODO: [emi] Send email notifications
-
     }
 }

@@ -21,7 +21,6 @@ trait CurrentUser
      */
     protected static function getCurrentUserGuid()
     {
-
         $user = static::getCurrentUser();
 
         if (empty($user)) {
@@ -29,6 +28,5 @@ trait CurrentUser
         }
 
         return $user->guid;
-
     }
 }

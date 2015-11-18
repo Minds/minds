@@ -21,14 +21,13 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function get($pages)
     {
-
-        if(isset($pages[0])){
-            try{
+        if (isset($pages[0])) {
+            try {
                 $page = (new Entities\Page())
                     ->loadFromGuid($pages[0])
                     ->export();
                 $response = $page;
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 $response = [
                     'status' => 'error',
                     'message' => $e->getMessage()
@@ -49,17 +48,19 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function post($pages)
     {
-        if(!Core\Session::isAdmin())
-        return Factory::response([
-            'status' => 'error',
-            'message' => 'You are not authorized'
-        ]);
+        if (!Core\Session::isAdmin()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You are not authorized'
+            ]);
+        }
 
-        if(!isset($_POST['path']) || !$_POST['path'])
+        if (!isset($_POST['path']) || !$_POST['path']) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'You must supply a path'
             ]);
+        }
 
         $page = (new Entities\Page())
             ->setTitle($_POST['title'])
@@ -84,11 +85,11 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function delete($pages)
     {
         $response = [];
-        try{
+        try {
             $page = (new Entities\Page())
                 ->loadFromGuid($pages[0])
                 ->delete();
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $response = [
                 'status' => 'error',
                 'message' => $e->getMessage()

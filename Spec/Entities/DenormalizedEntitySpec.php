@@ -7,24 +7,24 @@ use Prophecy\Argument;
 
 class DenormalizedEntitySpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Entities\DenormalizedEntity');
     }
 
-    function it_returns_a_guid()
+    public function it_returns_a_guid()
     {
         $this->getGuid()->shouldBeNumeric();
     }
 
-    function it_can_set_the_rowKey()
+    public function it_can_set_the_rowKey()
     {
         $this->setRowKey('specs')->shouldReturn($this);
         $this->getRowKey()->shouldReturn('specs');
     }
 
-    function it_should_export(){
+    public function it_should_export()
+    {
         $this->export()->shouldBeArray();
     }
-
 }

@@ -60,7 +60,7 @@ class Block
      * @param mixed (Entities\User | string) - from this user
      * @return boolean
      */
-    public function isBlocked($user, $from = NULL)
+    public function isBlocked($user, $from = null)
     {
         if (!$from) {
             $from = Core\Session::getLoggedinUser();

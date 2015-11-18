@@ -4,25 +4,22 @@ namespace Spec\Minds\Entities;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-
 use Minds\Entities\Entity;
 use Minds\Entities\User;
 
 class NotificationSpec extends ObjectBehavior
 {
-
     private $mockData;
     private $mockUserA;
     private $mockUserB;
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Entities\Notification');
     }
 
-    function let(User $user_a, User $user_b, Entity $entity)
+    public function let(User $user_a, User $user_b, Entity $entity)
     {
-
         $this->mockData = [
             'guid' => -99999,
             'to' => $user_a,
@@ -35,12 +32,10 @@ class NotificationSpec extends ObjectBehavior
             'owner' => $user_a,
             'params' => [ 'message' => 'Message' ]
         ];
-
     }
 
     public function it_should_load_from_array()
     {
-
         $this->loadFromArray($this->mockData)->shouldReturn($this);
 
         $this->getType()->shouldReturn('notification');
@@ -54,12 +49,10 @@ class NotificationSpec extends ObjectBehavior
         $this->getAccessId()->shouldReturn(2);
         $this->getOwner()->shouldReturnAnInstanceOf('\\Minds\\Entities\\User');
         $this->getParams()->shouldBeArray();
-
     }
 
     public function it_should_set_properties(User $user_a, User $user_b, Entity $entity)
     {
-
         $this->setType('notification')->getType()->shouldReturn('notification');
         $this->setGuid(-123456)->getGuid()->shouldReturn(-123456);
         $this->setTo($user_a)->getTo()->shouldReturnAnInstanceOf('\\Minds\\Entities\\User');
@@ -71,8 +64,5 @@ class NotificationSpec extends ObjectBehavior
         $this->setAccessId(-2)->getAccessId()->shouldReturn(-2);
         $this->setOwner($user_a)->getOwner()->shouldReturnAnInstanceOf('\\Minds\\Entities\\User');
         $this->setParams([ 'message' => 'foo', 'action' => 'bar'])->getParams()->shouldBeArray();
-
     }
-
 }
-
