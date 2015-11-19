@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Notification\Extensions;
 
+use Minds\Core;
 use Minds\Interfaces;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Queue\Client as QueueClient;
@@ -70,9 +71,8 @@ class Push implements Interfaces\NotificationExtensionInterface
      */
     protected static function buildNotificationMesage(array $notification = [])
     {
-        $from_user = EntitiesFactory::build($notification['from'] ?: static::getCurrentUser(), [
-            'cache' => true
-        ]);
+        $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
+          Core\Session::getLoggedInUser();
 
         $message = 'You have a notification';
 
