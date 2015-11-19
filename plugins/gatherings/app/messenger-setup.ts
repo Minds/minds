@@ -14,7 +14,7 @@ import { MindsChannelResponse } from '../../interfaces/responses';
   events: [ 'done' ]
 })
 @View({
-  templateUrl: 'templates/plugins/gatherings/messenger-setup.html',
+  templateUrl: 'src/plugins/gatherings/templates/messenger-setup.html',
   directives: [ CORE_DIRECTIVES, Material, FORM_DIRECTIVES ]
 })
 

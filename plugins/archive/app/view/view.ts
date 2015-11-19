@@ -16,7 +16,7 @@ import { ArchiveGrid } from './views/grid';
   viewBindings: [ Client ]
 })
 @View({
-  templateUrl: 'templates/plugins/archive/view.html',
+  templateUrl: 'src/plugins/archive/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid ]
 })
 

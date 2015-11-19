@@ -11,16 +11,16 @@ import { MDL_DIRECTIVES } from '../../../directives/material';
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { MindsTinymce } from '../../../components/editors/tinymce';
-import { ArchiveTheatre } from './views/theatre';
-import { ArchiveGrid } from './views/grid';
-import { ThumbnailSelector } from './components/thumbnail-selector';
+import { ArchiveTheatre } from '../view/views/theatre';
+import { ArchiveGrid } from '../view/views/grid';
+import { ThumbnailSelector } from '../components/thumbnail-selector';
 
 @Component({
   selector: 'minds-archive-edit',
   viewBindings: [ Client, Upload ]
 })
 @View({
-  templateUrl: 'templates/plugins/archive/edit.html',
+  templateUrl: 'src/plugins/archive/edit/edit.html',
   directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, AutoGrow, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid, ThumbnailSelector  ]
 })
 

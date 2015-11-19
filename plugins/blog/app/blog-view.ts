@@ -18,7 +18,7 @@ import { MindsBlogEntity } from '../../interfaces/entities';
   bindings:[ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/blog/view.html',
+  templateUrl: 'src/plugins/blog/templates/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner ]
 })
 

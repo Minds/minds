@@ -16,7 +16,7 @@ import { BlogCard } from './blog-card';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/blog/list.html',
+  templateUrl: 'src/plugins/blog/templates/list.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll, BlogCard ]
 })
 

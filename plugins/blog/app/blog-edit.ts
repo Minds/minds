@@ -16,7 +16,7 @@ import { AutoGrow } from '../../directives/autogrow';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/blog/edit.html',
+  templateUrl: 'src/plugins/blog/templates/edit.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, AutoGrow, MindsBanner]
 })
 

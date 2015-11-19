@@ -21,7 +21,7 @@ import { MindsUserSearchResponse } from '../../interfaces/responses';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'templates/plugins/gatherings/gatherings.html',
+  templateUrl: 'src/plugins/gatherings/templates/gatherings.html',
   directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 

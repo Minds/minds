@@ -14,7 +14,7 @@ import { MindsMessageResponse } from './interfaces/responses';
   properties: [ '_conversation: conversation' ]
 })
 @View({
-  templateUrl: 'templates/plugins/gatherings/messenger-conversation.html',
+  templateUrl: 'src/plugins/gatherings/templates/messenger-conversation.html',
   directives: [ CORE_DIRECTIVES, Material, InfiniteScroll, RouterLink ]
 })
 

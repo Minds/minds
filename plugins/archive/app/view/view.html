@@ -28,7 +28,7 @@
         <button class="material-icons">edit</button>
       </minds-button-edit>
 
-      <minds-button-edit (click) ="delete()"  *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-edit (click)="delete()"  *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
         <button class="material-icons">close</button>
       </minds-button-edit>
 

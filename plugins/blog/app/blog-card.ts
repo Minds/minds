@@ -14,7 +14,7 @@ import { BUTTON_COMPONENTS } from '../../components/buttons';
   properties: ['_blog : object']
 })
 @View({
-  templateUrl: 'templates/plugins/blog/card.html',
+  templateUrl: 'src/plugins/blog/templates/card.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, InfiniteScroll ]
 })
 

@@ -6,7 +6,6 @@ import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
-import { GroupsCreator } from './groups-creator';
 
 @Component({
   selector: 'minds-groups-join-button',
@@ -78,6 +77,3 @@ export class GroupsJoinButton {
   }
 
 }
-
-export { GroupsProfile } from './groups-profile';
-export { GroupsCreator } from './groups-creator';
