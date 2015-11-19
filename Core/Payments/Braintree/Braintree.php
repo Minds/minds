@@ -257,8 +257,7 @@ class Braintree implements PaymentServiceInterface
 
           return $merchant;
       } catch (\Exception $e) {
-          var_dump($e);
-          return false;
+          throw new \Exception($e->getMessage());
       }
   }
 
