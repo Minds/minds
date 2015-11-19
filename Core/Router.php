@@ -10,7 +10,7 @@ class Router
 {
     // these are core pages, other pages are registered by plugins
     public static $routes = array(
-      'icon' => "Minds\\Controllers\\icon",
+      '/icon' => "Minds\\Controllers\\icon",
       '/api' => "Minds\\Controllers\\api\\api",
       '/fs' => "Minds\\Controllers\\fs\\fs",
       '/thumbProxy' => "Minds\\Controllers\\thumbProxy",
