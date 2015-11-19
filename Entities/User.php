@@ -167,6 +167,11 @@ class User extends \ElggUser
         return $app->total();
     }
 
+    public function getIconURL($size = 'medium') {
+      $join_date = $this->getTimeCreated();
+      return elgg_get_site_url() . "icon/$this->guid/$size/$join_date/$this->icontime/" . Core\Config::_()->lastcache;
+    }
+
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
