@@ -82,14 +82,17 @@ class entities implements Interfaces\Api
         if ($pages[1] != "all") {
             switch ($pages[1]) {
                 case "images":
+                case "image";
                     $type = "object";
                     $subtype = "image";
                     break;
                 case "albums":
+                case "ablum":
                     $type = "object";
                     $subtype = "album";
                     break;
                 case "videos":
+                case "video":
                     $type = "object";
                     $subtype = "video";
               }
