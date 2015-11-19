@@ -46,7 +46,15 @@ class merchant implements Interfaces\Api
       case "balance":
         break;
       case "settings":
-        $merchant = Payments\Factory::build('braintree')->getMerchant(Core\Session::getLoggedInUser()->guid);
+
+        try{
+            $merchant = Payments\Factory::build('braintree')->getMerchant(Core\Session::getLoggedInUser()->guid);
+        } catch(\Exception $e){
+            return Factory::response([
+              'status' => 'error',
+              'message' => $e->getMessage()
+            ]);
+        }
 
         $response['merchant'] = array(
           'status' => $merchant->getStatus(),
