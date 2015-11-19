@@ -159,6 +159,36 @@ class Braintree implements PaymentServiceInterface
    */
   public function updateMerchant(Merchant $merchant)
   {
+      $result = Braintree_MerchantAccount::update($merchant->getGuid(),
+      [
+        'individual' => [
+          'firstName' => $merchant->getFirstName(),
+          'lastName' => $merchant->getLastName(),
+          'email' => $merchant->getEmail(),
+          //'dateOfBirth' => $merchant->getDateOfBirth(),
+          'ssn' => $merchant->getSSN(),
+          //'address' => [
+          //  'streetAddress' => $merchant->getStreet(),
+          //  'locality' => $merchant->getCity(),
+          //  'region' => $merchant->getRegion(),
+          //  'postalCode' => $merchant->getPostCode()
+          //]
+        ],
+        'funding' => [
+          'descriptor' => $merchant->getName(),
+          'destination' => Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'email' => $merchant->getEmail(),
+          //'accountNumber' => $merchant->getAccountNumber(),
+          //'routingNumber' => $merchant->getRoutingNumber()
+        ],
+        'tosAccepted' => true
+      ]);
+
+      if ($result->success) {
+          return $result->merchantAccount->id;
+      }
+
+      throw new \Exception($result->message);
   }
 
   /**
@@ -169,30 +199,30 @@ class Braintree implements PaymentServiceInterface
   public function addMerchant(Merchant $merchant)
   {
       $result = Braintree_MerchantAccount::create([
-      'individual' => [
-        'firstName' => $merchant->getFirstName(),
-        'lastName' => $merchant->getLastName(),
-        'email' => $merchant->getEmail(),
-        'dateOfBirth' => $merchant->getDateOfBirth(),
-        'ssn' => $merchant->getSSN(),
-        'address' => [
-          'streetAddress' => $merchant->getStreet(),
-          'locality' => $merchant->getCity(),
-          'region' => $merchant->getRegion(),
-          'postalCode' => $merchant->getPostCode()
-        ]
-      ],
-      'funding' => [
-        'descriptor' => $merchant->getName(),
-        'destination' => Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
-        'email' => $merchant->getEmail(),
-        //'accountNumber' => $merchant->getAccountNumber(),
-        //'routingNumber' => $merchant->getRoutingNumber()
-      ],
-      'tosAccepted' => true,
-      'masterMerchantAccountId' => 'minds',
-      'id' => $merchant->getGuid()
-    ]);
+        'individual' => [
+          'firstName' => $merchant->getFirstName(),
+          'lastName' => $merchant->getLastName(),
+          'email' => $merchant->getEmail(),
+          'dateOfBirth' => $merchant->getDateOfBirth(),
+          'ssn' => $merchant->getSSN(),
+          'address' => [
+            'streetAddress' => $merchant->getStreet(),
+            'locality' => $merchant->getCity(),
+            'region' => $merchant->getRegion(),
+            'postalCode' => $merchant->getPostCode()
+          ]
+        ],
+        'funding' => [
+          'descriptor' => $merchant->getName(),
+          'destination' => Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'email' => $merchant->getEmail(),
+          //'accountNumber' => $merchant->getAccountNumber(),
+          //'routingNumber' => $merchant->getRoutingNumber()
+        ],
+        'tosAccepted' => true,
+        'masterMerchantAccountId' => 'minds',
+        'id' => $merchant->getGuid()
+      ]);
 
       if ($result->success) {
           return $result->merchantAccount->id;
