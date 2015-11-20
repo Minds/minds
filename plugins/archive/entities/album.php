@@ -18,6 +18,7 @@ class album extends object{
 
 		$this->attributes['super_subtype'] = 'archive';
 		$this->attributes['subtype'] = "album";
+    $this->attributes['access_id'] = 2;
 	}
 
 	public function getURL(){
@@ -75,7 +76,7 @@ class album extends object{
 	 */
 	public function save($public = true){
 		$this->super_subtype = 'archive';
-		$this->access_id = 2;
+		//$this->access_id = 2;
 		parent::save($public);
 		return $this->guid;
 	}
@@ -94,7 +95,8 @@ class album extends object{
 	 public function getExportableValues() {
 		return array_merge(parent::getExportableValues(), array(
 			'thumbnail',
-			'images'
+			'images',
+      'license'
 		));
 	}
 

@@ -150,7 +150,6 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
           }
         }
 
-
         /**
          * Video specific actions
          */
@@ -180,7 +179,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
             }
         }
 
-        $entity->access_id = !isset($_POST[$key]) ? 2 : $_POST['access_id'];
+        $entity->access_id = !isset($_POST['access_id']) ? 2 : (int) $_POST['access_id'];
         $entity->save(true);
 
         if($activity_post){
