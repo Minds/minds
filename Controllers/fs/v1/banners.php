@@ -20,48 +20,49 @@ class banners implements Interfaces\FS
 
         $filepath = "";
         switch ($entity->type) {
-      case "user":
-        $size = isset($pages[1]) ? $pages[1] : 'fat';
-        $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$entity->guid));
-        if ($carousels) {
-            $f = new Entities\File();
-            $f->owner_guid = $entity->guid;
-            $f->setFilename("banners/{$carousels[0]->guid}.jpg");
-            $filepath = $f->getFilenameOnFilestore();
-            if (!file_exists($filepath)) {
-                $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+          case "user":
+            $size = isset($pages[1]) ? $pages[1] : 'fat';
+            $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$entity->guid));
+            if ($carousels) {
+                $f = new Entities\File();
+                $f->owner_guid = $entity->guid;
+                $f->setFilename("banners/{$carousels[0]->guid}.jpg");
+                $filepath = $f->getFilenameOnFilestore();
+                if (!file_exists($filepath)) {
+                    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+                }
             }
+            break;
+          case "group":
+            $f = new Entities\File();
+            $f->owner_guid = $entity->owner_guid;
+            $f->setFilename("group/{$entity->guid}.jpg");
+            $filepath = $f->getFilenameOnFilestore();
+          case "object":
+            break;
         }
-        break;
-      case "group":
-        $f = new Entities\File();
-        $f->owner_guid = $entity->owner_guid;
-        $f->setFilename("group/{$entity->guid}.jpg");
-        $filepath = $f->getFilenameOnFilestore();
-      case "object":
-        break;
-    }
 
         switch ($entity->subtype) {
-      case "blog":
-        $f = new Entities\File();
-        $f->owner_guid = $entity->owner_guid;
-        $f->setFilename("blog/{$entity->guid}.jpg");
-        $filepath = $f->getFilenameOnFilestore();
-        break;
-      case "cms":
-        break;
-      case "carousel":
-        $size = isset($pages[1]) ? $pages[1] : 'fat';
-        $f = new Entities\File();
-        $f->owner_guid = $entity->owner_guid;
-        $f->setFilename("banners/{$entity->guid}.jpg");
-        $filepath = $f->getFilenameOnFilestore();
-        if (!file_exists($filepath)) {
-            $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
+          case "blog":
+            $f = new Entities\File();
+            $f->owner_guid = $entity->owner_guid;
+            $f->setFilename("blog/{$entity->guid}.jpg");
+            $filepath = $f->getFilenameOnFilestore();
+            break;
+          case "cms":
+            break;
+          case "carousel":
+            $size = isset($pages[1]) ? $pages[1] : 'fat';
+            $f = new Entities\File();
+            $f->owner_guid = $entity->owner_guid;
+            $f->setFilename("banners/{$entity->guid}.jpg");
+            $filepath = $f->getFilenameOnFilestore();
+            if (!file_exists($filepath)) {
+                $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
+            }
+            break;
         }
-        break;
-    }
+
 
         if (!file_exists($filepath)) {
             exit;
