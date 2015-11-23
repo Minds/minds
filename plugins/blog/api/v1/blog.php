@@ -149,6 +149,20 @@ class blog implements Interfaces\Api
 
         $response['guid'] = (string) $blog->guid;
 
+        if(!isset($pages[0])){
+            (new Activity())
+              ->setRemind((new Activity())
+                ->setTitle($embeded->title)
+                ->setBlurb(strip_tags($embeded->description))
+                ->setURL($embeded->getURL())
+                ->setThumbnail($embeded->getIconUrl())
+                ->setFromEntity($embeded)
+                ->export())
+            ->setFromEntity($embeded)
+            ->setMessage($message)
+            ->save();
+        }
+
         return Factory::response($response);
     }
 
