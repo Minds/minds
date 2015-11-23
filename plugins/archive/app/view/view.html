@@ -55,7 +55,7 @@
 
       <a class="album_backlink mdl-color-text--blue-grey-400"
         [router-link]="['/Archive-View', {guid: entity.container_guid}]"
-        [hidden]="entity.subtype == 'album'"
+        [hidden]="entity.subtype == 'album' || entity.container_guid == entity.owner_guid"
         >
         <i class="material-icons">photo_album</i>Back to album
       </a>
