@@ -56,6 +56,17 @@ class merchant implements Interfaces\Api
             ]);
         }
 
+        if(!$merchant){
+            $user = Core\Session::getLoggedInUser();
+            $user->merchant = (int) 0;
+            $user->save();
+            return Factory::response([
+              'status' => 'error',
+              'message' => 'Not a merchant account'
+            ]);
+        }
+
+
         $response['merchant'] = array(
           'status' => $merchant->getStatus(),
           'firstName' => $merchant->getFirstName(),
