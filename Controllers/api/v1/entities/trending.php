@@ -89,7 +89,7 @@ class trending implements Interfaces\Api
             default:
 
                 $db = new Core\Data\Call('entities_by_time');
-                $guids = $db->getRow('trending:month:USER', array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
+                $guids = $db->getRow('trending:month:user', array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
                 if (!$guids) {
                     break;
                 }
