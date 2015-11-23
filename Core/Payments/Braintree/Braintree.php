@@ -32,6 +32,7 @@ class Braintree implements PaymentServiceInterface
         $defaults = [
           'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
           'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
+          'master_merchant_id' => Core\Config::_()->payments['braintree']['master_merchant_id'],
           'public_key' => Core\Config::_()->payments['braintree']['public_key'],
           'private_key' => Core\Config::_()->payments['braintree']['private_key']
         ];
@@ -220,7 +221,8 @@ class Braintree implements PaymentServiceInterface
           'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
         ],
         'tosAccepted' => true,
-        'masterMerchantAccountId' => 'minds',
+        'masterMerchantAccountId' => $this->config['master_merchant_id'],
+
         'id' => $merchant->getGuid()
       ]);
 
@@ -257,6 +259,8 @@ class Braintree implements PaymentServiceInterface
 
           return $merchant;
       } catch (\Exception $e) {
+          if($e instanceof \Braintree_Exception_NotFound)
+              return false;
           throw new \Exception($e->getMessage());
       }
   }
