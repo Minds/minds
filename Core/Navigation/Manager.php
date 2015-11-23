@@ -39,7 +39,8 @@ class Manager
             ->setParams(array(
                 'filter' => 'suggested',
                 'type' => ''
-            ));
+            ))
+            ->setVisibility(0); //only show for loggedin
 
         $discovery_trending = new Item();
         $discovery_trending
