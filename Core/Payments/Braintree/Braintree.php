@@ -29,12 +29,12 @@ class Braintree implements PaymentServiceInterface
 
     private function setConfig($config)
     {
-        $defaults = array(
-      'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
-      'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
-      'public_key' => Core\Config::_()->payments['braintree']['public_key'],
-      'private_key' => Core\Config::_()->payments['braintree']['private_key']
-    );
+        $defaults = [
+          'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
+          'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
+          'public_key' => Core\Config::_()->payments['braintree']['public_key'],
+          'private_key' => Core\Config::_()->payments['braintree']['private_key']
+        ];
         $this->config = array_merge($defaults, $config);
         Braintree_Configuration::environment($this->config['environment']);
         Braintree_Configuration::merchantId($this->config['merchant_id']);
@@ -58,19 +58,19 @@ class Braintree implements PaymentServiceInterface
   public function setSale(Sale $sale)
   {
       $result = Braintree_Transaction::sale([
-      'amount' => $sale->getAmount(),
-      'paymentMethodNonce' => $sale->getNonce(),
-      'serviceFeeAmount' => $sale->getFee(),
-      'merchantAccountId' => $sale->getMerchant()->guid,
-      'customer' => [
-        'firstName' => $sale->getCustomerId()
-      ],
-      'orderId' => $sale->getOrderId(),
-      'options' => [
-        //'holdInEscrow' => true,
-        'submitForSettlement' => false //let the seller approve or deny
-      ]
-    ]);
+        'amount' => $sale->getAmount(),
+        'paymentMethodNonce' => $sale->getNonce(),
+        'serviceFeeAmount' => $sale->getFee(),
+        'merchantAccountId' => $sale->getMerchant()->guid,
+        'customer' => [
+          'firstName' => $sale->getCustomerId()
+        ],
+        'orderId' => $sale->getOrderId(),
+        'options' => [
+          //'holdInEscrow' => true,
+          'submitForSettlement' => false //let the seller approve or deny
+        ]
+      ]);
 
       if ($result->success) {
           return $result->transaction->id;
@@ -176,10 +176,10 @@ class Braintree implements PaymentServiceInterface
         ],
         'funding' => [
           'descriptor' => $merchant->getName(),
-          'destination' => Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
           'email' => $merchant->getEmail(),
-          //'accountNumber' => $merchant->getAccountNumber(),
-          //'routingNumber' => $merchant->getRoutingNumber()
+          'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
+          'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
         ],
         'tosAccepted' => true
       ]);
@@ -214,10 +214,10 @@ class Braintree implements PaymentServiceInterface
         ],
         'funding' => [
           'descriptor' => $merchant->getName(),
-          'destination' => Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
           'email' => $merchant->getEmail(),
-          //'accountNumber' => $merchant->getAccountNumber(),
-          //'routingNumber' => $merchant->getRoutingNumber()
+          'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
+          'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
         ],
         'tosAccepted' => true,
         'masterMerchantAccountId' => 'minds',

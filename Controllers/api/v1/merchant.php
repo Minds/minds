@@ -90,6 +90,7 @@ class merchant implements Interfaces\Api
               ->setCity($_POST['city'])
               ->setRegion($_POST['region'])
               ->setPostCode($_POST['postCode'])
+              ->setDestination($_POST['venmo'] ? 'email' : 'bank')
               ->setAccountNumber($_POST['accountNumber'])
               ->setRoutingNumber($_POST['routingNumber']);
 
@@ -119,6 +120,7 @@ class merchant implements Interfaces\Api
               //->setCity($_POST['city'])
               //->setRegion($_POST['region'])
               //->setPostCode($_POST['postCode'])
+              ->setDestination($_POST['venmo'] ? 'email' : 'bank')
               ->setAccountNumber($_POST['accountNumber'])
               ->setRoutingNumber($_POST['routingNumber']);
 
