@@ -83,7 +83,7 @@ class conversations implements Interfaces\Api{
             //return the public keys
             $response['publickeys'] = array(
                 $me => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
-                $pages[0] => elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
+                $pages[0] => $user->{"plugin:user_setting:gatherings:publickey"} ?: elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
             );
 
         } else {
@@ -179,7 +179,7 @@ class conversations implements Interfaces\Api{
 
     public function delete($pages){
 
-      $message = \Minds\entities\Factory::build($pages[1]);
+      $message = \Minds\Entities\Factory::build($pages[1]);
       if($message->canEdit()){
           $message->delete();
       }
