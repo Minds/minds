@@ -142,14 +142,13 @@ class Braintree implements PaymentServiceInterface
           $sales[] = (new Sale)
         ->setId($transaction->id)
         ->setAmount($transaction->amount)
-        ->setStatus($transaction->status)
+        ->setStatus($transaction->disbursementDetails->success == true ? 'disbursed' : $transaction->status)
         ->setMerchant($merchant)
         ->setOrderId($transaction->orderId)
         ->setCustomerId($transaction->customer['firstName'])
         ->setCreatedAt($transaction->createdAt)
         ->setSettledAt($transaction->settledAt);
       }
-
       return $sales;
   }
 
