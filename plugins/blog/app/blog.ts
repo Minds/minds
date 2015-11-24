@@ -35,7 +35,6 @@ export class Blog {
   constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
-      this.load();
 
       this.title.setTitle("Blogs");
 
@@ -52,6 +51,8 @@ export class Blog {
           this._filter2 = this._filter;
           this._filter = "owner";
       }
+
+      this.load();
   }
 
   load(refresh : boolean = false){
