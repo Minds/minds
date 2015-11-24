@@ -25,9 +25,9 @@ class start extends Components\Plugin
 
             return $meta = array(
                 'title' => $blog->title,
-                'description' => $blog->description,
+                'description' => strip_tags($blog->description),
                 'og:title' => $blog->title,
-                'og:description' => $blog->description,
+                'og:description' => strip_tags($blog->description),
                 'og:url' => $blog->getPermaUrl(),
                 'og:type' => 'article',
                 'og:image' => $blog->getIconUrl(800)
