@@ -13,7 +13,7 @@ import { Material } from '../../../directives/material';
 @View({
   template: `
   <div class="m-video-loading" [hidden]="!inProgress">
-    <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    <div class="mdl-spinner mdl-js-spinner is-active" [mdl]></div>
   </div>
   <video (click)="onClick()" preload="metadata" muted crossOrigin="anonymous">
   </video>
