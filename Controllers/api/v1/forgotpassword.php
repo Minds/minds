@@ -85,6 +85,8 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
           $user->password_reset_code = "";
           $user->save();
 
+          login($user);
+
           $response['user'] = $user->export();
 
           break;
