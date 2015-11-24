@@ -14,6 +14,7 @@ class Router
       '/api' => "Minds\\Controllers\\api\\api",
       '/fs' => "Minds\\Controllers\\fs\\fs",
       '/thumbProxy' => "Minds\\Controllers\\thumbProxy",
+      '/wall' => "Minds\\Controllers\\Legacy\\wall",
       '/not-supported' => "Minds\Controllers\\notSupported",
         //  "/app" => "minds\\pages\\app",
       '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe"
