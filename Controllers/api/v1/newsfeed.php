@@ -232,13 +232,24 @@ class newsfeed implements Interfaces\Api
                     $attachment->access_id = 2;
                     $attachment->save();
 
-                    $activity->setCustom('batch', array(
-                    array(
-                      'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
-                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
-                    )))
-                      ->setFromEntity($attachment)
-                      ->setTitle($attachment->message);
+                    switch($attachment->subtype){
+                      case "image":
+                        $activity->setCustom('batch', [[
+                          'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
+                          'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                        ]])
+                        ->setFromEntity($attachment)
+                        ->setTitle($attachment->message);
+                        break;
+                      case "video":
+                        $activity->setFromEntity($attachment)
+                            ->setCustom('video', array(
+                            'thumbnail_src'=>$attachment->getIconUrl(),
+                            'guid'=>$attachment->guid))
+                            ->setTitle($attachment->message);
+                        break;
+                    }
+
                 }
 
                 if (isset($_POST['container_guid'])) {
