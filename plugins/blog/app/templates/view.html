@@ -30,6 +30,7 @@
         <button class="material-icons">close</button>
       </minds-button-edit>
       <minds-button-feature [object]="blog" *ng-if="session.isAdmin()"></minds-button-feature>
+      <minds-button-monetize [object]="blog" *ng-if="session.isAdmin()"></minds-button-monetize>
 
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="blog"></minds-button-remind>
@@ -57,35 +58,13 @@
 
   <div class="mdl-grid" style="width:100%">
     <!-- START: Google adsense block -->
-    <div class="m-ad-block m-ad-block-google">
-      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-      <!-- responsive -->
-      <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-9303771378013875"
-         data-ad-slot="7588308825"
-         data-ad-format="auto"></ins>
-      <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <google-ad *ng-if="blog.monetized"></google-ad>
     <!-- END: Google adsense block -->
 
     <div class="mdl-cell mdl-cell--12-col minds-blog-body" inner-html="{{blog.description}}"></div>
 
     <!-- START: Google adsense block -->
-    <div class="m-ad-block m-ad-block-google">
-      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-      <!-- responsive -->
-      <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-9303771378013875"
-         data-ad-slot="7588308825"
-         data-ad-format="auto"></ins>
-      <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
+    <google-ad *ng-if="blog.monetized"></google-ad>
     <!-- END: Google adsense block -->
   </div>
 

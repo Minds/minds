@@ -27,7 +27,8 @@ class Blog extends \ElggObject
             'license',
             'ownerObj',
             'header_bg',
-            'header_top'
+            'header_top',
+            'monetized'
         ));
     }
 
