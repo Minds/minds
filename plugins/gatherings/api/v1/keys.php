@@ -41,6 +41,8 @@ class keys implements Interfaces\Api{
         if(!$tmp || !$unlock_password){
           $response['status'] = 'error';
           $response['message'] = "please check your password";
+        } else {
+            $response['key'] = $tmp;
         }
 
         return Factory::response($response);
