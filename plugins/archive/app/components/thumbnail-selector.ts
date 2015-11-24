@@ -79,7 +79,7 @@ export class ThumbnailSelector{
     this.inProgress = true;
     this.element.addEventListener('seeked', () => {
       console.log(this.element.videoWidth, this.canvas.toDataURL("image/jpeg"));
-      this.canvas.getContext('2d').drawImage(this.element, 0, 0, this.element.videoWidth, this.element.videoHeight);
+      this.canvas.getContext('2d').drawImage(this.element, 0, 0, this.canvas.width, this.canvas.height);
       this.thumbnail.next([this.canvas.toDataURL("image/jpeg"), this.thumbnailSec]);
       this.inProgress = false;
     });
