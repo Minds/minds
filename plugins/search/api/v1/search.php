@@ -32,7 +32,7 @@ class search implements Interfaces\Api{
 
         $query = preg_replace("/[^A-Za-z0-9_]/", ' ', $_GET['q']);
 
-        $query = "$query~";
+        $query = "$query";
 
         //$category = isset($_GET['category']) ? $_GET['category'] : NULL;
         //if($category)
@@ -49,6 +49,7 @@ class search implements Interfaces\Api{
         if($params['type']){
           switch($params['type']){
             case "channels":
+              $query .= "~";
               $params['type'] = 'user';
               break;
             case "videos":
@@ -67,7 +68,7 @@ class search implements Interfaces\Api{
         }
 
         $params['size'] = $_GET['limit'] ?: 12;
-        if(isset($_GET['offset']))
+        if(isset($_GET['offset']) && $_GET['offset'])
           $params['from'] = $_GET['offset'];
 
         $body['query']['query_string']['query'] = $query;
@@ -84,15 +85,15 @@ class search implements Interfaces\Api{
             array_push($guids, $raw['_id']);
           }
         }catch(\Exception $e){
-          $guids = array();
+            $guids = array();
         }
 
         $response = array();
         if($guids)
           $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
 
-        //$response['hits'] = $results['hits']['hits'];
-        $response['load-next'] = (int) $_GET['offset'] + count($response['entities']);
+       // $response['hits'] = $results['hits']['hits'];
+        $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'] + 1;
 
         return Factory::response($response);
     }

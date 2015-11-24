@@ -34,6 +34,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 if($entity->subtype == 'audio'){
                     header("Location:" . $entity->getSourceUrl('128.mp3'));
                 } else {
+                //    echo $entity->getSourceUrl('360.mp4'); exit;
                     header("Location:" . $entity->getSourceUrl('360.mp4'));
                 }
                 exit;
