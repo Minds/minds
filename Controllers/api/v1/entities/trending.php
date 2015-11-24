@@ -102,6 +102,9 @@ class trending implements Interfaces\Api
 
         }
 
+        if(!isset($_GET['load-next']) && isset($_GET['offset']))
+            $_GET['load-next'] = $_GET['offset'];
+
         if ($entities) {
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
