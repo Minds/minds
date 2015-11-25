@@ -53,6 +53,10 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             );
             elgg_trigger_plugin_hook('register', 'user', $params, true);
 
+            //subscribe to minds channel
+          	$minds = new Minds\Entities\User('minds');
+          	$params['user']->subscribe($minds->guid);
+
             Helpers\Wallet::createTransaction($guid, 100, $guid, "Welcome.");
             Core\Events\Dispatcher::trigger('notification', 'welcome', array(
                 'to'=>array($guid),
