@@ -9,6 +9,7 @@ import { MindsTitle } from '../../services/ux/title';
 import { MindsBanner } from '../../components/banner';
 import { Comments } from '../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../components/buttons';
+import { ShareModal } from '../../components/modal/modal';
 
 import { MindsBlogResponse } from '../../interfaces/responses';
 import { MindsBlogEntity } from '../../interfaces/entities';
@@ -20,7 +21,7 @@ import { MindsBlogEntity } from '../../interfaces/entities';
 })
 @View({
   templateUrl: 'src/plugins/blog/templates/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner, GoogleAds ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner, GoogleAds, ShareModal ]
 })
 
 export class BlogView {
@@ -34,6 +35,7 @@ export class BlogView {
     ownerObj: {}
   };
   session = SessionFactory.build();
+  sharetoggle : boolean = false;
 
   constructor(public client: Client,
     @Inject(Router) public router: Router,

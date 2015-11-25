@@ -52,6 +52,10 @@
       <span [hidden]="blog.access_id != 2">Public</span>
       <span [hidden]="blog.access_id != 0">Unlisted</span>
     </div>
+    <div class="m-share-buttons">
+      <i class="material-icons" (click)="sharetoggle = true" style="cursor:pointer">share</i>
+    </div>
+    <m-modal-share *ng-if="sharetoggle" [open]="true" (closed)="sharetoggle = false" [url]="minds.site_url + 'blog/view/' + blog.guid"></m-modal-share>
 
   </div>
 
