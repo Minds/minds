@@ -50,7 +50,7 @@ class notSupported extends core\page implements Interfaces\page
                   display:block;
                 }
                 .desktop{
-                  display:none;
+                  /*display:none;*/
                 }
               }
             </style>
@@ -60,13 +60,13 @@ class notSupported extends core\page implements Interfaces\page
 
             <minds-app  class="">
                 <img src="/assets/logos/medium.png" width="200px;" />
-                <h3>Sorry, we can not support your browser</h3>
-                <p class="desktop">Please try updating your browser to
+                <h3>Your browser is outdated.</h3>
+                <p class="desktop">Please upgrade to either
                   <a href="https://www.mozilla.org/en-GB/firefox/new/" target="_blank">Firefox</a>
                   or <a href="https://www.google.co.uk/chrome/browser/desktop/">Chrome</a>.
                 </p>
                 <div class="mobile">
-                  <p>Download our mobile apps</p>
+                  <p>You can also download our mobile apps too</p>
                   <div class="">
                     <a href="https://geo.itunes.apple.com/us/app/minds-com/id961771928?mt=8&amp;uo=6">
                       <img src="https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png">
