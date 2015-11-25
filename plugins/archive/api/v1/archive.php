@@ -64,7 +64,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
 
-            if(strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name']))){
+            if(strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name'])) && $pages[0] != "video"){
                 //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
@@ -132,6 +132,9 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $entity->container_guid = $album->guid;
             }
 
+            if($_POST['access_token'])
+                $activity_post = true;
+
             if($activity_post){
               $activity = new \Minds\Entities\Activity();
               $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
@@ -168,7 +171,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
               	$file->close();
               	$entity->thumbnail = $_POST['thumbnail'];
             }
-            if($activity_post){
+            if($activity_post || $_POST['access_token']){
                 $activity = new \Minds\Entities\Activity();
                 $activity->setFromEntity($entity)
                     ->setCustom('video', array(
