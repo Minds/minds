@@ -80,19 +80,23 @@ class wallet implements Interfaces\Api
                 $points = $_POST['points'];
                 $usd = $ex_rate * $points;
 
-                $card = new \Minds\plugin\payments\entities\card();
-                $card_obj = $card->create(array(
-                    'type' => $_POST['type'],
-                    'number' => (int) str_replace(' ', '', $_POST['number']),
-                    'month' => $_POST['month'],
-                    'year' => $_POST['year'],
-                    'sec' => $_POST['sec'],
-                    'name' => $_POST['name'],
-                    'name2' => $_POST['name2']
-                    ));
+
+                try{
+                    $card = \minds\plugin\payments\services\paypal::factory()->createCard([
+                        'type' => $_POST['type'],
+                        'number' => (int) str_replace(' ', '', $_POST['number']),
+                        'month' => $_POST['month'],
+                        'year' => $_POST['year'],
+                        'sec' => $_POST['sec'],
+                        'name' => $_POST['name'],
+                        'name2' => $_POST['name2']
+                    ]);
+                } catch(\Exception $e){
+                    return Factory::response(array('status'=>'error'));
+                } 
 
                 try {
-                    $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->card_id);
+                    $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->getID());
                     if ($response['id']) {
                         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
                     }
