@@ -32,13 +32,13 @@ class Session extends base
 
         // is there a remember me cookie
         //@todo remove this - now we have long lasting sessions
-        if (isset($_COOKIE['mindsperm']) && !isset($_SESSION['user'])) {
+/*        if (isset($_COOKIE['mindsperm']) && !isset($_SESSION['user'])) {
             // we have a cookie, so try to log the user in
             $cookie = md5($_COOKIE['mindsperm']);
             if ($user = get_user_by_cookie($cookie)) {
                 login($user);
             }
-        }
+}*/
 
         // Generate a simple token (private from potentially public session id)
         if (!isset($_SESSION['__elgg_session'])) {
