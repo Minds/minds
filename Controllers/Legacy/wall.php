@@ -13,7 +13,7 @@ class wall extends core\page implements Interfaces\page
 
     public function get($pages)
     {
-        forward('archive/thumbnail/' . $pages[0]);
+        forward('archive/thumbnail/' . $pages[1]);
     }
 
     public function post($pages)
