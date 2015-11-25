@@ -38,28 +38,32 @@ export class GroupsProfileMembers {
 
   load(refresh : boolean = false){
     var self = this;
+
+    if(this.inProgress)
+      return;
+
     this.inProgress = true;
     this.client.get('api/v1/groups/membership/' + this.group.guid, { limit: 12, offset: this.offset })
       .then((response : any) => {
 
         if(!response.members){
-          self.moreData = false;
-          self.inProgress = false;
+          this.moreData = false;
+          this.inProgress = false;
           return false;
         }
 
-        if(self.members && !refresh){
-          for(let member of response.members)
-            self.members.push(member);
+        if(refresh){
+          this.members = response.members;
+          this.members.push(member);
         } else {
-             self.members = response.members;
+          this.members = this.members.concat(response.members);
         }
-        self.offset = response['load-next'];
-        self.inProgress = false;
+        this.offset = response['load-next'];
+        this.inProgress = false;
 
       })
       .catch((e)=>{
-
+        this.inProgress = false;
       });
   }
 
