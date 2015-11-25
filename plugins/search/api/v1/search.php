@@ -91,6 +91,10 @@ class search implements Interfaces\Api{
         $response = array();
         if($guids)
           $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
+        
+        if($_GET['access_token']){
+            $response[$params['type']][] = $response['entities'];
+        }
 
        // $response['hits'] = $results['hits']['hits'];
         $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'] + 1;
