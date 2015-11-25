@@ -67,7 +67,7 @@ class channel implements Interfaces\Api
                 $response['channel']['carousels'][] = array(
                   'guid' => (string) $carousel->guid,
                   'top_offset' => $carousel->top_offset,
-                  'src'=> $CONFIG->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
+                  'src'=> Core\Config::_()->cdn_url . "fs/v1/banners/$carousel->guid/fat/$carousel->last_updated"
                 );
             }
         }
