@@ -30,7 +30,9 @@ class start extends Components\Plugin
                 'og:description' => strip_tags($blog->description),
                 'og:url' => $blog->getPermaUrl(),
                 'og:type' => 'article',
-                'og:image' => $blog->getIconUrl(800)
+                'og:image' => $blog->getIconUrl(800),
+                'og:image:width' => 2000,
+                'og:image:height' => 1000
             );
         });
 
