@@ -30,13 +30,13 @@ class paypal extends core\base{
 	public function init(){
 		$this->context = new ApiContext(
 			new OAuthTokenCredential(
-				Core\Config::build()->payments['paypalKey'] ?: 'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
-				Core\Config::build()->payments['paypalSecret'] ?: 'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
+				Core\Config::_()->payments['paypalKey'] ?: 'AaUOIRC8rTb2jXZtnUvjMXWH1BH-5spBnL2kILF2AEPygMxvWOqME3e06hnj',
+				Core\Config::_()->payments['paypalSecret'] ?: 'EOWEZBB5n4Kc84mxXQhqF1rgz0GMKXyJ_fmWi5s1sk7k_35GeWTtXIwU6p2t'
 			)
 		);
 		$this->context->setConfig(
 			array(
-				'mode' => Core\Config::build()->payments['paypal_mode'] ?: 'sandbox',
+				'mode' => Core\Config::_()->payments['paypal_mode'] ?: 'sandbox',
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
 				'log.FileName' => '/tmp/PayPal.log',
