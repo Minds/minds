@@ -51,7 +51,7 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
             $entity->feature();
             $newsfeed = true;
 
-            $activity = new Entities\Activity();
+/*            $activity = new Entities\Activity();
             switch ($entity->subtype) {
           case 'blog':
             $activity->setTitle($entity->title)
@@ -90,11 +90,10 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
             'entity'=>$entity,
             'description'=>$message,
             'notification_view'=>'feature'
-        ));
+        ));*/
         } else {
             $entity->unFeature();
         }
-
         $entity->save();
 
         return Factory::response(array());
