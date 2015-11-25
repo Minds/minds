@@ -68,6 +68,10 @@ class featured implements Interfaces\Api
                 break;
             case "channels":
                 $type = "user";
+                break;
+            case "object":
+                $subtype = $pages[1];
+                break;
             case "all":
             default:
                 $type = "user";
