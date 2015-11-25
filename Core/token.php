@@ -8,6 +8,7 @@ class token
 {
     public static function generate($ts=null)
     {
+        return;
         $site_secret = \get_site_secret();
         // Session token
         $st = $_SESSION['__elgg_session'];
@@ -19,6 +20,7 @@ class token
 
     public static function validate($ts = null, $token=null)
     {
+        return;
         if (!$ts) {
             $ts = \get_input('__elgg_ts');
         }
