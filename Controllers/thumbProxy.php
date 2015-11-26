@@ -24,6 +24,10 @@ class thumbProxy extends core\page implements Interfaces\page
             $src = "https:$src";
         }
 
+        if(strpos($src, 'blog/header/') !== FALSE)
+            $src = str_replace('blog/header/', 'fs/v1/banners/', $src);
+
+
         //get the original file
         $ch = curl_init($src);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Minds/2.0 (+http://www.minds.com/)');
