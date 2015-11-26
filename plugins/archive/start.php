@@ -94,7 +94,7 @@ class start extends Components\Plugin{
 						if($entity->filename)
 							$filename = "$data_root$user_path/$entity->filename";
 
-						if(isset($page[2])  && $size = $page[2]){
+						if(isset($page[2])  && $size = $page[2] && !$entity->gif){
 							if(!isset($entity->batch_guid))
 								$entity->batch_guid = $this->container_guid;
 
