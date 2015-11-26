@@ -14,7 +14,7 @@ use Minds\Api\Factory;
 
 class wallet implements Interfaces\Api
 {
-    private $ex_rate = 0.005;
+    private $ex_rate = 0.01;
 
     /**
      * Returns the wallet info
@@ -40,7 +40,7 @@ class wallet implements Interfaces\Api
                 $response['min'] = 10;
                 $response['boost_rate'] = 1;
                 $response['ex'] = array(
-                    'usd' => 0.005
+                    'usd' => 0.01
                 );
                 $response['satoshi'] = $satoshi;
                 $response['btc'] = sprintf('%.9f', $btc);
