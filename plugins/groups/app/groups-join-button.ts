@@ -6,6 +6,8 @@ import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
+import { SignupOnActionModal } from '../../components/modal/modal';
+
 
 @Component({
   selector: 'minds-groups-join-button',
@@ -13,15 +15,18 @@ import { MindsGroupListResponse } from '../../interfaces/responses';
   properties: ['_group: group']
 })
 @View({
-  template: '<button class="minds-group-join-button" *ng-if="!group.member" (click)="join()">Join</button> \
-    <button class="minds-group-join-button subscribed " *ng-if="group.member" (click)="leave()">Leave</button>',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll ]
+  template: `
+    <button class="minds-group-join-button" *ng-if="!group.member" (click)="join()">Join</button>
+    <button class="minds-group-join-button subscribed " *ng-if="group.member" (click)="leave()">Leave</button>
+    <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ng-if="!session.isLoggedIn()"></m-modal-signup-on-action>
+  `,
+  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, SignupOnActionModal ]
 })
 
 export class GroupsJoinButton {
 
   minds;
-
+  showModal : boolean = false;
   group : any;
   session = SessionFactory.build();
 
@@ -46,6 +51,10 @@ export class GroupsJoinButton {
    * Join a group
    */
   join(){
+    if(!this.session.isLoggedIn()){
+      this.showModal = true;
+      return;
+    }
 
     var self = this;
     this.group.member = true;
