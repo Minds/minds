@@ -99,7 +99,9 @@ class start extends Components\Plugin{
 								$entity->batch_guid = $this->container_guid;
 
 							$filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
-						}
+						} elseif($entity->gif) {
+              $filename = str_replace('xlarge.jpg', 'master.jpg', $filename);
+            }
 						break;
 					case 'album':
 						//get the first image attached to this album

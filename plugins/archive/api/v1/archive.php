@@ -92,6 +92,8 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $loc = $image->getFilenameOnFilestore();
                 $image->createThumbnails();
                 $image->access_id = 0;
+                if(strpos($_FILES['file']['type'], 'gif') !== FALSE)
+                    $image->gif = true;
                 $image->save();
                 $pages[0] = 'image';
             } else {
