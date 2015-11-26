@@ -258,7 +258,7 @@ class channel implements Interfaces\Api
           case "carousel":
             $db = new Core\Data\Call('entities_by_time');
           //  $db->removeAttributes("object:carousel:user:" . elgg_get_logged_in_user_guid());
-            $item = new \Minds\Entities\Carousel($pages[1]);
+            $item = new \Minds\Entities\Object\Carousel($pages[1]);
             $item->delete();
             break;
           default:
