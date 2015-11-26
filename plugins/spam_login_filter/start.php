@@ -13,48 +13,10 @@ function spam_login_filter_init() {
 
 	elgg_register_plugin_hook_handler('cron', 'daily', 'spam_login_filter_cron');
 
-	elgg_register_page_handler('spam_login_filter', 'spam_login_filter_page_handler');
-
-
-	elgg_register_event_handler('pagesetup', 'system', 'spam_login_filter_pagesetup');
-
-	if (elgg_get_plugin_setting("use_ip_blacklist_cache") == "yes") {
-		elgg_extend_view('forms/register', 'spam_login_filter/register', 100);
-	}
-
-	// Extend context menu with admin links
-	if (elgg_is_admin_logged_in()) {
-		if (elgg_is_active_plugin('tracker')) {
-			elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'spam_login_filter_hover_menu', 1000);
-		}
-	}
 
 	return true;
 }
 
-function spam_login_filter_pagesetup() {
-	elgg_register_admin_menu_item('administer', 'manageip', 'administer_utilities');
-}
-
-function spam_login_filter_page_handler($page) {
-
-	$page = (isset($page[0])) ? $page[0] : FALSE;
-
-	if ($page == 'admin') {
-		set_context('admin');
-		admin_gatekeeper();
-		$content = elgg_view('spam_login_filter/manageip');
-		$title = elgg_echo('spam_login_filter:admin:manage_ips');
-
-		$body = elgg_view_layout('two_column_left_sidebar', '', elgg_view_title($title) . $content);
-
-		echo elgg_view_page(elgg_echo('spam_login_filter:admin:manage_ips'), $title . $body);
-
-		return TRUE;
-	}
-
-	forward();
-}
 
 function spam_login_filter_verify_action_hook($hook, $entity_type, $returnvalue, $params) {
 	global $CONFIG;
