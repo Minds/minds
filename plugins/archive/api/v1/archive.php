@@ -63,8 +63,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
-
-            if(strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name'])) && $pages[0] != "video"){
+            error_log("[upload][log]:: got type " . $pages[0]);
+            if((strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name']))) 
+                && $pages[0] != "video"){
+                error_log("[upload][log]:: detected {$pages[0]} is an image");
+                error_log($_FILES['file']['type']);
+                error_log(is_array(getimagesize($_FILES['file']['tmp_name'])));
                 //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
@@ -94,10 +98,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
               switch($pages[0]){
                   case 'video':
                   default:
+                    error_log("[upload][log]:: start video");
                       $video = new entities\video();
                       $video->upload($_FILES['file']['tmp_name']);
                       $video->access_id = 0;
                       $guid = $video->save();
+                      error_log("[upload][log]:: video saved as ($guid)");
                       break;
               }
             }
