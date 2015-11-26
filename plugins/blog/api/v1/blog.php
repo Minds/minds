@@ -8,6 +8,7 @@
 namespace minds\plugin\blog\api\v1;
 
 use Minds\Core;
+use Minds\Entities\Activity;
 use minds\plugin\blog\entities;
 use Minds\Entities\User;
 use Minds\Interfaces;
@@ -149,18 +150,14 @@ class blog implements Interfaces\Api
 
         $response['guid'] = (string) $blog->guid;
 
-        if(!isset($pages[0])){
+        if(!isset($pages[0]) || $pages[0] == "new"){
             (new Activity())
-              ->setRemind((new Activity())
-                ->setTitle($embeded->title)
-                ->setBlurb(strip_tags($embeded->description))
-                ->setURL($embeded->getURL())
-                ->setThumbnail($embeded->getIconUrl())
-                ->setFromEntity($embeded)
-                ->export())
-            ->setFromEntity($embeded)
-            ->setMessage($message)
-            ->save();
+              ->setTitle($blog->title)
+              ->setBlurb(strip_tags($blog->description))
+              ->setURL($blog->getURL())
+              ->setThumbnail($blog->getIconUrl())
+              ->setFromEntity($blog)
+              ->save();
         }
 
         return Factory::response($response);
