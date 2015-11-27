@@ -18,7 +18,7 @@
       </div>
       <div class="minds-body">
         <a [router-link]="['/Channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{blog.ownerObj.name}}</a>
-        <span>{{ blog.time_created * 1000 | date: 'medium'}}</span>
+        <span *ng-if="blog.time_created">{{ blog.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
