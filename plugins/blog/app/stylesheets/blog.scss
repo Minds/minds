@@ -35,12 +35,7 @@ minds-blog-view{
       font-size:28px;
     }
   }
-  p{
-    font-size:16px;
-    font-family:Lato, Helvetica, Arial, sans-serif;
-    color: #6a6a6a;
-    font-weight: 300;
-  }
+
   a {
     color:#607d8b;
   }
@@ -51,6 +46,15 @@ minds-blog-view{
 }
 .minds-blog-body{
   padding-top:$minds-padding * 2;
+
+  p{
+    font-size:16px;
+    font-family:Lato, Helvetica, Arial, sans-serif;
+    color: #6a6a6a;
+    font-weight: 300;
+    line-height: 30px;
+    padding-bottom: 16px;
+  }
 }
 
 .minds-blog-save{
