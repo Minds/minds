@@ -77,6 +77,13 @@ class comments implements Interfaces\Api
           if ($parent instanceof Entities\Activity && $parent->remind_object) {
               $parent = (object) $parent->remind_object;
           }
+          if(!$_POST['comment']){
+            return Factory::response([
+              'status' => 'error',
+              'message' => 'You must enter a message'
+            ]);
+          }
+
           $comment = new Entities\Comment();
           $comment->description = urldecode($_POST['comment']);
           $comment->setParent($parent);
