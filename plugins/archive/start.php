@@ -118,7 +118,9 @@ class start extends Components\Plugin{
 	                break;
 	                case 'audio':
 	                    $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
-	        	    break;
+                        break; 
+                    case 'file':
+                        $filename = $filename = "$data_root$user_path/$entity->filename";
 				}
 
 				if(!file_exists($filename)){
