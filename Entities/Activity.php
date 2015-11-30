@@ -37,10 +37,10 @@ class Activity extends Entity
     public function save($index = true)
     {
 
-            //cache owner_guid for brief
-            if (!$this->ownerObj && $owner = $this->getOwnerEntity(false)) {
-                $this->ownerObj = $owner->export();
-            }
+        //cache owner_guid for brief
+        if (!$this->ownerObj && $owner = $this->getOwnerEntity(false)) {
+            $this->ownerObj = $owner->export();
+        }
 
         $guid = parent::save($index);
 
@@ -122,6 +122,7 @@ class Activity extends Entity
                 'perma_url',
                 'message',
                 'ownerObj',
+                'containerObj',
                 'thumbnail_src',
                 'remind_object',
                 'entity_guid',
