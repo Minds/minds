@@ -64,7 +64,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
             error_log("[upload][log]:: got type " . $pages[0]);
-            if((strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name']))) 
+            if((strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name'])))
                 && $pages[0] != "video"){
                 error_log("[upload][log]:: detected {$pages[0]} is an image");
                 error_log($_FILES['file']['type']);
@@ -121,7 +121,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
           $activity_post = true;
 
         //need a better check for if this was a mobile post.
-        if($entity->subtype == 'image' && $entity->container_guid == $entity->owner_guid){
+        if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){
                 $album = new entities\album($_POST['album_guid']);
                 if(!$album->guid)
@@ -152,6 +152,13 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                   ->setBlurb($_POST['description'])
                   ->save();
               $response['activity_guid'] = $activity->guid;
+            } else {
+                //get the attached activity items
+                $db = new Core\Data\Call('entities_by_time');
+                $e = new Core\Data\Call('entities');
+                foreach($db->getRow("activity:entitylink:$entity->guid") as $guid => $ts){
+                    $e->insert($guid, ['title' => $_POST['title']]);
+                }
             }
         }
 
@@ -188,6 +195,13 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                     ->setTitle($entity->title)
                     ->setBlurb($entity->description)
                     ->save();
+            } else {
+                //get the attached activity items
+                $db = new Core\Data\Call('entities_by_time');
+                $e = new Core\Data\Call('entities');
+                foreach($db->getRow("activity:entitylink:$entity->guid") as $guid => $ts){
+                    $e->insert($guid, ['title' => $_POST['title']]);
+                }
             }
         }
 
