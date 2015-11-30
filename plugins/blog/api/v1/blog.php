@@ -116,7 +116,9 @@ class blog implements Interfaces\Api
 
     public function post($pages)
     {
-        $response = array();
+        Factory::isLoggedIn();
+
+        $response = [];
 
         if (isset($pages[0]) && is_numeric($pages[0])) {
             $blog = new entities\Blog($pages[0]);
@@ -165,6 +167,8 @@ class blog implements Interfaces\Api
 
     public function put($pages)
     {
+        Factory::isLoggedIn();
+
         if (isset($pages[0]) && is_numeric($pages[0])) {
             $blog = new entities\Blog($pages[0]);
         } else {

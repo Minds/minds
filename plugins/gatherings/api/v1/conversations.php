@@ -23,7 +23,9 @@ class conversations implements Interfaces\Api{
      */
     public function get($pages){
 
-        $response = array();
+        Factory::isLoggedIn();
+
+        $response = [];
 
         if(isset($pages[0])){
 
@@ -103,6 +105,8 @@ class conversations implements Interfaces\Api{
     }
 
     public function post($pages){
+        Factory::isLoggedIn();
+
         //error_log("got a message to send");
         $conversation = new entities\conversation(Core\Session::getLoggedInUser()->guid, $pages[0]);
 
@@ -135,6 +139,7 @@ class conversations implements Interfaces\Api{
     }
 
     public function put($pages){
+        Factory::isLoggedIn();
 
         switch($pages[0]){
             case 'call':

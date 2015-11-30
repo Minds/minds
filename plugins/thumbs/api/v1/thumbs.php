@@ -46,6 +46,8 @@ class thumbs implements Interfaces\Api{
      */
     public function post($pages){
 
+        Factory::isLoggedIn();
+
         $guid = $pages[0];
         $direction = $pages[1];
 
@@ -84,6 +86,8 @@ class thumbs implements Interfaces\Api{
      * API:: /v1/thumbs/:guid/:direction
      */
     public function delete($pages){
+
+        Factory::isLoggedIn();
 
         $guid = $pages[0];
         $direction = $pages[1];

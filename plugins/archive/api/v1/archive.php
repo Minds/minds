@@ -57,8 +57,8 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
      * API:: /v1/archive/:guid
      */
     public function post($pages){
-
-      $response = array();
+        Factory::isLoggedIn();
+        $response = [];
 
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.

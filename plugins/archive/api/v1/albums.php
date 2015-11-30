@@ -86,6 +86,8 @@ class albums implements Interfaces\Api{
      */
     public function post($pages){
 
+        Factory::isLoggedIn();
+
         if(!isset($pages[0])){
 
             $album = new entities\album();
@@ -126,11 +128,11 @@ class albums implements Interfaces\Api{
      */
     public function delete($pages){
 
-      $album = new entities\album($pages[0]);
-      if($album->canEdit())
-        $album->delete();
+        $album = new entities\album($pages[0]);
+        if($album->canEdit())
+            $album->delete();
 
-      return Factory::response();
+        return Factory::response();
 
     }
 

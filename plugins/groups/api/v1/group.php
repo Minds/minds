@@ -36,6 +36,8 @@ class group implements Interfaces\Api
 
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         if (isset($pages[0])) {
             $group = new entities\Group($pages[0]);
         } else {

@@ -26,33 +26,33 @@ class membership implements Interfaces\Api
         $group = new entities\Group($pages[0]);
 
         $options = array(
-        'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
-        'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
-      );
+          'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
+          'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
+        );
 
         if (!isset($pages[1])) {
             $pages[1] = "members";
         }
 
         switch ($pages[1]) {
-        case "requests":
-          $response = array();
-          $users = helpers\Membership::getRequests($group, $options);
-          if (!$users) {
-              return Factory::response(array());
-          }
-          $response['users'] = Factory::exportable($users);
-          $response['load-next'] = end($users)->user;
-          break;
-        case "members":
-        default:
-          $members = helpers\Membership::getMembers($group, $options);
-          if (!$members) {
-              return Factory::response(array());
-          }
-          $response['members'] = Factory::exportable($members);
-          $response['load-next'] = end($members)->guid;
-      }
+          case "requests":
+            $response = array();
+            $users = helpers\Membership::getRequests($group, $options);
+            if (!$users) {
+                return Factory::response(array());
+            }
+            $response['users'] = Factory::exportable($users);
+            $response['load-next'] = end($users)->user;
+            break;
+          case "members":
+          default:
+            $members = helpers\Membership::getMembers($group, $options);
+            if (!$members) {
+                return Factory::response(array());
+            }
+            $response['members'] = Factory::exportable($members);
+            $response['load-next'] = end($members)->guid;
+        }
 
         return Factory::response($response);
     }
@@ -63,6 +63,8 @@ class membership implements Interfaces\Api
 
     public function put($pages)
     {
+        Factory::isLoggedIn();
+
         $group = new entities\Group($pages[0]);
 
         if (isset($pages[1])) {
@@ -85,6 +87,8 @@ class membership implements Interfaces\Api
 
     public function delete($pages)
     {
+        Factory::isLoggedIn();
+  
         $group = new entities\Group($pages[0]);
 
         if (isset($pages[1])) {
