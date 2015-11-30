@@ -121,7 +121,8 @@ class Factory
             echo json_encode([
               'status' => 'error',
               'message' => 'You are not not logged in',
-              'code'=>401
+              'code' => 401,
+              'loggedin' => false
             ]);
             exit;
         }
