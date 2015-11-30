@@ -142,12 +142,11 @@ class GenericRule implements Interfaces\XSSRule
             foreach ($this->allowedAttributes as $a) {
                 $tag = substr($a, 0, 1); //eg. * is all element, a is just anchor tags (<a>)
                 $attr = substr($a, 2);
-
-                if (($tag == '*' || $tag == $element->nodeName) && $element->getAttribute($attr)) {
+                if (($tag == '*' || $tag == $element->nodeName) && $element->getAttribute($attr) || $element->getAttribute($attr) === "0") {
                     $safe[$attr] = $element->getAttribute($attr);
                 }
             }
-
+            
             while ($element->attributes->length) {
                 $element->removeAttribute($element->attributes->item(0)->name);
             }
