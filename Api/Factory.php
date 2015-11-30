@@ -109,6 +109,25 @@ class Factory
     }
 
     /**
+     * Helper to check if LoggedIn
+     */
+    public static function isLoggedIn()
+    {
+        if(!Session::isLoggedIn()){
+            ob_end_clean();
+            header('Content-type: application/json');
+            header("Access-Control-Allow-Origin: *");
+            header('HTTP/1.1 401 Unauthorized', true, 401);
+            echo json_encode([
+              'status' => 'error',
+              'message' => 'You are not not logged in',
+              'code'=>401
+            ]);
+            exit;
+        }
+    }
+
+    /**
      * Builds an api response
      * @param array $data
      *

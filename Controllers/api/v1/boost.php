@@ -93,6 +93,8 @@ class boost implements Interfaces\Api
      */
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         if (!isset($pages[0])) {
             return Factory::response(array('status' => 'error', 'message' => ':type must be passed in uri'));
         }

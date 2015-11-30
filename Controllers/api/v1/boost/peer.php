@@ -25,21 +25,23 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function get($pages)
     {
-        $response = array();
+        Factory::isLoggedIn();
+
+        $response = [];
 
         switch ($pages[0]) {
-        case 'outbox':
-          $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-          $boosts = $pro->getOutbox(100);
-          $response['boosts'] = Factory::exportable($boosts);
-          break;
-        case 'inbox':
-        default:
-          $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-          $boosts = $pro->getReviewQueue(100);
-          $response['boosts'] = Factory::exportable($boosts);
-          $response['load-next'] = (string) end($boosts)->getGuid();
-      }
+          case 'outbox':
+            $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+            $boosts = $pro->getOutbox(100);
+            $response['boosts'] = Factory::exportable($boosts);
+            break;
+          case 'inbox':
+          default:
+            $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+            $boosts = $pro->getReviewQueue(100);
+            $response['boosts'] = Factory::exportable($boosts);
+            $response['load-next'] = (string) end($boosts)->getGuid();
+        }
 
         return Factory::response($response);
     }
@@ -52,6 +54,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
         $bid = $_POST['bid'];
@@ -132,6 +136,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function put($pages)
     {
+        Factory::isLoggedIn();
+
         $response = [];
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
@@ -179,6 +185,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function delete($pages)
     {
+        Factory::isLoggedIn();
+
         $response = [];
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);

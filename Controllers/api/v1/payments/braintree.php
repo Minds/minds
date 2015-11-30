@@ -26,10 +26,10 @@ class braintree implements Interfaces\Api
       $response = array();
 
       switch ($pages[0]) {
-      case "token":
-        $response['token'] = Payments\Factory::build('braintree')->getToken();
-        break;
-    }
+        case "token":
+          $response['token'] = Payments\Factory::build('braintree')->getToken();
+          break;
+      }
 
       return Factory::response($response);
   }
@@ -39,32 +39,32 @@ class braintree implements Interfaces\Api
         $response = array();
 
         switch ($pages[0]) {
-      case "charge":
-        $amount = $_POST['amount'];
-        $fee = $amount * 0.05 + 0.30; //5% + $.30
+          case "charge":
+            $amount = $_POST['amount'];
+            $fee = $amount * 0.05 + 0.30; //5% + $.30
 
-        if (!isset($_POST['merchant'])) {
-            $merchant = Core\Session::getLoggedInUser();
+            if (!isset($_POST['merchant'])) {
+                $merchant = Core\Session::getLoggedInUser();
+            }
+
+            $sale = (new Payments\Sale())
+              ->setAmount($amount)
+              ->setMerchant($merchant)
+              ->setFee($fee)
+              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
+              ->setNonce($_POST['nonce']);
+
+            try {
+                $result = Payments\Factory::build('braintree')->setSale($sale);
+                var_dump($result);
+                exit;
+            } catch (\Exception $e) {
+                $response['status'] = "error";
+                $response['message'] = $e->getMessage();
+            }
+
+            break;
         }
-
-        $sale = (new Payments\Sale())
-          ->setAmount($amount)
-          ->setMerchant($merchant)
-          ->setFee($fee)
-          ->setCustomerId(Core\Session::getLoggedInUser()->guid)
-          ->setNonce($_POST['nonce']);
-
-        try {
-            $result = Payments\Factory::build('braintree')->setSale($sale);
-            var_dump($result);
-            exit;
-        } catch (\Exception $e) {
-            $response['status'] = "error";
-            $response['message'] = $e->getMessage();
-        }
-
-        break;
-    }
 
         return Factory::response($response);
     }

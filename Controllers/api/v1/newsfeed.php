@@ -105,6 +105,7 @@ class newsfeed implements Interfaces\Api
 
     public function post($pages)
     {
+        Factory::isLoggedIn();
 
         //factory::authorize();
         switch ($pages[0]) {

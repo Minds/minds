@@ -24,7 +24,8 @@ class wallet implements Interfaces\Api
      */
     public function get($pages)
     {
-        $response = array();
+        Factory::isLoggedIn();
+        $response = [];
 
         switch ($pages[0]) {
 
@@ -66,7 +67,8 @@ class wallet implements Interfaces\Api
 
     public function post($pages)
     {
-        $response = array();
+        Factory::isLoggedIn();
+        $response = [];
         switch ($pages[0]) {
             case "quote":
                 $ex_rate = $this->ex_rate;
@@ -93,7 +95,7 @@ class wallet implements Interfaces\Api
                     ]);
                 } catch(\Exception $e){
                     return Factory::response(array('status'=>'error'));
-                } 
+                }
 
                 try {
                     $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->getID());

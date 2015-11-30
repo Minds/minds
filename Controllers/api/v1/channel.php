@@ -80,6 +80,7 @@ class channel implements Interfaces\Api
 
     public function post($pages)
     {
+        Factory::isLoggedIn();
         $owner = Core\Session::getLoggedinUser();
         $guid = Core\Session::getLoggedinUser()->guid;
         if (Core\Session::getLoggedinUser()->legacy_guid) {

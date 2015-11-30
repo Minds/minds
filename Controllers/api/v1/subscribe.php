@@ -85,6 +85,7 @@ class subscribe implements Interfaces\Api
      */
     public function post($pages)
     {
+        Factory::isLoggedIn();
         $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'subscribed');
@@ -103,6 +104,7 @@ class subscribe implements Interfaces\Api
 
     public function delete($pages)
     {
+        Factory::isLoggedIn();
         $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
         $response = array('status'=>'success');
         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');

@@ -25,6 +25,8 @@ class settings implements Interfaces\Api
      */
     public function get($pages)
     {
+        Factory::isLoggedIn();
+
         if (Core\Session::getLoggedInUser()->isAdmin() && isset($pages[0])) {
             $user = new entities\User($pages[0]);
         } else {
@@ -51,6 +53,8 @@ class settings implements Interfaces\Api
      */
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         if (!Core\Security\XSRF::validateRequest()) {
             return false;
         }
