@@ -42,7 +42,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         switch ($pages[0]) {
         case "request":
-          $user = new Entities\User($_POST['username']);
+          $user = new Entities\User(strtolower($_POST['username']));
           if (!$user->guid) {
               $response['status'] = "error";
               $response['message'] = "Could not find @" . $_POST['username'];
@@ -61,7 +61,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
 
           break;
         case "reset":
-          $user = new Entities\User($_POST['username']);
+          $user = new Entities\User(strtolower($_POST['username']));
           if (!$user->guid) {
               $response['status'] = "error";
               $response['message'] = "Could not find @" . $_POST['username'];

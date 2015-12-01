@@ -24,7 +24,7 @@ class wallet implements Interfaces\Api
      */
     public function get($pages)
     {
-        Factory::isLoggedIn();
+//        Factory::isLoggedIn();
         $response = [];
 
         switch ($pages[0]) {
@@ -49,6 +49,7 @@ class wallet implements Interfaces\Api
                 break;
 
             case "transactions":
+                Factory::isLoggedIn();
                 $entities = Core\Entities::get(array('subtype'=>'points_transaction', 'owner_guid'=> Core\Session::getLoggedinUser()->guid, 'limit'=>isset($_GET['limit']) ? $_GET['limit'] : 12, 'offset'=>isset($_GET['offset']) ? $_GET['offset'] : ""));
                 if (isset($_GET['offset']) && $_GET['offset']) {
                     array_shift($entities);

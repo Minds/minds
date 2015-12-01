@@ -24,7 +24,7 @@ class comments implements Interfaces\Api
      */
     public function get($pages)
     {
-        Factory::isLoggedIn();
+        //Factory::isLoggedIn();
         $response = array();
         $guid = $pages[0];
 

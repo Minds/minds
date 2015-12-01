@@ -37,7 +37,7 @@ class notifications implements Interfaces\Api
      */
     public function get($pages)
     {
-        Factory::isLoggedIn();
+        //Factory::isLoggedIn();
         $response = [];
 
         if (!isset($pages[0])) {
@@ -52,7 +52,8 @@ class notifications implements Interfaces\Api
 
             case 'list':
             default:
-                $limit = (int) static::getQueryValue('limit') ?: 12;
+                Factory::isLoggedIn(); 
+                    $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
 
                 if ($limit > static::MAX_NOTIFICATIONS_PER_PAGE) {
