@@ -104,6 +104,7 @@ export class Gatherings {
           this.conversations[i].unread = 1;
         }
       }
+      window.Minds.navigation.sidebar[i].extras.counter = 0;
     });
   }
 
