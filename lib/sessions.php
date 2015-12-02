@@ -326,6 +326,8 @@ function login(ElggUser $user, $persistent = false) {
 		return false;
 	}
 
+  Minds\Core\Session::generateJWTCookie();
+
 	return true;
 }
 

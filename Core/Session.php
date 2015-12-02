@@ -60,16 +60,7 @@ class Session extends base
             session_destroy();
         }
 
-        /**
-         * Create a JWT token for our web socket integration
-         */
-        if (isset($_SESSION['user'])) {
-            $jwt = \Firebase\JWT\JWT::encode([
-              'guid' => (string) $_SESSION['user']->guid,
-              'sessionId' => session_id()
-            ], Config::_()->get('sockets-jwt-secret'));
-            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com');
-        }
+        self::generateJWTCookie();
 
         header('X-Powered-By: Minds', true);
 
@@ -100,6 +91,21 @@ class Session extends base
     {
         $_SESSION['user'] = new Entities\User($_SESSION['guid'], false);
         session_regenerate_id(true);
+    }
+
+    /**
+     * Create a JWT token for our web socket integration
+     * @return void
+     */
+    public static function generateJWTCookie()
+    {
+        if (isset($_SESSION['user'])) {
+            $jwt = \Firebase\JWT\JWT::encode([
+              'guid' => (string) $_SESSION['user']->guid,
+              'sessionId' => session_id()
+            ], Config::_()->get('sockets-jwt-secret'));
+            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com');
+        }
     }
 
     /**
