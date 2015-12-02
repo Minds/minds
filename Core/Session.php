@@ -60,6 +60,17 @@ class Session extends base
             session_destroy();
         }
 
+        /**
+         * Create a JWT token for our web socket integration
+         */
+        if (isset($_SESSION['user'])) {
+            $jwt = \Firebase\JWT\JWT::encode([
+              'guid' => (string) $_SESSION['user']->guid,
+              'sessionId' => session_id()
+            ], Config::_()->get('sockets-jwt-secret'));
+            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com');
+        }
+
         header('X-Powered-By: Minds', true);
 
         register_shutdown_function(array($this, 'shutdown'));

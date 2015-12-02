@@ -326,16 +326,6 @@ function login(ElggUser $user, $persistent = false) {
 		return false;
 	}
 
-  /**
-   * Create a JWT token for our web socket integration
-   */
-  $jwt = Firebase\JWT\JWT::encode([
-    'guid' => (string) $user->guid,
-    'sessionId' => session_id()
-  ], Minds\Core\Config::_()->get('sockets-jwt-secret'));
-
-	setcookie('socket_jwt', $jwt, 0, '/', Minds\Core\Config::_()->get('sockets-jwt-domain') ?: 'minds.com');
-
 	return true;
 }
 
