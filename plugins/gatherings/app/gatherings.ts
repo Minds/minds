@@ -104,14 +104,14 @@ export class Gatherings {
           this.conversations[i].unread = 1;
         }
       }
-
-      //reset the global counter
-      for(var i in window.Minds.navigation.sidebar){
-        if(window.Minds.navigation.sidebar[i].name == "Messenger"){
-          window.Minds.navigation.sidebar[i].extras.counter = 0;
-        }
-      }
     });
+
+    //reset the global counter
+    for(var i in window.Minds.navigation.sidebar){
+      if(window.Minds.navigation.sidebar[i].name == "Messenger"){
+        window.Minds.navigation.sidebar[i].extras.counter = 0;
+      }
+    }
   }
 
   logout(){
