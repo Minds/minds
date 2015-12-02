@@ -1,5 +1,6 @@
 import { Component, View, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
 import { Router, RouteParams, RouterLink } from "angular2/router";
+import { SocketsService } from '../../services/sockets';
 import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
 import { Storage } from '../../services/storage';
@@ -26,13 +27,16 @@ export class MessengerConversation {
   guid : string;
 
   messages : Array<any> = [];
+  limit : number = 12;
   offset: string = "";
   previous: string;
   hasMoreData: boolean = true;
   inProgress: boolean = false;
+  isTyping : boolean = false;
   ready : boolean = false;
   newChat: boolean;
-  poll: boolean = true;
+  listener;
+
 
   isSubscribed : boolean = true;
   isSubscriber : boolean = true;
@@ -46,7 +50,7 @@ export class MessengerConversation {
 
   isSending : boolean = false;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public _element: ElementRef){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public _element: ElementRef, public sockets: SocketsService){
     this.minds = window.Minds;
     if (params.params && params.params['guid']){
       this.guid = params.params['guid'];
@@ -59,6 +63,7 @@ export class MessengerConversation {
       return;
     this.guid = value;
     this.load();
+    this.listen();
   }
 
   /**
@@ -70,7 +75,7 @@ export class MessengerConversation {
 
     this.client.get('api/v1/conversations/' + this.guid,
       {
-        limit: 12,
+        limit: this.limit,
         offset: this.offset,
         cachebreak: Date.now(),
         decrypt: true,
@@ -107,7 +112,6 @@ export class MessengerConversation {
    * Send
    */
   send(message){
-    var self = this;
     this.isSending = true;
     this.client.post('api/v1/conversations/' + this.guid,
       {
@@ -115,20 +119,56 @@ export class MessengerConversation {
         encrypt: true
       })
       .then((data : MindsMessageResponse) =>{
-        self.isSending = false;
+        this.isSending = false;
 
-        self.messages.push(data.message);
-        self.previous = data.message.guid;
+        this.messages.push(data.message);
+        this.previous = data.message.guid;
 
-        self.scrollToBottom();
+        this.scrollToBottom();
+
+        this.sockets.emit('sendMessage', this.guid, {
+          type: 'message',
+          guid: data.message.guid
+        });
 
         message.value = null;
       })
       .catch(function(error) {
         alert('sorry, your message could not be sent');
         message.value = null;
-        self.isSending = false;
+        this.isSending = false;
       });
+  }
+
+  listen_typing_timeout : number;
+  listen(){
+    this.listener = this.sockets.subscribe('messageReceived', (from_guid, message) => {
+
+      //New message
+      if(message.type == 'message' && this.guid == from_guid){
+        this.client.get('api/v1/conversations/' + this.guid, {
+            limit: this.limit, start: this.previous, decrypt: true, password: encodeURIComponent(this.storage.get('private-key'))
+          })
+          .then((data : MindsUserConversationResponse) =>{
+            this.messages = this.messages.concat(data.messages);
+            this.scrollToBottom();
+
+            this.offset = data['load-previous'];
+            this.previous = data['load-next'];
+          });
+      }
+
+      //Is typing
+      if(message.type == 'typing' && this.guid == from_guid){
+        this.isTyping = true;
+        if(this.listen_typing_timeout)
+          clearTimeout(this.listen_typing_timeout);
+        this.listen_typing_timeout = setTimeout(() => {
+          this.isTyping = false;
+        },600);
+      }
+
+    });
   }
 
   scrollToBottom(){
@@ -137,10 +177,20 @@ export class MessengerConversation {
     }, 300); //wait until the render?
   }
 
-  doneTyping($event) {
-    if($event.which === 13) {
-      this.send($event.target);
+  keyup(e) {
+    this.typing();
+    if(e.which === 13) {
+      this.send(e.target);
     }
+  }
+
+  typing_timeout : number;
+  typing(){
+    if(this.typing_timeout)
+      clearTimeout(this.typing_timeout);
+    this.typing_timeout = setTimeout(() => {
+      this.sockets.emit('sendMessage', this.guid, { type: 'typing' });
+    }, 100);
   }
 
   delete(message, index){
@@ -149,6 +199,11 @@ export class MessengerConversation {
       .then((response : any) => {
         delete self.messages[index];
       });
+  }
+
+  onDestroy(){
+    if(this.listener)
+      this.listener.unsubscribe();
   }
 
 }

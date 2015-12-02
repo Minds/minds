@@ -1,4 +1,4 @@
-<div class="minds-messenger-messenger mdl-color--white mdl-shadow--2dp">
+<div class="minds-messenger-messenger mdl-color--white mdl-shadow--2dp" >
 
   <div  class="mdl-card mdl-shadow--2dp minds-messenger-message"  *ng-if="!isSubscriber || !isSubscribed">
     <div class="mdl-card__supporting-text" [hidden]="isSubscribed">
@@ -37,7 +37,7 @@
   <input #message
     type="text"
     id="chatText"
-    (keyup)="doneTyping($event)"
+    (keyup)="keyup($event)"
     placeholder="Enter your message here..."
     />
   <button class="mdl-button mdl-js-button mdl-button--colored"
@@ -47,4 +47,8 @@
     Send
     <i class="material-icons">send</i>
   </button>
+</div>
+
+<div class="minds-messenger-typing mdl-color-text--blue-grey-300" [hidden]="!isTyping">
+  <i class="material-icons">mode_edit</i> typing...
 </div>

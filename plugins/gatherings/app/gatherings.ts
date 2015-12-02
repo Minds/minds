@@ -1,6 +1,7 @@
 import { Component, View, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
+import { SocketsService } from '../../services/sockets';
 import { MindsTitle } from '../../services/ux/title';
 import { MessengerConversation } from "./messenger-conversation";
 import { MessengerSetup } from "./messenger-setup";
@@ -38,8 +39,9 @@ export class Gatherings {
   search : any = {};
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
+  listener;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle, public sockets: SocketsService){
     if(!this.session.isLoggedIn()){
       router.navigate(['/Login']);
     } else {
@@ -48,6 +50,7 @@ export class Gatherings {
       }
       this.checkSetup();
       this.load(true);
+      this.listen();
     }
     this.title.setTitle("Messenger");
   }
@@ -94,6 +97,16 @@ export class Gatherings {
       });
   }
 
+  listen(){
+    this.listener = this.sockets.subscribe('messageReceived', (from_guid, message) => {
+      for(var i in this.conversations) {
+        if(this.conversations[i].guid == from_guid && this.conversation != from_guid) {
+          this.conversations[i].unread = 1;
+        }
+      }
+    });
+  }
+
   logout(){
     this.storage.destroy('private-key');
     this.setup = false;
@@ -137,6 +150,11 @@ export class Gatherings {
       this.doSearch(event.target.value);
     }, 300);
   };
+
+  onDestroy(){
+    if(this.listener)
+      this.listener.unsubscribe();
+  }
 
 }
 export { MessengerConversation } from './messenger-conversation';
