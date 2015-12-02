@@ -108,7 +108,7 @@ export class Gatherings {
       //reset the global counter
       for(var i in window.Minds.navigation.sidebar){
         if(window.Minds.navigation.sidebar[i].name == "Messenger"){
-          window.Minds.navigation.sidebar[i].extras.counter = 1;
+          window.Minds.navigation.sidebar[i].extras.counter = 0;
         }
       }
     });
