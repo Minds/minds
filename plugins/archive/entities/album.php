@@ -57,6 +57,8 @@ class album extends object{
 	public function addChildren($guids){
 		$rows = array();
 		foreach($guids as $guid => $ts){
+      if(!$guid)
+          continue;
 			$rows[$guid] = array('container_guid' => $this->guid, 'access_id' => $this->access_id);
 		}
 
