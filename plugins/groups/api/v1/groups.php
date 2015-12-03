@@ -43,6 +43,7 @@ class groups implements Interfaces\Api
             $groups = Core\Entities::get(array(
               'guids' => $guids
             ));
+            $response['load-next'] =  (string) end($groups)->featured_id;
             break;
           case "member":
             if (!Core\Session::isLoggedIn()) {
@@ -61,7 +62,8 @@ class groups implements Interfaces\Api
         }
 
         $response['groups'] = Factory::exportable($groups);
-        $response['load-next'] = (string) end($groups)->guid;
+        if(!isset($response['load-next']))
+            $response['load-next'] = (string) end($groups)->guid;
 
         return Factory::response($response);
     }
