@@ -15,10 +15,10 @@ class Groups
           $user = Core\Session::getLoggedInUser();
       }
 
-      $options = array_merge(array(
-      'limit' => 12,
-      'offset' => ""
-    ), $options);
+      $options = array_merge([
+        'limit' => 12,
+        'offset' => ""
+      ], $options);
 
       $key = "$user->guid:member";
 

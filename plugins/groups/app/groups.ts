@@ -31,10 +31,7 @@ export class Groups {
   session = SessionFactory.build();
   _filter : string = "featured";
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams,
-    public title: MindsTitle){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
@@ -43,31 +40,33 @@ export class Groups {
   }
 
   load(refresh : boolean = false){
+    if(this.inProgress)
+      return;
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
       .then((response : MindsGroupListResponse) => {
 
         if(!response.groups || response.groups.length == 0){
-          self.moreData = false;
-          self.inProgress = false;
+          this.moreData = false;
+          this.inProgress = false;
           return false;
         }
 
         if(refresh){
-          self.groups = response.groups;
+          this.groups = response.groups;
         } else {
-          if(self.offset)
+          if(this.offset)
             response.groups.shift();
           for(let group of response.groups)
-            self.groups.push(group);
+            this.groups.push(group);
         }
 
-        self.offset = response['load-next'];
-        self.inProgress = false;
+        this.offset = response['load-next'];
+        this.inProgress = false;
       })
       .catch((e)=>{
-
+        this.inProgress = false;
       });
   }
 

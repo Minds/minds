@@ -61,7 +61,7 @@ class groups implements Interfaces\Api
         }
 
         $response['groups'] = Factory::exportable($groups);
-        $response['load-next'] = end($groups)->guid;
+        $response['load-next'] = (string) end($groups)->guid;
 
         return Factory::response($response);
     }
