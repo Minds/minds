@@ -5,6 +5,7 @@ import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { GoogleAds } from '../../components/ads/google-ads';
+import { RevContent } from '../../components/ads/revcontent';
 import { MindsTitle } from '../../services/ux/title';
 import { MindsBanner } from '../../components/banner';
 import { Comments } from '../../controllers/comments/comments';
@@ -21,7 +22,7 @@ import { MindsBlogEntity } from '../../interfaces/entities';
 })
 @View({
   templateUrl: 'src/plugins/blog/templates/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner, GoogleAds, ShareModal ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner, GoogleAds, RevContent, ShareModal ]
 })
 
 export class BlogView {
