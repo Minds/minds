@@ -55,12 +55,14 @@ export class ArchiveView {
 
   delete(){
     var self = this;
-    this.client.delete('api/v1/archive/' + this.guid)
-      .then((response : any) => {
-        self.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
-      })
-      .catch((e) => {
-      });
+    if(confirm("Are you sure?")){
+      this.client.delete('api/v1/archive/' + this.guid)
+        .then((response : any) => {
+          self.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
+        })
+        .catch((e) => {
+        });
+    }
   }
 
 }
