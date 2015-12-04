@@ -164,5 +164,5 @@ export class Gatherings {
   }
 
 }
-export { MessengerConversation } from './messenger-conversation';
-export { MessengerSetup } from './messenger-setup';
+export { MessengerConversation } from './conversation/conversation';
+export { MessengerSetup } from './setup/setup';
