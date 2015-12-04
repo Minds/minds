@@ -126,6 +126,7 @@ class blog implements Interfaces\Api
             $blog = new entities\Blog();
         }
 
+        $original_access = $blog->access_id;
         $allowed = array('title', 'description', 'access_id', 'status', 'license');
 
         foreach ($allowed as $v) {
@@ -152,7 +153,14 @@ class blog implements Interfaces\Api
 
         $response['guid'] = (string) $blog->guid;
 
-        if(!isset($pages[0]) || $pages[0] == "new"){
+        $activity_post = false;
+        if((!isset($pages[0]) || $pages[0] == "new") && $blog->access_id == 2){
+            $activity_post = true;
+        } elseif($original_access != 2 && $blog->access_id == 2){
+            $activity_post = true;
+        }
+
+        if($activity_post){
             (new Activity())
               ->setTitle($blog->title)
               ->setBlurb(strip_tags($blog->description))
