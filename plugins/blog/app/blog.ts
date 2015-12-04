@@ -8,7 +8,7 @@ import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsBlogListResponse } from '../../interfaces/responses';
 
-import { BlogCard } from './blog-card';
+import { BlogCard } from './card/card';
 
 @Component({
   selector: 'minds-blog',
@@ -16,7 +16,7 @@ import { BlogCard } from './blog-card';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'src/plugins/blog/templates/list.html',
+  templateUrl: 'src/plugins/blog/list.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll, BlogCard ]
 })
 
@@ -87,5 +87,5 @@ export class Blog {
   }
 }
 
-export { BlogView } from './blog-view';
-export { BlogEdit } from './blog-edit';
+export { BlogView } from './view/view';
+export { BlogEdit } from './edit/edit';
