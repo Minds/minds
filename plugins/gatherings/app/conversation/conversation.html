@@ -34,12 +34,14 @@
 </div>
 
 <div class="mdl-card minds-gatherings-send mdl-shadow--2dp" *ng-if="ready && isSubscriber && isSubscribed">
-  <input #message
+  <textarea #message
     type="text"
     id="chatText"
     (keyup)="keyup($event)"
     placeholder="Enter your message here..."
-    />
+    [auto-grow]
+    rows="1"
+   ></textarea>
   <button class="mdl-button mdl-js-button mdl-button--colored"
     [disabled]="isSending"
     (click)="send(message)"

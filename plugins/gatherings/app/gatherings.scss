@@ -66,13 +66,15 @@ minds-messenger-conversation{
   .minds-gatherings-send{
     padding:$minds-padding;
     flex-flow:row nowrap;
+    align-items:center;
     width: 100% !important;
 
-    input{
+    input, textarea{
       flex:1;
       padding: 8px;
       border: 0;
       font-size:14px;
+      resize:none;
     }
     .mdl-button{
 

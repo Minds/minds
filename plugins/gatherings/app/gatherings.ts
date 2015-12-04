@@ -3,8 +3,8 @@ import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/rou
 
 import { SocketsService } from '../../services/sockets';
 import { MindsTitle } from '../../services/ux/title';
-import { MessengerConversation } from "./messenger-conversation";
-import { MessengerSetup } from "./messenger-setup";
+import { MessengerConversation } from "./conversation/conversation";
+import { MessengerSetup } from "./setup/setup";
 import { Storage } from '../../services/storage';
 import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
@@ -22,7 +22,7 @@ import { MindsUserSearchResponse } from '../../interfaces/responses';
   bindings: [ MindsTitle ]
 })
 @View({
-  templateUrl: 'src/plugins/gatherings/templates/gatherings.html',
+  templateUrl: 'src/plugins/gatherings/gatherings.html',
   directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 
