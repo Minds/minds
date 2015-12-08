@@ -400,7 +400,7 @@ class Common implements Interfaces\PreparedInterface
         $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
         $this->values = array(
             "filter" => "withinDistance:[$latlon,$distance]",
-            "guid" => is_object($user) ? $user->guid : $user,
+            "guid" => is_object($user) ? (string) $user->guid : (string) $user,
             "limit"=> (int) $limit,
             "skip" => (int) $skip
         );

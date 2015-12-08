@@ -181,7 +181,7 @@ class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam
         switch ($pages[0]) {
             case 'pass':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
-                Core\Data\Client::build('Neo4j')->request($prepared->createPass(Core\Session::getLoggedinUser()->guid, $pages[1]));
+                Core\Data\Client::build('Neo4j')->request($prepared->createPass((string) Core\Session::getLoggedinUser()->guid, (string) $pages[1]));
                 Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[1], 'pass');
                 break;
             case 'acted':
