@@ -85,7 +85,7 @@ class Manager
             ->setTitle('Discovery')
             ->setPath('/Discovery')
             ->setParams(array(
-                'filter' => 'featured',
+                'filter' => 'suggested',
                 'type' => ''
             ))
             ->addSubItem($discovery_suggested)
