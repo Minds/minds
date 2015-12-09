@@ -108,19 +108,26 @@ class ACL
             return false;
         }
 
-      /**
-       * Check if we are the owner
-       */
-      if ($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid || $entity->guid == $user->guid) {
-          return true;
-      }
+        /**
+         * Check if we are the owner
+         */
+        if ($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid || $entity->guid == $user->guid) {
+            return true;
+        }
 
-      /**
-       * Allow plugins to extend the ACL check
-       */
-      if (Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true) {
-          return true;
-      }
+        /**
+         * Is this user an admin?
+         */
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        /**
+         * Allow plugins to extend the ACL check
+         */
+        if (Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true) {
+            return true;
+        }
 
         return false;
     }
