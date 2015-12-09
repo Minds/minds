@@ -158,7 +158,7 @@ export class Gatherings {
     }, 300);
   };
 
-  onDestroy(){
+  ngOnDestroy(){
     if(this.listener)
       this.listener.unsubscribe();
   }

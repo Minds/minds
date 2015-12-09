@@ -202,7 +202,7 @@ export class MessengerConversation {
       });
   }
 
-  onDestroy(){
+  ngOnDestroy(){
     if(this.listener)
       this.listener.unsubscribe();
   }

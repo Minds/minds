@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <form #passwords="form" class="mdl-grid minds-messenger-setup-grid" (submit)="setup(passwords)" [hidden]="inProgress">
+    <form class="mdl-grid minds-messenger-setup-grid" (ng-submit)="setup(passwords)" #passwords="ngForm" [hidden]="inProgress">
 
         <div class="mdl-cell mdl-cell--6-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
@@ -70,7 +70,7 @@
       </div>
     </div>
 
-      <form #password="form" class="mdl-grid minds-messenger-setup-grid" (submit)="unlock(password)" [hidden]="inProgress">
+      <form class="mdl-grid minds-messenger-setup-grid" (ng-submit)="unlock(password)" #password="ngForm" [hidden]="inProgress">
 
         <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"

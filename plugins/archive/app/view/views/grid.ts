@@ -21,8 +21,7 @@ import { InfiniteScroll } from '../../../../directives/infinite-scroll';
         distance="25%"
         (load)="load()"
         *ng-if="moreData"
-        style="width:100%"
-        />
+        style="width:100%">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
     </infinite-scroll>
   `,
