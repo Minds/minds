@@ -62,12 +62,42 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        $page = (new Entities\Page())
-            ->setTitle($_POST['title'])
-            ->setBody($_POST['body'])
-            ->setMenuContainer($_POST['menuContainer'])
-            ->setPath($_POST['path'])
-            ->save();
+        switch($pages[1]){
+            case "header":
+              try{
+                $page = (new Entities\Page())->loadFromGuid($pages[0]);
+              } catch (\Exception $e){
+                return Factory::response([
+                  'status' => 'error',
+                  'message' => 'page not found'
+                ]);
+              }
+
+              if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                  $resized = get_resized_image_from_uploaded_file('file', 2000);
+                  $path = $pages[0];
+                  $filepath = Core\Config::_()->dataroot . "page_banners/" . $page->getPath() . ".jpg";
+                  @mkdir(Core\Config::_()->dataroot . "page_banners", 0777, true);
+
+                  $f = fopen($filepath, "w+b");
+                  fwrite($f, $resized);
+                  fclose($f);
+              }
+
+              $page->setHeader(true)
+                ->setHeaderTop($_POST['headerTop'])
+                ->save();
+              break;
+            case "update":
+            case "add":
+            default:
+              $page = (new Entities\Page())
+                ->setTitle($_POST['title'])
+                ->setBody($_POST['body'])
+                ->setMenuContainer($_POST['menuContainer'])
+                ->setPath($_POST['path'])
+                ->save();
+        }
 
         return Factory::response([]);
     }

@@ -13,8 +13,10 @@ class Page extends DenormalizedEntity
     protected $body;
     protected $path;
     protected $menuContainer;
+    protected $header;
+    protected $headerTop;
     protected $rowKey = 'pages';
-    protected $exportableDefaults = [ 'title', 'body', 'path', 'menuContainer' ];
+    protected $exportableDefaults = [ 'title', 'body', 'path', 'menuContainer', 'header', 'headerTop' ];
 
     public function setTitle($title)
     {
@@ -61,6 +63,28 @@ class Page extends DenormalizedEntity
         return $this->menuContainer;
     }
 
+    public function setHeader($header)
+    {
+        $this->header = $header;
+        return $this;
+    }
+
+    public function getHeader()
+    {
+        return $this->header;
+    }
+
+    public function setHeaderTop($top)
+    {
+        $this->headerTop = (int) $top;
+        return $this;
+    }
+
+    public function getHeaderTop()
+    {
+        return (int) $this->headerTop;
+    }
+
     /**
      * Save the entity
      * @param boolean $index
@@ -72,7 +96,9 @@ class Page extends DenormalizedEntity
             'title' => $this->title,
             'body' => $this->body,
             'path' => $this->path,
-            'menuContainer' => $this->menuContainer
+            'menuContainer' => $this->menuContainer,
+            'header' => $this->header,
+            'headerTop' => $this->headerTop
         ]);
         if (!$success) {
             throw new \Exception("We couldn't save the entity to the database");
