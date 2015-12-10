@@ -22,6 +22,7 @@
   <minds-button-edit (click)="save()" [hidden]="!editing" *ng-if="session.getLoggedInUser().guid == group.owner_guid">
     <button>Save changes</button>
   </minds-button-edit>
+  <minds-button-feature [object]="group" *ng-if="session.isAdmin()"></minds-button-feature>
 
   <minds-groups-join-button [group]="group" *ng-if="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
 

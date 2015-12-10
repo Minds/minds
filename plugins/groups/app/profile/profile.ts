@@ -6,8 +6,9 @@ import { Client, Upload } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { MDL_DIRECTIVES } from '../../../directives/material';
 import { CARDS } from '../../../controllers/cards/cards';
-import { MindsBanner } from '../../../components/banner'
-import { MindsAvatar } from '../../../components/avatar'
+import { BUTTON_COMPONENTS } from '../../../components/buttons';
+import { MindsBanner } from '../../../components/banner';
+import { MindsAvatar } from '../../../components/avatar';
 
 import { GroupsJoinButton } from '../groups-join-button';
 import { GroupsProfileMembers } from './members/members';
@@ -22,7 +23,7 @@ import { GroupsProfileFeed } from './feed/feed';
 })
 @View({
   templateUrl: 'src/plugins/groups/profile/profile.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, RouterLink, CARDS, GroupsJoinButton,
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, BUTTON_COMPONENTS, RouterLink, CARDS, GroupsJoinButton,
     GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar ]
 })
 

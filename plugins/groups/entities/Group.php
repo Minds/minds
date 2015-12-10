@@ -39,7 +39,8 @@ use Minds\plugin\groups\helpers;
        'icontime',
        'banner',
        'banner_position',
-       'membership'
+       'membership',
+       'featured_id'
      ));
      }
 
