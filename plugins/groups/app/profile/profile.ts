@@ -91,6 +91,7 @@ export class GroupsProfile {
       .catch((e) => {
 
       });
+    this.group.banner = true;
     console.log('new banne added', file);
   }
 
