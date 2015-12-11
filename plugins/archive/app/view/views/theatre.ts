@@ -32,6 +32,11 @@ export class ArchiveTheatre {
 
   set _object(value : any){
     this.object = value;
+    this.logPlay();
+  }
+
+  logPlay(){
+    this.client.put('api/v1/analytics/play/' + this.object.guid);
   }
 
 }

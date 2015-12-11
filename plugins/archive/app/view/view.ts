@@ -36,16 +36,15 @@ export class ArchiveView {
   }
 
   load(refresh : boolean = false){
-    var self = this;
     this.inProgress = true;
     this.client.get('api/v1/entities/entity/' + this.guid, { children: false })
       .then((response : any) => {
-        self.inProgress = false;
+        this.inProgress = false;
         if(response.entity.type != 'object'){
           return;
         }
         if(response.entity)
-          self.entity = response.entity;
+          this.entity = response.entity;
 
       })
       .catch((e) => {
@@ -54,11 +53,10 @@ export class ArchiveView {
   }
 
   delete(){
-    var self = this;
     if(confirm("Are you sure?")){
       this.client.delete('api/v1/archive/' + this.guid)
         .then((response : any) => {
-          self.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
+          this.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
         })
         .catch((e) => {
         });
