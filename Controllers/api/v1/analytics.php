@@ -15,10 +15,13 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class analytics implements Interfaces\Api
+class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
+
     public function get($pages)
     {
+        Factory::isLoggedIn();
+
         $span = isset($_GET['span']) ? $_GET['span'] : 5;
         $unit = isset($_GET['unit']) ? $_GET['unit'] : 'day';
 
@@ -27,9 +30,9 @@ class analytics implements Interfaces\Api
         ->setKey($pages[0])
         ->get($span, $unit);
 
-        $response = array(
-        'data' => $data
-      );
+        $response = [
+          'data' => $data
+        ];
 
         return Factory::response($response);
     }
@@ -62,8 +65,11 @@ class analytics implements Interfaces\Api
     {
         switch ($pages[0]) {
             case 'open':
-                Helpers\Analytics::increment("app-opens"); //@todo move this to a metric factory soon
-            break;
+              Helpers\Analytics::increment("app-opens"); //@todo move this to a metric factory soon
+              break;
+            case 'play':
+              Helpers\Counters::increment($pages[1], 'plays');
+              break;
         }
 
         return Factory::response(array());
