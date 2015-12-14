@@ -119,7 +119,8 @@ class wallet implements Interfaces\Api
                         $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
                         if ($payment->getId()) {
                             //ok, now charge!
-                             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                            Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
                         } else {
                             $response['status'] = 'error';
                         }
