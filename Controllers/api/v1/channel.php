@@ -142,47 +142,19 @@ class channel implements Interfaces\Api
                 $item->owner_guid = elgg_get_logged_in_user_guid();
                 $item->access_id = ACCESS_PUBLIC;
                 $item->save();
-                $files = array();
-                $sizes = array(
-                    'thin' => array(
-                        'w' => 2000,
-                        'h' => 800,
-                        'square' => false,
-                        'upscale' => true
-                        ),
-                    'fat' => array(
-                        'w' => 2000,
-                        // 'h' => 800,
-                        'square' => false,
-                        'upscale' => true
-                        )
-                    );
-                foreach ($sizes as $name => $size_info) {
-                    global $CONFIG;
-                    $theme_dir = $CONFIG->dataroot . 'carousel/';
-                    $dimensions = getimagesize($_FILES["file"]['tmp_name']);
-                    $h = $dimensions[1];
-                    $x1 = 0;
-                    $x2 = $dimensions[0];
-                    if ($h <= 800 || $size_info['h'] != 800) {
-                        $y1 = 0;
-                        $y2 = $h;
-                    } else {
-                        $y1 = $h/3;
-                        $y2 = $h-($h/3);
-                    }
-                    $resized = get_resized_image_from_existing_file($_FILES["file"]['tmp_name'], $size_info['w'], $size_info['h'], $size_info['square'], $x1, $y1, $x2, $y2, $size_info['upscale'], 'jpeg', 80);
-                    if ($resized) {
-                        @mkdir($theme_dir);
-                        file_put_contents($theme_dir . $item->guid . $name, $resized);
-                    }
-                    if (isset($_FILES["file"]) && ($_FILES["file"]['error'] != UPLOAD_ERR_NO_FILE) && $_FILES["file"]['error'] != 0) {
-                        // register_error(minds_themeconfig_codeToMessage($_FILES['logo']['error'])); // Debug uploads
-                    }
-                    $item->last_updated = time();
-                    $item->background = true;
+
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $resized = get_resized_image_from_uploaded_file('file', 2000);
+                    $file = new Entities\File();
+                    $file->owner_guid = $item->owner_guid;
+                    $file->setFilename("banners/{$item->guid}.jpg");
+                    $file->open('write');
+                    $file->write($resized);
+                    $file->close();
+
+                    $response['uploaded'] = true;
                 }
-                $item->save();
+
                 break;
             case "carousel":
               $item = new \Minds\Entities\Object\Carousel(isset($_POST['guid']) ? $_POST['guid'] : null);
