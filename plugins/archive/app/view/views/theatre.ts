@@ -7,7 +7,7 @@ import { Material } from '../../../../directives/material';
 @Component({
   selector: 'minds-archive-theatre',
   viewBindings: [ Client ],
-  properties: ['_object: object']
+  inputs: ['_object: object']
 })
 @View({
   template: `
@@ -31,6 +31,8 @@ export class ArchiveTheatre {
   }
 
   set _object(value : any){
+    if(!value.guid)
+      return;
     this.object = value;
     this.logPlay();
   }
