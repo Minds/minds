@@ -5,6 +5,8 @@
 
 namespace Minds\Core\SEO;
 
+use Minds\Core;
+
 use Minds\Entities;
 
 class Defaults
@@ -19,6 +21,13 @@ class Defaults
     public function init()
     {
 
+        Manager::setDefaults([
+          'og:url' => Core\Config::_()->site_url,
+          'og:descripton' => Core\Config::_()->site_description,
+          'og:type' => 'website',
+          'og:image' => Core\Config::_()->site_url . 'assets/logos/medium.png',
+        ]);
+
         /**
          * Channel default SEO roots
          */
@@ -29,10 +38,10 @@ class Defaults
                   return array();
               }
 
-              return $meta = array(
-              'title' => $user->name,
-              'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription)
-            );
+              return $meta = [
+                'title' => $user->name,
+                'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription)
+              ];
           }
         });
 

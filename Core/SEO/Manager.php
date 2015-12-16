@@ -7,9 +7,9 @@ namespace Minds\Core\SEO;
 class Manager
 {
     public static $routes = array();
-    public static $defaults = array(
-    'title' => ''
-  );
+    public static $defaults = [
+      'title' => ''
+    ];
 
   /**
    * Add a callback to provide metadata
