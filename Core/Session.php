@@ -87,10 +87,11 @@ class Session extends base
         }
     }
 
-    public static function regenerate()
+    public static function regenerate($new_id = true)
     {
         $_SESSION['user'] = new Entities\User($_SESSION['guid'], false);
-        session_regenerate_id(true);
+        if($new_id)
+            session_regenerate_id(true);
     }
 
     /**

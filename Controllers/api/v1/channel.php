@@ -207,7 +207,7 @@ class channel implements Interfaces\Api
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
                 //update session also
-                Core\Session::regenerate();
+                Core\Session::regenerate(false);
        }
 
         return Factory::response($response);
