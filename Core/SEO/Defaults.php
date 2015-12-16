@@ -22,10 +22,13 @@ class Defaults
     {
 
         Manager::setDefaults([
+          'og:title' => Core\Config::_()->site_name,
           'og:url' => Core\Config::_()->site_url,
           'og:descripton' => Core\Config::_()->site_description,
           'og:type' => 'website',
           'og:image' => Core\Config::_()->site_url . 'assets/logos/medium.png',
+          'og:image:width' => 2000,
+          'og:image:height' => 1000
         ]);
 
         /**
@@ -39,8 +42,15 @@ class Defaults
               }
 
               return $meta = [
-                'title' => $user->name,
-                'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription)
+                'title' => $user->name . ' | Minds',
+                'og:title' =>  $user->name . ' | Minds',
+                'og:type' => 'website',
+                'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
+                'og:description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
+                'og:url' => Core\Config::_()->site_url . $user->username,
+                'og:image' => $user->getIconUrl('master'),
+                'og:image:width' => 2000,
+                'og:image:height' => 1000
               ];
           }
         });
