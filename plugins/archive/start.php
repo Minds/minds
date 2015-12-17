@@ -43,8 +43,11 @@ class start extends Components\Plugin{
 		Api\Routes::add('v1/archive/albums', "\\minds\\plugin\\archive\\api\\v1\\albums");
 		Api\Routes::add('v1/archive/thumbnails', "\\minds\\plugin\\archive\\api\\v1\\thumbnails");
 
-		Core\SEO\Manager::add('/archive/view', function($slugs = array()){
+		Core\SEO\Manager::add('/archive/view', function($slugs = []){
 			$guid = $slugs[0];
+			if(isset($slugs[1]) && is_numeric($slugs[1])){
+					$guid = $slugs[1];
+			}
 			$entity = CoreEntities\Factory::build($guid);
 			if(!$entity)
 				return array();
