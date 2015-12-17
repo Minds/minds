@@ -54,7 +54,9 @@ class start extends Components\Plugin{
 				'description' => $entity->description,
 				'og:type' => $entity->subtype == 'video' ? 'video' : 'article',
 				'og:url' => $entity->perma_url,
-				'og:image' => $entity->getIconUrl('xlarge')
+				'og:image' => $entity->getIconUrl('xlarge'),
+				'og:image:width' => 2000,
+				'og:image:height' => 1000
 			);
 		});
 
@@ -118,7 +120,7 @@ class start extends Components\Plugin{
 	                break;
 	                case 'audio':
 	                    $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
-                        break; 
+                        break;
                     case 'file':
                         $filename = $filename = "$data_root$user_path/$entity->filename";
 				}
