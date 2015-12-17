@@ -15,7 +15,7 @@ class unsubscribe extends core\page implements Interfaces\page
     public function get($pages)
     {
         \elgg_set_ignore_access();
-        $username = $pages[0];
+        $username = strtolower($pages[0]);
         $user = new \Minds\Entities\User($username);
 
         if ($user->getEmail() == $pages[1]) {
@@ -23,14 +23,11 @@ class unsubscribe extends core\page implements Interfaces\page
             $user->save();
         }
 
+        echo <<<HTML
+    <h1>Thanks @$user->username. Come back soon!</h1>
+    <strong>You have now been unsubscribed from future emails</strong>
+HTML;
 
-        $body = \elgg_view_layout('one_column', array(
-            'title'=> 'Thanks, come back soon!',
-            'content'=> 'You have now been unsubscribed from future emails'
-        ));
-
-
-        echo $this->render(array('body'=>$body));
     }
     
     public function post($pages)
