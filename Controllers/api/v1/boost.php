@@ -78,7 +78,8 @@ class boost implements Interfaces\Api
                     unset($boosts[$i]);
               }
               $response['boosts'] = Factory::exportable($boosts);
-              $response['load-next'] = (string) end($boosts)->getGuid();
+              $next = end($boosts);
+              $response['load-next'] = $next ? (string) $next->getGuid() : null;
 
                 /*$db = new Core\Data\Call('entities_by_time');
                 $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
