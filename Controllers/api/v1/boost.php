@@ -53,7 +53,7 @@ class boost implements Interfaces\Api
 
         switch ($pages[0]) {
             case is_numeric($pages[0]):
-                $entity = entities\Factory::build($pages[0]);
+                /*$entity = entities\Factory::build($pages[0]);
                 $response['entity'] = $entity->export();
                 //going to assume this is a channel only review for now
                 $boost_ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
@@ -61,7 +61,11 @@ class boost implements Interfaces\Api
                 if (!$guids || key($guids) != $pages[0]) {
                     return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
                 }
-                $response['points'] = reset($guids);
+                $response['points'] = reset($guids);*/
+                $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+                $boost = $pro->getBoostEntity($pages[0]);
+                $response['entity'] = $boost->getEntity()->export();
+                $response['points'] = $boost->getBid();
             break;
             case "rates":
               $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
@@ -72,14 +76,23 @@ class boost implements Interfaces\Api
             case "p2p":
               $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
               $boosts = $pro->getReviewQueue(100);
+              $boost_entities = [];
               //only show 'point boosts and 'created' (not accepted or rejected)
               foreach($boosts as $i => $boost){
-                if($boost->getType() != 'points' || $boost->getState() != 'created')
+                if($boost->getType() != 'points' || $boost->getState() != 'created'){
                     unset($boosts[$i]);
+                    continue;
+                }
+                $boost_entities[$i] = $boost->getEntity();
+                $boost_entities[$i]->guid = $boost->getGuid();
+                $boost_entities[$i]->points = $boost->getBid();
               }
-              $response['boosts'] = Factory::exportable($boosts);
-              $next = end($boosts);
-              $response['load-next'] = $next ? (string) $next->getGuid() : null;
+
+              $response['boosts'] = factory::exportable($boost_entities, array('points'));
+              
+              
+             //$next = end($boosts);
+              //$response['load-next'] = $next ? (string) $next->getGuid() : null;
 
                 /*$db = new Core\Data\Call('entities_by_time');
                 $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
