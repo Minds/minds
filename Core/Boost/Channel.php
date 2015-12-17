@@ -10,6 +10,7 @@ use Minds\Helpers;
 
 /**
  * Channel boost handler
+ * DEPRECATED. Please use the Peer controller instead. This is for polyfill support of mobile only
  */
 class Channel implements Interfaces\BoostHandlerInterface
 {
@@ -33,9 +34,28 @@ class Channel implements Interfaces\BoostHandlerInterface
      * @param int $points
      * @return boolean
      */
-    public function boost($entity, $points)
+    public function boost($entity_guid, $points)
     {
-        if (is_object($entity)) {
+        $entity = Entities\Factory::build($entity_guid);
+        $boost = (new Entities\Boost\Peer())
+          ->setEntity($entity)
+          ->setType('points')
+          ->setBid($points)
+          ->setDestination($this->guid)
+          ->setOwner(Core\Session::getLoggedInUser())
+          ->setState('created')
+          ->save();
+
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
+          'to'=> [$boost->getDestination()->guid],
+          'entity' => $boost->getEntity(),
+          'title' => $boost->getEntity()->title,
+          'notification_view' => 'boost_peer_request',
+          'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
+
+        return $boost->getGuid();
+        /*if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -65,7 +85,7 @@ class Channel implements Interfaces\BoostHandlerInterface
                 'points' => $points
                 ));
 
-        return $result;
+        return $result;*/
     }
 
      /**
@@ -76,9 +96,7 @@ class Channel implements Interfaces\BoostHandlerInterface
      */
     public function getReviewQueue($limit, $offset = "")
     {
-        $db = new Data\Call('entities_by_time');
-        $guids = $db->getRow("boost:channel:$this->guid:review", array('limit'=>$limit, 'offset'=>$offset, 'reversed'=>false));
-        return $guids;
+        return false;
     }
 
     /**
@@ -89,7 +107,7 @@ class Channel implements Interfaces\BoostHandlerInterface
      */
     public function accept($entity, $points)
     {
-        if (is_object($entity)) {
+        /*if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -118,9 +136,7 @@ class Channel implements Interfaces\BoostHandlerInterface
 
             break;
             default:
-                 /**
-                   * The following are actually treated as embeded posts.
-                   */
+
                    switch ($embeded->subtype) {
                        case 'blog':
                            $message = false;
@@ -154,6 +170,7 @@ class Channel implements Interfaces\BoostHandlerInterface
             'points' => $points
             ));
         return true;
+        */
     }
 
     /**
@@ -169,7 +186,7 @@ class Channel implements Interfaces\BoostHandlerInterface
         ///
 
 
-        if (is_object($entity)) {
+      /*  if (is_object($entity)) {
             $guid = $entity->guid;
         } else {
             $guid = $entity;
@@ -186,6 +203,7 @@ class Channel implements Interfaces\BoostHandlerInterface
             'notification_view' => 'boost_rejected',
             ));
         return true;//need to double check somehow..
+        */
     }
 
     /**
@@ -202,7 +220,7 @@ class Channel implements Interfaces\BoostHandlerInterface
 
     public function autoExpire()
     {
-        $db = new Data\Call('entities_by_time');
+        /*$db = new Data\Call('entities_by_time');
         $boosts = $db->getRow("boost:channel:all:review");
         foreach ($boosts as $boost => $ts) {
             list($destination, $guid) = explode(':', $boost);
@@ -235,6 +253,6 @@ class Channel implements Interfaces\BoostHandlerInterface
             } else {
                 echo "$guid is ok... \n";
             }
-        }
+        }*/
     }
 }

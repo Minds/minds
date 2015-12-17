@@ -156,9 +156,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
         }
 
-      //now add to the newsfeed
-      $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
-      \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+        //now add to the newsfeed
+        $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
+        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
 
         $activity = new Entities\Activity();
         $activity->p2p_boosted = true;

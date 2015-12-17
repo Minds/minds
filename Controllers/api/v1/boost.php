@@ -65,21 +65,31 @@ class boost implements Interfaces\Api
             break;
             case "rates":
               $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
-                $response['rate'] = $this->rate;
+              $response['rate'] = $this->rate;
               $response['cap'] = 800;
               $response['min'] = 5;
             break;
             case "p2p":
-                $db = new Core\Data\Call('entities_by_time');
+              $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+              $boosts = $pro->getReviewQueue(100);
+              //only show 'point boosts and 'created' (not accepted or rejected)
+              foreach($boosts as $i => $boost){
+                if($boost->getType() != 'points' || $boost->getState() != 'created')
+                    unset($boosts[$i]);
+              }
+              $response['boosts'] = Factory::exportable($boosts);
+              $response['load-next'] = (string) end($boosts)->getGuid();
+
+                /*$db = new Core\Data\Call('entities_by_time');
                 $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
                 if ($queue_guids) {
-                    $entities =  core\Entities::get(array('guids'=>array_keys($queue_guids)));
+                    $entities =  Core\Entities::get(array('guids'=>array_keys($queue_guids)));
                     foreach ($entities as $guid =>$entity) {
                         $entities[$guid]->points = $queue_guids[$entity->guid];
                     }
                     $response['boosts'] = factory::exportable($entities, array('points'));
-                }
-                break;
+                }*/
+              break;
         }
 
         return Factory::response($response);
@@ -158,8 +168,41 @@ class boost implements Interfaces\Api
      */
     public function put($pages)
     {
+        Factory::isLoggedIn();
+
+        $response = [];
+        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+        $boost = $pro->getBoostEntity($pages[0]);
+
+        Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
+
+        //now add to the newsfeed
+        $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
+        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+
+        $activity = new Entities\Activity();
+        $activity->p2p_boosted = true;
+        if ($embeded->remind_object) {
+            $activity->setRemind($embeded->remind_object)->save();
+        } else {
+            $activity->setRemind($embeded->export())->save();
+        }
+
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
+            'to'=>array($boost->getOwner()->guid),
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_peer_accepted',
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
+
+        $pro->accept($pages[0]);
+        $response['status'] = 'success';
+
+        return Factory::response($response);
+
         //validate the points
-        $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
+        /*$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         $guids = $ctrl->getReviewQueue(1, $pages[0]);
         if (!$guids) {
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
@@ -167,7 +210,7 @@ class boost implements Interfaces\Api
         $points = reset($guids);
         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[0], "boost (remind)");
         $accept = $ctrl->accept($pages[0], $points);
-        return Factory::response(array());
+        return Factory::response(array());*/
     }
 
     /**
@@ -175,7 +218,28 @@ class boost implements Interfaces\Api
      */
     public function delete($pages)
     {
-        $ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
+        Factory::isLoggedIn();
+
+        $response = [];
+        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+        $boost = $pro->getBoostEntity($pages[0]);
+
+        Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
+
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
+            'to'=>array($boost->getOwner()->guid),
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_peer_rejected',
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+        ]);
+
+        $pro->reject($pages[0]);
+        $response['status'] = 'success';
+
+        return Factory::response($response);
+
+        /*$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
         $guids = $ctrl->getReviewQueue(1, $pages[0]);
         if (!$guids) {
             return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
@@ -183,6 +247,6 @@ class boost implements Interfaces\Api
         $points = reset($guids);
         $entity = new \Minds\Entities\Activity($pages[0]);
         Helpers\Wallet::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
-        $ctrl->reject($pages[0]);
+        $ctrl->reject($pages[0]);*/
     }
 }
