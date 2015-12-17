@@ -37,11 +37,12 @@ class Channel implements Interfaces\BoostHandlerInterface
     public function boost($entity_guid, $points)
     {
         $entity = Entities\Factory::build($entity_guid);
+        $destination = Entities\Factory::build($this->guid);
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
           ->setType('points')
           ->setBid($points)
-          ->setDestination($this->guid)
+          ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
           ->setState('created')
           ->save();
