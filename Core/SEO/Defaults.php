@@ -27,6 +27,7 @@ class Defaults
           'og:title' => Core\Config::_()->site_name,
           'og:url' => Core\Config::_()->site_url,
           'og:description' => Core\Config::_()->site_description,
+          'og:app_id' => Core\Config::_()->site_fbAppId,
           'og:type' => 'website',
           'og:image' => Core\Config::_()->site_url . 'assets/logos/medium.png',
           'og:image:width' => 2000,
