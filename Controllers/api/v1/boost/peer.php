@@ -112,6 +112,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ]);
             }
         } else {
+            if((int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) < $boost->getBid()){
+                return Factory::response([
+                    'status' => 'error',
+                    'stage' => 'transaction',
+                    'message' => "You don't have enough points"
+                ]);
+            }
             $transactions_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
         }
 
