@@ -55,6 +55,8 @@ class start extends Components\Plugin{
 			return $meta = array(
 				'title' => $entity->title,
 				'description' => $entity->description,
+				'og:title' => $entity->title,
+				'og:description' => $entity->description,
 				'og:type' => $entity->subtype == 'video' ? 'video' : 'article',
 				'og:url' => $entity->perma_url,
 				'og:image' => $entity->getIconUrl('xlarge'),
