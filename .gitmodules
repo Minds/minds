@@ -1,0 +1,6 @@
+[submodule "engine"]
+  path = engine
+  url = git@github.com:Minds/engine.git
+[submodule "front"]
+  path = front
+  url = git@github.com:Minds/front.git
