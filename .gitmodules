@@ -1,6 +1,6 @@
 [submodule "engine"]
-  path = engine
-  url = git@github.com:Minds/engine.git
+	path = engine
+	url = https://github.com/minds/engine.git
 [submodule "front"]
-  path = front
-  url = git@github.com:Minds/front.git
+	path = front
+	url = https://github.com/minds/front.git
