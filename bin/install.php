@@ -7,7 +7,7 @@ if (PHP_SAPI !== 'cli') {
 /**
  * Start the Elgg engine
  */
-require_once(dirname(dirname(__FILE__)) . "/vendor/autoload.php");
+require_once(dirname(dirname(__FILE__)) . "/engine/vendor/autoload.php");
 define('__MINDS_INSTALLING__', true);
 
 echo "Instaling Minds \n";
