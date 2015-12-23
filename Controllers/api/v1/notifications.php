@@ -52,7 +52,7 @@ class notifications implements Interfaces\Api
 
             case 'list':
             default:
-                Factory::isLoggedIn(); 
+                Factory::isLoggedIn();
                     $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
 
@@ -81,6 +81,11 @@ class notifications implements Interfaces\Api
 
                     if ($data['entity']) {
                         $response['notifications'][$key]['entityObj'] = $data['entity'];
+                    }
+
+                    //temp mobile move
+                    if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
+                        unset($response['notifications'][$key]);
                     }
                 }
 
