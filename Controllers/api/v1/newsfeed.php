@@ -121,7 +121,7 @@ class newsfeed implements Interfaces\Api
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
                 Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
 
-                if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
+                /*if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     $cacher = \Minds\Core\Data\cache\Factory::build();
                     if (!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")) {
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid", true);
@@ -129,7 +129,7 @@ class newsfeed implements Interfaces\Api
                         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $embeded->guid, 'remind');
                         Helpers\Wallet::createTransaction($embeded->owner_guid, 1, $embeded->guid, 'remind');
                     }
-                }
+                }*/
 
                 $activity = new Entities\Activity();
                 switch ($embeded->type) {

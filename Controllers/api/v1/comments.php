@@ -95,7 +95,8 @@ class comments implements Interfaces\Api
                     unset($subscribers[$comment->owner_guid]);
                 }
 
-                Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+                if($comment->owner_guid != Core\Session::getLoggedinUser()->guid)
+                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
 
                 Core\Events\Dispatcher::trigger('notification', 'all', array(
                     'to' => $subscribers,
