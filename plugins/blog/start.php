@@ -18,6 +18,9 @@ class start extends Components\Plugin
 
         Core\SEO\Manager::add('/blog/view', function ($slugs = array()) {
             $guid = $slugs[0];
+            if(strlen($guid) < 10){
+                $guid = (new \GUID())->migrate($guid);
+            }
             $blog = new entities\Blog($guid);
             if (!$blog->title) {
                 return array();
