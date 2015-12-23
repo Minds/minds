@@ -50,7 +50,7 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
           'approved' => $boost_objs->count(),
           'approved_backlog' => $boost_backlog,
           'impressions' => $boost_impressions,
-          'impressions_met' => $boot_impressions_met
+          'impressions_met' => $boost_impressions_met
       );
 
         $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
