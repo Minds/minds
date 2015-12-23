@@ -50,6 +50,10 @@ class thumbs implements Interfaces\Api{
 
         $guid = $pages[0];
         $direction = $pages[1];
+        $opposite = 'down';
+        if($direction == 'down'){
+            $opposite = 'up';
+        }
 
         $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
 
@@ -59,8 +63,8 @@ class thumbs implements Interfaces\Api{
                 WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
             } else {
 	            helpers\storage::insert($direction, $entity);
-                WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
-                if($entity->owner_guid != Core\Session::getLoggedinUser()->guid){
+                //WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
+                if($entity->owner_guid != Core\Session::getLoggedinUser()->guid && !helpers\buttons::hasThumbed($entity, $opposite)){
                    WalletHelper::createTransaction($entity->owner_guid, 1, $guid, 'vote');
                 }
             }
