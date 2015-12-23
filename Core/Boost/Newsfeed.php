@@ -146,7 +146,7 @@ class Newsfeed implements BoostHandlerInterface
             return null;
         }
         $boosts->sort(array('_id'=> 1));
-        $boosts->limit(15);
+        $boosts->limit(30);
         $return = array();
         foreach ($boosts as $boost) {
             if (count($return) >= $limit) {
