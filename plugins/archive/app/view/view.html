@@ -60,6 +60,8 @@
         <i class="material-icons">photo_album</i>Back to album
       </a>
 
+      <minds-button-boost [object]="entity" *ng-if="entity.subtype != 'album'"></minds-button-boost>
+
     </div>
 
 
