@@ -65,6 +65,7 @@ class thumbs implements Interfaces\Api{
 	            helpers\storage::insert($direction, $entity);
                 //WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
                 if($entity->owner_guid != Core\Session::getLoggedinUser()->guid && !helpers\buttons::hasThumbed($entity, $opposite)){
+                   WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
                    WalletHelper::createTransaction($entity->owner_guid, 1, $guid, 'vote');
                 }
             }
