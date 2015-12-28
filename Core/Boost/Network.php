@@ -181,7 +181,7 @@ class Network implements BoostHandlerInterface
 
             Core\Events\Dispatcher::trigger('notification', 'boost', [
                 'to'=> [ $boost->getOwner()->guid ],
-                'entity' => $boost,
+                'entity' => $boost->getEntity(),
                 'from'=> 100000000000000519,
                 'title' => $boost->getEntity()->title,
                 'notification_view' => 'boost_accepted',
@@ -207,7 +207,7 @@ class Network implements BoostHandlerInterface
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=> [ $boost->getOwner()->guid ],
             'from'=> 100000000000000519,
-            'entity' => $boost,
+            'entity' => $boost->getEntity(),
             'title' => $boost->getEntity()->title,
             'notification_view' => 'boost_rejected',
         ]);
@@ -243,7 +243,7 @@ class Network implements BoostHandlerInterface
         Core\Events\Dispatcher::trigger('notification', 'boost', [
           'to'=> [ $boost->getOwner()->guid ],
           'from'=> 100000000000000519,
-          'entity' => $boost,
+          'entity' => $boost->getEntity(),
           'title' => $boost->getEntity()->title,
           'notification_view' => 'boost_completed',
           'params' => ['impressions' => $boost->getBid()],
