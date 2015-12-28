@@ -141,6 +141,7 @@ class boost implements Interfaces\Api
 
         switch(ucfirst($pages[0])){
           case "Suggested":
+          case "User":
           case "Object":
               $pages[0] = "Content"; //legacy mobile support
           case "Activity":
