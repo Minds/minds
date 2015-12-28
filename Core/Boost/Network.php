@@ -72,14 +72,19 @@ class Network implements BoostHandlerInterface
             $query['_id'] = [ '$gt' => $offset ];
         }
         $queue = $this->mongo->find("boost", $query);
+        $queue->limit($limit);
+        $queue->sort(array('_id'=> 1));
 
         if (!$queue) {
           return false;
         }
 
+        $guids = [];
+        $end = "";
         foreach ($queue as $data) {
             $_id = (string) $data['_id'];
             $guids[$_id] = $data['guid'];
+            $end = $data['guid'];
             //$this->mongo->remove("boost", ['_id' => $_id]);
         }
 
@@ -90,9 +95,11 @@ class Network implements BoostHandlerInterface
         $db = new Data\Call('entities_by_time');
         $data = $db->getRow("boost:$this->handler", [
           'limit'=>$limit,
-          'finish'=> end($guids),
+          'offset'=> $end,
           'reversed'=>true
         ]);
+
+        $data = array_reverse($data); // oldest to newest
 
         $boosts = [];
         foreach ($data as $guid => $raw_data) {
