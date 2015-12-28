@@ -135,7 +135,7 @@ class Manager
         }
 
         self::add((new Item())
-            ->setPriority(2)
+            ->setPriority(3)
             ->setIcon('account_balance')
             ->setName('Wallet')
             ->setTitle('Wallet')
@@ -147,7 +147,7 @@ class Manager
         );
 
         self::add((new Item())
-            ->setPriority(1)
+            ->setPriority(2)
             ->setIcon('notifications')
             ->setName('Notifications')
             ->setTitle('Notifications')
@@ -155,6 +155,19 @@ class Manager
             ->setExtras(array(
                 'counter' => Helpers\Notifications::getCount()
             )),
+            'topbar'
+        );
+
+        self::add((new Item())
+            ->setPriority(1)
+            ->setIcon('trending_up')
+            ->setName('Boost Console')
+            ->setTitle('Boost Console')
+            ->setPath('/Boosts')
+            ->setParams([
+                'type' => 'peer',
+                'filter' => 'inbox'
+            ]),
             'topbar'
         );
 

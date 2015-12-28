@@ -89,20 +89,12 @@ class boost implements Interfaces\Api
               }
 
               $response['boosts'] = factory::exportable($boost_entities, array('points'));
-              
-              
-             //$next = end($boosts);
-              //$response['load-next'] = $next ? (string) $next->getGuid() : null;
-
-                /*$db = new Core\Data\Call('entities_by_time');
-                $queue_guids = $db->getRow("boost:channel:" . Core\Session::getLoggedinUser()->guid  . ":review");
-                if ($queue_guids) {
-                    $entities =  Core\Entities::get(array('guids'=>array_keys($queue_guids)));
-                    foreach ($entities as $guid =>$entity) {
-                        $entities[$guid]->points = $queue_guids[$entity->guid];
-                    }
-                    $response['boosts'] = factory::exportable($entities, array('points'));
-                }*/
+              break;
+            case "newsfeed":
+            case "content":
+              $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
+              $boosts = $pro->getOutbox(isset($_GET['limit']) ? $_GET['limit'] : 12, isset($_GET['offset']) ? $_GET['offset'] : "");
+              $response['boosts'] = Factory::exportable($boosts);
               break;
         }
 
@@ -141,36 +133,65 @@ class boost implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
         }
 
-        $response = array();
-        if (Core\Boost\Factory::build(ucfirst($pages[0]), array('destination'=>isset($_POST['destination']) ? $_POST['destination'] : null))->boost($pages[1], $impressions)) {
-            //dont use rate for p2p boosts
-            if (isset($_POST['destination']) && $_POST['destination']) {
-                $points = 0 - $impressions;
-            } else {
-                $points = 0 - ($impressions / $this->rate);
-            } //make it negative
+        $response = [];
+        $entity = Entities\Factory::build($pages[1]);
+        if(!$entity){
+          return Factory::response(['status' => 'error', 'message' => 'entity not found']);
+        }
 
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "boost");
-            //a boost gift
-            if (isset($pages[2]) && $pages[2] != Core\Session::getLoggedinUser()->guid) {
-                Core\Events\Dispatcher::trigger('notification', 'boost', array(
-                'to'=>array($pages[2]),
-                'entity' => $pages[1],
-                'notification_view' => 'boost_gift',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
-                ));
-            } elseif ($pages[0] != 'channel') {
-                Core\Events\Dispatcher::trigger('notification', 'boost', array(
-                'to'=>array(Core\Session::getLoggedinUser()->guid),
-                'entity' => $pages[1],
-                'notification_view' => 'boost_submitted',
-                'params' => array('impressions'=>$impressions),
-                'impressions' => $impressions
-                ));
+        switch(ucfirst($pages[0])){
+          case "Suggested":
+          case "Object":
+            $pages[0] = "Content"; //legacy mobile support
+          case "Newsfeed":
+          case "Content":
+
+            $points = ($impressions / $this->rate);
+
+            $boost = (new Entities\Boost\Network())
+              ->setEntity($entity)
+              ->setBid($points)
+              ->setOwner(Core\Session::getLoggedInUser())
+              ->setState('created')
+              ->setHandler(lcfirst($pages[0]));
+
+            $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost);
+            if($result){
+                $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
+                $boost->setId((string) $result)
+                  ->setTransactionId($transactionId)
+                  ->save();
+                Core\Events\Dispatcher::trigger('notification', 'boost', [
+                  'to'=> [ Core\Session::getLoggedinUser()->guid ],
+                  'entity' => $pages[1],
+                  'notification_view' => 'boost_submitted',
+                  'params' => [ 'impressions' => $impressions ],
+                  'impressions' => $impressions
+                ]);
+            } else {
+                $response['status'] = 'error';
             }
-        } else {
-            $response['status'] = 'error';
+            break;
+          case "Channel": //this is a polyfill for the new boost PRO
+            $result = Core\Boost\Factory::build("Channel", [
+              'destination'=>isset($_POST['destination']) ? $_POST['destination'] : null
+            ])->boost($entity, $impressions);
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, $pages[1], "p2p boost");
+            if($result){
+                Core\Events\Dispatcher::trigger('notification', 'boost', [
+                  'to'=> [ $pages[2] ],
+                  'entity' => $pages[1],
+                  'notification_view' => 'boost_gift',
+                  'params' => [ 'impressions'=>$impressions ],
+                  'impressions' => $impressions
+                ]);
+            } else {
+                $response['status'] = 'error';
+            }
+            break;
+          default:
+              $response['status'] = 'error';
+              $response['message'] = "boost handler not found";
         }
 
         return Factory::response($response);

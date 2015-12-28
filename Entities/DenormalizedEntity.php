@@ -93,6 +93,17 @@ class DenormalizedEntity
     }
 
     /**
+     * A small hack to always grab the guid without the getGuid() method
+     * @return string/void
+     */
+    public function __get($name)
+    {
+        if($name == 'guid'){
+            return $this->getGuid();
+        }
+    }
+
+    /**
      * Export the entity
      * @param array $keys
      * @return array

@@ -23,39 +23,23 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
      */
     public function get($pages)
     {
-        $response = array();
+        $response = [];
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
         $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
         $type = isset($pages[0]) ? $pages[0] : 'newsfeed';
-        $queue = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
-        $newsfeed_count =  Core\Boost\Factory::build(ucfirst("newsfeed"))->getReviewQueueCount();
-        $suggested_count =  Core\Boost\Factory::build(ucfirst("suggested"))->getReviewQueueCount();
+        $boosts = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
+        $newsfeed_count = Core\Boost\Factory::build("Newsfeed")->getReviewQueueCount();
+        $suggested_count = Core\Boost\Factory::build("Suggested")->getReviewQueueCount();
 
-        $guids = array();
-        foreach ($queue as $data) {
-            $_id = (string) $data['_id'];
-            $guids[$_id] = $data['guid'];
-        }
-
-        if ($guids) {
-            $entities = Core\Entities::get(array('guids' => $guids));
-            $db = new Core\Data\Call('entities_by_time');
-            foreach ($entities as $k => $entity) {
-                foreach ($queue as $data) {
-                    if ($data['guid'] == $entity->guid) {
-                        $entities[$k]->boost_impressions = $data['impressions'];
-                        $entities[$k]->boost_id = (string) $data['_id'];
-                    }
-                }
-            }
-            $response['entities'] = Factory::exportable($entities, array('boost_impressions', 'boost_id'));
+        if ($boosts) {
+            $response['boosts'] = Factory::exportable($boosts, ['boost_impressions', 'boost_id']);
             $response['count'] = $type == "newsfeed" ? $newsfeed_count : $suggested_count;
-            $response['newsfeed_count'] = (int) $newsfeed_count;
-            $response['suggested_count'] = (int) $suggested_count;
             $response['load-next'] = $_id;
         }
 
+        $response['newsfeed_count'] = (int) $newsfeed_count;
+        $response['suggested_count'] = (int) $suggested_count;
 
         return Factory::response($response);
     }
@@ -68,36 +52,44 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
     {
         $response = array();
 
-        $_id = $pages[0];
-        $action = $pages[1];
+        $type = ucfirst($pages[0]);
+        $guid = $pages[1];
+        $action = $pages[2];
 
-        if (!$_id) {
+        if (!$guid) {
             return Factory::response(array(
-          'status' => 'error',
-          'message' => "We couldn't find that boost"
-        ));
+              'status' => 'error',
+              'message' => "We couldn't find that boost"
+            ));
         }
 
         if (!$action) {
             return Factory::response(array(
-          'status' => 'error',
-          'message' => "You must provide an action: accept or reject"
-        ));
+              'status' => 'error',
+              'message' => "You must provide an action: accept or reject"
+            ));
         }
 
-        $type = isset($_POST['type']) ? $_POST['type'] : 'Newsfeed';
+        $boost = Core\Boost\Factory::build($type)->getBoostEntity($guid);
+        if(!$boost){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'boost not found'
+            ]);
+        }
+
         if ($action == 'accept') {
-            Core\Boost\Factory::build(ucfirst($type))->accept($_id);
-        } elseif ($action == 'reject') {
-            Core\Boost\Factory::build(ucfirst($type))->reject($_id);
-            $entity = \Minds\entities\Factory::build($_POST['guid']);
-            if ($entity->type == "user") {
-                $user_guid = $entity->guid;
-            } else {
-                $user_guid = $entity->owner_guid;
+            $success = Core\Boost\Factory::build($type)->accept($boost);
+            if(!$success){
+                $response['status'] = 'error';
             }
-        //refund the point
-        Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, null, "boost refund");
+        } elseif ($action == 'reject') {
+            $success = Core\Boost\Factory::build($type)->reject($boost);
+            if($success){
+                Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "boost refund");
+            } else {
+                $response['status'] = 'error';
+            }
         }
 
         return Factory::response($response);

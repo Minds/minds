@@ -8,12 +8,11 @@ use Minds\Entities;
 use Minds\Helpers;
 
 /**
- * Newsfeed Boost handler
+ * Content Boost handler
  */
-class Newsfeed extends Network implements BoostHandlerInterface
+class Content extends Network implements BoostHandlerInterface
 {
 
-    protected $handler = 'newsfeed';
-
+    protected $handler = 'content';
 
 }

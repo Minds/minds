@@ -240,17 +240,18 @@ class Peer implements BoostEntityInterface
     public function export()
     {
         $export = [
-      'guid' => $this->guid,
-      'entity' => $this->entity ? $this->entity->export() : [],
-      'bid' => $this->bid,
-      'destination' => $this->destination ? $this->destination->export() : [],
-      'owner' => $this->owner ? $this->owner->export() : [],
-      'state' => $this->state,
-      'transactionId' => $this->transactionId,
-      'time_created' => $this->time_created,
-      'last_updated' => $this->last_updated,
-      'type' => $this->_type
-    ];
+          'guid' => $this->guid,
+          'entity' => $this->entity ? $this->entity->export() : [],
+          'bid' => $this->bid,
+          'bidType' => $this->_type, //move to ->bidType soon
+          'destination' => $this->destination ? $this->destination->export() : [],
+          'owner' => $this->owner ? $this->owner->export() : [],
+          'state' => $this->state,
+          'transactionId' => $this->transactionId,
+          'time_created' => $this->time_created,
+          'last_updated' => $this->last_updated,
+          'type' => $this->_type
+        ];
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);
         return $export;
