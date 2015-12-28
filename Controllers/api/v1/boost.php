@@ -139,13 +139,15 @@ class boost implements Interfaces\Api
           return Factory::response(['status' => 'error', 'message' => 'entity not found']);
         }
 
+        if($pages[0] == "object" || $pages[0] == "user" || $pages[0] == "suggested"){
+            $pages[0] = "content";
+        }
+
+        if($pages[0] == "activity"){
+            $pages[0] = "newsfeed";
+        }
+
         switch(ucfirst($pages[0])){
-          case "Suggested":
-          case "User":
-          case "Object":
-              $pages[0] = "Content"; //legacy mobile support
-          case "Activity":
-              $pages[0] = "Newsfeed";
           case "Newsfeed":
           case "Content":
 
