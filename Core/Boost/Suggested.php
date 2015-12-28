@@ -85,11 +85,15 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
         $cacher = Core\Data\cache\factory::build();
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: [];
 
-        $boosts = $this->mongo->find("boost", ['type'=>'suggested', 'state'=>'approved']);
+        $boosts = $this->mongo->find("boost", [
+            'type'=>'suggested',
+            'state'=>'approved',
+            '_id' => [ '$gt' => end($mem_log) ]
+        ]);
         if (!$boosts) {
             return null;
         }
-        $boosts->limit(50);
+        $boosts->limit(100);
 
         $return = [];
         foreach ($boosts as $boost) {
