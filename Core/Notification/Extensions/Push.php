@@ -35,6 +35,10 @@ class Push implements Interfaces\NotificationExtensionInterface
             return false;
         }
 
+        if($notification['params']['notification_view'] == 'like' || $notification['params']['notification_view'] == 'downvote'){
+            return false;
+        }
+
         return QueueClient::build()
             ->setExchange($notification['exchange'])
             ->setQueue($notification['queue'])
