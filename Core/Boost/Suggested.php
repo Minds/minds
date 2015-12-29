@@ -104,8 +104,8 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             if (in_array((string)$boost['_id'], $mem_log)) {
                 continue; // already seen
             }
-            Helpers\Counters::increment($boost['_id'], "boost_impressions");
-            $count = Helpers\Counters::get($boost['_id'], "boost_impressions", false);
+            Helpers\Counters::increment((string)$boost['_id'], "boost_impressions");
+            $count = Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
             $entity = \Minds\Entities\Factory::build($boost['guid']);
             if ($count > $boost['impressions'] || !$entity) {
                 $this->mongo->remove("boost", array('_id' => $boost['_id']));
