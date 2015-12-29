@@ -126,6 +126,9 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
             $return[] = $entity;
         }
+        if(!$result && $mem_log){
+            $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts");
+        }
         return $return;
     }
 
