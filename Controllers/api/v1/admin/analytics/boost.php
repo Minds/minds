@@ -22,14 +22,14 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
      */
     public function get($pages)
     {
-        $response = array();
+        $response = [];
 
         $mongo = Core\Data\Client::build('MongoDB');
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         $boost_backlog = null;
-        $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'newsfeed'));
-        $boost_objs->sort(array('_id'=> 1));
+        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'newsfeed']);
+        $boost_objs->sort(['_id'=> 1]);
         foreach ($boost_objs as $boost) {
             if ($boost_backlog == null) {
                 $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
@@ -38,33 +38,33 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
 
-        $boost_reviews = $mongo->find("boost", array('state'=>'review', 'type'=>'newsfeed'));
-        $boost_reviews->sort(array('_id'=> 1));
+        $boost_reviews = $mongo->find("boost", ['state'=>'review', 'type'=>'newsfeed']);
+        $boost_reviews->sort(['_id'=> 1]);
         foreach ($boost_reviews as $obj) {
             $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
             break;
         }
-        $boosts = array(
+        $boosts = [
           'review' =>  $boost_reviews->count(),
           'review_backlog' => $review_backlog,
           'approved' => $boost_objs->count(),
           'approved_backlog' => $boost_backlog,
           'impressions' => $boost_impressions,
           'impressions_met' => $boost_impressions_met
-      );
+        ];
 
-        $boost_objs = $mongo->find("boost", array('state'=>'approved', 'type'=>'suggested'));
+        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'suggested']);
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         foreach ($boost_objs as $boost) {
             $boost_impressions = $boost_impressions + $boost['impressions'];
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
-        $boosts_suggested = array(
+        $boosts_suggested = [
           'approved' => $boost_objs->count(),
           'impressions' => $boost_impressions,
-          'impressions_met' => $boot_impressions_met
-      );
+          'impressions_met' => $boost_impressions_met
+        ];
 
         $response['newsfeed'] = $boosts;
         $response['suggested'] = $boosts_suggested;
