@@ -53,7 +53,10 @@ class notifications implements Interfaces\Api
             case 'list':
             default:
                 Factory::isLoggedIn();
-                    $limit = (int) static::getQueryValue('limit') ?: 12;
+
+                Helpers\Notifications::resetCounter();
+
+                $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
 
                 if ($limit > static::MAX_NOTIFICATIONS_PER_PAGE) {
@@ -92,7 +95,6 @@ class notifications implements Interfaces\Api
                 $response['load-next'] = (string) end($notifications)->getGuid();
                 //$response['load-previous'] = (string) key($notifications)->getGuid();
 
-                Helpers\Notifications::resetCounter();
                 break;
 
         }

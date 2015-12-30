@@ -35,7 +35,7 @@ class Notifications
             return $user->notifications_count;
         }
 
-        return Counters::get($user, 'notifications:count');
+        return Counters::get($user, 'notifications:count', false);
     }
 
     /**
