@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Featured API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,7 +17,7 @@ class featured implements Interfaces\Api
     /**
      * Returns the entities
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"entities"},
      *     summary="Returns featured entities",
@@ -76,7 +76,7 @@ class featured implements Interfaces\Api
             default:
                 $type = "user";
         }
-        
+
         //the allowed, plus default, options
         $options = array(
             'type' => $type,
@@ -84,7 +84,7 @@ class featured implements Interfaces\Api
             'limit'=>12,
             'offset'=>get_input('offset', '')
             );
-            
+
         foreach ($options as $key => $value) {
             if (isset($_GET[$key])) {
                 $options[$key] = $_GET[$key];
@@ -100,8 +100,11 @@ class featured implements Interfaces\Api
         if (!$guids) {
             return Factory::response(array('status'=>'error', 'message'=>'not found'));
         }
-        
-        $options = array('guids'=>$guids);
+
+        if (isset($_GET['offset']) && $_GET['offset']) {
+            array_shift($guids);
+        }
+        $options = ['guids'=>$guids];
         $entities = core\Entities::get($options);
 
         usort($entities, function ($a, $b) {
@@ -116,18 +119,18 @@ class featured implements Interfaces\Api
             $response['load-next'] = (string) end($entities)->featured_id;
             $response['load-previous'] = (string) key($entities)->featured_id;
         }
-        
+
         return Factory::response($response);
     }
-    
+
     public function post($pages)
     {
     }
-    
+
     public function put($pages)
     {
     }
-    
+
     public function delete($pages)
     {
     }

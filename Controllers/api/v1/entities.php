@@ -99,13 +99,13 @@ class entities implements Interfaces\Api
         }
 
         //the allowed, plus default, options
-        $options = array(
-            'type' => $type,
-            'subtype' => $subtype,
-            'owner_guid'=> $owner,
-            'limit'=>12,
-            'offset'=>''
-            );
+        $options = [
+          'type' => $type,
+          'subtype' => $subtype,
+          'owner_guid'=> $owner,
+          'limit'=>12,
+          'offset'=>''
+        ];
 
         foreach ($options as $key => $value) {
             if (isset($_GET[$key])) {
@@ -113,9 +113,12 @@ class entities implements Interfaces\Api
             }
         }
 
-
         $entities = Core\Entities::get($options);
-        $response = array();
+        if (isset($_GET['offset']) && $_GET['offset']) {
+            array_shift($entities);
+        }
+
+        $response = [];
         if ($entities) {
             $response['entities'] = factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
