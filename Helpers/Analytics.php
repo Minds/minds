@@ -26,13 +26,16 @@ class Analytics
     /**
      * @return void
      */
-    public static function increment($metric = "active", $ts = null)
+    public static function increment($metric = "active", $ts = null, $user_guid = NULL)
     {
+        if(!$user_guid){
+            $user_guid = Core\Session::getLoggedinUser()->guid
+        }
         $db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
-        $db->insert("analytics:$metric:day:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
+        $db->insert("analytics:$metric:day:$ts", [$user_guid => time()]);
         $ts = self::buildTS("month", $ts);
-        $db->insert("analytics:$metric:month:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
+        $db->insert("analytics:$metric:month:$ts", [$user_guid => time()]);
     }
 
     /**
