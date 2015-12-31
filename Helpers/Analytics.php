@@ -29,7 +29,7 @@ class Analytics
     public static function increment($metric = "active", $ts = null, $user_guid = NULL)
     {
         if(!$user_guid){
-            $user_guid = Core\Session::getLoggedinUser()->guid
+            $user_guid = Core\Session::getLoggedinUser()->guid;
         }
         $db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
