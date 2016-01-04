@@ -1,7 +1,7 @@
-<minds-archive-theatre [object]="entity" *ng-if="entity && entity.subtype == 'image'"></minds-archive-theatre>
-<minds-archive-thumbnail-selector (thumbnail)="setThumbnail($event)" [thumbnail-sec]="entity.thumbnail" [src]="[{ uri: entity.src['720.mp4']}]"  *ng-if="entity && entity.subtype == 'video'">></minds-archive-thumbnail-selector>
+<minds-archive-theatre [object]="entity" *ngIf="entity && entity.subtype == 'image'"></minds-archive-theatre>
+<minds-archive-thumbnail-selector (thumbnail)="setThumbnail($event)" [thumbnail-sec]="entity.thumbnail" [src]="[{ uri: entity.src['720.mp4']}]"  *ngIf="entity && entity.subtype == 'video'">></minds-archive-thumbnail-selector>
 
-<div class="mdl-grid archive-grid" style="max-width:900px" *ng-if="error">
+<div class="mdl-grid archive-grid" style="max-width:900px" *ngIf="error">
   <h1>{{error}}</h1>
 </div>
 
@@ -12,8 +12,8 @@
       class="m-h1-input"
       type="text"
       id="name"
-      [(ng-model)]="entity.title"
-      [auto-grow]
+      [(ngModel)]="entity.title"
+      [autoGrow]
       placeholder="Title..."
      ></textarea>
     <label class="mdl-textfield__label" for="name">{{entity.title}}</label>
@@ -22,14 +22,14 @@
   <div class="mdl-cell mdl-cell--12-col m-additional-block mdl-color-text--blue-grey-200">
     <div class="m-license-info">
       <i class="material-icons">public</i>
-      <select [(ng-model)]="entity.license" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option *ng-for="#l of licenses" [value]="l.value">{{l.text}}</option>
+      <select [(ngModel)]="entity.license" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ngFor="#l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
     <div class="m-visibility-info">
       <i class="material-icons">visibility</i>
-      <select [(ng-model)]="entity.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option *ng-for="#a of access" [value]="a.value">{{a.text}}</option>
+      <select [(ngModel)]="entity.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ngFor="#a of access" [value]="a.value">{{a.text}}</option>
       </select>
     </div>
   </div>

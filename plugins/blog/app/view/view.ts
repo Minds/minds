@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES, Inject} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client } from '../../../services/api';
@@ -14,6 +15,7 @@ import { ShareModal } from '../../../components/modal/modal';
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
+
 
 @Component({
   selector: 'minds-blog-view',

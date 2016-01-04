@@ -1,4 +1,5 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
 import { MindsTitle } from '../../services/ux/title';
@@ -17,7 +18,7 @@ import { GroupsJoinButton } from './groups-join-button';
 })
 @View({
   templateUrl: 'src/plugins/groups/groups.html',
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, GroupsJoinButton ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, GroupsJoinButton ]
 })
 
 export class Groups {

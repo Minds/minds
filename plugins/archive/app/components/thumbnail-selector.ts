@@ -1,6 +1,9 @@
-import { Component, View, CORE_DIRECTIVES, ElementRef, EventEmitter } from 'angular2/angular2';
+import { Component, View, ElementRef, EventEmitter } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+
 import { Client } from '../../../services/api';
 import { Material } from '../../../directives/material';
+
 
 @Component({
   selector: 'minds-archive-thumbnail-selector',
@@ -18,7 +21,7 @@ import { Material } from '../../../directives/material';
   <video (click)="onClick()" preload="metadata" muted crossOrigin="anonymous">
   </video>
   <div class="m-scrubber mdl-color--blue-grey-600" (click)="seek($event)">
-      <div class="m-scrubber-progress mdl-color--amber-600" [ng-style]="{'left': (thumbnailSec / element.duration)*100  + '%'}"></div>
+      <div class="m-scrubber-progress mdl-color--amber-600" [ngStyle]="{'left': (thumbnailSec / element.duration)*100  + '%'}"></div>
   </div>
   <span class="m-scrubber-tip">Click on this bar to change the thumbnail</span>
   `,

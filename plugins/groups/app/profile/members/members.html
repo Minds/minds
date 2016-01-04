@@ -1,10 +1,10 @@
-<div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp" *ng-for="#member of members">
+<div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp" *ngFor="#member of members">
   <minds-card-user [object]="member"></minds-card-user>
 </div>
 
 <infinite-scroll
     distance="25%"
     (load)="load()"
-    *ng-if="moreData">
+    *ngIf="moreData">
     <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
 </infinite-scroll>

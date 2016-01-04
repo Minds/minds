@@ -1,24 +1,24 @@
-<header *ng-if="blog">
+<header *ngIf="blog">
   <minds-banner [object]="blog"
-    [edit-mode]="editing"
+    [editMode]="editing"
     [top]="blog.header_top"
     (added)="add_banner($event)"
     [done]="banner_prompt"
-    *ng-if="blog.header_bg || editing"
+    *ngIf="blog.header_bg || editing"
     ></minds-banner>
 </header>
-<div class="mdl-grid blogs-grid" style="max-width:900px" *ng-if="error">
+<div class="mdl-grid blogs-grid" style="max-width:900px" *ngIf="error">
   <h1>{{error}}</h1>
 </div>
 
-<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px" *ng-if="blog.guid">
+<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px" *ngIf="blog.guid">
 
   <div class="mdl-cell mdl-cell--12-col">
     <textarea
-      [(ng-model)]="blog.title"
+      [(ngModel)]="blog.title"
       class="m-h1-input"
       placeholder="Your title"
-      [auto-grow]
+      [autoGrow]
      ></textarea>
   </div>
 
@@ -26,14 +26,14 @@
 
     <div class="m-license-info">
       <i class="material-icons">public</i>
-      <select [(ng-model)]="blog.license" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
-          <option *ng-for="#l of licenses" [value]="l.value">{{l.text}}</option>
+      <select [(ngModel)]="blog.license" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
+          <option *ngFor="#l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
     <div class="m-visibility-info">
       <i class="material-icons">visibility</i>
-      <select [(ng-model)]="blog.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option *ng-for="#a of access" [value]="a.value">{{a.text}}</option>
+      <select [(ngModel)]="blog.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
+          <option *ngFor="#a of access" [value]="a.value">{{a.text}}</option>
       </select>
     </div>
   </div>

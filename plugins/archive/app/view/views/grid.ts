@@ -1,10 +1,12 @@
-import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
+import { Component, View } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
+
 
 @Component({
   selector: 'minds-archive-grid',
@@ -13,14 +15,14 @@ import { InfiniteScroll } from '../../../../directives/infinite-scroll';
 })
 @View({
   template: `
-    <a *ng-for="#item of items" [router-link]="['/Archive-View', {guid: item.guid}]">
+    <a *ngFor="#item of items" [routerLink]="['/Archive-View', {guid: item.guid}]">
       <img src="/archive/thumbnail/{{item.guid}}/large" />
       	<span class="material-icons" [hidden]="item.subtype !='video'">play_circle_outline</span>
     </a>
     <infinite-scroll
         distance="25%"
         (load)="load()"
-        *ng-if="moreData"
+        *ngIf="moreData"
         style="width:100%">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
     </infinite-scroll>

@@ -1,5 +1,5 @@
 <header>
-  <minds-banner [edit-mode]="true" (added)="addBanner($event)"></minds-banner>
+  <minds-banner [editMode]="true" (added)="addBanner($event)"></minds-banner>
 </header>
 
 <form (submit)="save()" class="mdl-grid groups-grid" style="max-width:900px">
@@ -9,7 +9,7 @@
       class="mdl-textfield__input"
       type="text"
       id="name"
-      [(ng-model)]="group.name"
+      [(ngModel)]="group.name"
       />
     <label class="mdl-textfield__label" for="name">Name</label>
   </div>
@@ -20,7 +20,7 @@
       type="text"
       rows= "3"
       id="brief"
-      [(ng-model)]="group.briefdescription"
+      [(ngModel)]="group.briefdescription"
       ></textarea>
     <label class="mdl-textfield__label" for="brief">A short description about your new group (less than 100 words)</label>
   </div>

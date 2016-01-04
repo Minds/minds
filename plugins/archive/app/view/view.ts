@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
+import { Component, View } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client } from '../../../services/api';
@@ -10,6 +11,7 @@ import { BUTTON_COMPONENTS } from '../../../components/buttons';
 
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
+
 
 @Component({
   selector: 'minds-archive-view',

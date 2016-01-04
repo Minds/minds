@@ -1,20 +1,20 @@
 <div class="mdl-grid groups-grid" style="max-width:900px">
 
-    <a class="mdl-cell mdl-cell--4-col" [router-link]="['/Groups-Create']" style="text-decoration: none;">
+    <a class="mdl-cell mdl-cell--4-col" [routerLink]="['/Groups-Create']" style="text-decoration: none;">
       <minds-add-card class="mdl-card mdl-shadow--2dp mdl-color--blue-grey-400 mdl-color-text--blue-grey-100" style="height:144px;">
         <i class="material-icons">add</i>
         <h3>Start a group</h3>
       </minds-add-card>
     </a>
 
-    <div class="mdl-cell mdl-cell--4-col" *ng-for="#group of groups">
+    <div class="mdl-cell mdl-cell--4-col" *ngFor="#group of groups">
       <div class="minds-banner-card mdl-card mdl-shadow--2dp group-card">
         <div class="minds-usercard-banner">
         	<img src="{{minds.cdn_url}}/fs/v1/banners/{{group.guid}}"/>
         	<div class="minds-banner-overlay"></div>
         </div>
 
-        <a [router-link]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-card__supporting-text minds-usercard-block">
+        <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-card__supporting-text minds-usercard-block">
         	<div class="avatar">
         			<img src="{{minds.cdn_url}}/fs/v1/avatars/{{group.guid}}/small}}" class="mdl-shadow--2dp"/>
         	</div>
@@ -30,7 +30,7 @@
       <infinite-scroll
           distance="25%"
           (load)="load()"
-          *ng-if="moreData">
+          *ngIf="moreData">
           <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
       </infinite-scroll>
 

@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES, Inject, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { Client, Upload } from '../../../services/api';
@@ -14,6 +15,7 @@ import { MindsTinymce } from '../../../components/editors/tinymce';
 import { ArchiveTheatre } from '../view/views/theatre';
 import { ArchiveGrid } from '../view/views/grid';
 import { ThumbnailSelector } from '../components/thumbnail-selector';
+
 
 @Component({
   selector: 'minds-archive-edit',

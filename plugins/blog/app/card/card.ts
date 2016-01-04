@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
 import { Client } from '../../../services/api';
@@ -7,6 +8,7 @@ import { Material } from '../../../directives/material';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MindsBlogListResponse } from '../../../interfaces/responses';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
+
 
 @Component({
   selector: 'minds-card-blog',

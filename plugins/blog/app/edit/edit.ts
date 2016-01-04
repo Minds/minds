@@ -1,4 +1,5 @@
-import { Component, View, Inject, CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
 import { MindsTitle } from '../../../services/ux/title';
@@ -9,6 +10,7 @@ import { MDL_DIRECTIVES } from '../../../directives/material';
 import { MindsTinymce } from '../../../components/editors/tinymce';
 import { MindsBanner } from '../../../components/banner'
 import { AutoGrow } from '../../../directives/autogrow';
+
 
 @Component({
   selector: 'minds-blog-edit',

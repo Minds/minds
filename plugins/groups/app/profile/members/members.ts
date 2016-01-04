@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
 import { Client } from '../../../../services/api';
@@ -7,6 +8,7 @@ import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
 import { UserCard } from '../../../../controllers/cards/cards';
 
+
 @Component({
   selector: 'minds-groups-profile-members',
   viewBindings: [ Client ],
@@ -14,7 +16,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 })
 @View({
   templateUrl: 'src/plugins/groups/profile/members/members.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll ]
 })
 
 export class GroupsProfileMembers {

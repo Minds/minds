@@ -1,5 +1,7 @@
-import { Component, View, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
+import { Component, View, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, RouterLink } from "angular2/router";
+
 import { SocketsService } from '../../../services/sockets';
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
@@ -9,6 +11,7 @@ import { AutoGrow } from '../../../directives/autogrow';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MindsUserConversationResponse } from '../interfaces/responses';
 import { MindsMessageResponse } from '../interfaces/responses';
+
 
 @Component({
   selector: 'minds-messenger-conversation',

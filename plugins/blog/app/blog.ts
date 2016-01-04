@@ -1,4 +1,5 @@
-import { Component, View, CORE_DIRECTIVES, NgStyle, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
 import { MindsTitle } from '../../services/ux/title';
@@ -10,6 +11,7 @@ import { MindsBlogListResponse } from '../../interfaces/responses';
 
 import { BlogCard } from './card/card';
 
+
 @Component({
   selector: 'minds-blog',
   viewBindings: [ Client ],
@@ -17,7 +19,7 @@ import { BlogCard } from './card/card';
 })
 @View({
   templateUrl: 'src/plugins/blog/list.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, NgStyle, Material, InfiniteScroll, BlogCard ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll, BlogCard ]
 })
 
 export class Blog {

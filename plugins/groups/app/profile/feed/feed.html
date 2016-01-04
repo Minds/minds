@@ -2,11 +2,11 @@
 
 <div class="minds-list">
 
-    <minds-activity *ng-for="#a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+    <minds-activity *ngFor="#a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
     <infinite-scroll
         distance="25%"
         (load)="load()"
-        *ng-if="moreData">
+        *ngIf="moreData">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
     </infinite-scroll>
 

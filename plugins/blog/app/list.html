@@ -1,13 +1,13 @@
 <div class="mdl-grid blogs-grid" style="max-width:900px">
 
-  <a class="mdl-cell mdl-cell--4-col" [router-link]="['/Blog-Edit', {guid: 'new'}]" style="text-decoration: none;">
+  <a class="mdl-cell mdl-cell--4-col" [routerLink]="['/Blog-Edit', {guid: 'new'}]" style="text-decoration: none;">
     <minds-add-card class="mdl-card mdl-shadow--2dp mdl-color--blue-grey-400 mdl-color-text--blue-grey-100">
       <i class="material-icons">add</i>
       <h3>Create a new blog</h3>
     </minds-add-card>
   </a>
 
-  <div class="mdl-cell mdl-cell--4-col" *ng-for="#blog of blogs">
+  <div class="mdl-cell mdl-cell--4-col" *ngFor="#blog of blogs">
     <minds-card-blog [object]="blog" class=" mdl-card mdl-shadow--2dp minds-banner-card">
     </minds-card-blog>
   </div>
@@ -15,7 +15,7 @@
   <infinite-scroll
       distance="25%"
       (load)="load()"
-      *ng-if="moreData">
+      *ngIf="moreData">
       <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
   </infinite-scroll>
 

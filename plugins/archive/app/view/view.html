@@ -1,6 +1,6 @@
-<minds-archive-theatre [object]="entity" *ng-if="entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
+<minds-archive-theatre [object]="entity" *ngIf="entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
 
-<div class="mdl-grid archive-grid" style="max-width:660px" *ng-if="entity.guid">
+<div class="mdl-grid archive-grid" style="max-width:660px" *ngIf="entity.guid">
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
@@ -11,28 +11,28 @@
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
       <div class="minds-avatar">
-        <a [router-link]="['/Channel', {username: entity.ownerObj.username}]">
+        <a [routerLink]="['/Channel', {username: entity.ownerObj.username}]">
           <img src="{{minds.cdn_url}}/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>
       </div>
       <div class="minds-body">
-        <a [router-link]="['/Channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
+        <a [routerLink]="['/Channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
 
     <!-- Actions block -->
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
-      <minds-button-subscribe [user]="entity.ownerObj" *ng-if="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [router-link]="['/Archive-Edit', { guid: entity.guid }]" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-subscribe [user]="entity.ownerObj" *ngIf="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
+      <minds-button-edit [routerLink]="['/Archive-Edit', { guid: entity.guid }]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid">
         <button class="material-icons">edit</button>
       </minds-button-edit>
 
-      <minds-button-edit (click)="delete()"  *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-edit (click)="delete()"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid">
         <button class="material-icons">close</button>
       </minds-button-edit>
 
-      <minds-button-feature [object]="entity" *ng-if="session.isAdmin()"></minds-button-feature>
+      <minds-button-feature [object]="entity" *ngIf="session.isAdmin()"></minds-button-feature>
 
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="entity"></minds-button-remind>
@@ -47,32 +47,32 @@
         <span [hidden]="!entity.license">{{entity.license}}</span>
         <span [hidden]="entity.license">All Rights Reserved</span>
       </div>
-      <div class="m-visibility-info" *ng-if="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <div class="m-visibility-info" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <i class="material-icons">visibility</i>
         <span [hidden]="entity.access_id != 2">Public</span>
         <span [hidden]="entity.access_id != 0">Unlisted</span>
       </div>
 
       <a class="album_backlink mdl-color-text--blue-grey-400"
-        [router-link]="['/Archive-View', {guid: entity.container_guid}]"
+        [routerLink]="['/Archive-View', {guid: entity.container_guid}]"
         [hidden]="entity.subtype == 'album' || entity.container_guid == entity.owner_guid"
         >
         <i class="material-icons">photo_album</i>Back to album
       </a>
 
-      <minds-button-boost [object]="entity" *ng-if="entity.subtype != 'album'"></minds-button-boost>
+      <minds-button-boost [object]="entity" *ngIf="entity.subtype != 'album'"></minds-button-boost>
 
     </div>
 
 
-    <div class="mdl-cell mdl-cell--12-col m-discovery-full-description" [inner-html]="entity.description" [hidden]="!entity.description"></div>
+    <div class="mdl-cell mdl-cell--12-col m-discovery-full-description" [innerHtml]="entity.description" [hidden]="!entity.description"></div>
 
 
 </div>
 
-<minds-archive-grid [object]="entity" *ng-if="entity.subtype == 'album'"></minds-archive-grid>
+<minds-archive-grid [object]="entity" *ngIf="entity.subtype == 'album'"></minds-archive-grid>
 
 <!-- Don't show comments for albums -->
-<div class="mdl-grid archive-grid" style="width:100%; max-width:660px" *ng-if="entity.guid && entity.subtype != 'album'">
+<div class="mdl-grid archive-grid" style="width:100%; max-width:660px" *ngIf="entity.guid && entity.subtype != 'album'">
   <minds-comments [object]="entity"></minds-comments>
 </div>

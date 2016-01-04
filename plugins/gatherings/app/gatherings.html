@@ -10,19 +10,19 @@
 
     <!-- START: Users -->
     <div class="minds-gatherings-conversation-list">
-        <div class="mdl-card minds-block" *ng-for="#user of conversations" [ng-class]="{'mdl-color--blue-grey-600': user.guid == conversation}">
+        <div class="mdl-card minds-block" *ngFor="#user of conversations" [ngClass]="{'mdl-color--blue-grey-600': user.guid == conversation}">
           <div class="minds-avatar">
-            <a [router-link]="['/Messenger-Conversation', {guid: user.guid}]" >
+            <a [routerLink]="['/Messenger-Conversation', {guid: user.guid}]" >
               <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" class="mdl-shadow--2dp" alt={{user.username}} title={{user.username}}>
             </a>
           </div>
           <div class="minds-body">
-            <a [router-link]="['/Messenger-Conversation', {guid: user.guid}]"
+            <a [routerLink]="['/Messenger-Conversation', {guid: user.guid}]"
 
-              [ng-class]="{'mdl-color-text--blue-grey-100': user.guid == conversation, 'mdl-color-text--blue-grey-500': user.guid != conversation, 'not-subscribed': !user.subscribed}"
+              [ngClass]="{'mdl-color-text--blue-grey-100': user.guid == conversation, 'mdl-color-text--blue-grey-500': user.guid != conversation, 'not-subscribed': !user.subscribed}"
               >
               <h3>{{user.username}}</h3>
-              <span *ng-if="user.last_msg" class="mdl-color-text--grey-500">{{user.last_msg * 1000 | date:'shortTime'}} - {{user.last_msg * 1000 | date:'longDate'}}</span>
+              <span *ngIf="user.last_msg" class="mdl-color-text--grey-500">{{user.last_msg * 1000 | date:'shortTime'}} - {{user.last_msg * 1000 | date:'longDate'}}</span>
               <unread [hidden]="!user.unread"></unread>
             </a>
             <minds-button-subscribe [user]="user" [hidden]="user.subscribed"></minds-button-subscribe>
@@ -32,7 +32,7 @@
       <infinite-scroll
         distance="25%"
         (load)="load()"
-        *ng-if="hasMoreData">
+        *ngIf="hasMoreData">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
       </infinite-scroll>
 
@@ -46,7 +46,7 @@
   <!-- END: SEARCH BAR -->
 
   <div class="mdl-cell mdl-cell--8-col" >
-    <minds-messenger-setup *ng-if="!setup" (done)="setup = true"></minds-messenger-setup>
-    <minds-messenger-conversation *ng-if="setup" [conversation]="conversation"></minds-messenger-conversation>
+    <minds-messenger-setup *ngIf="!setup" (done)="setup = true"></minds-messenger-setup>
+    <minds-messenger-conversation *ngIf="setup" [conversation]="conversation"></minds-messenger-conversation>
   </div>
 </div>

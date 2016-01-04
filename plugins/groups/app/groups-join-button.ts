@@ -1,4 +1,5 @@
-import { Component, View, NgFor, NgIf, NgClass, Observable, Inject, FORM_DIRECTIVES} from 'angular2/angular2';
+import { Component, View, Inject } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
 import { Client } from '../../services/api';
@@ -16,11 +17,11 @@ import { SignupOnActionModal } from '../../components/modal/modal';
 })
 @View({
   template: `
-    <button class="minds-group-join-button" *ng-if="!group.member" (click)="join()">Join</button>
-    <button class="minds-group-join-button subscribed " *ng-if="group.member" (click)="leave()">Leave</button>
-    <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ng-if="!session.isLoggedIn()"></m-modal-signup-on-action>
+    <button class="minds-group-join-button" *ngIf="!group.member" (click)="join()">Join</button>
+    <button class="minds-group-join-button subscribed " *ngIf="group.member" (click)="leave()">Leave</button>
+    <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ngIf="!session.isLoggedIn()"></m-modal-signup-on-action>
   `,
-  directives: [ NgFor, NgIf, NgClass, Material, RouterLink, InfiniteScroll, SignupOnActionModal ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, SignupOnActionModal ]
 })
 
 export class GroupsJoinButton {

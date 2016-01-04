@@ -1,8 +1,11 @@
-import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
+import { Component, View } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+
 import { MindsVideo } from '../../../../components/video';
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
+
 
 @Component({
   selector: 'minds-archive-theatre',
@@ -11,10 +14,10 @@ import { Material } from '../../../../directives/material';
 })
 @View({
   template: `
-    <div class="minds-archive-stage" *ng-if="object.subtype == 'image'">
+    <div class="minds-archive-stage" *ngIf="object.subtype == 'image'">
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
-    <div class="minds-archive-stage" *ng-if="object.subtype == 'video'">
+    <div class="minds-archive-stage" *ngIf="object.subtype == 'video'">
       <minds-video [autoplay]="true" [muted]="false" [src]="[{ 'uri': object.src['720.mp4'] }]" >
       </minds-video>
     </div>
