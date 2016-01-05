@@ -104,6 +104,9 @@ class featured implements Interfaces\Api
         if (isset($_GET['offset']) && $_GET['offset']) {
             array_shift($guids);
         }
+        if(!$guids){
+            return Factory::response([]);
+        }
         $options = ['guids'=>$guids];
         $entities = core\Entities::get($options);
 
