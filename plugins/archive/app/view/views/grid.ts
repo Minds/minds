@@ -22,9 +22,9 @@ import { InfiniteScroll } from '../../../../directives/infinite-scroll';
     <infinite-scroll
         distance="25%"
         (load)="load()"
-        *ngIf="moreData"
+        [moreData]="moreData"
+        [inProgress]="inProgress"
         style="width:100%">
-        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress"></div>
     </infinite-scroll>
   `,
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll ]
