@@ -39,7 +39,7 @@ class Defaults
          */
         Manager::add('/', function ($slugs = array()) {
           if (isset($slugs[0]) && is_string($slugs[0])) {
-              $user = new Entities\User($slugs[0]);
+              $user = new Entities\User(strtolower($slugs[0]));
               if (!$user->guid) {
                   return array();
               }
