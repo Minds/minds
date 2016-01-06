@@ -103,6 +103,10 @@ class Push implements Interfaces\NotificationExtensionInterface
                 $message = sprintf('%s mentioned you in a post: %s', $name, $notification['params']['description']);
                 break;
 
+            case 'friends':
+                $message = sprintf('%s subscribed to you %s', $name);
+                break;
+
             case 'remind':
                 $message = sprintf('%s reminded %s', $name, $notification['params']['title']);
                 break;
