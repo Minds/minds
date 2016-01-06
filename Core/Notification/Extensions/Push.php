@@ -104,7 +104,7 @@ class Push implements Interfaces\NotificationExtensionInterface
                 break;
 
             case 'friends':
-                $message = sprintf('%s subscribed to you %s', $name);
+                $message = sprintf('%s subscribed to you', $name);
                 break;
 
             case 'remind':
