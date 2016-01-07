@@ -74,7 +74,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
             error_log("[upload][log]:: got type " . $pages[0]);
             if((strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name'])))
-                && $pages[0] != "video"){
+                && (!isset($_GET['access_token']) && $pages[0] != "video")){
                 error_log("[upload][log]:: detected {$pages[0]} is an image");
                 error_log($_FILES['file']['type']);
                 error_log(is_array(getimagesize($_FILES['file']['tmp_name'])));
