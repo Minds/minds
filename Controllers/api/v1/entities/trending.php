@@ -61,46 +61,34 @@ class trending implements Interfaces\Api
         if (!isset($pages[1])) {
             $pages[1] = $pages[0];
         }
+        $key = "";
         switch ($pages[1]) {
-            case 'image':
-            case 'images':
-                $prepared = new Core\Data\Neo4j\Prepared\Common();
-                $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('image', get_input('offset', 0)));
-                $rows = $result->getRows();
-
-                $guids = array();
-                foreach ($rows['object'] as $object) {
-                    $guids[] = $object['guid'];
-                }
-                $entities = core\Entities::get(array('guids'=>$guids));
+            case "image":
+            case "images":
+                $key = "image";
                 break;
-            case 'videos':
-            case 'video':
-                $prepared = new Core\Data\Neo4j\Prepared\Common();
-               $result= Core\Data\Client::build('Neo4j')->request($prepared->getTrendingObjects('video', get_input('offset', 0)));
-                $rows = $result->getRows();
-
-                $guids = array();
-                foreach ($rows['object'] as $object) {
-                    $guids[] = $object['guid'];
-                }
-                $entities = core\Entities::get(array('guids'=>$guids));
+            case "videos":
+            case "video":
+                $key = "video";
                 break;
-            default:
-
-                $db = new Core\Data\Call('entities_by_time');
-                $guids = $db->getRow('trending:month:user', array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
-                if (!$guids) {
-                    break;
-                }
-                ksort($guids);
-                $entities = core\Entities::get(array('guids'=>$guids));
-                $response['entities'] = Factory::exportable($entities);
-                $response['load-next'] = (string) end(array_keys($guids));
-  
-                return Factory::response($response);
-
+            case "channels":
+            case "channel":
+            case "users":
+            case "user":
+                $key = "user";
         }
+
+        $db = new Core\Data\Call('entities_by_time');
+        $guids = $db->getRow("trending:$key", array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
+        if (!$guids) {
+            break;
+        }
+        ksort($guids);
+        $entities = core\Entities::get(array('guids'=>$guids));
+        $response['entities'] = Factory::exportable($entities);
+        $response['load-next'] = (string) end(array_keys($guids));
+
+        return Factory::response($response);
 
         if(!isset($_GET['load-next']) && isset($_GET['offset']))
             $_GET['load-next'] = $_GET['offset'];

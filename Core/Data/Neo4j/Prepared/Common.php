@@ -251,11 +251,12 @@ class Common implements Interfaces\PreparedInterface
     /**
      * Get trending objects
      */
-    public function getTrendingObjects($subtype='video', $skip = 0)
+    public function getTrendingObjects($subtype='video', $skip = 0, $limit = 12)
     {
-        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT 12";
+        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT {limit}";
         $this->values = array(
             'skip' => (int) $skip,
+            'limit' => (int) $limit
         );
         return $this;
     }
@@ -263,11 +264,12 @@ class Common implements Interfaces\PreparedInterface
     /**
      * Get trending users
      */
-    public function getTrendingUsers($skip = 0)
+    public function getTrendingUsers($skip = 0, $limit = 12)
     {
-        $this->template = "MATCH ()-[r:SUBSCRIBED]->(user:User) RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT 12";
+        $this->template = "MATCH ()-[r:SUBSCRIBED]->(user:User) RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT {limit}";
         $this->values = array(
             'skip' => (int) $skip,
+            'limit' => (int) $limit
         );
         return $this;
     }
