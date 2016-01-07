@@ -11,7 +11,7 @@ class Common implements Interfaces\PreparedInterface
 {
     private $template;
     private $values = array();
-    
+
     public function build()
     {
         return array(
@@ -19,9 +19,9 @@ class Common implements Interfaces\PreparedInterface
             'values'=>$this->values
             );
     }
-    
+
     /**
-     * Create a user node 
+     * Create a user node
      * @param User $user
      * @return $this
      */
@@ -31,7 +31,7 @@ class Common implements Interfaces\PreparedInterface
         $this->values = array('guid'=>$user->guid, 'username'=>$user->username);
         return $this;
     }
-    
+
     /**
      * Import bulk users
      */
@@ -46,7 +46,7 @@ class Common implements Interfaces\PreparedInterface
         $this->template = "FOREACH (u IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(user:User {guid: str(u.guid)}))";
         return $this;
     }
-    
+
     /**
      * Import bulk subscriptions
      */
@@ -60,17 +60,17 @@ class Common implements Interfaces\PreparedInterface
                             );
              }
          }
-           
+
          $this->template = "UNWIND " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp)) . " AS row ".
                                 "MATCH (u:User {guid:row.guid}), (subscription:User {guid:row.subscription_guid}) " .
                                 "MERGE (u)-[:SUBSCRIBED]->(subscription) MERGE (u)-[:ACTED]->(subscription)";
          return $this;
      }
-     
+
      /**
       * Import bulk subscriber
       */
-    
+
     /**
      * Create a subscription
      * @param User or integer $user
@@ -88,7 +88,7 @@ class Common implements Interfaces\PreparedInterface
             );
         return $this;
     }
-    
+
     /**
      * Create a pass
      * @param integer $user
@@ -107,7 +107,7 @@ class Common implements Interfaces\PreparedInterface
             );
         return $this;
     }
-    
+
     /**
      * Return subscribers
      * @param User $user
@@ -119,7 +119,7 @@ class Common implements Interfaces\PreparedInterface
         $this->values = array('guid'=>$user->guid);
         return $this;
     }
-    
+
     /**
      * Return subscriptions of subscriptions
      * @param User $user
@@ -157,7 +157,7 @@ class Common implements Interfaces\PreparedInterface
                             );
         return $this;
     }
-    
+
     /**
      * Return degree
      * @param User $user
@@ -192,7 +192,7 @@ class Common implements Interfaces\PreparedInterface
                             );
         return $this;
     }
-    
+
     /**
      * Create objects
      */
@@ -202,7 +202,7 @@ class Common implements Interfaces\PreparedInterface
         $this->values = array('guid'=>(string) $object->guid);
         return $this;
     }
-    
+
     /**
      * Import bulk users
      */
@@ -217,9 +217,9 @@ class Common implements Interfaces\PreparedInterface
         $this->template = "FOREACH (o IN " . preg_replace('/"([^"]+)"\s*:\s*/', '$1:', json_encode($exp))  . " | MERGE(object:$subtype {guid: str(o.guid)}))";
         return $this;
     }
-    
+
     /**
-     * Return suggested content, based on 
+     * Return suggested content, based on
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video', $skip = 0)
     {
@@ -261,6 +261,18 @@ class Common implements Interfaces\PreparedInterface
     }
 
     /**
+     * Get trending users
+     */
+    public function getTrendingUsers($skip = 0)
+    {
+        $this->template = "MATCH ()-[r:SUBSCRIBED]->(user:User) RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT 12";
+        $this->values = array(
+            'skip' => (int) $skip,
+        );
+        return $this;
+    }
+
+    /**
      * Create a vote on an object
      * @param int $guid
      * @param string $subtype
@@ -282,9 +294,9 @@ class Common implements Interfaces\PreparedInterface
             );
         return $this;
     }
-   
+
     /**
-     * Create a down vote on an object 
+     * Create a down vote on an object
      * @param int $guid
      * @param string $subtype
      * @param int (optional) $user_guid
@@ -330,7 +342,7 @@ class Common implements Interfaces\PreparedInterface
             );
         return $this;
     }
-    
+
     /**
      * Update a node
      * @param Entity $entity
@@ -359,7 +371,7 @@ class Common implements Interfaces\PreparedInterface
         );
         return $this;
     }
-    
+
     /**
      * Links a node to a geom layer
      * ** THIS REQUIRES YOU TO HAVE THE NODE ID, NODE ENTIY GUID **
@@ -368,15 +380,15 @@ class Common implements Interfaces\PreparedInterface
      */
     public function linkNodeToGeom($node_id)
     {
-        $this->template = ':POST /db/data/index/node/geom 
-{ 
+        $this->template = ':POST /db/data/index/node/geom
+{
     "value" : "dummy",
-    "key" : "dummy", 
+    "key" : "dummy",
     "uri" : "http://localhost:7474/db/data/node/' . $node_id . '"
 }';
         return $this;
     }
-    
+
     /**
      * Return users via their location
      * @param User/string/int $user (can be an object or guid)
@@ -396,7 +408,7 @@ class Common implements Interfaces\PreparedInterface
 
         $km = $distance * 1.609344;
         $distance =  number_format((float)$km, 2, '.', '');
-       
+
         $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
         $this->values = array(
             "filter" => "withinDistance:[$latlon,$distance]",
