@@ -27,6 +27,23 @@ minds-archive-theatre{
     padding-top: 40%;
   }
 
+  .left, .right{
+    position: absolute;
+    top: 50%;
+    margin-top: -32px;
+    color: #FFF !important;
+    font-size: 64px;
+    cursor:pointer;
+
+    &.left{
+      left: 0;
+    }
+    &.right{
+      right: 0;
+    }
+
+  }
+
   .minds-archive-stage{
     margin: auto;
     max-width: 90%;

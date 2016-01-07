@@ -4,6 +4,7 @@
  */
 namespace minds\plugin\archive\entities;
 
+use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
 
@@ -150,6 +151,17 @@ class image extends Entities\File{
 				'license'
 			));
 		}
+
+    public function getAlbumChildrenGuids()
+    {
+        $db = new Core\Data\Call('entities_by_time');
+        $row = $db->getRow("object:container:$this->container_guid", ['limit'=>100]);
+        $guids = [];
+        foreach($row as $col => $val){
+            $guids[] = (string) $col;
+        }
+        return $guids;
+    }
 
 		/**
      * Extend exporting

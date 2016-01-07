@@ -1,5 +1,11 @@
 <minds-archive-theatre [object]="entity" *ngIf="entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
 
+<div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress" style="margin: 16px auto;"></div>
+<div class="m-error-splash" *ngIf="error && !inProgress">
+  <h3 class="mdl-color-text--red-300">{{error}}</h3>
+  <span class="mdl-color-text--blue-grey-300">The post may not exist</span>
+</div>
+
 <div class="mdl-grid archive-grid" style="max-width:660px" *ngIf="entity.guid">
 
   <div class="mdl-grid" style="width:100%">

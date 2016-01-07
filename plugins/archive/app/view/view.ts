@@ -29,6 +29,7 @@ export class ArchiveView {
   entity : any = {};
   session = SessionFactory.build();
   inProgress : boolean = true;
+  error : string = "";
 
   constructor(public client: Client,public router: Router, public params: RouteParams){
       if(params.params['guid'])
@@ -39,7 +40,7 @@ export class ArchiveView {
 
   load(refresh : boolean = false){
     this.inProgress = true;
-    this.client.get('api/v1/entities/entity/' + this.guid, { children: false })
+    this.client.get('api/v1/archive/' + this.guid, { children: false })
       .then((response : any) => {
         this.inProgress = false;
         if(response.entity.type != 'object'){
@@ -50,7 +51,8 @@ export class ArchiveView {
 
       })
       .catch((e) => {
-
+          this.inProgress = false;
+          this.error = "Sorry, there was problem."
       });
   }
 

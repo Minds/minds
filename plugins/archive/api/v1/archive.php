@@ -27,23 +27,32 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
         if(is_numeric($pages[0])){
             $entity = core\Entities::build(new \Minds\Entities\Entity($pages[0]));
-            Helpers\Counters::increment($pages[0], 'plays');
-            if(is_string($pages[1]) && $pages[1] == 'play'){
-                //echo $entity->getSourceUrl('360.mp4'); exit;
-                Header( "HTTP/1.1 301 Moved Permanently" );
-                if($entity->subtype == 'audio'){
-                    header("Location:" . $entity->getSourceUrl('128.mp3'));
-                } else {
-                //    echo $entity->getSourceUrl('360.mp4'); exit;
-                    header("Location:" . $entity->getSourceUrl('360.mp4'));
-                }
-                exit;
+            switch($entity->subtype){
+                case "video":
+                    Helpers\Counters::increment($pages[0], 'plays');
+                    if(is_string($pages[1]) && $pages[1] == 'play'){
+                        //echo $entity->getSourceUrl('360.mp4'); exit;
+                        Header( "HTTP/1.1 301 Moved Permanently" );
+                        if($entity->subtype == 'audio'){
+                            header("Location:" . $entity->getSourceUrl('128.mp3'));
+                        } else {
+                        //    echo $entity->getSourceUrl('360.mp4'); exit;
+                            header("Location:" . $entity->getSourceUrl('360.mp4'));
+                        }
+                        exit;
+                    }
+                    $response = reset(factory::exportable([$entity]));
+                    $response['transcodes'] = [
+                        '360.mp4' => $entity->getSourceUrl('360.mp4'),
+                        '720.mp4' =>  $entity->getSourceUrl('720.mp4')
+                    ];
+                default:
+                    $response['entity'] = $entity->export();
+                    if(method_exists($entity, 'getAlbumChildrenGuids')){
+                        $response['entity']['album_children_guids'] = $entity->getAlbumChildrenGuids();
+                    }
             }
-            $response = reset(factory::exportable(array($entity)));
-            $response['transcodes'] = array(
-                '360.mp4' => $entity->getSourceUrl('360.mp4'),
-                '720.mp4' =>  $entity->getSourceUrl('720.mp4')
-            );
+
         }
 
         return Factory::response($response);
