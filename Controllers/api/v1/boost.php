@@ -214,6 +214,14 @@ class boost implements Interfaces\Api
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
+        //double check status before issuing points
+        if($boost->getState() != 'created'){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+            ]);
+        }
+
         Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
 
         //now add to the newsfeed
@@ -263,6 +271,14 @@ class boost implements Interfaces\Api
         $response = [];
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
+
+        //double check status before issuing points
+        if($boost->getState() != 'created'){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+            ]);
+        }
 
         Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
 
