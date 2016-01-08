@@ -1,5 +1,5 @@
 <minds-archive-theatre [object]="entity" *ngIf="entity && entity.subtype == 'image'"></minds-archive-theatre>
-<minds-archive-thumbnail-selector (thumbnail)="setThumbnail($event)" [thumbnail-sec]="entity.thumbnail" [src]="[{ uri: entity.src['720.mp4']}]"  *ngIf="entity && entity.subtype == 'video'">></minds-archive-thumbnail-selector>
+<minds-archive-thumbnail-selector (thumbnail)="setThumbnail($event)" [thumbnailSec]="entity.thumbnail" [src]="[{ uri: entity.src['720.mp4']}]"  *ngIf="entity && entity.subtype == 'video'">></minds-archive-thumbnail-selector>
 
 <div class="mdl-grid archive-grid" style="max-width:900px" *ngIf="error">
   <h1>{{error}}</h1>

@@ -1,4 +1,4 @@
-import { Component, View, ElementRef, EventEmitter } from 'angular2/core';
+import { Component, ElementRef, EventEmitter } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 
 import { Client } from '../../../services/api';
@@ -11,9 +11,7 @@ import { Material } from '../../../directives/material';
   outputs: [ 'thumbnail' ],
   host: {
     //'(click)': 'onClick()',
-  }
-})
-@View({
+  },
   template: `
   <div class="m-video-loading" [hidden]="!inProgress">
     <div class="mdl-spinner mdl-js-spinner is-active" [mdl]></div>
@@ -33,7 +31,7 @@ export class ThumbnailSelector{
   element : any;
   src : Array<any> = [];
   thumbnailSec : number = 0;
-  thumbnail : EventEmitter = new EventEmitter();
+  thumbnail : EventEmitter<any> = new EventEmitter();
   canvas;
   inProgress : boolean = false;
 
