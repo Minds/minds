@@ -33,7 +33,7 @@ export class MessengerSetup {
 
   inProgress : boolean = false;
   error : string = "";
-  done : EventEmitter = new EventEmitter;
+  done : EventEmitter<any> = new EventEmitter();
 
   constructor(public client: Client, public params: RouteParams){
     this.check();

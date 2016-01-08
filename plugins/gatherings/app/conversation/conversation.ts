@@ -144,7 +144,7 @@ export class MessengerConversation {
       });
   }
 
-  listen_typing_timeout : number;
+  listen_typing_timeout;
   listen(){
     this.listener = this.sockets.subscribe('messageReceived', (from_guid, message) => {
 
@@ -188,7 +188,7 @@ export class MessengerConversation {
     }
   }
 
-  typing_timeout : number;
+  typing_timeout;
   typing(){
     if(this.typing_timeout)
       clearTimeout(this.typing_timeout);
