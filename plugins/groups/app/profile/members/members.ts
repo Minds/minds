@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
@@ -12,9 +12,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 @Component({
   selector: 'minds-groups-profile-members',
   viewBindings: [ Client ],
-  properties: ['_group : group']
-})
-@View({
+  inputs: ['_group : group'],
   templateUrl: 'src/plugins/groups/profile/members/members.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll ]
 })
@@ -56,7 +54,6 @@ export class GroupsProfileMembers {
 
         if(refresh){
           this.members = response.members;
-          this.members.push(member);
         } else {
           this.members = this.members.concat(response.members);
         }
