@@ -64,6 +64,9 @@ class boost implements Interfaces\Api
                 $response['points'] = reset($guids);*/
                 $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
                 $boost = $pro->getBoostEntity($pages[0]);
+                if($boost->getState() != 'created'){
+                    return Factory::response(['status'=>'error', 'message'=>'entity not in boost queue']);
+                }
                 $response['entity'] = $boost->getEntity()->export();
                 $response['points'] = $boost->getBid();
             break;
