@@ -80,6 +80,12 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           }
 
+          if(!isset($_POST['code']) || !$_POST['code']) {
+              $response['status'] = "error";
+              $response['message'] = "The reset code is invalid";
+              break;
+          }
+
           $user->salt = Core\Security\Password::salt();
           $user->password = Core\Security\Password::generate($user, $_POST['password']);
           $user->password_reset_code = "";
