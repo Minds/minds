@@ -11,8 +11,8 @@ import { MindsBanner } from '../../../components/banner';
 
 @Component({
   selector: 'minds-groups-create',
-  viewBindings: [ Client, Upload ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/groups/create/create.html',

@@ -11,7 +11,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-requests',
-  viewBindings: [ Client ],
+  
   properties: ['_group : group']
 })
 @View({

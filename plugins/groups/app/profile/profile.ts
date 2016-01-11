@@ -19,8 +19,8 @@ import { GroupsProfileFeed } from './feed/feed';
 
 @Component({
   selector: 'minds-groups-profile',
-  viewBindings: [ Client, Upload ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/groups/profile/profile.html',

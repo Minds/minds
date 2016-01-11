@@ -10,7 +10,7 @@ import { Material } from '../../../../directives/material';
 
 @Component({
   selector: 'minds-archive-theatre',
-  viewBindings: [ Client ],
+  
   inputs: ['_object: object']
 })
 @View({

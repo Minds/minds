@@ -15,7 +15,7 @@ import { ArchiveGrid } from './views/grid';
 
 @Component({
   selector: 'minds-archive-view',
-  viewBindings: [ Client ]
+  viewBindings: [ ]
 })
 @View({
   templateUrl: 'src/plugins/archive/view/view.html',

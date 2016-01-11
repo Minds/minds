@@ -10,7 +10,7 @@ import { InfiniteScroll } from '../../../../directives/infinite-scroll';
 
 @Component({
   selector: 'minds-archive-grid',
-  viewBindings: [ Client ],
+  
   properties: ['_object: object']
 })
 @View({

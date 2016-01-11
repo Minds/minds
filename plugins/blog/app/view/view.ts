@@ -19,7 +19,7 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 
 @Component({
   selector: 'minds-blog-view',
-  viewBindings: [ Client ],
+  
   bindings:[ MindsTitle ]
 })
 @View({

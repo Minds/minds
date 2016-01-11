@@ -11,7 +11,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-members',
-  viewBindings: [ Client ],
+  
   inputs: ['_group : group'],
   templateUrl: 'src/plugins/groups/profile/members/members.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll ]

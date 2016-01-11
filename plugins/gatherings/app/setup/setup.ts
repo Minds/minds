@@ -13,7 +13,7 @@ import { MindsChannelResponse } from '../../../interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-setup',
-  viewBindings: [ Client ],
+  
   events: [ 'done' ]
 })
 @View({

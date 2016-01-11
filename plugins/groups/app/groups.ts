@@ -13,8 +13,8 @@ import { GroupsJoinButton } from './groups-join-button';
 
 @Component({
   selector: 'minds-groups',
-  viewBindings: [ Client ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/groups/groups.html',

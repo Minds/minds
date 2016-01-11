@@ -14,8 +14,8 @@ import { BlogCard } from './card/card';
 
 @Component({
   selector: 'minds-blog',
-  viewBindings: [ Client ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/blog/list.html',

@@ -15,7 +15,7 @@ import { MindsMessageResponse } from '../interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
-  viewBindings: [ Client ],
+  
   properties: [ '_conversation: conversation' ]
 })
 @View({

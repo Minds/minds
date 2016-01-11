@@ -24,7 +24,7 @@ interface MindsGroup {
 
 @Component({
   selector: 'minds-groups-profile-feed',
-  viewBindings: [ Client ],
+  
   inputs: [ '_group: group' ]
 })
 @View({

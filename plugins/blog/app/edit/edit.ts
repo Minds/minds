@@ -14,8 +14,8 @@ import { AutoGrow } from '../../../directives/autogrow';
 
 @Component({
   selector: 'minds-blog-edit',
-  viewBindings: [ Client, Upload ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/blog/edit/edit.html',

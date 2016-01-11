@@ -12,7 +12,7 @@ import { BUTTON_COMPONENTS } from '../../../components/buttons';
 
 @Component({
   selector: 'minds-card-blog',
-  viewBindings: [ Client ],
+  
   properties: ['_blog : object']
 })
 @View({

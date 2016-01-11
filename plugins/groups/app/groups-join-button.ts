@@ -12,7 +12,7 @@ import { SignupOnActionModal } from '../../components/modal/modal';
 
 @Component({
   selector: 'minds-groups-join-button',
-  viewBindings: [ Client ],
+  
   properties: ['_group: group']
 })
 @View({

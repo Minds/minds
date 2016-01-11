@@ -19,8 +19,8 @@ import { MindsUserSearchResponse } from '../../interfaces/responses';
 
 @Component({
   selector: 'minds-gatherings',
-  viewBindings: [ Client ],
-  bindings: [ MindsTitle ]
+  
+  bindings: [MindsTitle ]
 })
 @View({
   templateUrl: 'src/plugins/gatherings/gatherings.html',
