@@ -80,7 +80,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           }
 
-          if(!isset($_POST['code']) || !$_POST['code']) {
+          if(!isset($_POST['code']) || !$_POST['code'] || !is_string($_POST['code']) || !strlen($_POST['code']) > 10) {
               $response['status'] = "error";
               $response['message'] = "The reset code is invalid";
               break;
