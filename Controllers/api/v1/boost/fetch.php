@@ -29,7 +29,6 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         switch ($pages[0]) {
           case 'content':
-              $pages[0] = "suggested"; //temp until we expire all suggested legacy boosts
               $boosts = Core\Boost\Factory::build($pages[0])
                 ->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
                 foreach ($boosts as $entity) {
