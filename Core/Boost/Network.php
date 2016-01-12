@@ -310,7 +310,7 @@ class Network implements BoostHandlerInterface
                 continue; //max count met
             }
             array_push($mem_log, (string) $data['_id']);
-            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
+            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler", $mem_log, (12 * 3600));
 
             if($legacy_boost){
                 $return[] = $entity;
