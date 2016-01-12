@@ -287,13 +287,8 @@ class Network implements BoostHandlerInterface
             Helpers\Counters::increment(0, "boost_impressions", 1);
             $count = Helpers\Counters::get((string) $data['_id'], "boost_impressions", false);
 
-            if($data['_id']->getTimestamp() > 1451320200){
-                $boost = $this->getBoostEntity($data['guid']);
-                $legacy_boost = false;
-            } else {
-                $entity = new \Minds\Entities\Activity($data['guid']);
-                $legacy_boost = true;
-            }
+            $boost = $this->getBoostEntity($data['guid']);
+            $legacy_boost = false;
 
             if ($count > $impressions) {
 
