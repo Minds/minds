@@ -254,15 +254,23 @@ class Network implements BoostHandlerInterface
     public function getBoosts($limit = 2)
     {
         $cacher = Core\Data\cache\factory::build('apcu');
-        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: [];
+        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
 
-        $boosts = $this->mongo->find("boost", ['type'=>$this->handler, 'state'=>'approved']);
+        $opts = [
+            'type'=>$this->handler,
+            'state'=>'approved',
+        ];
+        if($mem_log){
+            $opts['_id'] =  [ '$gt' => end($mem_log) ];
+        }
+
+        $boosts = $this->mongo->find("boost", $opts);
 
         if (!$boosts) {
             return null;
         }
         $boosts->sort(['_id'=> 1]);
-        $boosts->limit(30);
+        $boosts->limit(50);
         $return = [];
         foreach ($boosts as $data) {
             if (count($return) >= $limit) {
@@ -279,7 +287,6 @@ class Network implements BoostHandlerInterface
             Helpers\Counters::increment(0, "boost_impressions", 1);
             $count = Helpers\Counters::get((string) $data['_id'], "boost_impressions", false);
 
-
             if($data['_id']->getTimestamp() > 1451320200){
                 $boost = $this->getBoostEntity($data['guid']);
                 $legacy_boost = false;
@@ -291,8 +298,8 @@ class Network implements BoostHandlerInterface
             if ($count > $impressions) {
 
                 if($legacy_boost){
-                    $this->mongo->remove("boost", ['_id' => $boost['_id']]);
-                    Core\Events\Dispatcher::trigger('notification', 'boost', [
+                    $this->mongo->remove("boost", ['_id' => $data['_id']]);
+                /*    Core\Events\Dispatcher::trigger('notification', 'boost', [
                       'to'=>array($entity->owner_guid),
                       'from'=> 100000000000000519,
                       'entity' => $entity,
@@ -300,7 +307,7 @@ class Network implements BoostHandlerInterface
                       'notification_view' => 'boost_completed',
                       'params' => array('impressions'=>$boost['impressions']),
                       'impressions' => $boost['impressions']
-                    ]);
+                      ]);*/
                 } else {
                     $this->expireBoost($boost);
                 }
@@ -315,6 +322,10 @@ class Network implements BoostHandlerInterface
             } else {
                 $return[] = $boost->getEntity();
             }
+        }
+        if(empty($return) && !empty($mem_log)){
+            $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler");
+            return $this->getBoosts($limit);
         }
         return $return;
     }
