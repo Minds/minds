@@ -53,21 +53,21 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
           'impressions_met' => $boost_impressions_met
         ];
 
-        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'suggested']);
+        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'content']);
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         foreach ($boost_objs as $boost) {
             $boost_impressions = $boost_impressions + $boost['impressions'];
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
-        $boosts_suggested = [
+        $boosts_content = [
           'approved' => $boost_objs->count(),
           'impressions' => $boost_impressions,
           'impressions_met' => $boost_impressions_met
         ];
 
         $response['newsfeed'] = $boosts;
-        $response['suggested'] = $boosts_suggested;
+        $response['content'] = $boosts_content;
 
         return Factory::response($response);
     }
