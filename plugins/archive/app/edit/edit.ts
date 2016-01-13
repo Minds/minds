@@ -19,7 +19,6 @@ import { ThumbnailSelector } from '../components/thumbnail-selector';
 
 @Component({
   selector: 'minds-archive-edit',
-  viewBindings: [ Upload ]
 })
 @View({
   templateUrl: 'src/plugins/archive/edit/edit.html',
