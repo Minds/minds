@@ -8,7 +8,7 @@ import { Material } from '../../../directives/material';
 import { GoogleAds } from '../../../components/ads/google-ads';
 import { RevContent } from '../../../components/ads/revcontent';
 import { MindsTitle } from '../../../services/ux/title';
-import { MindsBanner } from '../../../components/banner';
+import { MindsFatBanner } from '../../../components/banner';
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { ShareModal } from '../../../components/modal/modal';
@@ -19,12 +19,13 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 
 @Component({
   selector: 'minds-blog-view',
-  
-  bindings:[ MindsTitle ]
-})
-@View({
+  host: {
+    'class': 'm-blog'
+  },
+  bindings:[ MindsTitle ],
   templateUrl: 'src/plugins/blog/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsBanner, GoogleAds, RevContent, ShareModal ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
+    GoogleAds, RevContent, ShareModal ]
 })
 
 export class BlogView {
@@ -40,10 +41,7 @@ export class BlogView {
   session = SessionFactory.build();
   sharetoggle : boolean = false;
 
-  constructor(public client: Client,
-    @Inject(Router) public router: Router,
-    @Inject(RouteParams) public params: RouteParams,
-    public title: MindsTitle){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;

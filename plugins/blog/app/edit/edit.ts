@@ -8,18 +8,18 @@ import { Client, Upload } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { MDL_DIRECTIVES } from '../../../directives/material';
 import { MindsTinymce } from '../../../components/editors/tinymce';
-import { MindsBanner } from '../../../components/banner'
+import { MindsFatBanner } from '../../../components/banner'
 import { AutoGrow } from '../../../directives/autogrow';
 
 
 @Component({
   selector: 'minds-blog-edit',
-  
-  bindings: [MindsTitle ]
-})
-@View({
+  host: {
+    'class': 'm-blog'
+  },
+  bindings: [ MindsTitle ],
   templateUrl: 'src/plugins/blog/edit/edit.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, AutoGrow, MindsBanner]
+  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, AutoGrow, MindsFatBanner]
 })
 
 export class BlogEdit {

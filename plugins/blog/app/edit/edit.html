@@ -1,17 +1,16 @@
 <header *ngIf="blog">
-  <minds-banner [object]="blog"
-    [editMode]="editing"
-    [top]="blog.header_top"
+  <minds-banner-fat
+    [object]="blog"
+    editMode="true"
     (added)="add_banner($event)"
     [done]="banner_prompt"
-    *ngIf="blog.header_bg || editing"
-    ></minds-banner>
+    ></minds-banner-fat>
 </header>
 <div class="mdl-grid blogs-grid" style="max-width:900px" *ngIf="error">
   <h1>{{error}}</h1>
 </div>
 
-<form (submit)="save()" class="mdl-grid blogs-grid" style="max-width:660px" *ngIf="blog.guid">
+<form (submit)="save()" class="mdl-grid blogs-grid m-blog-container mdl-color--white mdl-shadow--4dp" style="max-width:660px" *ngIf="blog.guid">
 
   <div class="mdl-cell mdl-cell--12-col">
     <textarea

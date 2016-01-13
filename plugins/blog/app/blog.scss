@@ -24,9 +24,26 @@
   }
 }
 
+.m-blog{
+  header{
+    position:absolute;
+    top:60px;
+    left:0;
+    overflow: visible;
+    width:100%;
+    height:auto;
+  }
+
+  .m-blog-container{
+    position:relative;
+    margin-top:30%;
+  }
+}
+
 minds-blog-view{
   display:block;
   background:#FFF;
+
   h1{
     margin:0;
     font-size:36px;
@@ -45,7 +62,8 @@ minds-blog-view{
   }
 }
 .minds-blog-body{
-  padding-top:$minds-padding * 2;
+  //padding-top:$minds-padding * 2;
+  padding:0 $minds-padding;
 
   p{
     font-size:16px;
@@ -82,6 +100,7 @@ minds-blog-view{
 minds-blog-edit{
   display:block;
   background:#FFF;
+
 }
 
 minds-card-blog{
