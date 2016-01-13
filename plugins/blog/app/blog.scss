@@ -38,6 +38,11 @@
     position:relative;
     margin-top:30%;
   }
+  @media screen and (max-width:$max-mobile){
+    .m-blog-container{
+      margin-top: 60%;
+    }
+  }
 }
 
 minds-blog-view{
