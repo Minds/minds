@@ -12,6 +12,7 @@ import { MindsFatBanner } from '../../../components/banner';
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { ShareModal } from '../../../components/modal/modal';
+import { SocialIcons } from '../../../components/social-icons/social-icons';
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
@@ -25,7 +26,7 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
   bindings:[ MindsTitle ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, RevContent, ShareModal ]
+    GoogleAds, RevContent, ShareModal, SocialIcons ]
 })
 
 export class BlogView {

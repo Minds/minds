@@ -86,6 +86,8 @@
 
 </div>
 
+<m-social-icons [url]="minds.site_url + 'blog/view/' + blog.guid"></m-social-icons>
+
 <div class="mdl-grid blogs-grid" style="max-width:660px" *ngIf="blog.guid">
   <minds-comments [object]="blog"></minds-comments>
 </div>
