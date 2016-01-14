@@ -1,4 +1,4 @@
-<m-blog-view *ngFor="#blog of blogs" [blog]="blog"></m-blog-view>
+<m-blog-view *ngFor="#blog of blogs; #i = index" [blog]="blog" [index]="i"></m-blog-view>
 
 <infinite-scroll
     distance="25%"

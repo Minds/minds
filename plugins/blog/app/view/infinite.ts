@@ -36,7 +36,6 @@ export class BlogViewInfinite {
 
   inProgress : boolean = false;
   moreData : boolean = true;
-  activeBlog : number = 0;
 
   constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])
@@ -65,7 +64,6 @@ export class BlogViewInfinite {
   }
 
   loadNextBlog(){
-    console.log('hit load next', this.inProgress);
     if(this.inProgress){
       return false;
     }
@@ -80,10 +78,6 @@ export class BlogViewInfinite {
         }
         this.blogs.push(response.blog);
         this.guid = response.blog.guid;
-        this.title.setTitle(response.blog.title);
-        console.log(window.location, window.history);
-        window.history.pushState(null, response.blog.title, response.blog.perma_url);
-        //window.location = response.blog.perma_url;
         this.inProgress = false;
       })
       .catch((e) => {

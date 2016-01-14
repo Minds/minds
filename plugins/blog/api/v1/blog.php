@@ -95,18 +95,19 @@ class blog implements Interfaces\Api
             $db = new Core\Data\Call('entities_by_time');
 
             //try to get same owner first
-            $blogs = $db->getRow("object:blog:user:$blog->owner_guid", ['limit'=> 1, 'offset' => $blog->guid-1]);
-            if(!$blogs){
+            //$blogs = $db->getRow("object:blog:user:$blog->owner_guid", ['limit'=> 1, 'offset' => $blog->guid-1]);
+            //if(!$blogs){
                 $offset = $blog->featured_id ? $blog->featured_id-1: "";
                 $blogs = $db->getRow("object:blog:featured", ['limit'=>1, 'offset'=>$offset]);
-            }
+            //}
 
             if(!$blogs){
               return Factory::response([]);
             }
 
-            $key = key($blogs);
-            $blog = new entities\Blog($blogs[$key]);
+            //$guids = array_keys($blogs);
+            $guids = array_values($blogs);    
+            $blog = new entities\Blog($guids[0]);
             $response['blog'] = $blog->export();
             $owner = new user($blog->ownerObj);
             $response['blog']['ownerObj'] = $owner->export();

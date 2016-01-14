@@ -15,7 +15,7 @@ import { ShareModal } from '../../../components/modal/modal';
 import { SocialIcons } from '../../../components/social-icons/social-icons';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { ScrollService } from '../../../services/ux/scroll';
-
+import { AnalyticsService } from '../../../services/analytics';
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
@@ -23,7 +23,7 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 
 @Component({
   selector: 'm-blog-view',
-  inputs: [ 'blog' ],
+  inputs: [ 'blog', '_index: index' ],
   host: {
     'class': 'm-blog'
   },
@@ -47,8 +47,9 @@ export class BlogView {
   activeBlog : number = 0;
 
   visible : boolean = false;
+  index : number = 0;
 
-  constructor(_element : ElementRef,  public scroll: ScrollService){
+  constructor(_element : ElementRef,  public scroll: ScrollService, public title: MindsTitle){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
       this.isVisible();
@@ -58,13 +59,25 @@ export class BlogView {
     //listens every 0.6 seconds
     this.scroll.listen((e) => {
       var bounds = this.element.getBoundingClientRect();
-      if(bounds.top < this.scroll.view.clientHeight && bounds.top + bounds.height >= 0){
-        window.history.pushState(null, this.blog.title, this.minds.site_url + 'blog/view/' + this.blog.guid);
+      if(bounds.top < this.scroll.view.clientHeight && bounds.top + bounds.height > this.scroll.view.clientHeight){
+        var url = this.minds.site_url + 'blog/view/' + this.blog.guid;
+        if(!this.visible){
+          window.history.pushState(null, this.blog.title, url);
+          this.title.setTitle(this.blog.title);
+          AnalyticsService.send('pageview', { 'page' : '/blog/view/' + this.blog.guid});
+        }
         this.visible = true;
       } else {
         this.visible = false;
       }
-    }, 0, 600);
+    }, 0, 300);
+  }
+
+  set _index(value : number){
+    this.index = value;
+    if(this.index == 0){
+      this.visible = true;
+    }
   }
 
 }

@@ -4,7 +4,7 @@
 
 <div class="mdl-grid m-blog-container blogs-grid mdl-color--white mdl-shadow--4dp" style="max-width:660px" *ngIf="blog.guid">
 
-  <google-ad *ngIf="blog.monetized" type="responsive" location="top"></google-ad>
+  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="top"></google-ad>
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
@@ -45,14 +45,14 @@
 
   <div style="width:100%; padding:8px;">
     <!-- START: Google adsense block -->
-    <google-ad *ngIf="blog.monetized"></google-ad>
+    <google-ad *ngIf="blog.monetized && index == 0"></google-ad>
     <!-- END: Google adsense block -->
 
     <div class="mdl-cell mdl-cell--12-col minds-blog-body" innerHtml="{{blog.description}}"></div>
   </div>
 
   <!-- START: Google adsense block -->
-  <google-ad *ngIf="blog.monetized" type="responsive" location="bottom"></google-ad>
+  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="bottom"></google-ad>
   <!-- END: Google adsense block -->
 
   <div style="width:100%; padding:8px;">
