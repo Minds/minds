@@ -1,0 +1,9 @@
+<m-blog-view *ngFor="#blog of blogs" [blog]="blog"></m-blog-view>
+
+<infinite-scroll
+    distance="25%"
+    (load)="loadNextBlog()"
+    [moreData]="moreData"
+    [inProgress]="inProgress"
+    *ngIf="blogs.length >= 1">
+</infinite-scroll>

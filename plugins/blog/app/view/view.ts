@@ -53,11 +53,13 @@ export class BlogView {
   }
 
   isVisible(){
+    //listens every 0.6 seconds
     this.scroll.listen((e) => {
-      if(this.element.offsetTop - this.element.clientHeight - this.scroll.view.clientHeight <= this.scroll.view.scrollTop && this.moreData){
-          window.history.pushState(null, this.blog.title, this.blog.perma_url);
+      var bounds = this.element.getBoundingClientRect();
+      if(bounds.top < this.scroll.view.clientHeight && bounds.top + bounds.height >= 0){
+        window.history.pushState(null, this.blog.title, this.minds.site_url + 'blog/view/' + this.blog.guid);
       }
-    }, 300);
+    }, 0, 600);
   }
 
 }
