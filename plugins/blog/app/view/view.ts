@@ -46,6 +46,8 @@ export class BlogView {
   moreData : boolean = true;
   activeBlog : number = 0;
 
+  visible : boolean = false;
+
   constructor(_element : ElementRef,  public scroll: ScrollService){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
@@ -58,6 +60,9 @@ export class BlogView {
       var bounds = this.element.getBoundingClientRect();
       if(bounds.top < this.scroll.view.clientHeight && bounds.top + bounds.height >= 0){
         window.history.pushState(null, this.blog.title, this.minds.site_url + 'blog/view/' + this.blog.guid);
+        this.visible = true;
+      } else {
+        this.visible = false;
       }
     }, 0, 600);
   }
