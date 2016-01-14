@@ -84,6 +84,34 @@ class blog implements Interfaces\Api
             $response['blogs'] = Factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->guid;
             break;
+          case "next":
+            if (!isset($pages[1])){
+              return Factory::response([
+                'status' => 'error',
+                'message' => 'Not blog reference guid provided'
+              ]);
+            }
+            $blog = new entities\Blog($pages[1]);
+            $db = new Core\Data\Call('entities_by_time');
+
+            //try to get same owner first
+            $blogs = $db->getRow("object:blog:user:$blog->owner_guid", ['limit'=> 1, 'offset' => $blog->guid-1]);
+            if(!$blogs){
+                $offset = $blog->featured_id ? $blog->featured_id-1: "";
+                $blogs = $db->getRow("object:blog:featured", ['limit'=>1, 'offset'=>$offset]);
+            }
+
+            if(!$blogs){
+              return Factory::response([]);
+            }
+
+            $key = key($blogs);
+            $blog = new entities\Blog($blogs[$key]);
+            $response['blog'] = $blog->export();
+            $owner = new user($blog->ownerObj);
+            $response['blog']['ownerObj'] = $owner->export();
+            $response['blog']['description'] = (new Core\Security\XSS())->clean($response['blog']['description']);
+            break;
           case is_numeric($pages[0]):
             $blog = new entities\Blog($pages[0]);
             $response['blog'] = $blog->export();

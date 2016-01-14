@@ -14,7 +14,7 @@ import { BlogCard } from './card/card';
 
 @Component({
   selector: 'minds-blog',
-  
+
   bindings: [MindsTitle ]
 })
 @View({
@@ -90,4 +90,5 @@ export class Blog {
 }
 
 export { BlogView } from './view/view';
+export { BlogViewInfinite } from './view/infinite';
 export { BlogEdit } from './edit/edit';

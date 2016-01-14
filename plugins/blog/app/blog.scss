@@ -25,9 +25,13 @@
 }
 
 .m-blog{
+  position:relative;
+  padding-top:30%;
+  display:block;
+
   header{
     position:absolute;
-    top:60px;
+    top:0;
     left:0;
     overflow: visible;
     width:100%;
@@ -36,7 +40,6 @@
 
   .m-blog-container{
     position:relative;
-    margin-top:30%;
   }
   @media screen and (max-width:$max-mobile){
     .m-blog-container{
@@ -44,6 +47,7 @@
     }
   }
 }
+
 
 minds-blog-view{
   display:block;

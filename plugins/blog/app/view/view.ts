@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, View, Inject, ElementRef } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -13,66 +13,51 @@ import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { ShareModal } from '../../../components/modal/modal';
 import { SocialIcons } from '../../../components/social-icons/social-icons';
+import { InfiniteScroll } from '../../../directives/infinite-scroll';
+import { ScrollService } from '../../../services/ux/scroll';
+
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
 
 
 @Component({
-  selector: 'minds-blog-view',
+  selector: 'm-blog-view',
+  inputs: [ 'blog' ],
   host: {
     'class': 'm-blog'
   },
   bindings:[ MindsTitle ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, RevContent, ShareModal, SocialIcons ]
+    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll ]
 })
 
 export class BlogView {
 
   minds;
   guid : string;
-  blog : MindsBlogEntity = {
-    guid: '',
-    title: '',
-    description: '',
-    ownerObj: {}
-  };
+  blog : MindsBlogEntity;
   session = SessionFactory.build();
   sharetoggle : boolean = false;
+  element;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
-      if(params.params['guid'])
-        this.guid = params.params['guid'];
+  inProgress : boolean = false;
+  moreData : boolean = true;
+  activeBlog : number = 0;
+
+  constructor(_element : ElementRef,  public scroll: ScrollService){
       this.minds = window.Minds;
-      this.load();
+      this.element = _element.nativeElement;
+      this.isVisible();
   }
 
-  load(refresh : boolean = false){
-    console.log('grabbing ' + this.guid);
-    var self = this;
-    this.client.get('api/v1/blog/' + this.guid, {})
-      .then((response : MindsBlogResponse) => {
-        if(response.blog)
-          self.blog = response.blog;
-          self.title.setTitle(self.blog.title);
-      })
-      .catch((e) => {
-
-      });
-  }
-
-  delete(){
-    var self = this;
-    if(confirm("Are you sure?")){
-      this.client.delete('api/v1/blog/' + this.guid)
-        .then((response : any) => {
-          self.router.navigate(['/Blog', {filter: 'owner'}]);
-        })
-        .catch((e) => {
-        });
-    }
+  isVisible(){
+    this.scroll.listen((e) => {
+      if(this.element.offsetTop - this.element.clientHeight - this.scroll.view.clientHeight <= this.scroll.view.scrollTop && this.moreData){
+          window.history.pushState(null, this.blog.title, this.blog.perma_url);
+      }
+    }, 300);
   }
 
 }
