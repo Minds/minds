@@ -37,7 +37,7 @@ class wallet implements Interfaces\Api
                 $btc = ($satoshi / 1000000000);
 
                 $response['count'] = $count;
-                $response['cap'] = 800;
+                $response['cap'] = 500;
                 $response['min'] = 10;
                 $response['boost_rate'] = 1;
                 $response['ex'] = array(
