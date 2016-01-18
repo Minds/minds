@@ -27,6 +27,7 @@ class Minds extends base
         (new Config\ConfigProvider())->register();
         //(new Core\Boost\BoostProvider())->register();
         //(new Core\Data\DataProvider())->register();
+        (new Email\EmailProvider())->register();
         //(new Core\Events\EventsProvider())->register();
         //(new Core\Router\NavigationProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
