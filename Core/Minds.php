@@ -24,17 +24,17 @@ class Minds extends base
      */
     public function initProviders()
     {
-        (new Core\Config\ConfigProvider())->register();
-        (new Core\Boost\BoostProvider())->register();
-        (new Core\Data\DataProvider())->register();
-        (new Core\Events\EventsProvider())->register();
-        (new Core\Router\NavigationProvider())->register();
-        (new Core\Notification\NotificationProvider())->register();
-        (new Core\Payments\PaymentsProvider())->register();
-        (new Core\Queue\QueueProvider())->register();
-        (new Core\Router\RouterProvider())->register();
-        (new Core\Router\SecruityProvider())->register();
-        (new Core\SEO\SEOProvider())->register();
+        (new Config\ConfigProvider())->register();
+        //(new Core\Boost\BoostProvider())->register();
+        //(new Core\Data\DataProvider())->register();
+        //(new Core\Events\EventsProvider())->register();
+        //(new Core\Router\NavigationProvider())->register();
+        //(new Core\Notification\NotificationProvider())->register();
+        //(new Core\Payments\PaymentsProvider())->register();
+        //(new Core\Queue\QueueProvider())->register();
+        //(new Core\Router\RouterProvider())->register();
+        //(new Core\Router\SecruityProvider())->register();
+        //(new Core\SEO\SEOProvider())->register();
     }
 
     /**

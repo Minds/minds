@@ -17,7 +17,7 @@ class Di
      * @param string $alias
      * @return mixed
      */
-    public function get(string $alias)
+    public function get($alias)
     {
         if(isset($this->bindings[$alias])){
             $binding = $this->bindings[$alias];
@@ -40,13 +40,18 @@ class Di
      * @param array $options
      * @return void
      */
-    public function bind(string $alias, \Closure $function, array $options = [])
+    public function bind($alias, \Closure $function, array $options = [])
     {
         $options = array_merge([
           'useFactory' => false,
           'immutable' => false
         ], $options);
-        $binding = (new DiBinding())
+
+        if($options['immutable'] && isset($this->bindings[$alias])){
+            throw new ImmutableException();
+        }
+
+        $binding = (new Binding())
           ->setFunction($function)
           ->setFactory($options['useFactory'])
           ->setImmutable($options['immutable']);
@@ -57,7 +62,7 @@ class Di
      * Singleton loader
      * @return Di
      */
-    static public function _() : Di
+    static public function _()
     {
         if(!self::$_){
             self::$_ = new Di;

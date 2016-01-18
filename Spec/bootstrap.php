@@ -7,7 +7,7 @@ date_default_timezone_set('UTC');
 $minds = new Minds\Core\Minds();
 $minds->loadLegacy();
 
-$CONFIG = Minds\Core\Config::_();
+$CONFIG = Minds\Core\Di\Di::_()->get('Config');
 $CONFIG->default_access = 2;
 $CONFIG->site_guid = 0;
 $CONFIG->cassandra = new stdClass;
