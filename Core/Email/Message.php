@@ -18,10 +18,10 @@ class Message
 
     private function init()
     {
-        $this->from = array(
-      'name' => "Minds",
-      'email' => "info@minds.com"
-    );
+        $this->from = [
+          'name' => "Minds",
+          'email' => "info@minds.com"
+        ];
     }
 
   /**

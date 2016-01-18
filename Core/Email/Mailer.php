@@ -15,22 +15,18 @@ class Mailer
 
     public function __construct($mailer = null)
     {
-        if ($mailer) {
-            $this->mailer = $mailer;
-        } else {
-            $this->mailer = new PHPMailer();
-        }
-        $this->mailer->isSMTP();
-        $this->mailer->SMTPKeepAlive = true;
+        $this->mailer = $mailer;
         $this->setup();
-        $this->stats = array(
-      'sent' => 0,
-      'failed' => 0
-    );
+        $this->stats = [
+          'sent' => 0,
+          'failed' => 0
+        ];
     }
 
     private function setup()
     {
+        $this->mailer->isSMTP();
+        $this->mailer->SMTPKeepAlive = true;
         $this->mailer->Host = \elgg_get_plugin_setting('phpmailer_host', 'phpmailer');
         $this->mailer->Auth = \elgg_get_plugin_setting('phpmailer_smtp_auth', 'phpmailer');
         $this->mailer->SMTPAuth = true;
@@ -40,13 +36,13 @@ class Mailer
         $this->mailer->Port = \elgg_get_plugin_setting('ep_phpmailer_port', 'phpmailer');
     }
 
-  /**
-   * Send an email
-   * @param Message $message
-   * @return $this
-   */
-  public function send($message)
-  {
+    /**
+     * Send an email
+     * @param Message $message
+     * @return $this
+     */
+    public function send($message)
+    {
       $this->mailer->ClearAllRecipients();
       $this->mailer->ClearAttachments();
 
@@ -69,10 +65,12 @@ class Mailer
       }
 
       return $this;
-  }
+    }
 
     public function __destruct()
     {
-        $this->mailer->SmtpClose();
+        if($this->mailer){
+            $this->mailer->SmtpClose();
+        }
     }
 }
