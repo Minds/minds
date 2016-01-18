@@ -254,7 +254,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         return $this->handler;
     }
 
-    public function export()
+    public function export($keys = [])
     {
         $export = parent::export();
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));

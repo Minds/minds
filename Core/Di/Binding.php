@@ -11,35 +11,35 @@ class Binding
     private $isFactory;
     private $isImmutable;
 
-    public function setFunction(\Closure $function) : DiBinding
+    public function setFunction(\Closure $function)
     {
         $this->function = $function;
         return $this;
     }
 
-    public function getFunction() : \Closure
+    public function getFunction()
     {
         return $this->function;
     }
 
-    public function setFactory(bool $useFactory) : DiBinding
+    public function setFactory($useFactory)
     {
         $this->isFactory = $useFactory;
         return $this;
     }
 
-    public function isFactory() : bool
+    public function isFactory()
     {
         return $this->isFactory;
     }
 
-    public function setImmutable(bool $immutable) : DiBinding
+    public function setImmutable($immutable)
     {
         $this->isImmutable = $immutable;
         return $this;
     }
 
-    public function isImmutable() : bool
+    public function isImmutable()
     {
         return $this->isImmutable;
     }
