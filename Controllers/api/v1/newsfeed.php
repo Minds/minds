@@ -69,7 +69,8 @@ class newsfeed implements Interfaces\Api
 
         if ($pages[0] == 'network') {
             try {
-                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts(2);
+                $limit = isset($_GET['access_id']) ? 2 : 1;
+                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit);
                 foreach ($boosts as $boost) {
                     $boost->boosted = true;
                     array_unshift($activity, $boost);

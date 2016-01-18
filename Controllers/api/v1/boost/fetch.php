@@ -38,12 +38,12 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
               break;
           case 'newsfeed':
-            $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
-            foreach ($boosts as $entity) {
-                $response['boosts'][] = $entity->export();
+            $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2, false);
+            foreach ($boosts as $guid => $entity) {
+                $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string) $guid]);
                 //bug: sometimes views weren't being calculated on scroll down
-                \Minds\Helpers\Counters::increment($entity->guid, "impression");
-                \Minds\Helpers\Counters::increment($entity->owner_guid, "impression");
+                //\Minds\Helpers\Counters::increment($entity->guid, "impression");
+                //\Minds\Helpers\Counters::increment($entity->owner_guid, "impression");
             }
 
         }
@@ -63,7 +63,19 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function put($pages)
     {
+        $boost = Core\Boost\Factory::build($pages[0])->getBoostEntity($pages[1]);
+        if(!$boost){
+            return Factory::response([
+              'status' => 'error',
+              'message' => 'Boost not found'
+            ]);
+        }
+        Helpers\Counters::increment($boost->getEntity()->guid, "impression");
+        Helpers\Counters::increment($boost->getEntity()->owner_guid, "impression");
+        Helpers\Counters::increment((string) $boost->getId(), "boost_impressions", 1);
+        Helpers\Counters::increment(0, "boost_impressions", 1);
 
+        return Factory::response([]);
     }
 
     /**

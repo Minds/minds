@@ -251,7 +251,7 @@ class Network implements BoostHandlerInterface
         ]);
     }
 
-    public function getBoosts($limit = 2)
+    public function getBoosts($limit = 2, $increment = true)
     {
         $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
@@ -281,10 +281,12 @@ class Network implements BoostHandlerInterface
             }
 
             $impressions = $data['impressions'];
-            //increment impression counter
-            Helpers\Counters::increment((string) $data['_id'], "boost_impressions", 1);
-            //get the current impressions count for this boost
-            Helpers\Counters::increment(0, "boost_impressions", 1);
+            if($increment){
+                //increment impression counter
+                Helpers\Counters::increment((string) $data['_id'], "boost_impressions", 1);
+                //get the current impressions count for this boost
+                Helpers\Counters::increment(0, "boost_impressions", 1);
+            }
             $count = Helpers\Counters::get((string) $data['_id'], "boost_impressions", false);
 
             $boost = $this->getBoostEntity($data['guid']);
@@ -315,7 +317,7 @@ class Network implements BoostHandlerInterface
             if($legacy_boost){
                 $return[] = $entity;
             } else {
-                $return[] = $boost->getEntity();
+                $return[$data['guid']] = $boost->getEntity();
             }
         }
         if(empty($return) && !empty($mem_log)){
