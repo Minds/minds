@@ -1,17 +1,20 @@
 <?php
 /**
- * Minds Config Provider
+ * Minds Events Provider
  */
 
-namespace Minds\Core\Config;
+namespace Minds\Core\Events;
 
 use Minds\Core\Di\Provider;
 
-class ConfigProvider extends Provider
+class EventsProvider extends Provider
 {
 
     public function register()
     {
+        $this->di->bind('EventsDispatcher', function($di){
+            return new Dispatcher();
+        }, ['useFactory'=>true]);
     }
 
 }

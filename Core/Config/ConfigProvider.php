@@ -14,7 +14,7 @@ class ConfigProvider extends Provider
     {
         $this->di->bind('Config', function($di){
             return new Config();
-        });
+        }, ['useFactory'=>true]);
     }
 
 }

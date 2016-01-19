@@ -5,6 +5,7 @@
 namespace Minds\Core\Pages;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Navigation;
 
 class Menu
@@ -14,7 +15,7 @@ class Menu
 
     public function init()
     {
-        $footer = Manager::_()->getMenu('footer');
+        $footer = Di::_()->get('PagesManager')->getMenu('footer');
 
         usort($footer, function ($a, $b) {
           return strcmp($b->getTitle(), $a->getTitle());

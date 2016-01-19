@@ -9,6 +9,7 @@
 namespace Minds\Controllers\api\v1\admin;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -34,7 +35,7 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ];
             }
         } else {
-            $pages = Core\Pages\Manager::_()->getPages();
+            $pages = Di::_()->get('PagesManager')->getPages();
             $response = [
                 'pages' => Factory::exportable($pages)
             ];
