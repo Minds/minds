@@ -4,6 +4,8 @@
 */
 namespace Minds\Core\Payments;
 
+use Minds\Core\Di\Di;
+
 /**
  * A factory providing handlers boosting items
  */
@@ -15,16 +17,13 @@ class Factory
      * @param array $options (optional)
      * @return BoostHandlerInterface
      */
-    public static function build($handler, $options = array())
+    public static function build($handler)
     {
-        $handler = ucfirst($handler);
-        $handler = "Minds\\Core\\Payments\\$handler\\$handler";
-        if (class_exists($handler)) {
-            $class = new $handler($options);
-            if ($class instanceof PaymentServiceInterface) {
-                return $class;
-            }
+        switch(ucfirst($handler)){
+          case "Braintree":
+            return Di::_()->get('BraintreePayments');
+          default:
+            throw new \Exception("Service not found");
         }
-        throw new \Exception("Payment service not found");
     }
 }

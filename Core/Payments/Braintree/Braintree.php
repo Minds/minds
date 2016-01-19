@@ -10,37 +10,37 @@ use Minds\Core\Payments\PaymentServiceInterface;
 use Minds\Core\Payments\Sale;
 use Minds\Core\Payments\Merchant;
 use Minds\Entities;
-use Braintree_ClientToken;
-use Braintree_Configuration;
-use Braintree_MerchantAccount;
-use Braintree_Transaction;
-use Braintree_TransactionSearch;
 //for testing purposes
 use Braintree_Test_MerchantAccount;
 
 class Braintree implements PaymentServiceInterface
 {
     private $config = array();
+    private $btConfig;
+    private $btClientToken;
+    private $btTransaction;
+    private $btTransactionSearch;
+    private $btMerchantAccount;
 
-    public function __construct($options = array())
+    public function __construct(\Braintree_Configuration $btConfig, \Braintree_ClientToken $btClientToken,
+      \Braintree_Transaction $btTransaction, \Braintree_TransactionSearch $btTransactionSearch,
+      \Braintree_MerchantAccount $btMerchantAccount)
     {
-        $this->setConfig($options);
+        $this->btConfig = $btConfig;
+        $this->btClientToken = $btClientToken;
+        $this->btTransaction = $btTransaction;
+        $this->btTransactionSearch = $btTransactionSearch;
+        $this->btMerchantAccount = $btMerchantAccount;
     }
 
-    private function setConfig($config)
+    public function setConfig($config)
     {
-        $defaults = [
-          'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
-          'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
-          'master_merchant_id' => Core\Config::_()->payments['braintree']['master_merchant_id'],
-          'public_key' => Core\Config::_()->payments['braintree']['public_key'],
-          'private_key' => Core\Config::_()->payments['braintree']['private_key']
-        ];
-        $this->config = array_merge($defaults, $config);
-        Braintree_Configuration::environment($this->config['environment']);
-        Braintree_Configuration::merchantId($this->config['merchant_id']);
-        Braintree_Configuration::publicKey($this->config['public_key']);
-        Braintree_Configuration::privateKey($this->config['private_key']);
+
+        $this->config = $config;
+        $this->btConfig::environment($this->config['environment']);
+        $this->btConfig::merchantId($this->config['merchant_id']);
+        $this->btConfig::publicKey($this->config['public_key']);
+        $this->btConfig::privateKey($this->config['private_key']);
     }
 
   /**
@@ -48,7 +48,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function getToken()
   {
-      return Braintree_ClientToken::generate();
+      return $this->btClientToken::generate();
   }
 
   /**
@@ -58,7 +58,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function setSale(Sale $sale)
   {
-      $result = Braintree_Transaction::sale([
+      $result = $this->btTransaction::sale([
         'amount' => $sale->getAmount(),
         'paymentMethodNonce' => $sale->getNonce(),
         'serviceFeeAmount' => $sale->getFee(),
@@ -90,7 +90,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function chargeSale(Sale $sale)
   {
-      $result = Braintree_Transaction::submitForSettlement($sale->getId());
+      $result = $this->btTransaction::submitForSettlement($sale->getId());
 
       if ($result->success) {
           return true;
@@ -107,7 +107,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function voidSale(Sale $sale)
   {
-      $result = Braintree_Transaction::void($sale->getId());
+      $result = $this->btTransaction::void($sale->getId());
   }
 
   /**
@@ -117,7 +117,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function refundSale(Sale $sale)
   {
-      $result = Braintree_Transaction::refund($sale->getId());
+      $result = $this->btTransaction::refund($sale->getId());
   }
 
   /**
@@ -128,12 +128,12 @@ class Braintree implements PaymentServiceInterface
    */
   public function getSales(Merchant $merchant, array $options = array())
   {
-      $results = Braintree_Transaction::search([
-      Braintree_TransactionSearch::merchantAccountId()->is($merchant->getGuid()),
-      Braintree_TransactionSearch::status()->in([
-        Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
-        Braintree_Transaction::SETTLED,
-        Braintree_Transaction::VOIDED
+      $results = $this->btTransaction::search([
+      $this->btTransactionSearch::merchantAccountId()->is($merchant->getGuid()),
+      $this->btTransactionSearch::status()->in([
+        $this->btTransaction::SUBMITTED_FOR_SETTLEMENT,
+        $this->btTransaction::SETTLED,
+        $this->btTransaction::VOIDED
       ])
     ]);
 
@@ -159,7 +159,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function updateMerchant(Merchant $merchant)
   {
-      $result = Braintree_MerchantAccount::update($merchant->getGuid(),
+      $result = $this->btMerchant::update($merchant->getGuid(),
       [
         'individual' => [
           'firstName' => $merchant->getFirstName(),
@@ -176,7 +176,7 @@ class Braintree implements PaymentServiceInterface
         ],
         'funding' => [
           'descriptor' => $merchant->getName(),
-          'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'destination' => $merchant->getDestination() == 'bank' ? $this->btMerchant::FUNDING_DESTINATION_BANK : $this->btMerchant::FUNDING_DESTINATION_EMAIL,
           'email' => $merchant->getEmail(),
           'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
           'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
@@ -198,7 +198,7 @@ class Braintree implements PaymentServiceInterface
    */
   public function addMerchant(Merchant $merchant)
   {
-      $result = Braintree_MerchantAccount::create([
+      $result = $this->btMerchant::create([
         'individual' => [
           'firstName' => $merchant->getFirstName(),
           'lastName' => $merchant->getLastName(),
@@ -214,7 +214,7 @@ class Braintree implements PaymentServiceInterface
         ],
         'funding' => [
           'descriptor' => $merchant->getName(),
-          'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
+          'destination' => $merchant->getDestination() == 'bank' ? $this->btMerchant::FUNDING_DESTINATION_BANK : $this->btMerchant::FUNDING_DESTINATION_EMAIL,
           'email' => $merchant->getEmail(),
           'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
           'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
@@ -239,7 +239,7 @@ class Braintree implements PaymentServiceInterface
   public function getMerchant($id)
   {
       try {
-          $result = Braintree_MerchantAccount::find($id);
+          $result = $this->btMerchant::find($id);
 
           $merchant = (new Merchant())
         ->setStatus($result->status)

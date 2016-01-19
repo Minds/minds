@@ -31,10 +31,11 @@ class Minds extends base
         //(new Core\Events\EventsProvider())->register();
         //(new Core\Router\NavigationProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
-        //(new Core\Payments\PaymentsProvider())->register();
-        //(new Core\Queue\QueueProvider())->register();
+        (new Pages\PagesProvider())->register();
+        (new Payments\PaymentsProvider())->register();
+        (new Queue\QueueProvider())->register();
         //(new Core\Router\RouterProvider())->register();
-        //(new Core\Router\SecruityProvider())->register();
+        (new Security\SecurityProvider())->register();
         //(new Core\SEO\SEOProvider())->register();
     }
 
