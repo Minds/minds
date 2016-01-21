@@ -17,6 +17,8 @@ class Network implements BoostHandlerInterface
     protected $mongo;
     protected $db;
 
+    protected $tries = 0;
+
     public function __construct($options = array(),
       Data\Interfaces\ClientInterface $mongo = null,
       Data\Call $db = null)
@@ -322,7 +324,9 @@ class Network implements BoostHandlerInterface
         }
         if(empty($return) && !empty($mem_log)){
             $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler");
-            return $this->getBoosts($limit);
+            $this->tries++;
+            if($this->tries > 2)
+                return $this->getBoosts($limit);
         }
         return $return;
     }
