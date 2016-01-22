@@ -80,6 +80,29 @@ class newsfeed implements Interfaces\Api
                       \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
                     }
                 }
+                if(!$boosts){
+                    $cacher = Core\Data\cache\factory::build('apcu');
+                    $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
+                    $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> $limit]);
+                    if (!$guids) {
+                        break;
+                    }
+                    $blogs = Core\Entities::get(['guids'=>$guids]);
+                    foreach($blogs as $blog){
+                        $boost = (new Entities\Activity())->setTitle($blog->title)
+                              ->setBlurb(strip_tags($blog->description))
+                              ->setURL($blog->getURL())
+                              ->setThumbnail($blog->getIconUrl())
+                              ->setFromEntity($blog);
+                        $boost->boosted = true;
+                        array_unshift($activity, $boost);
+                    }
+                    if(count($response['boosts']) < 5){
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
+                    } else {
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
+                    }
+                }
             } catch (\Exception $e) {
             }
 
