@@ -89,8 +89,9 @@ class newsfeed implements Interfaces\Api
                     }
                     $blogs = Core\Entities::get(['guids'=>$guids]);
                     foreach($blogs as $blog){
-                        $boost = (new Entities\Activity())->setTitle($blog->title)
-                              //->setGuid($blog->guid)
+                        $boost = new Entities\Activity();
+                        $boost->guid = $blog->guid;
+                        $boost->setTitle($blog->title)
                               ->setBlurb(strip_tags($blog->description))
                               ->setURL($blog->getURL())
                               ->setThumbnail($blog->getIconUrl())

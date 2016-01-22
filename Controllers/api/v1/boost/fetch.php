@@ -60,8 +60,9 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                     return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
                 });
                 foreach($blogs as $blog){
-                    $boost = (new Entities\Activity())->setTitle($blog->title)
-                          //->setGuid($blog->guid)
+                    $boost = new Entities\Activity();
+                    $boost->guid = $blog->guid;
+                    $boost->setTitle($blog->title)
                           ->setBlurb(strip_tags($blog->description))
                           ->setURL($blog->getURL())
                           ->setThumbnail($blog->getIconUrl())
