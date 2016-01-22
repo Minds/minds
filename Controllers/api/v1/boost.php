@@ -73,7 +73,7 @@ class boost implements Interfaces\Api
             case "rates":
               $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
               $response['rate'] = $this->rate;
-              $response['cap'] = 500;
+              $response['cap'] = 1000;
               $response['min'] = 5;
             break;
             case "p2p":
