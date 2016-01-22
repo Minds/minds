@@ -61,6 +61,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 });
                 foreach($blogs as $blog){
                     $boost = (new Entities\Activity())->setTitle($blog->title)
+                          ->setGuid($blog->guid)
                           ->setBlurb(strip_tags($blog->description))
                           ->setURL($blog->getURL())
                           ->setThumbnail($blog->getIconUrl())
