@@ -45,7 +45,36 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 //\Minds\Helpers\Counters::increment($entity->guid, "impression");
                 //\Minds\Helpers\Counters::increment($entity->owner_guid, "impression");
             }
-
+            if(!$boosts){
+                $cacher = Core\Data\cache\factory::build('apcu');
+                $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
+                $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> 12]);
+                if (!$guids) {
+                    break;
+                }
+                $blogs = Core\Entities::get(['guids'=>$guids]);
+                usort($blogs, function ($a, $b) {
+                    if ((int)$a->featured_id == (int) $b->featured_id) {
+                        return 0;
+                    }
+                    return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+                });
+                foreach($blogs as $blog){
+                    $boost = (new Entities\Activity())->setTitle($blog->title)
+                          ->setBlurb(strip_tags($blog->description))
+                          ->setURL($blog->getURL())
+                          ->setThumbnail($blog->getIconUrl())
+                          ->setFromEntity($blog)
+                          ->export();
+                    $boost['boosted'] = true;
+                    $response['boosts'][] = $boost;
+                }
+                if(count($response['boosts']) < 5){
+                    $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
+                } else {
+                    $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
+                }
+            }
         }
 
         return Factory::response($response);
