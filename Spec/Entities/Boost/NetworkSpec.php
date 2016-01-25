@@ -25,6 +25,7 @@ class NetworkSpec extends ObjectBehavior
           'type' => 'points',
           'entity' => json_encode(['guid'=>'mock_entity_guid', 'type'=>'activity']),
           'bid' => 10,
+          'bidType' => 'points',
           'destination' => json_encode(['guid'=>'mock_destination_guid', 'type'=>'user']),
           'owner' => json_encode(['guid'=>'mock_owner_guid', 'type'=>'user']),
           'state' => 'testing',

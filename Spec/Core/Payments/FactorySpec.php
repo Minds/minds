@@ -10,14 +10,7 @@ class FactorySpec extends ObjectBehavior
 {
     public function let()
     {
-        Config::_()->payments = [
-      'braintree' => [
-        'environment' => 'sandbox',
-        'merchant_id' => Argument::any(),
-        'public_key' => Argument::any(),
-        'private_key' => Argument::any()
-      ]
-    ];
+
     }
 
     public function it_is_initializable()

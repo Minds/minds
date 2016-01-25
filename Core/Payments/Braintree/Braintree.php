@@ -6,19 +6,28 @@
 namespace Minds\Core\Payments\Braintree;
 
 use Minds\Core;
+use Minds\Core\Guid;
 use Minds\Core\Payments\PaymentServiceInterface;
+use Minds\Core\Payments\Subscriptions\SubscriptionPaymentServiceInterface;
 use Minds\Core\Payments\Sale;
 use Minds\Core\Payments\Merchant;
+use Minds\Core\Payments\Customer;
+use Minds\Core\Payments\PaymentMethod;
+use Minds\Core\Payments\Subscription;
 use Minds\Entities;
 use Braintree_ClientToken;
 use Braintree_Configuration;
 use Braintree_MerchantAccount;
 use Braintree_Transaction;
 use Braintree_TransactionSearch;
+use Braintree_Customer;
+use Braintree_CustomerSearch;
+use Braintree_PaymentMethod;
+use Braintree_Subscription;
 //for testing purposes
 use Braintree_Test_MerchantAccount;
 
-class Braintree implements PaymentServiceInterface
+class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceInterface
 {
     private $config = array();
 
@@ -266,5 +275,97 @@ class Braintree implements PaymentServiceInterface
 
     public function confirmMerchant(Merchant $merchant)
     {
+    }
+
+    /* Subscriptions */
+
+    public function createCustomer(Customer $customer)
+    {
+
+        $id = $customer->getId() ?: Guid::build();
+
+        try {
+            $braintree_customer = Braintree_Customer::find($id);
+        } catch (\Braintree_Exception_NotFound $e) {
+            $braintree_customer = null;
+        }
+
+        if ($braintree_customer)
+            $customer->setId($braintree_customer->id);
+        else {
+            $result = Braintree_Customer::create([
+                'id' => $id,
+                'email' => strtolower($customer->getEmail())
+            ]);
+
+            if ($result->success)
+                $customer->setId($result->customer->id);
+            else {
+                $errors = $result->errors->deepAll();
+                throw new \Exception($errors[0]->message);
+            }
+        }
+
+        return $customer;
+    }
+
+    public function createPaymentMethod(PaymentMethod $payment_method)
+    {
+
+        $result = Braintree_PaymentMethod::create([
+            'customerId' => $payment_method->getCustomer()->getId(),
+            'paymentMethodNonce' => $payment_method->getPaymentMethodNonce(),
+            'options' => [
+                'verifyCard' => true
+            ]
+        ]);
+
+        if ($result->success) {
+            $payment_method->setToken($result->paymentMethod->token);
+            return $payment_method;
+        } else {
+            $errors = $result->errors->deepAll();
+            throw new \Exception($errors[0]->message);
+        }
+
+    }
+
+    public function createSubscription(Subscription $subscription)
+    {
+
+        $result = Braintree_Subscription::create([
+            'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
+            'planId' => $subscription->getPlanId()
+        ]);
+
+        if ($result->success) {
+            $subscription->setId($result->subscription->id);
+            return $subscription;
+        } else {
+            $errors = $result->errors->deepAll();
+            throw new \Exception($errors[0]->message);
+        }
+
+    }
+
+    public function getSubscription($subscription_id)
+    {
+
+        try {
+
+            $result = Braintree_Subscription::find($subscription_id);
+
+            return (new Subscription)
+            ->setBalance($result->balance)
+            ->setCreatedAt($result->createdAt)
+            ->setNextBillingPeriodAmount($result->nextBillingPeriodAmount)
+            ->setNextBillingDate($result->nextBillingDate)
+            ->setPlanId($result->planId)
+            ->setTrialPeriod($result->trialPeriod);
+
+        } catch (\Braintree_Exception_NotFound $e) {
+            return null;
+        }
+
     }
 }
