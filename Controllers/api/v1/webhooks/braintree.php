@@ -30,35 +30,13 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
    */
   public function post($pages){
 
-    Payments\Factory::build('braintree');
-   
+      Payments\Factory::build('braintree');
 
-    $notification = Braintree_WebhookNotification::parse($_POST['bt_signature'], $_POST['bt_payload']);
-    error_log(print_r($notification, true));
+      $webhooks = new Payments\Braintree\Webhooks();
+      $webhooks->setSignature($_POST['bt_signature'])
+        ->setPayload($_POST['bt_payload'])
+        ->run();
 
-    switch($notification->kind){
-      case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_APPROVED:
-        //send a notification to the user letting them know we just approved them
-        $message = "Congrats, you are now a Minds Merchant";
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-              'to'=>[$notification->merchantAccount->id],
-              'from' => 100000000000000519,
-              'notification_view' => 'custom_message',
-              'params' => array('message'=>$message),
-              'message'=>$message
-              ));
-        break;
-      case Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_DECLINED:
-        $reason = $notification->message;  
-        $message = "Sorry, we could not approve your Merchant Account: $reason";
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', array(
-              'to'=>[$notification->merchantAccount->id],
-              'from' => 100000000000000519,
-              'notification_view' => 'custom_message',
-              'params' => array('message'=>$message),
-              'message'=>$message
-              ));
-        break;
     }
 
 
