@@ -11,6 +11,7 @@ use Minds\Core;
 use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Payments;
 
 class wallet implements Interfaces\Api
 {
@@ -60,7 +61,16 @@ class wallet implements Interfaces\Api
                     $response['load-next'] = (string) end($entities)->guid;
                 }
                 break;
+            case "subscription":
+                Factory::isLoggedIn();
+                $db = new Core\Data\Call("user_index_to_guid");
+                $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
 
+                $braintree = Payments\Factory::build("Braintree");
+                $subscription = $braintree->getSubscription($subscriptionIds[0]);
+                if($subscription)
+                  $response['subscription'] = $subscription->export();
+                break;
         }
 
         return Factory::response($response);
@@ -126,6 +136,62 @@ class wallet implements Interfaces\Api
                         }
 
                     break;
+                }
+                break;
+            case "subscription":
+                $payment_service = Core\Payments\Factory::build('Braintree');
+                $db = new Core\Data\Call("user_index_to_guid");
+                try {
+
+                    $customer = $payment_service->createCustomer(
+                        (new Payments\Customer)
+                        ->setId(Core\Session::getLoggedInUser()->guid)
+                        ->setEmail(Core\Session::getLoggedInUser()->getEmail())
+                    );
+
+                    $payment_method = $payment_service->createPaymentMethod(
+                        (new Payments\PaymentMethod)
+                        ->setCustomer($customer)
+                        ->setPaymentMethodNonce($_POST['nonce'])
+                    );
+
+                    $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+                    if($subscriptionIds){
+                        $subscription = $payment_service->updateSubscription(
+                            (new Payments\Subscriptions\Subscription)
+                            ->setId($subscriptionIds[0])
+                            ->setPaymentMethod($payment_method)
+                            ->setPlanId(Core\Config::_()->payments['points_plan_id'])
+                            ->setAddOn([
+                                'inheritedFromId' => 'points',
+                                'quantity' => $_POST['points']
+                            ])
+                        );
+                    } else {
+                        $subscription = $payment_service->createSubscription(
+                            (new Payments\Subscriptions\Subscription)
+                            ->setPaymentMethod($payment_method)
+                            ->setPlanId(Core\Config::_()->payments['points_plan_id'])
+                            ->setAddOn([
+                                'inheritedFromId' => 'points',
+                                'quantity' => $_POST['points']
+                            ])
+                        );
+                    }
+
+                    $subscriptionIds = $db->insert(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [$subscription->getId()]);
+
+                    return Factory::response([
+                        'subscriptionId' => $subscription->getId()
+                    ]);
+
+                } catch (\Exception $e) {
+                  echo "<pre>";
+                  var_dump($e); exit;
+                    return Factory::response([
+                      'status' => 'error',
+                      'message' => $e->getMessage()
+                    ]);
                 }
                 break;
             case "withdraw":

@@ -13,7 +13,7 @@ use Minds\Core\Payments\Sale;
 use Minds\Core\Payments\Merchant;
 use Minds\Core\Payments\Customer;
 use Minds\Core\Payments\PaymentMethod;
-use Minds\Core\Payments\Subscription;
+use Minds\Core\Payments\Subscriptions\Subscription;
 use Minds\Entities;
 use Braintree_ClientToken;
 use Braintree_Configuration;
@@ -335,7 +335,10 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
-            'planId' => $subscription->getPlanId()
+            'planId' => $subscription->getPlanId(),
+            'addOns' => [
+                'add' => $subscription->getAddOns()
+            ]
         ]);
 
         if ($result->success) {
@@ -355,17 +358,52 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
             $result = Braintree_Subscription::find($subscription_id);
 
+            $addOns = [];
+            foreach($result->addOns as $addOn){
+                $addOns[] = [
+                  'id' => $addOn->id,
+                  'quantity' => $addOn->quantity,
+                  'amount' => $addOn->amount
+                ];
+            }
+
             return (new Subscription)
-            ->setBalance($result->balance)
-            ->setCreatedAt($result->createdAt)
-            ->setNextBillingPeriodAmount($result->nextBillingPeriodAmount)
-            ->setNextBillingDate($result->nextBillingDate)
-            ->setPlanId($result->planId)
-            ->setTrialPeriod($result->trialPeriod);
+              ->setBalance($result->balance)
+              ->setCreatedAt($result->createdAt)
+              ->setNextBillingPeriodAmount($result->nextBillingPeriodAmount)
+              ->setNextBillingDate($result->nextBillingDate)
+              ->setPlanId($result->planId)
+              ->setTrialPeriod($result->trialPeriod)
+              ->setAddOns($addOns);
 
         } catch (\Braintree_Exception_NotFound $e) {
             return null;
         }
 
     }
+
+    public function updateSubscription(Subscription $subscription)
+    {
+
+        $result = Braintree_Subscription::update($subscription->getId(), [
+          //  'id' => $subscription->getId(),
+            'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
+            'planId' => $subscription->getPlanId(),
+            'addOns' => [
+                'update' => $subscription->getAddOns()
+            ]
+        ]);
+
+        if ($result->success) {
+            $subscription->setId($result->subscription->id);
+            return $subscription;
+        } else {
+          echo "<pre>";
+          var_dump($result);exit;
+            $errors = $result->errors->deepAll();
+            throw new \Exception($errors[0]->message);
+        }
+
+    }
+
 }

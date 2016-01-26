@@ -5,33 +5,34 @@
 namespace Minds\Core\Wallet;
 
 use Minds\Core\Payments\Subscriptions;
+use Minds\Helpers\Wallet as WalletHelper;
 
 class PointsSubscription implements Subscriptions\HookInterface
 {
 
-    public function onCharged()
+    public function onCharged($subscription)
+    {
+        WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+    }
+
+    public function onActive($subscription)
     {
 
     }
 
-    public function onActive()
+    public function onExpired($subscription)
     {
 
     }
 
-    public function onExpired()
+    public function onOverdue($subscription)
     {
 
     }
 
-    public function onOverdue()
+    public function onCanceled($subscription)
     {
 
-    }
-
-    public function onCanceled()
-    {
-      
     }
 
 }

@@ -16,6 +16,7 @@ class Subscription
     private $next_billing_date;
     private $plan_id;
     private $trial_period;
+    private $addOns;
 
     public function __construct()
     {
@@ -117,6 +118,23 @@ class Subscription
         return $this;
     }
 
+    public function getAddOns()
+    {
+        return $this->addOns ?: [];
+    }
+
+    public function setAddOns($addOns)
+    {
+        $this->addOns = $addOns;
+        return $this;
+    }
+
+    public function setAddOn($addOn)
+    {
+        $this->addOns[] = $addOn;
+        return $this;
+    }
+
     public function getExportableValues() {
         return [
             'balance',
@@ -125,6 +143,7 @@ class Subscription
             'next_billing_date',
             'plan_id',
             'trial_period',
+            'addOns'
         ];
     }
 
@@ -138,7 +157,7 @@ class Subscription
             }
         }
 
-        $export = \Minds\Helpers\Export::dateTimeToTimestamp($export);
+        //$export = \Minds\Helpers\Export::dateTimeToTimestamp($export);
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', ['entity' => $this], []));
         $export = \Minds\Helpers\Export::sanitize($export);
         return $export;

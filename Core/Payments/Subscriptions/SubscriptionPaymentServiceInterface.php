@@ -6,7 +6,7 @@ namespace Minds\Core\Payments\Subscriptions;
 
 use Minds\Core\Payments\Customer;
 use Minds\Core\Payments\PaymentMethod;
-use Minds\Core\Payments\Subscription;
+use Minds\Core\Payments\Subscriptions\Subscription;
 
 interface SubscriptionPaymentServiceInterface
 {
