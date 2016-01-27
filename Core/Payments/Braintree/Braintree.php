@@ -376,6 +376,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
             return (new Subscription)
               ->setBalance($result->balance)
+              ->setPrice($result->price)
               ->setCreatedAt($result->createdAt)
               ->setNextBillingPeriodAmount($result->nextBillingPeriodAmount)
               ->setNextBillingDate($result->nextBillingDate)
@@ -391,7 +392,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     public function cancelSubscription(Subscription $subscription)
     {
-        $result = Braintree_Subscription::find($subscription->getId());
+        $result = Braintree_Subscription::cancel($subscription->getId());
         return $result;
     }
 
@@ -402,6 +403,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
           //  'id' => $subscription->getId(),
             'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
             'planId' => $subscription->getPlanId(),
+            'price' => $subscription->getPrice(),
             'addOns' => [
                 'update' => $subscription->getAddOns()
             ]

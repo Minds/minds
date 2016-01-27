@@ -150,6 +150,7 @@ class Subscription
     public function getExportableValues() {
         return [
             'balance',
+            'price',
             'created_at',
             'next_billing_period_amount',
             'next_billing_date',

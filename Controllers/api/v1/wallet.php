@@ -181,26 +181,24 @@ class wallet implements Interfaces\Api
                         ->setCustomer($customer)
                         ->setPaymentMethodNonce($_POST['nonce'])
                     );
-
+                    
                     $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
                     if($subscriptionIds){
-                        $subscription = $payment_service->updateSubscription(
+                        $payment_service->cancelSubscription(
                             (new Payments\Subscriptions\Subscription)
                             ->setId($subscriptionIds[0])
-                            ->setPaymentMethod($payment_method)
-                            ->setPlanId(Core\Config::_()->payments['points_plan_id'])
-                            ->setPrice($usd)
-                        );
-                    } else {
-                        $subscription = $payment_service->createSubscription(
-                            (new Payments\Subscriptions\Subscription)
-                            ->setPaymentMethod($payment_method)
-                            ->setPlanId(Core\Config::_()->payments['points_plan_id'])
-                            ->setPrice($usd)
                         );
                     }
+                    
+                    $subscription = $payment_service->createSubscription(
+                        (new Payments\Subscriptions\Subscription)
+                        ->setPaymentMethod($payment_method)
+                        ->setPlanId(Core\Config::_()->payments['points_plan_id'])
+                        ->setPrice($usd)
+                    );
 
-                    $subscriptionIds = $db->insert(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [$subscription->getId()]);
+                    $db->insert(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [$subscription->getId()]);
+                    $db->insert("subscription:" . $subscription->getId(), [Core\Session::getLoggedinUser()->guid]);
 
                     return Factory::response([
                         'subscriptionId' => $subscription->getId()
@@ -233,13 +231,14 @@ class wallet implements Interfaces\Api
               $payment_service = Core\Payments\Factory::build('Braintree');
               $db = new Core\Data\Call("user_index_to_guid");
               $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+
               $result = $payment_service->cancelSubscription(
                   (new Payments\Subscriptions\Subscription)
                   ->setId($subscriptionIds[0])
               );
-              if($result->status == "Canceled"){
+              //if($result->status == "Canceled"){
                   $db->removeAttributes(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [0]);
-              }
+              //}
               break;
         }
         return Factory::response(array());

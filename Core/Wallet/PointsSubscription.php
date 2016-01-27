@@ -4,16 +4,27 @@
  */
 namespace Minds\Core\Wallet;
 
+use Minds\Core;
 use Minds\Core\Payments\HookInterface;
 use Minds\Helpers\Wallet as WalletHelper;
+use Minds\Entities;
 
 class PointsSubscription implements HookInterface
 {
 
+    private $rate = 0.01;
+
     public function onCharged($subscription)
     {
+        error_log("[webhook]:: " .  print_r($subscription, true));
+        $db = new Core\Data\Call('user_index_to_guid');
+
+        //find the customer
+        $user_guids = $db->getRow("subscription:" . $subscription->getId());
+        $user = Entities\Factory::build($user_guids[0]);
+
         error_log("[webhook]:: got onCharge");
-        WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+        WalletHelper::createTransaction($user->guid, $subscription->getPrice() / $this->rate, null, "purchase (recurring)");
     }
 
     public function onActive($subscription)
