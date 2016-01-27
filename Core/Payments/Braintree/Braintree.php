@@ -67,20 +67,26 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
    */
   public function setSale(Sale $sale)
   {
-      $result = Braintree_Transaction::sale([
+      $opts = [
         'amount' => $sale->getAmount(),
         'paymentMethodNonce' => $sale->getNonce(),
-        'serviceFeeAmount' => $sale->getFee(),
-        'merchantAccountId' => $sale->getMerchant()->guid,
         'customer' => [
           'firstName' => $sale->getCustomerId()
         ],
         'orderId' => $sale->getOrderId(),
         'options' => [
           //'holdInEscrow' => true,
-          'submitForSettlement' => false //let the seller approve or deny
+          'submitForSettlement' => $sale->getSettle() //let the seller approve or deny
         ]
-      ]);
+      ];
+      if($sale->getFee()){
+        $opts['serviceFeeAmount'] = $sale->getFee();
+      }
+      if($sale->getMerchant()){
+        $opts['merchantAccountId'] = $sale->getMerchant()->guid;
+      }
+
+      $result = Braintree_Transaction::sale($opts);
 
       if ($result->success) {
           return $result->transaction->id;
@@ -398,8 +404,6 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             $subscription->setId($result->subscription->id);
             return $subscription;
         } else {
-          echo "<pre>";
-          var_dump($result);exit;
             $errors = $result->errors->deepAll();
             throw new \Exception($errors[0]->message);
         }

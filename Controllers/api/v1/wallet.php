@@ -138,6 +138,27 @@ class wallet implements Interfaces\Api
                     break;
                 }
                 break;
+            case "purchase-once":
+                $amount = $_POST['amount'];
+                $points = $_POST['points'];
+                $usd = $this->ex_rate * $points;
+
+                $sale = (new Payments\Sale())
+                  ->setAmount($usd)
+                  ->setCustomerId(Core\Session::getLoggedInUser()->guid)
+                  ->setSettle(true)
+                  ->setFee(0)
+                  ->setNonce($_POST['nonce']);
+
+                try {
+                    $result = Payments\Factory::build('braintree')->setSale($sale);
+                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                    Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
+                } catch (\Exception $e) {
+                    $response['status'] = "error";
+                    $response['message'] = $e->getMessage();
+                }
+                break;
             case "subscription":
                 $payment_service = Core\Payments\Factory::build('Braintree');
                 $db = new Core\Data\Call("user_index_to_guid");
@@ -163,7 +184,7 @@ class wallet implements Interfaces\Api
                             ->setPaymentMethod($payment_method)
                             ->setPlanId(Core\Config::_()->payments['points_plan_id'])
                             ->setAddOn([
-                                'inheritedFromId' => 'points',
+                                'existingId' => 'points',
                                 'quantity' => $_POST['points']
                             ])
                         );
@@ -186,8 +207,6 @@ class wallet implements Interfaces\Api
                     ]);
 
                 } catch (\Exception $e) {
-                  echo "<pre>";
-                  var_dump($e); exit;
                     return Factory::response([
                       'status' => 'error',
                       'message' => $e->getMessage()
