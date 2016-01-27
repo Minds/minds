@@ -160,6 +160,9 @@ class wallet implements Interfaces\Api
                 }
                 break;
             case "subscription":
+                $points = $_POST['points'];
+                $usd = $this->ex_rate * $points;
+
                 $payment_service = Core\Payments\Factory::build('Braintree');
                 $db = new Core\Data\Call("user_index_to_guid");
                 try {
@@ -183,20 +186,14 @@ class wallet implements Interfaces\Api
                             ->setId($subscriptionIds[0])
                             ->setPaymentMethod($payment_method)
                             ->setPlanId(Core\Config::_()->payments['points_plan_id'])
-                            ->setAddOn([
-                                'existingId' => 'points',
-                                'quantity' => $_POST['points']
-                            ])
+                            ->setPrice($usd)
                         );
                     } else {
                         $subscription = $payment_service->createSubscription(
                             (new Payments\Subscriptions\Subscription)
                             ->setPaymentMethod($payment_method)
                             ->setPlanId(Core\Config::_()->payments['points_plan_id'])
-                            ->setAddOn([
-                                'inheritedFromId' => 'points',
-                                'quantity' => $_POST['points']
-                            ])
+                            ->setPrice($usd)
                         );
                     }
 
