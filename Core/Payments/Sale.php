@@ -17,6 +17,7 @@ class Sale
     private $merchant;
     private $customerId;
     private $nonce;
+    private $settle = false;
 
     public function __construct()
     {
@@ -86,7 +87,7 @@ class Sale
 
     public function getFee()
     {
-        if (!$this->fee) {
+        if ($this->fee === null) {
             $this->fee = $this->amount * 0.05 + 0.30;
         }
         return $this->fee;
@@ -134,6 +135,17 @@ class Sale
     public function getCustomerId()
     {
         return $this->customerId;
+    }
+
+    public function setSettle($settle)
+    {
+        $this->settle  = $settle;
+        return $this;
+    }
+
+    public function getSettle()
+    {
+        return $this->settle;
     }
 
   /**

@@ -56,13 +56,28 @@ class braintree implements Interfaces\Api
 
             try {
                 $result = Payments\Factory::build('braintree')->setSale($sale);
-                var_dump($result);
-                exit;
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
             }
 
+            break;
+          case "charge-master":
+            $amount = $_POST['amount'];
+
+            $sale = (new Payments\Sale())
+              ->setAmount($amount)
+              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
+              ->setSettle(true)
+              ->setFee(0)
+              ->setNonce($_POST['nonce']);
+
+            try {
+                $result = Payments\Factory::build('braintree')->setSale($sale);
+            } catch (\Exception $e) {
+                $response['status'] = "error";
+                $response['message'] = $e->getMessage();
+            }
             break;
         }
 
