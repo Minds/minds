@@ -342,6 +342,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         $result = Braintree_Subscription::create([
             'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
             'planId' => $subscription->getPlanId(),
+            'price' => $subscription->getPrice(),
             'addOns' => [
                 'add' => $subscription->getAddOns()
             ]

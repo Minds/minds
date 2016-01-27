@@ -11,6 +11,7 @@ class Subscription
     private $id;
 
     private $balance;
+    private $price;
     private $created_at;
     private $next_billing_period_amount;
     private $next_billing_date;
@@ -55,6 +56,17 @@ class Subscription
     {
         $this->balance = $balance;
 
+        return $this;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
         return $this;
     }
 
