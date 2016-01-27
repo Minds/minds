@@ -36,7 +36,8 @@ class Webhooks
         Braintree_WebhookNotification::SUBSCRIPTION_WENT_ACTIVE => 'subscriptionActive',
         Braintree_WebhookNotification::SUBSCRIPTION_EXPIRED => 'subscriptionExpired',
         Braintree_WebhookNotification::SUBSCRIPTION_WENT_PAST_DUE => 'subscriptionOverdue',
-        Braintree_WebhookNotification::SUBSCRIPTION_CANCELED => 'subscriptionCanceled'
+        Braintree_WebhookNotification::SUBSCRIPTION_CANCELED => 'subscriptionCanceled',
+        Braintree_WebhookNotification::CHECK => 'check'
     ];
     protected $hooks;
 
@@ -170,6 +171,14 @@ class Webhooks
         $subscription = (new Subscription())
           ->setId($this->notification->subscription->id);
         $this->hooks->onCanceled($subscription);
+    }
+
+    /**
+     * @return void
+     */
+    protected function check()
+    {
+        error_log("[webook]:: check is OK!");
     }
 
 }
