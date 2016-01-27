@@ -388,6 +388,12 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     }
 
+    public function cancelSubscription(Subscription $subscription)
+    {
+        $result = Braintree_Subscription::find($subscription->getId());
+        return $result;
+    }
+
     public function updateSubscription(Subscription $subscription)
     {
 
