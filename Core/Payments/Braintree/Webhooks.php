@@ -129,7 +129,9 @@ class Webhooks
     protected function subscriptionCharged()
     {
         $subscription = (new Subscription())
-          ->setId($this->notification->subscription->id);
+            ->setId($this->notification->subscription->id)
+            ->setBalance($this->notification->subscription->balance)
+            ->setPrice($this->notification->subscription->price);
         $this->hooks->onCharged($subscription);
     }
 
@@ -139,7 +141,9 @@ class Webhooks
     protected function subscriptionActive()
     {
         $subscription = (new Subscription())
-          ->setId($this->notification->subscription->id);
+            ->setId($this->notification->subscription->id)
+            ->setBalance($this->notification->subscription->balance)
+            ->setPrice($this->notification->subscription->price);
         $this->hooks->onActive($subscription);
     }
 
