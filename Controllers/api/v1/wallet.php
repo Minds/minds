@@ -65,6 +65,9 @@ class wallet implements Interfaces\Api
                 Factory::isLoggedIn();
                 $db = new Core\Data\Call("user_index_to_guid");
                 $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+                if(!isset($subscriptionIds[0])){
+                    return Factory::response([]);
+                }
 
                 $braintree = Payments\Factory::build("Braintree");
                 $subscription = $braintree->getSubscription($subscriptionIds[0]);
@@ -225,6 +228,20 @@ class wallet implements Interfaces\Api
 
     public function delete($pages)
     {
+        switch($pages[0]){
+          case "subscription":
+              $payment_service = Core\Payments\Factory::build('Braintree');
+              $db = new Core\Data\Call("user_index_to_guid");
+              $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+              $result = $payment_service->cancelSubscription(
+                  (new Payments\Subscriptions\Subscription)
+                  ->setId($subscriptionIds[0])
+              );
+              if($result->status == "Canceled"){
+                  $db->removeAttributes(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [0]);
+              }
+              break;
+        }
         return Factory::response(array());
     }
 }
