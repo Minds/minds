@@ -30,9 +30,14 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
    */
   public function post($pages){
 
+        error_log("[webhooks]:: hit first entrace point");
+
       Payments\Factory::build('braintree');
 
-      $webhooks = new Payments\Braintree\Webhooks();
+      $hooks = new Payments\Hooks();
+      $hooks->loadDefaults();
+
+      $webhooks = new Payments\Braintree\Webhooks($hooks);
       $webhooks->setSignature($_POST['bt_signature'])
         ->setPayload($_POST['bt_payload'])
         ->run();

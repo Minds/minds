@@ -26,6 +26,7 @@ class Hooks
 
     public function __call($function, $vars = [])
     {
+        error_log('[webhook]:: from __call function');
         foreach($this->hooks as $hook){
             if(method_exists($hook, $function)){
                 $hook->$function($vars);

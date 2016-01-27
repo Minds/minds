@@ -32,12 +32,12 @@ class Webhooks
     protected $aliases = [
         Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_APPROVED => 'subMerchantApproved',
         Braintree_WebhookNotification::SUB_MERCHANT_ACCOUNT_DECLINED => 'subMerchantDeclined',
-        Braintree_WebhookNotification::SUBSCRIPTION_CHARGED_SUCCESSFULLY => 'subscriptionCharged',
-        Braintree_WebhookNotification::SUBSCRIPTION_WENT_ACTIVE => 'subscriptionActive',
+        'subscription_charged_successfully' => 'subscriptionCharged',
+        'subscription_went_active' => 'subscriptionActive',
         Braintree_WebhookNotification::SUBSCRIPTION_EXPIRED => 'subscriptionExpired',
         Braintree_WebhookNotification::SUBSCRIPTION_WENT_PAST_DUE => 'subscriptionOverdue',
         Braintree_WebhookNotification::SUBSCRIPTION_CANCELED => 'subscriptionCanceled',
-        Braintree_WebhookNotification::CHECK => 'check'
+        'check' => 'check'
     ];
     protected $hooks;
 
