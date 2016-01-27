@@ -326,7 +326,7 @@ class Network implements BoostHandlerInterface
             $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler");
             $this->tries++;
             if($this->tries > 2)
-                return $this->getBoosts($limit);
+                return $this->getBoosts($limit, $increment);
         }
         return $return;
     }
