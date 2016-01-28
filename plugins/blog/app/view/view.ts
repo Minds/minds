@@ -49,6 +49,8 @@ export class BlogView {
   visible : boolean = false;
   index : number = 0;
 
+  scroll_listener;
+
   constructor(_element : ElementRef,  public scroll: ScrollService, public title: MindsTitle){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
@@ -57,7 +59,7 @@ export class BlogView {
 
   isVisible(){
     //listens every 0.6 seconds
-    this.scroll.listen((e) => {
+    this.scroll_listener = this.scroll.listen((e) => {
       var bounds = this.element.getBoundingClientRect();
       if(bounds.top < this.scroll.view.clientHeight && bounds.top + bounds.height > this.scroll.view.clientHeight){
         var url = this.minds.site_url + 'blog/view/' + this.blog.guid;
@@ -78,6 +80,11 @@ export class BlogView {
     if(this.index == 0){
       this.visible = true;
     }
+  }
+
+  ngOnDestroy(){
+    if(this.scroll_listener)
+      this.scroll.unListen(this.scroll_listener);
   }
 
 }
