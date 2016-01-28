@@ -7,12 +7,13 @@
  */
 namespace Minds\Controllers\api\v1;
 
+use Minds\Components\Controller;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class block implements Interfaces\Api, Interfaces\ApiIgnorePam
+class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     /**
      * Return a list of your blocked users
@@ -30,7 +31,7 @@ class block implements Interfaces\Api, Interfaces\ApiIgnorePam
           $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
           $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
 
-          $block = Core\Security\ACL\Block::_();
+          $block = $this->di->get('Security\ACL\Block');
           $guids = $block->getBlockList(Core\Session::getLoggedinUser(), $limit, $offset);
 
           if ($guids) {
@@ -39,7 +40,7 @@ class block implements Interfaces\Api, Interfaces\ApiIgnorePam
           }
           break;
         case is_numeric($pages[0]):
-          $block = Core\Security\ACL\Block::_();
+          $block = $this->di->get('Security\ACL\Block');
           $response['blocked'] = $block->isBlocked($pages[0]);
           break;
       }
@@ -62,7 +63,7 @@ class block implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function put($pages)
     {
-        $block = Core\Security\ACL\Block::_();
+        $block = $this->di->get('Security\ACL\Block');
         $block->block($pages[0]);
 
         return Factory::response(array());
@@ -73,7 +74,7 @@ class block implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function delete($pages)
     {
-        $block = Core\Security\ACL\Block::_();
+        $block = $this->di->get('Security\ACL\Block');
         $block->unBlock($pages[0]);
 
         return Factory::response(array());

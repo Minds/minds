@@ -8,6 +8,7 @@
  */
 namespace Minds\Controllers\api\v1\admin;
 
+use Minds\Components\Controller;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Helpers;
@@ -15,7 +16,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
+class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     /**
      *
@@ -35,7 +36,7 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ];
             }
         } else {
-            $pages = Di::_()->get('PagesManager')->getPages();
+            $pages = $this->di->get('PagesManager')->getPages();
             $response = [
                 'pages' => Factory::exportable($pages)
             ];
@@ -77,8 +78,8 @@ class pages implements Interfaces\Api, Interfaces\ApiIgnorePam
               if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                   $resized = get_resized_image_from_uploaded_file('file', 2000);
                   $path = $pages[0];
-                  $filepath = Core\Config::_()->dataroot . "page_banners/" . $page->getPath() . ".jpg";
-                  @mkdir(Core\Config::_()->dataroot . "page_banners", 0777, true);
+                  $filepath = $this->config->dataroot . "page_banners/" . $page->getPath() . ".jpg";
+                  @mkdir($this->config->dataroot . "page_banners", 0777, true);
 
                   $f = fopen($filepath, "w+b");
                   fwrite($f, $resized);
