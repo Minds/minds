@@ -17,9 +17,7 @@ class Network implements BoostHandlerInterface
     protected $mongo;
     protected $db;
 
-    public function __construct($options = array(),
-      Data\Interfaces\ClientInterface $mongo = null,
-      Data\Call $db = null)
+    public function __construct(Data\Interfaces\ClientInterface $mongo = null, Data\Call $db = null)
     {
         if ($mongo) {
             $this->mongo = $mongo;
