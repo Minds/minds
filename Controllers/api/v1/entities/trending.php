@@ -81,6 +81,7 @@ class trending implements Interfaces\Api
         $db = new Core\Data\Call('entities_by_time');
         $guids = $db->getRow("trending:$key", array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
         if (!$guids) {
+            exit;
             break;
         }
         ksort($guids);
