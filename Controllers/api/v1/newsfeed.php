@@ -99,7 +99,7 @@ class newsfeed implements Interfaces\Api
                         $boost->boosted = true;
                         array_unshift($activity, $boost);
                     }
-                    if(count($response['boosts']) < 5){
+                    if(count($blogs) < 5){
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
                     } else {
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
