@@ -91,6 +91,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
           ->setBid($_POST['bid'])
           ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
+          ->postToFacebook($_POST['postToFacebook'])
+          ->setScheduledTs($_POST['scheduledTs'])
           ->setState('created');
           //->save();
 
@@ -182,6 +184,16 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             'notification_view' => 'boost_peer_accepted',
             'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
         ]);
+
+        //Now forward through to social networks if selected
+        if($pro->shouldPostToFacebook()){
+            $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
+            $facebook->getApiCredentials();
+            if($pro->getScheduledTs() > time()){
+                $facebook->schedule($pro->getScheduledTs());
+            }
+            $facebook->post($embeded);
+        }
 
         $pro->accept($pages[0]);
         $response['status'] = 'success';
