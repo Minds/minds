@@ -91,6 +91,7 @@ class newsfeed implements Interfaces\Api
                     foreach($blogs as $blog){
                         $boost = new Entities\Activity();
                         $boost->guid = $blog->guid;
+                        $boost->owner_guid = $blog->owner_guid;
                         $boost->setTitle($blog->title)
                               ->setBlurb(strip_tags($blog->description))
                               ->setURL($blog->getURL())
