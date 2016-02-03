@@ -180,7 +180,8 @@ class User extends \ElggUser
             'dob',
             'gender',
             'city',
-            'merchant'
+            'merchant',
+            'boostProPlus'
         ));
     }
 }

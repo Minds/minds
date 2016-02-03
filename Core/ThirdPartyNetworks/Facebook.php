@@ -116,7 +116,7 @@ class Facebook implements NetworkInterface
 
     public function getPage()
     {
-        if($this->credentials['uuid'] == 'me'){
+        if($this->credentials['uuid'] == 'me' || !$this->credentials['uuid']){
             return false;
         }
         $response = $this->fb->get('/' . $this->credentials['uuid'], $this->credentials['access_token']);
