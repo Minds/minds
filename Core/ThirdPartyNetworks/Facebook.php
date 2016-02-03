@@ -44,6 +44,16 @@ class Facebook implements NetworkInterface
     }
 
     /**
+     * Drop facebook api credentials
+     * @return $this
+     */
+    public function dropApiCredentials()
+    {
+        $this->db->removeAttributes(Core\Session::getLoggedInUser()->guid . ":thirdpartynetworks:credentials", ['facebook:uuid', 'facebook:access_token']);
+        return $this;
+    }
+
+    /**
      * Return api credentials
      * @return array
      */
@@ -71,9 +81,14 @@ class Facebook implements NetworkInterface
     {
         $this->data = array_merge($this->data, [
           'message' => $entity->message,
-          'link' => $entity->getUrl()
+          'link' => $entity->getUrl(),
+          'name' => $entity->title,
+          'description' => "blurb",
+          'picture' => $entity->thumbnail_src
         ]);
-        $this->fb->post('/' + $this->credentials['uuid'] + '/feed', $this->data, $this->credentials['access_token']);
+
+        $this->fb->post("/{$this->credentials['uuid']}/feed", $this->data, $this->credentials['access_token']);
+        exit;
     }
 
     /**
@@ -83,7 +98,8 @@ class Facebook implements NetworkInterface
      */
     public function schedule($timestamp)
     {
-        $this->data['scheduled_publish_time'] = $this->scheduledTs;
+        $this->data['scheduled_publish_time'] = $timestamp;
+        $this->data['published'] = false;
         return $this;
     }
 
@@ -96,6 +112,16 @@ class Facebook implements NetworkInterface
           $accounts[] = $account->asArray();
         }
         return $accounts;
+    }
+
+    public function getPage()
+    {
+        if($this->credentials['uuid'] == 'me'){
+            return false;
+        }
+        $response = $this->fb->get('/' . $this->credentials['uuid'], $this->credentials['access_token']);
+        $user = $response->getGraphUser();
+        return $user->asArray();
     }
 
 }

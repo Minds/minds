@@ -186,11 +186,11 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         ]);
 
         //Now forward through to social networks if selected
-        if($pro->shouldPostToFacebook()){
+        if($boost->shouldPostToFacebook()){
             $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
             $facebook->getApiCredentials();
-            if($pro->getScheduledTs() > time()){
-                $facebook->schedule($pro->getScheduledTs());
+            if($boost->getScheduledTs() > time()){
+                $facebook->schedule($boost->getScheduledTs());
             }
             $facebook->post($embeded);
         }

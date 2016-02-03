@@ -39,7 +39,8 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
               $helper = $facebook->getFb()->getRedirectLoginHelper();
               $url = $helper->getLoginUrl(Core\Config::_()->site_url . 'api/v1/thirdpartynetworks/facebook/callback', [
                 'manage_pages',
-                'publish_pages'
+                'publish_pages',
+                'publish_actions'
               ]);
               forward($url);
               exit;
@@ -51,11 +52,17 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'uuid' => 'me',
                 'access_token' => (string) $accessToken
               ]);
+              echo "<script>window.opener.onSuccessCallback(); window.close();</script>";
+              exit;
               break;
           case "accounts":
               $facebook->getApiCredentials();
               $accounts = $facebook->getAccounts();
               $response['accounts'] = $accounts;
+              break;
+          case "page":
+              $facebook->getApiCredentials();
+              $response['page'] = $facebook->getPage();
               break;
       }
 
@@ -69,7 +76,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
         switch($pages[0]){
             case "select-page":
                 $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
-                $accessToken = $_POST['access_token'];
+                $accessToken = $_POST['accessToken'];
                 $id = $_POST['id'];
                 $name = $_POST['name'];
                 $facebook->setApiCredentials([
@@ -89,6 +96,8 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function delete($pages)
     {
+        $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
+        $facebook->dropApiCredentials();
         return Factory::response(array());
     }
 }

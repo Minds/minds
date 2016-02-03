@@ -243,7 +243,7 @@ class Peer implements BoostEntityInterface
         return $this;
     }
 
-    public function getSchedulesTs()
+    public function getScheduledTs()
     {
         return $this->scheduledTs ?: time();
     }
@@ -282,7 +282,9 @@ class Peer implements BoostEntityInterface
           'transactionId' => $this->transactionId,
           'time_created' => $this->time_created,
           'last_updated' => $this->last_updated,
-          'type' => $this->_type
+          'type' => $this->_type,
+          'scheduledTs' => $this->scheduledTs,
+          'postToFacebook' => $this->postToFacebook
         ];
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);
