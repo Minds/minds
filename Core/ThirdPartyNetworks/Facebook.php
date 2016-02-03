@@ -83,12 +83,14 @@ class Facebook implements NetworkInterface
           'message' => $entity->message,
           'link' => $entity->getUrl(),
           'name' => $entity->title,
-          'description' => "blurb",
-          'picture' => $entity->thumbnail_src
+          'description' => "blurb"
         ]);
 
+        if($entity->thumbnail_src){
+            $this->data['picture'] = $entity->thumbnail_src;
+        }
+
         $this->fb->post("/{$this->credentials['uuid']}/feed", $this->data, $this->credentials['access_token']);
-        exit;
     }
 
     /**
