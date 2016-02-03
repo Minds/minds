@@ -160,6 +160,7 @@ class channel implements Interfaces\Api
               $item = new \Minds\Entities\Object\Carousel(isset($_POST['guid']) ? $_POST['guid'] : null);
               $item->access_id = ACCESS_PUBLIC;
               $item->top_offset = $_POST['top'];
+              $item->last_updated = time();
               $item->save();
 
               $response['carousel'] = array(
