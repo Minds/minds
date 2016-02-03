@@ -61,7 +61,7 @@ class blog implements Interfaces\Api
           case "trending":
             //this is temporary until we bring in neo4j sorting
             $db = new Core\Data\Call('entities_by_time');
-            $guids = $db->getRow('trending:month:object:blog', array( 'limit'=> $limit, 'offset'=>$offset, 'reversed' => false ));
+            $guids = $db->getRow('trending:week:object:blog', array( 'limit'=> $limit, 'offset'=>$offset, 'reversed' => false ));
             if (!$guids) {
                 break;
             }
@@ -106,7 +106,7 @@ class blog implements Interfaces\Api
             }
 
             //$guids = array_keys($blogs);
-            $guids = array_values($blogs);    
+            $guids = array_values($blogs);
             $blog = new entities\Blog($guids[0]);
             $response['blog'] = $blog->export();
             $owner = new user($blog->ownerObj);
