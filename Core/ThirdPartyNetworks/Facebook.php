@@ -7,6 +7,7 @@ namespace Minds\Core\ThirdPartyNetworks;
 
 use Minds\Core;
 use Minds\Core\Data;
+use Minds\Entities;
 use Facebook\Facebook as FacebookSDK;
 
 class Facebook implements NetworkInterface
@@ -79,6 +80,11 @@ class Facebook implements NetworkInterface
      */
     public function post($entity)
     {
+
+        if($entity->remind_object){
+            $entity = new Entities\Activity($entity->remind_object);
+        }
+
         $this->data['message'] = $entity->message;
 
         if($entity->perma_url){
