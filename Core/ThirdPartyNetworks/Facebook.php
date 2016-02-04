@@ -85,7 +85,7 @@ class Facebook implements NetworkInterface
             $this->data = array_merge($this->data, [
               'link' => $entity->perma_url,
               'name' => $entity->title,
-              'description' => "blurb",
+              'description' => $entity->blurb,
               'picture' => $entity->thumbnail_src
             ]);
         }
