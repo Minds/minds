@@ -79,18 +79,39 @@ class Facebook implements NetworkInterface
      */
     public function post($entity)
     {
-        $this->data = array_merge($this->data, [
-          'message' => $entity->message,
-          'link' => $entity->getUrl(),
-          'name' => $entity->title,
-          'description' => "blurb"
-        ]);
+        $this->data['message'] = $entity->message;
 
-        if($entity->thumbnail_src){
-            $this->data['picture'] = $entity->thumbnail_src;
+        if($entity->perma_url){
+            $this->data = array_merge($this->data, [
+              'link' => $entity->perma_url,
+              'name' => $entity->title,
+              'description' => "blurb",
+              'picture' => $entity->thumbnail_src
+            ]);
+        }
+
+        //Custom image posts
+        if(($entity->thumbnail_src && !$entity->perma_url) || $entity->custom_type == 'batch'){
+            $this->data['url'] = $entity->thumbnail_src;
+
+            if($entity->custom_type == 'batch'){
+                $this->data['url'] = $entity->custom_data[0]['src'];
+            }
+
+            $this->fb->post("/{$this->credentials['uuid']}/photos", $this->data, $this->credentials['access_token']);
+            return true;
+        }
+
+        //Custom video posts
+        if($entity->custom_type == 'video'){
+            $this->title = $entity->title;
+            $this->data['file_url'] = Core\Config::_()->site_url "/api/v1/archive/{$entity->custom_data['guid']}/play";
+            $this->fb->post("/{$this->credentials['uuid']}/videos", $this->data, $this->credentials['access_token']);
+            return true;
         }
 
         $this->fb->post("/{$this->credentials['uuid']}/feed", $this->data, $this->credentials['access_token']);
+        exit;
     }
 
     /**
