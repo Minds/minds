@@ -71,6 +71,7 @@ class NormalizedEntity
     {
         foreach ($data as $k => $v) {
             if (is_null($v)) {
+                unset($data[$k]);
                 continue;
             }
             if (is_array($v)) {
