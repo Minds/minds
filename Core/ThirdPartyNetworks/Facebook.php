@@ -105,7 +105,7 @@ class Facebook implements NetworkInterface
         //Custom video posts
         if($entity->custom_type == 'video'){
             $this->title = $entity->title;
-            $this->data['file_url'] = Core\Config::_()->site_url "/api/v1/archive/{$entity->custom_data['guid']}/play";
+            $this->data['file_url'] = Core\Config::_()->site_url . "/api/v1/archive/{$entity->custom_data['guid']}/play";
             $this->fb->post("/{$this->credentials['uuid']}/videos", $this->data, $this->credentials['access_token']);
             return true;
         }
