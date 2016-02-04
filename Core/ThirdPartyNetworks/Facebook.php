@@ -75,7 +75,7 @@ class Facebook implements NetworkInterface
     /**
      * Create a post
      * @param object $entity
-     * @return $this
+     * @return boolean
      */
     public function post($entity)
     {
@@ -111,7 +111,7 @@ class Facebook implements NetworkInterface
         }
 
         $this->fb->post("/{$this->credentials['uuid']}/feed", $this->data, $this->credentials['access_token']);
-        exit;
+        return true;
     }
 
     /**
