@@ -20,7 +20,7 @@ class FactorySpec extends ObjectBehavior
 
     public function it_should_build_a_service()
     {
-        $this::build('braintree')->shouldImplement('Minds\Core\Payments\PaymentServiceInterface');
+        $this::build('braintree', ['gateway'=>'merchants'])->shouldImplement('Minds\Core\Payments\PaymentServiceInterface');
     }
 
     public function it_should_throw_an_exception_if_service_doesnt_exist()

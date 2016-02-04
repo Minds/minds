@@ -29,6 +29,8 @@ use Braintree_Test_MerchantAccount;
 
 class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceInterface
 {
+
+    private $gateway = 'default';
     private $config = array();
 
     public function __construct($options = array())
@@ -38,12 +40,16 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     private function setConfig($config)
     {
+        if(isset($config['gateway'])){
+            $this->gateway = $config['gateway'];
+        }
+
         $defaults = [
-          'environment' => Core\Config::_()->payments['braintree']['environment'] ?: 'sandbox',
-          'merchant_id' => Core\Config::_()->payments['braintree']['merchant_id'],
-          'master_merchant_id' => Core\Config::_()->payments['braintree']['master_merchant_id'],
-          'public_key' => Core\Config::_()->payments['braintree']['public_key'],
-          'private_key' => Core\Config::_()->payments['braintree']['private_key']
+          'environment' => Core\Config::_()->payments['braintree'][$this->gateway]['environment'] ?: 'sandbox',
+          'merchant_id' => Core\Config::_()->payments['braintree'][$this->gateway]['merchant_id'],
+          'master_merchant_id' => Core\Config::_()->payments['braintree'][$this->gateway]['master_merchant_id'],
+          'public_key' => Core\Config::_()->payments['braintree'][$this->gateway]['public_key'],
+          'private_key' => Core\Config::_()->payments['braintree'][$this->gateway]['private_key']
         ];
         $this->config = array_merge($defaults, $config);
         Braintree_Configuration::environment($this->config['environment']);

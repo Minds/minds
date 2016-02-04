@@ -32,7 +32,9 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         error_log("[webhooks]:: hit first entrace point");
 
-      Payments\Factory::build('braintree');
+      $gateway = isset($pages[0]) ? $pages[0] : 'default';
+
+      Payments\Factory::build('braintree', ['gateway'=>$gateway]);
 
       $hooks = new Payments\Hooks();
       $hooks->loadDefaults();

@@ -69,7 +69,7 @@ class wallet implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $braintree = Payments\Factory::build("Braintree");
+                $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
                 $subscription = $braintree->getSubscription($subscriptionIds[0]);
                 if($subscription)
                   $response['subscription'] = $subscription->export();
@@ -154,7 +154,7 @@ class wallet implements Interfaces\Api
                   ->setNonce($_POST['nonce']);
 
                 try {
-                    $result = Payments\Factory::build('braintree')->setSale($sale);
+                    $result = Payments\Factory::build('braintree', ['gateway'=>'default'])->setSale($sale);
                     Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
                     Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
                 } catch (\Exception $e) {
@@ -166,7 +166,7 @@ class wallet implements Interfaces\Api
                 $points = $_POST['points'];
                 $usd = $this->ex_rate * $points;
 
-                $payment_service = Core\Payments\Factory::build('Braintree');
+                $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
                 $db = new Core\Data\Call("user_index_to_guid");
                 try {
 
@@ -181,7 +181,7 @@ class wallet implements Interfaces\Api
                         ->setCustomer($customer)
                         ->setPaymentMethodNonce($_POST['nonce'])
                     );
-                    
+
                     $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
                     if($subscriptionIds){
                         $payment_service->cancelSubscription(
@@ -189,7 +189,7 @@ class wallet implements Interfaces\Api
                             ->setId($subscriptionIds[0])
                         );
                     }
-                    
+
                     $subscription = $payment_service->createSubscription(
                         (new Payments\Subscriptions\Subscription)
                         ->setPaymentMethod($payment_method)
@@ -228,7 +228,7 @@ class wallet implements Interfaces\Api
     {
         switch($pages[0]){
           case "subscription":
-              $payment_service = Core\Payments\Factory::build('Braintree');
+              $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'merchants']);
               $db = new Core\Data\Call("user_index_to_guid");
               $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
 

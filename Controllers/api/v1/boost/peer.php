@@ -103,7 +103,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setNonce($_POST['nonce']);
 
             try {
-                $transaction_id = Payments\Factory::build('braintree')->setSale($sale);
+                $transaction_id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
             } catch (\Exception $e) {
                 return Factory::response([
                     'status' => 'error',
@@ -151,7 +151,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if ($boost->getType() == "pro") {
             try {
-                Payments\Factory::build('braintree')->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                Payments\Factory::build('braintree', ['gateway'=>'merchants'])->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
                     'status' => 'error',
@@ -200,7 +200,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if ($boost->getType() == "pro") {
             try {
-                Payments\Factory::build('braintree')->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                Payments\Factory::build('braintree', ['gateway'=>'merchants'])->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
             'status' => 'error',
