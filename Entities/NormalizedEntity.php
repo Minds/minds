@@ -48,11 +48,14 @@ class NormalizedEntity
     public function loadFromArray($array)
     {
         foreach ($array as $key => $value) {
-            if (Helpers\Validation::isJson($value)) {
+            if (Helpers\Validation::isJson($value)) { //json_decode should handle this, not sure it's needed
                 $value = json_decode($value, true);
             }
 
-            if (property_exists($this, $key)) {
+            $method = Helpers\Entities::buildSetter($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            } elseif (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
