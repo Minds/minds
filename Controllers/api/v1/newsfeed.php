@@ -92,6 +92,8 @@ class newsfeed implements Interfaces\Api
                         $boost = new Entities\Activity();
                         $boost->guid = $blog->guid;
                         $boost->owner_guid = $blog->owner_guid;
+                        $boost->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
+                        $boost->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
                         $boost->setTitle($blog->title)
                               ->setBlurb(strip_tags($blog->description))
                               ->setURL($blog->getURL())
