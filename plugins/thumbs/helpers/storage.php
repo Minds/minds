@@ -38,11 +38,14 @@ class storage{
         }
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ?: array();
-        $user_guids[] = elgg_get_logged_in_user_guid();
+        $user_guids[] = Core\Session::getLoggedInUserGuid();
         $db->insert($entity->guid, array("thumbs:$direction:user_guids" => json_encode($user_guids)));
 
         //now add to the entity list of thumbed up users
-        $indexes->insert("thumbs:$direction:entity:$entity->guid", array(elgg_get_logged_in_user_guid() => time()));
+        $indexes->insert("thumbs:$direction:entity:$entity->guid", [ Core\Session::getLoggedInUserGuid() => time() ]);
+        if($entity->entity_guid){
+            $indexes->insert("thumbs:$direction:entity:$entity->entity_guid", [ Core\Session::getLoggedInUserGuid() => time() ]);
+        }
 
         //now add to the users list of thumbed up content
         $indexes->insert("thumbs:$direction:user:".elgg_get_logged_in_user_guid(), array($entity->guid => time()));
