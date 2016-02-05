@@ -62,8 +62,6 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 foreach($blogs as $blog){
                     $boostObj = new Entities\Activity();
                     $boostObj->guid = $blog->guid;
-                    $boostObj->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
-                    $boostObj->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
                     $boost = $boostObj->setTitle($blog->title)
                           ->setBlurb(strip_tags($blog->description))
                           ->setURL($blog->getURL())
