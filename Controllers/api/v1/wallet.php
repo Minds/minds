@@ -228,7 +228,7 @@ class wallet implements Interfaces\Api
     {
         switch($pages[0]){
           case "subscription":
-              $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'merchants']);
+              $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
               $db = new Core\Data\Call("user_index_to_guid");
               $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
 
