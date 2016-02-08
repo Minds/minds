@@ -23,17 +23,8 @@ class Network implements BoostHandlerInterface
       Data\Interfaces\ClientInterface $mongo = null,
       Data\Call $db = null)
     {
-        if ($mongo) {
-            $this->mongo = $mongo;
-        } else {
-            $this->mongo = Data\Client::build('MongoDB');
-        }
-
-        if ($db) {
-            $this->db = $db;
-        } else {
-            $this->db = new Data\Call('entities_by_time');
-        }
+        $this->mongo = $mongo ?: Data\Client::build('MongoDB');
+        $this->db = $db ?: new Data\Call('entities_by_time');
     }
 
     /**
@@ -253,6 +244,27 @@ class Network implements BoostHandlerInterface
         ]);
     }
 
+    /**
+     * Excuse the horrible mess here!!
+     * (sorry!)
+     * @return array
+     */
+    private function patchThumbs($boosts)
+    {
+        $keys = [];
+        foreach($boosts as $boost){
+            $keys[] = "thumbs:up:entity:$boost->guid";
+        }
+        $thumbs = $this->db->getRows($keys, ['offset'=> Core\Session::getLoggedInUserGuid()]);
+        foreach($boosts as $k => $boost){
+            $key = "thumbs:up:entity:$boost->guid";
+            if(isset($thumbs[$key])){
+                $boosts[$k]->{'thumbs:up:user_guids'} = array_keys($thumbs[$key]);
+            }
+        }
+        return $boosts;
+    }
+
     public function getBoosts($limit = 2, $increment = true)
     {
         $cacher = Core\Data\cache\factory::build('apcu');
@@ -328,6 +340,7 @@ class Network implements BoostHandlerInterface
             if($this->tries > 2)
                 return $this->getBoosts($limit, $increment);
         }
+        $return = $this->patchThumbs($return);
         return $return;
     }
 }
