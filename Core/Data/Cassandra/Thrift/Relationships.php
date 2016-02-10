@@ -57,6 +57,32 @@ class Relationships
     }
     
     /**
+     * Gets GUIDs for a certain relationship for working GUID
+     * @param  string $rel
+     * @param  array $opts
+     * @return mixed
+     */
+    public function get($rel, array $opts = [])
+    {
+        $opts = array_merge([
+            'inverse' => false
+        ], $opts);
+        
+        if (!$this->guid) {
+            throw new \Exception('Source guid must not be empty');
+        }
+        
+        if (!$rel) {
+            throw new \Exception('Relationship must not be empty');
+        }
+
+        $inverse_keyword = $opts['inverse'] ? ':inverted' : '';
+        
+        // TODO: [emi] should we manually pass $opts ?
+        return $this->db->getRow("{$this->guid}:{$rel}{$inverse_keyword}", $opts);
+    }
+    
+    /**
      * Removes a relationship between working GUID and another GUID
      * @param  string $rel
      * @param  string $guid
@@ -143,5 +169,15 @@ class Relationships
         $inverse_keyword = $inverse ? ':inverted' : '';
         
         return $this->db->countRow("{$this->guid}:{$rel}{$inverse_keyword}");
+    }
+    
+    /**
+     * Readable shortcut for ->count(guid, true)
+     * @param  string $rel
+     * @return integer
+     */
+    public function countInverse($rel)
+    {
+        return $this->count($rel, true);
     }
 }
