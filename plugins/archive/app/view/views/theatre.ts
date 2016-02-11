@@ -10,12 +10,16 @@ import { Material } from '../../../../directives/material';
 
 @Component({
   selector: 'minds-archive-theatre',
-  
+
   inputs: ['_object: object']
 })
 @View({
   template: `
-    <i class="material-icons left" (click)="prev()" [hidden]="!object.album_children_guids || object.album_children_guids.length <= 1">keyboard_arrow_left</i>
+    <i class="material-icons left"
+      (click)="prev()"
+      [hidden]="object.container_guid == object.owner_guid || !object.album_children_guids || object.album_children_guids.length <= 1">
+        keyboard_arrow_left
+    </i>
     <div class="minds-archive-stage" *ngIf="object.subtype == 'image'">
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
@@ -23,7 +27,11 @@ import { Material } from '../../../../directives/material';
       <minds-video [autoplay]="true" [muted]="false" [src]="[{ 'uri': object.src['720.mp4'] }]" >
       </minds-video>
     </div>
-    <i class="material-icons right" (click)="next()" [hidden]="!object.album_children_guids || object.album_children_guids.length <= 1">keyboard_arrow_right</i>
+    <i class="material-icons right"
+      (click)="next()"
+      [hidden]="object.container_guid == object.owner_guid || !object.album_children_guids || object.album_children_guids.length <= 1">
+        keyboard_arrow_right
+    </i>
   `,
   directives: [ CORE_DIRECTIVES, MindsVideo, Material ]
 })
