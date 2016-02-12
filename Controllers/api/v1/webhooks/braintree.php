@@ -34,12 +34,12 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
 
       $gateway = isset($pages[0]) ? $pages[0] : 'default';
 
-      Payments\Factory::build('braintree', ['gateway'=>$gateway]);
+      $bt = Payments\Factory::build('braintree', ['gateway'=>$gateway]);
 
       $hooks = new Payments\Hooks();
       $hooks->loadDefaults();
 
-      $webhooks = new Payments\Braintree\Webhooks($hooks);
+      $webhooks = new Payments\Braintree\Webhooks($hooks, $bt);
       $webhooks->setSignature($_POST['bt_signature'])
         ->setPayload($_POST['bt_payload'])
         ->run();
