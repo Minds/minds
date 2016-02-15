@@ -85,7 +85,7 @@ class Facebook implements NetworkInterface
             $entity = new Entities\Activity($entity->remind_object);
         }
 
-        $this->data['message'] = $entity->message;
+        //$this->data['message'] = $entity->message;
 
         if($entity->perma_url){
             $this->data = array_merge($this->data, [
