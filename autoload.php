@@ -36,8 +36,15 @@ function _minds_autoload($class)
         return true;
     }
 
-    //plugins follow a different path
-    $file = str_replace('/plugin/', '/../plugins/', $file);
+    //plugins follow a different path (new style)
+    $file = str_replace('/Plugin/', '../plugins/', $file);
+    if (file_exists($file)) {
+        require_once $file;
+        return true;
+    }
+
+    //plugins follow a different path (old style)
+    $file = str_replace('/plugin/', '../plugins/', $file);
     if (file_exists($file)) {
         require_once $file;
         return true;
