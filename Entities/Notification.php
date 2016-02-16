@@ -297,7 +297,8 @@ class Notification extends DenormalizedEntity
     {
      
         if (Core\Session::isLoggedIn()) {
-            $this->from['subscribed'] = Subscriptions::isSubscribed(Core\Session::getLoggedInUserGuid(), (int) $this->from['guid']);
+            $this->from['subscribed'] = Core\Session::getLoggedInUser()->isSubscribed((int) $this->from['guid']);
+            $this->from['subscriber'] = Core\Session::getLoggedInUser()->isSubscriber((int) $this->from['guid']);
             //$this->from['subscribed'] = true;
         }
         return $this->from;
