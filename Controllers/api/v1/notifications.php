@@ -8,7 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
-use Minds\Core\Notifications\Settings;
+use Minds\Core\Notification\Settings;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Api\Factory;
@@ -54,6 +54,7 @@ class notifications implements Interfaces\Api
                 Factory::isLoggedIn();
                 $toggles = (new Settings\PushSettings())->getToggles();
                 $response['toggles'] = $toggles;
+                break;
             case 'list':
             default:
                 Factory::isLoggedIn();

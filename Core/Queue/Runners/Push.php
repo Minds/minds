@@ -4,7 +4,7 @@ namespace Minds\Core\Queue\Runners;
 use Minds\Core\Data;
 use Minds\Core\Queue\Interfaces;
 use Minds\Core\Queue;
-use Minds\Core\Notifications\Settings;
+use Minds\Core\Notification\Settings;
 use Minds\Entities\User;
 use Surge;
 
