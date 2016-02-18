@@ -31,7 +31,7 @@ class merchant implements Interfaces\Api
         case "sales":
           $merchant = (new Payments\Merchant)
             ->setGuid(Core\Session::getLoggedInUser()->guid);
-          $sales = Payments\Factory::build('braintree')->getSales($merchant);
+          $sales = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getSales($merchant);
 
           foreach ($sales as $sale) {
               $response['sales'][] = [
@@ -50,7 +50,7 @@ class merchant implements Interfaces\Api
         case "settings":
 
           try{
-              $merchant = Payments\Factory::build('braintree')->getMerchant(Core\Session::getLoggedInUser()->guid);
+              $merchant = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getMerchant(Core\Session::getLoggedInUser()->guid);
           } catch(\Exception $e){
               return Factory::response([
                 'status' => 'error',
@@ -110,7 +110,7 @@ class merchant implements Interfaces\Api
               ->setRoutingNumber($_POST['routingNumber']);
 
             try {
-                $id = Payments\Factory::build('braintree')->addMerchant($merchant);
+                $id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->addMerchant($merchant);
                 $response['id'] = $id;
 
                 $user = Core\Session::getLoggedInUser();
@@ -140,7 +140,7 @@ class merchant implements Interfaces\Api
               ->setRoutingNumber($_POST['routingNumber']);
 
             try {
-                $id = Payments\Factory::build('braintree')->updateMerchant($merchant);
+                $id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->updateMerchant($merchant);
                 $response['id'] = $id;
 
                 $user = Core\Session::getLoggedInUser();
@@ -156,7 +156,7 @@ class merchant implements Interfaces\Api
               ->setId($pages[1]);
 
             try {
-                Payments\Factory::build('braintree')->chargeSale($sale);
+                Payments\Factory::build('braintree', ['gateway'=>'merchants'])->chargeSale($sale);
             } catch (\Exception $e) {
                 var_dump($e);
                 exit;
@@ -166,12 +166,12 @@ class merchant implements Interfaces\Api
           case "void":
             $sale = (new Payments\Sale)
               ->setId($pages[1]);
-            Payments\Factory::build('braintree')->voidSale($sale);
+            Payments\Factory::build('braintree', ['gateway'=>'merchants'])->voidSale($sale);
             break;
           case "refund":
             $sale = (new Payments\Sale)
               ->setId($pages[1]);
-            Payments\Factory::build('braintree')->refundSale($sale);
+            Payments\Factory::build('braintree', ['gateway'=>'merchants'])->refundSale($sale);
             break;
         }
 

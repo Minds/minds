@@ -27,7 +27,8 @@ class braintree implements Interfaces\Api
 
       switch ($pages[0]) {
         case "token":
-          $response['token'] = Payments\Factory::build('braintree')->getToken();
+          $gateway = isset($pages[1]) ? $pages[1] : 'default';
+          $response['token'] = Payments\Factory::build('braintree', ['gateway'=>$gateway])->getToken();
           break;
       }
 
@@ -55,7 +56,7 @@ class braintree implements Interfaces\Api
               ->setNonce($_POST['nonce']);
 
             try {
-                $result = Payments\Factory::build('braintree')->setSale($sale);
+                $result = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
@@ -73,7 +74,7 @@ class braintree implements Interfaces\Api
               ->setNonce($_POST['nonce']);
 
             try {
-                $result = Payments\Factory::build('braintree')->setSale($sale);
+                $result = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();

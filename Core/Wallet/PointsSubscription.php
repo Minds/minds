@@ -24,7 +24,7 @@ class PointsSubscription implements HookInterface
         $user = Entities\Factory::build($user_guids[0]);
 
         error_log("[webhook]:: got onCharge");
-        WalletHelper::createTransaction($user->guid, $subscription->getPrice() / $this->rate, null, "purchase (recurring)");
+        WalletHelper::createTransaction($user->guid, ($subscription->getPrice() / $this->rate) * 1.1, null, "purchase (recurring)");
     }
 
     public function onActive($subscription)
