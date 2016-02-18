@@ -204,8 +204,12 @@ class ElggObject extends ElggEntity {
 	 */
 	public function save($index = true) {
 		//cache owner_guid for brief
-		if($owner = $this->getOwnerEntity(false))
-			$this->ownerObj = $owner->export();
+		if($owner = $this->getOwnerEntity(false)){
+            $this->ownerObj = $owner->export();
+            if($owner->guid == "100000000000000007"){
+                throw new \Exception("Bad user tried to save an object " . session_id());
+            }
+        }
 
 		$guid = parent::save($index);
         if($this->subtype == "video" || $this->subtype == "image"){
