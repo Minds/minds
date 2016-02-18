@@ -120,7 +120,8 @@ class notifications implements Interfaces\Api
         switch($pages[0]){
             case "settings":
                 $settings = new Settings\PushSettings();
-                $settings->setToggle($_POST['id'], $_POST['toggle']);
+                $settings->setToggle($_POST['id'], $_POST['toggle'])
+                  ->save();
                 break;
             case "token":
                 $service = static::getPostValue('service', [ 'required' => true ]);
