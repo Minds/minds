@@ -45,6 +45,7 @@ class Push implements Interfaces\NotificationExtensionInterface
             ->send([
                 'user_guid' => $notification['to']->guid,
                 'message' => static::buildNotificationMesage($notification),
+                'type' => $notification['params']['notification_view'],
                 'uri' => $notification['uri']
             ]);
     }
