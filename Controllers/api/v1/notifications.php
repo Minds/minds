@@ -132,7 +132,7 @@ class notifications implements Interfaces\Api
                 ]);
 
                 (new Core\Data\Call('entities'))
-                    ->insert(static::getCurrentUserGuid(), [ 'surge_token' => $token ])
+                    ->insert(static::getCurrentUserGuid(), [ 'surge_token' => $token ]);
             break;
         }
 
