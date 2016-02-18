@@ -40,6 +40,7 @@ class Sessions implements \SessionHandlerInterface
                 return $result['data'];
             }
         } catch (Exception $e) {
+            exit;
             return false;
         }
         
