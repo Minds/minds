@@ -51,10 +51,10 @@ class RetentionSpec extends ObjectBehavior
         $return->shouldHaveCount(1);
         $return[0]->shouldHaveCount(4);
         $return[0]['total']->shouldBe((0.5+0.4+0.2+0.1) / 4);
-        $return[0]['totals'][1]->shouldBe(0.5);
-        $return[0]['totals'][3]->shouldBe(0.4);
-        $return[0]['totals'][7]->shouldBe(0.2);
-        $return[0]['totals'][28]->shouldBe(0.1);
+        $return[0]['totals'][0]['total']->shouldBe(0.5);
+        $return[0]['totals'][1]['total']->shouldBe(0.4);
+        $return[0]['totals'][2]['total']->shouldBe(0.2);
+        $return[0]['totals'][3]['total']->shouldBe(0.1);
     }
 
 }
