@@ -79,17 +79,22 @@ class Retention implements AnalyticsMetric
   public function get($span = 1, $unit = 'day', $timestamp = null)
   {
       $intervals = [1,3,7,28];
-      $timestamps = Timestamps::span($span, $unit);
+      $timestamps = Timestamps::span(28, $unit);
+      $spans = Timestamps::span($span, $unit);
       $data = [];
-      foreach ($timestamps as $ts) {
+      foreach ($spans as $ts) {
           $totals = [];
+          $retained = [];
+          $signups = [];
           foreach($intervals as $x){
-              $totals[$x] = $this->db->count("{$this->namespace}:$x:$ts");
+              $retained[$x] = $this->db->countRow("{$this->namespace}:$x:$ts");
+              $signups[$x] = $this->db->countRow("analytics:signups:day:" . $timestamps[$x-1]);
+              $totals[$x] = $retained[$x] / $signups[$x];
           }
           $data[] = [
             'timestamp' => $ts,
             'date' => date('d-m-Y', $ts),
-            'total' => array_sum($totals) / count($totals),
+            'total' => (array_sum($totals) / count($totals)),
             'totals' => $totals
           ];
       }

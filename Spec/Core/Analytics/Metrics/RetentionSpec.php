@@ -33,4 +33,28 @@ class RetentionSpec extends ObjectBehavior
         $this->increment()->shouldReturn(true);
     }
 
+    function it_should_return_metrics(Call $db)
+    {
+        $this->beConstructedWith($db);
+
+        $timestamps = Timestamps::span(28, 'day');
+
+        //mock the calls that are expected
+        $db->countRow(Argument::containingString(':signup'))->willReturn(100)->shouldBeCalledTimes(4);
+        $db->countRow(Argument::containingString(':retention:1'))->willReturn(50)->shouldBeCalledTimes(1);
+        $db->countRow(Argument::containingString(':retention:3'))->willReturn(40)->shouldBeCalledTimes(1);
+        $db->countRow(Argument::containingString(':retention:7'))->willReturn(20)->shouldBeCalledTimes(1);
+        $db->countRow(Argument::containingString(':retention:28'))->willReturn(10)->shouldBeCalledTimes(1);
+
+        $return = $this->get(1);
+        $return->shouldBeArray();
+        $return->shouldHaveCount(1);
+        $return[0]->shouldHaveCount(4);
+        $return[0]['total']->shouldBe((0.5+0.4+0.2+0.1) / 4);
+        $return[0]['totals'][1]->shouldBe(0.5);
+        $return[0]['totals'][3]->shouldBe(0.4);
+        $return[0]['totals'][7]->shouldBe(0.2);
+        $return[0]['totals'][28]->shouldBe(0.1);
+    }
+
 }
