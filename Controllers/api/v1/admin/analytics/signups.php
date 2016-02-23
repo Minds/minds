@@ -28,7 +28,7 @@ class signups implements Interfaces\Api, Interfaces\ApiAdminPam
         $db = new Core\Data\Call('entities_by_time');
 
         $app = Core\Analytics\App::_()
-        ->setMetric('signups');
+        ->setMetric('signup');
 
         $response['daily'] = $app->get(30);
         $response['montly'] = $app->get(3, 'month');
