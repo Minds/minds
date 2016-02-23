@@ -41,7 +41,7 @@ class Retention implements AnalyticsMetric
     public function increment()
     {
 
-        $now = Timestamps::get(['day'])['day'];
+        $now = Timestamps::span(2, 'day')[0];
         $intervals = [1,3,7,28];
         $timestamps = array_reverse(Timestamps::span(29, 'day'));
 
@@ -82,7 +82,7 @@ class Retention implements AnalyticsMetric
   {
       $intervals = [1,3,7,28];
       $timestamps = array_reverse(Timestamps::span(29, $unit));
-      $spans = Timestamps::span($span, $unit);
+      $spans = Timestamps::span($span+1, $unit);
       $data = [];
       foreach ($spans as $ts) {
           $totals = [];
@@ -91,7 +91,7 @@ class Retention implements AnalyticsMetric
           $signups = [];
           foreach($intervals as $x){
               $retained[$x] = (int) $this->db->countRow("{$this->namespace}:$x:$ts");
-              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:" . $timestamps[$x]);
+              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:$ts");
               $totals[] = [
                 'day' => $x,
                 'retained' => (int) $retained[$x],
