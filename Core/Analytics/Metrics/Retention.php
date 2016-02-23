@@ -46,7 +46,6 @@ class Retention implements AnalyticsMetric
         $timestamps = array_reverse(Timestamps::span(29, 'day'));
 
         foreach($intervals as $x){
-
             //grab signups from $x days ago
             $startTs = $timestamps[$x];
             $signups = $this->db->getRow("analytics:signup:day:$startTs", ['limit'=>10000]);
@@ -81,8 +80,8 @@ class Retention implements AnalyticsMetric
   public function get($span = 1, $unit = 'day', $timestamp = null)
   {
       $intervals = [1,3,7,28];
-      $timestamps = array_reverse(Timestamps::span(29, $unit));
       $spans = Timestamps::span($span+1, $unit);
+      $timestamps = array_reverse(Timestamps::span(29, $unit));
       $data = [];
       foreach ($spans as $ts) {
           $totals = [];
@@ -91,9 +90,10 @@ class Retention implements AnalyticsMetric
           $signups = [];
           foreach($intervals as $x){
               $retained[$x] = (int) $this->db->countRow("{$this->namespace}:$x:$ts");
-              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:$ts");
+              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:{$timestamps[$x]}");
               $totals[] = [
                 'day' => $x,
+                'date' => date('d-m-Y', $timestamps[$x]),
                 'retained' => (int) $retained[$x],
                 'signups' => (int) $signups[$x],
                 'total' => (int) $retained[$x] / $signups[$x]
