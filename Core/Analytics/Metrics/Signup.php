@@ -1,6 +1,6 @@
 <?php
 /**
- * Active Metric
+ * Signups Metric
  */
 namespace Minds\Core\Analytics\Metrics;
 
@@ -9,10 +9,10 @@ use Minds\Core;
 use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
-class Active implements AnalyticsMetric
+class Signup implements AnalyticsMetric
 {
     private $db;
-    private $namespace = "analytics:";
+    private $namespace = "analytics:signup";
     private $key;
 
     public function __construct($db = null)
@@ -40,8 +40,8 @@ class Active implements AnalyticsMetric
 
     public function increment()
     {
-        foreach (Timestamps::get(array('day', 'month')) as $p => $ts) {
-            $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
+        foreach (Timestamps::get(['day', 'month']) as $p => $ts) {
+            $this->db->insert("{$this->namespace}:$p:$ts", [$this->key => time()]);
         }
         return true;
     }
@@ -56,13 +56,13 @@ class Active implements AnalyticsMetric
   public function get($span = 3, $unit = 'day', $timestamp = null)
   {
       $timestamps = Timestamps::span($span, $unit);
-      $data = array();
+      $data = [];
       foreach ($timestamps as $ts) {
-          $data[] = array(
-        'timestamp' => $ts,
-        'date' => date('d-m-Y', $ts),
-        'total' => $this->db->countRow("{$this->namespace}active:$unit:$ts")
-      );
+          $data[] = [
+            'timestamp' => $ts,
+            'date' => date('d-m-Y', $ts),
+            'total' => $this->db->countRow("{$this->namespace}:$unit:$ts")
+          ];
       }
       return $data;
   }

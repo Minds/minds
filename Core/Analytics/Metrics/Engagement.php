@@ -1,6 +1,6 @@
 <?php
 /**
- * Active Metric
+ * Engagement Metric
  */
 namespace Minds\Core\Analytics\Metrics;
 
@@ -9,10 +9,10 @@ use Minds\Core;
 use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
-class Active implements AnalyticsMetric
+class Engagement implements AnalyticsMetric
 {
     private $db;
-    private $namespace = "analytics:";
+    private $namespace = "analytics:active";
     private $key;
 
     public function __construct($db = null)
@@ -40,10 +40,7 @@ class Active implements AnalyticsMetric
 
     public function increment()
     {
-        foreach (Timestamps::get(array('day', 'month')) as $p => $ts) {
-            $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
-        }
-        return true;
+        //not applicable
     }
 
   /**
@@ -55,14 +52,15 @@ class Active implements AnalyticsMetric
   */
   public function get($span = 3, $unit = 'day', $timestamp = null)
   {
-      $timestamps = Timestamps::span($span, $unit);
-      $data = array();
+      $month= Timestamps::get(['month'])['month'];
+      $timestamps = Timestamps::span($span, 'day');
+      $data = [];
       foreach ($timestamps as $ts) {
-          $data[] = array(
-        'timestamp' => $ts,
-        'date' => date('d-m-Y', $ts),
-        'total' => $this->db->countRow("{$this->namespace}active:$unit:$ts")
-      );
+          $data[] = [
+            'timestamp' => $ts,
+            'date' => date('d-m-Y', $ts),
+            'total' => $this->db->countRow("{$this->namespace}:day:$ts") /  $this->db->countRow("{$this->namespace}:month:$month")
+          ];
       }
       return $data;
   }
