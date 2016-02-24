@@ -44,7 +44,9 @@ class Push implements Interfaces\QueueRunner
                       $type = $data['type'];
 
                       //get notification settings for this user
-                      $toggles = (new Settings\PushSettings())->getToggles();
+                      $toggles = (new Settings\PushSettings())
+                        ->setUserGuid($data['user_guid'])
+                        ->getToggles();
                       if(!isset($toggles[$type]) || $data[$type] === false){
                           echo "{$data['user_guid']} has disabled $type notifications \n";
                           return false;

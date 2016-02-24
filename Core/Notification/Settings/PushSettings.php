@@ -29,12 +29,23 @@ class PushSettings
       'boost_rejected' => true,
       'boost_completed' => true
     ];
-
+    protected $userGuid;
     protected $toBeSaved = [];
 
     public function __construct($db = null)
     {
         $this->db = $db ?: new Data\Call('entities_by_time');
+        $this->userGuid = Session::getLoggedInUser()->guid;
+    }
+
+    /**
+     * Set user guid
+     * @return $this
+     */
+    public function setUserGuid($guid)
+    {
+        $this->userGuid = $guid;
+        return $this;
     }
 
     /**
@@ -43,7 +54,7 @@ class PushSettings
      */
     public function getToggles()
     {
-        $types = $this->db->getRow('settings:push:toggles:' . Session::getLoggedInUser()->guid);
+        $types = $this->db->getRow('settings:push:toggles:' . $this->userGuid) ?: [];
         foreach($types as $toggle => $value){
             $this->types[$toggle] = (bool) $value;
         }
@@ -78,7 +89,7 @@ class PushSettings
      */
     public function save()
     {
-        $this->db->insert('settings:push:toggles:' . Session::getLoggedInUser()->guid, $this->toBeSaved);
+        $this->db->insert('settings:push:toggles:' . $this->userGuid, $this->toBeSaved);
         $this->toBeSaved = [];
         return $this;
     }
