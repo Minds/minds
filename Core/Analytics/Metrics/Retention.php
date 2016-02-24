@@ -43,16 +43,17 @@ class Retention implements AnalyticsMetric
 
         $now = Timestamps::span(2, 'day')[0];
         $intervals = [1,3,7,28];
-        $timestamps = array_reverse(Timestamps::span(29, 'day'));
+        $timestamps = array_reverse(Timestamps::span(30, 'day'));
 
         foreach($intervals as $x){
             //grab signups from $x days ago
-            $startTs = $timestamps[$x];
+            $startTs = $timestamps[$x+1];
             $signups = $this->db->getRow("analytics:signup:day:$startTs", ['limit'=>10000]);
 
 
             //now get active users from each interval after this date
-            $endTs =  $timestamps[$x-$x];
+            $endTs =  $timestamps[$x-$x+1];
+            echo "[$x]:: actives: " . date('d-m-Y', $endTs) . " signups: " . date('d-m-Y', $startTs) . "\n";
             $actives = $this->db->getRow("analytics:active:day:$endTs", ['limit'=>10000]);
 
             $retained = [];
@@ -66,7 +67,7 @@ class Retention implements AnalyticsMetric
             $this->db->insert("{$this->namespace}:$x:$now", $retained);
 
         }
-
+exit;
         return true;
     }
 
@@ -81,7 +82,7 @@ class Retention implements AnalyticsMetric
   {
       $intervals = [1,3,7,28];
       $spans = Timestamps::span($span+1, $unit);
-      $timestamps = array_reverse(Timestamps::span(29, $unit));
+      $timestamps = array_reverse(Timestamps::span(30, $unit));
       $data = [];
       foreach ($spans as $ts) {
           $totals = [];
@@ -90,10 +91,11 @@ class Retention implements AnalyticsMetric
           $signups = [];
           foreach($intervals as $x){
               $retained[$x] = (int) $this->db->countRow("{$this->namespace}:$x:$ts");
-              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:{$timestamps[$x]}");
+              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:{$timestamps[$x+1]}");
               $totals[] = [
                 'day' => $x,
-                'date' => date('d-m-Y', $timestamps[$x]),
+                'signupDate' => date('d-m-Y', $timestamps[$x+1]),
+                'retainedDate' => date('d-m-Y', $ts),
                 'retained' => (int) $retained[$x],
                 'signups' => (int) $signups[$x],
                 'total' => (int) $retained[$x] / $signups[$x]
