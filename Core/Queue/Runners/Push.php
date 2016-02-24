@@ -20,7 +20,7 @@ class Push implements Interfaces\QueueRunner
         $client->setExchange("mindsqueue", "direct")
                ->setQueue("Push")
                ->receive(function ($data) {
-                   echo "Received a push notification";
+                   echo "[push]: Received a push notification \n";
 
                    $data = $data->getData();
                    $keyspace = $data['keyspace'];
@@ -47,15 +47,15 @@ class Push implements Interfaces\QueueRunner
                       $toggles = (new Settings\PushSettings())
                         ->setUserGuid($data['user_guid'])
                         ->getToggles();
-                      if(!isset($toggles[$type]) || $data[$type] === false){
-                          echo "{$data['user_guid']} has disabled $type notifications \n";
+                      if(!isset($toggles[$type]) || $toggles[$type] === false){
+                          echo "[push]: {$data['user_guid']} has disabled $type notifications \n";
                           return false;
                       }
 
                       $user = new user($data['user_guid'], false);
 
                       if (!$user->surge_token) {
-                        echo "$user->username hasn't configured push yet.. not sending \n";
+                        echo "[push]: $user->username hasn't configured push yet.. not sending \n";
                         return false;
                       }
 
@@ -68,7 +68,7 @@ class Push implements Interfaces\QueueRunner
 
                       Surge\Surge::send($message, $config);
 
-                      echo "sent a push notification to $user->guid \n";
+                      echo "[push]: delivered $user->guid \n";
                    } catch (\Exception $e) {
                       echo "Failed to send push notification \n";
                    }
