@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Notification\Settings;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Api\Factory;
@@ -49,7 +50,11 @@ class notifications implements Interfaces\Api
             case 'count':
                 $response['count'] = Helpers\Notifications::getCount();
                 break;
-
+            case 'settings':
+                Factory::isLoggedIn();
+                $toggles = (new Settings\PushSettings())->getToggles();
+                $response['toggles'] = $toggles;
+                break;
             case 'list':
             default:
                 Factory::isLoggedIn();
@@ -109,18 +114,30 @@ class notifications implements Interfaces\Api
      */
     public function post($pages)
     {
-        $service = static::getPostValue('service', [ 'required' => true ]);
-        $passed_token = static::getPostValue('token', [ 'required' => true ]);
+        if(!isset($pages[0])){
+            $pages[0] = 'token';
+        }
+        switch($pages[0]){
+            case "settings":
+                $settings = new Settings\PushSettings();
+                $settings->setToggle($_POST['id'], $_POST['toggle'])
+                  ->save();
+                break;
+            case "token":
+                $service = static::getPostValue('service', [ 'required' => true ]);
+                $passed_token = static::getPostValue('token', [ 'required' => true ]);
 
-        $token = \Surge\Token::create([
-            'service' => $service,
-            'token' => $passed_token
-        ]);
+                $token = \Surge\Token::create([
+                    'service' => $service,
+                    'token' => $passed_token
+                ]);
 
-        (new Core\Data\Call('entities'))
-            ->insert(static::getCurrentUserGuid(), [ 'surge_token' => $token ]);
+                (new Core\Data\Call('entities'))
+                    ->insert(static::getCurrentUserGuid(), [ 'surge_token' => $token ]);
+            break;
+        }
 
-        return Factory::response(array());
+        return Factory::response([]);
     }
 
     /**
