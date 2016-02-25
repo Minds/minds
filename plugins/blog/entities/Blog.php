@@ -23,6 +23,7 @@ class Blog extends \ElggObject
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
+            'last_updated',
             'excerpt',
             'license',
             'ownerObj',
