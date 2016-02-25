@@ -114,7 +114,11 @@ class blog implements Interfaces\Api
             $response['blog']['description'] = (new Core\Security\XSS())->clean($response['blog']['description']);
             break;
           case is_numeric($pages[0]):
-            $blog = new entities\Blog($pages[0]);
+            $guid = $pages[0];
+            if(strlen($guid) < 15){
+                $guid = (new \GUID())->migrate($guid);
+            }
+            $blog = new entities\Blog($guid);
             $response['blog'] = $blog->export();
             //provide correct subscribe info for userobj (renormalize)
             $owner = new user($blog->ownerObj);
