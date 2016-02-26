@@ -206,8 +206,8 @@ class ElggObject extends ElggEntity {
 		//cache owner_guid for brief
 		if($owner = $this->getOwnerEntity(false)){
             $this->ownerObj = $owner->export();
-            if($owner->guid == "100000000000000007"){
-                throw new \Exception("Bad user tried to save an object " . session_id());
+            if(!$owner->username){
+                throw new \Exception("Bad username tried to save an object {$owner->guid} " . session_id());
             }
         }
 
