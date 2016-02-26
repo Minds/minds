@@ -78,8 +78,13 @@ class Relationships
 
         $inverse_keyword = $opts['inverse'] ? ':inverted' : '';
 
-        // TODO: [emi] should we manually pass $opts ?
-        return $this->db->getRow("{$this->guid}:{$rel}{$inverse_keyword}", $opts);
+        $rows = $this->db->getRow("{$this->guid}:{$rel}{$inverse_keyword}", $opts);
+
+        if (!$rows) {
+            return false;
+        }
+
+        return array_keys($rows);
     }
 
     /**
@@ -186,9 +191,53 @@ class Relationships
      * @param  string  $rel
      * @return boolean
      */
-    public function destroy($rel)
+    public function destroy($rel, array $opts = [])
     {
-        // TODO: [emi] Ask mark the best way to remove inversed indexes
-        return $this->db->removeRow("{$this->guid}:{$rel}");
+        $opts = array_merge([
+            'inverse' => false
+        ], $opts);
+
+        $this_inverse_keyword = $opts['inverse'] ? ':inverted' : '';
+        $rel_inverse_keyword = $opts['inverse'] ? '' : ':inverted';
+
+        $offset = '';
+
+        while (true) {
+
+            $guids = $this->db->getRow("{$this->guid}:{$rel}{$this_inverse_keyword}", [
+                'limit' => 500,
+                'offset' => $offset
+            ]);
+
+            if (!$guids) {
+                break;
+            }
+
+            $guids = array_keys($guids);
+
+            if ($offset) {
+                array_shift($guids);
+            }
+
+            if (!$guids) {
+                break;
+            }
+
+            if ($guids[0] == $offset) {
+                break;
+            }
+
+            $offset = end($guids);
+
+            foreach ($guids as $guid) {
+                $this->db->removeRow("{$guid}:{$rel}{$rel_inverse_keyword}");
+            }
+
+            if (!$offset) {
+                break;
+            }
+
+        }
+        return $this->db->removeRow("{$this->guid}:{$rel}{$this_inverse_keyword}");
     }
 }
