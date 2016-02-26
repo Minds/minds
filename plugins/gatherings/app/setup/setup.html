@@ -70,7 +70,7 @@
       </div>
     </div>
 
-      <form class="mdl-grid minds-messenger-setup-grid" (ngSubmit)="unlock(password)" #password="ngForm" [hidden]="inProgress">
+      <form class="mdl-grid minds-messenger-setup-grid" (ngSubmit)="unlock(password)" #password="ngForm" [hidden]="inProgress" autocomplete="off">
 
         <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
           <input class="mdl-textfield__input"
