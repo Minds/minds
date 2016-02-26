@@ -50,7 +50,7 @@ class video extends object{
 	 * @return string
 	 */
 	public function getSourceUrl($transcode = '720.mp4'){
-		$cacher = \Minds\Core\Data\cache\factory::build();
+		/*$cacher = \Minds\Core\Data\cache\factory::build();
 		if($return = $cacher->get("$this->guid:transcode:$transcode"))
 			return $return;
 
@@ -59,7 +59,8 @@ class video extends object{
 		if($this->access_id == 0)
 			$expires = time() + (60*60*60);
 		$url =  $cinemr::factory('media')->get($this->cinemr_guid."/transcodes/$transcode", $expires);
-		$cacher->set("$this->guid:transcode:$transcode", $url, 1440);
+		$cacher->set("$this->guid:transcode:$transcode", $url, 1440);*/
+    $url = Core\Config::_()->cinemr_url . $this->cinemr_guid . '/' . $transcode;
 		return $url;
 	}
 
