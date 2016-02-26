@@ -31,7 +31,7 @@ class start extends Components\Plugin
                 'description' => htmlspecialchars(strip_tags($blog->description)),
                 'og:title' => $blog->title,
                 'og:description' => htmlspecialchars(strip_tags($blog->description)),
-                'og:url' => $blog->getPermaUrl(),
+                'og:url' => str_replace($blog->getPermaUrl(), 'https://', 'http://'),
                 'og:type' => 'article',
                 'og:image' => $blog->getIconUrl(800),
                 'og:image:width' => 2000,
