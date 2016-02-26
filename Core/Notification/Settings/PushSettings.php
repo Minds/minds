@@ -16,6 +16,7 @@ class PushSettings
     protected $types = [
       'daily' => true,
       'comment' => true,
+      'chat' => true,
       'like' => true,
       'tag' => true,
       'friends' => true,
