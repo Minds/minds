@@ -20,7 +20,10 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function get($pages)
     {
-        Factory::isLoggedIn();
+        //Factory::isLoggedIn();
+        if(!Core\Session::isLoggedin()){
+            return Factory::response(['status'=>'error']);
+        }
 
         $span = isset($_GET['span']) ? $_GET['span'] : 5;
         $unit = isset($_GET['unit']) ? $_GET['unit'] : 'day';
