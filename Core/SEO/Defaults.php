@@ -70,11 +70,11 @@ class Defaults
 
               return $meta = [
                 'title' => $activity->title ?: $activity->message,
-                'description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
+                'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
                 'og:title' => $activity->title ?: $activity->message,
-                'og:description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
+                'og:description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
                 'og:url' => $activity->getUrl(),
-                'og:image' => $activity->thumbnail_src,
+                'og:image' => $activity->custom_type == 'batch' ? $activity->custom_data[0]['src'] ?: $activity->thumbnail_src,
                 'og:image:width' => 2000,
                 'og:image:height' => 1000
               ];
