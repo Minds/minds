@@ -69,8 +69,13 @@ class Defaults
               }
 
               return $meta = [
-                'title' => $activity->message ?: $activity->title,
-                'description' => "@{$activity->ownerObj['name']} on Minds"
+                'title' => $activity->title ?: $activity->message,
+                'description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
+                'og:description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
+                'og:url' => $activity->getUrl(),
+                'og:image' => $activity->thumbnail_src,
+                'og:image:width' => 2000,
+                'og:image:height' => 1000
               ];
           }
         });
