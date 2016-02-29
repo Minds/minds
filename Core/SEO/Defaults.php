@@ -71,6 +71,7 @@ class Defaults
               return $meta = [
                 'title' => $activity->title ?: $activity->message,
                 'description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
+                'og:title' => $activity->title ?: $activity->message,
                 'og:description' => $activity->blurb ?: "@{$activity->ownerObj['name']} on Minds",
                 'og:url' => $activity->getUrl(),
                 'og:image' => $activity->thumbnail_src,
