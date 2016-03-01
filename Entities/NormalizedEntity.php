@@ -17,6 +17,7 @@ class NormalizedEntity
     private $indexDB;
     private $guid;
     private $indexes = [];
+    protected $exportableDefaults = [];
 
     public function __construct($db = null, $indexDB = null)
     {
@@ -89,5 +90,29 @@ class NormalizedEntity
         foreach ($this->indexes as $index) {
             $this->indexDB->insert($index, [$this->getGuid() => $this->getGuid()]);
         }
+    }
+    
+    /**
+     * Export the entity
+     * @param array $keys
+     * @return array
+     */
+    public function export($keys = [])
+    {
+        $keys = array_merge($this->exportableDefaults, $keys);
+        $export = [];
+        foreach ($keys as $key) {
+            $method = Helpers\Entities::buildGetter($key);
+            if (method_exists($this, $method)) {
+                $export[$key] = $this->$method();
+            } elseif (property_exists($this, $key)) {
+                $export[$key] = $this->$key;
+            }
+
+            if (is_object($export[$key]) && method_exists($export[$key], 'export')) {
+                $export[$key] = $export[$key]->export();
+            }
+        }
+        return $export;
     }
 }
