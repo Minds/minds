@@ -1,0 +1,385 @@
+@import 'defaults.scss';
+
+.minds-banner-card{
+  minds-groups-join-button{
+    position: absolute;
+    margin: -38px 130px;
+  }
+  &.group-card{
+    padding-bottom:$minds-padding*2;
+    min-height:0;
+  }
+}
+minds-groups-profile{
+
+  .members-grid{
+    display:flex;
+    flex-flow:row wrap;
+  }
+
+  .minds-channel-media-sidebard{
+    display: flex;
+    flex-wrap: wrap;
+    padding:0;
+    width:100%;
+    a {
+      height: 88px;
+      display:inline-block;
+      width:calc(100% / 3);
+      background-color:#333;
+      background-position:
+      center center;
+      background-size:cover;
+    }
+    img{
+      width: 100%;
+      max-width:80px;
+      max-height:80px;
+    }
+  }
+
+  header {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 300px;
+    box-sizing: content-box;
+    overflow: visible;
+
+    .minds-group-avatar {
+      display: flex;
+      flex-flow: row wrap;
+      margin: 0;
+      width: 220px;
+      pointer-events: all;
+    }
+
+    .groups-tabs {
+      flex: 1;
+      align-items: flex-end;
+      justify-content: flex-end;
+      border: 0;
+      pointer-events: all;
+
+      a span {
+        width: 100%;
+        display: block;
+        font-size: 11px;
+        height: 11px;
+        vertical-align: middle;
+        line-height: 36px;
+      }
+
+      .mdl-tabs__action-buttons {
+        padding-top: 4px;
+        padding-right: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        overflow: visible;
+
+        > * > button {
+          color: #eceff1;
+          border: 1px solid #eceff1;
+        }
+      }
+    }
+  }
+
+  minds-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .save-bar {
+      bottom: 56px !important;
+      pointer-events: none;
+
+      minds-button-edit {
+        pointer-events: all;
+      }
+    }
+  }
+
+  .group-header-bar {
+    z-index: 9999;
+  }
+
+  .groups-grid-bottom {
+    pointer-events: none;
+    align-items: flex-end;
+    padding: 0;
+    width: 100%
+  }
+
+  .minds-groups-invite-form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .minds-groups-invite-actions {
+    text-align: right;
+  }
+
+  .minds-group-invite-dialog {
+    padding: $minds-padding * 2;
+    text-align: center;
+
+    minds-groups-join-button {
+      margin-left: 0.5em;
+    }
+  }
+  minds-groups-profile-members-invite {
+    margin: $minds-padding;
+    width: 100%;
+  }
+
+  .minds-group-info {
+    minds-channel-modules {
+      margin-top: 1em;
+    }
+    
+    .minds-group-info-name {
+      > div {
+        padding-bottom: 0;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 0.5em;
+        text-transform: uppercase;
+      }
+      input[type=text] {
+        font-size: 20px;
+        margin: 0 0 0.5em;
+        padding: $minds-padding / 2;
+      }
+    }
+
+    .minds-group-info-brief-description {
+      > div {
+        padding-top: 0;
+      }
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 5em;
+        padding: $minds-padding / 2;
+      }
+    }
+
+    .minds-group-info-tags {
+      > div {
+        padding-top: 0;
+      }
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 5em;
+        padding: $minds-padding / 2;
+      }
+    }
+  }
+}
+
+.group-avatar{
+  padding:$minds-padding;
+  img{
+    width:100%;
+  }
+}
+
+minds-groups-create{
+  form{
+    width:100%;
+  }
+  .minds-groups-name{
+    width:100%;
+
+    input{
+      padding:$minds-padding*2;
+    }
+    label{
+      padding:($minds-padding*2)-4 $minds-padding*2;
+    }
+  }
+
+  .minds-groups-brief{
+    width:100%;
+
+    textarea{
+      padding:$minds-padding*2;
+    }
+    label{
+      top:inherit;
+      bottom:24px;
+      padding:($minds-padding*2)-4 $minds-padding*2;
+    }
+
+  }
+  .minds-groups-brief.is-focused{
+    label{
+      bottom:0;
+      top:24px;
+    }
+  }
+
+  .minds-groups-visibilty{
+    width:100%;
+    .mdl-radio{
+      display:block;
+    }
+  }
+
+  .minds-groups-save{
+    width:100%;
+    margin-top:$minds-padding * 2;
+
+    button{
+      float:right;
+    }
+  }
+
+}
+
+.groups-tabs{
+
+  minds-groups-settings-button {
+    position: relative;
+
+    > button {
+      position: relative;
+      top: 8px;
+      font-size: 23px;
+      text-transform: none;
+    }
+
+    .minds-dropdown-menu {
+      position: absolute;;
+      top: 44px;
+      right: 0;
+      left: auto;
+      width: 200px;
+      margin-top: 0;
+      text-transform: capitalize;
+    }
+  }
+
+  minds-button-edit, minds-button-feature{
+    padding:$minds-padding;
+
+    button.material-icons{
+      padding: 4px 8px;
+      font-size: 23px;
+    }
+    button > .material-icons{
+      font-size: 23px;
+    }
+  }
+  minds-groups-join-button{
+    padding:$minds-padding $minds-padding*2;
+  }
+}
+
+.minds-group-title{
+  h1, input{
+    font-size: 56px;
+  }
+}
+
+minds-groups-profile-requests{
+  .mdl-cell{
+    min-height:0;
+  }
+
+  .mdl-card__title{
+    padding:$minds-padding;
+  }
+
+  .minds-avatar{
+    margin-right:$minds-margin;
+    img{
+      width:50px;
+    }
+  }
+
+  .mdl-card__actions{
+    border-top: 0;
+    width: auto;
+    right: 0;
+    position: absolute;
+    top: 0;
+    padding: $minds-padding*2;
+  }
+}
+
+.minds-groups-button-badge {
+  color: #45565E;
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 2px;
+  opacity: 0.65;
+}
+
+minds-groups-card-user-actions-button {
+  position: absolute;
+  top: $minds-padding;
+  right: 0;
+
+  &.is-admin {
+    right: 38px;
+  }
+
+  > button {
+    padding: 0 !important;
+  }
+
+  .minds-dropdown-menu {
+    top: 12px;
+    right: 0;
+  }
+}
+
+minds-groups-modal-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+
+  > .minds-groups-modal-dialog-wrapper {
+    max-width: 480px;
+    height: 100%;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    text-transform: none;
+    text-align: left;
+
+    > .mdl-card {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .minds-modal-dialog-actions {
+    padding: 0 $minds-padding $minds-padding;
+    box-sizing: border-box;
+    text-align: right;
+
+    > button {
+      line-height: 1em;
+    }
+  }
+}
+
+.minds-dropdown-menu .minds-menu-info-item {
+  color: #999999;
+}

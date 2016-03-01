@@ -1,0 +1,41 @@
+<div class="mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Invite to {{ group.name }}</h2>
+  </div>
+  <div class="mdl-card__supporting-text">
+    - You can only invite users who are your subscribers<br>
+    - They will receive a notification to confirm they want to be a member of this group<br>
+    - If the user was banned from the group, inviting them will list the ban
+  </div>
+  <div [hidden]="!inviteInProgress">
+    <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
+    <div class="mdl-card__supporting-text">
+      Inviting...
+    </div>
+  </div>
+  <form class="mdl-grid minds-groups-invite-form" (ngSubmit)="invite(invitation)" #invitation="ngForm" [hidden]="inviteInProgress">
+
+    <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
+      <input class="mdl-textfield__input"
+      type="text"
+      id="user"
+      ngControl="user"
+      />
+      <label class="mdl-textfield__label" for="user">Username</label>
+    </div>
+
+    <div class="mdl-cell mdl-cell--8-col minds-error mdl-color-text--red">
+      <span [hidden]="!inviteError">{{ inviteError }}</span>
+    </div>
+    <div class="mdl-cell mdl-cell--4-col minds-groups-invite-actions">
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+        Invite
+      </button>
+    </div>
+
+    <div class="mdl-cell mdl-cell--12-col mdl-color-text--blue-grey-400" [hidden]="!inviteLastUser">
+      Sent <b>{{ inviteLastUser }}</b> an invitation to join {{ group.name }}
+    </div>
+
+  </form>
+</div>

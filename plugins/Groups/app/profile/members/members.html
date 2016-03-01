@@ -1,0 +1,16 @@
+<minds-groups-profile-members-invite [group]="group"></minds-groups-profile-members-invite>
+
+<div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="#member of members">
+    <div class="mdl-card mdl-shadow--2dp">
+        <minds-card-user [object]="member"></minds-card-user>
+        <minds-groups-card-user-actions-button class="m-button" [ngClass]="{ 'is-admin': session.isAdmin() }" *ngIf="session.isLoggedIn() &amp;&amp; session.getLoggedInUser().guid != member.guid"
+        [group]="group" [user]="member"></minds-groups-card-user-actions-button>
+    </div>
+</div>
+
+<infinite-scroll
+    distance="25%"
+    (load)="load()"
+    [moreData]="moreData"
+    [inProgress]="inProgress">
+</infinite-scroll>
