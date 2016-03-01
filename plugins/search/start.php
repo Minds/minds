@@ -15,6 +15,7 @@ class start extends \minds\Components\Plugin{
     Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
 
 		\elgg_register_event_handler('create', 'user', array($this, 'hook'));
+		\elgg_register_event_handler('create', 'group', array($this, 'hook'));
 		\elgg_register_event_handler('create', 'object', array($this, 'hook'));
 	}
 
@@ -24,7 +25,7 @@ class start extends \minds\Components\Plugin{
 	public function createDocument($entity){
 		global $CONFIG;
 		//error_log("attempting index of $entity->type");
-		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user' || $entity->type == 'activity'){
+		if(in_array($entity->subtype, array('blog','image','album','video')) || $entity->type == 'user' || $entity->type == 'group' || $entity->type == 'activity'){
 
 			$client = new \Elasticsearch\Client(array('hosts'=>array(\elgg_get_plugin_setting('server_addr','search')?:'localhost')));
 			$params = array();

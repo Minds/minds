@@ -64,6 +64,9 @@ class search implements Interfaces\Api,Interfaces\ApiIgnorePam{
               $params['type'] = 'object';
               $query .= ' +subtype:"blog"';
               break;
+            case "groups":
+              $params['type'] = 'group';
+              break;
           }
         }
 
@@ -91,7 +94,7 @@ class search implements Interfaces\Api,Interfaces\ApiIgnorePam{
         $response = array();
         if($guids)
           $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
-        
+
         if($_GET['access_token']){
             $response[$params['type']][] = $response['entities'];
         }
