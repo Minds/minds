@@ -8,12 +8,12 @@ class Relationships
 {
     protected $db;
     protected $guid;
-    
+
     public function __construct($db)
     {
         $this->db = $db;
     }
-    
+
     /**
      * Sets the working GUID
      * @param string $guid
@@ -21,10 +21,10 @@ class Relationships
     public function setGuid($guid)
     {
         $this->guid = $guid;
-        
+
         return $this;
     }
-    
+
     /**
      * Creates a relationship between working GUID and another GUID
      * @param  string $rel
@@ -36,26 +36,26 @@ class Relationships
         if (!$this->guid) {
             throw new \Exception('Source guid must not be empty');
         }
-        
+
         if (!$rel) {
             throw new \Exception('Relationship must not be empty');
         }
-        
+
         if (!$guid) {
             throw new \Exception('Guid must not be empty');
         }
-        
+
         $result = $this->db->insert("{$this->guid}:{$rel}", [ $guid => time() ]);
-        
+
         if (!$result) {
             return false;
         }
-        
+
         $result = $this->db->insert("{$guid}:{$rel}:inverted", [ $this->guid => time() ]);
-        
+
         return (bool) $result;
     }
-    
+
     /**
      * Gets GUIDs for a certain relationship for working GUID
      * @param  string $rel
@@ -67,21 +67,21 @@ class Relationships
         $opts = array_merge([
             'inverse' => false
         ], $opts);
-        
+
         if (!$this->guid) {
             throw new \Exception('Source guid must not be empty');
         }
-        
+
         if (!$rel) {
             throw new \Exception('Relationship must not be empty');
         }
 
         $inverse_keyword = $opts['inverse'] ? ':inverted' : '';
-        
+
         // TODO: [emi] should we manually pass $opts ?
         return $this->db->getRow("{$this->guid}:{$rel}{$inverse_keyword}", $opts);
     }
-    
+
     /**
      * Removes a relationship between working GUID and another GUID
      * @param  string $rel
@@ -93,26 +93,26 @@ class Relationships
         if (!$this->guid) {
             throw new \Exception('Source guid must not be empty');
         }
-        
+
         if (!$rel) {
             throw new \Exception('Relationship must not be empty');
         }
-        
+
         if (!$guid) {
             throw new \Exception('Guid must not be empty');
         }
-        
+
         $result = $this->db->removeAttributes("{$this->guid}:{$rel}", [ $guid ]);
-        
+
         if ($result === false) {
             return false;
         }
-        
+
         $result = $this->db->removeAttributes("{$guid}:{$rel}:inverted", [ $this->guid ]);
-        
+
         return $result !== false;
     }
-    
+
     /**
      * Checks if a relationship between working GUID and another GUID exists
      * @param  string $rel
@@ -124,20 +124,20 @@ class Relationships
         if (!$this->guid) {
             throw new \Exception('Source guid must not be empty');
         }
-        
+
         if (!$rel) {
             throw new \Exception('Relationship must not be empty');
         }
-        
+
         if (!$guid) {
             throw new \Exception('Guid must not be empty');
         }
-        
+
         $result = $this->db->getRow("{$this->guid}:{$rel}", [
             'offset' => $guid,
             'limit' => 1
         ]);
-        
+
         if (isset($result[$guid])) {
             return true;
         }
@@ -146,10 +146,10 @@ class Relationships
             'offset' => $this->guid,
             'limit' => 1
         ]);
-        
+
         return isset($result[$this->guid]);
     }
-    
+
     /**
      * Counts the GUIDs on a working GUID's relationship
      * @param  string  $rel
@@ -161,16 +161,16 @@ class Relationships
         if (!$this->guid) {
             throw new \Exception('Source guid must not be empty');
         }
-        
+
         if (!$rel) {
             throw new \Exception('Relationship must not be empty');
         }
-        
+
         $inverse_keyword = $inverse ? ':inverted' : '';
-        
+
         return $this->db->countRow("{$this->guid}:{$rel}{$inverse_keyword}");
     }
-    
+
     /**
      * Readable shortcut for ->count(guid, true)
      * @param  string $rel
@@ -179,5 +179,16 @@ class Relationships
     public function countInverse($rel)
     {
         return $this->count($rel, true);
+    }
+
+    /**
+     * Destroys a relationship
+     * @param  string  $rel
+     * @return boolean
+     */
+    public function destroy($rel)
+    {
+        // TODO: [emi] Ask mark the best way to remove inversed indexes
+        return $this->db->removeRow("{$this->guid}:{$rel}");
     }
 }
