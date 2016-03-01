@@ -10,6 +10,7 @@ namespace minds\plugin\archive\api\v1;
 use Minds\Core;
 use Minds\Helpers;
 use Minds\Interfaces;
+use Minds\Core\Events\Dispatcher;
 use Minds\Entities as CoreEntities;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
@@ -69,6 +70,14 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         Factory::isLoggedIn();
         $response = [];
 
+        if (isset($_POST['container_guid'])) {
+            $owner_guid = Core\Events\Dispatcher::trigger('archive:container:owner', 'all', [
+                'container' => $_POST['container_guid']
+            ]) ?: elgg_get_logged_in_user_guid();
+        } else {
+            $owner_guid = elgg_get_logged_in_user_guid();
+        }
+
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
@@ -125,6 +134,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                         $video->setFlag('mature', $mature);
                       }
 
+                      $video->owner_guid = $owner_guid;
                       $guid = $video->save();
                       error_log("[upload][log]:: video saved as ($guid)");
                       break;
@@ -153,10 +163,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 if(!$album->guid)
                     return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
-                //does the user already have and album?
-                $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid'=>elgg_get_logged_in_user_guid()));
+                //does the owner already have and album?
+                $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid' => $owner_guid));
                 if(!$albums){
                   $album = new entities\album();
+                  $album->owner_guid = $owner_guid;
                   $album->title = "My Album";
                   $album->save();
                 } else {
