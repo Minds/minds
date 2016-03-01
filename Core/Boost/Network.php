@@ -17,11 +17,16 @@ class Network implements BoostHandlerInterface
     protected $mongo;
     protected $db;
 
-    protected $tries = 0;
+    public function __construct(Data\Interfaces\ClientInterface $mongo = null, Data\Call $db = null)
+    {
+        if ($mongo) {
+            $this->mongo = $mongo;
+        } else {
+            $this->mongo = Data\Client::build('MongoDB');
+        }
 
-    public function __construct($options = array(),
-      Data\Interfaces\ClientInterface $mongo = null,
-      Data\Call $db = null)
+        if ($db) {
+            $this->db = $db;
     {
         $this->mongo = $mongo ?: Data\Client::build('MongoDB');
         $this->db = $db ?: new Data\Call('entities_by_time');

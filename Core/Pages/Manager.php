@@ -5,6 +5,7 @@
 namespace Minds\Core\Pages;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 
 class Manager
@@ -16,10 +17,10 @@ class Manager
     private $indexes;
     private $lookup;
 
-    public function __construct($db = null, $lookup = null)
+    public function __construct($db, $lookup)
     {
-        $this->db = $db ?: new Core\Data\Call('entities_by_time');
-        $this->lookup = $lookup ?: new Core\Data\Call('user_index_to_guid');
+        $this->db = $db;
+        $this->lookup = $lookup;
     }
 
     /**
@@ -87,9 +88,6 @@ class Manager
      */
     public static function _()
     {
-        if (!self::$_) {
-            self::$_ = new Manager();
-        }
-        return self::$_;
+        return self::$_ = Di::_()->get('PagesManager');
     }
 }
