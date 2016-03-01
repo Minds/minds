@@ -31,40 +31,28 @@ class DataProvider extends Provider
            return $di->get('Database\Cassandra');
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra', function($di){
-            return new Call();
+            return new Data\Call();
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function($di){
-            return new Cassandra\Thrift\Entities(new Call('entities'));
-        }, ['useFactory'=>true]); 
+            return new Cassandra\Thrift\Entities(new Data\Call('entities'));
+        }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Indexes', function($di){
-            return new Cassandra\Thrift\Indexes(new Call('entities_by_time'));
+            return new Cassandra\Thrift\Indexes(new Data\Call('entities_by_time'));
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Lookup', function($di){
-            return new Cassandra\Thrift\Lookup(new Call('user_index_to_guid'));
+            return new Cassandra\Thrift\Lookup(new Data\Call('user_index_to_guid'));
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Relationships', function($di){
-            return new Cassandra\Thrift\Relationships(new Call('relationships'));
-        }, ['useFactory'=>true]);
-        $this->di->bind('Database\Cassandra\Entities', function($di){
-            return new Data\Cassandra\Thrift\Entities(new Data\Call('entities'));
-        }, ['useFactory'=>true]); 
-        $this->di->bind('Database\Cassandra\Indexes', function($di){
-            return new Data\Cassandra\Thrift\Indexes(new Data\Call('entities_by_time'));
-        }, ['useFactory'=>true]);
-        $this->di->bind('Database\Cassandra\Lookup', function($di){
-            return new Data\Cassandra\Thrift\Lookup(new Data\Call('user_index_to_guid'));
-        }, ['useFactory'=>true]);
-        $this->di->bind('Database\Cassandra\Relationships', function($di){
-            return new Data\Cassandra\Thrift\Relationships(new Data\Call('relationships'));
+            return new Cassandra\Thrift\Relationships(new Data\Call('relationships'));
         }, ['useFactory'=>true]);
         $this->di->bind('Database\MongoDB', function($di){
-            return new MongoDB\Client();
+            return new Data\MongoDB\Client();
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Neo4j', function($di){
-            return new Neo4j\Client();
+            return new Data\Neo4j\Client();
         }, ['useFactory'=>true]);
         $this->di->bind('Database\ElasticSearch', function($di){
-            return new ElasticSearch\Client();
+            return new Data\ElasticSearch\Client();
         }, ['useFactory'=>true]);
     }
 
