@@ -67,8 +67,11 @@ class Defaults
               if (!$activity->guid) {
                   return [];
               }
+              if($activity->remind_object){
+                $activity = new Entities\Activity($activity->remind_object);
+              }
 
-              return $meta = [
+              $meta = [
                 'title' => $activity->title ?: $activity->message,
                 'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
                 'og:title' => $activity->title ?: $activity->message,
@@ -78,6 +81,13 @@ class Defaults
                 'og:image:width' => 2000,
                 'og:image:height' => 1000
               ];
+
+              if($activity->custom_type == 'video'){
+                  $meta['og:type'] = "video";
+                  $meta['og:image'] = $activity->custom_data['thumbnail_src'];
+              }
+
+              return $meta;
           }
         });
     }
