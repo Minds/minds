@@ -17,9 +17,16 @@ class banners implements Interfaces\FS
     public function get($pages)
     {
         $entity = Entities\Factory::build($pages[0]);
-
+        $type = '';
         $filepath = "";
-        switch ($entity->type) {
+
+        if (method_exists($entity, 'getType')) {
+            $type = $entity->getType();
+        } elseif (property_exists($entity, 'type')) {
+            $type = $entity->type;
+        }
+
+        switch ($type) {
           case "user":
             $size = isset($pages[1]) ? $pages[1] : 'fat';
             $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$entity->guid));
@@ -35,8 +42,8 @@ class banners implements Interfaces\FS
             break;
           case "group":
             $f = new Entities\File();
-            $f->owner_guid = $entity->owner_guid;
-            $f->setFilename("group/{$entity->guid}.jpg");
+            $f->owner_guid = $entity->getOwnerObj()->guid;
+            $f->setFilename("group/{$entity->getGuid()}.jpg");
             $filepath = $f->getFilenameOnFilestore();
           case "object":
             break;
