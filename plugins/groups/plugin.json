@@ -1,9 +1,0 @@
-{
-  "name": "groups",
-  "version": "1.0.0",
-  "routes": {
-    "/groups": "app/src/groups",
-    "/groups/profile/:guid": "app/src/groups-profile",
-    "/groups/:slug": "app/src/groups"
-  }
-}
