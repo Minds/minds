@@ -19,10 +19,15 @@ class Client implements Interfaces\QueueClient
     private $exchange;
     private $binder = "";
 
-    public function __construct($config, AMQPConnection $connection)
+    public function __construct($config, AMQPConnection $connection = null)
     {
         $this->config = $config;
-        $this->connection = $connection;
+        $this->connection = $connection ?: new AMQPConnection(
+            'localhost',
+            5672,
+            'guest',
+            'guest'
+        );
         $this->setup();
     }
 
