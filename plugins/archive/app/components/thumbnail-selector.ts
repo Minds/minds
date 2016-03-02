@@ -35,23 +35,37 @@ export class ThumbnailSelector{
   canvas;
   inProgress : boolean = false;
 
-  constructor(_element : ElementRef){
-    this.element = _element.nativeElement.getElementsByTagName("video")[0];
+  constructor(private _element : ElementRef){
+
+  }
+
+  ngOnInit(){
+    this.element = this._element.nativeElement.getElementsByTagName("video")[0];
+    if(this.src)
+      this.element.src = this.src;
+    this.element.addEventListener('loadedmetadata', () => {
+      if(this.thumbnailSec)
+        this.element.currentTime = value;
+      this.inProgress = false;
+    });
   }
 
   set _src(value : any){
     this.src = value[0].uri;
-    this.element.src = this.src;
+    if(this.element)
+      this.element.src = this.src;
   }
 
   set _thumbnailSec(value : number){
     if(!this.canvas)
       this.inProgress = true;
     this.thumbnailSec = value;
-    this.element.addEventListener('loadedmetadata', () => {
-      this.element.currentTime = value;
-      this.inProgress = false;
-    });
+    if(this.element){
+      this.element.addEventListener('loadedmetadata', () => {
+        this.element.currentTime = value;
+        this.inProgress = false;
+      });
+    }
   }
 
   seek(e){
@@ -79,7 +93,7 @@ export class ThumbnailSelector{
     }
     this.inProgress = true;
     this.element.addEventListener('seeked', () => {
-      console.log(this.element.videoWidth, this.canvas.toDataURL("image/jpeg"));
+      //console.log(this.element.videoWidth, this.canvas.toDataURL("image/jpeg"));
       this.canvas.getContext('2d').drawImage(this.element, 0, 0, this.canvas.width, this.canvas.height);
       this.thumbnail.next([this.canvas.toDataURL("image/jpeg"), this.thumbnailSec]);
       this.inProgress = false;
