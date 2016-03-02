@@ -63,14 +63,5 @@ class Events
             $params = $e->getParameters();
             $e->setResponse(Membership::cleanup($params['group']));
         });
-
-        Dispatcher::register('archive:container:owner', 'all', function ($e) {
-            $params = $e->getParameters();
-            $group = EntitiesFactory::build($params['container']);
-
-            if (method_exists($group, 'getType') && $group->getType() == 'group') {
-                $e->setResponse($group->getGuid());
-            }
-        });
     }
 }
