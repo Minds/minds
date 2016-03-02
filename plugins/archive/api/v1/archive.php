@@ -71,6 +71,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         $response = [];
 
         $owner_guid = Core\Session::getLoggedInUserGuid();
+        $container_guid = isset($_POST['container_guid']) && $_POST['container_guid'] ? $_POST['container_guid'] : null;
 
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
@@ -90,6 +91,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $mature = isset($_POST['mature']) && !!$_POST['mature'];
                 if ($image instanceof \Minds\Interfaces\Flaggable) {
                   $image->setFlag('mature', $mature);
+                }
+ 
+                $image->owner_guid = $owner_guid;
+
+                if ($container_guid) {
+                    $image->container_guid = $container_guid;
                 }
 
                 $guid = $image->save();
@@ -129,6 +136,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                       }
 
                       $video->owner_guid = $owner_guid;
+
+                      if ($container_guid) {
+                          $video->container_guid = $container_guid;
+                      }
+
                       $guid = $video->save();
                       error_log("[upload][log]:: video saved as ($guid)");
                       break;
@@ -157,18 +169,25 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 if(!$album->guid)
                     return Factory::response(array('error'=>'Sorry, the album was not found'));
             } else {
-                //does the owner already have and album?
-                $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid' => $owner_guid));
-                if(!$albums){
-                  $album = new entities\album();
-                  $album->owner_guid = $owner_guid;
-                  $album->title = "My Album";
-                  $album->save();
-                } else {
-                  $album = $albums[0];
+
+                if (!$container_guid) {
+                    //does the owner already have and album?
+                    $albums = core\Entities::get(array('subtype'=>'album', 'owner_guid' => $owner_guid));
+                    if(!$albums){
+                      $album = new entities\album();
+                      $album->owner_guid = $owner_guid;
+                      $album->title = "My Album";
+                      $album->save();
+                    } else {
+                      $album = $albums[0];
+                    }
+                    $album->addChildren(array($entity->guid => time()));
+                    $entity->container_guid = $album->guid;
                 }
-                $album->addChildren(array($entity->guid => time()));
-                $entity->container_guid = $album->guid;
+                else {
+                    $entity->container_guid = $container_guid;
+                }
+
             }
 
             if($_POST['access_token'])
