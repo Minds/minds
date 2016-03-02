@@ -30,6 +30,10 @@
 		{
 		    "type": "vcs",
 		    "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git"
+		},
+		{
+		    "type": "vcs",
+		    "url": "https://cab1b9ee9869072e7a58a1eb593b602ec5bedcd3@github.com/davegardnerisme/cruftflake.git"
 		}
 	],
 	"autoload": {
