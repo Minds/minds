@@ -68,6 +68,9 @@ class entities implements Interfaces\Api
             case "all":
                 $type="user";
                 break;
+            case "container":
+                $owner = $pages[2];
+                break;
             case "owner":
                 if (!is_numeric($pages[2])) {
                     $lookup = new Core\Data\lookup();
@@ -102,10 +105,15 @@ class entities implements Interfaces\Api
         $options = [
           'type' => $type,
           'subtype' => $subtype,
-          'owner_guid'=> $owner,
           'limit'=>12,
           'offset'=>''
         ];
+
+        if ($pages[0] == 'container') {
+            $options['container_guids'] = [ $owner ];
+        } else {
+            $options['owner_guids'] = [ $owner ];
+        }
 
         foreach ($options as $key => $value) {
             if (isset($_GET[$key])) {
