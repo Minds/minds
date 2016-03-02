@@ -14,11 +14,11 @@ import { Client } from '../../../services/api';
     <ul class="minds-dropdown-menu" [hidden]="!showMenu" >
       <li class="mdl-menu__item" [hidden]="group.muted" (click)="mute()">Disable Notifications</li>
       <li class="mdl-menu__item" [hidden]="!group.muted" (click)="unmute()">Enable Notifications</li>
-      <li class="mdl-menu__item" [hidden]="!group.can_edit || group.deleted" (click)="deletePrompt()">Delete Group</li>
+      <li class="mdl-menu__item" *ngIf="group.can_edit" [hidden]="group.deleted" (click)="deletePrompt()">Delete Group</li>
     </ul>
     <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
-    <minds-groups-modal-dialog [hidden]="!isGoingToBeDeleted">
+    <minds-groups-modal-dialog *ngIf="group.can_edit && isGoingToBeDeleted">
       <div class="minds-groups-modal-dialog-wrapper">
         <div class="mdl-card mdl-shadow--2dp">
           <div class="mdl-card__supporting-text">

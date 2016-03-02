@@ -1,5 +1,5 @@
 <header *ngIf="group">
-  <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" (added)="add_banner($event)" *ngIf="group.banner || editing"></minds-banner>
+  <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" (added)="add_banner($event)"></minds-banner>
 
   <div class="mdl-grid groups-grid-bottom group-header-bar" style="max-width:900px" *ngIf="group">
 
@@ -28,7 +28,7 @@
         <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group.can_edit">
           <button>Save changes</button>
         </minds-button-edit>
-        <minds-groups-settings-button [group]="group" class="m-button" *ngIf="group.can_edit"></minds-groups-settings-button>
+        <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
         <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
 
         <minds-groups-join-button [group]="group" *ngIf="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
@@ -59,44 +59,59 @@
   <div class="mdl-cell mdl-cell--4-col minds-group-info">
     <div class="mdl-card mdl-shadow--2dp">
       <!-- Name -->
-      <div class="minds-group-info-name" style="width:auto; min-height:0;">
+      <div class="minds-group-info-name">
 
-        <div class="mdl-card__supporting-text mdl-color-text--grey-600" style="min-height:0;">
-          <h1 [hidden]="editing">{{group.name}}</h1>
-          <input type="text" [hidden]="!editing" [(ngModel)]="group.name" placeholder="Enter a name" />
+        <div [hidden]="editing || !group.name" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
+          <h1>{{group.name}}</h1>
+        </div>
+
+        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
+          <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
         </div>
 
       </div>
 
       <!-- Brief description -->
-      <div [hidden]="!group.briefdescription && !editing" class="minds-group-info-brief-description" style="width:auto; min-height:0;">
+      <div class="minds-group-info-brief-description">
 
-        <div class="mdl-card__supporting-text mdl-color-text--grey-400" style="min-height:0;">
-          <span [hidden]="editing">{{group.briefdescription}}</span>
-          <textarea [hidden]="!editing" [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+        <div [hidden]="editing || !group.briefdescription" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
+          <span>{{group.briefdescription}}</span>
+        </div>
+
+        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
+          <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
         </div>
 
       </div>
 
       <!-- Tags -->
-      <div [hidden]="!group.tags && !editing" class="minds-group-info-tags" style="width:auto; min-height:0;">
+      <div class="minds-group-info-tags">
 
-        <div class="mdl-card__supporting-text mdl-color-text--grey-400" style="min-height:0;">
-          <label [hidden]="!group.tags || editing">Tags:</label>
-          <span [hidden]="editing">{{group.tags}}</span>
-          <textarea [hidden]="!editing" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags"></textarea>
+        <div [hidden]="editing || !group.tags" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+          <span>{{group.tags}}</span>
+        </div>
+
+        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+          <input type="text" class="icon-prefix" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags" />
         </div>
 
       </div>
 
       <!-- Members -->
-      <div class="minds-group-info-members" style="width:auto">
+      <div class="minds-group-info-members">
         <div class="mdl-card__title">
           <h2 class="mdl-card__title-text">Members</h2>
         </div>
 
         <!-- Avatars of latest users -->
-        <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid" style="min-height:0;">
+        <div class="mdl-card__supporting-text mdl-color-text--blue-grey-400 members-invite-link">
+          <a [routerLink]="['/Groups-Profile', { guid: group.guid, filter: 'members' }]">Invite</a>
+        </div>
+
+        <!-- Avatars of latest users -->
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid">
           <a *ngFor="#member of group.members" [routerLink]="['/Channel', {username: member.username}]" >
             <img src="/icon/{{member.guid}}/small"/>
           </a>

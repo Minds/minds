@@ -140,10 +140,26 @@ minds-groups-profile{
     minds-channel-modules {
       margin-top: 1em;
     }
-    
-    .minds-group-info-name {
-      > div {
+
+    .minds-group-info-name,
+    .minds-group-info-brief-description,
+    .minds-group-info-tags {
+      width:auto;
+      min-height:0;
+
+      > .mdl-card__supporting-text {
+        padding-top: $minds-padding * 2;
         padding-bottom: 0;
+
+        > i.material-icons {
+          font-size: 16px;
+          vertical-align: middle;
+          margin-right: 0.35em;
+        }
+
+        > span {
+          vertical-align: middle;
+        }
       }
       h1 {
         font-size: 20px;
@@ -151,33 +167,59 @@ minds-groups-profile{
         text-transform: uppercase;
       }
       input[type=text] {
-        font-size: 20px;
+        width: 100%;
         margin: 0 0 0.5em;
-        padding: $minds-padding / 2;
+        padding: $minds-padding;
+        vertical-align: middle;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+
+        &.h1 {
+          font-size: 20px;
+        }
+
+        &.icon-prefix {
+          width: 85%;
+          width: calc(100% - 24px - 0.35em);
+        }
+      }
+      textarea {
+        box-sizing: border-box;
+        width: 100%;
+        height: 5em;
+        padding: $minds-padding;
+        border: 1px solid #ddd;
+        border-radius: 3px;
       }
     }
 
     .minds-group-info-brief-description {
-      > div {
+      > .mdl-card__supporting-text {
         padding-top: 0;
-      }
-      textarea {
-        box-sizing: border-box;
-        width: 100%;
-        height: 5em;
-        padding: $minds-padding / 2;
       }
     }
 
-    .minds-group-info-tags {
-      > div {
-        padding-top: 0;
+    .minds-group-info-members {
+      width: auto;
+      padding-top: $minds-padding * 2;
+
+      .mdl-card__title {
+        padding-bottom: 0;
       }
-      textarea {
-        box-sizing: border-box;
-        width: 100%;
-        height: 5em;
-        padding: $minds-padding / 2;
+
+      .members-invite-link {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        > a {
+          color: inherit;
+          text-decoration: none;
+          border-bottom: 1px dotted #ddd;
+        }
+      }
+
+      .members-grid {
+        min-height: 0;
       }
     }
   }
