@@ -73,9 +73,9 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if (isset($_POST['container_guid'])) {
             $owner_guid = Core\Events\Dispatcher::trigger('archive:container:owner', 'all', [
                 'container' => $_POST['container_guid']
-            ]) ?: elgg_get_logged_in_user_guid();
+            ]) ?: Core\Session::getLoggedInUserGuid();
         } else {
-            $owner_guid = elgg_get_logged_in_user_guid();
+            $owner_guid = Core\Session::getLoggedInUserGuid();
         }
 
         if(!is_numeric($pages[0])){
