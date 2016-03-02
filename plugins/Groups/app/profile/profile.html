@@ -121,7 +121,7 @@
     </div>
 
     <!-- images  -->
-    <minds-channel-modules [owner]="group" type="image">
+    <minds-channel-modules [container]="group" type="image">
 
       <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:group.guid, type:'images'}]">
         View More
@@ -131,7 +131,7 @@
     <div class="minds-spacer-2x"></div>
 
     <!-- videos  -->
-    <minds-channel-modules [owner]="group" type="video" limit="6">
+    <minds-channel-modules [container]="group" type="video" limit="6">
 
       <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:group.guid, type:'videos'}]">
         View More
