@@ -16,6 +16,7 @@ use Minds\Plugin\Groups\Core\Membership;
 use Minds\Plugin\Groups\Core\Notifications;
 use Minds\Plugin\Groups\Core\Invitations;
 use Minds\Plugin\Groups\Core\Group as CoreGroup;
+use Minds\Plugin\Groups\Core\Activity;
 
 class group implements Interfaces\Api
 {
@@ -28,11 +29,13 @@ class group implements Interfaces\Api
     public function get($pages)
     {
         $group = EntitiesFactory::build($pages[0]);
+        $activity = new Activity($group);
         $membership = new Membership($group);
         $notifications = new Notifications($group);
         $invitations = new Invitations($group);
 
         $response['group'] = $group->export([], Session::getLoggedInUser());
+        $response['group']['activity:count'] = $activity->count();
         $response['group']['muted'] = $notifications->isMuted(Session::getLoggedInUser());
         $response['group']['invited'] = $invitations->isInvited(Session::getLoggedInUser());
         $response['group']['members'] = Factory::exportable($membership->getMembers());

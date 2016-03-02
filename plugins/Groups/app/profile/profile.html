@@ -10,7 +10,7 @@
     <div class="mdl-cell mdl-cell--8-col groups-tabs mdl-tabs__tab-bar" *ngIf="group">
       <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
         <span>Feed</span>
-        <b></b>
+        <b>{{group['activity:count']}}</b>
       </a>
       <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
         <span>Members</span>
