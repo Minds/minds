@@ -176,7 +176,7 @@ class group implements Interfaces\Api
         $current_user = Session::getLoggedInUser();
         $group_owner = EntitiesFactory::build($group->getOwnerObj());
 
-        if (!$current_user->isAdmin() || $group_owner->getGuid() != $current_user->guid) {
+        if (!$current_user || !$current_user->isAdmin() || $group_owner->guid != $current_user->guid) {
             return Factory::response([]);
         }
 
