@@ -22,19 +22,13 @@ class PaymentsProvider extends Provider
     {
         $this->di->bind('BraintreePayments', function($di){
             $config = $di->get('Config');
-            $braintree = new Braintree\Braintree(
-              new Braintree_Configuration(),
-              new Braintree_ClientToken(),
-              Braintree_Transaction::factory([]),
-              new Braintree_TransactionSearch(),
-              Braintree_MerchantAccount::factory([])
-            );
+            $braintree = new Braintree\Braintree(new Braintree_Configuration(),$di->get('Config'));
             $braintree->setConfig([
-              'environment' => $config->payments['braintree']['environment'] ?: 'sandbox',
-              'merchant_id' => $config->payments['braintree']['merchant_id'],
-              'master_merchant_id' => $config->payments['braintree']['master_merchant_id'],
-              'public_key' => $config->payments['braintree']['public_key'],
-              'private_key' => $config->payments['braintree']['private_key']
+              'environment' => $config->payments['braintree']['default']['environment'] ?: 'sandbox',
+              'merchant_id' => $config->payments['braintree']['default']['merchant_id'],
+              'master_merchant_id' => $config->payments['braintree']['default']['master_merchant_id'],
+              'public_key' => $config->payments['braintree']['default']['public_key'],
+              'private_key' => $config->payments['braintree']['default']['private_key']
             ]);
             return $braintree;
         }, ['useFactory'=>true]);

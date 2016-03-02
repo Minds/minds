@@ -16,4 +16,11 @@ class Config extends Config\Config
     {
         return self::$_ = Di\Di::_()->get('Config');
     }
+
+    public static function build()
+    {
+        //error_log('[deprecated]: CONFIG should be called from the DI ' . print_r(debug_backtrace(), true));
+        return self::_();
+    }
+
 }

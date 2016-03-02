@@ -12,9 +12,11 @@ use Minds\Entities;
 class Defaults
 {
     private static $_;
+    private $config;
 
-    public function __construct()
+    public function __construct($config)
     {
+        $this->config = $config;
         $this->init();
     }
 
@@ -22,14 +24,14 @@ class Defaults
     {
 
         Manager::setDefaults([
-          'title' =>  Core\Config::_()->site_name,
-          'description' => Core\Config::_()->site_description,
-          'og:title' => Core\Config::_()->site_name,
-          'og:url' => Core\Config::_()->site_url,
-          'og:description' => Core\Config::_()->site_description,
-          'og:app_id' => Core\Config::_()->site_fbAppId,
+          'title' =>  $this->config->site_name,
+          'description' => $this->config->site_description,
+          'og:title' => $this->config->site_name,
+          'og:url' => $this->config->site_url,
+          'og:description' => $this->config->site_description,
+          'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => Core\Config::_()->site_url . 'assets/logos/medium.png',
+          'og:image' => $this->config->site_url . 'assets/logos/medium.png',
           'og:image:width' => 2000,
           'og:image:height' => 1000
         ]);
@@ -50,7 +52,7 @@ class Defaults
                 'og:type' => 'website',
                 'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
                 'og:description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
-                'og:url' => Core\Config::_()->site_url . $user->username,
+                'og:url' => $this->config->site_url . $user->username,
                 'og:image' => $user->getIconUrl('master'),
                 'og:image:width' => 2000,
                 'og:image:height' => 1000

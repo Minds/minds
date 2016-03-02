@@ -29,14 +29,11 @@ class Minds extends base
         (new Data\DataProvider())->register();
         (new Email\EmailProvider())->register();
         //(new Core\Events\EventsProvider())->register();
-        //(new Core\Router\NavigationProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
         (new Pages\PagesProvider())->register();
         (new Payments\PaymentsProvider())->register();
         (new Queue\QueueProvider())->register();
-        //(new Core\Router\RouterProvider())->register();
         (new Security\SecurityProvider())->register();
-        //(new Core\SEO\SEOProvider())->register();
     }
 
     /**
@@ -64,7 +61,7 @@ class Minds extends base
         Security\XSRF::setCookie();
 
         Events\Defaults::_();
-        SEO\Defaults::_();
+        new SEO\Defaults(static::$di->get('Config'));
 
         /**
          * Boot the system, @todo this should be oop?
@@ -99,7 +96,7 @@ class Minds extends base
     {
         global $CONFIG;
         if (!isset($CONFIG)) {
-            $CONFIG = Config::_();
+            $CONFIG = static::$di->get('Config');
         }
 
         // Load the system settings

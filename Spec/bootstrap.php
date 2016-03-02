@@ -17,9 +17,18 @@ $CONFIG->cassandra->cql_servers = array('127.0.0.1:9042');
 
 $CONFIG->payments = [
   'braintree' => [
-    'environment' => 'sandbox',
-    'merchant_id' => 'foobar',
-    'master_merchant_id' => 'foobar',
-    'public_key' => 'random',
-    'private_key' => 'random_private'
+    'default' => [
+      'environment' => 'sandbox',
+      'merchant_id' => 'foobar',
+      'master_merchant_id' => 'foobar',
+      'public_key' => 'random',
+      'private_key' => 'random_private'
+    ],
+    'merchants' => [
+      'environment' => 'sandbox',
+      'merchant_id' => 'foobar',
+      'master_merchant_id' => 'foobar',
+      'public_key' => 'random',
+      'private_key' => 'random_private'
+    ],
   ]];
