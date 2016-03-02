@@ -74,7 +74,8 @@ export class GroupsProfile {
     this.client.post('api/v1/groups/group/' + this.group.guid, {
         name: this.group.name,
         briefdescription: this.group.briefdescription,
-        tags: this.group.tags
+        tags: this.group.tags,
+        membership: this.group.membership
       })
       .then((response : any) => {
 

@@ -99,6 +99,29 @@
 
       </div>
 
+      <!-- Membership -->
+      <div class="minds-group-info-membership">
+
+        <div [hidden]="editing || group.membership != 2" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">public</i>
+          <span>Open Group</span>
+        </div>
+
+        <div [hidden]="editing || group.membership != 0" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">lock</i>
+          <span>Closed Group</span>
+        </div>
+
+        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
+          <select class="icon-prefix" [(ngModel)]="group.membership">
+            <option value="2">Open Group</option>
+            <option value="0">Closed Group</option>
+          </select>
+        </div>
+
+      </div>
+
       <!-- Members -->
       <div class="minds-group-info-members">
         <div class="mdl-card__title">
