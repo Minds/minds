@@ -45,7 +45,7 @@ export class ThumbnailSelector{
       this.element.src = this.src;
     this.element.addEventListener('loadedmetadata', () => {
       if(this.thumbnailSec)
-        this.element.currentTime = value;
+        this.element.currentTime = this.thumbnailSec;
       this.inProgress = false;
     });
   }
