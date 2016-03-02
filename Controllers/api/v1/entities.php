@@ -72,7 +72,7 @@ class entities implements Interfaces\Api
                 $owner = $pages[2];
                 break;
             case "owner":
-                if (!is_numeric($pages[2])) {
+                if (isset($pages[2]) && !is_numeric($pages[2])) {
                     $lookup = new Core\Data\lookup();
                     $pages[2] = key($lookup->get(strtolower($pages[2])));
                 }
