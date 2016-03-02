@@ -13,7 +13,7 @@ class Relationships
     {
         $this->db = $db;
     }
-
+    
     /**
      * Sets the working GUID
      * @param string $guid
@@ -21,10 +21,10 @@ class Relationships
     public function setGuid($guid)
     {
         $this->guid = $guid;
-
+        
         return $this;
     }
-
+    
     /**
      * Creates a relationship between working GUID and another GUID
      * @param  string $rel

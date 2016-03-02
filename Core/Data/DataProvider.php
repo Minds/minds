@@ -35,7 +35,7 @@ class DataProvider extends Provider
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function($di){
             return new Cassandra\Thrift\Entities(new Call('entities'));
-        }, ['useFactory'=>true]);
+        }, ['useFactory'=>true]); 
         $this->di->bind('Database\Cassandra\Indexes', function($di){
             return new Cassandra\Thrift\Indexes(new Call('entities_by_time'));
         }, ['useFactory'=>true]);

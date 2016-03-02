@@ -44,7 +44,7 @@ class Webhooks
     public function __construct($hooks = NULL, $braintree = NULL)
     {
         $this->hooks = $hooks ?: new Payments\Hooks();
-        $this->braintree = $braintree ?: Payments\Factory::build("Braintree");
+        $this->braintree = $braintree;
     }
 
     /**
