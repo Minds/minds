@@ -70,13 +70,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         Factory::isLoggedIn();
         $response = [];
 
-        if (isset($_POST['container_guid'])) {
-            $owner_guid = Core\Events\Dispatcher::trigger('archive:container:owner', 'all', [
-                'container' => $_POST['container_guid']
-            ]) ?: Core\Session::getLoggedInUserGuid();
-        } else {
-            $owner_guid = Core\Session::getLoggedInUserGuid();
-        }
+        $owner_guid = Core\Session::getLoggedInUserGuid();
 
         if(!is_numeric($pages[0])){
             //images should still use put, large videos use post because of memory issues.
