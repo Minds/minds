@@ -131,8 +131,12 @@ minds-groups-profile{
       margin-left: 0.5em;
     }
   }
+
+  minds-groups-profile-members {
+    margin-top: 0 !important;
+  }
   minds-groups-profile-members-invite {
-    margin: $minds-padding;
+    margin: 0 $minds-padding $minds-padding;
     width: 100%;
   }
 
