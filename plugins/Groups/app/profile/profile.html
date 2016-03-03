@@ -1,5 +1,5 @@
 <header *ngIf="group">
-  <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" (added)="add_banner($event)"></minds-banner>
+  <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" [done]="editDone" (added)="add_banner($event)"></minds-banner>
 
   <div class="mdl-grid groups-grid-bottom group-header-bar" style="max-width:900px" *ngIf="group">
 

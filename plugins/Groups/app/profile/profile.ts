@@ -41,6 +41,7 @@ export class GroupsProfile {
     container_guid: 0
   };
   editing : boolean = false;
+  editDone: boolean = false;
   session = SessionFactory.build();
   minds = window.Minds;
 
@@ -84,10 +85,15 @@ export class GroupsProfile {
 
       });
     this.editing = false;
+    this.editDone = true;
   }
 
   toggleEdit(){
     this.editing = !this.editing;
+
+    if (this.editing) {
+      this.editDone = false;
+    }
   }
 
   add_banner(file : any){

@@ -94,12 +94,7 @@ minds-groups-profile{
     overflow: hidden;
 
     .save-bar {
-      bottom: 56px !important;
-      pointer-events: none;
-
-      minds-button-edit {
-        pointer-events: all;
-      }
+      display: none !important;
     }
   }
 
