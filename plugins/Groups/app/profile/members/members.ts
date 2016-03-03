@@ -30,6 +30,7 @@ export class GroupsProfileMembers {
   offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+  canInvite: boolean = false;
 
 	constructor(public client: Client){
 
@@ -45,6 +46,14 @@ export class GroupsProfileMembers {
 
     if(this.inProgress)
       return;
+
+    this.canInvite = false;
+
+    if (this.group.membership == 0 && this.group.can_edit) {
+      this.canInvite = true;
+    } else if (this.group.membership == 2 && this.group.member) {
+      this.canInvite = true;
+    }
 
     this.inProgress = true;
     this.client.get('api/v1/groups/membership/' + this.group.guid, { limit: 12, offset: this.offset })

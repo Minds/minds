@@ -1,4 +1,4 @@
-<minds-groups-profile-members-invite [group]="group"></minds-groups-profile-members-invite>
+<minds-groups-profile-members-invite *ngIf="canInvite" [group]="group"></minds-groups-profile-members-invite>
 
 <div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="#member of members">
     <div class="mdl-card mdl-shadow--2dp">
