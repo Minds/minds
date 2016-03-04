@@ -50,6 +50,10 @@ class Membership
             'inverse' => true
         ]);
 
+        if (!$guids) {
+            return [];
+        }
+
         if (!$opts['hydrate']) {
             return $guids;
         }
