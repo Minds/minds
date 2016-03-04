@@ -82,6 +82,7 @@ class group implements Interfaces\Api
             // Specific updating (uploads)
 
             $response = [ 'done' => false ];
+            $group_owner = EntitiesFactory::build($group->getOwnerObj());
 
             switch ($pages[1]) {
                 case "avatar":
@@ -91,7 +92,7 @@ class group implements Interfaces\Api
                             $resized = get_resized_image_from_uploaded_file('file', $icon_sizes[$size]['w'], $icon_sizes[$size]['h'], $icon_sizes[$size]['square']);
 
                             $file = new FileEntity();
-                            $file->owner_guid = $group->getOwnerObj()->guid;
+                            $file->owner_guid = $group_owner->getGuid();
                             $file->setFilename("groups/{$group->getGuid()}{$size}.jpg");
                             $file->open('write');
                             $file->write($resized);
@@ -224,9 +225,11 @@ class group implements Interfaces\Api
 
     protected function uploadBanner(GroupEntity $group, $banner_position)
     {
+        $group_owner = EntitiesFactory::build($group->getOwnerObj());
+
         $resized = get_resized_image_from_uploaded_file('file', 3840, 1404);
         $file = new FileEntity();
-        $file->owner_guid = $group->getOwnerObj()->guid;
+        $file->owner_guid = $group_owner->getGuid();
         $file->setFilename("group/{$group->getGuid()}.jpg");
         $file->open('write');
         $file->write($resized);
