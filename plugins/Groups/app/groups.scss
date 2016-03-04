@@ -205,13 +205,13 @@ minds-groups-profile{
 
       .mdl-card__title {
         padding-bottom: 0;
-      }
-
-      .members-invite-link {
-        padding-top: 0;
-        padding-bottom: 0;
+        position: relative;
 
         > a {
+          position: absolute;
+          right: 16px;
+          top: 25px;
+          font-size: 13px;
           color: inherit;
           text-decoration: none;
           border-bottom: 1px dotted #ddd;
