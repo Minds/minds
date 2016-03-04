@@ -17,12 +17,12 @@ import { SignupOnActionModal } from '../../components/modal/modal';
 })
 @View({
   template: `
-    <button class="minds-group-join-button" *ngIf="!group.invited && !group.member" (click)="join()">Join</button>
-    <span *ngIf="group.invited &amp;&amp; !group.member">
+    <button class="minds-group-join-button" *ngIf="!group['is:invited'] && !group['is:member']" (click)="join()">Join</button>
+    <span *ngIf="group['is:invited'] &amp;&amp; !group['is:member']">
       <button class="minds-group-join-button" (click)="accept()">Accept</button>
       <button class="minds-group-join-button" (click)="decline()">Decline</button>
     </span>
-    <button class="minds-group-join-button subscribed " *ngIf="group.member" (click)="leave()">Leave</button>
+    <button class="minds-group-join-button subscribed " *ngIf="group['is:member']" (click)="leave()">Leave</button>
     <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ngIf="!session.isLoggedIn()"></m-modal-signup-on-action>
   `,
   directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, SignupOnActionModal ]
@@ -47,7 +47,7 @@ export class GroupsJoinButton {
    * Check if is a member
    */
   isMember(){
-    if(this.group.member)
+    if(this.group['is:member'])
       return true;
     return false;
   }
@@ -62,13 +62,13 @@ export class GroupsJoinButton {
     }
 
     var self = this;
-    this.group.member = true;
+    this.group['is:member'] = true;
     this.client.put('api/v1/groups/membership/' + this.group.guid)
       .then((response : any) => {
-        self.group.member = true;
+        self.group['is:member'] = true;
       })
       .catch((e) => {
-        self.group.member = false;
+        self.group['is:member'] = false;
       });
 
   }
@@ -79,13 +79,13 @@ export class GroupsJoinButton {
   leave(){
 
     var self = this;
-    this.group.member = false;
+    this.group['is:member'] = false;
     this.client.delete('api/v1/groups/membership/' + this.group.guid)
      .then((response : any) => {
-       self.group.member = false;
+       self.group['is:member'] = false;
      })
      .catch((e) => {
-      this.group.member = true;
+      this.group['is:member'] = true;
      });
 
   }
@@ -100,21 +100,21 @@ export class GroupsJoinButton {
     }
 
     var self = this;
-    this.group.member = true;
-    this.group.invited = false;
+    this.group['is:member'] = true;
+    this.group['is:invited'] = false;
     this.client.post(`api/v1/groups/invitations/${this.group.guid}/accept`, {})
       .then((response : any) => {
         if (response.done) {
-          self.group.member = true;
-          self.group.invited = false;
+          self.group['is:member'] = true;
+          self.group['is:invited'] = false;
         } else {
-          self.group.member = false;
-          self.group.invited = true;
+          self.group['is:member'] = false;
+          self.group['is:invited'] = true;
         }
       })
       .catch((e) => {
-        self.group.member = false;
-        self.group.invited = true;
+        self.group['is:member'] = false;
+        self.group['is:invited'] = true;
       });
 
   }
@@ -129,21 +129,21 @@ export class GroupsJoinButton {
     }
 
     var self = this;
-    this.group.member = false;
-    this.group.invited = false;
+    this.group['is:member'] = false;
+    this.group['is:invited'] = false;
     this.client.post(`api/v1/groups/invitations/${this.group.guid}/decline`, {})
       .then((response : any) => {
-        self.group.member = false;
+        self.group['is:member'] = false;
 
         if (response.done) {
-          self.group.invited = false;
+          self.group['is:invited'] = false;
         } else {
-          self.group.invited = true;
+          self.group['is:invited'] = true;
         }
       })
       .catch((e) => {
-        self.group.member = false;
-        self.group.invited = true;
+        self.group['is:member'] = false;
+        self.group['is:invited'] = true;
       });
 
   }

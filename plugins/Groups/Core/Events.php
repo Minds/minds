@@ -28,20 +28,37 @@ class Events
         });
 
         Dispatcher::register('acl:read', 'activity', function ($e) {
-
-            $access = EntitiesFactory::build($entity->access_id);
+            $params = $e->getParameters();
+            $entity = $params['entity'];
+            $access_entity = EntitiesFactory::build($entity->access_id);
 
             // TODO: [emi] Find a better way to check
-            if (!is_object($access) || !method_exists($access, 'getType') || $access->getType() != 'group') {
+            if (!is_object($access_entity) || !method_exists($access_entity, 'getType') || $access_entity->getType() != 'group') {
                 return;
             }
 
-            $params = $e->getParameters();
-            $entity = $params['entity'];
             $user = $params['user'];
-            $membership = new Membership($access);
+            $membership = new Membership($access_entity);
 
             $e->setResponse($membership->isMember($user->guid));
+        });
+
+        Dispatcher::register('acl:read', 'group', function($e) {
+            $params = $e->getParameters();
+            $group = $params['entity'];
+            $user = $params['user'];
+
+            $membership = new Membership($group);
+            $e->setResponse($membership->isMember($user->guid));
+        });
+
+        Dispatcher::register('acl:write', 'group', function($e) {
+            $params = $e->getParameters();
+            $group = $params['entity'];
+            $user = $params['user'];
+
+            $membership = new Membership($group);
+            $e->setResponse($membership->isOwner($user->guid) && $membership->isMember($user->guid));
         });
 
         Dispatcher::register('activity:container', 'group', function ($e) {

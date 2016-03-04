@@ -9,16 +9,16 @@ import { Client } from '../../../services/api';
   selector: 'minds-groups-settings-button',
   inputs: ['group'],
   template: `
-    <button class="material-icons" (click)="toggleMenu($event)">settings <i *ngIf="group.muted" class="minds-groups-button-badge material-icons">notifications_off</i></button>
+    <button class="material-icons" (click)="toggleMenu($event)">settings <i *ngIf="group['is:muted']" class="minds-groups-button-badge material-icons">notifications_off</i></button>
 
     <ul class="minds-dropdown-menu" [hidden]="!showMenu" >
-      <li class="mdl-menu__item" [hidden]="group.muted" (click)="mute()">Disable Notifications</li>
-      <li class="mdl-menu__item" [hidden]="!group.muted" (click)="unmute()">Enable Notifications</li>
-      <li class="mdl-menu__item" *ngIf="group.can_edit" [hidden]="group.deleted" (click)="deletePrompt()">Delete Group</li>
+      <li class="mdl-menu__item" [hidden]="group['is:muted']" (click)="mute()">Disable Notifications</li>
+      <li class="mdl-menu__item" [hidden]="!group['is:muted']" (click)="unmute()">Enable Notifications</li>
+      <li class="mdl-menu__item" *ngIf="group['is:owner']" [hidden]="group.deleted" (click)="deletePrompt()">Delete Group</li>
     </ul>
     <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
-    <minds-groups-modal-dialog *ngIf="group.can_edit && isGoingToBeDeleted">
+    <minds-groups-modal-dialog *ngIf="group['is:owner'] && isGoingToBeDeleted">
       <div class="minds-groups-modal-dialog-wrapper">
         <div class="mdl-card mdl-shadow--2dp">
           <div class="mdl-card__supporting-text">
@@ -43,7 +43,7 @@ import { Client } from '../../../services/api';
 export class GroupsSettingsButton {
 
   group: any = {
-    muted: false,
+    'is:muted': false,
     deleted: false
   };
   showMenu: boolean = false;
@@ -54,25 +54,25 @@ export class GroupsSettingsButton {
   }
 
   mute(){
-    this.group.muted = true;
+    this.group['is:muted'] = true;
     this.client.post(`api/v1/groups/notifications/${this.group.guid}/mute`, { })
       .then((response : any) => {
-        this.group.muted = true;
+        this.group['is:muted'] = true;
       })
       .catch((e) => {
-        this.group.muted = false;
+        this.group['is:muted'] = false;
       });
     this.showMenu = false;
   }
 
   unmute(){
-    this.group.muted = false;
+    this.group['is:muted'] = false;
     this.client.post(`api/v1/groups/notifications/${this.group.guid}/unmute`, { })
     .then((response : any) => {
-      this.group.muted = false;
+      this.group['is:muted'] = false;
     })
     .catch((e) => {
-      this.group.muted = true;
+      this.group['is:muted'] = true;
     });
     this.showMenu = false;
   }

@@ -47,11 +47,12 @@ export class GroupsProfileMembers {
     if(this.inProgress)
       return;
 
+    // TODO: [emi] Send this via API
     this.canInvite = false;
 
-    if (this.group.membership == 0 && this.group.can_edit) {
+    if (this.group.membership == 0 && this.group['is:owner']) {
       this.canInvite = true;
-    } else if (this.group.membership == 2 && this.group.member) {
+    } else if (this.group.membership == 2 && this.group['is:member']) {
       this.canInvite = true;
     }
 

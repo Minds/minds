@@ -7,6 +7,7 @@ namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
 use Minds\Core\Session;
+use Minds\Core\Security\ACL;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
@@ -24,17 +25,25 @@ class invitations implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $user = Session::getLoggedInUser();
 
-        if ($group->isMember($user)) {
-            return Factory::response([
-                'invited' => false
-            ]);
+        if (!ACL::_()->read($this->group, $user)) {
+            return Factory::response([]);
         }
 
-        $invitations = new CoreInvitations($group);
-
-        return Factory::response([
-            'invited' => $invitations->isInvited($user)
+        $invitees = (new CoreInvitations($group))->getInvitations([
+            'hydrate' => true,
+            'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 12,
+            'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
         ]);
+
+        $response = [
+            'users' => $invitees
+        ];
+
+        if ($invitees) {
+            $response['load-next'] = (string) end($invitees)->guid;
+        }
+
+        return Factory::response($response);
     }
 
     public function post($pages)

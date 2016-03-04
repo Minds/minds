@@ -10,6 +10,7 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Core\Security\ACL;
 use Minds\Core\Entities;
 use Minds\Entities\User;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class Membership
@@ -22,11 +23,12 @@ class Membership
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null, $notifications = null)
+    public function __construct(GroupEntity $group, $db = null, $notifications = null, $acl = null)
     {
         $this->group = $group ?: new GroupEntity();
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->notifications = $notifications ?: new Notifications($this->group);
+        $this->acl = $acl ?: ACL::_();
     }
 
     /**
@@ -141,7 +143,7 @@ class Membership
         $canJoin = $this->group->isPublic();
 
         if (!$canJoin && $opts['executing_user']) {
-            $canJoin = $this->group->canEdit($opts['executing_user']);
+            $canJoin = $this->acl->write($this->group, EntitiesFactory::build($opts['executing_user']));
         }
 
         if ($opts['force'] || $canJoin) {
@@ -220,7 +222,7 @@ class Membership
             return false;
         }
 
-        if (!$actor || !$this->canEdit($actor)) {
+        if (!$actor || !$this->acl->write($this->group, EntitiesFactory::build($actor))) {
             return false;
         }
 
@@ -255,7 +257,7 @@ class Membership
             return false;
         }
 
-        if (!$actor || !$this->canEdit($actor)) {
+        if (!$actor || !$this->acl->write($this->group, EntitiesFactory::build($actor))) {
             return false;
         }
 
@@ -284,15 +286,36 @@ class Membership
 
     /**
      * Gets the GUIDs of banned users
+     * @param  array $opts
      * @return array
      */
-    public function getBannedUsers()
+    public function getBannedUsers($opts)
     {
+        $opts = array_merge([
+            'limit' => 12,
+            'offset' => '',
+            'hydrate' => true
+        ], $opts);
+
         $this->relDB->setGuid($this->group->getGuid());
 
-        return $this->relDB->get('group:banned', [
+        $guids = $this->relDB->get('group:banned', [
+            'limit' => $opts['limit'],
+            'offset' => $opts['offset'],
             'inverse' => true
         ]);
+
+        if (!$guids) {
+            return [];
+        }
+
+        if (!$opts['hydrate']) {
+            return $guids;
+        }
+
+        $users = Entities::get([ 'guids' => $guids ]);
+
+        return $users;
     }
 
     /**
@@ -317,19 +340,44 @@ class Membership
     }
 
     /**
-     * Checks (via ACL) if the user can edit the group
+     * Checks if the user owns the group. Used by ACL event.
      * @param  mixed   $user
      * @return boolean
      */
-    public function canEdit($user)
+    public function isOwner($user)
     {
         if (!$user) {
             return false;
         }
 
-        $user = !is_object($user) ? new User($user) : $user;
+        if ($this->isCreator($user)) {
+            return true;
+        }
 
-        return ACL::_()->write($this->group, $user);
+        $user_guid = is_object($user) ? $user->guid : $user;
+
+        return in_array($user_guid, $this->group->getOwnerGuids());
+    }
+
+    /**
+     * Checks if the user is the creator of the group. Used by ACL event.
+     * @param  mixed   $user
+     * @return boolean
+     */
+    public function isCreator($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+        $owner = $this->group->getOwnerObj();
+
+        if (!$owner) {
+            return false;
+        }
+
+        return $user_guid == $owner->guid;
     }
 
     /**

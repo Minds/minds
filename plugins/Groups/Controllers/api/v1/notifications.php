@@ -24,14 +24,14 @@ class notifications implements Interfaces\Api
 
         if (!$group->isMember($user)) {
             return Factory::response([
-                'muted' => false
+                'is:muted' => false
             ]);
         }
 
         $notifications = new CoreNotifications($group);
 
         return Factory::response([
-            'muted' => $notifications->isMuted($user)
+            'is:muted' => $notifications->isMuted($user)
         ]);
     }
 
@@ -52,12 +52,12 @@ class notifications implements Interfaces\Api
             case 'mute':
                 $notifications->mute($user);
                 return Factory::response([
-                    'muted' => true
+                    'is:muted' => true
                 ]);
             case 'unmute':
                 $notifications->unmute($user);
                 return Factory::response([
-                    'muted' => false
+                    'is:muted' => false
                 ]);
         }
 

@@ -27,6 +27,7 @@ class Group extends NormalizedEntity
     protected $featured = 0;
     protected $featured_id;
     protected $tags = '';
+    protected $owner_guids = [];
 
     protected $exportableDefaults = [
         'guid',
@@ -67,6 +68,7 @@ class Group extends NormalizedEntity
             'featured' => $this->featured,
             'featured_id' => $this->featured_id,
             'tags' => $this->tags,
+            'owner_guids' => $this->owner_guids,
         ]);
 
         if (!$saved) {
@@ -100,6 +102,10 @@ class Group extends NormalizedEntity
     {
         if ($name === 'guid') {
             return $this->getGuid();
+        } elseif ($name === 'type') {
+            return $this->getType();
+        } elseif ($name === 'container_guid') {
+            return null;
         } elseif ($name === 'owner_guid') {
             return $this->getOwnerObj() ? $this->getOwnerObj()->guid : null;
         }
@@ -379,6 +385,57 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Sets `owner_guids`
+     * @param array $owner_guids
+     * @return Group
+     */
+    public function setOwnerGuids(array $owner_guids)
+    {
+        $this->owner_guids = array_filter(array_unique($owner_guids), [ $this, 'isValidOwnerGuid' ]);
+
+        return $this;
+    }
+
+    /**
+     * Returns if a GUID is valid. Used internally.
+     * @param  mixed  $guid
+     * @return boolean
+     */
+    public function isValidOwnerGuid($guid)
+    {
+        return (bool) $guid && (is_numeric($guid) || is_string($guid));
+    }
+
+    /**
+     * Gets `owner_guids`
+     * @return mixed
+     */
+    public function getOwnerGuids()
+    {
+        return $this->owner_guids ?: [];
+    }
+
+    /**
+     * Push a new GUID onto `owner_guids`
+     * @param mixed $guid
+     * @return Group
+     */
+    public function pushOwnerGuid($guid)
+    {
+        return $this->setOwnerGuids(array_merge($this->getOwnerGuids(), [ $guid ]));
+    }
+
+    /**
+     * Remove a GUID from `owner_guids`
+     * @param mixed $guid
+     * @return Group
+     */
+    public function removeOwnerGuid($guid)
+    {
+        return $this->setOwnerGuids(array_diff($this->getOwnerGuids(), [ $guid ]));
+    }
+
+    /**
      * Checks if a user is member of this group
      * @param  User    $user
      * @return boolean
@@ -413,9 +470,19 @@ class Group extends NormalizedEntity
      * @param  User    $user
      * @return boolean
      */
-    public function canEdit($user = null)
+    public function isOwner($user = null)
     {
-        return (new Membership($this))->canEdit($user);
+        return (new Membership($this))->isOwner($user);
+    }
+
+    /**
+     * Checks if a user is the group's creator
+     * @param  User    $user
+     * @return boolean
+     */
+    public function isCreator($user = null)
+    {
+        return (new Membership($this))->isCreator($user);
     }
 
     /**
@@ -468,16 +535,15 @@ class Group extends NormalizedEntity
     /**
      * Public facing properties export
      * @param  array  $keys
-     * @param  User   $user
      * @return array
      */
-    public function export(array $keys = [], $user = null)
+    public function export(array $keys = [])
     {
         $export = parent::export($keys);
-        $export['owner_guid'] = $this->getOwnerObj()->guid;
-        $export['member'] = $user ? $this->isMember($user) : false;
-        $export['members:count'] = 0;
 
+        // Compatibility keys
+        $export['owner_guid'] = $this->getOwnerObj()->guid;
+        $export['members:count'] = 0;
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
 

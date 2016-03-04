@@ -1,3 +1,8 @@
+<div class="mdl-color--white mdl-color-text--grey-600 minds-group-invite-dialog" *ngIf="group &amp;&amp; !group['is:member'] &amp;&amp; group['is:invited']">
+  You were invited to join {{ group.name }}<br>
+  <br>
+  <minds-groups-join-button [group]="group" *ngIf="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
+</div>
 <header *ngIf="group">
   <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" [done]="editDone" (added)="add_banner($event)"></minds-banner>
 
@@ -16,22 +21,22 @@
         <span>Members</span>
         <b>{{group['members:count']}}</b>
       </a>
-      <a *ngIf="group.membership != 2" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+      <a *ngIf="group['is:owner'] && group.membership != 2" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
         <span>Requests</span>
         <b>{{group['requests:count']}}</b>
       </a>
 
       <div class="mdl-tabs__tab mdl-tabs__action-buttons">
-        <minds-button-edit (click)="toggleEdit()" [hidden]="editing" *ngIf="group.can_edit">
+        <minds-button-edit (click)="toggleEdit()" [hidden]="editing" *ngIf="group['is:owner']">
           <button class="material-icons">mode_edit</button>
         </minds-button-edit>
-        <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group.can_edit">
+        <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group['is:owner']">
           <button>Save changes</button>
         </minds-button-edit>
         <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
         <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
 
-        <minds-groups-join-button [group]="group" *ngIf="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
+        <minds-groups-join-button [group]="group" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
       </div>
     </div>
   </div>
@@ -65,7 +70,7 @@
           <h1>{{group.name}}</h1>
         </div>
 
-        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
+        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
           <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
         </div>
 
@@ -78,7 +83,7 @@
           <span>{{group.briefdescription}}</span>
         </div>
 
-        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
+        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
           <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
         </div>
 
@@ -92,7 +97,7 @@
           <span>{{group.tags}}</span>
         </div>
 
-        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
           <input type="text" class="icon-prefix" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags" />
         </div>
@@ -112,7 +117,7 @@
           <span>Closed Group</span>
         </div>
 
-        <div *ngIf="editing && group.can_edit" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
           <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
           <select class="icon-prefix" [(ngModel)]="group.membership">
             <option value="2">Open Group</option>

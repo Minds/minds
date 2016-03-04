@@ -8,14 +8,14 @@ import { Client } from '../../../services/api';
   selector: 'minds-groups-card-user-actions-button',
   inputs: ['group', 'user'],
   template: `
-  <button *ngIf="group.can_edit" (click)="toggleMenu($event)">
+  <button *ngIf="group['is:owner']" (click)="toggleMenu($event)">
     <i class="material-icons">settings</i>
   </button>
 
   <ul class="minds-dropdown-menu" [hidden]="!showMenu">
-    <li class="mdl-menu__item" *ngIf="group.can_edit && !wasKicked" (click)="removePrompt()">Remove</li>
-    <li class="mdl-menu__item" *ngIf="group.can_edit && wasKicked && !wasReInvited" (click)="reInvite()">Re-invite</li>
-    <li class="mdl-menu__item" *ngIf="group.can_edit && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !wasKicked" (click)="removePrompt()">Remove</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasKicked && !wasReInvited" (click)="reInvite()">Re-invite</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
@@ -44,7 +44,6 @@ import { Client } from '../../../services/api';
 export class GroupsCardUserActionsButton {
 
   group: any = {
-    muted: false
   };
   user: any = {
   };

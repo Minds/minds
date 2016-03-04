@@ -7,6 +7,7 @@ namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
 use Minds\Core\Session;
+use Minds\Core\Security\ACL;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
@@ -49,8 +50,8 @@ class membership implements Interfaces\Api
             $response['load-next'] = end($users)->user;
             break;
           case "bans":
-            if (!$membership->canEdit(Session::getLoggedInUser())) {
-              return Factory::response([]);
+            if (!ACL::_()->write($group, Session::getLoggedInUser())) {
+                return Factory::response([]);
             }
 
             $users = $membership->getBannedUsers();

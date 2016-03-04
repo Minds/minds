@@ -5,7 +5,9 @@
 namespace Minds\Plugin\Groups\Core;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Security\ACL;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Entities;
 use Minds\Core\Queue\Client as QueueClient;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User as User;
@@ -21,23 +23,44 @@ class Invitations
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null)
+    public function __construct(GroupEntity $group, $db = null, $acl = null)
     {
         $this->group = $group;
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
+        $this->acl = $acl ?: ACL::_();
     }
 
     /**
      * Fetch the group invitations
      * @return array
      */
-    public function getInvitations()
+    public function getInvitations(array $opts = [])
     {
+        $opts = array_merge([
+            'limit' => 12,
+            'offset' => '',
+            'hydrate' => true
+        ], $opts);
+
         $this->relDB->setGuid($this->group->getGuid());
 
-        return $this->relDB->get('group:invited', [
+        $guids = $this->relDB->get('group:invited', [
+            'limit' => $opts['limit'],
+            'offset' => $opts['offset'],
             'inverse' => true
         ]);
+
+        if (!$guids) {
+            return [];
+        }
+
+        if (!$opts['hydrate']) {
+            return $guids;
+        }
+
+        $users = Entities::get([ 'guids' => $guids ]);
+
+        return $users;
     }
 
     /**
@@ -190,7 +213,7 @@ class Invitations
             return true;
         } elseif ($this->group->isPublic() && $this->group->isMember($user)) {
             return $invitee ? $this->userHasSubscriber($user, $invitee) : true;
-        } elseif (!$this->group->isPublic() && $this->group->canEdit($user)) {
+        } elseif (!$this->group->isPublic() && $this->acl->write($this->group, $user)) {
             return $invitee ? $this->userHasSubscriber($user, $invitee) : true;
         }
 

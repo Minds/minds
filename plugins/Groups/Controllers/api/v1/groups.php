@@ -66,7 +66,7 @@ class groups implements Interfaces\Api
         $user = Session::getLoggedInUser();
 
         for ($i = 0; $i < count($response['groups']); $i++) {
-            $response['groups'][$i]['member'] = $groups[$i]->isMember($user);
+            $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
         }
 
         if (!isset($response['load-next']) && $groups) {

@@ -7,6 +7,7 @@ namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
 use Minds\Core\Session;
+use Minds\Core\Security\ACL;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\File as FileEntity;
@@ -34,15 +35,29 @@ class group implements Interfaces\Api
         $notifications = new Notifications($group);
         $invitations = new Invitations($group);
 
-        $response['group'] = $group->export([], Session::getLoggedInUser());
+        $response['group'] = $group->export();
         $response['group']['activity:count'] = $activity->count();
-        $response['group']['muted'] = $notifications->isMuted(Session::getLoggedInUser());
-        $response['group']['invited'] = $invitations->isInvited(Session::getLoggedInUser());
-        $response['group']['members'] = Factory::exportable($membership->getMembers());
-        $response['group']['members:count'] = $membership->getMembersCount();
-        $response['group']['requests'] = [];
-        $response['group']['requests:count'] = $membership->getRequestsCount();
-        $response['group']['can_edit'] = $membership->canEdit(Session::getLoggedInUser());
+
+        $user = Session::getLoggedInUser();
+        $can_read = $user && ACL::_()->read($group, $user);
+
+        $response['group']['is:invited'] = $user ? $invitations->isInvited($user) : false;
+
+        $response['group']['members'] = $can_read ? Factory::exportable($membership->getMembers()) : [];
+        $response['group']['members:count'] = $can_read ? $membership->getMembersCount() : '';
+        $response['group']['is:member'] = $can_read ? $group->isMember($user) : false;
+
+        if ($can_read) {
+            $response['group']['is:muted'] = $notifications->isMuted($user);
+            $response['group']['is:creator'] = $group->isCreator($user);
+
+            $owner = $group->isOwner($user);
+            $response['group']['is:owner'] = $owner;
+
+            if ($owner) {
+                $response['group']['requests:count'] = $membership->getRequestsCount();
+            }
+        }
 
         return Factory::response($response);
     }
@@ -54,6 +69,10 @@ class group implements Interfaces\Api
         if (isset($pages[0])) {
             $creation = false;
             $group = EntitiesFactory::build($pages[0]);
+
+            if (!ACL::_()->write($group, Session::getLoggedInUser())) {
+                throw new \Exception('You do not have enough permissions');
+            }
         } else {
             $creation = true;
             $group = new GroupEntity();
@@ -62,8 +81,7 @@ class group implements Interfaces\Api
         if (isset($pages[1]) && $group->getGuid()) {
             // Specific updating (uploads)
 
-            $response = [];
-            $group_owner = EntitiesFactory::build($group->getOwnerObj());
+            $response = [ 'done' => false ];
 
             switch ($pages[1]) {
                 case "avatar":
@@ -73,7 +91,7 @@ class group implements Interfaces\Api
                             $resized = get_resized_image_from_uploaded_file('file', $icon_sizes[$size]['w'], $icon_sizes[$size]['h'], $icon_sizes[$size]['square']);
 
                             $file = new FileEntity();
-                            $file->owner_guid = $group_owner->getGuid();
+                            $file->owner_guid = $group->getOwnerObj()->guid;
                             $file->setFilename("groups/{$group->getGuid()}{$size}.jpg");
                             $file->open('write');
                             $file->write($resized);
@@ -81,11 +99,13 @@ class group implements Interfaces\Api
                         }
                         $group->setIconTime(time());
                         $group->save();
+                        $response['done'] = true;
                     }
                     break;
                 case "banner":
                     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                         $this->uploadBanner($group, $_POST['banner_position']);
+                        $response['done'] = true;
                     }
                     break;
             }
@@ -111,6 +131,12 @@ class group implements Interfaces\Api
 
         if (isset($_POST['membership'])) {
             $group->setMembership($_POST['membership']);
+
+            if ($_POST['membership'] == 2) {
+                $group->setAccessId(ACCESS_PUBLIC);
+            } elseif ($_POST['membership'] == 0) {
+                $group->setAccessId(ACCESS_PRIVATE);
+            }
         }
 
         if (isset($_POST['tags'])) {
@@ -168,15 +194,15 @@ class group implements Interfaces\Api
         Factory::isLoggedIn();
 
         $group = EntitiesFactory::build($pages[0]);
+        $user = Session::getLoggedInUser();
 
-        if (!$group || !$group->getGuid()) {
+        if (!$user || !$group || !$group->getGuid()) {
             return Factory::response([]);
         }
 
-        $current_user = Session::getLoggedInUser();
         $group_owner = EntitiesFactory::build($group->getOwnerObj());
 
-        if (!$current_user || (!$current_user->isAdmin() && $group_owner->guid != $current_user->guid)) {
+        if (!ACL::_()->write($group, $user)) {
             return Factory::response([]);
         }
 
@@ -198,11 +224,9 @@ class group implements Interfaces\Api
 
     protected function uploadBanner(GroupEntity $group, $banner_position)
     {
-        $group_owner = EntitiesFactory::build($group->getOwnerObj());
-
-        $resized = get_resized_image_from_uploaded_file('file', 2000);
+        $resized = get_resized_image_from_uploaded_file('file', 3840, 1404);
         $file = new FileEntity();
-        $file->owner_guid = $group_owner->getGuid();
+        $file->owner_guid = $group->getOwnerObj()->guid;
         $file->setFilename("group/{$group->getGuid()}.jpg");
         $file->open('write');
         $file->write($resized);
