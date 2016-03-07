@@ -23,10 +23,12 @@ class Invitations
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null, $acl = null)
+    public function __construct(GroupEntity $group, $db = null, $acl = null, $friendsDB = null)
     {
         $this->group = $group;
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
+        // TODO: [emi] Ask Mark about a 'friendsof' replacement (or create a DI entry)
+        $this->friendsDB = $friendsDB ?: new \Minds\Core\Data\Call('friendsof');
         $this->acl = $acl ?: ACL::_();
     }
 
@@ -74,7 +76,7 @@ class Invitations
             return [];
         }
 
-        $invited_guids = $this->getInvitations();
+        $invited_guids = $this->getInvitations([ 'hydrate' => false ]);
         $result = [];
 
         foreach ($users as $user) {
@@ -107,18 +109,25 @@ class Invitations
      * @param  mixed   $from
      * @return boolean
      */
-    public function invite($invitee, $from)
+    public function invite($invitee, $actor, array $opts = [])
     {
+        $opts = array_merge([
+            'notify' => true
+        ], $opts);
+
         if (!$invitee) {
             return false;
         }
 
-        if (!$from) {
+        if (!$actor) {
             return false;
         }
 
-        $from = !is_object($from) ? EntityFactory::build($from) : $from;
-        $canInvite = $this->userCanInvite($from, $invitee);
+        if ($actor && !($actor instanceof User)) {
+            $actor = EntityFactory::build($actor);
+        }
+
+        $canInvite = $this->userCanInvite($actor, $invitee);
 
         if (!$canInvite) {
             return false;
@@ -130,14 +139,16 @@ class Invitations
 
         $invited = $this->relDB->create('group:invited', $this->group->getGuid());
 
-        Dispatcher::trigger('notification', 'all', [
-            'to' => [ $invitee_guid ],
-            'notification_view' => 'group_invite',
-            'params' => [
-                'group' => $this->group->export(),
-                'user' => $from->username
-            ]
-        ]);
+        if ($opts['notify']) {
+            Dispatcher::trigger('notification', 'all', [
+                'to' => [ $invitee_guid ],
+                'notification_view' => 'group_invite',
+                'params' => [
+                    'group' => $this->group->export(),
+                    'user' => $actor->username
+                ]
+            ]);
+        }
 
         return $invited;
     }
@@ -148,18 +159,21 @@ class Invitations
      * @param  mixed   $from
      * @return boolean
      */
-    public function uninvite($invitee, $from)
+    public function uninvite($invitee, $actor)
     {
         if (!$invitee) {
             return false;
         }
 
-        if (!$from) {
+        if (!$actor) {
             return false;
         }
 
-        $from = !is_object($from) ? EntityFactory::build($from) : $from;
-        $canInvite = $this->userCanInvite($from, $invitee);
+        if ($actor && !($actor instanceof User)) {
+            $actor = EntityFactory::build($actor);
+        }
+
+        $canInvite = $this->userCanInvite($actor, $invitee);
 
         if (!$canInvite) {
             return false;
@@ -176,6 +190,10 @@ class Invitations
     public function accept($invitee)
     {
         if (!$invitee) {
+            return false;
+        }
+
+        if (!$this->isInvited($invitee)) {
             return false;
         }
 
@@ -206,8 +224,13 @@ class Invitations
      */
     public function userCanInvite($user, $invitee = null)
     {
-        $user = !is_object($user) ? EntityFactory::build($user) : $user;
-        $invitee = $invitee && !is_object($invitee) ? EntityFactory::build($invitee) : $invitee;
+        if ($user && !($user instanceof User)) {
+            $user = EntityFactory::build($user);
+        }
+
+        if ($invitee && !($user instanceof User)) {
+            $invitee = EntityFactory::build($invitee);
+        }
 
         if ($user->isAdmin()) {
             return true;
@@ -228,11 +251,9 @@ class Invitations
      */
     protected function userHasSubscriber(User $user, User $subscriber)
     {
-        // TODO: [emi] Ask Mark about a 'friendsof' replacement (or create a DI entry)
-        $db = new \Minds\Core\Data\Call('friendsof');
-        $row = $db->getRow($user->getGuid(), [ 'limit' => 1, 'offset' => (string) $subscriber->getGuid() ]);
+        $row = $this->friendsDB->getRow($user->guid, [ 'limit' => 1, 'offset' => (string) $subscriber->guid ]);
 
-        return $row && isset($row[(string) $subscriber->getGuid()]);
+        return $row && isset($row[(string) $subscriber->guid]);
     }
 
     /**

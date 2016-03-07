@@ -67,8 +67,12 @@ class Group
      * Deletes a group and schedules its contents for deletion
      * @return boolean
      */
-    public function delete()
+    public function delete(array $opts = [])
     {
+        $opts = array_merge([
+            'cleanup' => true
+        ], $opts);
+
         $deleted = $this->group->delete();
 
         if (!$deleted) {
@@ -77,21 +81,23 @@ class Group
 
         $this->featured->unfeature($this->group);
 
-        QueueClient::build()->setExchange('mindsqueue')
-        ->setQueue('FeedCleanup')
-        ->send([
-            'guid' => $this->group->getGuid(),
-            'owner_guid' => $this->group->getOwnerObj()->guid,
-            'type' => $this->group->getType()
-        ]);
+        if ($opts['cleanup']) {
+            QueueClient::build()->setExchange('mindsqueue')
+            ->setQueue('FeedCleanup')
+            ->send([
+                'guid' => $this->group->getGuid(),
+                'owner_guid' => $this->group->getOwnerObj()->guid,
+                'type' => $this->group->getType()
+            ]);
 
-        QueueClient::build()->setExchange('mindsqueue')
-        ->setQueue('CleanupDispatcher')
-        ->send([
-            'type' => 'group',
-            'group' => $this->group->export()
-        ]);
-
+            QueueClient::build()->setExchange('mindsqueue')
+            ->setQueue('CleanupDispatcher')
+            ->send([
+                'type' => 'group',
+                'group' => $this->group->export()
+            ]);
+        }
+        
         return true;
     }
 }

@@ -472,7 +472,7 @@ class Group extends NormalizedEntity
      */
     public function isOwner($user = null)
     {
-        return (new Membership($this))->isOwner($user);
+        return $this->isCreator() || (new Membership($this))->isOwner($user);
     }
 
     /**

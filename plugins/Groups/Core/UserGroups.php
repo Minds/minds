@@ -19,7 +19,7 @@ class UserGroups
      */
     public function __construct(User $user, $db = null)
     {
-        $this->user = $user ?: new User();
+        $this->user = $user;
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
     }
 
@@ -32,10 +32,11 @@ class UserGroups
     {
         $opts = array_merge([
             'limit' => 12,
-            'offset' => ''
+            'offset' => '',
+            'hydrate' => true
         ], $opts);
 
-        $this->relDB->setGuid($this->user->getGuid());
+        $this->relDB->setGuid($this->user->guid);
 
         $guids = $this->relDB->get('member', [
             'limit' => $opts['limit'],
@@ -44,6 +45,10 @@ class UserGroups
 
         if (!$guids) {
             return [];
+        }
+
+        if (!$opts['hydrate']) {
+            return $guids;
         }
 
         $groups = Entities::get([ 'guids' => $guids ]);
