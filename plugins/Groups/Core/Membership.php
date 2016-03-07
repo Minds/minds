@@ -18,6 +18,7 @@ class Membership
     protected $group;
     protected $relDB;
     protected $notifications;
+    protected $acl;
 
     /**
      * Constructor
@@ -131,19 +132,23 @@ class Membership
     {
         $opts = array_merge([
             'force' => false,
-            'executing_user' => $user
+            'actor' => $user
         ], $opts);
 
         if (!$user) {
             return false;
         }
 
+        if ($opts['actor'] && !($opts['actor'] instanceof User)) {
+            $opts['actor'] = EntitiesFactory::build($opts['actor']);
+        }
+
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
         $canJoin = $this->group->isPublic();
 
-        if (!$canJoin && $opts['executing_user']) {
-            $canJoin = $this->acl->write($this->group, EntitiesFactory::build($opts['executing_user']));
+        if (!$canJoin && $opts['actor']) {
+            $canJoin = $this->acl->write($this->group, $opts['actor']);
         }
 
         if ($opts['force'] || $canJoin) {
@@ -222,7 +227,11 @@ class Membership
             return false;
         }
 
-        if (!$actor || !$this->acl->write($this->group, EntitiesFactory::build($actor))) {
+        if ($actor && !($actor instanceof User)) {
+            $actor = EntitiesFactory::build($actor);
+        }
+
+        if (!$actor || !$this->acl->write($this->group, $actor)) {
             return false;
         }
 
@@ -257,7 +266,11 @@ class Membership
             return false;
         }
 
-        if (!$actor || !$this->acl->write($this->group, EntitiesFactory::build($actor))) {
+        if ($actor && !($actor instanceof User)) {
+            $actor = EntitiesFactory::build($actor);
+        }
+
+        if (!$actor || !$this->acl->write($this->group, $actor)) {
             return false;
         }
 
@@ -289,7 +302,7 @@ class Membership
      * @param  array $opts
      * @return array
      */
-    public function getBannedUsers($opts)
+    public function getBannedUsers(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 12,
@@ -329,7 +342,7 @@ class Membership
             return [];
         }
 
-        $banned_guids = $this->getBannedUsers();
+        $banned_guids = $this->getBannedUsers([ 'hydrate' => false ]);
         $result = [];
 
         foreach ($users as $user) {
