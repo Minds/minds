@@ -116,16 +116,17 @@ class Notifications
 
         $this->relDB->setGuid($this->group->getGuid());
 
-        $member_guids = $this->relDB->get('member', [
+        $guids = $this->relDB->get('member', [
             'inverse' => true
         ]);
 
-        $exclude = array_merge($opts['exclude'], $this->getMutedMembers());
+        $guids = array_map([ $this, 'toString' ], $guids);
+        $exclude = array_unique(array_map(
+            [ $this, 'toString' ],
+            array_merge($opts['exclude'], $this->getMutedMembers())
+        ));
 
-        $member_guids = array_map([ $this, 'toString' ], $member_guids);
-        $exclude_guids = array_unique(array_map([ $this, 'toString' ], $exclude));
-
-        return array_diff($member_guids, $exclude_guids);
+        return array_values(array_diff($guids, $exclude));
     }
 
     /**
@@ -136,15 +137,15 @@ class Notifications
     {
         $this->relDB->setGuid($this->group->getGuid());
 
-        $muted_guids = $this->relDB->get('group:muted', [
+        $guids = $this->relDB->get('group:muted', [
             'inverse' => true
         ]);
 
-        if (!$muted_guids) {
+        if (!$guids) {
             return [];
         }
 
-        return array_keys($muted_guids);
+        return $guids;
     }
 
     /**
