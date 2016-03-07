@@ -13,9 +13,9 @@ use Minds\Core\Security\ACL;
 
 class MembershipSpec extends ObjectBehavior
 {
-    function it_is_initializable(GroupEntity $entity, Relationships $db)
+    function it_is_initializable(GroupEntity $entity, Relationships $db, Notifications $notifications, ACL $acl)
     {
-        $this->beConstructedWith($entity, $db);
+        $this->beConstructedWith($entity, $db, $notifications, $acl);
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Membership');
     }
 

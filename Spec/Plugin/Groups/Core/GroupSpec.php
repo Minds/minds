@@ -51,6 +51,6 @@ class GroupSpec extends ObjectBehavior
 
         $featured->unfeature($group)->shouldBeCalled();
 
-        $this->delete()->shouldReturn(true);
+        $this->delete([ 'cleanup' => false ])->shouldReturn(true);
     }
 }
