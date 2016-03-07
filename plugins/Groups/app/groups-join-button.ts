@@ -35,7 +35,7 @@ export class GroupsJoinButton {
   group : any;
   session = SessionFactory.build();
 
-  constructor(public client: Client){
+  constructor(public client: Client,  public router: Router){
     this.minds = window.Minds;
   }
 
@@ -66,6 +66,8 @@ export class GroupsJoinButton {
     this.client.put('api/v1/groups/membership/' + this.group.guid)
       .then((response : any) => {
         self.group['is:member'] = true;
+        // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+        window.location.reload();
       })
       .catch((e) => {
         self.group['is:member'] = false;
@@ -83,6 +85,8 @@ export class GroupsJoinButton {
     this.client.delete('api/v1/groups/membership/' + this.group.guid)
      .then((response : any) => {
        self.group['is:member'] = false;
+       // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+       window.location.reload();
      })
      .catch((e) => {
       this.group['is:member'] = true;
@@ -107,6 +111,8 @@ export class GroupsJoinButton {
         if (response.done) {
           self.group['is:member'] = true;
           self.group['is:invited'] = false;
+          // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+          window.location.reload();
         } else {
           self.group['is:member'] = false;
           self.group['is:invited'] = true;
