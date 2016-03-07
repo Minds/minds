@@ -9,6 +9,7 @@ use Minds\Entities\User;
 use Minds\Core\Data\Cassandra\Thrift\Relationships;
 use Minds\Plugin\Groups\Core\Notifications;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
+use Minds\Core\Security\ACL;
 
 class MembershipSpec extends ObjectBehavior
 {
@@ -81,33 +82,37 @@ class MembershipSpec extends ObjectBehavior
         $this->join($user)->shouldReturn(true);
     }
 
-    function it_should_request_to_join(GroupEntity $group, Relationships $db, User $user)
+    function it_should_request_to_join(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
-        $this->beConstructedWith($group, $db);
+        $this->beConstructedWith($group, $db, null, $acl);
 
         $user->get('guid')->willReturn(1);
+
         $group->getGuid()->willReturn(50);
         $group->isPublic()->shouldBeCalled()->willReturn(false);
-        $group->canEdit($user)->shouldBeCalled()->willReturn(false);
 
         $db->setGuid(1)->shouldBeCalled();
         $db->create('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
+
         $this->join($user)->shouldReturn(true);
     }
 
-    function it_should_forcefully_join_an_admin(GroupEntity $group, Relationships $db, User $user)
+    function it_should_forcefully_join_an_admin(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
-        $this->beConstructedWith($group, $db);
+        $this->beConstructedWith($group, $db, null, $acl);
 
         $user->get('guid')->willReturn(1);
+
         $group->getGuid()->willReturn(50);
         $group->isPublic()->shouldBeCalled()->willReturn(false);
-        $group->canEdit($user)->shouldBeCalled()->willReturn(true);
 
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('membership_request', 50)->shouldBeCalled();
         $db->create('member', 50)->shouldBeCalled()->willReturn(true);
+
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(true);
 
         $this->join($user)->shouldReturn(true);
     }
@@ -213,7 +218,7 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(50)->shouldBeCalled();
         $db->get('group:banned', Argument::any())->shouldBeCalled()->willReturn([3, 4, 5]);
 
-        $this->getBannedUsers()->shouldReturn([3, 4, 5]);
+        $this->getBannedUsers([ 'hydrate' => false ])->shouldReturn([3, 4, 5]);
     }
 
     function it_should_check_banned_users_in_batch(GroupEntity $group, Relationships $db)
