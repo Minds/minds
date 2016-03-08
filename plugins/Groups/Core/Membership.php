@@ -353,47 +353,6 @@ class Membership
     }
 
     /**
-     * Checks if the user owns the group. Used by ACL event.
-     * @param  mixed   $user
-     * @return boolean
-     */
-    public function isOwner($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        if ($this->isCreator($user)) {
-            return true;
-        }
-
-        $user_guid = is_object($user) ? $user->guid : $user;
-
-        return in_array($user_guid, $this->group->getOwnerGuids());
-    }
-
-    /**
-     * Checks if the user is the creator of the group. Used by ACL event.
-     * @param  mixed   $user
-     * @return boolean
-     */
-    public function isCreator($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        $user_guid = is_object($user) ? $user->guid : $user;
-        $owner = $this->group->getOwnerObj();
-
-        if (!$owner) {
-            return false;
-        }
-
-        return $user_guid == $owner->guid;
-    }
-
-    /**
      * Cancel a user's membership request to the group
      * @param  mixed  $user
      * @return boolean

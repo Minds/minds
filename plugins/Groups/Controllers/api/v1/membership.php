@@ -13,6 +13,7 @@ use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User as User;
 use Minds\Plugin\Groups\Core\Membership as CoreMembership;
+use Minds\Plugin\Groups\Core\Management as Management;
 
 class membership implements Interfaces\Api
 {
@@ -66,12 +67,20 @@ class membership implements Interfaces\Api
           case "members":
           default:
             $members = $membership->getMembers($options);
+            $management = new Management($group);
 
             if (!$members) {
                 return Factory::response([]);
             }
 
             $response['members'] = Factory::exportable($members);
+
+            for ($i = 0; $i < count($response['members']); $i++) {
+                $response['members'][$i]['is:member'] = true;
+                $response['members'][$i]['is:creator'] = $management->isCreator($response['members'][$i]['guid']);
+                $response['members'][$i]['is:owner'] = $management->isOwner($response['members'][$i]['guid']);
+            }
+
             $response['load-next'] = end($members)->getGuid();
             break;
         }

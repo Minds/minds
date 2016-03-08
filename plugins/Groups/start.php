@@ -27,6 +27,7 @@ class start extends Components\Plugin
         Routes::add('v1/groups/membership', '\\Minds\\Plugin\\Groups\\Controllers\\api\\v1\\membership');
         Routes::add('v1/groups/notifications', '\\Minds\\Plugin\\Groups\\Controllers\\api\\v1\\notifications');
         Routes::add('v1/groups/invitations', '\\Minds\\Plugin\\Groups\\Controllers\\api\\v1\\invitations');
+        Routes::add('v1/groups/management', '\\Minds\\Plugin\\Groups\\Controllers\\api\\v1\\management');
 
         // TODO: [emi] Add FS route for icon.php
     }

@@ -10,6 +10,7 @@ use Minds\Entities\NormalizedEntity;
 use Minds\Plugin\Groups\Core\Membership;
 use Minds\Plugin\Groups\Core\Invitations;
 use Minds\Plugin\Groups\Core\Group as CoreGroup;
+use Minds\Plugin\Groups\Core\Management;
 
 class Group extends NormalizedEntity
 {
@@ -472,7 +473,7 @@ class Group extends NormalizedEntity
      */
     public function isOwner($user = null)
     {
-        return $this->isCreator() || (new Membership($this))->isOwner($user);
+        return (new Management($this))->isOwner($user);
     }
 
     /**
@@ -482,7 +483,7 @@ class Group extends NormalizedEntity
      */
     public function isCreator($user = null)
     {
-        return (new Membership($this))->isCreator($user);
+        return (new Management($this))->isCreator($user);
     }
 
     /**
