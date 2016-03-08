@@ -383,6 +383,8 @@ minds-groups-card-user-actions-button {
   .minds-dropdown-menu {
     top: 12px;
     right: 0;
+    width: 180px;
+    z-index: 10000;
   }
 }
 

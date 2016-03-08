@@ -13,9 +13,11 @@ import { Client } from '../../../services/api';
   </button>
 
   <ul class="minds-dropdown-menu" [hidden]="!showMenu">
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !wasKicked" (click)="removePrompt()">Remove</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasKicked && !wasReInvited" (click)="reInvite()">Re-invite</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="removePrompt()">Remove from Group</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()">Re-invite to Group</li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="makeOwner()">Make Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:creator'] && user['is:owner'] && user['is:member']" (click)="removeOwner()">Remove as Admin</li>
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
@@ -46,13 +48,15 @@ export class GroupsCardUserActionsButton {
   group: any = {
   };
   user: any = {
+    'is:member': false,
+    'is:owner': false,
+    'is:creator': false,
+    'is:banned': false
   };
 
   kickPrompt: boolean = false;
   kickBan: boolean = false;
 
-  wasKicked: boolean = false;
-  wasBanned: boolean = false;
   wasReInvited: boolean = false;
 
   showMenu: boolean = false;
@@ -96,8 +100,8 @@ export class GroupsCardUserActionsButton {
     })
     .then((response : any) => {
       if (response.done) {
-        this.wasKicked = true;
-        this.wasBanned = ban;
+        this.user['is:member'] = false;
+        this.user['is:banned'] = ban;
       }
       this.kickPrompt = false;
     })
@@ -118,6 +122,30 @@ export class GroupsCardUserActionsButton {
     })
     .catch((e)=>{
       this.wasReInvited = false;
+    });
+
+    this.showMenu = false;
+  }
+
+  makeOwner() {
+    this.client.put(`api/v1/groups/management/${this.group.guid}`, { member: this.user.guid })
+    .then((response : any) => {
+      this.user['is:owner'] = true;
+    })
+    .catch((e)=>{
+      this.user['is:owner'] = false;
+    });
+
+    this.showMenu = false;
+  }
+
+  removeOwner() {
+    this.client.delete(`api/v1/groups/management/${this.group.guid}`, { member: this.user.guid })
+    .then((response : any) => {
+      this.user['is:owner'] = false;
+    })
+    .catch((e)=>{
+      this.user['is:owner'] = true;
     });
 
     this.showMenu = false;
