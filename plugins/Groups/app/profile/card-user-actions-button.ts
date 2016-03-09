@@ -128,7 +128,7 @@ export class GroupsCardUserActionsButton {
   }
 
   makeOwner() {
-    this.client.put(`api/v1/groups/management/${this.group.guid}`, { member: this.user.guid })
+    this.client.put(`api/v1/groups/management/${this.group.guid}/${this.user.guid}`)
     .then((response : any) => {
       this.user['is:owner'] = true;
     })
@@ -140,7 +140,7 @@ export class GroupsCardUserActionsButton {
   }
 
   removeOwner() {
-    this.client.delete(`api/v1/groups/management/${this.group.guid}`, { member: this.user.guid })
+    this.client.delete(`api/v1/groups/management/${this.group.guid}/${this.user.guid}`)
     .then((response : any) => {
       this.user['is:owner'] = false;
     })

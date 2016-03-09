@@ -6,10 +6,12 @@
 namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Security\ACL;
 use Minds\Core\Session;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
+use Minds\Entities\User;
 
 use Minds\Plugin\Groups\Core\Management as CoreManagement;
 
@@ -27,11 +29,81 @@ class management implements Interfaces\Api
 
     public function put($pages)
     {
-        return Factory::response([]);
+        Factory::isLoggedIn();
+
+        $group = EntitiesFactory::build($pages[0]);
+        $actor = Session::getLoggedInUser();
+
+        if (!$group || !$group->getGuid())
+        {
+            return Factory::response([
+                'done' => false,
+                'error' => 'No group'
+            ]);
+        }
+
+        if (!isset($pages[1]) || !$pages[1] || !ctype_alnum($pages[1])) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'Invalid user'
+            ]);
+        }
+
+        $member = new User($pages[1]);
+
+        if (!$member || !$member->getGuid()) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'User not found'
+            ]);
+        }
+
+        $management = new CoreManagement($group);
+
+        $done = $management->grant($member, $actor);
+
+        return Factory::response([
+            'done' => $done
+        ]);
     }
 
     public function delete($pages)
     {
-        return Factory::response([]);
+        Factory::isLoggedIn();
+
+        $group = EntitiesFactory::build($pages[0]);
+        $actor = Session::getLoggedInUser();
+
+        if (!$group || !$group->getGuid())
+        {
+            return Factory::response([
+                'done' => false,
+                'error' => 'No group'
+            ]);
+        }
+
+        if (!isset($pages[1]) || !$pages[1] || !ctype_alnum($pages[1])) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'Invalid user'
+            ]);
+        }
+
+        $member = new User($pages[1]);
+
+        if (!$member || !$member->getGuid()) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'User not found'
+            ]);
+        }
+
+        $management = new CoreManagement($group);
+
+        $done = $management->revoke($member, $actor);
+
+        return Factory::response([
+            'done' => $done
+        ]);
     }
 }

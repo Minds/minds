@@ -8,6 +8,7 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 use Minds\Plugin\Groups\Core\Membership;
+use Minds\Plugin\Groups\Core\Management;
 use Minds\Plugin\Groups\Core\Notifications;
 use Minds\Plugin\Groups\Core\Group;
 
@@ -57,8 +58,9 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
+            $management = new Management($group);
             $membership = new Membership($group);
-            $e->setResponse($membership->isOwner($user->guid) && $membership->isMember($user->guid));
+            $e->setResponse($management->isOwner($user->guid) && $membership->isMember($user->guid));
         });
 
         Dispatcher::register('activity:container', 'group', function ($e) {
