@@ -18,10 +18,10 @@ class Message
 
     private function init()
     {
-        $this->from = array(
-      'name' => "Minds",
-      'email' => "info@minds.com"
-    );
+        $this->from = [
+          'name' => "Minds",
+          'email' => "info@minds.com"
+        ];
     }
 
   /**
@@ -32,10 +32,10 @@ class Message
    */
   public function setFrom($email, $name = "Minds")
   {
-      $this->from = array(
-      'name' => $name,
-      'email' => $email
-    );
+      $this->from = [
+        'name' => $name,
+        'email' => $email
+      ];
       return $this;
   }
 
@@ -46,10 +46,10 @@ class Message
    */
   public function setTo($user)
   {
-      $this->to[] = array(
-      'name' => $user->name,
-      'email' => $user->getEmail()
-    );
+      $this->to[] = [
+        'name' => $user->name,
+        'email' => $user->getEmail()
+      ];
       return $this;
   }
 
@@ -69,7 +69,7 @@ class Message
    * @param string $html
    * @return $this
    */
-  public function setHtml($html)
+  public function setHtml(Template $html)
   {
       $this->html = $html;
   }
@@ -80,6 +80,6 @@ class Message
    */
   public function buildHtml()
   {
-      return $this->html;
+      return $this->html->render();
   }
 }
