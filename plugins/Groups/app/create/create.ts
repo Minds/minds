@@ -23,8 +23,8 @@ import { MindsAvatar } from '../../../components/avatar';
 export class GroupsCreator {
 
   session = SessionFactory.build();
-  banner;
-  avatar;
+  banner: any = false;
+  avatar: any = false;
   group : any = {
     name: '',
     description: '',
@@ -34,6 +34,7 @@ export class GroupsCreator {
   };
   invitees: string[] = [];
   editing: boolean = true;
+  editDone: boolean = false;
 
   constructor(public client: Client, public upload: Upload, public router: Router, public title: MindsTitle){
     this.title.setTitle("Create Group");
@@ -88,12 +89,31 @@ export class GroupsCreator {
   save(){
     var self = this;
     this.editing = false;
+    this.editDone = true;
 
     this.group.invitees = this.invitees.join(',');
 
-    this.upload.post('api/v1/groups/group', [this.banner, this.avatar], this.group)
+    this.client.post('api/v1/groups/group', this.group)
       .then((response : any) => {
-        self.router.navigate(['/Groups-Profile', {guid: response.guid, filter: ''}]);
+        if (response.guid) {
+
+          let uploads = [];
+
+          if (this.banner) {
+            uploads.push(this.upload.post(`api/v1/groups/group/${response.guid}/banner`, [this.banner], { banner_position: this.group.banner_position }));
+          }
+
+          if (this.avatar) {
+            uploads.push(this.upload.post(`api/v1/groups/group/${response.guid}/avatar`, [this.avatar]));
+          }
+
+          Promise.all(uploads).then((uploadResponse: any) => {
+            self.router.navigate(['/Groups-Profile', {guid: response.guid, filter: ''}]);
+          })
+          .catch(e => {
+
+          });
+        }
       })
       .catch((e)=>{
         this.editing = true;

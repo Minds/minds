@@ -1,5 +1,5 @@
 <header>
-  <minds-banner [editMode]="editing" (added)="addBanner($event)"></minds-banner>
+  <minds-banner [editMode]="editing" [done]="editDone" (added)="addBanner($event)"></minds-banner>
   <div class="avatar-wrapper">
     <minds-avatar [editMode]="editing" [done]="editDone" (added)="addAvatar($event)"></minds-avatar>
   </div>
