@@ -18,6 +18,47 @@ class ManagementSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Management');
     }
 
+    function it_should_grant(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
+    {
+        $this->beConstructedWith($group, $db, $acl);
+
+        $user->get('guid')->willReturn(1);
+
+        $actor->get('guid')->willReturn(2);
+
+        $group->getGuid()->willReturn(50);
+        $group->isMember($user)->shouldBeCalled()->willReturn(true);
+        $group->pushOwnerGuid(1)->shouldBeCalled();
+        $group->save()->shouldBeCalled()->willReturn(true);
+
+        $db->setGuid(1)->shouldBeCalled();
+        $db->create('group:owner', 50)->shouldBeCalled()->willReturn(true);
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->grant($user, $actor)->shouldReturn(true);
+    }
+
+    function it_should_revoke(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
+    {
+        $this->beConstructedWith($group, $db, $acl);
+
+        $user->get('guid')->willReturn(1);
+
+        $actor->get('guid')->willReturn(2);
+
+        $group->getGuid()->willReturn(50);
+        $group->removeOwnerGuid(1)->shouldBeCalled();
+        $group->save()->shouldBeCalled()->willReturn(true);
+
+        $db->setGuid(1)->shouldBeCalled();
+        $db->remove('group:owner', 50)->shouldBeCalled()->willReturn(true);
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->revoke($user, $actor)->shouldReturn(true);
+    }
+
     function it_should_check_if_creator(GroupEntity $group, Relationships $db, ACL $acl, User $user)
     {
         $this->beConstructedWith($group, $db, $acl);
