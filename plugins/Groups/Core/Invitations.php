@@ -249,7 +249,7 @@ class Invitations
      * @param  User   $subscriber
      * @return boolean
      */
-    protected function userHasSubscriber(User $user, User $subscriber)
+    public function userHasSubscriber(User $user, User $subscriber)
     {
         $row = $this->friendsDB->getRow($user->guid, [ 'limit' => 1, 'offset' => (string) $subscriber->guid ]);
 

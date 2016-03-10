@@ -15,6 +15,7 @@ use Minds\Entities\User;
 
 use Minds\Plugin\Groups\Core\Membership as CoreMembership;
 use Minds\Plugin\Groups\Core\Invitations as CoreInvitations;
+use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class invitations implements Interfaces\Api
 {
@@ -49,6 +50,35 @@ class invitations implements Interfaces\Api
     public function post($pages)
     {
         Factory::isLoggedIn();
+
+        if ($pages[0] == 'preinvite') {
+
+            if (!isset($_POST['user']) || !$_POST['user']) {
+                return Factory::response([
+                    'done' => false
+                ]);
+            }
+
+            $user = Session::getLoggedInUser();
+            $invitee = new User($_POST['user']);
+
+            if (!$invitee || !$invitee->getGuid()) {
+                return Factory::response([
+                    'done' => false
+                ]);
+            }
+
+            if ($user->getGuid() == $invitee->getGuid()) {
+                return Factory::response([
+                    'done' => false
+                ]);
+            }
+
+            $invitations = new CoreInvitations(new GroupEntity());
+            return Factory::response([
+                'done' => $invitations->userHasSubscriber($user, $invitee)
+            ]);
+        }
 
         $group = EntitiesFactory::build($pages[0]);
         $invitee = Session::getLoggedInUser();

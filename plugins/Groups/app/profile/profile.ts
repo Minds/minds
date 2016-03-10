@@ -109,7 +109,6 @@ export class GroupsProfile {
   }
 
   upload_avatar(file : any){
-    console.log(file);
     this.upload.post('api/v1/groups/group/' + this.group.guid + '/avatar', [file])
       .then((response : any) => {
 

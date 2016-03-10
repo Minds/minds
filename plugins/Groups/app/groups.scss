@@ -236,7 +236,9 @@ minds-groups-create{
   form{
     width:100%;
   }
-  .minds-groups-name{
+  .minds-groups-name,
+  .minds-groups-tags,
+  .minds-groups-new-invitee {
     width:100%;
 
     input{
@@ -426,4 +428,53 @@ minds-groups-modal-dialog {
 
 .minds-dropdown-menu .minds-menu-info-item {
   color: #999999;
+}
+
+minds-groups-create {
+  .save-bar {
+    display: none !important;
+  }
+
+  .minds-groups-pre-invite {
+    width: 100%;
+
+    .invitees {
+      > span {
+        background: #ddd;
+        display: inline-block;
+        padding: 1px 6px 2px;
+        border-radius: 2px;
+        margin-right: 0.35em;
+
+        > a {
+          font-size: inherit;
+          position: relative;
+          top: 2px;
+          cursor: pointer;
+          color: #999;
+        }
+      }
+    }
+  }
+
+  header {
+    position: relative;
+
+    .avatar-wrapper {
+      pointer-events: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    minds-avatar {
+      position: absolute;
+      bottom: 12px;
+      pointer-events: all;
+
+      .minds-avatar {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
 }

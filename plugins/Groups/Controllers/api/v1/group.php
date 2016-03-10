@@ -10,6 +10,7 @@ use Minds\Core\Session;
 use Minds\Core\Security\ACL;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Entities\User;
 use Minds\Entities\File as FileEntity;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
@@ -66,11 +67,13 @@ class group implements Interfaces\Api
     {
         Factory::isLoggedIn();
 
+        $user = Session::getLoggedInUser();
+
         if (isset($pages[0])) {
             $creation = false;
             $group = EntitiesFactory::build($pages[0]);
 
-            if (!ACL::_()->write($group, Session::getLoggedInUser())) {
+            if (!ACL::_()->write($group, $user)) {
                 throw new \Exception('You do not have enough permissions');
             }
         } else {
@@ -181,6 +184,26 @@ class group implements Interfaces\Api
 
         $response = array();
         $response['guid'] = $group->getGuid();
+
+
+        if ($creation && isset($_POST['invitees']) && $_POST['invitees']) {
+            $invitations = new Invitations($group);
+            $invitees = explode(',', $_POST['invitees']);
+
+            foreach ($invitees as $invitee) {
+                $invitee = new User(strtolower(trim($invitee)));
+
+                if (!$invitee || !$invitee->getGuid()) {
+                    continue;
+                }
+
+                if ($user->getGuid() == $invitee->getGuid()) {
+                    continue;
+                }
+
+                $invited = $invitations->invite($invitee, $user);
+            }
+        }
 
         return Factory::response($response);
     }
