@@ -8,6 +8,10 @@ class DailyRewards
 {
     public static function reward()
     {
+        if(!Core\Session::isLoggedin()){
+            return false;
+        }
+
         $cacher = Core\Data\cache\factory::build('apcu');
         if ($cacher->get('rewarded:' . Core\Session::getLoggedinUser()->guid) == true) {
             return;

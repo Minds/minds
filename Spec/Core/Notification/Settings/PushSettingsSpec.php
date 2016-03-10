@@ -18,6 +18,7 @@ class PushSettingsSpec extends ObjectBehavior
     function it_should_return_toggles(Call $db)
     {
         $this->beConstructedWith($db);
+        $db->getRow('settings:push:toggles:')->willReturn([]);
         $this->getToggles()->shouldBeArray();
     }
 

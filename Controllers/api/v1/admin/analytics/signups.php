@@ -30,7 +30,8 @@ class signups implements Interfaces\Api, Interfaces\ApiAdminPam
         $app = Core\Analytics\App::_()
         ->setMetric('signup');
 
-        $response['daily'] = $app->get(30);
+        $response['daily'] = $app->get(7);
+        array_pop($response['daily']); //remove todays count
         $response['montly'] = $app->get(3, 'month');
 
 
