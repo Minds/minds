@@ -84,6 +84,10 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                   'access_token' => $accessToken
                 ]);
                 $user = Core\Session::getLoggedInUser();
+                $user->fb = [
+                  'uuid' => $id,
+                  'name' => $name
+                ];
                 $user->boostProPlus = true;
                 $user->save();
                 break;
@@ -102,6 +106,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
         $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
         $facebook->dropApiCredentials();
         $user = Core\Session::getLoggedInUser();
+        $user->fb = [];
         $user->boostProPlus = false;
         $user->save();
         return Factory::response(array());

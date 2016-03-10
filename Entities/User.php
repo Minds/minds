@@ -156,6 +156,9 @@ class User extends \ElggUser
         }
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
         $export['impressions'] = $this->getImpressions();
+        if($this->fb){
+          $export['fb'] = json_decode($this->fb, true);
+        }
         return $export;
     }
 
@@ -181,7 +184,8 @@ class User extends \ElggUser
             'gender',
             'city',
             'merchant',
-            'boostProPlus'
+            'boostProPlus',
+            'fb'
         ));
     }
 }
