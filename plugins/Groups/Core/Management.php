@@ -7,6 +7,7 @@ namespace Minds\Plugin\Groups\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Security\ACL;
 use Minds\Entities\Factory as EntitiesFactory;
+use Minds\Entities\User;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class Management
