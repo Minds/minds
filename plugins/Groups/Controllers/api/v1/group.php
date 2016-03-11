@@ -139,6 +139,10 @@ class group implements Interfaces\Api
 
             if ($_POST['membership'] == 2) {
                 $group->setAccessId(ACCESS_PUBLIC);
+
+                if (!$creation) {
+                    (new Membership($group))->acceptAllRequests();
+                }
             } elseif ($_POST['membership'] == 0) {
                 $group->setAccessId(ACCESS_PRIVATE);
             }

@@ -105,7 +105,7 @@ class membership implements Interfaces\Api
 
             Factory::isLoggedIn();
 
-            $response['done'] = (bool) $membership->cancel(Session::getLoggedInUser());
+            $response['done'] = (bool) $membership->cancelRequest(Session::getLoggedInUser());
             break;
 
             case 'kick':

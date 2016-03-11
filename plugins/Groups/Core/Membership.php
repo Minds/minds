@@ -122,6 +122,36 @@ class Membership
         return $this->relDB->countInverse('membership_request');
     }
 
+    public function acceptAllRequests()
+    {
+        $offset = '';
+        $count = 0;
+
+        while (true) {
+            $guids = $this->getRequests([ 'hydrate' => false, 'limit' => 500, 'offset' => $offset ]);
+
+            if (!$guids) {
+                break;
+            }
+
+            if ($offset == $guids[0]) {
+                break;
+            }
+
+            $offset = end($guids);
+
+            foreach ($guids as $guid) {
+                $this->relDB->setGuid($guid);
+                $this->relDB->create('member', $this->group->getGuid());
+                $this->relDB->remove('membership_request', $this->group->getGuid());
+
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
     /**
      * Adds an user to group members list
      * @param  mixed   $user
@@ -144,7 +174,6 @@ class Membership
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $this->relDB->setGuid($user_guid);
         $canJoin = $this->group->isPublic();
 
         if (!$canJoin && $opts['actor']) {
@@ -152,7 +181,9 @@ class Membership
         }
 
         if ($opts['force'] || $canJoin) {
-            $this->cancel($user_guid);
+            $this->cancelRequest($user_guid);
+
+            $this->relDB->setGuid($user_guid);
             return $this->relDB->create('member', $this->group->getGuid());
         }
 
@@ -239,7 +270,7 @@ class Membership
      * @param  mixed  $user
      * @return boolean
      */
-    public function cancel($user)
+    public function cancelRequest($user)
     {
         if (!$user) {
             return false;
