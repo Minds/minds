@@ -43,6 +43,7 @@ class group implements Interfaces\Api
         $can_read = $user && ACL::_()->read($group, $user);
 
         $response['group']['is:invited'] = $user ? $invitations->isInvited($user) : false;
+        $response['group']['is:awaiting'] = $user ? $membership->isAwaiting($user) : false;
 
         $response['group']['members'] = $can_read ? Factory::exportable($membership->getMembers()) : [];
         $response['group']['members:count'] = $can_read ? $membership->getMembersCount() : '';

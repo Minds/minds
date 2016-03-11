@@ -152,7 +152,7 @@ class Membership
         }
 
         if ($opts['force'] || $canJoin) {
-            $this->cancelRequest($user_guid);
+            $this->cancel($user_guid);
             return $this->relDB->create('member', $this->group->getGuid());
         }
 
@@ -214,6 +214,41 @@ class Membership
         $this->relDB->setGuid($user_guid);
 
         return $this->relDB->check('member', $this->group->getGuid());
+    }
+
+    /**
+     * Checks if a user is awaiting to join the group
+     * @param  mixed   $user
+     * @return boolean
+     */
+    public function isAwaiting($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+        $this->relDB->setGuid($user_guid);
+
+        return $this->relDB->check('membership_request', $this->group->getGuid());
+    }
+
+
+    /**
+     * Cancel a user's membership request to the group
+     * @param  mixed  $user
+     * @return boolean
+     */
+    public function cancel($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+        $this->relDB->setGuid($user_guid);
+
+        return $this->relDB->remove('membership_request', $this->group->getGuid());
     }
 
     /**
@@ -350,23 +385,6 @@ class Membership
         }
 
         return $result;
-    }
-
-    /**
-     * Cancel a user's membership request to the group
-     * @param  mixed  $user
-     * @return boolean
-     */
-    public function cancelRequest($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        $user_guid = is_object($user) ? $user->guid : $user;
-        $this->relDB->setGuid($user_guid);
-
-        return $this->relDB->remove('membership_request', $this->group->getGuid());
     }
 
     /**

@@ -68,6 +68,7 @@ class groups implements Interfaces\Api
         for ($i = 0; $i < count($response['groups']); $i++) {
             $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
             $response['groups'][$i]['is:creator'] = $groups[$i]->isCreator($user);
+            $response['groups'][$i]['is:awaiting'] = $groups[$i]->isAwaiting($user);
         }
 
         if (!isset($response['load-next']) && $groups) {

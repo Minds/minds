@@ -77,6 +77,7 @@ class membership implements Interfaces\Api
 
             for ($i = 0; $i < count($response['members']); $i++) {
                 $response['members'][$i]['is:member'] = true;
+                $response['members'][$i]['is:awaiting'] = false;
                 $response['members'][$i]['is:creator'] = $management->isCreator($response['members'][$i]['guid']);
                 $response['members'][$i]['is:owner'] = $management->isOwner($response['members'][$i]['guid']);
             }
@@ -93,11 +94,6 @@ class membership implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $membership = new CoreMembership($group);
 
-        $options = [
-            'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
-            'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
-        ];
-
         if (!isset($pages[1])) {
             return Factory::response([]);
         }
@@ -105,6 +101,13 @@ class membership implements Interfaces\Api
         $response = [];
 
         switch ($pages[1]) {
+            case 'cancel':
+
+            Factory::isLoggedIn();
+
+            $response['done'] = (bool) $membership->cancel(Session::getLoggedInUser());
+            break;
+
             case 'kick':
             $user = $_POST['user'];
 
