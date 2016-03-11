@@ -16,7 +16,7 @@
 
                     <p align="center">
                       <a href="https://www.minds.com/?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none;">
-                      <img src="https://www.minds.com/assets/logos/medium.png" align="center" width="200px"/>
+                      <img src="https://www.minds.com/assets/logos/medium.png" align="center" width="200px" height="80px"/>
                       </a>
                     </p>
                   </td>

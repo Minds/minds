@@ -16,7 +16,6 @@ class Retention
 
     protected $db;
     protected $template;
-    protected $message;
     protected $mailer;
 
     protected $period = 1;
@@ -25,16 +24,14 @@ class Retention
     {
         $this->db = $db ?: new Call('entities_by_time');
         $this->template = $template ?: new Template();
-        $this->message = $message ?: new Message();
         $this->mailer = $mailer ?: new Mailer();
     }
 
     public function setPeriod($period = 1)
     {
-        $allowed = [1,3,7,28];
-        if(in_array($period, $allowed)){
-          $this->period = $period;
-        }
+        if(is_int($period))
+          return $this;
+        $this->period = $period;
         return $this;
     }
 
@@ -49,12 +46,12 @@ class Retention
           $this->template->set('guid', $user->guid);
           $this->template->set('user', $user);
 
-          $this->message = new Message();
-          $this->message->setTo($user);
-          $this->message->setHtml($this->template);
+          $message = new Message();
+          $message->setTo($user);
+          $message->setHtml($this->template);
 
           //send email
-          $this->mailer->send($this->message);
+          $this->mailer->queue($message);
         }
     }
 
@@ -65,6 +62,7 @@ class Retention
         if(empty($guids)){
           return [];
         }
+        echo date('d-m-Y', $timestamps[$this->period]) . "\n";
         $users = Entities::get(['guids' => array_keys($guids)]);
         return $users;
     }
