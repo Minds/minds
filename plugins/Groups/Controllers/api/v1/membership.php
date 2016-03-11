@@ -48,7 +48,7 @@ class membership implements Interfaces\Api
             }
 
             $response['users'] = Factory::exportable($users);
-            $response['load-next'] = end($users)->user;
+            $response['load-next'] = end($users)->getGuid();
             break;
           case "bans":
             if (!ACL::_()->write($group, Session::getLoggedInUser())) {
@@ -62,7 +62,7 @@ class membership implements Interfaces\Api
             }
 
             $response['users'] = Factory::exportable($users);
-            $response['load-next'] = end($users)->user;
+            $response['load-next'] = end($users)->getGuid();
             break;
           case "members":
           default:
