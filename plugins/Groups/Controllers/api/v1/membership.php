@@ -159,9 +159,7 @@ class membership implements Interfaces\Api
 
         if (isset($pages[1])) {
             //Admin approval
-            $user = new User($pages[1]);
-
-            if ($group->join($user)) {
+            if ($membership->join($pages[1], [ 'actor' => $user ])) {
                 return Factory::response([]);
             }
         }
