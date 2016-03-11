@@ -447,6 +447,16 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Checks if a user has a membership request for this group
+     * @param  User    $user
+     * @return boolean
+     */
+    public function isAwaiting($user = null)
+    {
+        return (new Membership($this))->isAwaiting($user);
+    }
+
+    /**
      * Checks if a user is invited to this group
      * @param  User    $user
      * @return boolean
