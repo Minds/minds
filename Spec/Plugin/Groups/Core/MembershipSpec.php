@@ -91,7 +91,6 @@ class MembershipSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->shouldBeCalled()->willReturn(false);
 
-        $db->setGuid(1)->shouldBeCalled();
         $db->create('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
         $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
@@ -256,6 +255,27 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
-        $this->cancel($user)->shouldReturn(true);
+        $this->cancelRequest($user)->shouldReturn(true);
+    }
+
+    function it_should_accept_all_requests(GroupEntity $group, Relationships $db)
+    {
+        $this->beConstructedWith($group, $db);
+
+        $db->setGuid(50)->shouldBeCalled();
+        $db->get('membership_request', [ 'limit' => 500, 'offset' => '', 'inverse' => true ])->shouldBeCalled()->willReturn([3, 4, 5]);
+        $db->get('membership_request', [ 'limit' => 500, 'offset' => 5, 'inverse' => true ])->shouldBeCalled()->willReturn([6, 7]);
+        $db->get('membership_request', [ 'limit' => 500, 'offset' => 7, 'inverse' => true ])->shouldBeCalled()->willReturn([]);
+        $db->setGuid(3)->shouldBeCalled();
+        $db->setGuid(4)->shouldBeCalled();
+        $db->setGuid(5)->shouldBeCalled();
+        $db->setGuid(6)->shouldBeCalled();
+        $db->setGuid(7)->shouldBeCalled();
+        $db->create('member', 50)->shouldBeCalled()->willReturn(true);
+        $db->remove('membership_request', 50)->shouldBeCalled()->willReturn(true);
+
+        $group->getGuid()->willReturn(50);
+
+        $this->acceptAllRequests();
     }
 }
