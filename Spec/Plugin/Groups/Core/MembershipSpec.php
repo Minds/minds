@@ -233,6 +233,19 @@ class MembershipSpec extends ObjectBehavior
         $this->isBannedBatch([3, 4, 6])->shouldReturn([3 => true, 4 => true, 6 => false]);
     }
 
+    function it_should_check_request(GroupEntity $group, Relationships $db, User $user)
+    {
+        $this->beConstructedWith($group, $db);
+
+        $user->get('guid')->willReturn(1);
+        $group->getGuid()->willReturn(50);
+
+        $db->setGuid(1)->shouldBeCalled();
+        $db->check('membership_request', 50)->shouldBeCalled()->willReturn(true);
+
+        $this->isAwaiting($user)->shouldReturn(true);
+    }
+
     function it_should_cancel_request(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($group, $db);
@@ -243,6 +256,6 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
-        $this->cancelRequest($user)->shouldReturn(true);
+        $this->cancel($user)->shouldReturn(true);
     }
 }
