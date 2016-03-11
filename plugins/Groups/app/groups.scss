@@ -56,10 +56,14 @@ minds-groups-profile{
 
     .groups-tabs {
       flex: 1;
-      align-items: flex-end;
-      justify-content: flex-end;
+      align-items: flex-start;
+      justify-content: flex-start;
       border: 0;
       pointer-events: all;
+
+      .mdl-tabs__tab.minds-first-tab {
+        padding-left: 0;
+      }
 
       a span {
         width: 100%;

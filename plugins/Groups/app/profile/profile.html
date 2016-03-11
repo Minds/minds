@@ -8,12 +8,8 @@
 
   <div class="mdl-grid groups-grid-bottom group-header-bar" style="max-width:900px" *ngIf="group">
 
-    <div class="mdl-cell mdl-cell--4-col minds-group-avatar">
-      <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
-    </div>
-
     <div class="mdl-cell mdl-cell--8-col groups-tabs mdl-tabs__tab-bar" *ngIf="group">
-      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab minds-first-tab mdl-color-text--blue-grey-50">
         <span>Feed</span>
         <b>{{group['activity:count']}}</b>
       </a>
@@ -39,6 +35,11 @@
         <minds-groups-join-button [group]="group" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
       </div>
     </div>
+
+    <div class="mdl-cell mdl-cell--4-col minds-group-avatar">
+      <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
+    </div>
+
   </div>
 </header>
 
