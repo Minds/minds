@@ -11,7 +11,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-requests',
-  
+
   properties: ['_group : group']
 })
 @View({
@@ -67,26 +67,22 @@ export class GroupsProfileRequests {
       });
   }
 
-  accept(user : any){
+  accept(user : any, index: number){
     var self = this;
     this.client.put('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
       .then((response : any) => {
-        for(var i in self.users){
-          delete self.users[i];
-        }
+        self.users.splice(index, 1);
       })
       .catch((e) => {
 
       });
   }
 
-  reject(user : any){
+  reject(user : any, index: number){
     var self = this;
     this.client.delete('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
       .then((response : any) => {
-        for(var i in self.users){
-          delete self.users[i];
-        }
+        self.users.splice(index, 1);
       })
       .catch((e) => {
 
