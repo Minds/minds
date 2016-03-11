@@ -23,7 +23,7 @@
         	</div>
         </a>
 
-        <minds-groups-join-button [group]="group"></minds-groups-join-button>
+        <minds-groups-join-button *ngIf="!group['is:creator']" [group]="group"></minds-groups-join-button>
       </div>
     </div>
 
