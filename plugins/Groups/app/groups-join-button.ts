@@ -4,7 +4,6 @@ import { RouterLink, Router, RouteParams } from "angular2/router";
 
 import { GroupsService } from './groups-service';
 
-import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { MindsGroupListResponse } from '../../interfaces/responses';
@@ -38,7 +37,7 @@ export class GroupsJoinButton {
   group : any;
   session = SessionFactory.build();
 
-  constructor(public service: GroupsService, public client: Client,  public router: Router){
+  constructor(public service: GroupsService, public router: Router){
     this.minds = window.Minds;
   }
 
@@ -73,47 +72,40 @@ export class GroupsJoinButton {
       return;
     }
 
-    var self = this;
-
     if (this.isPublic()) {
       this.group['is:member'] = true;
     }
 
-    this.client.put('api/v1/groups/membership/' + this.group.guid)
-      .then((response : any) => {
-        if (self.isPublic()) {
-          self.group['is:member'] = true;
-          // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-          window.location.reload();
-          return;
-        }
+    this.service.join(this.group)
+    .then(() => {
+      if (this.isPublic()) {
+        this.group['is:member'] = true;
+        // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+        window.location.reload();
+        return;
+      }
 
-        self.group['is:awaiting'] = true;
-      })
-      .catch((e) => {
-        self.group['is:member'] = false;
-        self.group['is:awaiting'] = false;
-      });
-
+      this.group['is:awaiting'] = true;
+    })
+    .catch(e => {
+      this.group['is:member'] = false;
+      this.group['is:awaiting'] = false;
+    });
   }
 
   /**
    * Leave a group
    */
   leave(){
-
-    var self = this;
-    this.group['is:member'] = false;
-    this.client.delete('api/v1/groups/membership/' + this.group.guid)
-     .then((response : any) => {
-       self.group['is:member'] = false;
-       // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-       window.location.reload();
-     })
-     .catch((e) => {
+    this.service.leave(this.group)
+    .then(() => {
+      this.group['is:member'] = false;
+      // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+      window.location.reload();
+    })
+    .catch(e => {
       this.group['is:member'] = true;
-     });
-
+    });
   }
 
   /**
@@ -139,20 +131,12 @@ export class GroupsJoinButton {
    * Cancel a group joining request
    */
   cancelRequest(){
-    var self = this;
     this.group['is:awaiting'] = false;
-    this.client.post(`api/v1/groups/membership/${this.group.guid}/cancel`, {})
-      .then((response : any) => {
-        if (response.done) {
-          self.group['is:awaiting'] = false;
-        } else {
-          self.group['is:awaiting'] = true;
-        }
-      })
-      .catch((e) => {
-        self.group['is:awaiting'] = true;
-      });
 
+    this.service.cancelRequest(this.group)
+    .then((done: boolean) => {
+      this.group['is:awaiting'] = !done;
+    });
   }
 
   /**

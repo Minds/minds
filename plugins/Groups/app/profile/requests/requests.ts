@@ -4,7 +4,6 @@ import { RouterLink, RouteParams } from "angular2/router";
 
 import { GroupsService } from '../../groups-service';
 
-import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
@@ -32,7 +31,7 @@ export class GroupsProfileRequests {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public service: GroupsService, public client: Client){
+	constructor(public service: GroupsService){
 
 	}
 
@@ -54,25 +53,17 @@ export class GroupsProfileRequests {
   }
 
   accept(user : any, index: number){
-    var self = this;
-    this.client.put('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
-      .then((response : any) => {
-        self.users.splice(index, 1);
-      })
-      .catch((e) => {
-
-      });
+    this.service.acceptRequest(this.group, user.guid)
+    .then(() => {
+      this.users.splice(index, 1);
+    });
   }
 
   reject(user : any, index: number){
-    var self = this;
-    this.client.delete('api/v1/groups/membership/' + this.group.guid + '/' + user.guid)
-      .then((response : any) => {
-        self.users.splice(index, 1);
-      })
-      .catch((e) => {
-
-      });
+    this.service.rejectRequest(this.group, user.guid)
+    .then(() => {
+      this.users.splice(index, 1);
+    });
   }
 
 }

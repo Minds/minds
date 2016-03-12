@@ -160,12 +160,16 @@ class membership implements Interfaces\Api
         if (isset($pages[1])) {
             //Admin approval
             if ($membership->join($pages[1], [ 'actor' => $user ])) {
-                return Factory::response([]);
+                return Factory::response([
+                    'done' => true
+                ]);
             }
         }
 
         if ($group->join($user)) {
-            return Factory::response([]);
+            return Factory::response([
+                'done' => true
+            ]);
         }
 
         return Factory::response([
@@ -187,11 +191,15 @@ class membership implements Interfaces\Api
         if (isset($pages[1])) {
             //Admin approval
             $membership->cancelRequest($pages[1]);
-            return Factory::response([]);
+            return Factory::response([
+                'done' => true
+            ]);
         }
 
         if ($group->leave($user)) {
-            return Factory::response([]);
+            return Factory::response([
+                'done' => true
+            ]);
         }
 
         return Factory::response([

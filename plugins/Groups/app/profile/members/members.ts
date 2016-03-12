@@ -44,8 +44,6 @@ export class GroupsProfileMembers {
   }
 
   load(refresh : boolean = false){
-    var self = this;
-
     if(this.inProgress)
       return;
 

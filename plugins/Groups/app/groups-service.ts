@@ -73,6 +73,50 @@ export class GroupsService {
 
   // Membership
 
+  join(group: any, target: string = null) {
+    let endpoint = `${this.base}membership/${group.guid}`;
+
+    if (target) {
+      endpoint += `/${target}`;
+    }
+
+    return this.clientService.put(endpoint)
+    .then((response: any) => {
+      if (response.done) {
+        return true;
+      }
+
+      throw response.error ? response.error : 'Internal error';
+    });
+  }
+
+  leave(group: any, target: string = null) {
+    let endpoint = `${this.base}membership/${group.guid}`;
+
+    if (target) {
+      endpoint += `/${target}`;
+    }
+
+    return this.clientService.delete(endpoint)
+    .then((response: any) => {
+      if (response.done) {
+        return true;
+      }
+
+      throw response.error ? response.error : 'Internal error';
+    });
+  }
+
+  acceptRequest(group: any, target: string) {
+    // Same endpoint as join
+    return this.join(group, target);
+  }
+
+  rejectRequest(group: any, target: string) {
+    // Same endpoint as leave
+    return this.leave(group, target);
+  }
+
   kick(group: any, user: string) {
     return this.clientService.post(`${this.base}membership/${group.guid}/kick`, { user })
     .then((response: any) => {
@@ -85,6 +129,16 @@ export class GroupsService {
 
   ban(group: any, user: string) {
     return this.clientService.post(`${this.base}membership/${group.guid}/ban`, { user })
+    .then((response: any) => {
+      return !!response.done;
+    })
+    .catch(e => {
+      return false;
+    });
+  }
+
+  cancelRequest(group: any) {
+    return this.clientService.post(`${this.base}membership/${group.guid}/cancel`)
     .then((response: any) => {
       return !!response.done;
     })
