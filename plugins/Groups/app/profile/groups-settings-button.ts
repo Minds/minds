@@ -23,10 +23,10 @@ import { Client } from '../../../services/api';
         <div class="mdl-card mdl-shadow--2dp">
           <div class="mdl-card__supporting-text">
             <p>Are you sure you want to delete {{ group.name }}? This action cannot be undone.</p>
-            <p><input type="checkbox" #sure> I'm 100% sure.</p>
+            <p><input type="checkbox" #sure (click)="isReallyGoingToBeDeleted = sure.checked"> I'm 100% sure.</p>
           </div>
           <div class="minds-modal-dialog-actions">
-            <button (click)="delete()" [disabled]="!sure.checked" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            <button (click)="delete()" [disabled]="!isReallyGoingToBeDeleted" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
               Confirm
             </button>
             <button (click)="cancelDelete()" class="mdl-button mdl-js-button mdl-button--colored">
@@ -49,6 +49,7 @@ export class GroupsSettingsButton {
   showMenu: boolean = false;
 
   isGoingToBeDeleted: boolean = false;
+  isReallyGoingToBeDeleted: boolean = false;
 
   constructor(public client : Client, public router: Router) {
   }
@@ -79,10 +80,12 @@ export class GroupsSettingsButton {
 
   deletePrompt() {
     this.isGoingToBeDeleted = true;
+    this.isReallyGoingToBeDeleted = false;
   }
 
   cancelDelete() {
     this.isGoingToBeDeleted = false;
+    this.isReallyGoingToBeDeleted = false;
   }
 
   delete(){
