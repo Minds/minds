@@ -17,7 +17,7 @@
     <label class="mdl-textfield__label" for="name">Name</label>
   </div>
 
-  <div class="mdl-textfield mdl-js-textfield minds-groups-brief">
+  <div class="mdl-textfield mdl-js-textfield minds-groups-brief" [mdl]>
     <textarea
       class="mdl-textfield__input"
       type="text"
@@ -28,7 +28,7 @@
     <label class="mdl-textfield__label" for="brief">A short description about your new group (less than 100 words)</label>
   </div>
 
-  <div class="mdl-textfield mdl-js-textfield minds-groups-tags">
+  <div class="mdl-textfield mdl-js-textfield minds-groups-tags" [mdl]>
     <input
       class="mdl-textfield__input"
       type="text"
@@ -70,14 +70,14 @@
         <a class="material-icons" (click)="removeInvitee(i)">cancel</a>
       </span>
     </div>
-    <div class="mdl-textfield mdl-js-textfield minds-groups-new-invitee">
+    <div class="mdl-textfield mdl-js-textfield minds-groups-new-invitee" [mdl]>
       <input
         class="mdl-textfield__input"
         type="text"
         #inviteeInput
         (keydown.enter)="addInvitee(inviteeInput, $event)"
         />
-      <label class="mdl-textfield__label" for="name">Invite user</label>
+      <label class="mdl-textfield__label" for="name">Invite user. Type a name and press Enter.</label>
     </div>
   </div>
 
