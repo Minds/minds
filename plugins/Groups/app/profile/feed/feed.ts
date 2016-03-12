@@ -2,7 +2,8 @@ import { Component, View, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { Client } from '../../../../services/api';
+import { GroupsService } from '../../groups-service';
+
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
@@ -24,7 +25,7 @@ interface MindsGroup {
 
 @Component({
   selector: 'minds-groups-profile-feed',
-  
+  bindings: [ GroupsService ],
   inputs: [ '_group: group' ]
 })
 @View({
@@ -44,7 +45,7 @@ export class GroupsProfileFeed {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public client: Client){
+	constructor(public service: GroupsService){
 	}
 
   set _group(value : any){
@@ -61,35 +62,14 @@ export class GroupsProfileFeed {
    * Load a groups newsfeed
    */
   load(refresh : boolean = false){
-    var self = this;
-
-    if(this.inProgress)
-      return false;
-
-    if(refresh)
-      this.offset = "";
-
-    this.inProgress = true;
-    this.client.get('api/v1/newsfeed/container/' + this.guid, { limit: 12, offset: this.offset })
-      .then((response : any) => {
-        if(!response.activity){
-          self.moreData = false;
-          self.inProgress = false;
-          return false;
-        }
-
-        if(self.activity && !refresh){
-          for(let activity of response.activity)
-            self.activity.push(activity);
-        } else {
-             self.activity = response.activity;
-        }
-        self.offset = response['load-next'];
-        self.inProgress = false;
-      })
-      .catch((e)=>{
-
-      });
+    this.service.infiniteList(this, {
+      url: `api/v1/newsfeed/container/${this.guid}`,
+      refresh,
+      collection: 'activity',
+      query: {
+        limit: 12
+      }
+    });
   }
 
 }

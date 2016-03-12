@@ -2,7 +2,8 @@ import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
-import { Client } from '../../../../services/api';
+import { GroupsService } from '../../groups-service';
+
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
@@ -18,7 +19,8 @@ import { GroupsCardUserActionsButton } from '../card-user-actions-button';
   inputs: ['_group : group'],
   templateUrl: 'src/plugins/Groups/profile/members/members.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll,
-      GroupsProfileMembersInvite, GroupsCardUserActionsButton ]
+      GroupsProfileMembersInvite, GroupsCardUserActionsButton ],
+  bindings: [ GroupsService ]
 })
 
 export class GroupsProfileMembers {
@@ -32,7 +34,7 @@ export class GroupsProfileMembers {
   moreData : boolean = true;
   canInvite: boolean = false;
 
-	constructor(public client: Client){
+	constructor(public service: GroupsService){
 
 	}
 
@@ -56,28 +58,14 @@ export class GroupsProfileMembers {
       this.canInvite = true;
     }
 
-    this.inProgress = true;
-    this.client.get('api/v1/groups/membership/' + this.group.guid, { limit: 12, offset: this.offset })
-      .then((response : any) => {
-
-        if(!response.members){
-          this.moreData = false;
-          this.inProgress = false;
-          return false;
-        }
-
-        if(refresh){
-          this.members = response.members;
-        } else {
-          this.members = this.members.concat(response.members);
-        }
-        this.offset = response['load-next'];
-        this.inProgress = false;
-
-      })
-      .catch((e)=>{
-        this.inProgress = false;
-      });
+    this.service.infiniteList(this, {
+      endpoint: `membership/${this.group.guid}`,
+      refresh,
+      collection: 'members',
+      query: {
+        limit: 12
+      }
+    });
   }
 
 }

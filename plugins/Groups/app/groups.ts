@@ -2,8 +2,9 @@ import { Component, View, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
+import { GroupsService } from './groups-service';
+
 import { MindsTitle } from '../../services/ux/title';
-import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
@@ -14,7 +15,7 @@ import { GroupsJoinButton } from './groups-join-button';
 @Component({
   selector: 'minds-groups',
 
-  bindings: [MindsTitle ]
+  bindings: [ MindsTitle, GroupsService ]
 })
 @View({
   templateUrl: 'src/plugins/Groups/groups.html',
@@ -25,14 +26,13 @@ export class Groups {
 
   minds;
 
-  offset : string = "";
   moreData : boolean = true;
   inProgress : boolean = false;
   groups : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
+  constructor(public service: GroupsService, public router: Router, public params: RouteParams, public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
@@ -40,45 +40,17 @@ export class Groups {
       this.title.setTitle("Groups");
   }
 
-  load(refresh : boolean = false){
-    if(this.inProgress)
-      return;
-    var self = this;
-    this.inProgress = true;
-    this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
-      .then((response : MindsGroupListResponse) => {
-
-        if(!response.groups || response.groups.length == 0){
-          this.moreData = false;
-          this.inProgress = false;
-          return false;
-        }
-
-        if(refresh){
-          this.groups = response.groups;
-        } else {
-          if(this.offset)
-            response.groups.shift();
-          for(let group of response.groups)
-            this.groups.push(group);
-        }
-
-        this.offset = response['load-next'];
-        this.inProgress = false;
-      })
-      .catch((e)=>{
-        this.inProgress = false;
-      });
+  load(refresh: boolean = false) {
+    this.service.infiniteList(this, {
+      endpoint: this._filter,
+      refresh,
+      collection: 'groups',
+      query: {
+        limit: 12
+      },
+      shift: true
+    });
   }
-
-  /**
-   * Join a group
-   */
-  join(group : any){
-  //  this.client.post('')
-
-  }
-
 }
 
 export { GroupsProfile } from './profile/profile';

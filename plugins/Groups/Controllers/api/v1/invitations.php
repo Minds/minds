@@ -51,7 +51,9 @@ class invitations implements Interfaces\Api
     {
         Factory::isLoggedIn();
 
-        if ($pages[0] == 'preinvite') {
+        // Start check-only response
+        // TODO: [emi] Move to a helper method in this class
+        if ($pages[0] == 'check') {
 
             if (!isset($_POST['user']) || !$_POST['user']) {
                 return Factory::response([
@@ -79,6 +81,7 @@ class invitations implements Interfaces\Api
                 'done' => $invitations->userHasSubscriber($user, $invitee)
             ]);
         }
+        // End check-only response
 
         $group = EntitiesFactory::build($pages[0]);
         $invitee = Session::getLoggedInUser();

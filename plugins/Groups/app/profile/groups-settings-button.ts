@@ -2,8 +2,7 @@ import { Component, EventEmitter } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, RouterLink, Location, ROUTER_DIRECTIVES } from 'angular2/router';
 
-import { Client } from '../../../services/api';
-
+import { GroupsService } from '../groups-service';
 
 @Component({
   selector: 'minds-groups-settings-button',
@@ -37,7 +36,8 @@ import { Client } from '../../../services/api';
       </div>
     </minds-groups-modal-dialog>
   `,
-  directives: [ CORE_DIRECTIVES ]
+  directives: [ CORE_DIRECTIVES ],
+  bindings: [ GroupsService ]
 })
 
 export class GroupsSettingsButton {
@@ -51,30 +51,28 @@ export class GroupsSettingsButton {
   isGoingToBeDeleted: boolean = false;
   isReallyGoingToBeDeleted: boolean = false;
 
-  constructor(public client : Client, public router: Router) {
+  constructor(public service: GroupsService, public router: Router) {
   }
 
   mute(){
     this.group['is:muted'] = true;
-    this.client.post(`api/v1/groups/notifications/${this.group.guid}/mute`, { })
-      .then((response : any) => {
-        this.group['is:muted'] = true;
-      })
-      .catch((e) => {
-        this.group['is:muted'] = false;
-      });
+
+    this.service.muteNotifications(this.group)
+    .then((isMuted: boolean) => {
+      this.group['is:muted'] = isMuted;
+    });
+
     this.showMenu = false;
   }
 
   unmute(){
-    this.group['is:muted'] = false;
-    this.client.post(`api/v1/groups/notifications/${this.group.guid}/unmute`, { })
-    .then((response : any) => {
-      this.group['is:muted'] = false;
-    })
-    .catch((e) => {
-      this.group['is:muted'] = true;
+    this.group['is:muted'] = true;
+
+    this.service.unmuteNotifications(this.group)
+    .then((isMuted: boolean) => {
+      this.group['is:muted'] = isMuted;
     });
+
     this.showMenu = false;
   }
 
@@ -90,22 +88,24 @@ export class GroupsSettingsButton {
 
   delete(){
 
-    if (!this.isGoingToBeDeleted) {
+    if (!this.isGoingToBeDeleted || !this.isReallyGoingToBeDeleted) {
       return;
     }
 
     this.group.deleted = true;
-    this.client.delete(`api/v1/groups/group/${this.group.guid}`, { })
-    .then((response : any) => {
-      this.group.deleted = true;
-      this.router.navigate([ '/Groups', { 'filter': 'member' } ]);
-    })
-    .catch((e) => {
-      this.group.deleted = false;
+
+    this.service.deleteGroup(this.group)
+    .then((deleted) => {
+      this.group.deleted = deleted;
+
+      if (deleted) {
+        this.router.navigate([ '/Groups', { 'filter': 'member' } ]);
+      }
     });
+
     this.showMenu = false;
     this.isGoingToBeDeleted = false;
-
+    this.isReallyGoingToBeDeleted = false;
   }
 
   toggleMenu(e){

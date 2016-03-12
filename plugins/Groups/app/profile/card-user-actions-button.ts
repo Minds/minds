@@ -1,8 +1,7 @@
 import { Component, EventEmitter } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 
-import { Client } from '../../../services/api';
-
+import { GroupsService } from '../groups-service';
 
 @Component({
   selector: 'minds-groups-card-user-actions-button',
@@ -16,8 +15,8 @@ import { Client } from '../../../services/api';
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="removePrompt()">Remove from Group</li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()">Re-invite to Group</li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="makeOwner()">Make Admin</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:creator'] && user['is:owner'] && user['is:member']" (click)="removeOwner()">Remove as Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()">Make Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:creator'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()">Remove as Admin</li>
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
@@ -40,7 +39,8 @@ import { Client } from '../../../services/api';
     </div>
   </minds-groups-modal-dialog>
   `,
-  directives: [ CORE_DIRECTIVES ]
+  directives: [ CORE_DIRECTIVES ],
+  bindings: [ GroupsService ]
 })
 
 export class GroupsCardUserActionsButton {
@@ -61,7 +61,7 @@ export class GroupsCardUserActionsButton {
 
   showMenu: boolean = false;
 
-  constructor(public client : Client) {
+  constructor(public service: GroupsService) {
   }
 
   toggleMenu(e){
@@ -86,66 +86,56 @@ export class GroupsCardUserActionsButton {
     this.kickPrompt = false;
   }
 
-  kick(ban:boolean = false) {
-
-    let endpoint = 'kick';
-    if (ban) {
-      endpoint = 'ban';
-    }
+  kick(ban: boolean = false) {
+    let action;
 
     this.kickPrompt = false;
 
-    this.client.post(`api/v1/groups/membership/${this.group.guid}/${endpoint}`, {
-      user: this.user.guid
-    })
-    .then((response : any) => {
-      if (response.done) {
-        this.user['is:member'] = false;
-        this.user['is:banned'] = ban;
-      }
-      this.kickPrompt = false;
-    })
-    .catch((e) => {
-      this.kickPrompt = true;
+    if (ban) {
+      action = this.service.ban(this.group, this.user.guid);
+    } else {
+      action = this.service.kick(this.group, this.user.guid);
+    }
+
+    action.then((done: boolean) => {
+      this.user['is:member'] = !done;
+      this.user['is:banned'] = done && ban;
+
+      this.kickPrompt = !done;
     });
 
     this.showMenu = false;
   }
 
   reInvite() {
-
-    this.client.put(`api/v1/groups/invitations/${this.group.guid}`, { invitee: this.user.username })
-    .then((response : any) => {
-
-      this.wasReInvited = response.done;
-
+    this.service.invite(this.group, this.user.username)
+    .then(() => {
+      this.wasReInvited = true;
     })
-    .catch((e)=>{
+    .catch(e => {
       this.wasReInvited = false;
     });
 
     this.showMenu = false;
   }
 
-  makeOwner() {
-    this.client.put(`api/v1/groups/management/${this.group.guid}/${this.user.guid}`)
-    .then((response : any) => {
-      this.user['is:owner'] = true;
-    })
-    .catch((e)=>{
-      this.user['is:owner'] = false;
+  grantOwnership() {
+    this.user['is:owner'] = true;
+
+    this.service.grantOwnership({ guid: this.group.guid }, this.user.guid)
+    .then((isOwner: boolean) => {
+      this.user['is:owner'] = isOwner;
     });
 
     this.showMenu = false;
   }
 
-  removeOwner() {
-    this.client.delete(`api/v1/groups/management/${this.group.guid}/${this.user.guid}`)
-    .then((response : any) => {
-      this.user['is:owner'] = false;
-    })
-    .catch((e)=>{
-      this.user['is:owner'] = true;
+  revokeOwnership() {
+    this.user['is:owner'] = false;
+
+    this.service.revokeOwnership({ guid: this.group.guid }, this.user.guid)
+    .then((isOwner: boolean) => {
+      this.user['is:owner'] = isOwner;
     });
 
     this.showMenu = false;

@@ -2,8 +2,9 @@ import { Component, View, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
+import { GroupsService } from '../groups-service';
+
 import { MindsTitle } from '../../../services/ux/title';
-import { Client, Upload } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { MDL_DIRECTIVES } from '../../../directives/material';
 import { CARDS } from '../../../controllers/cards/cards';
@@ -23,7 +24,7 @@ import { ChannelModules } from '../../../controllers/channels/modules/modules';
 @Component({
   selector: 'minds-groups-profile',
 
-  bindings: [MindsTitle ]
+  bindings: [ MindsTitle, GroupsService ]
 })
 @View({
   templateUrl: 'src/plugins/Groups/profile/profile.html',
@@ -50,7 +51,7 @@ export class GroupsProfile {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public client: Client, public upload: Upload, public params: RouteParams, public title: MindsTitle){
+	constructor(public service: GroupsService, public params: RouteParams, public title: MindsTitle){
       this.guid = params.params['guid'];
       if(params.params['filter'])
         this.filter = params.params['filter'];
@@ -59,31 +60,22 @@ export class GroupsProfile {
 	}
 
   load(){
-    var self = this;
-    this.client.get('api/v1/groups/group/' + this.guid, {})
-      .then((response : any) => {
-          self.group = response.group;
-          self.title.setTitle(self.group.name);
-      })
-      .catch((e)=>{
-
-      });
+    this.service.load(this.guid)
+    .then((group) => {
+      this.group = group;
+      this.title.setTitle(this.group.name);
+    });
   }
 
   save(){
-    var self = this;
-    this.client.post('api/v1/groups/group/' + this.group.guid, {
-        name: this.group.name,
-        briefdescription: this.group.briefdescription,
-        tags: this.group.tags,
-        membership: this.group.membership
-      })
-      .then((response : any) => {
+    this.service.save({
+      guid: this.group.guid,
+      name: this.group.name,
+      briefdescription: this.group.briefdescription,
+      tags: this.group.tags,
+      membership: this.group.membership
+    });
 
-      })
-      .catch((e) => {
-
-      });
     this.editing = false;
     this.editDone = true;
   }
@@ -97,25 +89,18 @@ export class GroupsProfile {
   }
 
   add_banner(file : any){
-    this.upload.post('api/v1/groups/group/' + this.group.guid + '/banner', [file.file], { banner_position: file.top })
-      .then((response : any) => {
+    this.service.upload({
+      guid: this.group.guid,
+      banner_position: file.top
+    }, { banner: file.file });
 
-      })
-      .catch((e) => {
-
-      });
     this.group.banner = true;
-    console.log('new banne added', file);
   }
 
   upload_avatar(file : any){
-    this.upload.post('api/v1/groups/group/' + this.group.guid + '/avatar', [file])
-      .then((response : any) => {
-
-      })
-      .catch((e) => {
-
-      });
+    this.service.upload({
+      guid: this.group.guid
+    }, { avatar: file });
   }
 
 }

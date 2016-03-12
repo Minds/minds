@@ -2,10 +2,11 @@ import { Component, View, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
+import { GroupsService } from './groups-service';
+
 import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
-import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
 import { SignupOnActionModal } from '../../components/modal/modal';
 
@@ -13,7 +14,8 @@ import { SignupOnActionModal } from '../../components/modal/modal';
 @Component({
   selector: 'minds-groups-join-button',
 
-  properties: ['_group: group']
+  properties: ['_group: group'],
+  bindings: [ GroupsService ]
 })
 @View({
   template: `
@@ -26,7 +28,7 @@ import { SignupOnActionModal } from '../../components/modal/modal';
     <button class="minds-group-join-button" *ngIf="group['is:awaiting']" (click)="cancelRequest()">Cancel request</button>
     <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ngIf="!session.isLoggedIn()"></m-modal-signup-on-action>
   `,
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, SignupOnActionModal ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, SignupOnActionModal ]
 })
 
 export class GroupsJoinButton {
@@ -36,7 +38,7 @@ export class GroupsJoinButton {
   group : any;
   session = SessionFactory.build();
 
-  constructor(public client: Client,  public router: Router){
+  constructor(public service: GroupsService, public client: Client,  public router: Router){
     this.minds = window.Minds;
   }
 
@@ -118,42 +120,25 @@ export class GroupsJoinButton {
    * Accept joining a group
    */
   accept(){
-    if(!this.session.isLoggedIn()){
-      this.showModal = true;
-      return;
-    }
-
-    var self = this;
     this.group['is:member'] = true;
     this.group['is:invited'] = false;
-    this.client.post(`api/v1/groups/invitations/${this.group.guid}/accept`, {})
-      .then((response : any) => {
-        if (response.done) {
-          self.group['is:member'] = true;
-          self.group['is:invited'] = false;
-          // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-          window.location.reload();
-        } else {
-          self.group['is:member'] = false;
-          self.group['is:invited'] = true;
-        }
-      })
-      .catch((e) => {
-        self.group['is:member'] = false;
-        self.group['is:invited'] = true;
-      });
 
+    this.service.acceptInvitation(this.group)
+    .then((done: boolean) => {
+      this.group['is:member'] = done;
+      this.group['is:invited'] = !done;
+
+      if (done) {
+        // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
+        window.location.reload();
+      }
+    });
   }
 
   /**
    * Cancel a group joining request
    */
   cancelRequest(){
-    if(!this.session.isLoggedIn()){
-      this.showModal = true;
-      return;
-    }
-
     var self = this;
     this.group['is:awaiting'] = false;
     this.client.post(`api/v1/groups/membership/${this.group.guid}/cancel`, {})
@@ -174,29 +159,14 @@ export class GroupsJoinButton {
    * Decline joining a group
    */
   decline(){
-    if(!this.session.isLoggedIn()){
-      this.showModal = true;
-      return;
-    }
-
-    var self = this;
     this.group['is:member'] = false;
     this.group['is:invited'] = false;
-    this.client.post(`api/v1/groups/invitations/${this.group.guid}/decline`, {})
-      .then((response : any) => {
-        self.group['is:member'] = false;
 
-        if (response.done) {
-          self.group['is:invited'] = false;
-        } else {
-          self.group['is:invited'] = true;
-        }
-      })
-      .catch((e) => {
-        self.group['is:member'] = false;
-        self.group['is:invited'] = true;
-      });
-
+    this.service.declineInvitation(this.group)
+    .then((done: boolean) => {
+      this.group['is:member'] = false;
+      this.group['is:invited'] = !done;
+    });
   }
 
 }

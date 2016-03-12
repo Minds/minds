@@ -2,7 +2,8 @@ import { Component, View } from 'angular2/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { Router, RouterLink } from "angular2/router";
 
-import { Client, Upload } from '../../../services/api';
+import { GroupsService } from '../groups-service';
+
 import { MindsTitle } from '../../../services/ux/title';
 import { SessionFactory } from '../../../services/session';
 import { Material } from '../../../directives/material';
@@ -13,7 +14,7 @@ import { MindsAvatar } from '../../../components/avatar';
 @Component({
   selector: 'minds-groups-create',
 
-  bindings: [MindsTitle ]
+  bindings: [ MindsTitle, GroupsService ]
 })
 @View({
   templateUrl: 'src/plugins/Groups/create/create.html',
@@ -36,7 +37,7 @@ export class GroupsCreator {
   editing: boolean = true;
   editDone: boolean = false;
 
-  constructor(public client: Client, public upload: Upload, public router: Router, public title: MindsTitle){
+  constructor(public service: GroupsService, public router: Router, public title: MindsTitle){
     this.title.setTitle("Create Group");
   }
 
@@ -71,15 +72,9 @@ export class GroupsCreator {
       return;
     }
 
-    this.client.post(`api/v1/groups/invitations/preinvite`, { user: user })
-    .then((response: any) => {
-      if (response.done) {
-        this.invitees.push(user)
-      }
-    })
-    .catch(e => {
-
-    })
+    this.service.canInvite(user).then(user => {
+      this.invitees.push(user);
+    });
   }
 
   removeInvitee(i) {
@@ -87,37 +82,29 @@ export class GroupsCreator {
   }
 
   save(){
-    var self = this;
     this.editing = false;
     this.editDone = true;
 
     this.group.invitees = this.invitees.join(',');
 
-    this.client.post('api/v1/groups/group', this.group)
-      .then((response : any) => {
-        if (response.guid) {
+    this.service.save(this.group)
+    .then((guid: any) => {
 
-          let uploads = [];
-
-          if (this.banner) {
-            uploads.push(this.upload.post(`api/v1/groups/group/${response.guid}/banner`, [this.banner], { banner_position: this.group.banner_position }));
-          }
-
-          if (this.avatar) {
-            uploads.push(this.upload.post(`api/v1/groups/group/${response.guid}/avatar`, [this.avatar]));
-          }
-
-          Promise.all(uploads).then((uploadResponse: any) => {
-            self.router.navigate(['/Groups-Profile', {guid: response.guid, filter: ''}]);
-          })
-          .catch(e => {
-
-          });
-        }
+      this.service.upload({
+        guid,
+        banner_position: this.group.banner_position
+      }, {
+        banner: this.banner,
+        avatar: this.avatar
       })
-      .catch((e)=>{
-        this.editing = true;
+      .then(() => {
+        this.router.navigate(['/Groups-Profile', { guid, filter: '' }]);
       });
+
+    })
+    .catch(e => {
+      this.editing = true;
+    });
   }
 
 }

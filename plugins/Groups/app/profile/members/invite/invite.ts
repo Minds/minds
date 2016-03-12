@@ -1,8 +1,8 @@
 import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 
-import { Client } from '../../../../../services/api';
 import { Material } from '../../../../../directives/material';
+import { GroupsService } from '../../../groups-service';
 
 
 @Component({
@@ -10,7 +10,8 @@ import { Material } from '../../../../../directives/material';
 
   inputs: ['_group : group'],
   templateUrl: 'src/plugins/Groups/profile/members/invite/invite.html',
-  directives: [ CORE_DIRECTIVES, Material ]
+  directives: [ CORE_DIRECTIVES, Material ],
+  bindings: [ GroupsService ]
 })
 
 export class GroupsProfileMembersInvite {
@@ -21,8 +22,7 @@ export class GroupsProfileMembersInvite {
   inviteLastUser: string = '';
   inviteError: string = '';
 
-  constructor(public client: Client){
-
+  constructor(public service: GroupsService) {
   }
 
   set _group(value : any){
@@ -34,24 +34,17 @@ export class GroupsProfileMembersInvite {
     this.inviteLastUser = '';
     this.inviteError = '';
 
-    this.client.put(`api/v1/groups/invitations/${this.group.guid}`, { invitee: invitation.value.user })
-    .then((response : any) => {
-
+    this.service.invite(this.group, invitation.value.user)
+    .then(() => {
       this.inviteInProgress = false;
+      this.inviteLastUser = invitation.value.user;
 
-      if (response.done) {
-        this.inviteLastUser = invitation.value.user;
-        // NOTE: [emi] Check hosting component in front/multi
-        window.document.querySelector('.minds-groups-invite-form #user').value = '';
-      }
-      else {
-        this.inviteError = response.error ? response.error : 'Internal error';
-      }
-
+      // NOTE: [emi] Check hosting component in front/multi
+      window.document.querySelector('.minds-groups-invite-form #user').value = '';
     })
-    .catch((e)=>{
+    .catch(e => {
       this.inviteInProgress = false;
-      this.inviteError = 'Connectivity error';
+      this.inviteError = e;
     });
   }
 

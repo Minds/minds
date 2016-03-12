@@ -2,6 +2,8 @@ import { Component, View, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
+import { GroupsService } from '../../groups-service';
+
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
@@ -11,7 +13,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 
 @Component({
   selector: 'minds-groups-profile-requests',
-
+  bindings: [ GroupsService ],
   properties: ['_group : group']
 })
 @View({
@@ -30,7 +32,7 @@ export class GroupsProfileRequests {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public client: Client){
+	constructor(public service: GroupsService, public client: Client){
 
 	}
 
@@ -41,30 +43,14 @@ export class GroupsProfileRequests {
   }
 
   load(refresh : boolean = false){
-    var self = this;
-    this.inProgress = true;
-    this.client.get('api/v1/groups/membership/' + this.group.guid + '/requests', { limit: 12, offset: this.offset })
-      .then((response : any) => {
-
-        if(!response.users || response.users.length == 0){
-          self.moreData = false;
-          self.inProgress = false;
-          return false;
-        }
-
-        if(self.users && !refresh){
-          for(let user of response.users)
-            self.users.push(user);
-        } else {
-             self.users = response.users;
-        }
-        self.offset = response['load-next'];
-        self.inProgress = false;
-
-      })
-      .catch((e)=>{
-
-      });
+    this.service.infiniteList(this, {
+      endpoint: `membership/${this.group.guid}/requests`,
+      refresh,
+      collection: 'users',
+      query: {
+        limit: 12
+      }
+    });
   }
 
   accept(user : any, index: number){
