@@ -18,7 +18,7 @@ import { SignupOnActionModal } from '../../components/modal/modal';
 })
 @View({
   template: `
-    <button class="minds-group-join-button" *ngIf="!group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()">Join</button>
+    <button class="minds-group-join-button" *ngIf="!group['is:banned'] && !group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()">Join</button>
     <span *ngIf="group['is:invited'] &amp;&amp; !group['is:member']">
       <button class="minds-group-join-button" (click)="accept()">Accept</button>
       <button class="minds-group-join-button" (click)="decline()">Decline</button>
