@@ -24,6 +24,7 @@ class groups implements Interfaces\Api
     public function get($pages)
     {
         $groups = [];
+        $user = Session::getLoggedInUser();
 
         if (!isset($pages[0])) {
             $pages[0] = "featured";
@@ -43,11 +44,11 @@ class groups implements Interfaces\Api
 
             break;
           case "member":
-            if (!Session::isLoggedIn()) {
-                return Factory::response([]);
+            if (!$user) {
+                return Factory::response([], 'failed');
             }
 
-            $groups = (new UserGroups(Session::getLoggedInUser()))
+            $groups = (new UserGroups($user))
             ->getGroups([
                 'limit' => 12,
                 'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
@@ -63,12 +64,13 @@ class groups implements Interfaces\Api
         }
 
         $response['groups'] = Factory::exportable($groups);
-        $user = Session::getLoggedInUser();
 
-        for ($i = 0; $i < count($response['groups']); $i++) {
-            $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
-            $response['groups'][$i]['is:creator'] = $groups[$i]->isCreator($user);
-            $response['groups'][$i]['is:awaiting'] = $groups[$i]->isAwaiting($user);
+        if ($user) {
+            for ($i = 0; $i < count($response['groups']); $i++) {
+                $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
+                $response['groups'][$i]['is:creator'] = $groups[$i]->isCreator($user);
+                $response['groups'][$i]['is:awaiting'] = $groups[$i]->isAwaiting($user);
+            }
         }
 
         if (!isset($response['load-next']) && $groups) {
