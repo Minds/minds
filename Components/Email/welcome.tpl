@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td height="80px;" style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed/welcome"
+        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed?message=<?php echo urlencode('Hi Minds, I’m new here. Show me some love. ' . $vars['user']->getUrl())?>&newUser=true"
           style="padding:16px 32px; background-color:#546e7a; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
           POST!
         </a>
