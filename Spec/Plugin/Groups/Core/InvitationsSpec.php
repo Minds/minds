@@ -68,13 +68,15 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->willReturn(true);
         $group->isMember($actor)->willReturn(true);
+        $group->isMember($user)->willReturn(false);
 
         $db->setGuid(1)->shouldBeCalled();
         $db->create('group:invited', 50)->shouldBeCalled()->willReturn(true);
 
         $friendsDB->getRow(2, Argument::any())->shouldBeCalled()->willReturn([ '1' => 123456 ]);
 
-        $this->invite($user, $actor, [ 'notify' => false ])->shouldReturn(true);
+        $this->setActor($actor);
+        $this->invite($user, [ 'notify' => false ])->shouldReturn(true);
     }
 
     function it_should_not_invite_to_a_private_group(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
@@ -89,12 +91,14 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->willReturn(false);
         $group->isMember($actor)->willReturn(true);
+        $group->isMember($user)->willReturn(false);
 
         $db->create('group:invited', 50)->shouldNotBeCalled();
 
         $acl->write($group, $actor)->shouldBeCalled()->willReturn(false);
 
-        $this->invite($user, $actor, [ 'notify' => false ])->shouldReturn(false);
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringInvite($user, [ 'notify' => false ]);
     }
 
     function it_should_invite_to_a_private_group_by_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
@@ -109,6 +113,7 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->willReturn(false);
         $group->isMember($actor)->willReturn(true);
+        $group->isMember($user)->willReturn(false);
 
         $db->setGuid(1)->shouldBeCalled();
         $db->create('group:invited', 50)->shouldBeCalled()->willReturn(true);
@@ -117,7 +122,8 @@ class InvitationsSpec extends ObjectBehavior
 
         $friendsDB->getRow(2, Argument::any())->shouldBeCalled()->willReturn([ '1' => 123456 ]);
 
-        $this->invite($user, $actor, [ 'notify' => false ])->shouldReturn(true);
+        $this->setActor($actor);
+        $this->invite($user, [ 'notify' => false ])->shouldReturn(true);
     }
 
     function it_should_uninvite(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
@@ -132,13 +138,15 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->willReturn(true);
         $group->isMember($actor)->willReturn(true);
+        $group->isMember($user)->willReturn(false);
 
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('group:invited', 50)->shouldBeCalled()->willReturn(true);
 
         $friendsDB->getRow(2, Argument::any())->shouldBeCalled()->willReturn([ '1' => 123456 ]);
 
-        $this->uninvite($user, $actor)->shouldReturn(true);
+        $this->setActor($actor);
+        $this->uninvite($user)->shouldReturn(true);
     }
 
     function it_should_not_uninvite_a_non_subscriber(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
@@ -153,12 +161,14 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->willReturn(true);
         $group->isMember($actor)->willReturn(true);
+        $group->isMember($user)->willReturn(false);
 
         $db->remove('group:invited', 50)->shouldNotBeCalled();
 
         $friendsDB->getRow(2, Argument::any())->shouldBeCalled()->willReturn([]);
 
-        $this->uninvite($user, $actor)->shouldReturn(false);
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringUninvite($user);
     }
 
     function it_should_accept(GroupEntity $group, Relationships $db, User $user)
@@ -174,7 +184,8 @@ class InvitationsSpec extends ObjectBehavior
 
         $group->join($user, [ 'force' => true ])->shouldBeCalled()->willReturn(true);
 
-        $this->accept($user)->shouldReturn(true);
+        $this->setActor($user);
+        $this->accept()->shouldReturn(true);
     }
 
     function it_should_fail_to_accept_if_not_invited(GroupEntity $group, Relationships $db, User $user)
@@ -190,7 +201,8 @@ class InvitationsSpec extends ObjectBehavior
 
         $group->join($user, [ 'force' => true ])->shouldNotBeCalled();
 
-        $this->accept($user)->shouldReturn(false);
+        $this->setActor($user);
+        $this->accept()->shouldReturn(false);
     }
 
     function it_should_decline(GroupEntity $group, Relationships $db, User $user)
@@ -203,6 +215,7 @@ class InvitationsSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('group:invited', 50)->shouldBeCalled()->willReturn(true);
 
-        $this->decline($user)->shouldReturn(true);
+        $this->setActor($user);
+        $this->decline()->shouldReturn(true);
     }
 }
