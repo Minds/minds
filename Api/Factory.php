@@ -133,10 +133,10 @@ class Factory
      * @param array $data
      *
      */
-    public static function response($data = array())
+    public static function response($data = array(), $status = 'success')
     {
         $data = array_merge(array(
-            'status' => 'success', //should success be assumed?
+            'status' => $status,
         ), $data);
 
         ob_end_clean();
