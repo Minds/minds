@@ -150,7 +150,7 @@ class group implements Interfaces\Api
 
         if ($creation) {
             // Join group
-            $group->join($user);
+            $group->join($user, [ 'force' => true ]);
         }
 
         // Legacy behavior
