@@ -39,7 +39,7 @@ class group implements Interfaces\Api
         } catch (GroupOperationException $e) {
             return Factory::response([
                 'error' => $e->getMessage()
-            ], 'failed');
+            ]);
         }
     }
 
@@ -56,7 +56,7 @@ class group implements Interfaces\Api
             if (!$group->isOwner($user)) {
                 return Factory::response([
                     'error' => 'You cannot edit this group'
-                ], 'failed');
+                ]);
             }
         } else {
             $creation = true;
@@ -162,21 +162,14 @@ class group implements Interfaces\Api
         $response['guid'] = $group->getGuid();
 
         if ($creation && isset($_POST['invitees']) && $_POST['invitees']) {
-            $invitations = new Invitations($group);
+            $invitations = (new Invitations($group))->setActor($user);
             $invitees = explode(',', $_POST['invitees']);
 
             foreach ($invitees as $invitee) {
-                $invitee = new User(strtolower(trim($invitee)));
-
-                if (!$invitee || !$invitee->getGuid()) {
-                    continue;
-                }
-
-                if ($user->getGuid() == $invitee->getGuid()) {
-                    continue;
-                }
-
-                $invited = $invitations->invite($invitee, $user);
+                try {
+                    $invitee = new User(strtolower(trim($invitee)));
+                    $invitations->invite($invitee);
+                } catch (GroupOperationException $e) { }
             }
         }
 
@@ -196,7 +189,7 @@ class group implements Interfaces\Api
         $user = Session::getLoggedInUser();
 
         if (!$group || !$group->getGuid()) {
-            return Factory::response([], 'failed');
+            return Factory::response([]);
         }
 
         $core_group = (new CoreGroup($group))->setActor($user);
@@ -208,7 +201,7 @@ class group implements Interfaces\Api
         } catch (GroupOperationException $e) {
             return Factory::response([
                 'error' => $e->getMessage()
-            ], 'failed');
+            ]);
         }
     }
 

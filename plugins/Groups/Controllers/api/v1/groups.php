@@ -45,7 +45,7 @@ class groups implements Interfaces\Api
             break;
           case "member":
             if (!$user) {
-                return Factory::response([], 'failed');
+                return Factory::response([]);
             }
 
             $groups = (new UserGroups($user))
