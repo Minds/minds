@@ -36,6 +36,10 @@ class UserGroups
             'hydrate' => true
         ], $opts);
 
+        if (!$this->user) {
+            return [];
+        }
+
         $this->relDB->setGuid($this->user->guid);
 
         $guids = $this->relDB->get('member', [
