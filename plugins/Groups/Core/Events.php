@@ -10,7 +10,6 @@ use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 use Minds\Plugin\Groups\Core\Membership;
 use Minds\Plugin\Groups\Core\Management;
 use Minds\Plugin\Groups\Core\Notifications;
-use Minds\Plugin\Groups\Core\Group;
 
 class Events
 {
