@@ -44,10 +44,6 @@ class groups implements Interfaces\Api
 
             break;
           case "member":
-            if (!$user) {
-                return Factory::response([]);
-            }
-
             $groups = (new UserGroups($user))
             ->getGroups([
                 'limit' => 12,
@@ -65,7 +61,7 @@ class groups implements Interfaces\Api
 
         $response['groups'] = Factory::exportable($groups);
 
-        if ($user) {
+        if ($user && $response['groups']) {
             for ($i = 0; $i < count($response['groups']); $i++) {
                 $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
                 $response['groups'][$i]['is:creator'] = $groups[$i]->isCreator($user);
