@@ -17,6 +17,8 @@ use Minds\Plugin\Groups\Core\Membership as CoreMembership;
 use Minds\Plugin\Groups\Core\Invitations as CoreInvitations;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class invitations implements Interfaces\Api
 {
     public function get($pages)
@@ -26,8 +28,10 @@ class invitations implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $user = Session::getLoggedInUser();
 
-        if (!ACL::_()->read($this->group, $user)) {
-            return Factory::response([]);
+        if (!$group->isMember($user)) {
+            return Factory::response([
+                'error' => 'You cannot read invitations'
+            ]);
         }
 
         $invitees = (new CoreInvitations($group))->getInvitations([
@@ -64,13 +68,13 @@ class invitations implements Interfaces\Api
             $user = Session::getLoggedInUser();
             $invitee = new User($_POST['user']);
 
-            if (!$invitee || !$invitee->getGuid()) {
+            if (!$invitee || !$invitee->guid) {
                 return Factory::response([
                     'done' => false
                 ]);
             }
 
-            if ($user->getGuid() == $invitee->getGuid()) {
+            if ($user->guid == $invitee->guid) {
                 return Factory::response([
                     'done' => false
                 ]);
@@ -90,7 +94,7 @@ class invitations implements Interfaces\Api
             return Factory::response([]);
         }
 
-        $invitations = new CoreInvitations($group);
+        $invitations = (new CoreInvitations($group))->setActor($invitee);
 
         if (!$invitations->isInvited($invitee)) {
             return Factory::response([]);
@@ -104,11 +108,11 @@ class invitations implements Interfaces\Api
         switch ($pages[1]) {
             case 'accept':
                 return Factory::response([
-                    'done' => $invitations->accept($invitee)
+                    'done' => $invitations->accept()
                 ]);
             case 'decline':
                 return Factory::response([
-                    'done' => $invitations->decline($invitee)
+                    'done' => $invitations->decline()
                 ]);
         }
 
@@ -140,40 +144,40 @@ class invitations implements Interfaces\Api
 
         $invitee = new User(strtolower($payload['invitee']));
 
-        if (!$invitee || !$invitee->getGuid()) {
+        if (!$invitee || !$invitee->guid) {
             return Factory::response([
                 'done' => false,
                 'error' => 'User not found'
             ]);
         }
 
-        if ($user->getGuid() == $invitee->getGuid()) {
+        $membership = new CoreMembership($group);
+        $banned = $membership->isBanned($invitee);
+
+        if ($banned && !$group->isOwner($user)) {
             return Factory::response([
                 'done' => false,
-                'error' => 'Cannot invite yourself'
+                'error' => 'User is banned from this group'
             ]);
         }
 
-        if ($group->isMember($invitee)) {
+        $invitations = (new CoreInvitations($group))->setActor($user);
+
+        try {
+            $invited = $invitations->invite($invitee);
+        } catch (GroupOperationException $e) {
             return Factory::response([
                 'done' => false,
-                'error' => 'User is already a member'
+                'error' => $e->getMessage()
             ]);
         }
 
-        $invitations = new CoreInvitations($group);
-        $invited = $invitations->invite($invitee, $user);
-
-        if ($invited) {
-            $membership = new CoreMembership($group);
-            if ($membership->isBanned($invitee)) {
-                $membership->unban($invitee, Session::getLoggedInUser());
-            }
+        if ($banned) {
+            $membership->unban($invitee, $user);
         }
 
         return Factory::response([
-            'done' => $invited,
-            'error' => !$invited ? 'User cannot be invited' : ''
+            'done' => $invited
         ]);
     }
 
@@ -202,33 +206,26 @@ class invitations implements Interfaces\Api
 
         $invitee = new User(strtolower($payload['invitee']));
 
-        if (!$invitee || !$invitee->getGuid()) {
+        if (!$invitee || !$invitee->guid) {
             return Factory::response([
                 'done' => false,
                 'error' => 'User not found'
             ]);
         }
 
-        if ($user->getGuid() == $invitee->getGuid()) {
+        $invitations = (new CoreInvitations($group))->setActor($user);
+
+        try {
+            $uninvited = $invitations->uninvite($invitee);
+        } catch (GroupOperationException $e) {
             return Factory::response([
                 'done' => false,
-                'error' => 'Cannot uninvite yourself'
+                'error' => $e->getMessage()
             ]);
         }
-
-        if ($group->isMember($invitee)) {
-            return Factory::response([
-                'done' => false,
-                'error' => 'User is already a member'
-            ]);
-        }
-
-        $invitations = new CoreInvitations($group);
-        $uninvited = $invitations->uninvite($invitee, $user);
 
         return Factory::response([
-            'done' => $uninvited,
-            'error' => !$uninvited ? 'User cannot be uninvited' : ''
+            'done' => $uninvited
         ]);
     }
 }

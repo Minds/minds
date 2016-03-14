@@ -14,10 +14,18 @@ use Minds\Entities\User as User;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 use Minds\Plugin\Groups\Core\Membership as CoreMembership;
 
+use Minds\Plugin\Groups\Behaviors\Actorable;
+
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class Invitations
 {
+    use Actorable;
+
     protected $relDB;
     protected $group;
+    protected $acl;
+    protected $friendsDB;
 
     /**
      * Constructor
@@ -29,7 +37,7 @@ class Invitations
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         // TODO: [emi] Ask Mark about a 'friendsof' replacement (or create a DI entry)
         $this->friendsDB = $friendsDB ?: new \Minds\Core\Data\Call('friendsof');
-        $this->acl = $acl ?: ACL::_();
+        $this->setAcl($acl);
     }
 
     /**
@@ -109,28 +117,28 @@ class Invitations
      * @param  mixed   $from
      * @return boolean
      */
-    public function invite($invitee, $actor, array $opts = [])
+    public function invite($invitee, array $opts = [])
     {
         $opts = array_merge([
             'notify' => true
         ], $opts);
 
-        if (!$invitee) {
-            return false;
+        if (!$invitee || !$invitee->guid) {
+            throw new GroupOperationException('User not found');
         }
 
-        if (!$actor) {
-            return false;
+        if ($this->getActor() && ($this->getActor()->guid == $invitee->guid)) {
+            throw new GroupOperationException('Cannot invite yourself');
         }
 
-        if ($actor && !($actor instanceof User)) {
-            $actor = EntityFactory::build($actor);
+        if ($this->group->isMember($invitee)) {
+            throw new GroupOperationException('User is already a member of the group');
         }
 
-        $canInvite = $this->userCanInvite($actor, $invitee);
+        $canInvite = $this->userCanInvite($this->getActor(), $invitee);
 
         if (!$canInvite) {
-            return false;
+            throw new GroupOperationException('You cannot invite this user');
         }
 
         $invitee_guid = is_object($invitee) ? $invitee->guid : $invitee;
@@ -145,7 +153,7 @@ class Invitations
                 'notification_view' => 'group_invite',
                 'params' => [
                     'group' => $this->group->export(),
-                    'user' => $actor->username
+                    'user' => $this->getActor() ? $this->getActor()->username : 'A user'
                 ]
             ]);
         }
@@ -159,24 +167,20 @@ class Invitations
      * @param  mixed   $from
      * @return boolean
      */
-    public function uninvite($invitee, $actor)
+    public function uninvite($invitee)
     {
-        if (!$invitee) {
-            return false;
+        if (!$invitee || !$invitee->guid) {
+            throw new GroupOperationException('User not found');
         }
 
-        if (!$actor) {
-            return false;
+        if ($this->group->isMember($invitee)) {
+            throw new GroupOperationException('User is already a member of the group');
         }
 
-        if ($actor && !($actor instanceof User)) {
-            $actor = EntityFactory::build($actor);
-        }
-
-        $canInvite = $this->userCanInvite($actor, $invitee);
+        $canInvite = $this->userCanInvite($this->getActor(), $invitee);
 
         if (!$canInvite) {
-            return false;
+            throw new GroupOperationException('You cannot invite this user');
         }
 
         return $this->removeInviteFromIndex($invitee);
@@ -187,18 +191,18 @@ class Invitations
      * @param  mixed   $invitee
      * @return boolean
      */
-    public function accept($invitee)
+    public function accept()
     {
-        if (!$invitee) {
+        if (!$this->hasActor()) {
             return false;
         }
 
-        if (!$this->isInvited($invitee)) {
+        if (!$this->isInvited($this->getActor())) {
             return false;
         }
 
-        $this->removeInviteFromIndex($invitee);
-        return $this->group->join($invitee, [ 'force' => true ]);
+        $this->removeInviteFromIndex($this->getActor());
+        return $this->group->join($this->getActor(), [ 'force' => true ]);
     }
 
     /**
@@ -206,13 +210,13 @@ class Invitations
      * @param  mixed   $invitee
      * @return boolean
      */
-    public function decline($invitee)
+    public function decline()
     {
-        if (!$invitee) {
+        if (!$this->hasActor()) {
             return false;
         }
 
-        $this->removeInviteFromIndex($invitee);
+        $this->removeInviteFromIndex($this->getActor());
         return true;
     }
 
@@ -224,6 +228,10 @@ class Invitations
      */
     public function userCanInvite($user, $invitee = null)
     {
+        if (!$user) {
+            return false;
+        }
+
         if ($user && !($user instanceof User)) {
             $user = EntityFactory::build($user);
         }
