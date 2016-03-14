@@ -15,6 +15,8 @@ use Minds\Entities\User;
 
 use Minds\Plugin\Groups\Core\Management as CoreManagement;
 
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class management implements Interfaces\Api
 {
     public function get($pages)
@@ -58,12 +60,19 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = new CoreManagement($group);
+        $management = (new CoreManagement($group))->setActor($actor);
 
-        $done = $management->grant($member, $actor);
+        try {
+            $granted = $management->grant($member);
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
 
         return Factory::response([
-            'done' => $done
+            'done' => $granted
         ]);
     }
 
@@ -98,12 +107,19 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = new CoreManagement($group);
+        $management = (new CoreManagement($group))->setActor($actor);
 
-        $done = $management->revoke($member, $actor);
+        try {
+            $revoked = $management->revoke($member);
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
 
         return Factory::response([
-            'done' => $done
+            'done' => $revoked
         ]);
     }
 }
