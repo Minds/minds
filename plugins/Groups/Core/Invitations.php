@@ -194,11 +194,11 @@ class Invitations
     public function accept()
     {
         if (!$this->hasActor()) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
         if (!$this->isInvited($this->getActor())) {
-            return false;
+            throw new GroupOperationException('You were not invited to this group');
         }
 
         $this->removeInviteFromIndex($this->getActor());
@@ -213,7 +213,11 @@ class Invitations
     public function decline()
     {
         if (!$this->hasActor()) {
-            return false;
+            throw new GroupOperationException('User not found');
+        }
+
+        if (!$this->isInvited($this->getActor())) {
+            throw new GroupOperationException('You were not invited to this group');
         }
 
         $this->removeInviteFromIndex($this->getActor());

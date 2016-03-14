@@ -56,34 +56,8 @@ class invitations implements Interfaces\Api
         Factory::isLoggedIn();
 
         // Start check-only response
-        // TODO: [emi] Move to a helper method in this class
         if ($pages[0] == 'check') {
-
-            if (!isset($_POST['user']) || !$_POST['user']) {
-                return Factory::response([
-                    'done' => false
-                ]);
-            }
-
-            $user = Session::getLoggedInUser();
-            $invitee = new User($_POST['user']);
-
-            if (!$invitee || !$invitee->guid) {
-                return Factory::response([
-                    'done' => false
-                ]);
-            }
-
-            if ($user->guid == $invitee->guid) {
-                return Factory::response([
-                    'done' => false
-                ]);
-            }
-
-            $invitations = new CoreInvitations(new GroupEntity());
-            return Factory::response([
-                'done' => $invitations->userHasSubscriber($user, $invitee)
-            ]);
+            return $this->checkOnly();
         }
         // End check-only response
 
@@ -105,18 +79,27 @@ class invitations implements Interfaces\Api
             return Factory::response([]);
         }
 
-        switch ($pages[1]) {
-            case 'accept':
-                return Factory::response([
-                    'done' => $invitations->accept()
-                ]);
-            case 'decline':
-                return Factory::response([
-                    'done' => $invitations->decline()
-                ]);
+        $done = false;
+
+        try {
+            switch ($pages[1]) {
+                case 'accept':
+                    $done = $invitations->accept();
+                    break;
+                case 'decline':
+                    $done = $invitations->decline();
+                    break;
+            }
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
+            ]);
         }
 
-        return Factory::response([]);
+        return Factory::response([
+            'done' => $done
+        ]);
     }
 
     public function put($pages)
@@ -226,6 +209,38 @@ class invitations implements Interfaces\Api
 
         return Factory::response([
             'done' => $uninvited
+        ]);
+    }
+
+    protected function checkOnly()
+    {
+        if (!isset($_POST['user']) || !$_POST['user']) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'User not found'
+            ]);
+        }
+
+        $user = Session::getLoggedInUser();
+        $invitee = new User($_POST['user']);
+
+        if (!$invitee || !$invitee->guid) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'User not found'
+            ]);
+        }
+
+        if ($user->guid == $invitee->guid) {
+            return Factory::response([
+                'done' => false,
+                'error' => 'You cannot invite yourself'
+            ]);
+        }
+
+        $invitations = new CoreInvitations(new GroupEntity());
+        return Factory::response([
+            'done' => $invitations->userHasSubscriber($user, $invitee)
         ]);
     }
 }
