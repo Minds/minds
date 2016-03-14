@@ -36,7 +36,8 @@ class ManagementSpec extends ObjectBehavior
 
         $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
 
-        $this->grant($user, $actor)->shouldReturn(true);
+        $this->setActor($actor);
+        $this->grant($user)->shouldReturn(true);
     }
 
     function it_should_revoke(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
@@ -56,7 +57,8 @@ class ManagementSpec extends ObjectBehavior
 
         $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
 
-        $this->revoke($user, $actor)->shouldReturn(true);
+        $this->setActor($actor);
+        $this->revoke($user)->shouldReturn(true);
     }
 
     function it_should_check_if_creator(GroupEntity $group, Relationships $db, ACL $acl, User $user)
