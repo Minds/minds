@@ -4,8 +4,11 @@
   </div>
   <div class="mdl-card__supporting-text">
     - You can only invite users who are your subscribers<br>
-    - They will receive a notification to confirm they want to be a member of this group<br>
-    - If the user was banned from the group, inviting them will lift the ban
+    - They will receive a notification to confirm they want to be a member of this group
+    <span [hidden]="!group['is:owner']">
+      <br>
+      - If the user was banned from the group, inviting them will lift the ban
+    </span>
   </div>
   <div [hidden]="!inviteInProgress">
     <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
