@@ -465,6 +465,7 @@ minds-groups-create {
     position: relative;
 
     .avatar-wrapper {
+      position: relative;
       pointer-events: none;
       max-width: 900px;
       margin: 0 auto;
@@ -473,6 +474,7 @@ minds-groups-create {
     minds-avatar {
       position: absolute;
       bottom: 12px;
+      right: 0;
       pointer-events: all;
 
       .minds-avatar {
