@@ -79,7 +79,7 @@
       <span>SHARE</span>
     </div>
     <m-modal-share *ngIf="sharetoggle" [open]="true" (closed)="sharetoggle = false" [url]="minds.site_url + 'blog/view/' + blog.guid"></m-modal-share>
-    <minds-button-boost [object]="blog"></minds-button-boost>
+    <minds-button-boost [object]="blog" *ngIf="session.isLoggedIn()"></minds-button-boost>
   </div>
 
 </div>
