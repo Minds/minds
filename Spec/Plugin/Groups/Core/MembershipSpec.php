@@ -76,10 +76,32 @@ class MembershipSpec extends ObjectBehavior
         $group->isPublic()->shouldBeCalled()->willReturn(true);
 
         $db->setGuid(1)->shouldBeCalled();
-        $db->remove('membership_request', 50)->shouldBeCalled();
+        $db->check('membership_request', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('member', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('group:banned', 50)->shouldBeCalled()->willReturn(false);
+        $db->remove('membership_request', 50)->shouldNotBeCalled();
         $db->create('member', 50)->shouldBeCalled()->willReturn(true);
 
+        $this->setActor($user);
         $this->join($user)->shouldReturn(true);
+    }
+
+    function it_should_not_join_if_banned(GroupEntity $group, Relationships $db, User $user)
+    {
+        $this->beConstructedWith($group, $db);
+
+        $user->get('guid')->willReturn(1);
+        $group->getGuid()->willReturn(50);
+        $group->isPublic()->shouldBeCalled()->willReturn(true);
+
+        $db->setGuid(1)->shouldBeCalled();
+        $db->check('member', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('group:banned', 50)->shouldBeCalled()->willReturn(true);
+        $db->remove('membership_request', 50)->shouldNotBeCalled();
+        $db->create('member', 50)->shouldNotBeCalled();
+
+        $this->setActor($user);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringJoin($user);
     }
 
     function it_should_request_to_join(GroupEntity $group, Relationships $db, User $user, ACL $acl)
@@ -91,10 +113,14 @@ class MembershipSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
         $group->isPublic()->shouldBeCalled()->willReturn(false);
 
+        $db->setGuid(1)->shouldBeCalled();
+        $db->check('member', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('group:banned', 50)->shouldBeCalled()->willReturn(false);
         $db->create('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
         $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
 
+        $this->setActor($user);
         $this->join($user)->shouldReturn(true);
     }
 
@@ -108,11 +134,14 @@ class MembershipSpec extends ObjectBehavior
         $group->isPublic()->shouldBeCalled()->willReturn(false);
 
         $db->setGuid(1)->shouldBeCalled();
-        $db->remove('membership_request', 50)->shouldBeCalled();
+        $db->check('membership_request', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('member', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('group:banned', 50)->shouldBeCalled()->willReturn(false);
         $db->create('member', 50)->shouldBeCalled()->willReturn(true);
 
         $acl->write($group, $user)->shouldBeCalled()->willReturn(true);
 
+        $this->setActor($user);
         $this->join($user)->shouldReturn(true);
     }
 
@@ -124,6 +153,7 @@ class MembershipSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
 
         $db->setGuid(1)->shouldBeCalled();
+        $db->check('member', 50)->shouldBeCalled()->willReturn(true);
         $db->remove('member', 50)->shouldBeCalled()->willReturn(true);
 
         $notifications->unmute(1)->shouldBeCalled()->willReturn(null);
@@ -131,20 +161,59 @@ class MembershipSpec extends ObjectBehavior
         $this->leave($user)->shouldReturn(true);
     }
 
-    function it_should_kick(GroupEntity $group, Relationships $db, User $user, Notifications $notifications)
+    function it_should_kick(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
-        $this->beConstructedWith($group, $db, $notifications);
+        $this->beConstructedWith($group, $db, $notifications, $acl);
 
         $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
         $group->getGuid()->willReturn(50);
 
         $db->setGuid(1)->shouldBeCalled();
+        $db->check('member', 50)->shouldBeCalled()->willReturn(true);
         $db->remove('member', 50)->shouldBeCalled()->willReturn(true);
 
         $notifications->unmute(1)->shouldBeCalled()->willReturn(null);
         $notifications->sendKickNotification(1)->shouldBeCalled()->willReturn(null);
 
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->setActor($actor);
         $this->kick($user)->shouldReturn(true);
+    }
+
+    function it_should_not_kick_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, $notifications, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+
+        $db->remove('member', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(false);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringKick($user);
+    }
+
+    function it_should_not_kick_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, $notifications, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+
+        $db->remove('member', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(true);
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringKick($user);
     }
 
     function it_should_check_if_its_a_member(GroupEntity $group, Relationships $db, User $user)
@@ -160,9 +229,9 @@ class MembershipSpec extends ObjectBehavior
         $this->isMember($user)->shouldReturn(true);
     }
 
-    function it_should_ban(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications)
+    function it_should_ban(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
-        $this->beConstructedWith($group, $db, $notifications);
+        $this->beConstructedWith($group, $db, $notifications, $acl);
 
         $user->get('guid')->willReturn(1);
         $actor->get('guid')->willReturn(2);
@@ -177,12 +246,53 @@ class MembershipSpec extends ObjectBehavior
         $notifications->unmute(1)->shouldBeCalled()->willReturn(null);
         $notifications->sendKickNotification(1)->shouldBeCalled()->willReturn(null);
 
-        $this->ban($user, $actor)->shouldReturn(true);
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->setActor($actor);
+        $this->ban($user)->shouldReturn(true);
     }
 
-    function it_should_unban(GroupEntity $group, Relationships $db, User $user, User $actor)
+    function it_should_not_ban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
-        $this->beConstructedWith($group, $db);
+        $this->beConstructedWith($group, $db, $notifications, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+        $group->getOwnerObj()->willReturn($actor);
+
+        $db->remove('member', 50)->shouldNotBeCalled();
+        $db->create('group:banned', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(false);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringBan($user);
+    }
+
+    function it_should_not_ban_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, $notifications, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+        $group->getOwnerObj()->willReturn($actor);
+
+        $db->remove('member', 50)->shouldNotBeCalled();
+        $db->create('group:banned', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(true);
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringBan($user);
+    }
+
+    function it_should_unban(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, null, $acl);
 
         $user->get('guid')->willReturn(1);
         $actor->get('guid')->willReturn(2);
@@ -192,7 +302,27 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('group:banned', 50)->shouldBeCalled()->willReturn(true);
 
-        $this->unban($user, $actor)->shouldReturn(true);
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+
+        $this->setActor($actor);
+        $this->unban($user)->shouldReturn(true);
+    }
+
+    function it_should_not_unban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, null, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+        $group->getOwnerObj()->willReturn($actor);
+
+        $db->remove('group:banned', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(false);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringUnban($user);
     }
 
     function it_should_check_if_its_banned(GroupEntity $group, Relationships $db, User $user)
@@ -245,9 +375,9 @@ class MembershipSpec extends ObjectBehavior
         $this->isAwaiting($user)->shouldReturn(true);
     }
 
-    function it_should_cancel_request(GroupEntity $group, Relationships $db, User $user)
+    function it_should_cancel_request(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
-        $this->beConstructedWith($group, $db);
+        $this->beConstructedWith($group, $db, null, $acl);
 
         $user->get('guid')->willReturn(1);
         $group->getGuid()->willReturn(50);
@@ -255,7 +385,42 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->remove('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
+        $this->setActor($user);
         $this->cancelRequest($user)->shouldReturn(true);
+    }
+
+    function it_should_cancel_request_if_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, null, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+
+        $db->setGuid(1)->shouldBeCalled();
+        $db->remove('membership_request', 50)->shouldBeCalled()->willReturn(true);
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(true);
+        $acl->write($group, $user)->shouldBeCalled()->willReturn(false);
+
+        $this->setActor($actor);
+        $this->cancelRequest($user)->shouldReturn(true);
+    }
+
+    function it_should_not_cancel_request_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    {
+        $this->beConstructedWith($group, $db, null, $acl);
+
+        $user->get('guid')->willReturn(1);
+        $actor->get('guid')->willReturn(2);
+        $group->getGuid()->willReturn(50);
+
+        $db->remove('membership_request', 50)->shouldNotBeCalled();
+
+        $acl->write($group, $actor)->shouldBeCalled()->willReturn(false);
+
+        $this->setActor($actor);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringCancelRequest($user);
     }
 
     function it_should_accept_all_requests(GroupEntity $group, Relationships $db)
