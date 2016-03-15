@@ -374,7 +374,7 @@ class Membership
      * @param  mixed   $user
      * @return boolean
      */
-    public function unban($user, $actor)
+    public function unban($user)
     {
         if (!$user) {
             throw new GroupOperationException('User not found');
