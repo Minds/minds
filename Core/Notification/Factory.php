@@ -11,7 +11,8 @@ class Factory
 
     public static function build($data)
     {
-        $entity = EntitiesFactory::build($data);
+        $entity = new Entities\Notification();
+        $entity->loadFromArray($data);
         return $entity;
     }
 
