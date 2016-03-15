@@ -202,7 +202,7 @@ class InvitationsSpec extends ObjectBehavior
         $group->join($user, [ 'force' => true ])->shouldNotBeCalled();
 
         $this->setActor($user);
-        $this->accept()->shouldReturn(false);
+        $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringAccept();
     }
 
     function it_should_decline(GroupEntity $group, Relationships $db, User $user)
@@ -213,6 +213,7 @@ class InvitationsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(50);
 
         $db->setGuid(1)->shouldBeCalled();
+        $db->check('group:invited', 50)->shouldBeCalled()->willReturn(true);
         $db->remove('group:invited', 50)->shouldBeCalled()->willReturn(true);
 
         $this->setActor($user);
