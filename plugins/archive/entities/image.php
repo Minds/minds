@@ -19,7 +19,7 @@ class image extends Entities\File{
 	}
 
 	public function getUrl(){
-		return elgg_get_site_url() . "archive/view/$this->container_guid/$this->guid";
+		return elgg_get_site_url() . "archive/view/$this->guid";
 	}
 
 	public function getIconUrl($size = 'large'){
