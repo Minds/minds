@@ -263,7 +263,11 @@ export class GroupsService {
     this.infiniteInProgress = true;
     this.clientService.get(url, query)
     .then((response: any) => {
-      if (!response[_collection] || response[_collection].length == (opts.shift ? 1 : 0)) {
+      if (
+        !response[_collection] ||
+        response[_collection].length == 0 ||
+        (opts.shift && this.infiniteOffset && response[_collection].length == 1)
+      ) {
         host[_moreData] = false;
 
         host[_inProgress] = false;
@@ -276,7 +280,7 @@ export class GroupsService {
       if (opts.refresh) {
         host[target] = response[_collection];
       } else {
-        if (opts.shift) {
+        if (opts.shift && this.infiniteOffset) {
           response[_collection].shift();
         }
 
