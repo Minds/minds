@@ -380,7 +380,7 @@ class Membership
             throw new GroupOperationException('User not found');
         }
 
-        if (!$this->canActorActUponUser($user, $this->group, false)) {
+        if (!$this->canActorWrite($this->group)) {
             throw new GroupOperationException('You cannot unban this user');
         }
 
