@@ -10,8 +10,14 @@ use Minds\Core\Queue\Client as QueueClient;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
+use Minds\Plugin\Groups\Behaviors\Actorable;
+
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class Notifications
 {
+    use Actorable;
+
     protected $relDB;
     protected $group;
 
@@ -194,13 +200,19 @@ class Notifications
     public function mute($user)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->create('group:muted', $this->group->getGuid());
+        $done = $this->relDB->create('group:muted', $this->group->getGuid());
+
+        if ($done) {
+            return true;
+        }
+
+        throw new GroupOperationException('Error muting group');
     }
 
     /**
@@ -211,13 +223,19 @@ class Notifications
     public function unmute($user)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->remove('group:muted', $this->group->getGuid());
+        $done = $this->relDB->remove('group:muted', $this->group->getGuid());
+
+        if ($done) {
+            return true;
+        }
+
+        throw new GroupOperationException('Error unmuting group');
     }
 
     /**

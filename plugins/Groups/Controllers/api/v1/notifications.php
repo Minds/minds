@@ -48,17 +48,24 @@ class notifications implements Interfaces\Api
 
         $notifications = new CoreNotifications($group);
 
-        switch ($pages[1]) {
-            case 'mute':
+        try {
+            switch ($pages[1]) {
+                case 'mute':
                 $notifications->mute($user);
                 return Factory::response([
                     'is:muted' => true
                 ]);
-            case 'unmute':
+                case 'unmute':
                 $notifications->unmute($user);
                 return Factory::response([
                     'is:muted' => false
                 ]);
+            }
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'is:muted' => false,
+                'error' => $e->getMessage()
+            ]);
         }
 
         return Factory::response([]);
