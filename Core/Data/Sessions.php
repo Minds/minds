@@ -1,8 +1,8 @@
-<?php 
+<?php
 /**
  * The session storage handler
  */
- 
+
 namespace Minds\Core\Data;
 
 if (version_compare(phpversion(), '5.4.0', '<')) {
@@ -12,6 +12,8 @@ if (version_compare(phpversion(), '5.4.0', '<')) {
 class Sessions implements \SessionHandlerInterface
 {
     private $db;
+
+    private $session;
 
     public function open($save_path, $name)
     {
@@ -23,18 +25,20 @@ class Sessions implements \SessionHandlerInterface
     {
         return true;
     }
-    
+
     public function read($session_id)
     {
         try {
             $cacher = cache\factory::build();
             if ($result = $cacher->get($session_id)) {
+                $this->session = ['data' => $result];
                 return $result;
             }
-            
+
             $result = $this->db->getRow($session_id);
             $this->cache[$session_id] = $result;
-            
+            $this->session = $result;
+
             if ($result) {
                 //load serialized owner entity & add to cache
                 return $result['data'];
@@ -43,7 +47,7 @@ class Sessions implements \SessionHandlerInterface
             exit;
             return false;
         }
-        
+
         return false;
     }
 
@@ -53,6 +57,11 @@ class Sessions implements \SessionHandlerInterface
         $params = session_get_cookie_params();
 
         try {
+
+            if($this->session && $this->session['data'] == $session_data){
+                return true; //no change detected
+            }
+
             $cacher = cache\factory::build();
             $cacher->set($session_id, $session_data, $params['lifetime']);
 
@@ -67,13 +76,13 @@ class Sessions implements \SessionHandlerInterface
 
         return false;
     }
-    
+
     public function destroy($session_id)
     {
         try {
             $cacher = cache\factory::build();
             $cacher->destroy($session_id);
-            
+
             $this->db->removeRow($session_id);
 
             return true;
