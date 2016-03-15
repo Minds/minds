@@ -133,6 +133,11 @@ minds-groups-profile{
 
   minds-groups-profile-members {
     margin-top: 0 !important;
+
+    .minds-groups-member-card minds-card-user.minds-user-ephemeral {
+      opacity: 0.5;
+      -webkit-filter: grayscale(100%);
+    }
   }
   minds-groups-profile-members-invite {
     margin: 0 $minds-padding $minds-padding;
