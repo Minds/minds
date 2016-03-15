@@ -156,7 +156,7 @@ class invitations implements Interfaces\Api
         }
 
         if ($banned) {
-            $membership->unban($invitee, $user);
+            $membership->setActor($user)->unban($invitee);
         }
 
         return Factory::response([

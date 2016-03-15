@@ -1,8 +1,8 @@
 <?php
 /**
- * Minds Group API
- * Membership-related operations
- */
+* Minds Group API
+* Membership-related operations
+*/
 namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
@@ -15,18 +15,20 @@ use Minds\Entities\User as User;
 use Minds\Plugin\Groups\Core\Membership as CoreMembership;
 use Minds\Plugin\Groups\Core\Management as Management;
 
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class membership implements Interfaces\Api
 {
     /**
-     * Returns the conversations or conversation
-     * @param array $pages
-     *
-     * API:: /v1/group/group/:guid
-     */
+    * Returns the conversations or conversation
+    * @param array $pages
+    *
+    * API:: /v1/group/group/:guid
+    */
     public function get($pages)
     {
         $group = EntitiesFactory::build($pages[0]);
-        $membership = new CoreMembership($group);
+        $membership = (new CoreMembership($group))->setActor(Session::getLoggedInUser());
 
         $options = [
             'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
@@ -40,50 +42,58 @@ class membership implements Interfaces\Api
         $response = [];
 
         switch ($pages[1]) {
-          case "requests":
-            $users = $membership->getRequests($options);
+            case "requests":
+                if (!$membership->canActorWrite($group)) {
+                    return Factory::response([]);
+                }
 
-            if (!$users) {
-                return Factory::response([]);
-            }
+                $users = $membership->getRequests($options);
 
-            $response['users'] = Factory::exportable($users);
-            $response['load-next'] = end($users)->getGuid();
-            break;
-          case "bans":
-            if (!ACL::_()->write($group, Session::getLoggedInUser())) {
-                return Factory::response([]);
-            }
+                if (!$users) {
+                    return Factory::response([]);
+                }
 
-            $users = $membership->getBannedUsers();
+                $response['users'] = Factory::exportable($users);
+                $response['load-next'] = end($users)->getGuid();
+                break;
+            case "bans":
+                if (!$membership->canActorWrite($group)) {
+                    return Factory::response([]);
+                }
 
-            if (!$users) {
-                return Factory::response([]);
-            }
+                $users = $membership->getBannedUsers();
 
-            $response['users'] = Factory::exportable($users);
-            $response['load-next'] = end($users)->getGuid();
-            break;
-          case "members":
-          default:
-            $members = $membership->getMembers($options);
-            $management = new Management($group);
+                if (!$users) {
+                    return Factory::response([]);
+                }
 
-            if (!$members) {
-                return Factory::response([]);
-            }
+                $response['users'] = Factory::exportable($users);
+                $response['load-next'] = end($users)->getGuid();
+                break;
+            case "members":
+            default:
+                if (!$membership->canActorRead($group)) {
+                    return Factory::response([]);
+                }
 
-            $response['members'] = Factory::exportable($members);
+                $members = $membership->getMembers($options);
+                $management = new Management($group);
 
-            for ($i = 0; $i < count($response['members']); $i++) {
-                $response['members'][$i]['is:member'] = true;
-                $response['members'][$i]['is:awaiting'] = false;
-                $response['members'][$i]['is:creator'] = $management->isCreator($response['members'][$i]['guid']);
-                $response['members'][$i]['is:owner'] = $management->isOwner($response['members'][$i]['guid']);
-            }
+                if (!$members) {
+                    return Factory::response([]);
+                }
 
-            $response['load-next'] = end($members)->getGuid();
-            break;
+                $response['members'] = Factory::exportable($members);
+
+                for ($i = 0; $i < count($response['members']); $i++) {
+                    $response['members'][$i]['is:member'] = true;
+                    $response['members'][$i]['is:awaiting'] = false;
+                    $response['members'][$i]['is:creator'] = $management->isCreator($response['members'][$i]['guid']);
+                    $response['members'][$i]['is:owner'] = $management->isOwner($response['members'][$i]['guid']);
+                }
+
+                $response['load-next'] = end($members)->getGuid();
+                break;
         }
 
         return Factory::response($response);
@@ -91,8 +101,11 @@ class membership implements Interfaces\Api
 
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         $group = EntitiesFactory::build($pages[0]);
-        $membership = new CoreMembership($group);
+        $actor = Session::getLoggedInUser();
+        $membership = (new CoreMembership($group))->setActor($actor);
 
         if (!isset($pages[1])) {
             return Factory::response([]);
@@ -100,46 +113,50 @@ class membership implements Interfaces\Api
 
         $response = [];
 
-        switch ($pages[1]) {
-            case 'cancel':
+        try {
+            switch ($pages[1]) {
+                case 'cancel':
+                $response['done'] = $membership->cancelRequest($actor);
+                break;
 
-            Factory::isLoggedIn();
+                case 'kick':
+                $user = $_POST['user'];
 
-            $response['done'] = (bool) $membership->cancelRequest(Session::getLoggedInUser());
-            break;
+                if (!$user) {
+                    break;
+                }
 
-            case 'kick':
-            $user = $_POST['user'];
+                $response['done'] = $membership->kick($user);
+                break;
 
-            if (!$user) {
+                case 'ban':
+                $user = $_POST['user'];
+
+                if (!$user) {
+                    break;
+                }
+
+                $response['done'] = $membership->ban($user);
+                break;
+
+                case 'unban':
+                $user = $_POST['user'];
+
+                if (!$user) {
+                    break;
+                }
+
+                $response['done'] = $membership->unban($user);
                 break;
             }
 
-            $response['done'] = (bool) $membership->kick($user, Session::getLoggedInUser());
-            break;
-
-            case 'ban':
-            $user = $_POST['user'];
-
-            if (!$user) {
-                break;
-            }
-
-            $response['done'] = (bool) $membership->ban($user, Session::getLoggedInUser());
-            break;
-
-            case 'unban':
-            $user = $_POST['user'];
-
-            if (!$user) {
-                break;
-            }
-
-            $response['done'] = (bool) $membership->unban($user, Session::getLoggedInUser());
-            break;
+            return Factory::response($response);
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
+            ]);
         }
-
-        return Factory::response($response);
     }
 
     public function put($pages)
@@ -150,32 +167,36 @@ class membership implements Interfaces\Api
         $user = Session::getLoggedInUser();
 
         $membership = new CoreMembership($group);
-        if ($membership->isBanned($user)) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'You are banned from this group'
-            ]);
-        }
 
         if (isset($pages[1])) {
             //Admin approval
-            if ($membership->join($pages[1], [ 'actor' => $user ])) {
+            try {
+                $joined = $membership->setActor($user)->join($pages[1]);
+
                 return Factory::response([
-                    'done' => true
+                    'done' => $joined
+                ]);
+            } catch (GroupOperationException $e) {
+                return Factory::response([
+                    'done' => false,
+                    'error' => $e->getMessage()
                 ]);
             }
         }
 
-        if ($group->join($user)) {
+        // Normal join
+        try {
+            $joined = $group->join($user);
+
             return Factory::response([
-                'done' => true
+                'done' => $joined
+            ]);
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
             ]);
         }
-
-        return Factory::response([
-            'status' => 'error',
-            'message' => 'Could not join group'
-        ]);
     }
 
     public function delete($pages)
@@ -183,28 +204,39 @@ class membership implements Interfaces\Api
         Factory::isLoggedIn();
 
         $group = EntitiesFactory::build($pages[0]);
+        $actor = Session::getLoggedInUser();
         $membership = new CoreMembership($group);
-        $user = Session::getLoggedInUser();
 
         // TODO: [emi] Check if this logic makes sense
 
         if (isset($pages[1])) {
             //Admin approval
-            $membership->cancelRequest($pages[1]);
-            return Factory::response([
-                'done' => true
-            ]);
+            try {
+                $cancelled = $membership->setActor($actor)->cancelRequest($pages[1]);
+
+                return Factory::response([
+                    'done' => $cancelled
+                ]);
+            } catch (GroupOperationException $e) {
+                return Factory::response([
+                    'done' => false,
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
 
-        if ($group->leave($user)) {
+        // Normal leave
+        try {
+            $left = $group->leave($actor);
+
             return Factory::response([
-                'done' => true
+                'done' => $left
+            ]);
+        } catch (GroupOperationException $e) {
+            return Factory::response([
+                'done' => false,
+                'error' => $e->getMessage()
             ]);
         }
-
-        return Factory::response([
-            'status' => 'error',
-            'message' => 'Could not leave group'
-        ]);
     }
 }

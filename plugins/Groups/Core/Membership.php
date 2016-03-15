@@ -7,14 +7,19 @@ namespace Minds\Plugin\Groups\Core;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
-use Minds\Core\Security\ACL;
 use Minds\Core\Entities;
 use Minds\Entities\User;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
+use Minds\Plugin\Groups\Behaviors\Actorable;
+
+use Minds\Plugin\Groups\Exceptions\GroupOperationException;
+
 class Membership
 {
+    use Actorable;
+
     protected $group;
     protected $relDB;
     protected $notifications;
@@ -29,7 +34,7 @@ class Membership
         $this->group = $group ?: new GroupEntity();
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->notifications = $notifications ?: new Notifications($this->group);
-        $this->acl = $acl ?: ACL::_();
+        $this->setAcl($acl);
     }
 
     /**
@@ -161,33 +166,57 @@ class Membership
     public function join($user, array $opts = [])
     {
         $opts = array_merge([
-            'force' => false,
-            'actor' => $user
+            'force' => false
         ], $opts);
 
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
-        if ($opts['actor'] && !($opts['actor'] instanceof User)) {
-            $opts['actor'] = EntitiesFactory::build($opts['actor']);
+        if ($this->isMember($user)) {
+            throw new GroupOperationException('User is already a member');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
+        $banned = $this->isBanned($user);
         $canJoin = $this->group->isPublic();
 
-        if (!$canJoin && $opts['actor']) {
-            $canJoin = $this->acl->write($this->group, $opts['actor']);
+        if (!$canJoin && $this->hasActor()) {
+            $canJoin = $this->canActorWrite($this->group);
+
+            // Unban if the actor has write capabilities
+            if ($canJoin && $banned) {
+                $unbanned = $this->unban($user);
+                $banned = !$unbaned;
+            }
         }
+
+        if ($banned) {
+            throw new GroupOperationException('You are banned from this group');
+        }
+
+        $this->relDB->setGuid($user_guid);
+        $done = false;
 
         if ($opts['force'] || $canJoin) {
-            $this->cancelRequest($user_guid);
+            if ($this->isAwaiting($user_guid)) {
+                try {
+                    $this->cancelRequest($user_guid);
+                } catch (GroupOperationException $e) { }
+            }
 
-            $this->relDB->setGuid($user_guid);
-            return $this->relDB->create('member', $this->group->getGuid());
+            $done = $this->relDB->create('member', $this->group->getGuid());
+        } else {
+            $done = $this->relDB->create('membership_request', $this->group->getGuid());
         }
 
-        return $this->relDB->create('membership_request', $this->group->getGuid());
+        // TODO: [emi] Send a notification to target user if was awaiting
+
+        if ($done) {
+            return true;
+        }
+
+        throw new GroupOperationException('Error joining group');
     }
 
     /**
@@ -198,7 +227,11 @@ class Membership
     public function leave($user)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
+        }
+
+        if (!$this->isMember($user)) {
+            throw new GroupOperationException('User is not a member');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
@@ -206,7 +239,13 @@ class Membership
 
         $this->notifications->unmute($user_guid);
 
-        return $this->relDB->remove('member', $this->group->getGuid());
+        $done = $this->relDB->remove('member', $this->group->getGuid());
+
+        if ($done) {
+            return true;
+        }
+
+        throw new GroupOperationException('Error leaving group');
     }
 
     /**
@@ -217,17 +256,19 @@ class Membership
     public function kick($user)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
+        }
+
+        if (!$this->canActorActUponUser($user, $this->group, false)) {
+            throw new GroupOperationException('You cannot kick this user');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $left = $this->leave($user);
+        $this->leave($user);
 
-        if ($left) {
-            $this->notifications->sendKickNotification($user_guid);
-        }
+        $this->notifications->sendKickNotification($user_guid);
 
-        return $left;
+        return true;
     }
 
     /**
@@ -273,13 +314,23 @@ class Membership
     public function cancelRequest($user)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
+        }
+
+        if (!$this->canActorActUponUser($user, $this->group)) {
+            throw new GroupOperationException('You cannot cancel this request');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->remove('membership_request', $this->group->getGuid());
+        $cancelled = $this->relDB->remove('membership_request', $this->group->getGuid());
+
+        if ($cancelled) {
+            return true;
+        }
+
+        throw new GroupOperationException('Error cancelling request');
     }
 
     /**
@@ -287,38 +338,35 @@ class Membership
      * @param  mixed   $user
      * @return boolean
      */
-    public function ban($user, $actor)
+    public function ban($user)
     {
         if (!$user) {
-            return false;
-        }
-
-        if ($actor && !($actor instanceof User)) {
-            $actor = EntitiesFactory::build($actor);
-        }
-
-        if (!$actor || !$this->acl->write($this->group, $actor)) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $actor_guid = is_object($actor) ? $actor->guid : $actor;
+
+        if ($this->isActorUser($user_guid)) {
+            throw new GroupOperationException('You cannot ban yourself');
+        }
+
+        if (!$this->canActorActUponUser($user, $this->group, false)) {
+            throw new GroupOperationException('You cannot ban this user');
+        }
+
         $this->relDB->setGuid($user_guid);
 
-        if ($actor_guid == $user_guid) {
-            // Cannot self-ban
-            return false;
-        }
+        $banned = $this->relDB->create('group:banned', $this->group->getGuid());
 
         if ($this->isMember($user)) {
-            $kicked = $this->kick($user);
-
-            if (!$kicked) {
-                return false;
-            }
+            $this->kick($user);
         }
 
-        return $this->relDB->create('group:banned', $this->group->getGuid());
+        if ($banned) {
+            return true;
+        }
+
+        throw new GroupOperationException('Cannot ban user');
     }
 
     /**
@@ -329,21 +377,23 @@ class Membership
     public function unban($user, $actor)
     {
         if (!$user) {
-            return false;
+            throw new GroupOperationException('User not found');
         }
 
-        if ($actor && !($actor instanceof User)) {
-            $actor = EntitiesFactory::build($actor);
-        }
-
-        if (!$actor || !$this->acl->write($this->group, $actor)) {
-            return false;
+        if (!$this->canActorActUponUser($user, $this->group, false)) {
+            throw new GroupOperationException('You cannot unban this user');
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->remove('group:banned', $this->group->getGuid());
+        $unbanned = $this->relDB->remove('group:banned', $this->group->getGuid());
+
+        if ($unbanned) {
+            return true;
+        }
+
+        throw new GroupOperationException('Cannot unban user');
     }
 
     /**

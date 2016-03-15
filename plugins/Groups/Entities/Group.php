@@ -512,7 +512,7 @@ class Group extends NormalizedEntity
      */
     public function join($user = null, array $opts = [])
     {
-        return (new Membership($this))->join($user, $opts);
+        return (new Membership($this))->setActor($user)->join($user, $opts);
     }
 
     /**
@@ -522,7 +522,7 @@ class Group extends NormalizedEntity
      */
     public function leave($user = null)
     {
-        return (new Membership($this))->leave($user);
+        return (new Membership($this))->setActor($user)->leave($user);
     }
 
     /**
