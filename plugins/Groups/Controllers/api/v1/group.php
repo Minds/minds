@@ -111,7 +111,7 @@ class group implements Interfaces\Api
                 $group->setAccessId(ACCESS_PUBLIC);
 
                 if (!$creation) {
-                    (new Membership($group))->acceptAllRequests();
+                    (new Membership($group))->setActor($user)->acceptAllRequests();
                 }
             } elseif ($_POST['membership'] == 0) {
                 $group->setAccessId(ACCESS_PRIVATE);
