@@ -401,14 +401,6 @@ minds-groups-profile-requests{
 }
 
 minds-groups-card-user-actions-button {
-  position: absolute;
-  top: $minds-padding;
-  right: 0;
-
-  &.is-admin {
-    right: 38px;
-  }
-
   > button {
     padding: 0 !important;
   }

@@ -2,9 +2,12 @@
 
 <div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="#member of members">
     <div class="mdl-card mdl-shadow--2dp">
-        <minds-card-user [object]="member" [ngClass]="{ 'minds-user-ephemeral': !member['is:member'] }"></minds-card-user>
-        <minds-groups-card-user-actions-button class="m-button" [ngClass]="{ 'is-admin': session.isAdmin() }" *ngIf="session.isLoggedIn() &amp;&amp; session.getLoggedInUser().guid != member.guid"
-        [group]="group" [user]="member"></minds-groups-card-user-actions-button>
+        <minds-card-user [object]="member" [ngClass]="{ 'minds-user-ephemeral': !member['is:member'] }">
+          <div buttons>
+            <minds-groups-card-user-actions-button class="m-button" *ngIf="session.isLoggedIn() &amp;&amp; session.getLoggedInUser().guid != member.guid"
+            [group]="group" [user]="member"></minds-groups-card-user-actions-button>
+          </div>
+        </minds-card-user>
     </div>
 </div>
 
