@@ -342,12 +342,16 @@ minds-groups-create{
 }
 
 minds-groups-profile-requests{
+  transform-style: preserve-3d;
+
   .mdl-cell{
     min-height:0;
   }
 
   .mdl-card__title{
-    padding:$minds-padding;
+    position: relative;
+    top: 14px - $minds-padding;
+    padding: $minds-padding;
   }
 
   .minds-avatar{
@@ -357,13 +361,27 @@ minds-groups-profile-requests{
     }
   }
 
+  .minds-body {
+    > a {
+      display: block;
+      font-size: 1.1em;
+      text-decoration: none;
+    }
+
+    > span {
+      display: block;
+      font-size: 0.75em;
+    }
+  }
+
   .mdl-card__actions{
     border-top: 0;
     width: auto;
     right: 0;
     position: absolute;
-    top: 0;
-    padding: $minds-padding*2;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 $minds-padding*2;
   }
 }
 
