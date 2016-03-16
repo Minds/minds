@@ -344,6 +344,10 @@ minds-groups-create{
 minds-groups-profile-requests{
   transform-style: preserve-3d;
 
+  > .mdl-card {
+    max-height: 94px;
+  }
+
   .mdl-cell{
     min-height:0;
   }
