@@ -102,6 +102,7 @@ export class GroupsCardUserActionsButton {
       this.user['is:banned'] = done && ban;
 
       this.kickPrompt = !done;
+      this.changeCounter('members:count', -1);
     });
 
     this.showMenu = false;
@@ -139,6 +140,12 @@ export class GroupsCardUserActionsButton {
     });
 
     this.showMenu = false;
+  }
+
+  private changeCounter(counter: string, val = 0) {
+    if (typeof this.group[counter] !== 'undefined') {
+      this.group[counter] = parseInt(this.group[counter], 10) + val;
+    }
   }
 
   ngOnDestroy(){

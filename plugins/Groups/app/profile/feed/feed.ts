@@ -51,7 +51,7 @@ export class GroupsProfileFeed {
   set _group(value : any){
     this.group = value;
     this.guid = value.guid;
-    this.load();
+    this.load(true);
   }
 
   prepend(activity : any){

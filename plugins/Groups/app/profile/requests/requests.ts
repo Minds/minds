@@ -56,6 +56,8 @@ export class GroupsProfileRequests {
     this.service.acceptRequest(this.group, user.guid)
     .then(() => {
       this.users.splice(index, 1);
+      this.changeCounter('members:count', +1);
+      this.changeCounter('requests:count', -1);
     });
   }
 
@@ -63,7 +65,15 @@ export class GroupsProfileRequests {
     this.service.rejectRequest(this.group, user.guid)
     .then(() => {
       this.users.splice(index, 1);
+      this.changeCounter('requests:count', -1);
     });
+
+  }
+
+  private changeCounter(counter: string, val = 0) {
+    if (typeof this.group[counter] !== 'undefined') {
+      this.group[counter] = parseInt(this.group[counter], 10) + val;
+    }
   }
 
 }

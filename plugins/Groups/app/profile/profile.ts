@@ -103,4 +103,8 @@ export class GroupsProfile {
     }, { avatar: file });
   }
 
+  change_membership(membership: any) {
+    this.load();
+  }
+
 }

@@ -32,7 +32,7 @@
         <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
         <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
 
-        <minds-groups-join-button [group]="group" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
+        <minds-groups-join-button [group]="group" (membership)="change_membership($event)" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
       </div>
     </div>
 

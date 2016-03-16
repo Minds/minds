@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, View, Inject, EventEmitter } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
@@ -14,7 +14,8 @@ import { SignupOnActionModal } from '../../components/modal/modal';
   selector: 'minds-groups-join-button',
 
   properties: ['_group: group'],
-  bindings: [ GroupsService ]
+  bindings: [ GroupsService ],
+  outputs:[ 'membership' ]
 })
 @View({
   template: `
@@ -36,6 +37,8 @@ export class GroupsJoinButton {
   showModal : boolean = false;
   group : any;
   session = SessionFactory.build();
+  membership: EventEmitter<any> = new EventEmitter();
+
 
   constructor(public service: GroupsService, public router: Router){
     this.minds = window.Minds;
@@ -80,8 +83,9 @@ export class GroupsJoinButton {
     .then(() => {
       if (this.isPublic()) {
         this.group['is:member'] = true;
-        // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-        window.location.reload();
+        this.membership.next({
+          member: true
+        });
         return;
       }
 
@@ -100,8 +104,9 @@ export class GroupsJoinButton {
     this.service.leave(this.group)
     .then(() => {
       this.group['is:member'] = false;
-      // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-      window.location.reload();
+      this.membership.next({
+        member: false
+      });
     })
     .catch(e => {
       this.group['is:member'] = true;
@@ -121,8 +126,9 @@ export class GroupsJoinButton {
       this.group['is:invited'] = !done;
 
       if (done) {
-        // TODO: [emi] Find an Angular way. But Router doesn't reload the page.
-        window.location.reload();
+        this.membership.next({
+          member: true
+        });
       }
     });
   }
