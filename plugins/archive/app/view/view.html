@@ -30,11 +30,11 @@
     <!-- Actions block -->
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ngIf="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [routerLink]="['/Archive-Edit', { guid: entity.guid }]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-edit [routerLink]="['/Archive-Edit', { guid: entity.guid }]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">edit</button>
       </minds-button-edit>
 
-      <minds-button-edit (click)="delete()"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-edit (click)="delete()"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">close</button>
       </minds-button-edit>
 

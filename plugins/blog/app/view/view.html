@@ -25,11 +25,11 @@
       </div>
     </div>
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
-      <minds-button-subscribe [user]="blog.ownerObj" *ngIf="blog.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [routerLink]="['/Blog-Edit', { guid: blog.guid }]" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit">
+      <minds-button-subscribe [user]="blog.ownerObj" *ngIf="blog.ownerObj.guid != session.getLoggedInUser().guid" [ngClass]="{'m-button-icon-only': session.isAdmin()}"></minds-button-subscribe>
+      <minds-button-edit [routerLink]="['/Blog-Edit', { guid: blog.guid }]" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit || session.isAdmin()">
         <button class="material-icons">edit</button>
       </minds-button-edit>
-      <minds-button-edit (click)="delete()"  *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid">
+      <minds-button-edit (click)="delete()"  *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">close</button>
       </minds-button-edit>
       <minds-button-feature [object]="blog" *ngIf="session.isAdmin()"></minds-button-feature>
