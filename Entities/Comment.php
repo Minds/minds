@@ -9,6 +9,7 @@ use Minds\Entities;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Core\Security;
+use Minds\Helpers;
 
 class Comment extends Entities\Entity
 {
@@ -90,7 +91,26 @@ class Comment extends Entities\Entity
         return array_merge(parent::getExportableValues(), array(
             'description',
             'ownerObj',
-            'parent_guid'
+            'parent_guid',
+            'thumbs:up:count',
+            'thumbs:up:user_guids',
+            'thumbs:down:count',
+            'thumbs:down:user_guids',
         ));
+    }
+
+    public function export()
+    {
+        $export = parent::export();
+
+        $export['thumbs:up:count'] = Helpers\Counters::get($this, 'thumbs:up');
+        $export['thumbs:down:count'] = Helpers\Counters::get($this, 'thumbs:down');
+
+        $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids']);
+        $export['thumbs:down:user_guids'] = (array) array_values($export['thumbs:down:user_guids']);
+
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+
+        return $export;
     }
 }
