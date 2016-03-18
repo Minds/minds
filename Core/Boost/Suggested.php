@@ -83,13 +83,16 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
     {
 
         $cacher = Core\Data\cache\factory::build();
-        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts") ?: [];
+        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested") ?: [];
 
-        $boosts = $this->mongo->find("boost", [
+        $opts = [
             'type'=>'suggested',
-            'state'=>'approved',
-            '_id' => [ '$gt' => end($mem_log) ]
-        ]);
+             'state'=>'approved',
+        ];  
+        if($mem_log){
+            $opts['_id'] =  [ '$gt' => end($mem_log) ];
+        }
+        $boosts = $this->mongo->find("boost", $opts);
         if (!$boosts) {
             return null;
         }
@@ -123,11 +126,12 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             }
 
             array_push($mem_log, (string) $boost['_id']);
-            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts", $mem_log, (12 * 3600));
+            $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested", $mem_log, (12 * 3600));
             $return[] = $entity;
         }
-        if(!$result && $mem_log){
-            $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts");
+        if(empty($return) && !empty($mem_log)){
+            $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested");
+            return $this->getBoosts($limit);
         }
         return $return;
     }
