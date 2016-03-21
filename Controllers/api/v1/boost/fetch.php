@@ -38,11 +38,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
               break;
           case 'newsfeed':
-            //$boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
-            $boosts = Core\Entities::get([
-              'type'=>'activity',
-              'owner_guid' => Core\Session::getLoggedinUser()->guid
-            ]);
+            $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
             foreach ($boosts as $entity) {
                 $response['boosts'][] = $entity->export();
                 //bug: sometimes views weren't being calculated on scroll down
