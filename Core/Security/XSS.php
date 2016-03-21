@@ -49,8 +49,9 @@ class XSS
     {
         $this->allowed = array_merge($allowed, [
           '<a>', '<b>', '<i>', '<em>', '<strong>', '<ul>', '<li>', '<p>', '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', //tag names
+          '<sub>', '<sup>', '<span>', //more tag names
           '<img>', '<video>', '<iframe>', //tag names
-          'a=href', '*=src', '*=width', '*=height', //attibute names
+          'a=href', '*=src', '*=width', '*=height', '*=style',//attibute names
           '::http', '::https', '::*', //scheme protocols
         ]);
 

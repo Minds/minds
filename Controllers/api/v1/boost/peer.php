@@ -91,6 +91,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
           ->setBid($_POST['bid'])
           ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
+          ->postToFacebook($_POST['postToFacebook'])
+          ->setScheduledTs($_POST['scheduledTs'])
           ->setState('created');
           //->save();
 
@@ -183,6 +185,16 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
         ]);
 
+        //Now forward through to social networks if selected
+        if($boost->shouldPostToFacebook()){
+            $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
+            $facebook->getApiCredentials();
+            if($boost->getScheduledTs() > time()){
+                $facebook->schedule($boost->getScheduledTs());
+            }
+            $facebook->post($embeded);
+        }
+
         $pro->accept($pages[0]);
         $response['status'] = 'success';
         return Factory::response($response);
@@ -198,29 +210,39 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
+        $revoked = isset($pages[1]) && $pages[1] == 'revoke';
+
         if ($boost->getType() == "pro") {
             try {
                 Payments\Factory::build('braintree', ['gateway'=>'merchants'])->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
-            'status' => 'error',
-            'message' => $e->getMessage()
-          ]);
+                  'status' => 'error',
+                  'message' => $e->getMessage()
+                ]);
                 return false;
             }
         } else {
-            Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
+            $message = "Rejected Peer Boost";
+            if($revoked){
+                $message = "Revoked Peer Boost";
+            }
+            Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $revoke);
         }
 
-        Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to'=>array($boost->getOwner()->guid),
-            'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
-            'notification_view' => 'boost_peer_rejected',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
-        ]);
+        if($revoked){
+            $pro->revoke($pages[0]);
+        } else {
+            Core\Events\Dispatcher::trigger('notification', 'boost', [
+                'to'=>array($boost->getOwner()->guid),
+                'entity' => $boost->getEntity(),
+                'title' => $boost->getEntity()->title,
+                'notification_view' => 'boost_peer_rejected',
+                'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+            ]);
+            $pro->reject($pages[0]);
+        }
 
-        $pro->reject($pages[0]);
         $response['status'] = 'success';
         return Factory::response($response);
     }

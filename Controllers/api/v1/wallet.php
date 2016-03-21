@@ -189,7 +189,6 @@ class wallet implements Interfaces\Api
                             ->setId($subscriptionIds[0])
                         );
                     }
-
                     $subscription = $payment_service->createSubscription(
                         (new Payments\Subscriptions\Subscription)
                         ->setPaymentMethod($payment_method)

@@ -25,6 +25,8 @@ class Peer implements BoostEntityInterface
     private $last_updated;
     private $transactionId;
     private $_type = 'pro';
+    private $scheduledTs;
+    private $postToFacebook = false;
 
     public function __construct($db = null)
     {
@@ -62,6 +64,8 @@ class Peer implements BoostEntityInterface
       $this->time_created = $array['time_created'];
       $this->last_updated = $array['last_updated'];
       $this->transactionId = $array['transactionId'];
+      $this->scheduledTs = $array['scheduledTs'];
+      $this->postToFacebook = $array['postToFacebook'];
       return $this;
   }
 
@@ -77,17 +81,19 @@ class Peer implements BoostEntityInterface
       }
 
       $data = [
-      'guid' => $this->guid,
-      'type' => $this->_type,
-      'entity' => $this->entity->export(),
-      'bid' => $this->bid,
-      'owner' => $this->owner->export(),
-      'destination' => $this->destination->export(),
-      'state' => $this->state,
-      'time_created' => $this->time_created,
-      'last_updated' => time(),
-      'transactionId' => $this->transactionId
-    ];
+        'guid' => $this->guid,
+        'type' => $this->_type,
+        'entity' => $this->entity->export(),
+        'bid' => $this->bid,
+        'owner' => $this->owner->export(),
+        'destination' => $this->destination->export(),
+        'state' => $this->state,
+        'time_created' => $this->time_created,
+        'last_updated' => time(),
+        'transactionId' => $this->transactionId,
+        'scheduledTs' => $this->scheduledTs ?: time(),
+        'postToFacebook' => $this->postToFacebook
+      ];
 
       $serialized = json_encode($data);
       $this->db->insert("boost:peer:{$this->destination->guid}", [ $this->guid => $serialized ]);
@@ -219,23 +225,49 @@ class Peer implements BoostEntityInterface
         return $this;
     }
 
-  /**
-   * Return the boost type
-   * @return string
-   */
-  public function getType()
-  {
-      return $this->_type;
-  }
+    /**
+     * Return the boost type
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
 
-  /**
-   * Set the boost type
-   */
-  public function setType($type)
-  {
-      $this->_type = $type;
-      return $this;
-  }
+    /**
+     * Set the boost type
+     */
+    public function setType($type)
+    {
+        $this->_type = $type;
+        return $this;
+    }
+
+    public function getScheduledTs()
+    {
+        return $this->scheduledTs ?: time();
+    }
+
+    public function setScheduledTs($ts)
+    {
+        $this->scheduledTs = $ts;
+        return $this;
+    }
+
+    public function shouldPostToFacebook()
+    {
+        if($this->postToFacebook){
+            return true;
+        }
+        return false;
+    }
+
+    public function postToFacebook($boolean){
+        if($boolean){
+            $this->postToFacebook = true;
+        }
+        return $this;
+    }
 
     public function export()
     {
@@ -250,7 +282,9 @@ class Peer implements BoostEntityInterface
           'transactionId' => $this->transactionId,
           'time_created' => $this->time_created,
           'last_updated' => $this->last_updated,
-          'type' => $this->_type
+          'type' => $this->_type,
+          'scheduledTs' => $this->scheduledTs,
+          'postToFacebook' => $this->postToFacebook
         ];
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);

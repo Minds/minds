@@ -123,6 +123,23 @@ class Peer implements Interfaces\BoostHandlerInterface
     }
 
     /**
+     * Revoke a boost
+     * @param object/int $entity
+     * @return boolean
+     */
+    public function revoke($boost, $impressions)
+    {
+        if (!$boost instanceof Entities\Boost\Peer) {
+            $boost = $this->getBoostEntity($boost);
+        }
+
+        $boost->setState('revoked')
+        ->save();
+
+        return true;
+    }
+
+    /**
      * Return a boost
      * @return array
      */

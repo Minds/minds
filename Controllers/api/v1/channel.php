@@ -192,6 +192,7 @@ class channel implements Interfaces\Api
                 foreach (array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field) {
                     if (isset($_POST[$field])) {
                         $update[$field] = $_POST[$field];
+                        $owner->$field = $_POST[$field];
                     }
                 }
 
@@ -208,7 +209,7 @@ class channel implements Interfaces\Api
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
                 //update session also
-                Core\Session::regenerate(false);
+                Core\Session::regenerate(false, $owner);
        }
 
         return Factory::response($response);
