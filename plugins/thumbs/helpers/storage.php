@@ -17,22 +17,9 @@ class storage{
 
     public static function insert($direction = 'up', $entity){
 
-        if ($entity->type == 'comment') {
-            if (!$entity->parent_guid) {
-                return false;
-            }
-
-            $parent = EntitiesFactory::build($entity->parent_guid);
-
-            // check if we can interact both with the comment and the activity
-            if (!Security\ACL::_()->interact($entity) || !Security\ACL::_()->interact($parent)) {
-                return false;
-            }
-        } else {
-            //check to see if we can interact with the entity
-            if (!Security\ACL::_()->interact($entity)) {
-                return false;
-            }
+        //check to see if we can interact with the entity
+        if (!Security\ACL::_()->interact($entity)) {
+            return false;
         }
 
         $db = new Data\Call('entities');
