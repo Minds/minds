@@ -135,6 +135,7 @@ class Common implements Interfaces\PreparedInterface
                             "WHERE " .
                              "NOT (user)-[:ACTED]->(fof) " .
                              "AND NOT (fof.guid = user.guid) " .
+                             "AND (fof.hasAvatar = true) " .
                             "RETURN fof ".
                             //"ORDER BY COUNT(*) DESC ".
                             "SKIP {skip} " .
@@ -145,6 +146,7 @@ class Common implements Interfaces\PreparedInterface
                             "WHERE " .
                              "NOT (user)-[:ACTED]->(fof) " .
                              "AND NOT (fof.guid = user.guid) " .
+                             "AND (fof.hasAvatar = true) " .
                             "RETURN fof ".
                             //"ORDER BY COUNT(*) DESC ".
                             "SKIP {skip} " .
@@ -411,7 +413,7 @@ class Common implements Interfaces\PreparedInterface
         $km = $distance * 1.609344;
         $distance =  number_format((float)$km, 2, '.', '');
 
-        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
+        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid AND (n.hasAvatar = true) return n as fof SKIP {skip} LIMIT {limit}";
         $this->values = array(
             "filter" => "withinDistance:[$latlon,$distance]",
             "guid" => is_object($user) ? (string) $user->guid : (string) $user,
