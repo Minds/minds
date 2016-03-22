@@ -199,7 +199,8 @@ class newsfeed implements Interfaces\Api
                                         $activity->setFromEntity($embeded)
                                           ->setCustom('video', [
                                               'thumbnail_src'=>$embeded->getIconUrl(),
-                                              'guid'=>$embeded->guid
+                                              'guid'=>$embeded->guid,
+                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
                                             ])
                                           ->setTitle($embeded->title)
                                           ->setBlurb($embeded->description)
@@ -210,7 +211,8 @@ class newsfeed implements Interfaces\Api
                                           ->setFromEntity($embeded)
                                           ->setCustom('video', [
                                               'thumbnail_src'=>$embeded->getIconUrl(),
-                                              'guid'=>$embeded->guid
+                                              'guid'=>$embeded->guid,
+                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
                                             ])
                                           ->setTitle($embeded->title)
                                           ->setBlurb($embeded->description)
@@ -223,7 +225,8 @@ class newsfeed implements Interfaces\Api
                                     if($embeded->owner_guid == Core\Session::getLoggedInUserGuid()){
                                         $activity->setCustom('batch', [[
                                           'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
-                                          'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid
+                                          'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,
+                                          'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
                                         ]])
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
@@ -233,7 +236,8 @@ class newsfeed implements Interfaces\Api
                                         $activity->setRemind((new \Minds\Entities\Activity())
                                           ->setCustom('batch', [[
                                               'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
-                                              'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid
+                                              'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,
+                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
                                              ]])
                                           ->setFromEntity($embeded)
                                           ->setTitle($embeded->title)
@@ -279,18 +283,25 @@ class newsfeed implements Interfaces\Api
 
                 if (isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
                     $attachment = entities\Factory::build($_POST['attachment_guid']);
+                    $mature = isset($_POST['mature']) && !!$_POST['mature'];
                     if (!$attachment) {
                         break;
                     }
                     $attachment->title = $activity->message;
                     $attachment->access_id = 2;
+
+                    if ($attachment instanceof \Minds\Interfaces\Flaggable) {
+                      $attachment->setFlag('mature', $mature);
+                    }
+
                     $attachment->save();
 
                     switch($attachment->subtype){
                       case "image":
                         $activity->setCustom('batch', [[
                           'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
-                          'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                          'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid,
+                          'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
                         ]])
                         ->setFromEntity($attachment)
                         ->setTitle($attachment->message);
@@ -299,7 +310,8 @@ class newsfeed implements Interfaces\Api
                         $activity->setFromEntity($attachment)
                             ->setCustom('video', array(
                             'thumbnail_src'=>$attachment->getIconUrl(),
-                            'guid'=>$attachment->guid))
+                            'guid'=>$attachment->guid,
+                            'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false))
                             ->setTitle($attachment->message);
                         break;
                     }

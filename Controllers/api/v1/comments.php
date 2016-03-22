@@ -150,16 +150,24 @@ class comments implements Interfaces\Api
 
         if (!$error && isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
             $attachment = entities\Factory::build($_POST['attachment_guid']);
+            $mature = isset($_POST['mature']) && !!$_POST['mature'];
+
             if ($attachment) {
                 $attachment->title = $comment->description;
                 $attachment->access_id = 2;
+
+                if ($attachment instanceof \Minds\Interfaces\Flaggable) {
+                  $attachment->setFlag('mature', $mature);
+                }
+
                 $attachment->save();
 
                 switch($attachment->subtype){
                   case "image":
                     $comment->setCustom('batch', [[
                       'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
-                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid,
+                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
                     ]]);
                     break;
                 }
