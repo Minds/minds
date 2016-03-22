@@ -24,21 +24,21 @@
 
 
 
-<table cellspacing="0" cellpadding="0" border="0" width="400" align="center">
+<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
   <tbody>
 
     <?php foreach($vars['featured'] as $object){ ?>
     <tr>
       <td style="background:#FEFEFE; border:1px solid #DDD; padding: 0;">
-        <table cellspacing="0" cellpadding="4" border="0" width="400" align="center">
+        <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
 
           <tr>
             <td>
-              <table cellspacing="0" cellpadding="0" border="0" width="400" align="center">
+              <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
                 <tr>
                   <td>
                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>">
-                      <img src="<?= $object->getIconUrl(400) ?>" width="400px" alt="<?php echo $object->title ?>">
+                      <img src="<?= $object->getIconUrl(400) ?>" width="600px" alt="<?php echo $object->title ?>">
                     </a>
                   </td>
                 </tr>
@@ -48,7 +48,7 @@
 
           <tr>
             <td>
-              <table cellspacing="0" cellpadding="0" border="0" width="400" align="center" style="padding:16px;">
+              <table cellspacing="0" cellpadding="0" border="0" width="600" align="center" style="padding:16px;">
                 <tr>
                   <td colspan="2">
                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none; font-weight:bold; color:#333; font-size:16px; display:block; padding-bottom: 12px;"><?= htmlspecialchars_decode($object->title, ENT_QUOTES) ?></a>
@@ -71,6 +71,9 @@
 
         </table>
       </td>
+    </tr>
+    <tr>
+      <td height="20px"></td>
     </tr>
     <?php } ?>
 
