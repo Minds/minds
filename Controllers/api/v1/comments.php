@@ -61,6 +61,7 @@ class comments implements Interfaces\Api
     public function post($pages)
     {
         $response = array();
+        $error = false;
 
         switch ($pages[0]) {
           case "update":
@@ -69,8 +70,23 @@ class comments implements Interfaces\Api
                 $response = array('status' => 'error', 'message' => 'This comment can not be edited');
                 break;
             }
-            $comment->description = $_POST['description'];
-            $comment->save();
+
+            $content = $_POST['comment'];
+
+            // Odd fallback so we don't break mobile apps editing
+            if (!$_POST['title'] && $_POST['description']) {
+                $content = $_POST['description'];
+            }
+
+            if(!$content && !$_POST['attachment_guid']){
+              return Factory::response([
+                'status' => 'error',
+                'message' => 'You must enter a message'
+              ]);
+            }
+
+            $comment->description = urldecode($content);
+            $error = !$comment->save();
             break;
           case is_numeric($pages[0]):
           default:
@@ -78,7 +94,7 @@ class comments implements Interfaces\Api
             if ($parent instanceof Entities\Activity && $parent->remind_object) {
                 $parent = (object) $parent->remind_object;
             }
-            if(!$_POST['comment']){
+            if(!$_POST['comment'] && !$_POST['attachment_guid']){
               return Factory::response([
                 'status' => 'error',
                 'message' => 'You must enter a message'
@@ -112,11 +128,50 @@ class comments implements Interfaces\Api
                 $comment->ownerObj = Core\Session::getLoggedinUser()->export();
                 $response['comment'] = $comment->export();
             } else {
+                $error = true;
+
                 $response = array(
                   'status' => 'error',
                   'message' => 'The comment couldn\'t be saved'
                 );
             }
+        }
+
+        $modified = false;
+
+        if (!$error && isset($_POST['title']) && $_POST['title']) {
+            $comment->setTitle(urldecode($_POST['title']))
+                ->setBlurb(urldecode($_POST['description']))
+                ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
+                ->setThumbnail(urldecode($_POST['thumbnail']));
+
+            $modified = true;
+        }
+
+        if (!$error && isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
+            $attachment = entities\Factory::build($_POST['attachment_guid']);
+            if ($attachment) {
+                $attachment->title = $comment->description;
+                $attachment->access_id = 2;
+                $attachment->save();
+
+                switch($attachment->subtype){
+                  case "image":
+                    $comment->setCustom('batch', [[
+                      'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
+                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid
+                    ]]);
+                    break;
+                }
+
+                $comment->setAttachmentGuid($attachment->guid);
+                $modified = true;
+            }
+        }
+
+        if ($modified) {
+            $comment->save();
+            $response['comment'] = $comment->export();
         }
 
         return Factory::response($response);

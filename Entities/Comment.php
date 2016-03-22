@@ -32,6 +32,63 @@ class Comment extends Entities\Entity
         return $this;
     }
 
+    public function setCustom($type, $data = array())
+    {
+        $this->custom_type = $type;
+        $this->custom_data = $data;
+        return $this;
+    }
+
+    public function setAttachmentGuid($guid)
+    {
+        $this->attachment_guid = $guid;
+        return $this;
+    }
+
+    /**
+     * Sets the title
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * Sets the blurb
+     * @param string $blurb
+     * @return $this
+     */
+    public function setBlurb($blurb)
+    {
+        $this->blurb = $blurb;
+        return $this;
+    }
+
+    /**
+     * Sets the url
+     * @param string $url
+     * @return $this
+     */
+    public function setURL($url)
+    {
+        $this->perma_url = $url;
+        return $this;
+    }
+
+    /**
+     * Sets the thumbnail
+     * @param string $src
+     * @return $this
+     */
+    public function setThumbnail($src)
+    {
+        $this->thumbnail_src = $src;
+        return $this;
+    }
+
     public function save()
     {
 
@@ -90,8 +147,15 @@ class Comment extends Entities\Entity
     {
         return array_merge(parent::getExportableValues(), array(
             'description',
+            'title',
+            'blurb',
+            'perma_url',
+            'thumbnail_src',
+            'attachment_guid',
             'ownerObj',
             'parent_guid',
+            'custom_type',
+            'custom_data',
             'thumbs:up:count',
             'thumbs:up:user_guids',
             'thumbs:down:count',
