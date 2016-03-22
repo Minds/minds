@@ -27,8 +27,8 @@ class Common implements Interfaces\PreparedInterface
      */
     public function createUser($user)
     {
-        $this->template = "MERGE (user:User { guid: {guid}, username:{username} })";
-        $this->values = array('guid'=>$user->guid, 'username'=>$user->username);
+        $this->template = "MERGE (user:User { guid: {guid}, username:{username}, hasAvatar:{hasAvatar} })";
+        $this->values = array('guid'=>$user->guid, 'username'=>$user->username, 'hasAvatar'=>(bool) $user->icontime);
         return $this;
     }
 
