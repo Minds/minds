@@ -27,6 +27,16 @@ minds-archive-theatre{
     padding-top: 40%;
   }
 
+  &.m-mature-content {
+      cursor: pointer;
+
+      .minds-archive-stage {
+          filter: blur(25px) grayscale(100%);
+          overflow: hidden;
+          transform: translate3d(0, 0, 0);
+      }
+  }
+
   .left, .right{
     position: absolute;
     top: 50%;

@@ -32,6 +32,7 @@ import { Material } from '../../../../directives/material';
       [hidden]="object.container_guid == object.owner_guid || !object.album_children_guids || object.album_children_guids.length <= 1">
         keyboard_arrow_right
     </i>
+    <ng-content></ng-content>
   `,
   directives: [ CORE_DIRECTIVES, MindsVideo, Material ]
 })

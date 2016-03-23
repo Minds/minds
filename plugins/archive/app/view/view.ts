@@ -12,10 +12,12 @@ import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
 
+import { AttachmentService } from '../../../services/attachment';
 
 @Component({
   selector: 'minds-archive-view',
-  viewBindings: [ ]
+  viewBindings: [ ],
+  bindings: [ AttachmentService ]
 })
 @View({
   templateUrl: 'src/plugins/archive/view/view.html',
@@ -31,7 +33,7 @@ export class ArchiveView {
   inProgress : boolean = true;
   error : string = "";
 
-  constructor(public client: Client,public router: Router, public params: RouteParams){
+  constructor(public client: Client,public router: Router, public params: RouteParams, public attachment: AttachmentService){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;
