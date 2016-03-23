@@ -42,7 +42,7 @@ minds-groups-profile{
     position: relative;
     display: flex;
     align-items: flex-end;
-    height: 300px;
+    height: 400px;
     box-sizing: content-box;
     overflow: visible;
 
@@ -94,6 +94,11 @@ minds-groups-profile{
     width: 100%;
     height: 100%;
     overflow: hidden;
+
+    .minds-banner{
+      max-height:400px;
+      height:400px;
+    }
 
     .save-bar {
       display: none !important;
