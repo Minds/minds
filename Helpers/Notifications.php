@@ -5,7 +5,6 @@
 
 namespace Minds\Helpers;
 
-use Minds\Entities;
 use Minds\Core;
 use Minds\Core\Events;
 use Minds\Core\Notification\Factory as NotificationFactory;
@@ -24,7 +23,7 @@ class Notifications
      */
     public static function getCount($user = null, array $options = [])
     {
-        $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
+        $user = Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
@@ -45,7 +44,7 @@ class Notifications
      */
     public static function increaseCounter($user = null)
     {
-        $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
+        $user = Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
@@ -72,7 +71,7 @@ class Notifications
      */
     public static function resetCounter($user = null)
     {
-        $user = Entities\Factory::build($user ?: static::getCurrentUser(), [
+        $user = Factory::build($user ?: static::getCurrentUser(), [
             'cache' => true
         ]);
 
