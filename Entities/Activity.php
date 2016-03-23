@@ -167,7 +167,7 @@ class Activity extends Entity
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
-        $export['mature'] = $export['mature'];
+        $export['mature'] = (bool) $export['mature'];
 
         return $export;
     }
