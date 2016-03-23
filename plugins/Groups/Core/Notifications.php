@@ -4,11 +4,14 @@
 */
 namespace Minds\Plugin\Groups\Core;
 
+use Minds\Core\Entities;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Queue\Client as QueueClient;
 use Minds\Entities\Factory as EntitiesFactory;
+use Minds\Entities\Notification as NotificationEntity;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
+use Minds\Helpers\Counters;
 
 use Minds\Plugin\Groups\Behaviors\Actorable;
 
@@ -25,10 +28,11 @@ class Notifications
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null)
+    public function __construct(GroupEntity $group, $relDb = null, $indexDb = null)
     {
         $this->group = $group;
-        $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
+        $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
+        $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
     }
 
     /**
@@ -61,9 +65,23 @@ class Notifications
     {
         $activity = EntitiesFactory::build($params['activity']);
 
-        $offset = '';
+        //generate only one notification, because it's quicker that way
+        $notification = (new NotificationEntity())
+            ->setTo($activity->getOwner())
+            ->setEntity($activity)
+            ->setFrom($activity->getOwner())
+            ->setOwner($activity->getOwner())
+            ->setNotificationView('group_activity')
+            ->setDescription($activity->message)
+            ->setParams(['group' => $this->group->export() ])
+            ->setTimeCreated(time());
+        $serialized = json_encode($notification->export());
+
+        $offset = "";
 
         while (true) {
+
+            echo "[notification]: Running from $offset \n";
 
             $guids = $this->getRecipients([
                 'exclude' => $params['exclude'] ?: [],
@@ -71,11 +89,7 @@ class Notifications
                 'offset' => $offset
             ]);
 
-            if (!$guids) {
-                break;
-            }
-
-            if ($offset) {
+            if($offset){
                 array_shift($guids);
             }
 
@@ -89,24 +103,28 @@ class Notifications
 
             $offset = end($guids);
 
-            foreach ($guids as $recipient) {
-                Dispatcher::trigger('notification', 'all', [
-                    'to' => $guids,
-                    'entity' => $activity,
-                    'notification_view' => 'group_activity',
-                    'description' => $activity->message,
-                    'title' => $activity->title,
-                    'params' => [
-                        'group' => $this->group->getGuid()
-                    ]
+            $i = 0;
+            foreach($guids as $recipient){
+                $i++;
+                $pct = ($i / count($guids)) * 100;
+                echo "[notification]: $i / " . count($guids) . " ($pct%) ";
+                $this->indexDb->set('notifications:' . $recipient, [
+                    $notification->getGuid() => $serialized
                 ]);
+                echo " (dispatched) \r";
             }
+
+            //now update the counters for each user
+            echo "\n[notification]: incrementing counters ";
+            Counters::incrementBatch($guids, 'notifications:count');
+            echo " (done) \n";
 
             if (!$offset) {
                 break;
             }
 
         }
+        echo "[notification]: Dispatch complete for $activity->guid \n";
     }
 
     /**
@@ -117,13 +135,17 @@ class Notifications
     public function getRecipients(array $opts = [])
     {
         $opts = array_merge([
-            'exclude' => []
+            'exclude' => [],
+            'offset' => "", 
+            'limit' => 12
         ], $opts);
 
         $this->relDB->setGuid($this->group->getGuid());
 
         $guids = $this->relDB->get('member', [
-            'inverse' => true
+            'inverse' => true,
+            'offset' => $opts['offset'],
+            'limit' => $opts['limit']
         ]);
 
         $guids = array_map([ $this, 'toString' ], $guids);
