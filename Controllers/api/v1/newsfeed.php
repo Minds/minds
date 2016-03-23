@@ -264,12 +264,19 @@ class newsfeed implements Interfaces\Api
                             $activity->$allowed = $_POST[$allowed];
                         }
                     }
+
+                    if (isset($_POST['mature'])) {
+                        $activity->setMature($_POST['mature']);
+                    }
+
                     $activity->save();
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }
 
                 $activity = new Entities\Activity();
-                //error_log(print_r($_POST, true));
+
+                $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
+
                 if (isset($_POST['message'])) {
                     $activity->setMessage(urldecode($_POST['message']));
                 }
@@ -283,7 +290,6 @@ class newsfeed implements Interfaces\Api
 
                 if (isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
                     $attachment = entities\Factory::build($_POST['attachment_guid']);
-                    $mature = isset($_POST['mature']) && !!$_POST['mature'];
                     if (!$attachment) {
                         break;
                     }
@@ -291,7 +297,7 @@ class newsfeed implements Interfaces\Api
                     $attachment->access_id = 2;
 
                     if ($attachment instanceof \Minds\Interfaces\Flaggable) {
-                      $attachment->setFlag('mature', $mature);
+                      $attachment->setFlag('mature', $activity->getMature());
                     }
 
                     $attachment->save();

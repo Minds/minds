@@ -21,7 +21,8 @@ class Comment extends Entities\Entity
         $this->attributes = array_merge($this->attributes, array(
             'type' => 'comment',
             'owner_guid'=>elgg_get_logged_in_user_guid(),
-            'access_id' => 2
+            'access_id' => 2,
+            'mature' => false,
         ));
     }
 
@@ -43,6 +44,25 @@ class Comment extends Entities\Entity
     {
         $this->attachment_guid = $guid;
         return $this;
+    }
+
+    /**
+     * Sets the maturity flag for this comment
+     * @param mixed $value
+     */
+    public function setMature($value)
+    {
+        $this->mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the maturity flag
+     * @return boolean
+     */
+    public function getMature()
+    {
+        return (bool) $this->mature;
     }
 
     /**
@@ -160,6 +180,7 @@ class Comment extends Entities\Entity
             'thumbs:up:user_guids',
             'thumbs:down:count',
             'thumbs:down:user_guids',
+            'mature',
         ));
     }
 
@@ -172,6 +193,8 @@ class Comment extends Entities\Entity
 
         $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids']);
         $export['thumbs:down:user_guids'] = (array) array_values($export['thumbs:down:user_guids']);
+
+        $export['mature'] = (bool) $export['mature'];
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 

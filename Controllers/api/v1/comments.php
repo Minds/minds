@@ -86,6 +86,11 @@ class comments implements Interfaces\Api
             }
 
             $comment->description = urldecode($content);
+
+            if (isset($_POST['mature'])) {
+                $comment->setMature($_POST['mature']);
+            }
+
             $error = !$comment->save();
             break;
           case is_numeric($pages[0]):
@@ -104,6 +109,8 @@ class comments implements Interfaces\Api
             $comment = new Entities\Comment();
             $comment->description = urldecode($_POST['comment']);
             $comment->setParent($parent);
+            $comment->setMature(isset($_POST['mature']) && !!$_POST['mature']);
+
             if ($comment->save()) {
                 $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
                 $subscribers[$parent->owner_guid] = $parent->owner_guid;
@@ -150,14 +157,13 @@ class comments implements Interfaces\Api
 
         if (!$error && isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
             $attachment = entities\Factory::build($_POST['attachment_guid']);
-            $mature = isset($_POST['mature']) && !!$_POST['mature'];
 
             if ($attachment) {
                 $attachment->title = $comment->description;
                 $attachment->access_id = 2;
 
                 if ($attachment instanceof \Minds\Interfaces\Flaggable) {
-                  $attachment->setFlag('mature', $mature);
+                  $attachment->setFlag('mature', $comment->getMature());
                 }
 
                 $attachment->save();

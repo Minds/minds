@@ -24,6 +24,7 @@ class Activity extends Entity
             'type' => 'activity',
             'owner_guid' => elgg_get_logged_in_user_guid(),
             'access_id' => 2, //private,
+            'mature' => false,
 
         //	'node' => elgg_get_site_url()
         ));
@@ -132,7 +133,8 @@ class Activity extends Entity
                 'thumbs:up:user_guids',
                 'thumbs:down:count',
                 'thumbs:down:user_guids',
-                'p2p_boosted'
+                'p2p_boosted',
+                'mature'
             ));
     }
 
@@ -164,6 +166,8 @@ class Activity extends Entity
         $export['thumbs:up:user_guids'] = $export['thumbs:up:user_guids'] ? (array) array_values($export['thumbs:up:user_guids']) : [];
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+
+        $export['mature'] = $export['mature'];
 
         return $export;
     }
@@ -301,6 +305,25 @@ class Activity extends Entity
     {
         $this->to_guid = $guid;
         return $this;
+    }
+
+    /**
+     * Sets the maturity flag for this activity
+     * @param mixed $value
+     */
+    public function setMature($value)
+    {
+        $this->mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the maturity flag
+     * @return boolean
+     */
+    public function getMature()
+    {
+        return (bool) $this->mature;
     }
 
     /**
