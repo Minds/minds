@@ -46,12 +46,14 @@ minds-groups-profile{
     box-sizing: content-box;
     overflow: visible;
 
-    .minds-group-avatar {
+    .m-group-avatar {
       display: flex;
       flex-flow: row wrap;
-      margin: 0;
-      width: 220px;
       pointer-events: all;
+
+      minds-avatar{
+        margin:auto;
+      }
     }
 
     .groups-tabs {
@@ -80,12 +82,8 @@ minds-groups-profile{
         display: flex;
         flex-flow: row nowrap;
         overflow: visible;
-
-        > * > button {
-          color: #eceff1;
-          border: 1px solid #eceff1;
-        }
       }
+
     }
   }
 
@@ -113,16 +111,16 @@ minds-groups-profile{
     width: 100%
   }
 
-  .minds-groups-invite-form {
+  .m-groups-invite-form {
     width: 100%;
     box-sizing: border-box;
   }
 
-  .minds-groups-invite-actions {
+  .m-groups-invite-actions {
     text-align: right;
   }
 
-  .minds-group-invite-dialog {
+  .m-group-invite-dialog {
     padding: $minds-padding * 2;
     text-align: center;
 
@@ -134,7 +132,7 @@ minds-groups-profile{
   minds-groups-profile-members {
     margin-top: 0 !important;
 
-    .minds-groups-member-card minds-card-user.minds-user-ephemeral {
+    .m-groups-member-card minds-card-user.minds-user-ephemeral {
       opacity: 0.5;
       -webkit-filter: grayscale(100%);
     }
@@ -144,73 +142,80 @@ minds-groups-profile{
     width: 100%;
   }
 
-  .minds-group-info {
-    minds-channel-modules {
-      margin-top: 1em;
+  .m-group-info {
+
+    .mdl-card{
+      padding:$minds-padding;
+      margin-bottom:$minds-margin;
     }
 
-    .minds-group-info-name,
-    .minds-group-info-brief-description,
-    .minds-group-info-tags,
-    .minds-group-info-membership {
+    minds-channel-modules {
+      margin-top: $minds-margin;
+    }
+
+    .m-group-info-name,
+    .m-group-info-brief-description,
+    .m-group-info-tags,
+    .m-group-info-membership {
       width:auto;
       min-height:0;
+      padding:$minds-padding;
 
-      > .mdl-card__supporting-text {
-        padding-top: $minds-padding * 2;
-        padding-bottom: 0;
+      > div {
 
         > i.material-icons {
-          font-size: 16px;
+          //font-size: 16px;
           vertical-align: middle;
-          margin-right: 0.35em;
+          padding-right:$minds-padding;
         }
 
         > span {
           vertical-align: middle;
         }
       }
+
       h1 {
-        font-size: 20px;
-        margin: 0 0 0.5em;
-        text-transform: uppercase;
+        font-size: 26px;
+        font-weight: 400;
+        margin:0;
       }
-      input[type=text], select {
+      input[type=text], select, textarea {
         width: 100%;
-        margin: 0 0 0.5em;
         padding: $minds-padding;
         vertical-align: middle;
         border: 1px solid #ddd;
-        border-radius: 3px;
 
         &.h1 {
-          font-size: 20px;
+          font-size: 26px;
+          font-weight: 400;
         }
 
         &.icon-prefix {
           width: 85%;
-          width: calc(100% - 24px - 0.35em);
+          width: calc(100% - 38px);
         }
       }
-      textarea {
-        box-sizing: border-box;
-        width: 100%;
-        height: 5em;
-        padding: $minds-padding;
-        border: 1px solid #ddd;
-        border-radius: 3px;
+
+      select{
+        padding: 8px;
+        border-radius: 0;
+        -webkit-appearance: none;
       }
+
     }
 
-    .minds-group-info-brief-description {
+    .m-group-info-membership{
+      font-size:12px;
+    }
+
+    .m-group-info-brief-description {
       > .mdl-card__supporting-text {
         padding-top: 0;
       }
     }
 
-    .minds-group-info-members {
+    .m-group-info-members {
       width: auto;
-      padding-top: $minds-padding * 2;
 
       .mdl-card__title {
         padding-bottom: 0;
@@ -245,9 +250,9 @@ minds-groups-create{
   form{
     width:100%;
   }
-  .minds-groups-name,
-  .minds-groups-tags,
-  .minds-groups-new-invitee {
+  .m-groups-name,
+  .m-groups-tags,
+  .m-groups-new-invitee {
     width:100%;
 
     input{
@@ -258,7 +263,7 @@ minds-groups-create{
     }
   }
 
-  .minds-groups-brief{
+  .m-groups-brief{
     width:100%;
 
     textarea{
@@ -271,21 +276,21 @@ minds-groups-create{
     }
 
   }
-  .minds-groups-brief.is-focused{
+  .m-groups-brief.is-focused{
     label{
       bottom:0;
       top:24px;
     }
   }
 
-  .minds-groups-visibilty{
+  .m-groups-visibilty{
     width:100%;
     .mdl-radio{
       display:block;
     }
   }
 
-  .minds-groups-save{
+  .m-groups-save{
     width:100%;
     margin-top:$minds-padding * 2;
 
@@ -335,7 +340,7 @@ minds-groups-create{
   }
 }
 
-.minds-group-title{
+.m-group-title{
   h1, input{
     font-size: 56px;
   }
@@ -389,7 +394,7 @@ minds-groups-profile-requests{
   }
 }
 
-.minds-groups-button-badge {
+.m-groups-button-badge {
   color: #45565E;
   font-size: 14px;
   position: absolute;
@@ -422,7 +427,7 @@ minds-groups-modal-dialog {
   background: rgba(0, 0, 0, 0.5);
   z-index: 99999;
 
-  > .minds-groups-modal-dialog-wrapper {
+  > .m-groups-modal-dialog-wrapper {
     max-width: 480px;
     height: 100%;
     margin: 0 auto;
@@ -458,7 +463,7 @@ minds-groups-create {
     display: none !important;
   }
 
-  .minds-groups-pre-invite {
+  .m-groups-pre-invite {
     width: 100%;
 
     .invitees {

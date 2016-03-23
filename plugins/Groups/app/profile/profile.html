@@ -1,8 +1,9 @@
-<div class="mdl-color--white mdl-color-text--grey-600 minds-group-invite-dialog" *ngIf="group &amp;&amp; !group['is:member'] &amp;&amp; group['is:invited']">
+<div class="mdl-color--white mdl-color-text--grey-600 minds-group-invite-dialog" *ngIf="group && !group['is:member'] && group['is:invited']">
   You were invited to join {{ group.name }}<br>
   <br>
   <minds-groups-join-button [group]="group" *ngIf="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
 </div>
+
 <header *ngIf="group">
   <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" [done]="editDone" (added)="add_banner($event)"></minds-banner>
 
@@ -36,7 +37,7 @@
       </div>
     </div>
 
-    <div class="mdl-cell mdl-cell--4-col minds-group-avatar">
+    <div class="mdl-cell mdl-cell--4-col m-group-avatar">
       <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
     </div>
 
@@ -62,43 +63,44 @@
   <!-- END: Requests filter -->
 
   <!-- Sidebar -->
-  <div class="mdl-cell mdl-cell--4-col minds-group-info">
+  <div class="mdl-cell mdl-cell--4-col m-group-info">
+
     <div class="mdl-card mdl-shadow--2dp">
       <!-- Name -->
-      <div class="minds-group-info-name">
+      <div class="m-group-info-name mdl-color-text--blue-grey-800">
 
-        <div [hidden]="editing || !group.name" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
+        <div [hidden]="editing || !group.name">
           <h1>{{group.name}}</h1>
         </div>
 
-        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-800">
+        <div *ngIf="editing && group['is:owner']">
           <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
         </div>
 
       </div>
 
       <!-- Brief description -->
-      <div class="minds-group-info-brief-description">
+      <div class="m-group-info-brief-description mdl-color-text--blue-grey-600">
 
-        <div [hidden]="editing || !group.briefdescription" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
+        <div [hidden]="editing || !group.briefdescription">
           <span>{{group.briefdescription}}</span>
         </div>
 
-        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-600">
+        <div *ngIf="editing && group['is:owner']">
           <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
         </div>
 
       </div>
 
       <!-- Tags -->
-      <div class="minds-group-info-tags">
+      <div class="m-group-info-tags mdl-color-text--blue-grey-300">
 
-        <div [hidden]="editing || !group.tags" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div [hidden]="editing || !group.tags">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
           <span>{{group.tags}}</span>
         </div>
 
-        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div *ngIf="editing && group['is:owner']">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
           <input type="text" class="icon-prefix" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags" />
         </div>
@@ -106,19 +108,19 @@
       </div>
 
       <!-- Membership -->
-      <div class="minds-group-info-membership">
+      <div class="m-group-info-membership mdl-color-text--blue-grey-300">
 
-        <div [hidden]="editing || group.membership != 2" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div [hidden]="editing || group.membership != 2">
           <i class="material-icons mdl-color-text--blue-grey-300">public</i>
           <span>Open Group</span>
         </div>
 
-        <div [hidden]="editing || group.membership != 0" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div [hidden]="editing || group.membership != 0">
           <i class="material-icons mdl-color-text--blue-grey-300">lock</i>
           <span>Closed Group</span>
         </div>
 
-        <div *ngIf="editing && group['is:owner']" class="mdl-card__supporting-text mdl-color-text--blue-grey-300">
+        <div *ngIf="editing && group['is:owner']">
           <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
           <select class="icon-prefix" [(ngModel)]="group.membership">
             <option value="2">Open Group</option>
@@ -128,8 +130,13 @@
 
       </div>
 
+    </div>
+
+    
+    <div class="mdl-card mdl-shadow--2dp">
+
       <!-- Members -->
-      <div class="minds-group-info-members">
+      <div class="m-group-info-members">
         <div class="mdl-card__title">
           <h2 class="mdl-card__title-text">Members</h2>
           <a [routerLink]="['/Groups-Profile', { guid: group.guid, filter: 'members' }]" class="mdl-color-text--blue-grey-400">Invite</a>
