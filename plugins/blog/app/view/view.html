@@ -1,5 +1,13 @@
-<header *ngIf="blog">
-  <minds-banner-fat [object]="blog" *ngIf="blog.header_bg"></minds-banner-fat>
+<header *ngIf="blog"
+[ngClass]="{ 'm-mature-content': attachment.shouldBeBlurred(blog), 'm-mature-content-shown': attachment.isForcefullyShown(blog) }"
+>
+  <div class="m-mature-overlay" (click)="blog.mature_visibility = !blog.mature_visibility">
+    <span class="m-mature-overlay-note">
+      <i class="material-icons" title="Explicit content">explicit</i>
+      <span>Click to see content</span>
+    </span>
+  </div>
+  <minds-banner-fat [object]="blog"*ngIf="blog.header_bg"></minds-banner-fat>
 </header>
 
 <div class="mdl-grid m-blog-container blogs-grid mdl-color--white mdl-shadow--4dp" style="max-width:660px" *ngIf="blog.guid">
@@ -48,7 +56,10 @@
     <google-ad *ngIf="blog.monetized && index == 0"></google-ad>
     <!-- END: Google adsense block -->
 
-    <div class="mdl-cell mdl-cell--12-col minds-blog-body" innerHtml="{{blog.description}}"></div>
+    <div class="mdl-cell mdl-cell--12-col minds-blog-body"
+    innerHtml="{{blog.description}}"
+    [ngClass]="{ 'm-mature-text': attachment.shouldBeBlurred(blog) }"
+    ></div>
   </div>
 
   <!-- START: Google adsense block -->

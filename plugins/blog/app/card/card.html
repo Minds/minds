@@ -1,8 +1,12 @@
 <a [routerLink]="['/Blog-View', {guid: blog.guid}]"
   class="mdl-card__title minds-blog-thumbnail"
   style="height:180px; margin-bottom:80px; background:#333; background-size:cover;"
-  [ngStyle]="{background: '#333 url(' + blog.thumbnail_src + ') center center / cover'}">
-</a>
+  [ngStyle]="{background: '#333 url(' + blog.thumbnail_src + ') center center / cover'}"
+  [ngClass]="{ 'm-mature-blog-thumbnail': attachment.shouldBeBlurred(blog) }"
+></a>
+<span class="m-mature-blog-thumbnail-overlay"
+    *ngIf="attachment.shouldBeBlurred(blog)"
+><i class="material-icons">explicit</i></span>
 
 <!-- Owner block -->
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 m-title-block m-title-block-fixed m-title-block-with-actions" *ngIf="blog.ownerObj && blog.ownerObj.username">

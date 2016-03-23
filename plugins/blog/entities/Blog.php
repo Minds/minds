@@ -13,6 +13,7 @@ class Blog extends \ElggObject
         parent::initializeAttributes();
 
         $this->attributes['subtype'] = "blog";
+        $this->attributes['mature'] = false;
     }
 
     /**
@@ -29,7 +30,8 @@ class Blog extends \ElggObject
             'ownerObj',
             'header_bg',
             'header_top',
-            'monetized'
+            'monetized',
+            'mature',
         ));
     }
 
@@ -63,6 +65,25 @@ class Blog extends \ElggObject
     }
 
     /**
+     * Sets the maturity flag for this activity
+     * @param mixed $value
+     */
+    public function setMature($value)
+    {
+        $this->mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the maturity flag
+     * @return boolean
+     */
+    public function getMature()
+    {
+        return (bool) $this->mature;
+    }
+
+    /**
      * Return the url for this entity
      */
     public function getUrl()
@@ -76,6 +97,7 @@ class Blog extends \ElggObject
         $export['thumbnail_src'] = $this->getIconUrl();
         $export['description'] = $this->description; //blogs need to be able to export html
         $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids']);
+        $export['mature'] = (bool) $export['mature'];
         return $export;
     }
 }
