@@ -24,8 +24,8 @@ import { MindsAvatar } from '../../../components/avatar';
 export class GroupsCreator {
 
   session = SessionFactory.build();
-  banner: any = false;
-  avatar: any = false;
+  banner : any = false;
+  avatar : any = false;
   group : any = {
     name: '',
     description: '',
@@ -33,9 +33,10 @@ export class GroupsCreator {
     tags: '',
     invitees: ''
   };
-  invitees: string[] = [];
-  editing: boolean = true;
-  editDone: boolean = false;
+  invitees : string[] = [];
+  editing : boolean = true;
+  editDone : boolean = false;
+  inProgress : boolean = false;
 
   constructor(public service: GroupsService, public router: Router, public title: MindsTitle){
     this.title.setTitle("Create Group");
@@ -84,6 +85,7 @@ export class GroupsCreator {
   save(){
     this.editing = false;
     this.editDone = true;
+    this.inProgress = true;
 
     this.group.invitees = this.invitees.join(',');
 
@@ -91,19 +93,20 @@ export class GroupsCreator {
     .then((guid: any) => {
 
       this.service.upload({
-        guid,
-        banner_position: this.group.banner_position
-      }, {
-        banner: this.banner,
-        avatar: this.avatar
-      })
-      .then(() => {
-        this.router.navigate(['/Groups-Profile', { guid, filter: '' }]);
-      });
+          guid,
+          banner_position: this.group.banner_position
+        }, {
+          banner: this.banner,
+          avatar: this.avatar
+        })
+        .then(() => {
+          this.router.navigate(['/Groups-Profile', { guid, filter: '' }]);
+        });
 
     })
     .catch(e => {
       this.editing = true;
+      this.inProgress = false;
     });
   }
 

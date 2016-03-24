@@ -146,100 +146,100 @@ minds-groups-profile{
     margin: 0 $minds-padding $minds-padding;
     width: 100%;
   }
+}
 
-  .m-group-info {
+.m-group-info {
 
-    .mdl-card{
-      padding:$minds-padding;
-      margin-bottom:$minds-margin;
-    }
+  .mdl-card{
+    padding:$minds-padding;
+    margin-bottom:$minds-margin;
+  }
 
-    minds-channel-modules {
-      margin-top: $minds-margin;
-    }
+  minds-channel-modules {
+    margin-top: $minds-margin;
+  }
 
-    .m-group-info-name,
-    .m-group-info-brief-description,
-    .m-group-info-tags,
-    .m-group-info-membership {
-      width:auto;
-      min-height:0;
-      padding:$minds-padding;
+  .m-group-info-name,
+  .m-group-info-brief-description,
+  .m-group-info-tags,
+  .m-group-info-membership {
+    width:auto;
+    min-height:0;
+    padding:$minds-padding;
 
-      > div {
+    > div {
 
-        > i.material-icons {
-          //font-size: 16px;
-          vertical-align: middle;
-          padding-right:$minds-padding;
-        }
-
-        > span {
-          vertical-align: middle;
-        }
+      > i.material-icons {
+        //font-size: 16px;
+        vertical-align: middle;
+        padding-right:$minds-padding;
       }
 
-      h1 {
+      > span {
+        vertical-align: middle;
+      }
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 400;
+      margin:0;
+    }
+    input[type=text], select, textarea {
+      width: 100%;
+      padding: $minds-padding;
+      vertical-align: middle;
+      border: 1px solid #ddd;
+
+      &.h1 {
         font-size: 26px;
         font-weight: 400;
-        margin:0;
-      }
-      input[type=text], select, textarea {
-        width: 100%;
-        padding: $minds-padding;
-        vertical-align: middle;
-        border: 1px solid #ddd;
-
-        &.h1 {
-          font-size: 26px;
-          font-weight: 400;
-        }
-
-        &.icon-prefix {
-          width: 85%;
-          width: calc(100% - 38px);
-        }
       }
 
-      select{
-        padding: 8px;
-        border-radius: 0;
-        -webkit-appearance: none;
-      }
-
-    }
-
-    .m-group-info-membership{
-      font-size:12px;
-    }
-
-    .m-group-info-brief-description {
-      > .mdl-card__supporting-text {
-        padding-top: 0;
+      &.icon-prefix {
+        width: 85%;
+        width: calc(100% - 38px);
       }
     }
 
-    .m-group-info-members {
-      width: auto;
+    select{
+      padding: 8px;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
 
-      .mdl-card__title {
-        padding-bottom: 0;
-        position: relative;
+  }
 
-        > a {
-          position: absolute;
-          right: 16px;
-          top: 25px;
-          font-size: 13px;
-          color: inherit;
-          text-decoration: none;
-          border-bottom: 1px dotted #ddd;
-        }
+  .m-group-info-membership{
+    font-size:12px;
+  }
+
+  .m-group-info-brief-description {
+    > .mdl-card__supporting-text {
+      padding-top: 0;
+    }
+  }
+
+  .m-group-info-members {
+    width: auto;
+
+    .mdl-card__title {
+      padding-bottom: 0;
+      position: relative;
+
+      > a {
+        position: absolute;
+        right: 16px;
+        top: 25px;
+        font-size: 13px;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px dotted #ddd;
       }
+    }
 
-      .members-grid {
-        min-height: 0;
-      }
+    .members-grid {
+      min-height: 0;
     }
   }
 }
@@ -252,6 +252,26 @@ minds-groups-profile{
 }
 
 minds-groups-create{
+
+  .m-group-saving-overlay{
+    width:100%;
+    height:100%;
+    position:fixed;
+    background:rgba(0,0,0,0.8);
+
+    text-align: center;
+    padding-top: 30%;
+    padding-top: 50vh;
+    padding-top: calc(50vh - 50px);
+
+    z-index:999;
+  }
+
+  .minds-banner{
+    max-height:400px;
+    height:400px;
+  }
+
   form{
     width:100%;
   }
@@ -296,8 +316,6 @@ minds-groups-create{
   }
 
   .m-groups-save{
-    width:100%;
-    margin-top:$minds-padding * 2;
 
     button{
       float:right;

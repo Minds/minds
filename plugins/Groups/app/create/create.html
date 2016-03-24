@@ -1,3 +1,7 @@
+<div class="m-group-saving-overlay" [hidden]="!inProgress">
+  <div class="mdl-spinner mdl-js-spinner is-active" [mdl]></div>
+</div>
+
 <header>
   <minds-banner [editMode]="editing" [done]="editDone" (added)="addBanner($event)"></minds-banner>
   <div class="avatar-wrapper">
@@ -7,82 +11,65 @@
 
 <form (submit)="save()" class="mdl-grid groups-grid" style="max-width:900px">
 
-  <div class="mdl-textfield mdl-js-textfield minds-groups-name" [mdl]>
-    <input
-      class="mdl-textfield__input"
-      type="text"
-      id="name"
-      [(ngModel)]="group.name"
-      />
-    <label class="mdl-textfield__label" for="name">Name</label>
-  </div>
-
-  <div class="mdl-textfield mdl-js-textfield minds-groups-brief" [mdl]>
-    <textarea
-      class="mdl-textfield__input"
-      type="text"
-      rows= "3"
-      id="brief"
-      [(ngModel)]="group.briefdescription"
-      ></textarea>
-    <label class="mdl-textfield__label" for="brief">A short description about your new group (less than 100 words)</label>
-  </div>
-
-  <div class="mdl-textfield mdl-js-textfield minds-groups-tags" [mdl]>
-    <input
-      class="mdl-textfield__input"
-      type="text"
-      id="tags"
-      [(ngModel)]="group.tags"
-      />
-    <label class="mdl-textfield__label" for="tags">Enter up to five comma separated tags</label>
-  </div>
-
-  <div class="minds-groups-visibilty">
-    <h5>Membership</h5>
-    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="open">
-      <input
-        type="radio"
-        id="open"
-        class="mdl-radio__button"
-        name="options"
-        (change)="membershipChange(2)"
-        />
-      <span class="mdl-radio__label">Open - anyone can join</span>
-    </label>
-    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="closed">
-      <input
-        type="radio"
-        id="closed"
-        class="mdl-radio__button"
-        name="options"
-        (change)="membershipChange(0)"
-        />
-      <span class="mdl-radio__label">Closed - invite or request to join</span>
-    </label>
-  </div>
-
-  <div class="minds-groups-pre-invite">
-    <h5>Invite</h5>
-    <div class="invitees">
-      <span *ngFor="#invitee of invitees; #i = index">
-        {{ invitee }}
-        <a class="material-icons" (click)="removeInvitee(i)">cancel</a>
-      </span>
-    </div>
-    <div class="mdl-textfield mdl-js-textfield minds-groups-new-invitee" [mdl]>
-      <input
-        class="mdl-textfield__input"
-        type="text"
-        #inviteeInput
-        (keydown.enter)="addInvitee(inviteeInput, $event)"
-        />
-      <label class="mdl-textfield__label" for="name">Invite user. Type a name and press Enter.</label>
+  <div class="mdl-cell mdl-cell--8-col">
+    <div class="m-groups-pre-invite mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__supporting-text">
+        <h5>Invite</h5>
+        <div class="invitees">
+          <span *ngFor="#invitee of invitees; #i = index">
+            {{ invitee }}
+            <a class="material-icons" (click)="removeInvitee(i)">cancel</a>
+          </span>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield m-groups-new-invitee" [mdl]>
+          <input
+            class="mdl-textfield__input"
+            type="text"
+            #inviteeInput
+            (keydown.enter)="addInvitee(inviteeInput, $event)"
+            />
+          <label class="mdl-textfield__label" for="name">Invite user. Type a name and press Enter.</label>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="minds-groups-save">
-   <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
+  <div class="mdl-cell mdl-cell--4-col m-group-info">
+
+    <div class="mdl-card mdl-shadow--2dp">
+
+      <div class="m-groups-save">
+       <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
+      </div>
+
+      <div class="m-group-info-name mdl-color-text--blue-grey-300">
+        <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
+      </div>
+
+      <div class="m-group-info-brief-description mdl-color-text--blue-grey-300">
+        <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+      </div>
+
+      <div class="m-group-info-tags mdl-color-text--blue-grey-300">
+        <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+        <input type="text" class="icon-prefix" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags" />
+      </div>
+
+      <div class="m-group-info-membership mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
+          <select class="icon-prefix" [(ngModel)]="group.membership">
+            <option value="2">Open Group</option>
+            <option value="0">Closed Group</option>
+          </select>
+      </div>
+
+
+      <div class="m-groups-save">
+       <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
+      </div>
+
+    </div>
+
   </div>
 
 </form>
