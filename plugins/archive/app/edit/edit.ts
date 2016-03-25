@@ -50,17 +50,19 @@ export class ArchiveEdit {
   }
 
   load(){
-    var self = this;
     this.inProgress = true;
     this.client.get('api/v1/entities/entity/' + this.guid, { children: false })
       .then((response : any) => {
-        self.inProgress = false;
+        this.inProgress = false;
         console.log(response);
         if(response.entity){
           if (!response.entity.description)
             response.entity.description = "";
 
-          self.entity = response.entity;
+          if(!response.entity.license)
+            response.entity.license = "all-rights-reserved";
+
+          this.entity = response.entity;
         }
       })
       .catch((e) => {
@@ -69,11 +71,10 @@ export class ArchiveEdit {
   }
 
   save(){
-    var self = this;
     this.client.post('api/v1/archive/' + this.guid, this.entity)
       .then((response : any) => {
         console.log(response);
-        self.router.navigate(['/Archive-View', {guid: self.guid}]);
+        this.router.navigate(['/Archive-View', {guid: this.guid}]);
       })
       .catch((e) => {
         this.error ="There was an error while trying to update";
