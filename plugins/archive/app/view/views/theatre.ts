@@ -24,8 +24,12 @@ import { Material } from '../../../../directives/material';
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
     <div class="minds-archive-stage" *ngIf="object.subtype == 'video'">
-      <minds-video [autoplay]="true" [muted]="false" [src]="[{ 'uri': object.src['720.mp4'] }]" >
-      </minds-video>
+      <minds-video [autoplay]="true"
+      [muted]="false"
+      [src]="[{ 'uri': object.src['720.mp4'] }]"
+      [log]="object.guid"
+      [playCount]="false"
+      ></minds-video>
     </div>
     <i class="material-icons right"
       (click)="next()"
@@ -49,11 +53,6 @@ export class ArchiveTheatre {
     if(!value.guid)
       return;
     this.object = value;
-    this.logPlay();
-  }
-
-  logPlay(){
-    this.client.put('api/v1/analytics/play/' + this.object.guid);
   }
 
   prev(){

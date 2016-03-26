@@ -69,6 +69,10 @@
         <span [hidden]="entity.access_id != 2">Public</span>
         <span [hidden]="entity.access_id != 0">Unlisted</span>
       </div>
+      <div class="m-play-count" *ngIf="entity['play:count'] || entity['play:count'] === 0">
+        <i class="material-icons">ondemand_video</i>
+        <span>{{ entity['play:count'] }} plays</span>
+      </div>
 
       <a class="album_backlink mdl-color-text--blue-grey-400"
         [routerLink]="['/Archive-View', {guid: entity.container_guid}]"
@@ -86,6 +90,12 @@
 
 
 </div>
+
+<m-social-icons [url]="minds.site_url + 'archive/view/' + entity.guid"
+[title]="entity.title || ''"
+[embed]="entity"
+*ngIf="!attachment.shouldBeBlurred(entity)"
+></m-social-icons>
 
 <minds-archive-grid [object]="entity" *ngIf="entity.subtype == 'album'"></minds-archive-grid>
 

@@ -13,6 +13,7 @@ import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
 
 import { AttachmentService } from '../../../services/attachment';
+import { SocialIcons } from '../../../components/social-icons/social-icons';
 
 @Component({
   selector: 'minds-archive-view',
@@ -21,7 +22,7 @@ import { AttachmentService } from '../../../services/attachment';
 })
 @View({
   templateUrl: 'src/plugins/archive/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons ]
 })
 
 export class ArchiveView {

@@ -154,6 +154,7 @@ class video extends object{
 			'360.mp4' => $this->getSourceUrl('360.mp4'),
 			'720.mp4' => $this->getSourceUrl('720.mp4')
         );
+    $export['play:count'] = Helpers\Counters::get($this->guid, 'plays');
     $export['thumbs:up:count'] = Helpers\Counters::get($this->guid,'thumbs:up');
     $export['thumbs:down:count'] = Helpers\Counters::get($this->guid,'thumbs:down');
 		$export['description'] = (new Core\Security\XSS())->clean($this->description); //videos need to be able to export html.. sanitize soon!
