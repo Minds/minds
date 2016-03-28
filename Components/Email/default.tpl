@@ -44,6 +44,7 @@
             <!-- END BODY -->
 
             <!-- START FOOTER -->
+            <?php if(isset($vars['username']) && isset($vars['email'])){ ?>
             <table cellspacing="0" cellpadding="0" border="0" width="300" align="center">
               <tbody>
                 <tr>
@@ -59,6 +60,7 @@
                 </tr>
               </tbody>
             </table>
+            <?php } ?>
             <!-- END FOOTER -->
 
           </td>
