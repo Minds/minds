@@ -46,9 +46,17 @@ class Retention
         $featured = Entities::get(['guids' => $featured_guids]);
         $this->template->set('featured', $featured);
 
-        $i = 0;
+        $queued = 0;
+        $skipped = 0;
         foreach($this->getUsers() as $user){
-            $i++;
+
+            if(!$user->guid || $user->disabled_emails || $user->enabled != "yes"){
+                $skipped++;
+                echo "[emails]: $queued queued | $skipped skipped  \r";
+                continue;
+            }
+
+            $queued++;
             $this->template->set('username', $user->username);
             $this->template->set('email', $user->getEmail());
             $this->template->set('guid', $user->guid);
@@ -62,9 +70,9 @@ class Retention
             //send email
             $this->mailer->queue($message);
 
-            echo "[emails]: Queued $i emails \r";
+            echo "[emails]: $queued queued | $skipped skipped  \r";
         }
-        echo "[emails]: Completed ($i queued) \n"; 
+        echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
     }
 
     protected function getUsers(){
