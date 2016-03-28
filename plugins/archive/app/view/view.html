@@ -69,6 +69,10 @@
         <span [hidden]="entity.access_id != 2">Public</span>
         <span [hidden]="entity.access_id != 0">Unlisted</span>
       </div>
+      <div class="m-mature-info" *ngIf="entity.flags && entity.flags.mature">
+        <i class="material-icons">explicit</i>
+        <span>Explicit content</span>
+      </div>
       <div class="m-play-count" *ngIf="entity['play:count'] || entity['play:count'] === 0">
         <i class="material-icons">ondemand_video</i>
         <span>{{ entity['play:count'] }} plays</span>

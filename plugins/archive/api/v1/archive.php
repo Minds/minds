@@ -141,6 +141,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         if($entity->access_id == 0 && (isset($_POST['access_id']) && $_POST['access_id'] == 2))
           $activity_post = true;
 
+        if ($entity instanceof \Minds\Interfaces\Flaggable) {
+          $mature = isset($_POST['mature']) && !!$_POST['mature'];
+          $entity->setFlag('mature', $mature);
+        }
+
         //need a better check for if this was a mobile post.
         if($entity->subtype == 'image'){
             if(isset($_POST['album_guid'])){

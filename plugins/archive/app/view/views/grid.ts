@@ -7,17 +7,22 @@ import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
 
+import { AttachmentService } from '../../../../services/attachment';
 
 @Component({
   selector: 'minds-archive-grid',
-  
-  properties: ['_object: object']
+  properties: ['_object: object'],
+  bindings: [ AttachmentService ]
 })
 @View({
   template: `
-    <a *ngFor="#item of items" [routerLink]="['/Archive-View', {guid: item.guid}]">
+    <a *ngFor="#item of items"
+    [routerLink]="['/Archive-View', {guid: item.guid}]"
+    [ngClass]="{ 'm-mature-thumbnail': attachment.shouldBeBlurred(item) }"
+    >
       <img src="/archive/thumbnail/{{item.guid}}/large" />
-      	<span class="material-icons" [hidden]="item.subtype !='video'">play_circle_outline</span>
+      <span class="material-icons" [hidden]="item.subtype !='video'">play_circle_outline</span>
+      <i class="material-icons">explicit</i>
     </a>
     <infinite-scroll
         distance="25%"
@@ -40,7 +45,7 @@ export class ArchiveGrid {
   moreData : boolean = true;
   offset : string = "";
 
-  constructor(public client: Client){
+  constructor(public client: Client, public attachment: AttachmentService){
   }
 
   set _object(value : any){
