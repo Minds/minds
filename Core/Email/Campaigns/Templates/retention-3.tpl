@@ -8,15 +8,14 @@
     <tr>
       <td height="20px"></td>
     </tr>
-    <tr>
-      <td>Earn 100 bonus points for email check-ins!</td>
-    </tr>
+
     <tr>
       <td height="80px;" style="text-align:center">
         <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed/welcome"
           style="padding:16px 32px; background-color:#546e7a; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
-          Claim 100 views
+          Check-in for 100 points!
         </a>
+        <span style="color:#999; font-size:11px; text-align:center">Clicking anywhere on this email and logging in gives a point reward</span>
       </td>
     </tr>
   </tbody>
