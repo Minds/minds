@@ -119,6 +119,9 @@ class blog implements Interfaces\Api
                 $guid = (new \GUID())->migrate($guid);
             }
             $blog = new entities\Blog($guid);
+            if(!$blog->title && !$blog->description){
+                break;
+            }
             $response['blog'] = $blog->export();
             //provide correct subscribe info for userobj (renormalize)
             $owner = new user($blog->ownerObj);

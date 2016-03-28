@@ -55,6 +55,8 @@ export class BlogViewInfinite {
         if(response.blog){
           this.blogs.push(response.blog);
           this.title.setTitle(response.blog.title);
+        } else if(this.blogs.length == 0){
+          this.error = "Sorry, we couldn't load the blog";
         }
         this.inProgress = false;
       })

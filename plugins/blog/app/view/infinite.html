@@ -1,3 +1,9 @@
+<div class="m-error-splash" *ngIf="error && !inProgress">
+  <h3 class="mdl-color-text--red-300">{{error}}</h3>
+  <span class="mdl-color-text--blue-grey-300">The blog post may not exist</span>
+</div>
+
+
 <m-blog-view *ngFor="#blog of blogs; #i = index" [blog]="blog" [index]="i"></m-blog-view>
 
 <infinite-scroll

@@ -51,7 +51,7 @@ export class BlogView {
 
   scroll_listener;
 
-  constructor(_element : ElementRef,  public scroll: ScrollService, public title: MindsTitle){
+  constructor(public client: Client, public router: Router, _element : ElementRef,  public scroll: ScrollService, public title: MindsTitle){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
       this.isVisible();
@@ -80,6 +80,13 @@ export class BlogView {
     if(this.index == 0){
       this.visible = true;
     }
+  }
+
+  delete(){
+    this.client.delete('api/v1/blog/' + this.blog.guid)
+      .then((response : any) => {
+        this.router.navigate(['/Blog', {filter: 'owner'}]);
+      });
   }
 
   ngOnDestroy(){
