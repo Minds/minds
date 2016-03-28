@@ -83,6 +83,22 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
             }
 
+            //send welcome email
+            $template = new Core\Email\Template();
+            $template
+              ->setTemplate()
+              ->setBody('welcome.tpl')
+              ->set('guid', $params['user']->guid)
+              ->set('username', $params['user']->username)
+              ->set('email', $_POST['email'])
+              ->set('user', $params['user']);
+            $message = new Core\Email\Message();
+            $message->setTo($params['user'])
+              ->setSubject("Welcome to Minds. Introduce yourself.")
+              ->setHtml($template);
+            $mailer = new Core\Email\Mailer();
+            $mailer->queue($message);
+
             login($params['user']);
             $response = array(
               'guid' => $guid,
