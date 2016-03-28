@@ -11,6 +11,8 @@ use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Message;
 use Minds\Core\Email\Template;
 
+use Minds\Core\Analytics\Iterators;
+
 class Retention
 {
 
@@ -44,32 +46,38 @@ class Retention
         $featured = Entities::get(['guids' => $featured_guids]);
         $this->template->set('featured', $featured);
 
+        $i = 0;
         foreach($this->getUsers() as $user){
-          $this->template->set('username', $user->username);
-          $this->template->set('email', $user->getEmail());
-          $this->template->set('guid', $user->guid);
-          $this->template->set('user', $user);
+            $i++;
+            $this->template->set('username', $user->username);
+            $this->template->set('email', $user->getEmail());
+            $this->template->set('guid', $user->guid);
+            $this->template->set('user', $user);
 
-          $message = new Message();
-          $message->setTo($user)
-            ->setSubject("Top 10 featured channels. Open me for a 100 point reward!")
-            ->setHtml($this->template);
+            $message = new Message();
+            $message->setTo($user)
+              ->setSubject("Top 10 featured channels. Open me for a 100 point reward!")
+              ->setHtml($this->template);
 
-          //send email
-          $this->mailer->queue($message);
+            //send email
+            $this->mailer->queue($message);
+
+            echo "[emails]: Queued $i emails \r";
         }
+        echo "[emails]: Completed ($i queued) \n"; 
     }
 
     protected function getUsers(){
-        //@todo implement an iterator to do this.. a lttle messy
-        $timestamps = array_reverse(Timestamps::span(30, 'day'));
-        echo date('d-m-Y', $timestamps[$this->period]) . "\n";
-        $guids = $this->db->getRow("analytics:signup:day:{$timestamps[$this->period]}", ['limit'=>10000]);
-        if(empty($guids)){
-          return [];
+        if($this->period < 30){
+            $users = new Iterators\SignupsIterator;
+            $users->setPeriod($this->period);
+            return $users;
+        } else {
+            //scan all users and return past 30 day period
+            $users = new Iterators\SignupsOffsetIterator;
+            $users->setPeriod($this->period);
+            return $users;
         }
-        $users = Entities::get(['guids' => array_keys($guids)]);
-        return $users;
     }
 
 }
