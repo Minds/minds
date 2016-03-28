@@ -176,6 +176,13 @@ class comments implements Interfaces\Api
                       'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
                     ]]);
                     break;
+                  case "video":
+                    $comment->setCustom('video', [
+                      'thumbnail_src'=>$attachment->getIconUrl(),
+                      'guid'=>$attachment->guid,
+                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
+                    ]);
+                    break;
                 }
 
                 $comment->setAttachmentGuid($attachment->guid);

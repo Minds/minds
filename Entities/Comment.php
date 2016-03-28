@@ -196,6 +196,10 @@ class Comment extends Entities\Entity
 
         $export['mature'] = (bool) $export['mature'];
 
+        if ($this->custom_type == 'video' && $this->custom_data['guid']) {
+          $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'],'plays');
+        }
+
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
         return $export;
