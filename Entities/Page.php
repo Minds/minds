@@ -15,8 +15,9 @@ class Page extends DenormalizedEntity
     protected $menuContainer;
     protected $header;
     protected $headerTop;
+    protected $subtype = 'page';
     protected $rowKey = 'pages';
-    protected $exportableDefaults = [ 'title', 'body', 'path', 'menuContainer', 'header', 'headerTop' ];
+    protected $exportableDefaults = [ 'title', 'body', 'path', 'menuContainer', 'header', 'headerTop', 'subtype' ];
 
     public function setTitle($title)
     {
@@ -85,6 +86,17 @@ class Page extends DenormalizedEntity
         return (int) $this->headerTop;
     }
 
+    public function setSubtype($subtype)
+    {
+        $this->subtype = $subtype;
+        return $this;
+    }
+
+    public function getSubtype()
+    {
+        return $this->subtype;
+    }
+
     /**
      * Save the entity
      * @param boolean $index
@@ -98,12 +110,21 @@ class Page extends DenormalizedEntity
             'path' => $this->path,
             'menuContainer' => $this->menuContainer,
             'header' => $this->header,
-            'headerTop' => $this->headerTop
+            'headerTop' => $this->headerTop,
+            'subtype' => $this->subtype
         ]);
         if (!$success) {
             throw new \Exception("We couldn't save the entity to the database");
         }
         //$this->saveToIndex();
         return $this;
+    }
+
+    public function export() {
+      $export = parent::export();
+
+      $export['body'] = (string) $export['body'];
+
+      return $export;
     }
 }

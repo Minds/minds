@@ -21,13 +21,22 @@ class Menu
         });
 
         foreach ($footer as $page) {
+            $front_path = '/P';
+            $listed = true;
+
+            if ($page->getSubtype() == 'link') {
+              $front_path = '';
+              $listed = false;
+            }
+
             Navigation\Manager::add(
                 (new Navigation\Item())
                     ->setName($page->getTitle())
                     ->setTitle($page->getTitle())
-                    ->setPath('/P')
+                    ->setPath($front_path)
                     ->setParams([
-                        'page' => $page->getPath()
+                        'page' => $page->getPath(),
+                        'listed' => $listed
                     ]),
                 "footer"
             );
