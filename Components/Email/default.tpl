@@ -5,7 +5,7 @@
   </head>
   <body style="margin:0; padding:0;">
 
-    <table cellspacing="0" cellpadding="12" border="0" width="100%" align="center" style="width:100%!important">
+    <table cellspacing="0" cellpadding="0" border="0" width="100%" align="center" style="width:100%!important">
       <tbody>
         <tr>
           <td>

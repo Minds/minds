@@ -13,9 +13,10 @@ class SignupsOffsetIterator implements \Iterator
 {
 
     private $cursor = -1;
+
     private $item;
 
-    private $limit = 200;
+    private $limit = 400;
     private $offset = "";
     private $data = [];
 
@@ -33,26 +34,40 @@ class SignupsOffsetIterator implements \Iterator
     }
 
     protected function getUsers(){
-        $this->cursor = -1;
-        $this->item = null;
-
         $timestamps = array_reverse(Timestamps::span($this->period+1, 'day'));
 
         $guids = $this->db->getRow("user", ['limit' => $this->limit, 'offset'=> $this->offset]);
+        $guids = array_keys($guids);
+
+        if($this->offset){
+            array_shift($guids);
+        }
+
         if(empty($guids)){
             $this->valid = false;
             return;
         }
         $this->valid = true;
-        $this->data = [];
-        $users = Entities::get(['guids' => array_keys($guids)]);
+        $users = Entities::get(['guids' => $guids]);
 
+        $pushed = 0;
         foreach($users as $user){
             if($user->time_created < $timestamps[$this->period]){
-                $this->data[] = $user;
+                array_push($this->data, $user);
+                $pushed++;
             }
         }
-        $this->offset = end($this->data)->guid;
+
+        if($this->offset == end($users)->guid){
+            $this->valid = false;
+            return;
+        }
+
+        $this->offset = end($users)->guid;
+        if(!$pushed){
+            error_log("no users past period " . date('d-m-Y', end($users)->time_created));
+            $this->getUsers();
+        }
     }
 
     public function rewind() {
@@ -73,12 +88,12 @@ class SignupsOffsetIterator implements \Iterator
     public function next() {
         $this->cursor++;
         if(!isset($this->data[$this->cursor])){
-            $this->valid = false;
+            $this->getUsers();
         }
     }
 
     public function valid() {
-        return $this->valid;
+        return $this->valid && isset($this->data[$this->cursor]);
     }
 
 }

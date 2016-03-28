@@ -52,7 +52,7 @@ class Retention
 
             if(!$user->guid || $user->disabled_emails || $user->enabled != "yes"){
                 $skipped++;
-                echo "[emails]: $queued queued | $skipped skipped  \r";
+                echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
                 continue;
             }
 
@@ -67,10 +67,14 @@ class Retention
               ->setSubject("Top 10 featured channels. Open me for a 100 point reward!")
               ->setHtml($this->template);
 
+            if($this->period >= 30){
+                $message->setSubject("Top 10 blogs on Minds");
+            }
+
             //send email
             $this->mailer->queue($message);
 
-            echo "[emails]: $queued queued | $skipped skipped  \r";
+            echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
         }
         echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
     }
