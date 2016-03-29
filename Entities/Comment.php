@@ -202,6 +202,10 @@ class Comment extends Entities\Entity
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
+        if ($export['owner_guid'] && !$export['ownerObj']) {
+          $export['ownerObj'] = Entities\Factory::build($export['owner_guid'])->export();
+        }
+
         return $export;
     }
 }
