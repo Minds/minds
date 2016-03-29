@@ -143,7 +143,10 @@ class newsfeed implements Interfaces\Api
                 }
 
                 \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
-                Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
+
+                if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
+                    Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
+                }
 
                 /*if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     $cacher = \Minds\Core\Data\cache\Factory::build();

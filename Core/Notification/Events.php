@@ -105,11 +105,27 @@ class Events
                 $message .= $params->title;
             }
 
+            $remind_owner_username = null;
+
+            if ($type == 'activity' && $params->remind_object) {
+                $remind_owner = $params->getOwnerEntity();
+
+                if ($remind_owner) {
+                    $remind_owner_username = $remind_owner->username;
+                }
+            }
+
             if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)) {
                 $usernames = $matches[1];
                 $to = [];
 
                 foreach ($usernames as $username) {
+                    if ($remind_owner_username && $remind_owner_username == $username) {
+                        // Don't send notification to the remind owner
+                        // (they already received a notification)
+                        continue;
+                    }
+
                     $user = new Entities\User(strtolower($username));
 
                     if ($user->guid) {
