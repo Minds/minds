@@ -25,13 +25,13 @@
 
     <div class="m-license-info">
       <i class="material-icons">public</i>
-      <select [(ngModel)]="blog.license" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
+      <select (ngModel)="blog.license" (change)="blog.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
           <option *ngFor="#l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
     <div class="m-visibility-info">
       <i class="material-icons">visibility</i>
-      <select [(ngModel)]="blog.access_id" class="mdl-color-text--blue-grey-300 m-form-select">
+      <select (ngModel)="blog.access_id" (change)="blog.access_id = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
           <option *ngFor="#a of access" [value]="a.value">{{a.text}}</option>
       </select>
     </div>
