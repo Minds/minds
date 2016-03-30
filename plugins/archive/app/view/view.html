@@ -1,4 +1,15 @@
-<minds-archive-theatre [object]="entity" *ngIf="entity.subtype != 'album'" [hidden]="!entity.subtype || entity.subtype == 'album'"></minds-archive-theatre>
+<minds-archive-theatre [object]="entity"
+*ngIf="entity.subtype != 'album'"
+[hidden]="!entity.subtype || entity.subtype == 'album'"
+[ngClass]="{ 'm-mature-content': attachment.shouldBeBlurred(entity), 'm-mature-content-shown': attachment.isForcefullyShown(entity) }"
+>
+  <div class="m-mature-overlay" (click)="entity.mature_visibility = !entity.mature_visibility">
+      <span class="m-mature-overlay-note">
+        <i class="material-icons" title="Explicit content">explicit</i>
+        <span>Click to see content</span>
+      </span>
+  </div>
+</minds-archive-theatre>
 
 <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress" style="margin: 16px auto;"></div>
 <div class="m-error-splash" *ngIf="error && !inProgress">
@@ -9,7 +20,7 @@
 <div class="mdl-grid archive-grid" style="max-width:660px" *ngIf="entity.guid">
 
   <div class="mdl-grid" style="width:100%">
-    <div class="mdl-cell mdl-cell--12-col">
+    <div class="mdl-cell mdl-cell--12-col" [ngClass]="{ 'm-mature-text': attachment.shouldBeBlurred(entity) }">
       <h1>{{entity.title}}</h1>
     </div>
 
@@ -58,6 +69,14 @@
         <span [hidden]="entity.access_id != 2">Public</span>
         <span [hidden]="entity.access_id != 0">Unlisted</span>
       </div>
+      <div class="m-mature-info" *ngIf="entity.flags && entity.flags.mature">
+        <i class="material-icons">explicit</i>
+        <span>Explicit content</span>
+      </div>
+      <div class="m-play-count" *ngIf="entity['play:count'] || entity['play:count'] === 0">
+        <i class="material-icons">ondemand_video</i>
+        <span>{{ entity['play:count'] }} plays</span>
+      </div>
 
       <a class="album_backlink mdl-color-text--blue-grey-400"
         [routerLink]="['/Archive-View', {guid: entity.container_guid}]"
@@ -75,6 +94,12 @@
 
 
 </div>
+
+<m-social-icons [url]="minds.site_url + 'archive/view/' + entity.guid"
+[title]="entity.title || ''"
+[embed]="entity"
+*ngIf="!attachment.shouldBeBlurred(entity)"
+></m-social-icons>
 
 <minds-archive-grid [object]="entity" *ngIf="entity.subtype == 'album'"></minds-archive-grid>
 

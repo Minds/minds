@@ -83,6 +83,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $image->batch_guid = 0;
                 $image->access_id = 2;
                 $image->title = isset($_POST['name']) ? $_POST['name'] : '';
+
+                $mature = isset($_POST['mature']) && !!$_POST['mature'];
+                if ($image instanceof \Minds\Interfaces\Flaggable) {
+                  $image->setFlag('mature', $mature);
+                }
+
                 $guid = $image->save();
                 $dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
                 $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
@@ -113,6 +119,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                       $video = new entities\video();
                       $video->upload($_FILES['file']['tmp_name']);
                       $video->access_id = 0;
+
+                      $mature = isset($_POST['mature']) && !!$_POST['mature'];
+                      if ($video instanceof \Minds\Interfaces\Flaggable) {
+                        $video->setFlag('mature', $mature);
+                      }
+
                       $guid = $video->save();
                       error_log("[upload][log]:: video saved as ($guid)");
                       break;
@@ -128,6 +140,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
         $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
         if($entity->access_id == 0 && (isset($_POST['access_id']) && $_POST['access_id'] == 2))
           $activity_post = true;
+
+        if ($entity instanceof \Minds\Interfaces\Flaggable) {
+          $mature = isset($_POST['mature']) && !!$_POST['mature'];
+          $entity->setFlag('mature', $mature);
+        }
 
         //need a better check for if this was a mobile post.
         if($entity->subtype == 'image'){
@@ -154,7 +171,11 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
             if($activity_post){
               $activity = new \Minds\Entities\Activity();
-              $activity->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid)))
+              $activity->setCustom('batch', [[
+                'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$guid,
+                'href'=>elgg_get_site_url() . 'archive/view/'.$album->guid.'/'.$guid,
+                'mature'=>$entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false
+              ]])
                   //->setMessage('Added '. count($guids) . ' new images. <a href="'.elgg_get_site_url().'archive/view/'.$album_guid.'">View</a>')
                   ->setFromEntity($entity)
                   ->setTitle($_POST['title'])
@@ -200,7 +221,8 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $activity->setFromEntity($entity)
                     ->setCustom('video', array(
                     'thumbnail_src'=>$entity->getIconUrl(),
-                    'guid'=>$entity->guid))
+                    'guid'=>$entity->guid,
+                    'mature'=>$entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false))
                     ->setTitle($entity->title)
                     ->setBlurb($entity->description)
                     ->save();

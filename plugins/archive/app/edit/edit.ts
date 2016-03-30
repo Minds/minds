@@ -34,7 +34,8 @@ export class ArchiveEdit {
     title: "",
     description: "",
     subtype: "",
-    license: "all-rights-reserved"
+    license: "all-rights-reserved",
+    mature: false
   };
   inProgress : boolean;
   error : string;
@@ -61,6 +62,8 @@ export class ArchiveEdit {
 
           if(!response.entity.license)
             response.entity.license = "all-rights-reserved";
+
+          response.entity.mature = response.entity.flags && response.entity.flags.mature ? 1 : 0;
 
           this.entity = response.entity;
         }

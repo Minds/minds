@@ -171,6 +171,10 @@ class blog implements Interfaces\Api
             }
         }
 
+        if (isset($_POST['mature'])) {
+            $blog->setMature($_POST['mature']);
+        }
+
         $blog->save();
 
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
@@ -203,6 +207,7 @@ class blog implements Interfaces\Api
               ->setURL($blog->getURL())
               ->setThumbnail($blog->getIconUrl())
               ->setFromEntity($blog)
+              ->setMature($blog->getMature())
               ->save();
         }
 

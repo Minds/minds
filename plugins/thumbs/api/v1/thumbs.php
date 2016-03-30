@@ -55,12 +55,14 @@ class thumbs implements Interfaces\Api{
             $opposite = 'up';
         }
 
-        $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
-
+        $entity = Entities\Factory::build($guid);
         if($entity->guid){
             if(helpers\buttons::hasThumbed($entity, $direction)){
-	            helpers\storage::cancel($direction, $entity);
-                WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
+                helpers\storage::cancel($direction, $entity);
+                if($entity->owner_guid != Core\Session::getLoggedinUser()->guid && !helpers\buttons::hasThumbed($entity, $opposite)){
+                    WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $guid, 'vote removed');
+                    WalletHelper::createTransaction($entity->owner_guid, -1, $guid, 'vote removed');
+                }
             } else {
 	            helpers\storage::insert($direction, $entity);
                 //WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');

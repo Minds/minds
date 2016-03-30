@@ -27,6 +27,16 @@ minds-archive-theatre{
     padding-top: 40%;
   }
 
+  &.m-mature-content {
+      cursor: pointer;
+
+      .minds-archive-stage {
+          filter: blur(25px) grayscale(100%);
+          overflow: hidden;
+          transform: translate3d(0, 0, 0);
+      }
+  }
+
   .left, .right{
     position: absolute;
     top: 50%;
@@ -117,6 +127,31 @@ minds-archive-grid{
       top: calc(50% - 36px);
     }
 
+    > i.material-icons {
+      display: none;
+    }
+
+    &.m-mature-thumbnail {
+      transform-style: preserve-3d;
+      background-color: rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+
+      > img {
+        filter: blur(5px) grayscale(100%);
+        transform: translate3d(0, 0, 0);
+        opacity: 0.65;
+      }
+
+      > i.material-icons {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3em;
+        color: #fff;
+      }
+    }
 
   }
 

@@ -9,11 +9,13 @@ import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MindsBlogListResponse } from '../../../interfaces/responses';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 
+import { AttachmentService } from '../../../services/attachment';
 
 @Component({
   selector: 'minds-card-blog',
-  
-  properties: ['_blog : object']
+
+  properties: ['_blog : object'],
+  bindings: [AttachmentService]
 })
 @View({
   templateUrl: 'src/plugins/blog/card/card.html',
@@ -27,7 +29,7 @@ export class BlogCard {
   blog;
   session = SessionFactory.build();
 
-  constructor(){
+  constructor(public attachment: AttachmentService){
       this.minds = window.Minds;
   }
 

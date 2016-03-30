@@ -20,6 +20,7 @@ import { AnalyticsService } from '../../../services/analytics';
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
 
+import { AttachmentService } from '../../../services/attachment';
 
 @Component({
   selector: 'm-blog-view',
@@ -27,7 +28,7 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
   host: {
     'class': 'm-blog'
   },
-  bindings:[ MindsTitle ],
+  bindings:[ MindsTitle, AttachmentService ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
     GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll ]
@@ -51,7 +52,7 @@ export class BlogView {
 
   scroll_listener;
 
-  constructor(public client: Client, public router: Router, _element : ElementRef,  public scroll: ScrollService, public title: MindsTitle){
+  constructor(public client: Client, public router: Router, _element : ElementRef,  public scroll: ScrollService, public title: MindsTitle, public attachment: AttachmentService){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
       this.isVisible();

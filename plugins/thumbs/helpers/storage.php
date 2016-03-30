@@ -10,15 +10,17 @@ use Minds\Core\Data;
 use Minds\Core\Security;
 use Minds\Core\entities;
 use Minds\Helpers;
+use Minds\Entities\Factory as EntitiesFactory;
 
 class storage{
 
 
     public static function insert($direction = 'up', $entity){
 
-        //check to see if we can interact with the parent
-        if(!Security\ACL::_()->interact($entity))
-          return false;
+        //check to see if we can interact with the entity
+        if (!Security\ACL::_()->interact($entity)) {
+            return false;
+        }
 
         $db = new Data\Call('entities');
         $indexes = new Data\Call('entities_by_time');
@@ -87,9 +89,19 @@ class storage{
 
         if($entity->owner_guid != Core\Session::getLoggedinUser()->guid){
             if($direction == 'up')
-              Core\Events\Dispatcher::trigger('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'entity'=>$entity));
+              Core\Events\Dispatcher::trigger('notification', 'thumbs', [
+                'to' => [ $entity->owner_guid ],
+                'notification_view' =>'like',
+                'title' => $entity->title,
+                'entity' => $entity
+              ]);
             elseif($direction == 'down')
-              Core\Events\Dispatcher::trigger('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'downvote', 'title'=>$entity->title, 'entity'=>$entity));
+              Core\Events\Dispatcher::trigger('notification', 'thumbs', [
+                'to' => [ $entity->owner_guid ],
+                'notification_view' => 'downvote',
+                'title' => $entity->title,
+                'entity' => $entity
+              ]);
         }
 
     }

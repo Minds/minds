@@ -34,7 +34,8 @@ export class BlogEdit {
     description: '',
     access_id: 2,
     license: 'all-rights-reserved',
-    fileKey: 'header'
+    fileKey: 'header',
+    mature: 0
   };
   banner : any;
   banner_top : number = 0;
