@@ -25,12 +25,12 @@ import { Material } from '../../../../directives/material';
     </div>
     <div class="minds-archive-stage" *ngIf="object.subtype == 'video'">
       <minds-video 
-	[autoplay]="true" 
-	[muted]="false" 
-	[src]="[{ 'uri': object.src['720.mp4'] }, { 'uri': object.src['360.mp4'] }]
+	    [autoplay]="true" 
+	    [muted]="false" 
+	    [src]="[{ 'uri': object.src['720.mp4'] }, { 'uri': object.src['360.mp4'] }]"
         [log]="object.guid"
-        [playCount]="false"
-      ></minds-video>
+        [playCount]="false">
+      </minds-video>
     </div>
     <i class="material-icons right"
       (click)="next()"
