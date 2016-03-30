@@ -263,7 +263,7 @@ class Notification extends DenormalizedEntity
      */
     public function setTo($to)
     {
-        $this->to = Factory::build($to) ?: false;
+        $this->to = is_numeric($to) ? Factory::build($to) : $to; 
         return $this;
     }
 
@@ -283,7 +283,7 @@ class Notification extends DenormalizedEntity
      */
     public function setEntity($entity)
     {
-        $this->entity = Factory::build($entity) ?: false;
+        $this->entity = is_numeric($entity) ? Factory::build($entity) : $entity;
         return $this;
     }
 
@@ -303,7 +303,7 @@ class Notification extends DenormalizedEntity
      */
     public function setFrom($from)
     {
-        $this->from = Factory::build($from) ?: false;
+        $this->from = is_numeric($from) ? Factory::build($from) : $from;
         return $this;
     }
 
@@ -323,7 +323,7 @@ class Notification extends DenormalizedEntity
      */
     public function setOwner($owner)
     {
-        $this->owner = Factory::build($owner);
+        $this->owner = is_numeric($owner) ? Factory::build($owner) : $owner;
         return $this;
     }
 }
