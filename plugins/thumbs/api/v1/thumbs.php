@@ -55,8 +55,7 @@ class thumbs implements Interfaces\Api{
             $opposite = 'up';
         }
 
-        $entity = core\Entities::build(new \Minds\Entities\Entity($guid));
-
+        $entity = Entities\Factory::build($guid);
         if($entity->guid){
             if(helpers\buttons::hasThumbed($entity, $direction)){
                 helpers\storage::cancel($direction, $entity);
