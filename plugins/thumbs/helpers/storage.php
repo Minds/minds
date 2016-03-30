@@ -89,9 +89,19 @@ class storage{
 
         if($entity->owner_guid != Core\Session::getLoggedinUser()->guid){
             if($direction == 'up')
-              Core\Events\Dispatcher::trigger('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'like', 'title'=>$entity->title, 'entity'=>$entity));
+              Core\Events\Dispatcher::trigger('notification', 'thumbs', [
+                'to' => [ $entity->owner_guid ],
+                'notification_view' =>'like',
+                'title' => $entity->title,
+                'entity' => $entity
+              ]);
             elseif($direction == 'down')
-              Core\Events\Dispatcher::trigger('notification', 'thumbs', array('to'=>array($entity->owner_guid), 'notification_view'=>'downvote', 'title'=>$entity->title, 'entity'=>$entity));
+              Core\Events\Dispatcher::trigger('notification', 'thumbs', [
+                'to' => [ $entity->owner_guid ],
+                'notification_view' => 'downvote',
+                'title' => $entity->title,
+                'entity' => $entity
+              ]);
         }
 
     }
