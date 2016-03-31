@@ -35,16 +35,16 @@ class DataProvider extends Provider
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function($di){
             return new Cassandra\Thrift\Entities(new Call('entities'));
-        }, ['useFactory'=>true]); 
+        }, ['useFactory'=>false]); 
         $this->di->bind('Database\Cassandra\Indexes', function($di){
             return new Cassandra\Thrift\Indexes(new Call('entities_by_time'));
-        }, ['useFactory'=>true]);
+        }, ['useFactory'=>false]);
         $this->di->bind('Database\Cassandra\Lookup', function($di){
             return new Cassandra\Thrift\Lookup(new Call('user_index_to_guid'));
-        }, ['useFactory'=>true]);
+        }, ['useFactory'=>false]);
         $this->di->bind('Database\Cassandra\Relationships', function($di){
             return new Cassandra\Thrift\Relationships(new Call('relationships'));
-        }, ['useFactory'=>true]);
+        }, ['useFactory'=>false]);
         $this->di->bind('Database\MongoDB', function($di){
             return new MongoDB\Client();
         }, ['useFactory'=>true]);
