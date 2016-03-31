@@ -18,6 +18,7 @@ class Group extends NormalizedEntity
     protected $type = 'group';
     protected $guid;
     protected $ownerObj;
+    protected $owner_guid;
     protected $name;
     protected $brief_description;
     protected $access_id = 2;
@@ -58,6 +59,7 @@ class Group extends NormalizedEntity
         $saved = $this->saveToDb([
             'type' => $this->type,
             'guid' => $this->guid,
+            'owner_guid' => $this->owner_guid,
             'ownerObj' => $this->ownerObj->export(),
             'name' => $this->name,
             'brief_description' => $this->brief_description,
@@ -108,7 +110,7 @@ class Group extends NormalizedEntity
         } elseif ($name === 'container_guid') {
             return null;
         } elseif ($name === 'owner_guid') {
-            return $this->getOwnerObj() ? $this->getOwnerObj()->guid : null;
+            return $this->getOwnerObj() ? $this->getOwnerObj()->guid : $this->owner_guid;
         }
 
         $trace = debug_backtrace();
@@ -413,6 +415,9 @@ class Group extends NormalizedEntity
      */
     public function getOwnerGuids()
     {
+        if(empty($this->owner_guids) && $this->owner_guid){
+            $this->owner_guids[] = $this->owner_guid;
+        }
         return $this->owner_guids ?: [];
     }
 
