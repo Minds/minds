@@ -12,7 +12,7 @@
 <form (submit)="save()" class="mdl-grid groups-grid" style="max-width:900px">
 
   <div class="mdl-cell mdl-cell--8-col">
-    <div class="m-groups-pre-invite mdl-card mdl-shadow--2dp">
+    <!--<div class="m-groups-pre-invite mdl-card mdl-shadow--2dp">
       <div class="mdl-card__supporting-text">
         <h5>Invite</h5>
         <div class="invitees">
@@ -31,7 +31,8 @@
           <label class="mdl-textfield__label" for="name">Invite user. Type a name and press Enter.</label>
         </div>
       </div>
-    </div>
+    </div>-->
+    <minds-groups-profile-members-invite (invited)="user = $event"></minds-groups-profile-members-invite>
   </div>
 
   <div class="mdl-cell mdl-cell--4-col m-group-info">

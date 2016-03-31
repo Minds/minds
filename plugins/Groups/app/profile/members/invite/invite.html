@@ -1,44 +1,36 @@
 <div class="mdl-card mdl-shadow--2dp">
   <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Invite to {{ group.name }}</h2>
+    <h2 class="mdl-card__title-text" *ngIf="group">Invite to {{ group.name }}</h2>
+    <h2 class="mdl-card__title-text" *ngIf="!group">Invite</h2>
   </div>
   <div class="mdl-card__supporting-text">
-    - You can only invite users who are your subscribers<br>
-    - They will receive a notification to confirm they want to be a member of this group
-    <span [hidden]="!group['is:owner']">
-      <br>
-      - If the user was banned from the group, inviting them will lift the ban
-    </span>
+    <span>- You can only invite users who are your subscribers</span>
+    <span>- They will receive a notification to confirm they want to be a member of this group</span>
+    <span *ngIf="group" [hidden]="!group['is:owner']">- If the user was banned from the group, inviting them will lift the ban</span>
+
+    <div [hidden]="!inviteInProgress">
+      <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
+      <div class="mdl-card__supporting-text">
+        Inviting...
+      </div>
+    </div>
+
+    <div class="m-search-inline" [hidden]="destination">
+      <input type="text" [(ngModel)]="q" (keyup)="search()" placeholder="Search for a channel"/>
+
+      <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white" [hidden]="users.length == 0 || !searching">
+        <div *ngFor="#user of users" (click)="invite(user);" class="m-search-inline-item m-block">
+          <div class="m-avatar">
+            <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" class="mdl-shadow--2dp"/>
+          </div>
+          <div class="m-body">
+            <h3>@{{user.username}}</h3>
+            <span *ngIf="user.merchant" class="m-boost-pro-tag mdl-color--blue-grey-300">pro</span>
+            <p class="m-subtitle">Views: {{user.impressions}} | Subscribers: {{user.subscribers_count}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div [hidden]="!inviteInProgress">
-    <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" width="width: 100%;" [mdl]></div>
-    <div class="mdl-card__supporting-text">
-      Inviting...
-    </div>
-  </div>
-  <form class="mdl-grid minds-groups-invite-form" (ngSubmit)="invite(invitation)" #invitation="ngForm" [hidden]="inviteInProgress">
-
-    <div class="mdl-cell mdl-cell--12-col mdl-textfield mdl-js-textfield textfield-demo" [mdl]>
-      <input class="mdl-textfield__input"
-      type="text"
-      id="user"
-      ngControl="user"
-      />
-      <label class="mdl-textfield__label" for="user">Username</label>
-    </div>
-
-    <div class="mdl-cell mdl-cell--8-col minds-error mdl-color-text--red">
-      <span [hidden]="!inviteError">{{ inviteError }}</span>
-    </div>
-    <div class="mdl-cell mdl-cell--4-col minds-groups-invite-actions">
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-        Invite
-      </button>
-    </div>
-
-    <div class="mdl-cell mdl-cell--12-col mdl-color-text--blue-grey-400" [hidden]="!inviteLastUser">
-      Sent <b>{{ inviteLastUser }}</b> an invitation to join {{ group.name }}
-    </div>
-
-  </form>
 </div>

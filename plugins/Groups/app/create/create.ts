@@ -10,6 +10,8 @@ import { Material } from '../../../directives/material';
 import { MindsBanner } from '../../../components/banner';
 import { MindsAvatar } from '../../../components/avatar';
 
+import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
+
 
 @Component({
   selector: 'minds-groups-create',
@@ -18,7 +20,7 @@ import { MindsAvatar } from '../../../components/avatar';
 })
 @View({
   templateUrl: 'src/plugins/Groups/create/create.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite ]
 })
 
 export class GroupsCreator {

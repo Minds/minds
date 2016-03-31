@@ -142,9 +142,16 @@ minds-groups-profile{
       -webkit-filter: grayscale(100%);
     }
   }
-  minds-groups-profile-members-invite {
-    margin: 0 $minds-padding $minds-padding;
-    width: 100%;
+
+}
+
+minds-groups-profile-members-invite {
+  margin: 0 $minds-padding $minds-padding;
+  width: 100%;
+
+  span{
+    display:block;
+    padding:$minds-padding;
   }
 }
 
