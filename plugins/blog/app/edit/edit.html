@@ -37,7 +37,7 @@
     </div>
     <div class="m-mature-info">
       <i class="material-icons">explicit</i>
-      <select [(ngModel)]="blog.mature" class="mdl-color-text--blue-grey-300 m-form-select">
+      <select [ngModel]="blog.mature" (change)="blog.mature = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
           <option [value]="0">Everyone</option>
           <option [value]="1">Explicit content</option>
       </select>
