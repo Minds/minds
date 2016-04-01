@@ -73,6 +73,11 @@ export class GroupsCreator {
   }
 
   save(){
+
+    if(!this.group.name){
+      return;
+    }
+
     this.editing = false;
     this.editDone = true;
     this.inProgress = true;
