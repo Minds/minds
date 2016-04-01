@@ -119,13 +119,8 @@ class group implements Interfaces\Api
         }
 
         if (isset($_POST['tags'])) {
-            // TODO: [emi] Ask Mark about proper sanitization on tags
-            $tags = explode(',', $_POST['tags']);
+            $tags = $_POST['tags'];
             $sanitized_tags = [];
-
-            if (count($tags) > 5) {
-                $tags = array_slice($tags, 0, 5);
-            }
 
             foreach ($tags as $tag) {
                 $tag = trim(strip_tags($tag));
@@ -137,7 +132,7 @@ class group implements Interfaces\Api
                 $sanitized_tags[] = $tag;
             }
 
-            $group->setTags(implode(', ', $sanitized_tags));
+            $group->setTags($sanitized_tags);
         }
 
         if ($creation) {

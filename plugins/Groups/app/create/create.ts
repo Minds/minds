@@ -9,6 +9,7 @@ import { SessionFactory } from '../../../services/session';
 import { Material } from '../../../directives/material';
 import { MindsBanner } from '../../../components/banner';
 import { MindsAvatar } from '../../../components/avatar';
+import { TagsInput } from '../../../components/forms/tags-input/tags';
 
 import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
 
@@ -20,7 +21,7 @@ import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
 })
 @View({
   templateUrl: 'src/plugins/Groups/create/create.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite, TagsInput ]
 })
 
 export class GroupsCreator {

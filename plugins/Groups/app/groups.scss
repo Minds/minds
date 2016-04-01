@@ -209,10 +209,13 @@ minds-groups-profile-members-invite {
       padding-right:$minds-padding;
     }
 
-    span {
-      vertical-align: middle;
+    > div {
+      > span {
+        vertical-align: middle;
+        font-size: 14px;
+        padding: 8px;
+      }
     }
-
 
     h1 {
       font-size: 26px;
@@ -235,6 +238,12 @@ minds-groups-profile-members-invite {
         width: calc(100% - 38px);
       }
 
+    }
+
+    minds-form-tags-input{
+      width: 80%;
+      width: calc(100% - 48px);
+      display:inline-block;
     }
 
     select{

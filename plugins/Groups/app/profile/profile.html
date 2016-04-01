@@ -97,12 +97,12 @@
 
         <div [hidden]="editing || !group.tags">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
-          <span>{{group.tags}}</span>
+          <span *ngFor="#tag of group.tags">{{tag}}</span>
         </div>
 
         <div *ngIf="editing && group['is:owner']">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
-          <input type="text" class="icon-prefix" [(ngModel)]="group.tags" placeholder="Enter up to five comma separated tags" />
+          <minds-form-tags-input [tags]="group.tags" (change)="group.tags = $event"></minds-form-tags-input>
         </div>
 
       </div>
@@ -178,7 +178,7 @@
 
   <minds-banner [object]="group" [top]="group.banner_position"></minds-banner>
 
-  <div class="m-group-closed-splash-inner"> 
+  <div class="m-group-closed-splash-inner">
 
     <div class="m-group-avatar">
       <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
