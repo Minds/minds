@@ -17,6 +17,8 @@ import { GroupsService } from '../../../groups-service';
 
 export class GroupsProfileMembersInvite {
 
+  minds = window.Minds;
+
   group : any;
   invited : EventEmitter<any> = new EventEmitter();
 
@@ -36,6 +38,8 @@ export class GroupsProfileMembersInvite {
   }
 
   invite(user) {
+    this.q = "";
+    this.users = [];
     if(!this.group){
       this.invited.next(user);
       return;

@@ -12,36 +12,28 @@
 <form (submit)="save()" class="mdl-grid groups-grid" style="max-width:900px">
 
   <div class="mdl-cell mdl-cell--8-col">
-    <!--<div class="m-groups-pre-invite mdl-card mdl-shadow--2dp">
-      <div class="mdl-card__supporting-text">
-        <h5>Invite</h5>
-        <div class="invitees">
-          <span *ngFor="#invitee of invitees; #i = index">
-            {{ invitee }}
-            <a class="material-icons" (click)="removeInvitee(i)">cancel</a>
-          </span>
-        </div>
-        <div class="mdl-textfield mdl-js-textfield m-groups-new-invitee" [mdl]>
-          <input
-            class="mdl-textfield__input"
-            type="text"
-            #inviteeInput
-            (keydown.enter)="addInvitee(inviteeInput, $event)"
-            />
-          <label class="mdl-textfield__label" for="name">Invite user. Type a name and press Enter.</label>
+    <minds-groups-profile-members-invite (invited)="invite($event)"></minds-groups-profile-members-invite>
+
+    <div class="invitees m-search-inline">
+      <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white">
+        <div *ngFor="#invitee of invitees; #i = index" class="m-search-inline-item m-block">
+          <div class="m-avatar">
+            <img src="{{minds.cdn_url}}/icon/{{invitee.guid}}/small" class="mdl-shadow--2dp"/>
+          </div>
+          <div class="m-body">
+            <h3>@{{invitee.username}}</h3>
+            <p class="m-subtitle">Views: {{invitee.impressions}} | Subscribers: {{invitee.subscribers_count}}</p>
+          </div>
+          <i class="material-icons m-remove-invitee" (click)="removeInvitee(i)">cancel</i>
         </div>
       </div>
-    </div>-->
-    <minds-groups-profile-members-invite (invited)="user = $event"></minds-groups-profile-members-invite>
+    </div>
+
   </div>
 
   <div class="mdl-cell mdl-cell--4-col m-group-info">
 
     <div class="mdl-card mdl-shadow--2dp">
-
-      <div class="m-groups-save">
-       <button class="mdl-button mdl-button--raised mdl-button--colored">Create</button>
-      </div>
 
       <div class="m-group-info-name mdl-color-text--blue-grey-300">
         <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />

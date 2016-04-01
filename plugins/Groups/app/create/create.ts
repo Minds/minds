@@ -25,6 +25,8 @@ import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
 
 export class GroupsCreator {
 
+  minds = window.Minds;
+
   session = SessionFactory.build();
   banner : any = false;
   avatar : any = false;
@@ -57,27 +59,13 @@ export class GroupsCreator {
     this.group.membership = value;
   }
 
-  addInvitee(input, $event = null) {
-    if ($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
+
+  invite(user){
+    for(let i of this.invitees){
+      if(i.guid == user.guid)
+        return;
     }
-
-    if (!input.value) {
-      return;
-    }
-
-    let user = input.value;
-
-    input.value = '';
-
-    if (this.invitees.indexOf(user) > -1) {
-      return;
-    }
-
-    this.service.canInvite(user).then(user => {
-      this.invitees.push(user);
-    });
+    this.invitees.push(user);
   }
 
   removeInvitee(i) {
@@ -89,7 +77,9 @@ export class GroupsCreator {
     this.editDone = true;
     this.inProgress = true;
 
-    this.group.invitees = this.invitees.join(',');
+    this.group.invitees = this.invitees.map((user) => {
+      return user.guid;
+    });
 
     this.service.save(this.group)
     .then((guid: any) => {
