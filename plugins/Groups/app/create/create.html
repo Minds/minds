@@ -50,7 +50,7 @@
 
       <div class="m-group-info-membership mdl-color-text--blue-grey-300">
           <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
-          <select class="icon-prefix" [(ngModel)]="group.membership">
+          <select class="icon-prefix" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
             <option value="2">Open Group</option>
             <option value="0">Closed Group</option>
           </select>

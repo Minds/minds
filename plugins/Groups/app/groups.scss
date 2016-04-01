@@ -143,6 +143,23 @@ minds-groups-profile{
     }
   }
 
+
+  .m-group-closed-splash{
+
+    .m-group-closed-splash-inner{
+      width: 360px;
+      margin: 180px auto;
+      text-align: center;
+      position: relative;
+
+      .minds-avatar{
+        background:transparent;
+        margin:auto;
+      }
+    }
+
+  }
+
 }
 
 minds-groups-profile-members-invite {
