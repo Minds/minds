@@ -25,7 +25,7 @@ class preview implements Interfaces\Api
         $url = $_GET['url'];
         $response = array();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://iframely.com/iframely?uri=".$url);
+        curl_setopt($ch, CURLOPT_URL, "https://open.iframe.ly.com/iframely?origin=minds&uri=".$url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);
