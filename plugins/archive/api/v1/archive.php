@@ -83,8 +83,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 if($detectIsImage && !$isWebApp){
                     $fauxImage = true;
                 }
+            } else {
+                if($mimeIsImage){
+                    $fauxImage = true;
+                }
             }
-            if($clientType == 'image' || $fauxImage){
+            if($fauxImage){
                 /*error_log("[upload][log]:: {$_FILES['file']['name']}");
                 error_log("[upload][log]:: detected {$pages[0]} is an image");
                 error_log("[upload][log]::" . $_FILES['file']['type']);
