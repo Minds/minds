@@ -73,11 +73,28 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
             //images should still use put, large videos use post because of memory issues.
             //some images are uploaded like videos though, if they don't have mime tags.. hack time!
             error_log("[upload][log]:: got type " . $pages[0]);
-            if((strpos($_FILES['file']['type'], 'image') !== FALSE || @is_array(getimagesize($_FILES['file']['tmp_name'])))
-                && (!isset($_SERVER['HTTP_X_XSRF_TOKEN']) || $pages[0] != "video")){
+            $clientType = $pages[0];
+            $mimeIsImage = strpos($_FILES['file']['type'], 'image') !== FALSE;
+            $detectIsImage = @is_array(getimagesize($_FILES['file']['tmp_name']));
+            $isWebApp = isset($_SERVER['HTTP_X_XSRF_TOKEN']);
+            $fauxImage = false;
+
+            if($clientType == 'video'){
+                if($detectIsImage && !$isWebApp){
+                    $fauxImage = true;
+                }
+            }
+            if($clientType == 'image' || $fauxImage){
+                /*error_log("[upload][log]:: {$_FILES['file']['name']}");
                 error_log("[upload][log]:: detected {$pages[0]} is an image");
-                error_log($_FILES['file']['type']);
-                error_log(is_array(getimagesize($_FILES['file']['tmp_name'])));
+                error_log("[upload][log]::" . $_FILES['file']['type']);
+                error_log("[upload][log]::" . is_array(getimagesize($_FILES['file']['tmp_name'])));
+                error_log(print_r($_FILES['file'], true));
+                error_log("[upload][log][size]::");
+                error_log(print_r(getimagesize($_FILES['file']['tmp_name']), true));
+                error_log(print_r(@is_array(getimagesize($_FILES['file']['tmp_name'])), true));
+                error_log("[upload][log][size][end]::"); */
+
                 //error_log('image as a video..');
                 $image = new \minds\plugin\archive\entities\image();
                 $image->batch_guid = 0;
