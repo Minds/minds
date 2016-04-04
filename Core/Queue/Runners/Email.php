@@ -17,20 +17,20 @@ class Email implements Interfaces\QueueRunner
 {
     public function run()
     {
+        $mailer = new Core\Email\Mailer();
         $client = Queue\Client::Build();
         $client->setExchange("mindsqueue", "direct")
                ->setQueue("Email")
-               ->receive(function ($data) {
+               ->receive(function ($data) use ($mailer) {
                   echo "[email]: Received an email \n";
 
                   $data = $data->getData();
 
                   $message = unserialize($data['message']);
 
-                  $mailer = new Core\Email\Mailer();
                   $mailer->send($message);
 
-                  echo "[email]: delivered to {$message->to[0]['name']} \n";
+                  echo "[email]: delivered to {$message->to[0]['name']} ($message->subject) \n";
 
                });
         $this->run();
