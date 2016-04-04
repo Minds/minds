@@ -39,12 +39,36 @@ class Retention
 
     public function send()
     {
-        $this->template->setTemplate('default.tpl');
-        $this->template->setBody("./Templates/retention-{$this->period}.tpl");
 
-        $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
+
+        $template = "mass";
+        $subject = "Top 10 featured blogs. Open me for a 100 point reward!";
+
+        switch($this->period){
+            case 3:
+                $featured_guids = (new Call('entities_by_time'))->getRow("object:image:featured", ['limit' => 10]);
+                $subject = "Top 10 featured images. Open me for a 100 point reward!";
+                $template = "reward";
+                break;
+            case 7:
+                $featured_guids = (new Call('entities_by_time'))->getRow("object:video:featured", ['limit' => 10]);
+                $subject = "Top 10 featured videos. Open me for a 100 point reward!";
+                $template = "reward";
+                break;
+            case 1:
+            case 28:
+                $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
+                $template = "reward";
+            default:
+                $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
+        }
+
+        $this->template->setTemplate('default.tpl');
+        $this->template->setBody("./Templates/retention-$template.tpl");
+
         $featured = Entities::get(['guids' => $featured_guids]);
         $this->template->set('featured', $featured);
+        $this->template->set('period', $this->period);
 
         $queued = 0;
         $skipped = 0;
@@ -64,7 +88,7 @@ class Retention
 
             $message = new Message();
             $message->setTo($user)
-              ->setSubject("Top 10 featured channels. Open me for a 100 point reward!")
+              ->setSubject($subject)
               ->setHtml($this->template);
 
             if($this->period >= 30){
@@ -83,6 +107,8 @@ class Retention
         if($this->period < 30){
             $users = new Iterators\SignupsIterator;
             $users->setPeriod($this->period);
+            $users = new Iterators\SignupsOffsetIterator;
+            $users->setPeriod(1);
             return $users;
         } else {
             //scan all users and return past 30 day period
