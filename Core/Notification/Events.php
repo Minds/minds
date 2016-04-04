@@ -2,11 +2,13 @@
 namespace Minds\Core\Notification;
 
 use Minds\Entities;
+use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
 use Minds\Core\Notification\Extensions\Push;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Notification\Factory as NotificationFactory;
+use Minds\Core\Notification\Entity as EntityNotification;
 
 class Events
 {
@@ -42,6 +44,17 @@ class Events
                 'entity' => null,
                 'dry' => false
             ], $params);
+
+            if ($params['entity'] && !is_object($params['entity'])) {
+                $params['entity'] = EntitiesFactory::build($params['entity']);
+            }
+
+            if ($params['to'] && $params['entity'] && in_array($params['entity']->type, [ 'activity', 'object' ])) {
+                $muted = array_map([ __CLASS__, 'toString' ], (new EntityNotification($params['entity']))->getMutedUsers());
+                $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
+
+                $params['to'] = array_diff($params['to'], $muted);
+            }
 
             foreach ($params['to'] as $to_user) {
                 if (!$to_user) {
@@ -147,6 +160,21 @@ class Events
         });
 
         /**
+         * Export extender for activity notifications
+         */
+        Dispatcher::register('export:extender', 'activity', function($event) {
+            $params = $event->getParameters();
+            $export = $event->response() ?: [];
+            $user = Session::getLoggedInUser();
+
+            $export['is:muted'] = $user &&
+                $params['entity']->guid &&
+                (new EntityNotification($params['entity']->guid))->isMuted($user);
+
+            $event->setResponse($export);
+        });
+
+        /**
          * Cron events
          */
         Dispatcher::register('cron', 'minute', [ __CLASS__, 'cronHandler' ]);
@@ -161,5 +189,15 @@ class Events
         }
 
         // TODO: [emi] Send email notifications
+    }
+
+    /**
+     * Internal funcion. Typecasts to string.
+     * @param  mixed $var
+     * @return string
+     */
+    private static function toString($var)
+    {
+        return (string) $var;
     }
 }

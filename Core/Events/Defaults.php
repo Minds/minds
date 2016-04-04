@@ -24,7 +24,7 @@ class Defaults
         //Channel object reserializer
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
-            $export = array();
+            $export = $event->response() ?: [];
             if ($params['entity']->ownerObj && is_array($params['entity']->ownerObj)) {
                 $export['ownerObj'] = Entities\Factory::build($params['entity']->ownerObj)->export();
                 //$export['ownerObj'] = \Minds\Helpers\Export::sanitize($params['entity']->ownerObj);
@@ -36,7 +36,7 @@ class Defaults
         //Comments count export extender
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
-            $export = array();
+            $export = $event->response() ?: [];
             $cacher = Core\Data\cache\factory::build();
 
             if ($params['entity']->type != 'activity') {
