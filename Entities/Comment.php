@@ -9,6 +9,7 @@ use Minds\Entities;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Core\Security;
+use Minds\Helpers;
 
 class Comment extends Entities\Entity
 {
@@ -20,7 +21,8 @@ class Comment extends Entities\Entity
         $this->attributes = array_merge($this->attributes, array(
             'type' => 'comment',
             'owner_guid'=>elgg_get_logged_in_user_guid(),
-            'access_id' => 2
+            'access_id' => 2,
+            'mature' => false,
         ));
     }
 
@@ -28,6 +30,82 @@ class Comment extends Entities\Entity
     {
         $this->parent = $parent;
         $this->parent_guid = $parent->guid;
+        return $this;
+    }
+
+    public function setCustom($type, $data = array())
+    {
+        $this->custom_type = $type;
+        $this->custom_data = $data;
+        return $this;
+    }
+
+    public function setAttachmentGuid($guid)
+    {
+        $this->attachment_guid = $guid;
+        return $this;
+    }
+
+    /**
+     * Sets the maturity flag for this comment
+     * @param mixed $value
+     */
+    public function setMature($value)
+    {
+        $this->mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the maturity flag
+     * @return boolean
+     */
+    public function getMature()
+    {
+        return (bool) $this->mature;
+    }
+
+    /**
+     * Sets the title
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * Sets the blurb
+     * @param string $blurb
+     * @return $this
+     */
+    public function setBlurb($blurb)
+    {
+        $this->blurb = $blurb;
+        return $this;
+    }
+
+    /**
+     * Sets the url
+     * @param string $url
+     * @return $this
+     */
+    public function setURL($url)
+    {
+        $this->perma_url = $url;
+        return $this;
+    }
+
+    /**
+     * Sets the thumbnail
+     * @param string $src
+     * @return $this
+     */
+    public function setThumbnail($src)
+    {
+        $this->thumbnail_src = $src;
         return $this;
     }
 
@@ -89,8 +167,45 @@ class Comment extends Entities\Entity
     {
         return array_merge(parent::getExportableValues(), array(
             'description',
+            'title',
+            'blurb',
+            'perma_url',
+            'thumbnail_src',
+            'attachment_guid',
             'ownerObj',
-            'parent_guid'
+            'parent_guid',
+            'custom_type',
+            'custom_data',
+            'thumbs:up:count',
+            'thumbs:up:user_guids',
+            'thumbs:down:count',
+            'thumbs:down:user_guids',
+            'mature',
         ));
+    }
+
+    public function export()
+    {
+        $export = parent::export();
+
+        $export['thumbs:up:count'] = Helpers\Counters::get($this, 'thumbs:up');
+        $export['thumbs:down:count'] = Helpers\Counters::get($this, 'thumbs:down');
+
+        $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids']);
+        $export['thumbs:down:user_guids'] = (array) array_values($export['thumbs:down:user_guids']);
+
+        $export['mature'] = (bool) $export['mature'];
+
+        if ($this->custom_type == 'video' && $this->custom_data['guid']) {
+          $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'],'plays');
+        }
+
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+
+        if ($export['owner_guid'] && !$export['ownerObj']) {
+          $export['ownerObj'] = Entities\Factory::build($export['owner_guid'])->export();
+        }
+
+        return $export;
     }
 }

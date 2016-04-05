@@ -87,18 +87,31 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
               }
 
               $page->setHeader(true)
-                ->setHeaderTop($_POST['headerTop'])
-                ->save();
+                ->setHeaderTop($_POST['headerTop']);
+
+              $saved = $page->save();
+
+              return Factory::response(compact('saved'));
               break;
             case "update":
             case "add":
             default:
+              $subtype = 'page';
+
+              if (isset($_POST['subtype'])) {
+                $subtype = $_POST['subtype'];
+              }
+
               $page = (new Entities\Page())
                 ->setTitle($_POST['title'])
                 ->setBody($_POST['body'])
                 ->setMenuContainer($_POST['menuContainer'])
                 ->setPath($_POST['path'])
-                ->save();
+                ->setSubtype($subtype);
+
+              $saved = (bool) $page->save();
+
+              return Factory::response(compact('saved'));
         }
 
         return Factory::response([]);
@@ -116,10 +129,32 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
      */
     public function delete($pages)
     {
+        if (!Core\Session::isAdmin()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You are not authorized'
+            ]);
+        }
+
+        // Workaround for links
+        // TODO: ^^ Maybe make it permanent (not use $pages), or fix services/client.ts to accept data as JSON-encoded
+        if (isset($_GET['path'])) {
+          $path = $_GET['path'];
+        } else {
+          $path = $pages[0];
+        }
+
+        if (!$path) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must supply a path'
+            ]);
+        }
+
         $response = [];
         try {
             $page = (new Entities\Page())
-                ->loadFromGuid($pages[0])
+                ->loadFromGuid($path)
                 ->delete();
         } catch (\Exception $e) {
             $response = [

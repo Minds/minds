@@ -58,6 +58,11 @@ class icon extends core\page implements Interfaces\page
             }
             exit;
         }
+
+        //avatar couldn't be found! remove from neo4j list
+        $prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
+        Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
+
         $this->forward("/assets/avatars/default-$size.png");
     }
 

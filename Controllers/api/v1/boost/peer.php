@@ -207,10 +207,11 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         Factory::isLoggedIn();
 
         $response = [];
-        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-        $boost = $pro->getBoostEntity($pages[0]);
 
         $revoked = isset($pages[1]) && $pages[1] == 'revoke';
+    
+        $pro = Core\Boost\Factory::build('peer', ['destination'=> $revoked ? "requested:" . Core\Session::getLoggedInUser()->guid : Core\Session::getLoggedInUser()->guid]);
+        $boost = $pro->getBoostEntity($pages[0]);
 
         if ($boost->getType() == "pro") {
             try {
@@ -227,7 +228,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             if($revoked){
                 $message = "Revoked Peer Boost";
             }
-            Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $revoke);
+            Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $message);
         }
 
         if($revoked){

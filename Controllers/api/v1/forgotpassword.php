@@ -55,10 +55,16 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
           //now send an email
           $mailer = Di::_()->get('Mailer');
           $message = new Core\Email\Message();
-          $message->setTo($user);
-          $message->setSubject("Password Reset");
-          $message->setHtml("Hello @$user->username. Please click on the following link to reset your password " . $link);
-          $mailer->send($message);
+          $template = new Core\Email\Template();
+          $template
+            ->setTemplate()
+            ->setBody('forgotpassword.tpl')
+            ->set('user', $user)
+            ->set('link', $link);
+          $message->setTo($user)
+            ->setSubject("Password Reset")
+            ->setHtml($template);
+          $mailer->queue($message);
 
           break;
         case "reset":

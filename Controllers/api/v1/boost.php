@@ -165,7 +165,11 @@ class boost implements Interfaces\Api
 
             $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost);
             if($result){
-                $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
+                if(isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200){
+                  $transactionId = "free";
+                } else {
+                  $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
+                }
                 $boost->setId((string) $result)
                   ->setTransactionId($transactionId)
                   ->save();

@@ -20,6 +20,11 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function get($pages)
     {
+
+        if ($pages[0] == '@counter') {
+          return $this->getCounter($pages);
+        }
+
         //Factory::isLoggedIn();
         if(!Core\Session::isLoggedin()){
             return Factory::response(['status'=>'error']);
@@ -38,6 +43,19 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
         ];
 
         return Factory::response($response);
+    }
+
+    public function getCounter($pages) {
+      $response = [];
+
+      switch ($pages[1]) {
+          case 'play':
+            $response['data'] = $pages[2] ? Helpers\Counters::get($pages[2], 'plays') : -1;
+            break;
+      }
+
+      return Factory::response($response);
+
     }
 
     public function post($pages)

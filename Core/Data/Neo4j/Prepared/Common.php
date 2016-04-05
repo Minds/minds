@@ -6,6 +6,7 @@ namespace Minds\Core\Data\Neo4j\Prepared;
 
 use Minds\Core\Data\Interfaces;
 use Minds\Entities;
+use Minds\Core\Analytics\Timestamps;
 
 class Common implements Interfaces\PreparedInterface
 {
@@ -27,8 +28,8 @@ class Common implements Interfaces\PreparedInterface
      */
     public function createUser($user)
     {
-        $this->template = "MERGE (user:User { guid: {guid}, username:{username} })";
-        $this->values = array('guid'=>$user->guid, 'username'=>$user->username);
+        $this->template = "MERGE (user:User { guid: {guid}, username:{username} }) ON MATCH SET user += {hasAvatar: {hasAvatar}}";
+        $this->values = array('guid'=>$user->guid, 'username'=>$user->username, 'hasAvatar'=>(bool) is_numeric($user->icontime));
         return $this;
     }
 
@@ -128,33 +129,34 @@ class Common implements Interfaces\PreparedInterface
      */
     public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0)
     {
+        $timestamps = Timestamps::span(15, 'day');
+    
         if ($user->getSubscriptionsCount() > 500) {
             //users with huge graphs take longer to discover friends of friends, so for now we just show who they aren't subscribed to for speed.
             //we can perhaps do background tasks for this in the future
-            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User) ".
-                            "WHERE " .
-                             "NOT (user)-[:ACTED]->(fof) " .
-                             "AND NOT (fof.guid = user.guid) " .
-                            "RETURN fof ".
-                            //"ORDER BY COUNT(*) DESC ".
-                            "SKIP {skip} " .
-                            "LIMIT {limit}";
+            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User {hasAvatar:true}) 
+                            WHERE fof.last_active > {active}
+                            AND NOT (user)-[:ACTED]->(fof)
+                            AND NOT (fof.guid = user.guid)
+                            RETURN fof 
+                            SKIP {skip} 
+                            LIMIT {limit}";
         } else {
             //error_log("loading default matches for $user->guid");
-            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User) ".
-                            "WHERE " .
-                             "NOT (user)-[:ACTED]->(fof) " .
-                             "AND NOT (fof.guid = user.guid) " .
-                            "RETURN fof ".
-                            //"ORDER BY COUNT(*) DESC ".
-                            "SKIP {skip} " .
-                            "LIMIT {limit}";
+            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User {hasAvatar:true})
+                             WHERE fof.last_active > {active}
+                             AND NOT (user)-[:ACTED]->(fof)
+                             AND NOT (fof.guid = user.guid)
+                             RETURN fof
+                             SKIP {skip}
+                             LIMIT {limit}";
         }
-        $this->values = array(
-                            'guid' => (string) $user->guid,
-                            'limit' => 16,
-                            'skip' => (int) $skip
-                            );
+        $this->values = [
+            'guid' => (string) $user->guid,
+            'active' => (int) $timestamps[15],
+            'limit' => 16,
+            'skip' => (int) $skip
+        ];
         return $this;
     }
 
@@ -411,10 +413,21 @@ class Common implements Interfaces\PreparedInterface
         $km = $distance * 1.609344;
         $distance =  number_format((float)$km, 2, '.', '');
 
-        $this->template = "start n = node:geom({filter}) MATCH (u:User {guid:{guid}}) WHERE NOT u-[:ACTED]->n AND NOT u.guid = n.guid return n as fof SKIP {skip} LIMIT {limit}";
+        $timestamps = Timestamps::span(30, 'day');
+
+        $this->template = "start n = node:geom({filter}) 
+            MATCH (u:User {guid:{guid}}) 
+            WHERE n.last_active > {active}
+            AND NOT u-[:ACTED]->n 
+            AND NOT u.guid = n.guid 
+            AND (n.hasAvatar = true) 
+            RETURN n as fof 
+            SKIP {skip} 
+            LIMIT {limit}";
         $this->values = array(
             "filter" => "withinDistance:[$latlon,$distance]",
             "guid" => is_object($user) ? (string) $user->guid : (string) $user,
+            "active" => (int) $timestamps[15],
             "limit"=> (int) $limit,
             "skip" => (int) $skip
         );

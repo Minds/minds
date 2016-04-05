@@ -11,6 +11,17 @@ use Minds\Helpers;
 
 class User extends \ElggUser
 {
+
+
+    public function setMature($value) {
+      $this->mature = $value ? 1 : 0;
+      return $this;
+    }
+
+    public function getMature() {
+      return $this->mature;
+    }
+
     /**
      * Sets and encrypts a users email address
      * @param $email
@@ -159,6 +170,10 @@ class User extends \ElggUser
         if($this->fb){
           $export['fb'] = json_decode($this->fb, true);
         }
+
+        if (isset($export['mature'])) {
+          $export['mature'] = (int) $export['mature'];
+        }
         return $export;
     }
 
@@ -185,7 +200,8 @@ class User extends \ElggUser
             'city',
             'merchant',
             'boostProPlus',
-            'fb'
+            'fb',
+            'mature'
         ));
     }
 }

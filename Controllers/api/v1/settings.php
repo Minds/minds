@@ -73,6 +73,10 @@ class settings implements Interfaces\Api
             $user->setEmail($_POST['email']);
         }
 
+        if (isset($_POST['mature'])) {
+            $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
+        }
+
         if (isset($_POST['password']) && $_POST['password']) {
             if (!Core\Security\Password::check($user, $_POST['password'])) {
                 return Factory::response(array(
