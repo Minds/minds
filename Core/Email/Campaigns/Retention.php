@@ -107,8 +107,6 @@ class Retention
         if($this->period < 30){
             $users = new Iterators\SignupsIterator;
             $users->setPeriod($this->period);
-            $users = new Iterators\SignupsOffsetIterator;
-            $users->setPeriod(1);
             return $users;
         } else {
             //scan all users and return past 30 day period
