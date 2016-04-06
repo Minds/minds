@@ -19,7 +19,7 @@
     </tr>
     <tr>
       <td style="text-align:center">
-        <span style="color:#999; font-size:11px; text-align:center">Clicking anywhere on this email and logging in gives a point reward</span>
+        <span style="color:#999; font-size:11px; text-align:center">Clicking anywhere on this email and logging in gives a 100 point reward to boost your content</span>
       </td>
     </tr>
     <tr>
