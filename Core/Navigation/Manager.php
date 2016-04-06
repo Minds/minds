@@ -129,6 +129,15 @@ class Manager
                 ->setPath('/Admin')
                 ->setParams(array(
                     'filter' => 'pages'
+                )))
+            ->addSubItem((new Item())
+                ->setPriority(4)
+                ->setIcon('flag')
+                ->setName('Reports')
+                ->setTitle('Reports')
+                ->setPath('/Admin')
+                ->setParams(array(
+                    'filter' => 'reports'
                 )));
         if (Core\Session::isLoggedIn() && Core\Session::getLoggedinUser()->isAdmin()) {
             self::add($admin);
