@@ -42,17 +42,17 @@ class Retention
 
 
         $template = "mass";
-        $subject = "Top 10 featured blogs. Open me for a 100 point reward!";
+        $subject = "Top 10 blogs and your boost bonus";
 
         switch($this->period){
             case 3:
                 $featured_guids = (new Call('entities_by_time'))->getRow("object:image:featured", ['limit' => 10]);
-                $subject = "Top 10 featured images. Open me for a 100 point reward!";
+                $subject = "Top 10 images and your boost bonus";
                 $template = "reward";
                 break;
             case 7:
                 $featured_guids = (new Call('entities_by_time'))->getRow("object:video:featured", ['limit' => 10]);
-                $subject = "Top 10 featured videos. Open me for a 100 point reward!";
+                $subject = "Top 10 videos and your boost bonus";
                 $template = "reward";
                 break;
             case 1:
