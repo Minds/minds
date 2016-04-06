@@ -6,11 +6,13 @@
 
 namespace Minds\Entities;
 
+use Minds\Core;
 use Minds\Core\Data;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Core\Guid as CoreGuid;
 use Minds\Core\Queue\Client as QueueClient;
 use Minds\Helpers\Notifications;
+use Minds\Helpers\Subscriptions;
 
 class Notification extends DenormalizedEntity
 {
@@ -293,6 +295,11 @@ class Notification extends DenormalizedEntity
      */
     public function getFrom()
     {
+     
+        if (Core\Session::isLoggedIn()) {
+            $this->from['subscribed'] = Subscriptions::isSubscribed(Core\Session::getLoggedInUserGuid(), (int) $this->from['guid']);
+            //$this->from['subscribed'] = true;
+        }
         return $this->from;
     }
 
