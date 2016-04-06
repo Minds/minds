@@ -150,6 +150,12 @@ class newsfeed implements Interfaces\Api
                     Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
                 }
 
+                $message = '';
+
+                if (isset($_POST['message'])) {
+                    $message = urldecode($_POST['message']);
+                }
+
                 /*if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     $cacher = \Minds\Core\Data\cache\Factory::build();
                     if (!$cacher->get(Core\Session::getLoggedinUser()->guid . ":hasreminded:$embeded->guid")) {
@@ -163,6 +169,10 @@ class newsfeed implements Interfaces\Api
                 $activity = new Entities\Activity();
                 switch ($embeded->type) {
                     case 'activity':
+                        if ($message) {
+                            $activity->setMessage($message);
+                        }
+
                         if ($embeded->remind_object) {
                             $activity->setRemind($embeded->remind_object)->save();
                             \Minds\Helpers\Counters::increment($embeded->remind_object['guid'], 'remind');
@@ -171,10 +181,6 @@ class newsfeed implements Interfaces\Api
                         }
                      break;
                      default:
-                        $message = false;
-                        if ($embeded->owner_guid != elgg_get_logged_in_user_guid()) {
-                            $message = 'via @'. $embeded->getOwnerEntity()->username;
-                        }
                          /**
                            * The following are actually treated as embeded posts.
                            */
@@ -186,6 +192,7 @@ class newsfeed implements Interfaces\Api
                                       ->setURL($embeded->getURL())
                                       ->setThumbnail($embeded->getIconUrl())
                                       ->setFromEntity($embeded)
+                                      ->setMessage($message)
                                       ->save();
                                   } else {
                                       $activity->setRemind((new \Minds\Entities\Activity())
@@ -209,6 +216,7 @@ class newsfeed implements Interfaces\Api
                                             ])
                                           ->setTitle($embeded->title)
                                           ->setBlurb($embeded->description)
+                                          ->setMessage($message)
                                           ->save();
                                     } else {
                                         $activity = new \Minds\Entities\Activity();
@@ -236,6 +244,7 @@ class newsfeed implements Interfaces\Api
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
                                         ->setBlurb($embeded->description)
+                                        ->setMessage($message)
                                         ->save();
                                     } else {
                                         $activity->setRemind((new \Minds\Entities\Activity())
