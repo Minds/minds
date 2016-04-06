@@ -42,7 +42,31 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
      */
     public function post($pages)
     {
-        return Factory::response([]);
+        $response = [];
+
+        if (count($pages) < 2) {
+            return Factory::response($response);
+        }
+
+        $id = $pages[0];
+        $action = $pages[1];
+
+        switch ($action) {
+            case 'archive':
+                $response['done'] = (new Core\Reports())->archive($id);
+                break;
+            case 'ignore':
+                $response['done'] = (new Core\Reports())->ignore($id);
+                break;
+            case 'explicit':
+                $response['done'] = (new Core\Reports())->explicit($id);
+                break;
+            case 'delete':
+                $response['done'] = (new Core\Reports())->delete($id);
+                break;
+        }
+
+        return Factory::response($response);
     }
 
     /**
