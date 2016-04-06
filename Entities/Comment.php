@@ -191,8 +191,8 @@ class Comment extends Entities\Entity
         $export['thumbs:up:count'] = Helpers\Counters::get($this, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this, 'thumbs:down');
 
-        $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids']);
-        $export['thumbs:down:user_guids'] = (array) array_values($export['thumbs:down:user_guids']);
+        $export['thumbs:up:user_guids'] = $export['thumbs:up:user_guids'] ? (array) array_values($export['thumbs:up:user_guids']) : [];
+        $export['thumbs:down:user_guids'] = $export['thumbs:down:user_guids'] ? (array) array_values($export['thumbs:down:user_guids']) : [];
 
         $export['mature'] = (bool) $export['mature'];
 

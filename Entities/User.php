@@ -167,7 +167,7 @@ class User extends \ElggUser
         }
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
         $export['impressions'] = $this->getImpressions();
-        if($this->fb){
+        if($this->fb && is_string($this->fb)){
           $export['fb'] = json_decode($this->fb, true);
         }
 
