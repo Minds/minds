@@ -6,4 +6,11 @@ suites:
     src_path: engine
     spec_path: ./
 
+  groups:
+    namespace: Minds\Plugin\Groups
+    psr4_prefix: Minds\Plugin\Groups
+    spec_prefix: Groups\Spec
+    src_path: ../plugins
+    spec_path: ../plugins
+
 bootstrap: Spec/bootstrap.php

@@ -13,16 +13,16 @@ class NormalizedEntity
 {
     use Traits\Entity;
 
-    private $db;
-    private $indexDB;
-    private $guid;
+    protected $db;
+    protected $indexDB;
+    protected $guid;
     private $indexes = [];
     protected $exportableDefaults = [];
 
-    public function __construct($db = null, $indexDB = null)
+    public function __construct($db = null, $indexDb = null)
     {
         $this->db = $db ?: new Data\Call('entities');
-        $this->indexDB = $indexDB ?: new Data\Call('entities_by_time');
+        $this->indexDb = $indexDb ?: Core\Di\Di::_()->get('Cassandra\Thrift\Indexes');
     }
 
     /**
@@ -95,13 +95,84 @@ class NormalizedEntity
             $this->indexDB->insert($index, [$this->getGuid() => $this->getGuid()]);
         }
     }
-    
+
+    /**
+     * Gets `guid`
+     * @return mixed
+     */
+    public function getGuid()
+    {
+        if(!$this->guid){
+            $this->guid = Core\Guid::build();
+        }
+        return (string) $this->guid;
+    }
+
+    /**
+     * Feature
+     */
+    public function feature()
+    {
+        //@todo check if the entity is allowed to be featured
+        $this->featured_id = Core\Guid::build();
+
+    		$this->indexDb->set("$this->type:featured", [ $this->featured_id => $this->getGUID() ]);
+        if($this->subtype){
+    		    $db->insert("$this->type:$this->subtype:featured", [ $this->featured_id => $this->getGUID() ]);
+        }
+
+    		$this->featured = 1;
+    		$this->save();
+
+    		return $this->featured_id;
+    }
+
+    /**
+     * Un-Feature
+     */
+    public function unFeature()
+    {
+        if($this->featured_id){
+          //supports legacy imports
+          $this->indexDb->remove("$this->type:featured", [ $this->featured_id ]);
+          $this->indexDb->remove("$this->type:$this->subtype:featured", [ $this->featured_id ]);
+          $this->featured_id = null;
+        }
+
+        $this->featured = 0;
+        $this->save();
+
+        $db = new Minds\Core\Data\Call('entities');
+        $result = $this->db->removeAttributes($this->guid, [ 'featured_id' ]);
+
+        return true;
+    }
+
+    /**
+     * Auto set/get hanlders
+     */
+    public function __call($name, array $args = [])
+    {
+        if(strpos($name, 'set', 0) === 0){
+            $attribute = str_replace('set', '', $name);
+            $attribute = lcfirst($attribute);
+            $this->$attribute = $args[0];
+            return $this;
+        }
+        if(strpos($name, 'get', 0) === 0){
+            $attribute = str_replace('get', '', $name);
+            $attribute = lcfirst($attribute);
+            return $this->$attribute;
+        }
+        return $this;
+    }
+
     /**
      * Export the entity
      * @param array $keys
      * @return array
      */
-    public function export($keys = [])
+    public function export(array $keys = [])
     {
         $keys = array_merge($this->exportableDefaults, $keys);
         $export = [];

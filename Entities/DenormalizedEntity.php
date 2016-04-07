@@ -108,7 +108,7 @@ class DenormalizedEntity
      * @param array $keys
      * @return array
      */
-    public function export($keys = [])
+    public function export(array $keys = [])
     {
         $keys = array_merge($this->exportableDefaults, $keys);
         $export = [];

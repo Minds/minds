@@ -81,6 +81,9 @@ class plugins extends base
         $list = [];
         foreach ($plugins as $key) {
             $row = $rows[$key];
+            if(!$row && $key === "Groups"){
+                $row = $rows["groups"];
+           }
 
             //do a quick check to see if the plugin is active, if it's not, then we can skip
             if ($status == 'active' && (!isset($row['active']) || $row['active'] != 1)) {

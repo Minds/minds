@@ -120,7 +120,7 @@ class Page extends DenormalizedEntity
         return $this;
     }
 
-    public function export() {
+    public function export(array $key = []) {
       $export = parent::export();
 
       $export['body'] = (string) $export['body'];

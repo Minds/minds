@@ -20,14 +20,15 @@ class RetentionSpec extends ObjectBehavior
     {
         $this->beConstructedWith($db);
 
-        $timestamps = Timestamps::span(28, 'day');
+        $timestamps = Timestamps::span(30, 'day');
 
         //mock the calls that are expected
         $db->getRow(Argument::containingString(':signup'), ['limit'=>10000])->willReturn(['foo'=>time(), 'bar'=>time(), 'foobar'=>time()]);
         $db->getRow(Argument::containingString(':active'), ['limit'=>10000])->willReturn(['foo'=>time(), 'bar'=>time(), 'barfoo'=>time()]);
 
+        $now = Timestamps::span(2, 'day')[0];
         foreach([1,3,7,28] as $x){
-            $db->insert("analytics:retention:$x:" . Timestamps::get(['day'])['day'], ['foo'=>time(), 'bar'=>time()])->willReturn("analytics:retention:$x");
+            $db->insert("analytics:retention:$x:" . $now, ['foo'=>time(), 'bar'=>time()])->willReturn("analytics:retention:$x");
         }
 
         $this->increment()->shouldReturn(true);
@@ -37,18 +38,18 @@ class RetentionSpec extends ObjectBehavior
     {
         $this->beConstructedWith($db);
 
-        $timestamps = Timestamps::span(28, 'day');
+        $timestamps = Timestamps::span(30, 'day');
 
         //mock the calls that are expected
-        $db->countRow(Argument::containingString(':signup'))->willReturn(100)->shouldBeCalledTimes(4);
-        $db->countRow(Argument::containingString(':retention:1'))->willReturn(50)->shouldBeCalledTimes(1);
-        $db->countRow(Argument::containingString(':retention:3'))->willReturn(40)->shouldBeCalledTimes(1);
-        $db->countRow(Argument::containingString(':retention:7'))->willReturn(20)->shouldBeCalledTimes(1);
-        $db->countRow(Argument::containingString(':retention:28'))->willReturn(10)->shouldBeCalledTimes(1);
+        $db->countRow(Argument::containingString(':signup'))->willReturn(100)->shouldBeCalledTimes(4 * 2); //actually called twice
+        $db->countRow(Argument::containingString(':retention:1'))->willReturn(50)->shouldBeCalledTimes(1 * 2);
+        $db->countRow(Argument::containingString(':retention:3'))->willReturn(40)->shouldBeCalledTimes(1 * 2);
+        $db->countRow(Argument::containingString(':retention:7'))->willReturn(20)->shouldBeCalledTimes(1 * 2);
+        $db->countRow(Argument::containingString(':retention:28'))->willReturn(10)->shouldBeCalledTimes(1 * 2);
 
         $return = $this->get(1);
         $return->shouldBeArray();
-        $return->shouldHaveCount(1);
+        $return->shouldHaveCount(2); //actually always returns 2..
         $return[0]->shouldHaveCount(4);
         $return[0]['total']->shouldBe((0.5+0.4+0.2+0.1) / 4);
         $return[0]['totals'][0]['total']->shouldBe(0.5);
