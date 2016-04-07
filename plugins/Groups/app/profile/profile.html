@@ -95,7 +95,7 @@
       <!-- Tags -->
       <div class="m-group-info-tags mdl-color-text--blue-grey-300">
 
-        <div [hidden]="editing || !group.tags">
+        <div [hidden]="editing || !group.tags" *ngIf="group.tags">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
           <span *ngFor="#tag of group.tags">{{tag}}</span>
         </div>
