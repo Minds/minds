@@ -160,21 +160,6 @@ class Events
         });
 
         /**
-         * Export extender for activity notifications
-         */
-        Dispatcher::register('export:extender', 'activity', function($event) {
-            $params = $event->getParameters();
-            $export = $event->response() ?: [];
-            $user = Session::getLoggedInUser();
-
-            $export['is:muted'] = $user &&
-                $params['entity']->guid &&
-                (new EntityNotification($params['entity']->guid))->isMuted($user);
-
-            $event->setResponse($export);
-        });
-
-        /**
          * Cron events
          */
         Dispatcher::register('cron', 'minute', [ __CLASS__, 'cronHandler' ]);
