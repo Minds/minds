@@ -13,10 +13,7 @@ use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User;
 
-use Minds\Plugin\Groups\Core\Membership as CoreMembership;
-use Minds\Plugin\Groups\Core\Invitations as CoreInvitations;
-use Minds\Plugin\Groups\Entities\Group as GroupEntity;
-
+use Minds\Plugin\Groups;
 use Minds\Plugin\Groups\Exceptions\GroupOperationException;
 
 class invitations implements Interfaces\Api
@@ -34,11 +31,13 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        $invitees = (new CoreInvitations($group))->getInvitations([
+        $invitees = (new Groups\Core\Invitations)
+          ->setGroup($group)
+          ->getInvitations([
             'hydrate' => true,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 12,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
-        ]);
+          ]);
 
         $response = [
             'users' => $invitees
@@ -68,13 +67,15 @@ class invitations implements Interfaces\Api
             return Factory::response([]);
         }
 
-        $invitations = (new CoreInvitations($group))->setActor($invitee);
+        $invitations = (new Groups\Core\Invitations)
+          ->setGroup($group)
+          ->setActor($invitee);
 
         if (!$invitations->isInvited($invitee)) {
             return Factory::response([]);
         }
 
-        $membership = new CoreMembership($group);
+        $membership = new Groups\Core\Membership($group);
         if ($membership->isBanned($invitee)) {
             return Factory::response([]);
         }
@@ -134,7 +135,7 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        $membership = new CoreMembership($group);
+        $membership = new Groups\Core\Membership($group);
         $banned = $membership->isBanned($invitee);
 
         if ($banned && !$group->isOwner($user)) {
@@ -144,7 +145,9 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        $invitations = (new CoreInvitations($group))->setActor($user);
+        $invitations = (new Groups\Core\Invitations)
+          ->setGroup($group)
+          ->setActor($user);
 
         try {
             $invited = $invitations->invite($invitee);
@@ -196,7 +199,9 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        $invitations = (new CoreInvitations($group))->setActor($user);
+        $invitations = (new Groups\Core\Invitations)
+          ->setGroup($group)
+          ->setActor($user);
 
         try {
             $uninvited = $invitations->uninvite($invitee);
@@ -238,7 +243,9 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        $invitations = new CoreInvitations(new GroupEntity());
+        $invitations = (new Groups\Core\Invitations)
+          ->setGroup(new GroupEntity());
+
         return Factory::response([
             'done' => $invitations->userHasSubscriber($user, $invitee)
         ]);

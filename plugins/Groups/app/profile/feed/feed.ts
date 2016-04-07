@@ -4,6 +4,7 @@ import { RouterLink, RouteParams } from "angular2/router";
 
 import { GroupsService } from '../../groups-service';
 
+import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
@@ -45,7 +46,7 @@ export class GroupsProfileFeed {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public service: GroupsService){
+	constructor(public client : Client, public service: GroupsService){
 	}
 
   set _group(value : any){
@@ -62,14 +63,30 @@ export class GroupsProfileFeed {
    * Load a groups newsfeed
    */
   load(refresh : boolean = false){
-    this.service.infiniteList(this, {
-      url: `api/v1/newsfeed/container/${this.guid}`,
-      refresh,
-      collection: 'activity',
-      query: {
-        limit: 12
-      }
-    });
+    if(this.inProgress)
+      return false;
+
+    if(refresh)
+      this.offset = "";
+
+    this.inProgress = true;
+    this.client.get('api/v1/newsfeed/container/' + this.guid, { limit: 12, offset: this.offset })
+      .then((response : any) => {
+        if(!response.activity){
+          self.moreData = false;
+          self.inProgress = false;
+          return false;
+        }
+
+        if(this.activity && !refresh){
+          for(let activity of response.activity)
+            this.activity.push(activity);
+        } else {
+             this.activity = response.activity;
+        }
+        this.offset = response['load-next'];
+        this.inProgress = false;
+      });
   }
 
 }

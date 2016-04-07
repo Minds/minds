@@ -24,20 +24,29 @@ class Invitations
 
     protected $relDB;
     protected $group;
-    protected $acl;
     protected $friendsDB;
 
     /**
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null, $acl = null, $friendsDB = null)
+    public function __construct($db = null, $acl = null, $friendsDB = null)
     {
-        $this->group = $group;
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         // TODO: [emi] Ask Mark about a 'friendsof' replacement (or create a DI entry)
         $this->friendsDB = $friendsDB ?: new \Minds\Core\Data\Call('friendsof');
         $this->setAcl($acl);
+    }
+
+    /**
+     * Set the group
+     * @param Group $group
+     * @return $this
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+        return $this;
     }
 
     /**

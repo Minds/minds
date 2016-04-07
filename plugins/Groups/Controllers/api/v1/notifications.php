@@ -11,7 +11,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 
-use Minds\Plugin\Groups\Core\Notifications as CoreNotifications;
+use Minds\Plugin\Groups;
 
 class notifications implements Interfaces\Api
 {
@@ -28,7 +28,8 @@ class notifications implements Interfaces\Api
             ]);
         }
 
-        $notifications = new CoreNotifications($group);
+        $notifications = (new Groups\Core\Notifications)
+          ->setGroup($group);
 
         return Factory::response([
             'is:muted' => $notifications->isMuted($user)
@@ -46,20 +47,22 @@ class notifications implements Interfaces\Api
             return Factory::response([]);
         }
 
-        $notifications = new CoreNotifications($group);
+        $notifications = (new Groups\Core\Notifications)
+          ->setGroup($group);
 
         try {
             switch ($pages[1]) {
-                case 'mute':
-                $notifications->mute($user);
-                return Factory::response([
-                    'is:muted' => true
-                ]);
-                case 'unmute':
-                $notifications->unmute($user);
-                return Factory::response([
-                    'is:muted' => false
-                ]);
+              case 'mute':
+                  $notifications->mute($user);
+                  return Factory::response([
+                      'is:muted' => true
+                  ]);
+                  break;
+              case 'unmute':
+                  $notifications->unmute($user);
+                  return Factory::response([
+                      'is:muted' => false
+                  ]);
             }
         } catch (GroupOperationException $e) {
             return Factory::response([

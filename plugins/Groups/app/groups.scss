@@ -5,9 +5,13 @@
     position: absolute;
     margin: -38px 130px;
   }
+  .m-groups-card-stats{
+    position: absolute;
+    margin: -48px 0 0 116px;
+    width: 168px;
+  }
   &.group-card{
-    padding-bottom:$minds-padding*2;
-    min-height:0;
+    min-height: 142px !important;
   }
 }
 minds-groups-profile{

@@ -4,6 +4,7 @@ import { RouterLink, RouteParams } from "angular2/router";
 
 import { GroupsService } from '../../groups-service';
 
+import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
 import { InfiniteScroll } from '../../../../directives/infinite-scroll';
@@ -31,7 +32,7 @@ export class GroupsProfileRequests {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public service: GroupsService){
+	constructor(public client : Client, public service: GroupsService){
 
 	}
 
@@ -42,14 +43,29 @@ export class GroupsProfileRequests {
   }
 
   load(refresh : boolean = false){
-    this.service.infiniteList(this, {
-      endpoint: `membership/${this.group.guid}/requests`,
-      refresh,
-      collection: 'users',
-      query: {
-        limit: 12
-      }
-    });
+    this.inProgress = true;
+    this.client.get('api/v1/groups/membership/' + this.group.guid + '/requests', { limit: 12, offset: this.offset })
+      .then((response : any) => {
+
+        if(!response.users || response.users.length == 0){
+          this.moreData = false;
+          this.inProgress = false;
+          return false;
+        }
+
+        if(this.users && !refresh){
+          for(let user of response.users)
+            this.users.push(user);
+        } else {
+             this.users = response.users;
+        }
+        this.offset = response['load-next'];
+        this.inProgress = false;
+
+      })
+      .catch((e)=>{
+
+      });
   }
 
   accept(user : any, index: number){

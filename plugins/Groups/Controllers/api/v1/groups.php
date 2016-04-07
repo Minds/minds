@@ -6,12 +6,11 @@
 namespace Minds\Plugin\Groups\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Entities;
 use Minds\Core\Session;
 use Minds\Interfaces;
 use Minds\Api\Factory;
-use Minds\Plugin\Groups\Core\UserGroups;
-use Minds\Plugin\Groups\Core\Featured;
 
 class groups implements Interfaces\Api
 {
@@ -26,48 +25,41 @@ class groups implements Interfaces\Api
         $groups = [];
         $user = Session::getLoggedInUser();
 
+        $indexDb = Di::_()->get('Database\Cassandra\Indexes');
+        $relDb = Di::_()->get('Database\Cassandra\Relationships');
+
         if (!isset($pages[0])) {
             $pages[0] = "featured";
         }
 
+        $opts = [
+          'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 12,
+          'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
+        ];
+
         switch ($pages[0]) {
           case "featured":
-
-            $groups = (new Featured())->getFeatured([
-                'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 12,
-                'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
-            ]);
-
-            if ($groups) {
-                $response['load-next'] =  (string) end($groups)->getFeaturedId();
-            }
-
+            $guids = $indexDb->get('group:featured', $opts);
+            end($guids); //get last in array
+            $response['load-next'] =  (string) key($guids);
             break;
           case "member":
-            $groups = (new UserGroups($user))
-            ->getGroups([
-                'limit' => 12,
-                'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
-            ]);
+            $relDb->setGuid($user->guid);
+            $guids = $relDb->get('member', $opts);
             break;
           case "all":
           default:
-            $groups = Entities::get(array(
-              'type' => 'group'
-            ));
-
+            $guids = $indexDb->get('group', $opts);
             break;
         }
 
-        $response['groups'] = Factory::exportable($groups);
-
-        if ($user && $response['groups']) {
-            for ($i = 0; $i < count($response['groups']); $i++) {
-                $response['groups'][$i]['is:member'] = $groups[$i]->isMember($user);
-                $response['groups'][$i]['is:creator'] = $groups[$i]->isCreator($user);
-                $response['groups'][$i]['is:awaiting'] = $groups[$i]->isAwaiting($user);
-            }
+        if(!$guids){
+          return;
         }
+
+        $groups = Entities::get(['guids' => $guids]);
+
+        $response['groups'] = Factory::exportable($groups);
 
         if (!isset($response['load-next']) && $groups) {
             $response['load-next'] = (string) end($groups)->getGuid();

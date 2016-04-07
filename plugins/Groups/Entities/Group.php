@@ -2,8 +2,10 @@
 /**
 * Group entity
 */
-namespace Minds\Plugin\Groups\entities;
+namespace Minds\Plugin\Groups\Entities;
 
+use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Guid;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\NormalizedEntity;
@@ -90,7 +92,26 @@ class Group extends NormalizedEntity
      */
     public function delete()
     {
-        // TODO: [emi] Ask Mark about setting NormalizedEntity $db to protected
+
+        $this->unFeature();
+
+        Di::get('Queue')
+          ->setExchange('mindsqueue')
+          ->setQueue('FeedCleanup')
+          ->send([
+              'guid' => $this->getGuid(),
+              'owner_guid' => $this->getOwnerObj()->guid,
+              'type' => $this->getType()
+          ]);
+
+        Di::get('Queue')
+          ->setExchange('mindsqueue')
+          ->setQueue('CleanupDispatcher')
+          ->send([
+              'type' => 'group',
+              'group' => $this->export()
+          ]);
+
         $db = new \Minds\Core\Data\Call('entities');
 
         return (bool) $db->removeRow($this->getGuid());
@@ -113,43 +134,7 @@ class Group extends NormalizedEntity
             return $this->getOwnerObj() ? $this->getOwnerObj()->guid : $this->owner_guid;
         }
 
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE
-        );
         return null;
-    }
-
-    /**
-     * Sets `guid`
-     * @param mixed $guid
-     * @return Multisite
-     */
-    public function setGuid($guid)
-    {
-        $this->guid = $guid;
-        return $this;
-    }
-
-    /**
-     * Gets `guid`
-     * @return mixed
-     */
-    public function getGuid()
-    {
-        return (string) $this->guid;
-    }
-
-    /**
-     * Gets `type`
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -166,36 +151,6 @@ class Group extends NormalizedEntity
         $this->ownerObj = $ownerObj;
 
         return $this;
-    }
-
-    /**
-     * Gets `ownerObj`
-     * @return Entity
-     */
-    public function getOwnerObj()
-    {
-        return $this->ownerObj;
-    }
-
-    /**
-     * Sets `name`
-     * @param mixed $name
-     * @return Group
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets `name`
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -241,48 +196,6 @@ class Group extends NormalizedEntity
     }
 
     /**
-     * Sets `membership`
-     * @param mixed $membership
-     * @return Group
-     */
-    public function setMembership($membership)
-    {
-        $this->membership = $membership;
-
-        return $this;
-    }
-
-    /**
-     * Gets `membership`
-     * @return mixed
-     */
-    public function getMembership()
-    {
-        return $this->membership;
-    }
-
-    /**
-     * Sets `banner`
-     * @param mixed $banner
-     * @return Group
-     */
-    public function setBanner($banner)
-    {
-        $this->banner = $banner;
-
-        return $this;
-    }
-
-    /**
-     * Gets `banner`
-     * @return mixed
-     */
-    public function getBanner()
-    {
-        return $this->banner;
-    }
-
-    /**
      * Sets `banner_position`
      * @param mixed $banner_position
      * @return Group
@@ -322,69 +235,6 @@ class Group extends NormalizedEntity
     public function getIconTime()
     {
         return $this->icon_time;
-    }
-
-    /**
-     * Sets `featured`
-     * @param mixed $featured
-     * @return Group
-     */
-    public function setFeatured($featured)
-    {
-        $this->featured = $featured;
-
-        return $this;
-    }
-
-    /**
-     * Gets `featured`
-     * @return mixed
-     */
-    public function getFeatured()
-    {
-        return $this->featured;
-    }
-
-    /**
-     * Sets `featured_id`
-     * @param mixed $featured_id
-     * @return Group
-     */
-    public function setFeaturedId($featured_id)
-    {
-        $this->featured_id = $featured_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets `featured_id`
-     * @return mixed
-     */
-    public function getFeaturedId()
-    {
-        return $this->featured_id;
-    }
-
-    /**
-     * Sets `tags`
-     * @param mixed $tags
-     * @return Group
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * Gets `tags`
-     * @return mixed
-     */
-    public function getTags()
-    {
-        return $this->tags;
     }
 
     /**
@@ -448,7 +298,8 @@ class Group extends NormalizedEntity
      */
     public function isMember($user = null)
     {
-        return (new Membership($this))->isMember($user);
+        return (new Membership)->setGroup($this)
+          ->isMember($user);
     }
 
     /**
@@ -458,7 +309,8 @@ class Group extends NormalizedEntity
      */
     public function isAwaiting($user = null)
     {
-        return (new Membership($this))->isAwaiting($user);
+        return (new Membership)->setGroup($this)
+          ->isAwaiting($user);
     }
 
     /**
@@ -468,7 +320,8 @@ class Group extends NormalizedEntity
      */
     public function isInvited($user = null)
     {
-        return (new Invitations($this))->isInvited($user);
+        return (new Invitations)->setGroup($this)
+          ->isInvited($user);
     }
 
     /**
@@ -488,7 +341,17 @@ class Group extends NormalizedEntity
      */
     public function isOwner($user = null)
     {
-        return (new Management($this))->isOwner($user);
+        if (!$user) {
+            return false;
+        }
+
+        if ($this->isCreator($user)) {
+            return true;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+
+        return $this->isCreator($user) || in_array($user_guid, $this->getOwnerGuids());
     }
 
     /**
@@ -498,7 +361,18 @@ class Group extends NormalizedEntity
      */
     public function isCreator($user = null)
     {
-        return (new Management($this))->isCreator($user);
+        if (!$user) {
+            return false;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+        $owner = $this->getOwnerObj();
+
+        if (!$owner) {
+            return false;
+        }
+
+        return $user_guid == $owner->guid;
     }
 
     /**
@@ -517,7 +391,9 @@ class Group extends NormalizedEntity
      */
     public function join($user = null, array $opts = [])
     {
-        return (new Membership($this))->setActor($user)->join($user, $opts);
+        return (new Membership)->setGroup($this)
+          ->setActor($user)
+          ->join($user, $opts);
     }
 
     /**
@@ -527,25 +403,22 @@ class Group extends NormalizedEntity
      */
     public function leave($user = null)
     {
-        return (new Membership($this))->setActor($user)->leave($user);
+        return (new Membership)->setGroup($this)
+          ->setActor($user)
+          ->leave($user);
     }
 
-    /**
-     * Features this group
-     * @return boolean
-     */
-    public function feature()
+    public function getMembersCount()
     {
-        return (new CoreGroup($this))->feature();
+        $relDb = Di::_()->get('Database\Cassandra\Relationships');
+        $relDb->setGuid($this->getGuid());
+        return $relDb->countInverse('member');
     }
 
-    /**
-     * Removes this group from featured index
-     * @return boolean
-     */
-    public function unfeature()
+    public function getActivityCount()
     {
-        return (new CoreGroup($this))->unfeature();
+        $indexes = Di::_()->get('Database\Cassandra\Indexes');
+        return $indexes->count("activity:container:{$this->getGuid()}");
     }
 
     /**
@@ -559,9 +432,15 @@ class Group extends NormalizedEntity
 
         // Compatibility keys
         $export['owner_guid'] = $this->getOwnerObj()->guid;
-        $export['members:count'] = 0;
+        $export['activity:count'] = $this->getActivityCount();
+        $export['members:count'] = $this->getMembersCount();
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
+
+        $export['is:owner'] = $this->isOwner(Core\Session::getLoggedInUser());
+        $export['is:member'] = $this->isMember(Core\Session::getLoggedInUser());
+        $export['is:creator'] = $this->isCreator(Core\Session::getLoggedInUser());
+        $export['is:awaiting'] = $this->isAwaiting(Core\Session::getLoggedInUser());
 
         return $export;
     }

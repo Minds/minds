@@ -12,10 +12,7 @@ use Minds\Api\Factory;
 use Minds\Entities\User;
 use Minds\Entities\File as FileEntity;
 use Minds\Entities\Factory as EntitiesFactory;
-use Minds\Plugin\Groups\Entities\Group as GroupEntity;
-use Minds\Plugin\Groups\Core\Membership;
-use Minds\Plugin\Groups\Core\Group as CoreGroup;
-use Minds\Plugin\Groups\Core\Invitations;
+use Minds\Plugin\Groups;
 
 use Minds\Plugin\Groups\Exceptions\GroupOperationException;
 
@@ -32,15 +29,10 @@ class group implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $user = Session::getLoggedInUser();
 
-        try {
-            return Factory::response([
-                'group' => (new CoreGroup($group))->setActor($user)->export()
-            ]);
-        } catch (GroupOperationException $e) {
-            return Factory::response([
-                'error' => $e->getMessage()
-            ]);
-        }
+        $response = [];
+        $response['group'] = $group->export();
+
+        return Factory::response($response);
     }
 
     public function post($pages)
@@ -60,7 +52,7 @@ class group implements Interfaces\Api
             }
         } else {
             $creation = true;
-            $group = new GroupEntity();
+            $group = new Groups\Entities\Group();
         }
 
         if (isset($pages[1]) && $group->getGuid()) {
@@ -111,7 +103,10 @@ class group implements Interfaces\Api
                 $group->setAccessId(ACCESS_PUBLIC);
 
                 if (!$creation) {
-                    (new Membership($group))->setActor($user)->acceptAllRequests();
+                    (new Membership)
+                      ->setGroup($group)
+                      ->setActor($user)
+                      ->acceptAllRequests();
                 }
             } elseif ($_POST['membership'] == 0) {
                 $group->setAccessId(ACCESS_PRIVATE);
@@ -136,9 +131,8 @@ class group implements Interfaces\Api
         }
 
         if ($creation) {
-            $group
-            ->setAccessId(2)
-            ->setOwnerObj($user);
+            $group->setAccessId(2)
+              ->setOwnerObj($user);
         }
 
         $group->save();
@@ -159,7 +153,7 @@ class group implements Interfaces\Api
         $response['guid'] = $group->getGuid();
 
         if ($creation && isset($_POST['invitees']) && $_POST['invitees']) {
-            $invitations = (new Invitations($group))->setActor($user);
+            $invitations = (new Groups\Core\Invitations)->setGroup($group)->setActor($user);
             $invitees = explode(',', $_POST['invitees']);
 
             foreach ($invitees as $invitee) {
@@ -189,11 +183,9 @@ class group implements Interfaces\Api
             return Factory::response([]);
         }
 
-        $core_group = (new CoreGroup($group))->setActor($user);
-
         try {
             return Factory::response([
-                'done' => $core_group->delete()
+                'done' => $group->delete()
             ]);
         } catch (GroupOperationException $e) {
             return Factory::response([
@@ -233,7 +225,7 @@ class group implements Interfaces\Api
      * @param  GroupEntity $group
      * @return GroupEntity
      */
-    protected function uploadBanner(GroupEntity $group, $banner_position)
+    protected function uploadBanner($group, $banner_position)
     {
         $group_owner = EntitiesFactory::build($group->getOwnerObj());
 

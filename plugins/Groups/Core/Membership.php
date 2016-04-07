@@ -23,18 +23,27 @@ class Membership
     protected $group;
     protected $relDB;
     protected $notifications;
-    protected $acl;
 
     /**
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $db = null, $notifications = null, $acl = null)
+    public function __construct($db = null, $notifications = null, $acl = null)
     {
-        $this->group = $group ?: new GroupEntity();
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
-        $this->notifications = $notifications ?: new Notifications($this->group);
+        $this->notifications = $notifications ?: new Notifications;
         $this->setAcl($acl);
+    }
+
+    /**
+     * Set the group
+     * @param Group $group
+     * @return $this
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+        return $this;
     }
 
     /**
@@ -57,6 +66,10 @@ class Membership
             'offset' => $opts['offset'],
             'inverse' => true
         ]);
+
+        if($opts['offset']){
+            array_shift($guids);
+        }
 
         if (!$guids) {
             return [];

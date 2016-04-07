@@ -4,6 +4,7 @@ import { RouterLink, Router, RouteParams } from "angular2/router";
 
 import { GroupsService } from './groups-service';
 
+import { Client } from '../../services/api';
 import { MindsTitle } from '../../services/ux/title';
 import { SessionFactory } from '../../services/session';
 import { Material } from '../../directives/material';
@@ -11,6 +12,7 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
 import { GroupsCreator } from './create/create';
 import { GroupsJoinButton } from './groups-join-button';
+import { GroupsCard } from './card/card';
 
 @Component({
   selector: 'minds-groups',
@@ -19,7 +21,7 @@ import { GroupsJoinButton } from './groups-join-button';
 })
 @View({
   templateUrl: 'src/plugins/Groups/groups.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, GroupsJoinButton ]
+  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, GroupsJoinButton, GroupsCard ]
 })
 
 export class Groups {
@@ -32,7 +34,7 @@ export class Groups {
   session = SessionFactory.build();
   _filter : string = "featured";
 
-  constructor(public service: GroupsService, public router: Router, public params: RouteParams, public title: MindsTitle){
+  constructor(public client : Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       this._filter = params.params['filter'];
       this.minds = window.Minds;
       this.load();
@@ -41,15 +43,34 @@ export class Groups {
   }
 
   load(refresh: boolean = false) {
-    this.service.infiniteList(this, {
-      endpoint: this._filter,
-      refresh,
-      collection: 'groups',
-      query: {
-        limit: 12
-      },
-      shift: true
-    });
+    if(this.inProgress)
+      return;
+    var self = this;
+    this.inProgress = true;
+    this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
+      .then((response : MindsGroupListResponse) => {
+
+        if(!response.groups || response.groups.length == 0){
+          this.moreData = false;
+          this.inProgress = false;
+          return false;
+        }
+
+        if(refresh){
+          this.groups = response.groups;
+        } else {
+          if(this.offset)
+            response.groups.shift();
+          for(let group of response.groups)
+            this.groups.push(group);
+        }
+
+        this.offset = response['load-next'];
+        this.inProgress = false;
+      })
+      .catch((e)=>{
+        this.inProgress = false;
+      });
   }
 }
 

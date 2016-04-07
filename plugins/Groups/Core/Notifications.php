@@ -28,11 +28,21 @@ class Notifications
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct(GroupEntity $group, $relDb = null, $indexDb = null)
+    public function __construct($relDb = null, $indexDb = null)
     {
-        $this->group = $group;
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
+    }
+
+    /**
+     * Set the group
+     * @param Group $group
+     * @return $this
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+        return $this;
     }
 
     /**
@@ -136,7 +146,7 @@ class Notifications
     {
         $opts = array_merge([
             'exclude' => [],
-            'offset' => "", 
+            'offset' => "",
             'limit' => 12
         ], $opts);
 

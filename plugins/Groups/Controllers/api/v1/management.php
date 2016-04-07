@@ -13,8 +13,7 @@ use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User;
 
-use Minds\Plugin\Groups\Core\Management as CoreManagement;
-
+use Minds\Plugin\Groups;
 use Minds\Plugin\Groups\Exceptions\GroupOperationException;
 
 class management implements Interfaces\Api
@@ -60,7 +59,8 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = (new CoreManagement($group))->setActor($actor);
+        $management = (new Groups\Core\Management($group))
+          ->setActor($actor);
 
         try {
             $granted = $management->grant($member);
@@ -107,7 +107,8 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = (new CoreManagement($group))->setActor($actor);
+        $management = (new Groups\Core\Management($group))
+          ->setActor($actor);
 
         try {
             $revoked = $management->revoke($member);

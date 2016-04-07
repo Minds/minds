@@ -6,10 +6,7 @@ namespace Minds\Plugin\Groups\Core;
 
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Factory as EntitiesFactory;
-use Minds\Plugin\Groups\Entities\Group as GroupEntity;
-use Minds\Plugin\Groups\Core\Membership;
-use Minds\Plugin\Groups\Core\Management;
-use Minds\Plugin\Groups\Core\Notifications;
+use Minds\Plugin\Groups;
 
 class Events
 {
@@ -20,7 +17,7 @@ class Events
     {
         \elgg_register_plugin_hook_handler('entities_class_loader', 'all', function ($hook, $type, $return, $row) {
             if ($row->type == 'group') {
-                $entity = new GroupEntity();
+                $entity = new Groups\Entities\Group();
                 $entity->loadFromArray((array) $row);
 
                 return $entity;
@@ -30,15 +27,14 @@ class Events
         Dispatcher::register('acl:read', 'activity', function ($e) {
             $params = $e->getParameters();
             $entity = $params['entity'];
-            $access_entity = EntitiesFactory::build($entity->access_id);
-
-            // TODO: [emi] Find a better way to check
-            if (!is_object($access_entity) || !method_exists($access_entity, 'getType') || $access_entity->getType() != 'group') {
-                return;
-            }
-
+            $access_id = $entity->access_id;
             $user = $params['user'];
-            $membership = new Membership($access_entity);
+
+            //fake group entity
+            $group = new Groups\Entities\Group();
+            $group->setGuid($access_id); //creates a group without loading the db
+
+            $membership = (new Membership)->setGroup($group);
 
             $e->setResponse($membership->isMember($user->guid));
         });
@@ -48,8 +44,7 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
-            $membership = new Membership($group);
-            $e->setResponse($membership->isMember($user->guid));
+            $e->setResponse($group->isMember($user->guid));
         });
 
         Dispatcher::register('acl:write', 'group', function($e) {
@@ -57,23 +52,20 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
-            $management = new Management($group);
-            $membership = new Membership($group);
-            $e->setResponse($management->isOwner($user->guid) && $membership->isMember($user->guid));
+            $e->setResponse($group->isOwner($user->guid) || $group->isMember($user->guid));
         });
 
         Dispatcher::register('activity:container', 'group', function ($e) {
             $params = $e->getParameters();
-            $group = EntitiesFactory::build($params['group']);
 
-            $notifications = new Notifications($params['container']);
+            $notifications = (new Notifications)->setGroup($params['container']);
             $notifications->queue($params['activity']);
         });
 
         Dispatcher::register('notification:dispatch', 'group', function ($e) {
             $params = $e->getParameters();
-            $group = EntitiesFactory::build($params['entity']);
-            $notifications = new Notifications($group);
+
+            $notifications = (new Notifications)->setGroup($group);
             $e->setResponse($notifications->send($params['params']));
         });
 
