@@ -1264,8 +1264,13 @@ abstract class ElggEntity extends ElggData implements
 			$indexes = array();
 		}
 
-		array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid");
-		array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid");
+    if(!$this->hidden){
+		    array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid");
+		    array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid");
+    } else {
+        array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid:hidden");
+        array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid:hidden");
+    }
 
 		array_push($indexes, "$this->type:container:$this->container_guid");
 		array_push($indexes, "$this->type:$this->subtype:container:$this->container_guid");
