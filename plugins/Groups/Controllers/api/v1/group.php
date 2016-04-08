@@ -103,7 +103,7 @@ class group implements Interfaces\Api
                 $group->setAccessId(ACCESS_PUBLIC);
 
                 if (!$creation) {
-                    (new Membership)
+                    (new Groups\Core\Membership)
                       ->setGroup($group)
                       ->setActor($user)
                       ->acceptAllRequests();
