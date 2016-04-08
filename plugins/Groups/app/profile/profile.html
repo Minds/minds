@@ -102,7 +102,7 @@
 
         <div *ngIf="editing && group['is:owner']">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
-          <minds-form-tags-input [tags]="group.tags" (change)="group.tags = $event"></minds-form-tags-input>
+          <minds-form-tags-input [(tags)]="group.tags"></minds-form-tags-input>
         </div>
 
       </div>
