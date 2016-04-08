@@ -85,7 +85,7 @@ trait Actorable
      */
     public function canActorActUponUser($user, $entity, $self_allowed = true)
     {
-        return ($self_allowed && $this->isActorUser($user)) || ($this->canActorWrite($entity) && !$this->acl->write($entity, $this->toUser($user)));
+        return ($self_allowed && $this->isActorUser($user)) || $this->canActorWrite($entity);
     }
 
     /**

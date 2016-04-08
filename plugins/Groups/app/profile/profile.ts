@@ -12,6 +12,7 @@ import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { MindsBanner } from '../../../components/banner';
 import { MindsAvatar } from '../../../components/avatar';
 import { TagsInput } from '../../../components/forms/tags-input/tags';
+import { TagsPipe } from '../../../pipes/tags';
 
 import { GroupsJoinButton } from '../groups-join-button';
 import { GroupsSettingsButton } from './groups-settings-button';
@@ -24,10 +25,8 @@ import { ChannelModules } from '../../../controllers/channels/modules/modules';
 
 @Component({
   selector: 'minds-groups-profile',
-
-  bindings: [ MindsTitle, GroupsService ]
-})
-@View({
+  pipes: [ TagsPipe ],
+  bindings: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/profile/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, BUTTON_COMPONENTS, RouterLink, CARDS, GroupsJoinButton,
     GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar, GroupsSettingsButton, ChannelModules, TagsInput ]

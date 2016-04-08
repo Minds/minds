@@ -22,16 +22,18 @@ class Membership
 
     protected $group;
     protected $relDB;
+    protected $cache;
     protected $notifications;
 
     /**
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct($db = null, $notifications = null, $acl = null)
+    public function __construct($db = null, $notifications = null, $acl = null, $cache = null)
     {
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->notifications = $notifications ?: new Notifications;
+        $this->cache = $cache ?: Di::_()->get('Cache');
         $this->setAcl($acl);
     }
 
@@ -43,6 +45,7 @@ class Membership
     public function setGroup($group)
     {
         $this->group = $group;
+        $this->notifications->setGroup($group);
         return $this;
     }
 
@@ -88,11 +91,16 @@ class Membership
      * Count the group members
      * @return int
      */
-    public function getMembersCount()
+    public function getMembersCount($cached = true)
     {
+        if($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")){
+            return $count;
+        }
         $this->relDB->setGuid($this->group->getGuid());
 
-        return $this->relDB->countInverse('member');
+        $count = $this->relDB->countInverse('member');
+        $this->cache->set("group:{$this->group->getGuid()}:members:count", $count);
+        return $count;
     }
 
     /**
@@ -133,11 +141,16 @@ class Membership
      * Count the group's membership requests
      * @return int
      */
-    public function getRequestsCount()
+    public function getRequestsCount($cached = true)
     {
+        if($count = $this->cache->get("group:{$this->group->getGuid()}:requests:count")){
+            return $count;
+        }
         $this->relDB->setGuid($this->group->getGuid());
 
-        return $this->relDB->countInverse('membership_request');
+        $count = $this->relDB->countInverse('membership_request');
+        $this->cache->set("group:{$this->group->getGuid()}:requests:count", $count);
+        return $count;
     }
 
     public function acceptAllRequests()
@@ -162,6 +175,9 @@ class Membership
                 $this->relDB->setGuid($guid);
                 $this->relDB->create('member', $this->group->getGuid());
                 $this->relDB->remove('membership_request', $this->group->getGuid());
+
+                $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
+                $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
 
                 $count++;
             }
@@ -223,6 +239,9 @@ class Membership
             $done = $this->relDB->create('membership_request', $this->group->getGuid());
         }
 
+        $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
+        $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
+
         // TODO: [emi] Send a notification to target user if was awaiting
 
         if ($done) {
@@ -253,6 +272,9 @@ class Membership
         $this->notifications->unmute($user_guid);
 
         $done = $this->relDB->remove('member', $this->group->getGuid());
+
+        $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
+        $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
 
         if ($done) {
             return true;
@@ -338,6 +360,7 @@ class Membership
         $this->relDB->setGuid($user_guid);
 
         $cancelled = $this->relDB->remove('membership_request', $this->group->getGuid());
+        $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
 
         if ($cancelled) {
             return true;

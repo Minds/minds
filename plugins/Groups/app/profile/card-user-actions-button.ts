@@ -1,7 +1,9 @@
 import { Component, EventEmitter } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 
+import { Modal } from '../../../components/modal/modal';
 import { GroupsService } from '../groups-service';
+
 
 @Component({
   selector: 'minds-groups-card-user-actions-button',
@@ -20,26 +22,22 @@ import { GroupsService } from '../groups-service';
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
-  <minds-groups-modal-dialog [hidden]="!kickPrompt">
-    <div class="minds-groups-modal-dialog-wrapper">
-      <div class="mdl-card mdl-shadow--2dp">
-        <div class="mdl-card__supporting-text">
-          <p>Are you sure you want to remove {{ user.username }} from {{ group.name }}?</p>
-          <p><input type="checkbox" #ban> Ban permanently</p>
-        </div>
-        <div class="minds-modal-dialog-actions">
-          <button (click)="kick(ban.checked)" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-            Confirm
-          </button>
-          <button (click)="cancelRemove()" class="mdl-button mdl-js-button mdl-button--colored">
-            Cancel
-          </button>
-        </div>
+  <m-modal [open]="kickPrompt">
+      <div class="mdl-card__supporting-text">
+        <p>Are you sure you want to remove {{ user.username }} from {{ group.name }}?</p>
+        <p><input type="checkbox" #ban> Ban permanently</p>
       </div>
-    </div>
-  </minds-groups-modal-dialog>
+      <div class="minds-modal-dialog-actions">
+        <button (click)="kick(ban.checked)" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+          Confirm
+        </button>
+        <button (click)="cancelRemove()" class="mdl-button mdl-js-button mdl-button--colored">
+          Cancel
+        </button>
+      </div>
+  </m-modal>
   `,
-  directives: [ CORE_DIRECTIVES ],
+  directives: [ CORE_DIRECTIVES, Modal ],
   bindings: [ GroupsService ]
 })
 

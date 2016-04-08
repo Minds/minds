@@ -410,15 +410,21 @@ class Group extends NormalizedEntity
 
     public function getMembersCount()
     {
-        $relDb = Di::_()->get('Database\Cassandra\Relationships');
-        $relDb->setGuid($this->getGuid());
-        return $relDb->countInverse('member');
+        return (new Membership)->setGroup($this)->getMembersCount();
     }
 
     public function getActivityCount()
     {
         $indexes = Di::_()->get('Database\Cassandra\Indexes');
         return $indexes->count("activity:container:{$this->getGuid()}");
+    }
+
+    public function getRequestsCount()
+    {
+        if($this->isPublic()){
+            return 0;
+        }
+        return (new Membership)->setGroup($this)->getRequestsCount();
     }
 
     /**
@@ -434,6 +440,7 @@ class Group extends NormalizedEntity
         $export['owner_guid'] = $this->getOwnerObj()->guid;
         $export['activity:count'] = $this->getActivityCount();
         $export['members:count'] = $this->getMembersCount();
+        $export['requests:count'] = $this->getRequestsCount();
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
 

@@ -73,8 +73,8 @@ export class GroupsProfileFeed {
     this.client.get('api/v1/newsfeed/container/' + this.guid, { limit: 12, offset: this.offset })
       .then((response : any) => {
         if(!response.activity){
-          self.moreData = false;
-          self.inProgress = false;
+          this.moreData = false;
+          this.inProgress = false;
           return false;
         }
 

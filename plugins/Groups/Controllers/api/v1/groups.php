@@ -54,7 +54,7 @@ class groups implements Interfaces\Api
         }
 
         if(!$guids){
-          return;
+          return Factory::response([]);
         }
 
         $groups = Entities::get(['guids' => $guids]);

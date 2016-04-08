@@ -83,7 +83,7 @@
       <div class="m-group-info-brief-description mdl-color-text--blue-grey-600">
 
         <div [hidden]="editing || !group.briefdescription">
-          <span>{{group.briefdescription}}</span>
+          <span [innerHtml]="group.briefdescription | tags"></span>
         </div>
 
         <div *ngIf="editing && group['is:owner']">

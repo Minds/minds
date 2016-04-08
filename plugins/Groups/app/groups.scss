@@ -195,7 +195,9 @@ minds-groups-profile-members-invite {
     margin-bottom:$minds-margin;
   }
 
-  minds-channel-modules {
+  minds-channel-modules.mdl-card {
+    padding:0;
+    min-height:0;
     margin-top: $minds-margin;
   }
 
@@ -216,8 +218,12 @@ minds-groups-profile-members-invite {
     > div {
       > span {
         vertical-align: middle;
-        font-size: 14px;
-        padding: 8px;
+        font-size: 11px;
+        padding: 4px 7px;
+        margin: 2px 2px;
+        border: 1px solid rgb(238, 238, 238);
+        border-radius: 3px;
+        display: inline-block;
       }
     }
 
@@ -489,41 +495,41 @@ minds-groups-card-user-actions-button {
     width: 180px;
     z-index: 10000;
   }
-}
 
-minds-groups-modal-dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99999;
+  m-modal{
+    z-index: 99999;
 
-  > .m-groups-modal-dialog-wrapper {
-    max-width: 480px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    margin: 0 auto;
-    transform-style: preserve-3d;
-    text-transform: none;
-    text-align: left;
 
-    > .mdl-card {
-      position: absolute;
-      width: 100%;
-      top: 50%;
-      transform: translateY(-50%);
+    .m-modal-container {
+      max-width: 480px;
+      min-width:auto;
+      height: auto;
+      min-height:0;
+      margin: 0 auto;
+      text-transform: none;
+      text-align: left;
+
+
+      .mdl-card{
+        min-height:0;
+      }
     }
-  }
 
-  .minds-modal-dialog-actions {
-    padding: 0 $minds-padding $minds-padding;
-    box-sizing: border-box;
-    text-align: right;
+    .minds-modal-dialog-actions {
+      padding: 0 $minds-padding $minds-padding;
+      box-sizing: border-box;
+      text-align: right;
 
-    > button {
-      line-height: 1em;
+      > button {
+        line-height: 1em;
+      }
     }
+
   }
 }
 

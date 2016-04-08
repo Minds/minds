@@ -32,6 +32,11 @@ class group implements Interfaces\Api
         $response = [];
         $response['group'] = $group->export();
 
+        $membership = (new Groups\Core\Membership)
+          ->setGroup($group);
+
+        $response['group']['members'] = Factory::exportable($membership->getMembers(['limit' => 10]));
+
         return Factory::response($response);
     }
 

@@ -38,7 +38,7 @@ export class GroupsCreator {
     tags: '',
     invitees: ''
   };
-  invitees : string[] = [];
+  invitees : Array<any> = [];
   editing : boolean = true;
   editDone : boolean = false;
   inProgress : boolean = false;
@@ -61,7 +61,7 @@ export class GroupsCreator {
   }
 
 
-  invite(user){
+  invite(user : any){
     for(let i of this.invitees){
       if(i.guid == user.guid)
         return;

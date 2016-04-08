@@ -85,10 +85,10 @@ class membership implements Interfaces\Api
 
                 $response['members'] = Factory::exportable($members);
 
-                //for ($i = 0; $i < count($response['members']); $i++) {
-                //    $response['members'][$i]['is:member'] = true;
-                //    $response['members'][$i]['is:awaiting'] = false;
-                //}
+                for ($i = 0; $i < count($response['members']); $i++) {
+                    $response['members'][$i]['is:member'] = true;
+                    $response['members'][$i]['is:awaiting'] = false;
+                }
 
                 $response['load-next'] = end($members)->getGuid();
                 break;

@@ -113,11 +113,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 if ($image instanceof \Minds\Interfaces\Flaggable) {
                   $image->setFlag('mature', $mature);
                 }
- 
+
                 $image->owner_guid = $owner_guid;
 
                 if ($container_guid) {
                     $image->container_guid = $container_guid;
+                    $image->hidden = true;
                 }
 
                 $guid = $image->save();
@@ -160,6 +161,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
                       if ($container_guid) {
                           $video->container_guid = $container_guid;
+                          $video->hidden = true;
                       }
 
                       $guid = $video->save();

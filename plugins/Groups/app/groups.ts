@@ -30,6 +30,7 @@ export class Groups {
 
   moreData : boolean = true;
   inProgress : boolean = false;
+  offset : string = "";
   groups : Array<any> = [];
   session = SessionFactory.build();
   _filter : string = "featured";
