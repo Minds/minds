@@ -16,13 +16,13 @@ class DataProvider extends Provider
          * Cache bindings
          */
         $this->di->bind('Cache', function($di){
-            return $di->get('Cache\Redis');
+            return cache\factory::build('Redis');
         }, ['useFactory'=>true]);
         $this->di->bind('Cache\Redis', function($di){
-            return new Cache\Redis();
+            return new cache\Redis();
         }, ['useFactory'=>true]);
         $this->di->bind('Cache\Apcu', function($di){
-            return new Cache\Apcu();
+            return new cache\apcu();
         }, ['useFactory'=>true]);
         /**
          * Database bindings
@@ -35,7 +35,7 @@ class DataProvider extends Provider
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function($di){
             return new Cassandra\Thrift\Entities(new Call('entities'));
-        }, ['useFactory'=>false]); 
+        }, ['useFactory'=>false]);
         $this->di->bind('Database\Cassandra\Indexes', function($di){
             return new Cassandra\Thrift\Indexes(new Call('entities_by_time'));
         }, ['useFactory'=>false]);
