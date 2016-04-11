@@ -30,8 +30,12 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
         $reports = (new Core\Reports())->getQueue($limit, $offset, $state);
 
         if ($reports) {
+            for ($i = 0; $i < count($reports); $i++) {
+                $reports[$i]['guid'] = (string) $reports[$i]['guid'];
+            }
+
             $response['reports'] = $reports;
-            $response['load-next'] = end($reports)['_id'];
+            $response['load-next'] = end($reports)['guid'];
         }
 
         return Factory::response($response);
@@ -48,21 +52,18 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
             return Factory::response($response);
         }
 
-        $id = $pages[0];
+        $guid = $pages[0];
         $action = $pages[1];
 
         switch ($action) {
             case 'archive':
-                $response['done'] = (new Core\Reports())->archive($id);
-                break;
-            case 'ignore':
-                $response['done'] = (new Core\Reports())->ignore($id);
+                $response['done'] = (new Core\Reports())->archive($guid);
                 break;
             case 'explicit':
-                $response['done'] = (new Core\Reports())->explicit($id);
+                $response['done'] = (new Core\Reports())->explicit($guid);
                 break;
             case 'delete':
-                $response['done'] = (new Core\Reports())->delete($id);
+                $response['done'] = (new Core\Reports())->delete($guid);
                 break;
         }
 
