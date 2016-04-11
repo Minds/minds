@@ -134,7 +134,7 @@ class Common implements Interfaces\PreparedInterface
         if ($user->getSubscriptionsCount() > 500) {
             //users with huge graphs take longer to discover friends of friends, so for now we just show who they aren't subscribed to for speed.
             //we can perhaps do background tasks for this in the future
-            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User {hasAvatar:true}) 
+            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User)-[:HAS]->(p:Property { avatar:true }) 
                             WHERE fof.last_active > {active}
                             AND NOT (user)-[:ACTED]->(fof)
                             AND NOT (fof.guid = user.guid)
@@ -143,7 +143,7 @@ class Common implements Interfaces\PreparedInterface
                             LIMIT {limit}";
         } else {
             //error_log("loading default matches for $user->guid");
-            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User {hasAvatar:true})
+            $this->template = "MATCH (user:User {guid: {guid}})-[:SUBSCRIBED*2..2]->(fof:User)-[:HAS]->(p:Property { avatar:true })
                              WHERE fof.last_active > {active}
                              AND NOT (user)-[:ACTED]->(fof)
                              AND NOT (fof.guid = user.guid)
@@ -416,11 +416,10 @@ class Common implements Interfaces\PreparedInterface
         $timestamps = Timestamps::span(30, 'day');
 
         $this->template = "start n = node:geom({filter}) 
-            MATCH (u:User {guid:{guid}}) 
+            MATCH (u:User {guid:{guid}}), (n)-[:HAS]->(p:Property { avatar:true }) 
             WHERE n.last_active > {active}
             AND NOT u-[:ACTED]->n 
             AND NOT u.guid = n.guid 
-            AND (n.hasAvatar = true) 
             RETURN n as fof 
             SKIP {skip} 
             LIMIT {limit}";
