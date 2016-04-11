@@ -183,59 +183,59 @@ export class GroupsService {
 
   revokeOwnership(group: any, user: string) {
     return this.clientService.delete(`${this.base}management/${group.guid}/${user}`)
-    .then((response: any) => {
-      return !response.done;
-    })
-    .catch(e => {
-      return true;
-    });
+      .then((response: any) => {
+        return !response.done;
+      })
+      .catch(e => {
+        return true;
+      });
   }
 
   // Invitations
 
   canInvite(user: string) {
     return this.clientService.post(`${this.base}invitations/check`, { user })
-    .then((response: any) => {
-      if (response.done) {
-        return user;
-      }
+      .then((response: any) => {
+        if (response.done) {
+          return user;
+        }
 
-      throw 'E_NOT_DONE';
-    });
+        throw 'E_NOT_DONE';
+      });
   }
 
-  invite(group: any, invitee: string) {
-    return this.clientService.put(`${this.base}invitations/${group.guid}`, { invitee })
-    .then((response: any) => {
-      if (response.done) {
-        return true;
-      }
+  invite(group: any, invitee : any) {
+    return this.clientService.put(`${this.base}invitations/${group.guid}`, { guid: invitee.guid })
+      .then((response: any) => {
+        if (response.done) {
+          return true;
+        }
 
-      throw response.error ? response.error : 'Internal error';
-    })
-    .catch(e => {
-      throw typeof e === 'string' ? e : 'Connectivity error';
-    });
+        throw response.error ? response.error : 'Internal error';
+      })
+      .catch(e => {
+        throw typeof e === 'string' ? e : 'Connectivity error';
+      });
   }
 
   acceptInvitation(group: any) {
     return this.clientService.post(`${this.base}invitations/${group.guid}/accept`)
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   declineInvitation(group: any) {
     return this.clientService.post(`${this.base}invitations/${group.guid}/decline`)
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
 }

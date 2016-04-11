@@ -80,21 +80,21 @@ export class GroupsJoinButton {
     }
 
     this.service.join(this.group)
-    .then(() => {
-      if (this.isPublic()) {
-        this.group['is:member'] = true;
-        this.membership.next({
-          member: true
-        });
-        return;
-      }
-
-      this.group['is:awaiting'] = true;
-    })
-    .catch(e => {
-      this.group['is:member'] = false;
-      this.group['is:awaiting'] = false;
-    });
+      .then(() => {
+        if (this.isPublic()) {
+          this.group['is:member'] = true;
+          this.membership.next({
+            member: true
+          });
+          return;
+        }
+        this.membership.next({});
+        this.group['is:awaiting'] = true;
+      })
+      .catch(e => {
+        this.group['is:member'] = false;
+        this.group['is:awaiting'] = false;
+      });
   }
 
   /**

@@ -119,23 +119,24 @@ class invitations implements Interfaces\Api
             ]);
         }
 
-        if (!isset($payload['invitee']) || !$payload['invitee'] || !ctype_alnum($payload['invitee'])) {
+        if (!isset($payload['guid']) || !$payload['guid'] || !is_numeric($payload['guid'])) {
             return Factory::response([
                 'done' => false,
-                'error' => 'Invalid username'
+                'error' => 'Invalid guid'
             ]);
         }
 
-        $invitee = new User(strtolower($payload['invitee']));
+        $invitee = new User($payload['guid']);
 
-        if (!$invitee || !$invitee->guid) {
+        if (!$invitee || !$invitee->username) {
             return Factory::response([
                 'done' => false,
                 'error' => 'User not found'
             ]);
         }
 
-        $membership = new Groups\Core\Membership($group);
+        $membership = (new Groups\Core\Membership())
+          ->setGroup($group);
         $banned = $membership->isBanned($invitee);
 
         if ($banned && !$group->isOwner($user)) {

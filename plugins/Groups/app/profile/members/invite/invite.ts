@@ -38,6 +38,11 @@ export class GroupsProfileMembersInvite {
   }
 
   invite(user) {
+
+    if(!user.subscriber){
+      return alert('You can only invite users who are subscribed to you');
+    }
+
     this.q = "";
     this.users = [];
     if(!this.group){

@@ -1,8 +1,3 @@
-<div class="mdl-color--white mdl-color-text--grey-600 minds-group-invite-dialog" *ngIf="group && !group['is:member'] && group['is:invited']">
-  You were invited to join {{ group.name }}<br>
-  <br>
-  <minds-groups-join-button [group]="group" *ngIf="session.getLoggedInUser().guid != group.owner_guid"></minds-groups-join-button>
-</div>
 
 <header *ngIf="group && (group['is:member'] || group.membership == 2)">
   <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" [done]="editDone" (added)="add_banner($event)"></minds-banner>
