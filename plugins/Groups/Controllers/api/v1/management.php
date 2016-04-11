@@ -59,7 +59,8 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = (new Groups\Core\Management($group))
+        $management = (new Groups\Core\Management())
+          ->setGroup($group)
           ->setActor($actor);
 
         try {
@@ -107,7 +108,8 @@ class management implements Interfaces\Api
             ]);
         }
 
-        $management = (new Groups\Core\Management($group))
+        $management = (new Groups\Core\Management())
+          ->setGroup($group)
           ->setActor($actor);
 
         try {

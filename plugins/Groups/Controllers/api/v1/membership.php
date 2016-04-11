@@ -86,6 +86,7 @@ class membership implements Interfaces\Api
                 $response['members'] = Factory::exportable($members);
 
                 for ($i = 0; $i < count($response['members']); $i++) {
+                    $response['members'][$i]['is:owner'] = $group->isOwner($response['members'][$i]['guid']);
                     $response['members'][$i]['is:member'] = true;
                     $response['members'][$i]['is:awaiting'] = false;
                 }
