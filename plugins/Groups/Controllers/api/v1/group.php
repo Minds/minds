@@ -35,7 +35,11 @@ class group implements Interfaces\Api
         $membership = (new Groups\Core\Membership)
           ->setGroup($group);
 
+        $notifications = (new Groups\Core\Notifications)
+          ->setGroup($group);
+
         $response['group']['members'] = Factory::exportable($membership->getMembers(['limit' => 10]));
+        $response['group']['is:muted'] = $notifications->isMuted($user);
 
         return Factory::response($response);
     }
