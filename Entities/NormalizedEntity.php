@@ -118,7 +118,7 @@ class NormalizedEntity
 
     		$this->indexDb->set("$this->type:featured", [ $this->featured_id => $this->getGUID() ]);
         if($this->subtype){
-    		    $db->insert("$this->type:$this->subtype:featured", [ $this->featured_id => $this->getGUID() ]);
+    		    $this->indexDb->set("$this->type:$this->subtype:featured", [ $this->featured_id => $this->getGUID() ]);
         }
 
     		$this->featured = 1;
@@ -142,8 +142,7 @@ class NormalizedEntity
         $this->featured = 0;
         $this->save();
 
-        $db = new Minds\Core\Data\Call('entities');
-        $result = $this->db->removeAttributes($this->guid, [ 'featured_id' ]);
+        $this->db->removeAttributes($this->guid, [ 'featured_id' ]);
 
         return true;
     }
