@@ -45,7 +45,7 @@
 
       <div class="m-group-info-tags mdl-color-text--blue-grey-300">
         <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
-        <minds-form-tags-input (change)="group.tags = $event"></minds-form-tags-input>
+        <minds-form-tags-input [(tags)]="group.tags"></minds-form-tags-input>
       </div>
 
       <div class="m-group-info-membership mdl-color-text--blue-grey-300">
