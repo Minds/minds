@@ -95,7 +95,7 @@ class Group extends NormalizedEntity
 
         $this->unFeature();
 
-        Di::get('Queue')
+        Di::_()->get('Queue')
           ->setExchange('mindsqueue')
           ->setQueue('FeedCleanup')
           ->send([
@@ -104,7 +104,7 @@ class Group extends NormalizedEntity
               'type' => $this->getType()
           ]);
 
-        Di::get('Queue')
+        Di::_()->get('Queue')
           ->setExchange('mindsqueue')
           ->setQueue('CleanupDispatcher')
           ->send([
@@ -112,9 +112,7 @@ class Group extends NormalizedEntity
               'group' => $this->export()
           ]);
 
-        $db = new \Minds\Core\Data\Call('entities');
-
-        return (bool) $db->removeRow($this->getGuid());
+        return (bool) $this->db->removeRow($this->getGuid());
     }
 
     /**
