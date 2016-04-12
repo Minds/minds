@@ -10,8 +10,14 @@
     margin: -48px 0 0 116px;
     width: 168px;
   }
-  &.group-card{
+  &.m-group-card{
     min-height: 142px !important;
+
+    .minds-usercard-banner {
+      img{
+        margin-top:-24px;
+      }
+    }
   }
 }
 minds-groups-profile{
@@ -400,6 +406,11 @@ minds-groups-create{
       width: 200px;
       margin-top: 0;
       text-transform: capitalize;
+    }
+
+    m-modal{
+      z-index: 999;
+      position: relative;
     }
   }
 

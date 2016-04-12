@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
