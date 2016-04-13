@@ -17,6 +17,7 @@ use Minds\Core\Payments\PaymentMethod;
 use Minds\Core\Payments\Subscriptions\Subscription;
 use Minds\Entities;
 
+use Braintree_Gateway;
 use Braintree_Configuration;
 use Braintree_Merchant;
 use Braintree_Transaction;
@@ -58,7 +59,8 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         $this->btConfig->setMerchantId($config['merchant_id']);
         $this->btConfig->setPublicKey($config['public_key']);
         $this->btConfig->setPrivateKey($config['private_key']);
-        $this->gateway = call_user_func([$this->btConfig, 'gateway']);
+        $this->gateway = new Braintree_Gateway($this->btConfig);
+        //call_user_func([$this->btConfig, 'gateway']);
     }
 
 
@@ -67,7 +69,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
      */
     public function getToken()
     {
-        return $this->gateway->generate();
+        return $this->gateway->clientToken()->generate();
     }
 
     /**
