@@ -225,9 +225,10 @@ class Common implements Interfaces\PreparedInterface
      */
     public function getSuggestedObjects($user_guid, $subtype = 'video', $skip = 0)
     {
-        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP*..2]-(object:$subtype) " .
-                            "WHERE NOT a-[:ACTED]->(object) " .
-                            "RETURN object SKIP {skip} LIMIT 16 ";
+        $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP]-(o:$subtype)<-[:UP]-(b:User),
+                            (b)-[:UP]->(object:$subtype)
+                            WHERE NOT a-[:ACTED]->(object) 
+                            RETURN object SKIP {skip} LIMIT 16 ";
         $this->values = array(
             'user_guid'=> (string) $user_guid,
              'skip' => (int) $skip
