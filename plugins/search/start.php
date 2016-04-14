@@ -12,11 +12,11 @@ class start extends \minds\Components\Plugin{
 
 	public function init(){
 
-    Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
+    //Api\Routes::add('v1/search', '\\minds\\plugin\\search\\api\\v1\\search');
 
-		\elgg_register_event_handler('create', 'user', array($this, 'hook'));
-		\elgg_register_event_handler('create', 'group', array($this, 'hook'));
-		\elgg_register_event_handler('create', 'object', array($this, 'hook'));
+		// \elgg_register_event_handler('create', 'user', array($this, 'hook'));
+		// \elgg_register_event_handler('create', 'group', array($this, 'hook'));
+		// \elgg_register_event_handler('create', 'object', array($this, 'hook'));
 	}
 
 	/**
