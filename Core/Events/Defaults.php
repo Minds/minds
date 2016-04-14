@@ -64,6 +64,9 @@ class Defaults
 
         // Notifications events
         Core\Notification\Events::registerEvents();
+
+        // Search events
+        (new Core\Search\Events())->init();
     }
 
     public static function _()
