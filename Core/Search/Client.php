@@ -4,6 +4,8 @@
  */
 namespace Minds\Core\Search;
 
+use Minds\Core\Config;
+
 class Client extends \Elasticsearch\Client
 {
   public function __construct(array $opts = [])
