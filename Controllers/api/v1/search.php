@@ -35,6 +35,9 @@ class search implements Interfaces\Api
         }
 
         switch ($opts['type']) {
+          case "activities":
+            $opts['type'] = 'activity';
+            break;
           case "channels":
             $opts['type'] = 'user';
             $flags[] = "~";

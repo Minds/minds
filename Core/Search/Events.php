@@ -27,12 +27,13 @@ class Events
       }
     });
 
-    // Legacy
-    // TODO: Refactor me
-    \elgg_register_event_handler('create', 'user', [ $this, 'hook' ]);
-    \elgg_register_event_handler('create', 'object', [ $this, 'hook' ]);
-    \elgg_register_event_handler('update', 'user', [ $this, 'hook' ]);
-    \elgg_register_event_handler('update', 'object', [ $this, 'hook' ]);
+    // Hooking for core entities
+    Dispatcher::register('create', 'elgg/event/user', [ $this, 'hook' ]);
+    Dispatcher::register('create', 'elgg/event/object', [ $this, 'hook' ]);
+    Dispatcher::register('create', 'elgg/event/activity', [ $this, 'hook' ]);
+    Dispatcher::register('update', 'elgg/event/user', [ $this, 'hook' ]);
+    Dispatcher::register('update', 'elgg/event/object', [ $this, 'hook' ]);
+    Dispatcher::register('update', 'elgg/event/activity', [ $this, 'hook' ]);
   }
 
   public function hook($hook, $type, $entity, array $params = [])
