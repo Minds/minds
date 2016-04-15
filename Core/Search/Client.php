@@ -8,7 +8,7 @@ class Client extends \Elasticsearch\Client
 {
   public function __construct(array $opts = [])
   {
-    $hosts = \elgg_get_plugin_setting('server_addr','search') ?: 'localhost';
+    $hosts = Config::_()->elasticsearch_hosts ?: 'localhost';
 
     if (!is_array($hosts)) {
       $hosts = [ $hosts ];
