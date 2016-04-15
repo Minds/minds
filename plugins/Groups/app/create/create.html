@@ -9,7 +9,7 @@
   </div>
 </header>
 
-<form (submit)="save()" class="mdl-grid groups-grid" style="max-width:900px">
+<form (submit)="save($event)" class="mdl-grid groups-grid" style="max-width:900px">
 
   <div class="mdl-cell mdl-cell--8-col">
     <minds-groups-profile-members-invite (invited)="invite($event)"></minds-groups-profile-members-invite>

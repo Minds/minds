@@ -16,10 +16,10 @@ import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
 
 @Component({
   selector: 'minds-groups-create',
-
-  bindings: [ MindsTitle, GroupsService ]
-})
-@View({
+  host: {
+    '(keydown)': 'keyDown($event)'
+  },
+  bindings: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/create/create.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite, TagsInput ]
 })
@@ -73,7 +73,14 @@ export class GroupsCreator {
     this.invitees.splice(i, 1);
   }
 
-  save(){
+  keyDown(e){
+    if(e.keyCode == 13){
+      e.preventDefault();
+      return false;
+    }
+  }
+
+  save(e){
 
     if(!this.group.name){
       return;
