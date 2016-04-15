@@ -45,9 +45,20 @@ class Documents
     }
 
     $body = $this->formatDocumentBody($data);
+    $fullTextBody = $this->getFullTextBody($data);
 
     if (!$body) {
       throw new \Exception('Empty data body');
+    }
+
+    // Get hashtags to put them into a field
+    $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
+    $matches = [];
+
+    preg_match_all($htRe, $fullTextBody, $matches);
+
+    if (isset($matches[2]) && $matches[2]) {
+        $body['hashtags'] = array_unique($matches[2]);
     }
 
     $params = [
@@ -79,9 +90,10 @@ class Documents
       'flags' => [ ]
     ], $opts);
 
-    $query = preg_replace('/[^A-Za-z0-9_\-#]/', ' ', $query);
+    $query = preg_replace('/[^A-Za-z0-9_\-#"]/', ' ', $query);
     $flags = '';
 
+    // Passed flags (type, subtype, ~, etc.)
     if (!is_array($opts['flags'])) {
       $opts['flags'] = [ $opts['flags'] ];
     }
@@ -94,6 +106,24 @@ class Documents
       $flags .= $flag;
     }
 
+    // Transform hashtags to `field:"value"` form and put into $flags
+    // Then remove the hashtags from main query
+    $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
+    $matches = [];
+
+    preg_match_all($htRe, $query, $matches);
+
+    if (isset($matches[2]) && $matches[2]) {
+        $matches[2] = array_unique($matches[2]);
+
+        foreach ($matches[2] as $match) {
+            $flags .= " +hashtags:\"{$match}\"";
+        }
+
+        $query = preg_replace($htRe, '', $query);
+    }
+
+    // Setup parameters
     $params = [
       'size' => $opts['limit'],
       'index' => $this->index,
@@ -103,7 +133,7 @@ class Documents
             'query' => $query . $flags,
             'default_operator' => 'AND',
             'minimum_should_match' => '75%',
-            'fields' => [ '_all', 'name^6', 'title^8', 'username^8' ],
+            'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'hashtags^8' ],
           ]
         ]
       ]
@@ -152,5 +182,25 @@ class Documents
     }
 
     return $body;
+  }
+
+  /**
+   * Gets the full text format for a set of data
+   * @param  array $data
+   * @return array
+   */
+  public function getFullTextBody(array $data = [])
+  {
+    $body = [];
+
+    foreach ($data as $item => $value) {
+      if (!is_string($value)) {
+          continue;
+      }
+
+      $body[] = $value;
+    }
+
+    return implode(' ', $body);
   }
 }
