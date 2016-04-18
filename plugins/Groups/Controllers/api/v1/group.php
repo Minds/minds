@@ -163,13 +163,15 @@ class group implements Interfaces\Api
 
         if ($creation && isset($_POST['invitees']) && $_POST['invitees']) {
             $invitations = (new Groups\Core\Invitations)->setGroup($group)->setActor($user);
-            $invitees = explode(',', $_POST['invitees']);
+            $invitees = $_POST['invitees'];
 
             foreach ($invitees as $invitee) {
-                try {
-                    $invitee = new User(strtolower(trim($invitee)));
-                    $invitations->invite($invitee);
-                } catch (GroupOperationException $e) { }
+                if(is_numeric($invitee)){
+                    try {
+                        $invitee = new User($invitee);
+                        $invitations->invite($invitee);
+                    } catch (GroupOperationException $e) { }
+                }
             }
         }
 
