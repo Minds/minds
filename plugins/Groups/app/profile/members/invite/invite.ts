@@ -43,10 +43,11 @@ export class GroupsProfileMembersInvite {
       return alert('You can only invite users who are subscribed to you');
     }
 
+    this.invited.next(user);
+
     this.q = "";
     this.users = [];
     if(!this.group){
-      this.invited.next(user);
       return;
     }
     this.inviteInProgress = true;

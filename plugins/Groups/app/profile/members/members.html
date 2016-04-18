@@ -1,4 +1,20 @@
-<minds-groups-profile-members-invite *ngIf="canInvite" [group]="group"></minds-groups-profile-members-invite>
+<div class="">
+  <minds-groups-profile-members-invite *ngIf="canInvite" [group]="group" (invited)="invite($event)"></minds-groups-profile-members-invite>
+  <div class="invitees m-search-inline">
+    <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white">
+      <div *ngFor="#invitee of invitees; #i = index" class="m-search-inline-item m-block">
+        <div class="m-avatar">
+          <img src="{{minds.cdn_url}}icon/{{invitee.guid}}/small" class="mdl-shadow--2dp"/>
+        </div>
+        <div class="m-body">
+          <h3>@{{invitee.username}}</h3>
+          <p class="m-subtitle">Views: {{invitee.impressions}} | Subscribers: {{invitee.subscribers_count}}</p>
+        </div>
+        <i class="material-icons m-remove-invitee" (click)="removeInvitee(i)">cancel</i>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="#member of members">
     <div class="mdl-card mdl-shadow--2dp">

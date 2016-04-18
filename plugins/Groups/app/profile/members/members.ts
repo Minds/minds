@@ -26,9 +26,12 @@ import { GroupsCardUserActionsButton } from '../card-user-actions-button';
 
 export class GroupsProfileMembers {
 
+  minds = window.Minds;
+
   group : any;
   session = SessionFactory.build();
 
+  invitees : any = [];
   members : Array<any> = [];
   offset : string = "";
   inProgress : boolean = false;
@@ -79,6 +82,14 @@ export class GroupsProfileMembers {
       .catch((e)=>{
         this.inProgress = false;
       });
+  }
+
+  invite(user : any){
+    for(let i of this.invitees){
+      if(i.guid == user.guid)
+        return;
+    }
+    this.invitees.push(user);
   }
 
 }
