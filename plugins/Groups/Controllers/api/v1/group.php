@@ -249,8 +249,8 @@ class group implements Interfaces\Api
         $file->close();
 
         $group
-        ->setBanner(true)
-        ->setBannerPosition($banner_position);
+          ->setBanner(time())
+          ->setBannerPosition($banner_position);
 
         $group->save();
 
