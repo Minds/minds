@@ -111,7 +111,10 @@ minds-groups-profile{
     }
 
     .save-bar {
-      display: none !important;
+      background: transparent !important;
+      .save-button{
+        display: none !important;
+      }
     }
   }
 
