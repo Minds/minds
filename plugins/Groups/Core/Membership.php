@@ -301,8 +301,6 @@ class Membership
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->leave($user);
 
-        $this->notifications->sendKickNotification($user_guid);
-
         return true;
     }
 

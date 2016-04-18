@@ -271,29 +271,6 @@ class Notifications
     }
 
     /**
-     * Sends a kick notification to a certain user
-     * @param  mixed $user
-     * @return boolean
-     */
-    public function sendKickNotification($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        Dispatcher::trigger('notification', 'all', [
-            'from' => 100000000000000519,
-            'to' => [ $user ],
-            'notification_view' => 'group_kick',
-            'params' => [
-                'group' => $this->group->export()
-            ]
-        ]);
-
-        return true;
-    }
-
-    /**
      * Internal funcion. Typecasts to string.
      * @param  mixed $var
      * @return string
