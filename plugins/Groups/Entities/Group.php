@@ -62,7 +62,7 @@ class Group extends NormalizedEntity
             'type' => $this->type,
             'guid' => $this->guid,
             'owner_guid' => $this->owner_guid,
-            'ownerObj' => $this->ownerObj->export(),
+            'ownerObj' => $this->ownerObj ? $this->ownerObj->export() : null,
             'name' => $this->name,
             'brief_description' => $this->brief_description,
             'access_id' => $this->access_id,
