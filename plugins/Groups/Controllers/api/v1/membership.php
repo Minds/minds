@@ -196,6 +196,7 @@ class membership implements Interfaces\Api
             ]);
         } catch (GroupOperationException $e) {
             return Factory::response([
+                'status' => 'error',
                 'done' => false,
                 'error' => $e->getMessage()
             ]);
