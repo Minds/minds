@@ -164,6 +164,7 @@ class membership implements Interfaces\Api
         $user = Session::getLoggedInUser();
 
         $membership = (new Groups\Core\Membership)->setGroup($group);
+        $invitations = (new Groups\Core\Invitations)->setGroup($group)->setActor($user);
 
         if (isset($pages[1])) {
             //Admin approval
@@ -183,7 +184,12 @@ class membership implements Interfaces\Api
 
         // Normal join
         try {
-            $joined = $group->join($user);
+
+            if($invitations->isInvited($user)){
+                $joined = $invitations->accept();
+            } else {
+                $joined = $group->join($user);
+            }
 
             return Factory::response([
                 'done' => $joined
