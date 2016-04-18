@@ -14,7 +14,7 @@ class NormalizedEntity
     use Traits\Entity;
 
     protected $db;
-    protected $indexDB;
+    protected $indexDb;
     protected $guid;
     private $indexes = [];
     protected $exportableDefaults = [];
@@ -22,7 +22,7 @@ class NormalizedEntity
     public function __construct($db = null, $indexDb = null)
     {
         $this->db = $db ?: new Data\Call('entities');
-        $this->indexDb = $indexDb ?: Core\Di\Di::_()->get('Cassandra\Thrift\Indexes');
+        $this->indexDb = $indexDb ?: Core\Di\Di::_()->get('Database\Cassandra\Indexes');
     }
 
     /**
@@ -92,7 +92,7 @@ class NormalizedEntity
     protected function saveToIndex()
     {
         foreach ($this->indexes as $index) {
-            $this->indexDB->insert($index, [$this->getGuid() => $this->getGuid()]);
+            $this->indexDb->insert($index, [$this->getGuid() => $this->getGuid()]);
         }
     }
 
