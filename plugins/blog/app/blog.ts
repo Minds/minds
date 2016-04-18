@@ -47,6 +47,8 @@ export class Blog {
         case "featured":
           this.title.setTitle("Featured Blogs");
           break;
+        case "all":
+          break;
         case "owner":
           break;
         default:
