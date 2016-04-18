@@ -162,6 +162,10 @@ minds-groups-profile{
       text-align: center;
       position: relative;
 
+      .m-group-avatar{
+        min-height:140px;
+      }
+
       .minds-avatar{
         background:transparent;
         margin:auto;
