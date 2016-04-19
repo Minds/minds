@@ -502,6 +502,17 @@ minds-groups-profile-requests{
   opacity: 0.65;
 }
 
+.m-group-closed{
+  .tabs{
+    minds-button-remind{
+      display:none;
+    }
+    .minds-boost-button{
+      display:none;
+    }
+  }
+}
+
 minds-groups-card-user-actions-button {
   > button {
     padding: 0 !important;

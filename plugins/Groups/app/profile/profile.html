@@ -43,7 +43,7 @@
 <div class="mdl-grid groups-grid newsfeed-grid" style="max-width:900px" *ngIf="group && (group['is:member'] || group.membership == 2)">
 
   <!-- Activity feed -->
-  <minds-groups-profile-feed [group]="group" class="mdl-cell mdl-cell--8-col" *ngIf="filter == 'activity'">
+  <minds-groups-profile-feed [group]="group" class="mdl-cell mdl-cell--8-col" [ngClass]="{'m-group-closed': group.membership != 2}" *ngIf="filter == 'activity'">
   </minds-groups-profile-feed>
   <!-- END: Activity feed -->
 
