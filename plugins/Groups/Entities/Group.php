@@ -122,14 +122,22 @@ class Group extends NormalizedEntity
      */
     public function __get($name)
     {
-        if ($name === 'guid') {
+        switch($name){
+          case 'guid':
             return $this->getGuid();
-        } elseif ($name === 'type') {
+            break;
+          case 'type':
             return $this->getType();
-        } elseif ($name === 'container_guid') {
+            break;
+          case 'container_guid':
             return null;
-        } elseif ($name === 'owner_guid') {
+            break;
+          case 'owner_guid':
             return $this->getOwnerObj() ? $this->getOwnerObj()->guid : $this->owner_guid;
+            break;
+          case 'access_id':
+            return $this->access_id;
+            break;
         }
 
         return null;
