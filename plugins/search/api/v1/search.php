@@ -46,6 +46,11 @@ class search implements Interfaces\Api,Interfaces\ApiIgnorePam{
         if(isset($_GET['type']))
           $params['type'] = $_GET['type'];
 
+        if(isset($_GET['subtype']) && $_GET['subtype'])
+          $subtype = $_GET['subtype'];
+        else
+          $subtype = 0;
+
         if($params['type']){
           switch($params['type']){
             case "channels":
@@ -63,6 +68,9 @@ class search implements Interfaces\Api,Interfaces\ApiIgnorePam{
             case "blogs":
               $params['type'] = 'object';
               $query .= ' +subtype:"blog"';
+              break;
+            case "object":
+              $query .= ' +subtype:"' . $params['subtype'] . '"';
               break;
           }
         }
@@ -93,7 +101,7 @@ class search implements Interfaces\Api,Interfaces\ApiIgnorePam{
           $response['entities'] = Factory::exportable(Core\Entities::get(array('guids'=>$guids)));
         
         if($_GET['access_token']){
-            $response[$params['type']][] = $response['entities'];
+            $response[$params['type']][$subtype] = $response['entities'];
         }
 
        // $response['hits'] = $results['hits']['hits'];
