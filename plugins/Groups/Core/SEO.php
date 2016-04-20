@@ -28,7 +28,7 @@ class SEO
                 'description' => strip_tags($group->getBriefDescription()),
                 'og:title' => $group->getName(),
                 'og:description' => strip_tags($group->getBriefDescription()),
-                'og:url' => Di::_()->get('Config')->site_url . $group->username,
+                'og:url' => Di::_()->get('Config')->site_url . 'groups/profile/' . $group->guid,
                 'og:image' => Di::_()->get('Config')->cdn_url . 'fs/v1/banners/' . $group->guid,
                 'og:image:width' => 2000,
                 'og:image:height' => 1000
