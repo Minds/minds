@@ -37,6 +37,7 @@ class NormalizedEntity
         if (!$row) {
             throw new \Exception("Entity not found");
         }
+        $row['guid'] = $guid;
         return $this->loadFromArray($row);
     }
 
