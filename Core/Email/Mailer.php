@@ -17,7 +17,7 @@ class Mailer
 
     public function __construct($mailer = null, $queue = null)
     {
-        $this->mailer = $mailer;
+        $this->mailer = $mailer ?: new PHPMailer();
         $this->setup();
         $this->stats = [
           'sent' => 0,
