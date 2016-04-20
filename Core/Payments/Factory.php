@@ -17,11 +17,11 @@ class Factory
      * @param array $options (optional)
      * @return BoostHandlerInterface
      */
-    public static function build($handler)
+    public static function build($handler, $opts = [])
     {
         switch(ucfirst($handler)){
           case "Braintree":
-            return Di::_()->get('BraintreePayments');
+            return Di::_()->get('BraintreePayments')->setConfig($opts);
           default:
             throw new \Exception("Service not found");
         }

@@ -20,6 +20,7 @@ use Minds\Entities;
 use Braintree_Gateway;
 use Braintree_Configuration;
 use Braintree_Merchant;
+use Braintree_MerchantAccount;
 use Braintree_Transaction;
 use Braintree_TransactionSearch;
 use Braintree_Test_MerchantAccount;
@@ -44,7 +45,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         } else {
             $gateway = 'default';
         }
-
+        
         $defaults = [
           'environment' => $this->config->payments['braintree'][$gateway]['environment'] ?: 'sandbox',
           'merchant_id' => $this->config->payments['braintree'][$gateway]['merchant_id'],
@@ -61,6 +62,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         $this->btConfig->setPrivateKey($config['private_key']);
         $this->gateway = new Braintree_Gateway($this->btConfig);
         //call_user_func([$this->btConfig, 'gateway']);
+        return $this;
     }
 
 
@@ -186,7 +188,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
      */
     public function updateMerchant(Merchant $merchant)
     {
-        $result = $this->gateway->merchant()->update($merchant->getGuid(),
+        $result = $this->gateway->merchantAccount()->update($merchant->getGuid(),
         [
           'individual' => [
             'firstName' => $merchant->getFirstName(),
@@ -203,7 +205,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
           ],
           'funding' => [
             'descriptor' => $merchant->getName(),
-            'destination' => $merchant->getDestination() == 'bank' ? Braintree_Merchant::FUNDING_DESTINATION_BANK : Braintree_Merchant::FUNDING_DESTINATION_EMAIL,
+            'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
             'email' => $merchant->getEmail(),
             'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
             'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
@@ -225,7 +227,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
      */
     public function addMerchant(Merchant $merchant)
     {
-        $result = $this->gateway->merchant()->create([
+        $result = $this->gateway->merchantAccount()->create([
           'individual' => [
             'firstName' => $merchant->getFirstName(),
             'lastName' => $merchant->getLastName(),
@@ -241,7 +243,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
           ],
           'funding' => [
             'descriptor' => $merchant->getName(),
-            'destination' => $merchant->getDestination() == 'bank' ? Braintree_Merchant::FUNDING_DESTINATION_BANK : Braintree_Merchant::FUNDING_DESTINATION_EMAIL,
+            'destination' => $merchant->getDestination() == 'bank' ? Braintree_MerchantAccount::FUNDING_DESTINATION_BANK : Braintree_MerchantAccount::FUNDING_DESTINATION_EMAIL,
             'email' => $merchant->getEmail(),
             'accountNumber' => $merchant->getDestination() == 'bank' ? $merchant->getAccountNumber() : null,
             'routingNumber' => $merchant->getDestination() == 'bank' ? $merchant->getRoutingNumber() : null
@@ -266,7 +268,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
     public function getMerchant($id)
     {
         try {
-            $result = $this->gateway->merchant()->find($id);
+            $result = $this->gateway->merchantAccount()->find($id);
 
             $merchant = (new Merchant())
               ->setStatus($result->status)
