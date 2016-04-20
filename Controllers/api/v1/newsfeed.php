@@ -274,6 +274,7 @@ class newsfeed implements Interfaces\Api
                         $activity->setMature($_POST['mature']);
                     }
 
+                    $activity->indexes = []; //don't re-index on edit
                     $activity->save();
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }
