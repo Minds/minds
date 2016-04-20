@@ -1,0 +1,191 @@
+
+<header *ngIf="group && (group['is:member'] || group.membership == 2)">
+  <minds-banner [object]="group" [editMode]="editing" [top]="group.banner_position" [done]="editDone" (added)="add_banner($event)"></minds-banner>
+
+  <div class="mdl-grid groups-grid-bottom group-header-bar" style="max-width:900px" *ngIf="group">
+
+    <div class="mdl-cell mdl-cell--8-col groups-tabs mdl-tabs__tab-bar" *ngIf="group">
+      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab minds-first-tab mdl-color-text--blue-grey-50">
+        <span>Feed</span>
+        <b>{{group['activity:count']}}</b>
+      </a>
+      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <span>Members</span>
+        <b>{{group['members:count']}}</b>
+      </a>
+      <a *ngIf="group['is:owner'] && group.membership != 2" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <span>Requests</span>
+        <b>{{group['requests:count']}}</b>
+      </a>
+
+      <div class="mdl-tabs__tab mdl-tabs__action-buttons">
+        <minds-button-edit (click)="toggleEdit()" [hidden]="editing" *ngIf="group['is:owner']">
+          <button class="material-icons">mode_edit</button>
+        </minds-button-edit>
+        <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group['is:owner']">
+          <button>Save changes</button>
+        </minds-button-edit>
+        <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
+        <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
+
+        <minds-groups-join-button [group]="group" (membership)="change_membership($event)" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
+      </div>
+    </div>
+
+    <div class="mdl-cell mdl-cell--4-col m-group-avatar">
+      <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
+    </div>
+
+  </div>
+</header>
+
+
+<div class="mdl-grid groups-grid newsfeed-grid" style="max-width:900px" *ngIf="group && (group['is:member'] || group.membership == 2)">
+
+  <!-- Activity feed -->
+  <minds-groups-profile-feed [group]="group" class="mdl-cell mdl-cell--8-col" [ngClass]="{'m-group-closed': group.membership != 2}" *ngIf="filter == 'activity'">
+  </minds-groups-profile-feed>
+  <!-- END: Activity feed -->
+
+  <!-- Members filter -->
+  <minds-groups-profile-members [group]="group" class="mdl-cell mdl-cell--8-col mdl-grid" *ngIf="filter == 'members'">
+  </minds-groups-profile-members>
+  <!-- END: Members filter -->
+
+  <!-- Requests Filter -->
+  <minds-groups-profile-requests [group]="group" class="mdl-cell mdl-cell--8-col mdl-grid" *ngIf="filter == 'requests'">
+  </minds-groups-profile-requests>
+  <!-- END: Requests filter -->
+
+  <!-- Sidebar -->
+  <div class="mdl-cell mdl-cell--4-col m-group-info">
+
+    <div class="mdl-card mdl-shadow--2dp">
+      <!-- Name -->
+      <div class="m-group-info-name mdl-color-text--blue-grey-800">
+
+        <div [hidden]="editing || !group.name">
+          <h1>{{group.name}}</h1>
+        </div>
+
+        <div *ngIf="editing && group['is:owner']">
+          <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
+        </div>
+
+      </div>
+
+      <!-- Brief description -->
+      <div class="m-group-info-brief-description mdl-color-text--blue-grey-600">
+
+        <div [hidden]="editing || !group.briefdescription">
+          <span [innerHtml]="group.briefdescription | tags"></span>
+        </div>
+
+        <div *ngIf="editing && group['is:owner']">
+          <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Tags -->
+      <div class="m-group-info-tags mdl-color-text--blue-grey-300">
+
+        <div [hidden]="editing || !group.tags" *ngIf="group.tags">
+          <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+          <span *ngFor="#tag of group.tags">{{tag}}</span>
+        </div>
+
+        <div *ngIf="editing && group['is:owner']">
+          <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+          <minds-form-tags-input [(tags)]="group.tags"></minds-form-tags-input>
+        </div>
+
+      </div>
+
+      <!-- Membership -->
+      <div class="m-group-info-membership mdl-color-text--blue-grey-300">
+
+        <div [hidden]="editing || group.membership != 2">
+          <i class="material-icons mdl-color-text--blue-grey-300">public</i>
+          <span>Open Group</span>
+        </div>
+
+        <div [hidden]="editing || group.membership != 0">
+          <i class="material-icons mdl-color-text--blue-grey-300">lock</i>
+          <span>Closed Group</span>
+        </div>
+
+        <div *ngIf="editing && group['is:owner']">
+          <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
+          <select class="icon-prefix" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
+            <option value="2">Open Group</option>
+            <option value="0">Closed Group</option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="mdl-card mdl-shadow--2dp">
+
+      <!-- Members -->
+      <div class="m-group-info-members">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">Members</h2>
+          <a [routerLink]="['/Groups-Profile', { guid: group.guid, filter: 'members' }]" class="mdl-color-text--blue-grey-400">Invite</a>
+        </div>
+
+        <!-- Avatars of latest users -->
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid">
+          <a *ngFor="#member of group.members" [routerLink]="['/Channel', {username: member.username}]" >
+            <img src="/icon/{{member.guid}}/small"/>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- images  -->
+    <minds-channel-modules [container]="group" type="image">
+
+      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:group.guid, type:'images'}]">
+        View More
+      </a>
+    </minds-channel-modules>
+
+    <div class="minds-spacer-2x"></div>
+
+    <!-- videos  -->
+    <minds-channel-modules [container]="group" type="video" limit="6">
+
+      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:group.guid, type:'videos'}]">
+        View More
+      </a>
+    </minds-channel-modules>
+
+  </div>
+</div>
+
+<!-- IF A CLOSED GROUP AND NOT A MEMBER -->
+<div class="m-group-closed-splash" *ngIf="group && !group['is:member'] && group.membership != 2">
+
+  <minds-banner [object]="group" [top]="group.banner_position"></minds-banner>
+
+  <div class="m-group-closed-splash-inner">
+
+    <div class="m-group-avatar">
+      <minds-avatar [object]="group" [editMode]="editing" (added)="upload_avatar($event)"></minds-avatar>
+    </div>
+
+    <div class="m-group-info-name mdl-color-text--blue-grey-800">
+      <h1>{{group.name}}</h1>
+    </div>
+
+
+    <minds-groups-join-button [group]="group" (membership)="change_membership($event)"></minds-groups-join-button>
+
+  </div>
+
+</div>

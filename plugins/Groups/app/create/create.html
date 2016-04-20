@@ -1,0 +1,68 @@
+<div class="m-group-saving-overlay" [hidden]="!inProgress">
+  <div class="mdl-spinner mdl-js-spinner is-active" [mdl]></div>
+</div>
+
+<header>
+  <minds-banner [editMode]="editing" [done]="editDone" (added)="addBanner($event)"></minds-banner>
+  <div class="avatar-wrapper">
+    <minds-avatar [editMode]="editing" [done]="editDone" (added)="addAvatar($event)"></minds-avatar>
+  </div>
+</header>
+
+<form (submit)="save($event)" class="mdl-grid groups-grid" style="max-width:900px">
+
+  <div class="mdl-cell mdl-cell--8-col">
+    <minds-groups-profile-members-invite (invited)="invite($event)"></minds-groups-profile-members-invite>
+
+    <div class="invitees m-search-inline">
+      <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white">
+        <div *ngFor="#invitee of invitees; #i = index" class="m-search-inline-item m-block">
+          <div class="m-avatar">
+            <img src="{{minds.cdn_url}}/icon/{{invitee.guid}}/small" class="mdl-shadow--2dp"/>
+          </div>
+          <div class="m-body">
+            <h3>@{{invitee.username}}</h3>
+            <p class="m-subtitle">Views: {{invitee.impressions}} | Subscribers: {{invitee.subscribers_count}}</p>
+          </div>
+          <i class="material-icons m-remove-invitee" (click)="removeInvitee(i)">cancel</i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mdl-cell mdl-cell--4-col m-group-info">
+
+    <div class="mdl-card mdl-shadow--2dp">
+
+      <div class="m-group-info-name mdl-color-text--blue-grey-300">
+        <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
+      </div>
+
+      <div class="m-group-info-brief-description mdl-color-text--blue-grey-300">
+        <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+      </div>
+
+      <div class="m-group-info-tags mdl-color-text--blue-grey-300">
+        <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
+        <minds-form-tags-input [(tags)]="group.tags"></minds-form-tags-input>
+      </div>
+
+      <div class="m-group-info-membership mdl-color-text--blue-grey-300">
+          <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
+          <select class="icon-prefix" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
+            <option value="2">Open Group</option>
+            <option value="0">Closed Group</option>
+          </select>
+      </div>
+
+
+      <div class="m-groups-save">
+       <button class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!group.name">Create</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</form>

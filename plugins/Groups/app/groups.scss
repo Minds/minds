@@ -1,0 +1,614 @@
+@import 'defaults.scss';
+
+.minds-banner-card{
+  minds-groups-join-button{
+    position: absolute;
+    margin: -38px 130px;
+  }
+  .m-groups-card-stats{
+    position: absolute;
+    margin: -48px 0 0 116px;
+    width: 168px;
+  }
+  &.m-group-card{
+    min-height: 142px !important;
+
+    .minds-usercard-banner {
+      img{
+        margin-top:-24px;
+      }
+    }
+  }
+}
+minds-groups-profile{
+
+  .members-grid{
+    display:flex;
+    flex-flow:row wrap;
+  }
+
+  .minds-channel-media-sidebard{
+    display: flex;
+    flex-wrap: wrap;
+    padding:0;
+    width:100%;
+    a {
+      height: 88px;
+      display:inline-block;
+      width:calc(100% / 3);
+      background-color:#333;
+      background-position:
+      center center;
+      background-size:cover;
+    }
+    img{
+      width: 100%;
+      max-width:80px;
+      max-height:80px;
+    }
+  }
+
+  header {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 400px;
+    box-sizing: content-box;
+    overflow: visible;
+
+    .m-group-avatar {
+      display: flex;
+      flex-flow: row wrap;
+      pointer-events: all;
+
+      minds-avatar{
+        margin:auto;
+      }
+    }
+
+    .groups-tabs {
+      flex: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border: 0;
+      pointer-events: all;
+
+      .mdl-tabs__tab.minds-first-tab {
+        padding-left: 0;
+      }
+
+      a span {
+        width: 100%;
+        display: block;
+        font-size: 11px;
+        height: 11px;
+        vertical-align: middle;
+        line-height: 36px;
+      }
+
+      .mdl-tabs__action-buttons {
+        padding-top: 4px;
+        padding-right: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        overflow: visible;
+      }
+
+    }
+  }
+
+  minds-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .minds-banner{
+      max-height:400px;
+      height:400px;
+    }
+
+    .save-bar {
+      background: transparent !important;
+      .save-button{
+        display: none !important;
+      }
+    }
+  }
+
+  .group-header-bar {
+    z-index: 9999;
+  }
+
+  .groups-grid-bottom {
+    pointer-events: none;
+    align-items: flex-end;
+    padding: 0;
+    width: 100%
+  }
+
+  .m-groups-invite-form {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .m-groups-invite-actions {
+    text-align: right;
+  }
+
+  .m-group-invite-dialog {
+    padding: $minds-padding * 2;
+    text-align: center;
+
+    minds-groups-join-button {
+      margin-left: 0.5em;
+    }
+  }
+
+  minds-groups-profile-members {
+    margin-top: 0 !important;
+
+    .m-groups-member-card minds-card-user.minds-user-ephemeral {
+      opacity: 0.5;
+      -webkit-filter: grayscale(100%);
+    }
+  }
+
+
+  .m-group-closed-splash{
+
+    .m-group-closed-splash-inner{
+      width: 360px;
+      margin: 180px auto;
+      text-align: center;
+      position: relative;
+
+      .m-group-avatar{
+        min-height:140px;
+      }
+
+      .minds-avatar{
+        background:transparent;
+        margin:auto;
+      }
+    }
+
+  }
+
+}
+
+minds-groups-profile-members-invite {
+  width: 100%;
+
+  .mdl-card__title{
+    padding-bottom:0;
+  }
+
+  .mdl-card__supporting-text{
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  span{
+    display:block;
+    padding:$minds-padding;
+  }
+
+  .m-search-inline{
+    margin-top:$minds-margin*2;
+  }
+}
+
+.m-group-info {
+
+  .mdl-card{
+    padding:$minds-padding;
+    margin-bottom:$minds-margin;
+  }
+
+  minds-channel-modules.mdl-card {
+    padding:0;
+    min-height:0;
+    margin-top: $minds-margin;
+  }
+
+  .m-group-info-name,
+  .m-group-info-brief-description,
+  .m-group-info-tags,
+  .m-group-info-membership {
+    width:auto;
+    min-height:0;
+    padding:$minds-padding;
+
+    i.material-icons {
+      //font-size: 16px;
+      vertical-align: middle;
+      padding-right:$minds-padding;
+    }
+
+    > div {
+      > span {
+        vertical-align: middle;
+        font-size: 11px;
+        padding: 4px 7px;
+        margin: 2px 2px;
+        border: 1px solid rgb(238, 238, 238);
+        border-radius: 3px;
+        display: inline-block;
+      }
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 400;
+      margin:0;
+    }
+    input[type=text], select, textarea {
+      width: 100%;
+      padding: $minds-padding;
+      vertical-align: middle;
+      border: 1px solid #ddd;
+
+      &.h1 {
+        font-size: 26px;
+        font-weight: 400;
+      }
+
+      &.icon-prefix {
+        width: 85%;
+        width: calc(100% - 38px);
+      }
+
+    }
+
+    minds-form-tags-input{
+      width: 80%;
+      width: calc(100% - 48px);
+      display:inline-block;
+    }
+
+    select{
+      padding: 8px;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+
+  }
+
+  .m-group-info-membership{
+    font-size:12px;
+  }
+
+  .m-group-info-brief-description {
+    > .mdl-card__supporting-text {
+      padding-top: 0;
+    }
+  }
+
+  .m-group-info-members {
+    width: auto;
+
+    .mdl-card__title {
+      padding-bottom: 0;
+      position: relative;
+
+      > a {
+        position: absolute;
+        right: 16px;
+        top: 25px;
+        font-size: 13px;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px dotted #ddd;
+      }
+    }
+
+    .members-grid {
+      min-height: 0;
+    }
+  }
+}
+
+.group-avatar{
+  padding:$minds-padding;
+  img{
+    width:100%;
+  }
+}
+
+minds-groups-create{
+
+  .m-group-saving-overlay{
+    width:100%;
+    height:100%;
+    position:fixed;
+    background:rgba(0,0,0,0.8);
+
+    text-align: center;
+    padding-top: 30%;
+    padding-top: 50vh;
+    padding-top: calc(50vh - 50px);
+
+    z-index:999;
+  }
+
+  .minds-banner{
+    max-height:400px;
+    height:400px;
+  }
+
+  form{
+    width:100%;
+  }
+  .m-groups-name,
+  .m-groups-tags,
+  .m-groups-new-invitee {
+    width:100%;
+
+    input{
+      padding:$minds-padding*2;
+    }
+    label{
+      padding:($minds-padding*2)-4 $minds-padding*2;
+    }
+  }
+
+  .m-groups-brief{
+    width:100%;
+
+    textarea{
+      padding:$minds-padding*2;
+    }
+    label{
+      top:inherit;
+      bottom:24px;
+      padding:($minds-padding*2)-4 $minds-padding*2;
+    }
+
+  }
+  .m-groups-brief.is-focused{
+    label{
+      bottom:0;
+      top:24px;
+    }
+  }
+
+  .m-groups-visibilty{
+    width:100%;
+    .mdl-radio{
+      display:block;
+    }
+  }
+
+  .m-groups-save{
+
+    button{
+      float:right;
+      margin:$minds-margin;
+    }
+
+  }
+
+}
+
+.groups-tabs{
+
+  minds-groups-settings-button {
+    position: relative;
+
+    > button {
+      position: relative;
+      top: 8px;
+      font-size: 23px;
+      text-transform: none;
+    }
+
+    .minds-dropdown-menu {
+      position: absolute;;
+      top: 44px;
+      right: 0;
+      left: auto;
+      width: 200px;
+      margin-top: 0;
+      text-transform: capitalize;
+    }
+
+    m-modal{
+      z-index: 999;
+      position: relative;
+    }
+  }
+
+  minds-button-edit, minds-button-feature{
+    padding:$minds-padding;
+
+    button.material-icons{
+      padding: 4px 8px;
+      font-size: 23px;
+    }
+    button > .material-icons{
+      font-size: 23px;
+    }
+  }
+  minds-groups-join-button{
+    padding:$minds-padding $minds-padding*2;
+  }
+}
+
+.m-group-title{
+  h1, input{
+    font-size: 56px;
+  }
+}
+
+minds-groups-profile-requests{
+  transform-style: preserve-3d;
+
+  > .mdl-card {
+    max-height: 94px;
+  }
+
+  .mdl-cell{
+    min-height:0;
+  }
+
+  .mdl-card__title{
+    position: relative;
+    top: 14px - $minds-padding;
+    padding: $minds-padding;
+  }
+
+  .minds-avatar{
+    margin-right:$minds-margin;
+    img{
+      width:50px;
+    }
+  }
+
+  .minds-body {
+    > a {
+      display: block;
+      font-size: 1.1em;
+      text-decoration: none;
+    }
+
+    > span {
+      display: block;
+      font-size: 0.75em;
+    }
+  }
+
+  .mdl-card__actions{
+    border-top: 0;
+    width: auto;
+    right: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 $minds-padding*2;
+  }
+}
+
+.m-groups-button-badge {
+  color: #45565E;
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 2px;
+  opacity: 0.65;
+}
+
+.m-group-closed{
+  .tabs{
+    minds-button-remind{
+      display:none;
+    }
+    .minds-boost-button{
+      display:none;
+    }
+  }
+}
+
+minds-groups-card-user-actions-button {
+  > button {
+    padding: 0 !important;
+  }
+
+  .minds-dropdown-menu {
+    top: 12px;
+    right: 0;
+    width: 180px;
+    z-index: 10000;
+  }
+
+  m-modal{
+    z-index: 99999;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .m-modal-container {
+      max-width: 480px;
+      min-width:auto;
+      height: auto;
+      min-height:0;
+      margin: 0 auto;
+      text-transform: none;
+      text-align: left;
+
+
+      .mdl-card{
+        min-height:0;
+      }
+    }
+
+    .minds-modal-dialog-actions {
+      padding: 0 $minds-padding $minds-padding;
+      box-sizing: border-box;
+      text-align: right;
+
+      > button {
+        line-height: 1em;
+      }
+    }
+
+  }
+}
+
+.minds-dropdown-menu .minds-menu-info-item {
+  color: #999999;
+}
+
+minds-groups-create {
+  .save-bar {
+    display: none !important;
+  }
+
+  .invitees {
+    > span {
+      background: #ddd;
+      display: inline-block;
+      padding: 1px 6px 2px;
+      border-radius: 2px;
+      margin-right: 0.35em;
+
+      .m-remove-invitee {
+        font-size: inherit;
+        position: relative;
+        top: 2px;
+        cursor: pointer;
+        color: #999;
+      }
+    }
+  }
+
+  header {
+    position: relative;
+
+    .avatar-wrapper {
+      position: relative;
+      pointer-events: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    minds-avatar {
+      position: absolute;
+      bottom: 12px;
+      right: 0;
+      pointer-events: all;
+
+      .minds-avatar {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+}
