@@ -61,6 +61,8 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         $this->btConfig->setPublicKey($config['public_key']);
         $this->btConfig->setPrivateKey($config['private_key']);
         $this->gateway = new Braintree_Gateway($this->btConfig);
+        //this is a hack for webhooks
+        Braintree_Configuration::$global = $this->btConfig; 
         //call_user_func([$this->btConfig, 'gateway']);
         return $this;
     }
