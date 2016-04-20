@@ -5,6 +5,8 @@
 
 namespace Minds\Components;
 
+use Minds\Core\Di\Di;
+
 class Controller {
 
     protected $di;
@@ -12,7 +14,7 @@ class Controller {
 
     public function __construct()
     {
-        $this->di = Minds\Core\Di\Di::_();
+        $this->di = Di::_();
         $this->config = $this->di->get('Config');
     }
 
