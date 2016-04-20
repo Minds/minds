@@ -362,15 +362,7 @@ class newsfeed implements Interfaces\Api
                     ));
 
                     if ($container) {
-                        $type = 'entity';
-
-                        if (is_object($container) && method_exists($container, 'getType')) {
-                            $type = $container->getType();
-                        } elseif (is_object($container) && isset($container->type)) {
-                            $type = $container->type;
-                        }
-
-                        Core\Events\Dispatcher::trigger('activity:container', $type, [
+                        Core\Events\Dispatcher::trigger('activity:container', $container->type, [
                             'container' => $container,
                             'activity' => $activity,
                         ]);
