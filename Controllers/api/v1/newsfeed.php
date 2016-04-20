@@ -78,8 +78,8 @@ class newsfeed implements Interfaces\Api
                     array_unshift($activity, $boost);
                     if (get_input('offset')) {
                       //bug: sometimes views weren't being calculated on scroll down
-                      \Minds\Helpers\Counters::increment($boost_object->guid, "impression");
-                      \Minds\Helpers\Counters::increment($boost_object->owner_guid, "impression");
+                      \Minds\Helpers\Counters::increment($boost->guid, "impression");
+                      \Minds\Helpers\Counters::increment($boost->owner_guid, "impression");
                     }
                 }
                 if(!$boosts){
