@@ -42,7 +42,7 @@ class banners implements Interfaces\FS
             break;
           case "group":
             $f = new Entities\File();
-            $f->owner_guid = $entity->getOwnerObj()->guid;
+            $f->owner_guid = $entity->owner_guid ?: $entity->getOwnerObj()->guid;
             $f->setFilename("group/{$entity->getGuid()}.jpg");
             $filepath = $f->getFilenameOnFilestore();
           case "object":
