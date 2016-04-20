@@ -242,7 +242,7 @@ class group implements Interfaces\Api
 
         $resized = get_resized_image_from_uploaded_file('file', 3840, 1404);
         $file = new FileEntity();
-        $file->owner_guid = $group_owner->getGuid();
+        $file->owner_guid = $group->owner_guid ?: $group_owner->getGuid();
         $file->setFilename("group/{$group->getGuid()}.jpg");
         $file->open('write');
         $file->write($resized);
