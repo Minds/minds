@@ -82,7 +82,7 @@ class blog implements Interfaces\Api
               'limit'=> $limit
             ));
             $response['blogs'] = Factory::exportable($entities);
-            $response['load-next'] = (string) end($entities)->guid;
+            $response['load-next'] = $entities ? (string) end($entities)->guid : null;
             break;
           case "next":
             if (!isset($pages[1])){
@@ -163,7 +163,7 @@ class blog implements Interfaces\Api
         }
 
         $original_access = $blog->access_id;
-        $allowed = array('title', 'description', 'access_id', 'status', 'license');
+        $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature');
 
         foreach ($allowed as $v) {
             if (isset($_POST[$v])) {
@@ -172,7 +172,7 @@ class blog implements Interfaces\Api
         }
 
         if (isset($_POST['mature'])) {
-            $blog->setMature($_POST['mature']);
+            //$blog->setMature($_POST['mature']);
         }
 
         $blog->save();
