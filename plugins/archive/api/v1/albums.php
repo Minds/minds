@@ -30,14 +30,17 @@ class albums implements Interfaces\Api{
         switch($pages[0]){
             case "list":
 
+                $owner_guid = isset($pages[1]) && is_numeric($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
+
                 $entities = Core\Entities::get([
                   'subtype' => 'album',
-                  'owner_guid' => Core\Session::getLoggedInUser()->guid
+                  'owner_guid' => $owner
                 ]);
 
                 if(!$entities){
                   $album = new entities\album();
                   $album->title = "My Album";
+                  $album->owner_guid = $owner_guid;
                   $album->save();
                   $entities = [$album];
                 }
