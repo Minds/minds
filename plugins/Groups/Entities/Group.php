@@ -304,8 +304,7 @@ class Group extends NormalizedEntity
      */
     public function isMember($user = null)
     {
-        return (new Membership)->setGroup($this)
-          ->isMember($user);
+        return Membership::_($this)->isMember($user);
     }
 
     /**
@@ -315,8 +314,10 @@ class Group extends NormalizedEntity
      */
     public function isAwaiting($user = null)
     {
-        return (new Membership)->setGroup($this)
-          ->isAwaiting($user);
+        if($this->isMember($user)){
+            return false;
+        }
+        return Membership::_($this)->isAwaiting($user);
     }
 
     /**
@@ -326,6 +327,9 @@ class Group extends NormalizedEntity
      */
     public function isInvited($user = null)
     {
+        if($this->isMember()){
+            return false;
+        }
         return (new Invitations)->setGroup($this)
           ->isInvited($user);
     }
@@ -416,13 +420,18 @@ class Group extends NormalizedEntity
 
     public function getMembersCount()
     {
-        return (new Membership)->setGroup($this)->getMembersCount();
+        return Membership::_($this)->getMembersCount();
     }
 
     public function getActivityCount()
     {
-        $indexes = Di::_()->get('Database\Cassandra\Indexes');
-        return $indexes->count("activity:container:{$this->getGuid()}");
+        $cache = Di::_()->get('Cache');
+        if($count = $cache->get("activity:container:{$this->getGuid()}")){
+            return $count;
+        }
+        $count = $this->indexDb->count("activity:container:{$this->getGuid()}");
+        $cache->set("activity:container:{$this->getGuid()}", $count);
+        return $count;
     }
 
     public function getRequestsCount()
@@ -430,7 +439,7 @@ class Group extends NormalizedEntity
         if($this->isPublic()){
             return 0;
         }
-        return (new Membership)->setGroup($this)->getRequestsCount();
+        return Membership::_($this)->getRequestsCount();
     }
 
     /**
@@ -446,7 +455,7 @@ class Group extends NormalizedEntity
         $export['owner_guid'] = $this->getOwnerObj()->guid;
         $export['activity:count'] = $this->getActivityCount();
         $export['members:count'] = $this->getMembersCount();
-        $export['requests:count'] = $this->getRequestsCount();
+        //$export['requests:count'] = $this->getRequestsCount();
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
 

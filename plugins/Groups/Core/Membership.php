@@ -20,6 +20,8 @@ class Membership
 {
     use Actorable;
 
+    static private $_ = [];
+
     protected $group;
     protected $relDB;
     protected $cache;
@@ -93,11 +95,11 @@ class Membership
      */
     public function getMembersCount($cached = true)
     {
-        if($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")){
+        if(($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")) !== NULL){
             return $count;
         }
         $this->relDB->setGuid($this->group->getGuid());
-
+        
         $count = $this->relDB->countInverse('member');
         $this->cache->set("group:{$this->group->getGuid()}:members:count", $count);
         return $count;
@@ -202,7 +204,7 @@ class Membership
             throw new GroupOperationException('User not found');
         }
 
-        if ($this->isMember($user)) {
+        if ($this->isMember($user, false)) {
             throw new GroupOperationException('User is already a member');
         }
 
@@ -262,7 +264,7 @@ class Membership
             throw new GroupOperationException('User not found');
         }
 
-        if (!$this->isMember($user)) {
+        if (!$this->isMember($user, false)) {
             throw new GroupOperationException('User is not a member');
         }
 
@@ -309,16 +311,23 @@ class Membership
      * @param  mixed   $user
      * @return boolean
      */
-    public function isMember($user)
+    public function isMember($user, $cache = true)
     {
         if (!$user) {
             return false;
         }
-
+ 
         $user_guid = is_object($user) ? $user->guid : $user;
+
+        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user->guid")) !== NULL){
+            return $is;
+        }
+        
         $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->check('member', $this->group->getGuid());
+        $is = $this->relDB->check('member', $this->group->getGuid());
+        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user->guid", $is);
+        return $is;
     }
 
     /**
@@ -440,7 +449,7 @@ class Membership
         if (!$user) {
             return false;
         }
-
+        
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
@@ -518,4 +527,12 @@ class Membership
         return $done;
     }
 
+
+    public static function _($group)
+    {
+        if(!isset(self::$_[$group->guid])){
+            self::$_[$group->guid] = (new Membership)->setGroup($group);
+        }
+        return self::$_[$group->guid];
+    }
 }
