@@ -95,7 +95,7 @@ class Membership
      */
     public function getMembersCount($cached = true)
     {
-        if(($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")) !== NULL){
+        if(($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")) !== FALSE){
             return $count;
         }
         $this->relDB->setGuid($this->group->getGuid());
@@ -319,7 +319,7 @@ class Membership
  
         $user_guid = is_object($user) ? $user->guid : $user;
 
-        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user->guid")) !== NULL){
+        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user->guid")) !== FALSE){
             return $is;
         }
         
