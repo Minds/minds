@@ -64,8 +64,8 @@ class Peer implements BoostEntityInterface
       $this->time_created = $array['time_created'];
       $this->last_updated = $array['last_updated'];
       $this->transactionId = $array['transactionId'];
-      $this->scheduledTs = $array['scheduledTs'];
-      $this->postToFacebook = $array['postToFacebook'];
+      $this->scheduledTs = isset($array['scheduledTs']) ? $array['scheduledTs'] : null;
+      $this->postToFacebook = isset($array['postToFacebook']) ? $array['postToFacebook'] : false;
       return $this;
   }
 

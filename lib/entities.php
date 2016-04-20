@@ -62,8 +62,12 @@ function invalidate_cache_for_entity($guid) {
  * @access private
  * TODO(evan): Use an ElggCache object
  */
-function cache_entity(ElggEntity $entity) {
+function cache_entity($entity) {
     global $ENTITY_CACHE;
+
+    if (!($entity instanceof ElggEntity)) {
+        return;
+    }
 
     // Don't store too many or we'll have memory problems
     // TODO(evan): Pick a less arbitrary limit

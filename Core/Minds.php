@@ -15,6 +15,25 @@ class Minds extends base
      */
     public function init()
     {
+        $this->initProviders();
+    }
+
+    /**
+     * Initialize our providers
+     * @return void
+     */
+    public function initProviders()
+    {
+        (new Config\ConfigProvider())->register();
+        //(new Core\Boost\BoostProvider())->register();
+        (new Data\DataProvider())->register();
+        (new Email\EmailProvider())->register();
+        //(new Core\Events\EventsProvider())->register();
+        //(new Core\Notification\NotificationProvider())->register();
+        (new Pages\PagesProvider())->register();
+        (new Payments\PaymentsProvider())->register();
+        (new Queue\QueueProvider())->register();
+        (new Security\SecurityProvider())->register();
     }
 
     /**
@@ -42,7 +61,7 @@ class Minds extends base
         Security\XSRF::setCookie();
 
         Events\Defaults::_();
-        SEO\Defaults::_();
+        new SEO\Defaults(static::$di->get('Config'));
 
         /**
          * Boot the system, @todo this should be oop?
@@ -77,7 +96,7 @@ class Minds extends base
     {
         global $CONFIG;
         if (!isset($CONFIG)) {
-            $CONFIG = Config::_();
+            $CONFIG = static::$di->get('Config');
         }
 
         // Load the system settings

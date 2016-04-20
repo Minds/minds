@@ -42,12 +42,12 @@ class Manager
       $route = rtrim(strtok($_SERVER["REQUEST_URI"], '?'), '/');
       }
 
-      $slugs = array();
-      $meta = array();
+      $slugs = [];
+      $meta = [];
 
       while ($route) {
           if (isset(self::$routes[$route])) {
-              $meta = call_user_func_array(self::$routes[$route], array(array_reverse($slugs)));
+              $meta = call_user_func_array(self::$routes[$route], array(array_reverse($slugs))) ?: [];
               break;
           } else {
               $slugs[] = substr($route, strrpos($route, '/')+1);

@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -52,7 +53,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
           $link = elgg_get_site_url() . "forgot-password?username=" . $user->username . "&code=" . $code;
 
           //now send an email
-          $mailer = new Core\Email\Mailer();
+          $mailer = Di::_()->get('Mailer');
           $message = new Core\Email\Message();
           $template = new Core\Email\Template();
           $template

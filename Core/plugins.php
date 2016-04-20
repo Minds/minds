@@ -78,8 +78,12 @@ class plugins extends base
             self::saveToCache("plugins:$status", $rows);
         }
 
+        $list = [];
         foreach ($plugins as $key) {
             $row = $rows[$key];
+            if(!$row && $key === "Groups"){
+                $row = $rows["groups"];
+           }
 
             //do a quick check to see if the plugin is active, if it's not, then we can skip
             if ($status == 'active' && (!isset($row['active']) || $row['active'] != 1)) {
@@ -159,7 +163,7 @@ class plugins extends base
      * @param string $id - the id of the plugin
      * @return bool
      */
-    public function isActive($id)
+    public static function isActive($id)
     {
         $plugins = self::get('active');
         return isset($plugins[$id]);

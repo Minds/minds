@@ -145,12 +145,6 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
      */
     public function getEntity()
     {
-        //$guid = $this->entity->guid;
-        //if($this->entity->entity_guid){
-        //    $guid = $this->entity->entity_guid;
-        //}
-        //$this->entity->{'thumbs:up:user_guids'} = array_keys($this->db->getRow("thumbs:up:entity:$guid", [ 'offset'=> Core\Session::getLoggedInUserGuid() ]));
-        //$this->entity->{'thumbs:down:user_guids'} = array_keys($this->db->getRow("thumbs:down:entity:$guid", [ 'offset'=> Core\Session::getLoggedInUserGuid() ]));
         return $this->entity;
     }
 
@@ -260,7 +254,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         return $this->handler;
     }
 
-    public function export($vars = [])
+    public function export(array $keys = [])
     {
         $export = parent::export();
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));

@@ -12,11 +12,13 @@ $CONFIG->cassandra->servers = array('{{cassandra_server}}');
 $CONFIG->cassandra->cql_servers = array('{{cassandra_server}}:9042');
 
 
-/** 
+/**
  * Other Elgg Settings
  */
 $CONFIG->installed = true;
 $CONFIG->path = '{{path}}';
+$CONFIG->plugins_path = '{{path}}plugins/';
+$CONFIG->pluginspath = '{{path}}plugins/';
 $CONFIG->dataroot = '{{dataroot}}';
 $CONFIG->default_site = '{{default_site}}';
 $CONFIG->site_id = '{{default_site}}';

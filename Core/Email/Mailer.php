@@ -15,25 +15,21 @@ class Mailer
     private $queue;
     private $stats;
 
-    public function __construct($mailer = null, Queue $queue = null)
+    public function __construct($mailer = null, $queue = null)
     {
-        if ($mailer) {
-            $this->mailer = $mailer;
-        } else {
-            $this->mailer = new PHPMailer();
-        }
-        $this->mailer->isSMTP();
-        $this->mailer->SMTPKeepAlive = true;
+        $this->mailer = $mailer;
         $this->setup();
-        $this->stats = array(
+        $this->stats = [
           'sent' => 0,
           'failed' => 0
-        );
+        ];
         $this->queue = $queue ?: Queue::build();
     }
 
     private function setup()
     {
+        $this->mailer->isSMTP();
+        $this->mailer->SMTPKeepAlive = true;
         $this->mailer->Host = Core\Config::_()->email['smtp']['host'];
         $this->mailer->Auth = Core\Config::_()->email['smtp']['auth'];
         $this->mailer->SMTPAuth = true;
@@ -86,6 +82,8 @@ class Mailer
 
     public function __destruct()
     {
-        $this->mailer->SmtpClose();
+        if($this->mailer){
+            $this->mailer->SmtpClose();
+        }
     }
 }

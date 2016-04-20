@@ -54,7 +54,9 @@ class newsfeed implements Interfaces\Api
         }
 
         //daily campaign reward
-        Helpers\Campaigns\DailyRewards::reward();
+        if (Core\Session::isLoggedIn()) {
+            Helpers\Campaigns\DailyRewards::reward();
+        }
 
         $activity = Core\Entities::get(array_merge(array(
             'type' => 'activity',
@@ -272,6 +274,7 @@ class newsfeed implements Interfaces\Api
                         $activity->setMature($_POST['mature']);
                     }
 
+                    $activity->indexes = []; //don't re-index on edit
                     $activity->save();
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }
@@ -327,6 +330,8 @@ class newsfeed implements Interfaces\Api
 
                 }
 
+                $container = null;
+
                 if (isset($_POST['container_guid']) && $_POST['container_guid']) {
                     $activity->container_guid = $_POST['container_guid'];
                     if($container = Entities\Factory::build($activity->container_guid))
@@ -355,6 +360,22 @@ class newsfeed implements Interfaces\Api
                             'description' => isset($_POST['description']) ? $_POST['description'] : null
                         )
                     ));
+
+                    if ($container) {
+                        $type = 'entity';
+
+                        if (is_object($container) && method_exists($container, 'getType')) {
+                            $type = $container->getType();
+                        } elseif (is_object($container) && isset($container->type)) {
+                            $type = $container->type;
+                        }
+
+                        Core\Events\Dispatcher::trigger('activity:container', $type, [
+                            'container' => $container,
+                            'activity' => $activity,
+                        ]);
+                    }
+
                     return Factory::response(array('guid'=>$guid, 'activity'=> $activity->export()));
                 } else {
                     return Factory::response(array('status'=>'failed', 'message'=>'could not save'));

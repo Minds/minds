@@ -12,55 +12,28 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class Client implements Interfaces\QueueClient
 {
+    private $config;
     private $connection;
     private $channel;
     private $queue;
     private $exchange;
     private $binder = "";
 
-    public function __construct($options = array())
+    public function __construct($config, AMQPConnection $connection = null)
     {
-        global $CONFIG;
+        $this->config = $config;
+        $this->connection = $connection ?: new AMQPConnection(
+            'localhost',
+            5672,
+            'guest',
+            'guest'
+        );
+        $this->setup();
+    }
 
-        $host = "localhost";
-        if (isset($CONFIG->rabbitmq['host'])) {
-            $host = $CONFIG->rabbitmq['host'];
-        }
-        if (isset($options['host'])) {
-            $host = $options['host'];
-        }
-
-        $port = 5672;
-        if (isset($CONFIG->rabbitmq['port'])) {
-            $port = $CONFIG->rabbitmq['port'];
-        }
-        if (isset($options['port'])) {
-            $port = $options['port'];
-        }
-
-        $username = "guest";
-        if (isset($CONFIG->rabbitmq['username'])) {
-            $username = $CONFIG->rabbitmq['username'];
-        }
-        if (isset($options['username'])) {
-            $username = $options['username'];
-        }
-
-        $password = "guest";
-        if (isset($CONFIG->rabbitmq['password'])) {
-            $password = $CONFIG->rabbitmq['password'];
-        }
-        if (isset($options['password'])) {
-            $password = $options['password'];
-        }
-
-        if (isset($CONFIG->rabbitmq) && $CONFIG->rabbitmq['host']  == 'unit_tests') {
-            $this->connection = new \Minds\tests\phpunit\mocks\MockAMQPConnection();
-        } else {
-            $this->connection = new AMQPConnection($host, $port, $username, $password, '/');
-        }
+    protected function setup()
+    {
         $this->channel = $this->connection->channel();
-
         register_shutdown_function(function ($channel, $connection) {
             $channel->close();
             $connection->close();

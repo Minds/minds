@@ -53,7 +53,7 @@ class Retention implements AnalyticsMetric
 
             //now get active users from each interval after this date
             $endTs =  $timestamps[$x-$x+1];
-            echo "[$x]:: actives: " . date('d-m-Y', $endTs) . " signups: " . date('d-m-Y', $startTs) . "\n";
+            //echo "[$x]:: actives: " . date('d-m-Y', $endTs) . " signups: " . date('d-m-Y', $startTs) . "\n";
             $actives = $this->db->getRow("analytics:active:day:$endTs", ['limit'=>10000]);
 
             $retained = [];
@@ -63,11 +63,11 @@ class Retention implements AnalyticsMetric
                 }
             }
 
-            $this->db->removeRow("{$this->namespace}:$x:$now");
+            //$this->db->removeRow("{$this->namespace}:$x:$now");
             $this->db->insert("{$this->namespace}:$x:$now", $retained);
 
         }
-exit;
+
         return true;
     }
 
