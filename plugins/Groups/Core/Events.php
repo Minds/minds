@@ -66,7 +66,7 @@ class Events
             $params = $e->getParameters();
 
             $group = new Groups\Entities\Group();
-            $group->setGuid($params['entity']);
+            $group->loadFromGuid($params['entity']);
 
             $notifications = (new Notifications)->setGroup($group);
             $e->setResponse($notifications->send($params['params']));
