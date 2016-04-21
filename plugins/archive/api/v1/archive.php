@@ -116,7 +116,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
                 $image->owner_guid = $owner_guid;
 
-                if ($container_guid) {
+                if ($container_guid && is_numeric($container_guid)) {
                     $image->container_guid = $container_guid;
                     $image->hidden = true;
                 }
@@ -159,7 +159,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam{
 
                       $video->owner_guid = $owner_guid;
 
-                      if ($container_guid) {
+                      if ($container_guid && is_numeric($container_guid)) {
                           $video->container_guid = $container_guid;
                           $video->hidden = true;
                       }
