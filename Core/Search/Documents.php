@@ -165,9 +165,14 @@ class Documents
    * @param  array $data
    * @return array
    */
-  public function formatDocumentBody(array $data = [])
+  public function formatDocumentBody(array $data = [], $call = 0)
   {
     $body = [];
+
+    if ($call++ >= 10) {
+      // Do no index 10 levels deep
+      return null;
+    }
 
     foreach ($data as $item => $value) {
       if (is_bool($value)) {
@@ -175,8 +180,10 @@ class Documents
       } elseif (is_numeric($value)) {
         $value = (string) $value;
       } elseif (is_object($value) && method_exists($value, 'export')) {
-        $value = $value->export();
+        $value = $this->formatDocumentBody($value->export(), $call);
       }
+
+      $item = str_replace('.', '__', $item);
 
       $body[$item] = $value;
     }
