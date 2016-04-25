@@ -7,6 +7,7 @@ namespace Minds\Plugin\Groups\Entities;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Guid;
+use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\NormalizedEntity;
 use Minds\Plugin\Groups\Core\Membership;
@@ -51,11 +52,17 @@ class Group extends NormalizedEntity
      * Save
      * @return boolean
      */
-    public function save()
+    public function save(array $opts = [])
     {
+        $opts = array_merge([
+            'skipSearchIndexing' => false
+        ], $opts);
+        $creation = false;
+
         if (!$this->guid) {
             $this->guid = Guid::build();
             $this->time_created = time();
+            $creation = true;
         }
 
         $saved = $this->saveToDb([
@@ -81,7 +88,14 @@ class Group extends NormalizedEntity
         }
 
         $this->saveToIndex();
-        \elgg_trigger_event('create', $this->type, $this);
+        // TODO: Is this necessary?
+        \elgg_trigger_event($creation ? 'create' : 'update', $this->type, $this);
+
+        if (!$opts['skipSearchIndexing']) {
+            Dispatcher::trigger('search:index', 'all', [
+                'entity' => $this
+            ]);
+        }
 
         return $this;
     }
