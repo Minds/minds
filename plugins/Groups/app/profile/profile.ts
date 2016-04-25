@@ -7,6 +7,7 @@ import { GroupsService } from '../groups-service';
 import { MindsTitle } from '../../../services/ux/title';
 import { SessionFactory } from '../../../services/session';
 import { MDL_DIRECTIVES } from '../../../directives/material';
+import { Hovercard } from '../../../directives/hovercard';
 import { CARDS } from '../../../controllers/cards/cards';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
 import { MindsBanner } from '../../../components/banner';
@@ -29,7 +30,8 @@ import { ChannelModules } from '../../../controllers/channels/modules/modules';
   bindings: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/profile/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, BUTTON_COMPONENTS, RouterLink, CARDS, GroupsJoinButton,
-    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar, GroupsSettingsButton, ChannelModules, TagsInput ]
+    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar, GroupsSettingsButton, ChannelModules, TagsInput,
+    Hovercard ]
 })
 
 export class GroupsProfile {
