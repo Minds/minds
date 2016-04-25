@@ -319,14 +319,14 @@ class Membership
  
         $user_guid = is_object($user) ? $user->guid : $user;
 
-        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user->guid")) !== FALSE){
-            return $is;
+        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== NULL){
+            return (bool) $is;
         }
         
         $this->relDB->setGuid($user_guid);
 
         $is = $this->relDB->check('member', $this->group->getGuid());
-        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user->guid", $is);
+        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", $is);
         return $is;
     }
 
