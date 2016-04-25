@@ -54,6 +54,9 @@ class search implements Interfaces\Api
             $opts['type'] = 'object';
             $flags[] = '+subtype:"blog"';
             break;
+          case "groups":
+            $opts['type'] = 'group';
+            break;
         }
 
         $opts['flags'] = $flags;

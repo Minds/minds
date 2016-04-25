@@ -133,7 +133,7 @@ class Documents
             'query' => $query . $flags,
             'default_operator' => 'AND',
             'minimum_should_match' => '75%',
-            'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'hashtags^12' ],
+            'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'tags^12', 'hashtags^12' ],
           ]
         ]
       ]
