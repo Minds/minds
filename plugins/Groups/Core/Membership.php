@@ -243,6 +243,7 @@ class Membership
 
         $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
         $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
+        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", true);
 
         // TODO: [emi] Send a notification to target user if was awaiting
 
@@ -277,6 +278,7 @@ class Membership
 
         $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
         $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
+        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", false);
 
         if ($done) {
             return true;
@@ -319,7 +321,7 @@ class Membership
  
         $user_guid = is_object($user) ? $user->guid : $user;
 
-        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== NULL){
+        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== FALSE){
             return (bool) $is;
         }
         
