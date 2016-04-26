@@ -130,16 +130,16 @@ class Common implements Interfaces\PreparedInterface
     public function getSubscriptionsOfSubscriptions(Entities\User $user, $skip = 0)
     {
         $timestamps = Timestamps::span(15, 'day');
-    
+
         if ($user->getSubscriptionsCount() > 500) {
             //users with huge graphs take longer to discover friends of friends, so for now we just show who they aren't subscribed to for speed.
             //we can perhaps do background tasks for this in the future
-            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User)-[:HAS]->(p:Property { avatar:true }) 
+            $this->template = "MATCH (user:User {guid: {guid}}), (fof:User)-[:HAS]->(p:Property { avatar:true })
                             WHERE fof.last_active > {active}
                             AND NOT (user)-[:ACTED]->(fof)
                             AND NOT (fof.guid = user.guid)
-                            RETURN fof 
-                            SKIP {skip} 
+                            RETURN fof
+                            SKIP {skip}
                             LIMIT {limit}";
         } else {
             //error_log("loading default matches for $user->guid");
@@ -200,8 +200,11 @@ class Common implements Interfaces\PreparedInterface
      */
     public function createObject(\ElggObject $object)
     {
-        $this->template = "MERGE (object:$object->subtype { guid: {guid} })";
-        $this->values = array('guid'=>(string) $object->guid);
+        $this->template = "MERGE (object:$object->subtype { guid: {guid} }) SET object.time_created = {ts}";
+        $this->values = [
+          'guid' => (string) $object->guid,
+          'ts' => $object->time_created
+        ];
         return $this;
     }
 
@@ -227,7 +230,7 @@ class Common implements Interfaces\PreparedInterface
     {
         $this->template = "MATCH (a:User {guid:{user_guid}})-[:UP]-(o:$subtype)<-[:UP]-(b:User),
                             (b)-[:UP]->(object:$subtype)
-                            WHERE NOT a-[:ACTED]->(object) 
+                            WHERE NOT a-[:ACTED]->(object)
                             RETURN object SKIP {skip} LIMIT 16 ";
         $this->values = array(
             'user_guid'=> (string) $user_guid,
@@ -256,10 +259,11 @@ class Common implements Interfaces\PreparedInterface
      */
     public function getTrendingObjects($subtype='video', $skip = 0, $limit = 12)
     {
-        $this->template = "MATCH (object:$subtype)-[r:UP]-() RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT {limit}";
+        $this->template = "MATCH (object:$subtype)-[r:UP]-() WHERE object.time_created > {ts} RETURN object, count(r) as c ORDER BY c DESC, object.guid SKIP {skip} LIMIT {limit}";
         $this->values = array(
             'skip' => (int) $skip,
-            'limit' => (int) $limit
+            'limit' => (int) $limit,
+            'ts' => Timestamps::span(30, 'day')[15] //last two weeks
         );
         return $this;
     }
@@ -416,13 +420,13 @@ class Common implements Interfaces\PreparedInterface
 
         $timestamps = Timestamps::span(30, 'day');
 
-        $this->template = "start n = node:geom({filter}) 
-            MATCH (u:User {guid:{guid}}), (n)-[:HAS]->(p:Property { avatar:true }) 
+        $this->template = "start n = node:geom({filter})
+            MATCH (u:User {guid:{guid}}), (n)-[:HAS]->(p:Property { avatar:true })
             WHERE n.last_active > {active}
-            AND NOT u-[:ACTED]->n 
-            AND NOT u.guid = n.guid 
-            RETURN n as fof 
-            SKIP {skip} 
+            AND NOT u-[:ACTED]->n
+            AND NOT u.guid = n.guid
+            RETURN n as fof
+            SKIP {skip}
             LIMIT {limit}";
         $this->values = array(
             "filter" => "withinDistance:[$latlon,$distance]",
