@@ -1,14 +1,14 @@
 <?php
 /**
- * Minds gatherings.
+ * Minds Messenger
  *
  * @package Minds
- * @subpackage gatherings
+ * @subpackage Plugin/Messenger
  * @author Mark Harding (mark@minds.com)
  *
  */
 
-namespace minds\plugin\gatherings;
+namespace Minds\Plugin\Messenger;
 
 use Minds\Components;
 use Minds\Core;
@@ -18,9 +18,9 @@ class start extends Components\Plugin{
 
 	public function init(){
 
-      Api\Routes::add('v1/gatherings', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
-      Api\Routes::add('v1/conversations', '\\minds\\plugin\\gatherings\\api\\v1\\conversations');
-      Api\Routes::add('v1/keys', '\\minds\\plugin\\gatherings\\api\\v1\\keys');
+      Api\Routes::add('v1/gatherings', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
+      Api\Routes::add('v1/conversations', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
+      Api\Routes::add('v1/keys', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\keys');
 
       /**
        * if it's a mutual match then create a conversation
@@ -51,23 +51,22 @@ class start extends Components\Plugin{
 				//->setVisibility(0) //only show for loggedin
 			);
 
-			//@todo move to new oop style
-			\elgg_register_plugin_hook_handler('entities_class_loader', 'all', function($hook, $type, $return, $row){
-				if($row->subtype == 'message')
-					return new entities\message($row);
-				if($row->subtype == 'call_missed')
-					return new entities\CallMissed($row);
-				if($row->subtype == 'call_ended')
-					return new entities\CallEnded($row);
+			Core\Events\Dispatcher::register('entities:loader', 'all', function($event){
+				$params = $event->getParameters();
+				if($params['row']->subtype == 'message')
+					return new Entities\Message($params['row']);
+				if($params['row']->subtype == 'call_missed')
+					return new Entities\CallMissed($params['row']);
+				if($params['row']->subtype == 'call_ended')
+					return new Entities\CallEnded($params['row']);
 			});
-
 
 			Core\Events\Dispatcher::register('acl:read', 'all', function($event){
 				$params = $event->getParameters();
 				$message = $params['entity'];
 				$user = $params['user'];
 
-				if($message instanceof \minds\plugin\gatherings\entities\message){
+				if($message instanceof Entities\Message){
 					$key = "message:$user->guid";
 					if($message->$key)
 						$event->setResponse(true);
@@ -77,28 +76,11 @@ class start extends Components\Plugin{
 
 	}
 
-	/**
-	 * Encryptor
-	 */
-	public function encrypt($message){
-		$user = \elgg_get_logged_in_user_entity();
-
-	}
-
-	/**
-	 * Sets the sidebar menus
-	 */
-	public function pageSetup(){
-		if(elgg_get_context() == 'gatherings'){
-
-		}
-	}
-
 	static public function getConversationsList($offset= ""){
         //@todo review for scalability. currently for pagination we need to load all conversation guids/time
-        $conversation_guids = core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>10000));
-		if($conversation_guids){
-			$conversations = array();
+        $conversation_guids = Core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>10000));
+				if($conversation_guids){
+						$conversations = [];
 
             arsort($conversation_guids);
             $i = 0;
