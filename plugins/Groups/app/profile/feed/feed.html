@@ -1,4 +1,4 @@
-<minds-newsfeed-poster (load)="prepend($event)" [containerGuid]="group.guid" [accessId]="group.guid"></minds-newsfeed-poster>
+<minds-newsfeed-poster (load)="prepend($event)" [containerGuid]="group.guid" [accessId]="group.guid" *ngIf="group['is:member']"></minds-newsfeed-poster>
 
 <div class="minds-list">
 
