@@ -5,7 +5,7 @@
  * @version 1
  * @author Mark Harding
  */
-namespace minds\plugin\gatherings\api\v1;
+namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
 use minds\plugin\gatherings\entities;

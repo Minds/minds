@@ -14,9 +14,11 @@ use Minds\Components;
 use Minds\Core;
 use Minds\Api;
 
-class start extends Components\Plugin{
+class start extends Components\Plugin
+{
 
-	public function init(){
+	public function init()
+	{
 
       Api\Routes::add('v1/gatherings', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
       Api\Routes::add('v1/conversations', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
@@ -51,14 +53,14 @@ class start extends Components\Plugin{
 				//->setVisibility(0) //only show for loggedin
 			);
 
-			Core\Events\Dispatcher::register('entities:loader', 'all', function($event){
+			Core\Events\Dispatcher::register('entities:map', 'all', function($event){
 				$params = $event->getParameters();
 				if($params['row']->subtype == 'message')
-					return new Entities\Message($params['row']);
+					$e->setResponse(new Entities\Message($params['row']));
 				if($params['row']->subtype == 'call_missed')
-					return new Entities\CallMissed($params['row']);
+					$e->setResponse(new Entities\CallMissed($params['row']));
 				if($params['row']->subtype == 'call_ended')
-					return new Entities\CallEnded($params['row']);
+					$e->setResponse(new Entities\CallEnded($params['row']));
 			});
 
 			Core\Events\Dispatcher::register('acl:read', 'all', function($event){
@@ -74,53 +76,6 @@ class start extends Components\Plugin{
 
 			});
 
-	}
-
-	static public function getConversationsList($offset= ""){
-        //@todo review for scalability. currently for pagination we need to load all conversation guids/time
-        $conversation_guids = Core\Data\indexes::fetch("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array('limit'=>10000));
-				if($conversation_guids){
-						$conversations = [];
-
-            arsort($conversation_guids);
-            $i = 0;
-            $ready = false;
-            foreach($conversation_guids as $user_guid => $data){
-                if(!$ready && $offset){
-                    if($user_guid == $offset)
-                        $ready = true;
-                    continue;
-                }
-                if($i++ > 12 && !$offset)
-                    continue;
-
-                if($i++ > 24){
-                    continue;
-                }
-
-                if($user_guid == $offset){
-                    unset($conversation_guids[$user_guid]);
-                    continue;
-                }
-            	if(is_numeric($data)){
-					$ts = $data;
-					$unread = 0;
-				} else {
-					$data = json_decode($data, true);
-					$unread = $data['unread'];
-					$ts = $data['ts'];
-				}
-				$u = new \Minds\Entities\User($user_guid);
-				$u->last_msg = $ts;
-				$u->unread = $unread;
-				if($u->username && $u->guid != core\Session::getLoggedinUser()->guid){
-					$conversations[] = $u;
-				}
-				continue;
-			}
-
-		}
-		return $conversations;
 	}
 
 }
