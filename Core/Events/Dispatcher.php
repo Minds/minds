@@ -90,20 +90,20 @@ class Dispatcher
             $calls[] = self::$events[$namespace]['all'];
         }
         //always trigger the all listener for namespace
-      foreach (array('all', 'elgg/hook/all', 'elgg/event/all') as $ns) {
-          if (isset(self::$events[$ns][$event])) {
-              $calls[] = self::$events[$ns][$event];
-          }
-      }
+        foreach (array('all', 'elgg/hook/all', 'elgg/event/all') as $ns) {
+            if (isset(self::$events[$ns][$event])) {
+                $calls[] = self::$events[$ns][$event];
+            }
+        }
 
         $calls = array_unique($calls, SORT_REGULAR);
 
       // New event format, expects event object
-      $eventobj = new Event(array(
-        'namespace' => $namespace,
-        'event' => $event,
-        'parameters' => $params
-      ));
+        $eventobj = new Event(array(
+          'namespace' => $namespace,
+          'event' => $event,
+          'parameters' => $params
+        ));
         $eventobj->setResponse($default_return);
 
         try {

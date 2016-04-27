@@ -46,7 +46,8 @@ class Entities extends base
         }
 
         //plugins should, strictly speaking, handle the routing of entities by themselves..
-        if ($new_entity = elgg_trigger_plugin_hook('entities_class_loader', 'all', $row)) {
+        if (($new_entity = Events\Dispatcher::trigger('entities:map', 'all', [ 'row' => $row ]))
+          || $new_entity = elgg_trigger_plugin_hook('entities_class_loader', 'all', $row)) {
             return $new_entity;
         }
 
