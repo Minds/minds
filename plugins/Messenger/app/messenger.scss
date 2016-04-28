@@ -1,0 +1,61 @@
+@import 'defaults.scss';
+
+minds-messenger{
+  position:fixed;
+  bottom:0;
+  right:0;
+  z-index:1;
+
+  .m-messenger-dockpane{
+    margin: 0 $minds-margin;
+    width: 200px;
+
+    .m-messenger-dockpane-container{
+      display:none;
+      visibility:hidden;
+    }
+
+    &.m-messenger-dockpane-open{
+      .m-messenger-dockpane-container{
+        visibility: visible;
+        display: block;
+      }
+    }
+
+    .m-messenger-dockpane-tab{
+      background: rgba(255,255,255,0.8);
+      border-radius: 3px 3px 0 0;
+      border-bottom: 1px solid #EAEAEA;
+      height: 28px;
+      width: 100%;
+      display: block;
+      cursor: pointer;
+
+      .m-messenger-dockpane-tab-title{
+        padding: 5px;
+
+        > i {
+          vertical-align: middle;
+          font-size: 17px;
+          padding: 0 8px;
+        }
+        > span {
+          vertical-align: middle;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-size: 11px;
+        }
+      }
+
+    }
+
+    .m-messenger-dockpane-container{
+      width: 100%;
+      height: 99px;
+      display: block;
+      position: relative;
+      background: rgba(255,255,255,0.9);
+    }
+
+  }
+}

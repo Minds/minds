@@ -15,11 +15,8 @@ import { MindsMessageResponse } from '../interfaces/responses';
 
 @Component({
   selector: 'minds-messenger-conversation',
-  
-  properties: [ '_conversation: conversation' ]
-})
-@View({
-  templateUrl: 'src/plugins/gatherings/conversation/conversation.html',
+  properties: [ '_conversation: conversation' ],
+  templateUrl: 'src/plugins/messenger/conversation/conversation.html',
   directives: [ CORE_DIRECTIVES, Material, InfiniteScroll, RouterLink, AutoGrow ]
 })
 

@@ -43,7 +43,7 @@ class start extends Components\Plugin
           }
       });
 
-			$link = new Core\Navigation\Item();
+			/*$link = new Core\Navigation\Item();
 			Core\Navigation\Manager::add($link
 				->setPriority(5)
 				->setIcon('chat_bubble')
@@ -51,7 +51,7 @@ class start extends Components\Plugin
 				->setTitle('Messenger')
 				->setPath('/Messenger')
 				//->setVisibility(0) //only show for loggedin
-			);
+			);*/
 
 			Core\Events\Dispatcher::register('entities:map', 'all', function($event){
 				$params = $event->getParameters();

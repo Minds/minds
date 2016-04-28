@@ -3,7 +3,6 @@ import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../services/sockets';
-import { MindsTitle } from '../../services/ux/title';
 import { MessengerConversation } from "./conversation/conversation";
 import { MessengerSetup } from "./setup/setup";
 import { Storage } from '../../services/storage';
@@ -12,22 +11,14 @@ import { SessionFactory } from '../../services/session';
 import { BUTTON_COMPONENTS } from '../../components/buttons';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
-import { Conversation } from './interfaces/entities';
-import { MindsConversationResponse } from './interfaces/responses';
-import { MindsUserSearchResponse } from '../../interfaces/responses';
-
 
 @Component({
-  selector: 'minds-gatherings',
-  
-  bindings: [MindsTitle ]
-})
-@View({
-  templateUrl: 'src/plugins/gatherings/gatherings.html',
-  directives: [ ROUTER_DIRECTIVES, CORE_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
+  selector: 'minds-messenger',
+  templateUrl: 'src/plugins/messenger/messenger.html',
+  directives: [ ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
 })
 
-export class Gatherings {
+export class Messenger {
 
   session = SessionFactory.build();
   conversation;
@@ -42,18 +33,15 @@ export class Gatherings {
   storage: Storage = new Storage();
   listener;
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle, public sockets: SocketsService){
-    if(!this.session.isLoggedIn()){
-      router.navigate(['/Login']);
-    } else {
-      if (params.params && params.params['guid']){
-        this.conversation = params.params['guid'];
-      }
+  constructor(public client: Client, public sockets: SocketsService){
+  }
+
+  ngOnInit(){
+    if(this.session.isLoggedIn()){
       this.checkSetup();
       this.load(true);
       this.listen();
     }
-    this.title.setTitle("Messenger");
   }
 
   checkSetup(){
@@ -64,37 +52,38 @@ export class Gatherings {
   }
 
   load(refresh : boolean = false) {
-    var self = this;
+
     if(this.inProgress)
       return false;
     this.inProgress = true;
 
-    this.client.get('api/v1/conversations',
-      {
-        limit: 12,offset: this.offset, cb: this.cb
+    this.client.get('api/v1/conversations', {
+        limit: 12,
+        offset: this.offset,
+        cb: this.cb
       })
-      .then((data : MindsConversationResponse) => {
-        if (!data.conversations) {
-          self.hasMoreData = false;
-          self.inProgress = false;
+      .then((response : any) => {
+        if (!response.conversations) {
+          this.hasMoreData = false;
+          this.inProgress = false;
           return false;
         }
 
-        if(self.conversations.length == 0 && !self.conversation)
-          self.conversation = data.conversations[0].guid;
+        if(this.conversations.length == 0 && !this.conversation)
+          this.conversation = response.conversations[0].guid;
 
         if(refresh){
-          self.conversations = data.conversations;
+          this.conversations = response.conversations;
         } else {
-          self.conversations = self.conversations.concat(data.conversations);
+          this.conversations = this.conversations.concat(response.conversations);
         }
 
-        self.offset = data['load-next'];
-        self.inProgress = false;
+        this.offset = response['load-next'];
+        this.inProgress = false;
       })
       .catch((error) => {
         console.log("got error" + error);
-        self.inProgress = true;
+        this.inProgress = true;
       });
   }
 
