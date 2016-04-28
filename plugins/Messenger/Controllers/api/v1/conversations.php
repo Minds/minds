@@ -8,9 +8,9 @@
 namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Entities;
 use Minds\Helpers;
 use Minds\Plugin\Messenger;
-use Minds\Plugin\Messenger\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
@@ -45,10 +45,15 @@ class conversations implements Interfaces\Api
     {
         $response = [];
 
-        $conversation = new Entities\Conversation(elgg_get_logged_in_user_guid(), $pages[0]);
-        $user = \Minds\Entities\Factory::build($pages[0]);
-        $is_subscribed = Core\Session::getLoggedInUser()->isSubscribed($pages[0]);
-        $is_subscriber = $user->isSubscribed(Core\Session::getLoggedInUser()->guid);
+        $me = Core\Session::getLoggedInUser();
+        $user = Entities\Factory::build($pages[0]);
+
+        $conversation = (new Messenger\Core\Conversation)
+          ->setParticipant($me)
+          ->setParticipant($user);
+
+        $is_subscribed = $me->isSubscribed($user->guid);
+        $is_subscriber = $user->isSubscribed($me->guid);
         if(!$is_subscribed || !$is_subscriber){
             return Factory::response(array(
               'status'=>'error',
@@ -60,44 +65,27 @@ class conversations implements Interfaces\Api
         }
 
         $conversation->clearCount();
-        $ik = $conversation->getIndexKeys();
-        $guids = core\Data\indexes::fetch("object:gathering:conversation:".$ik[0], array(
-          'limit'=>get_input('limit',12),
-          'offset'=>get_input('offset', ''),
-          'finish'=>get_input('start', ''),
-          'reversed'=>true
-        ));
-        if(isset($guids[get_input('start')])){
-            unset($guids[get_input('start')]);
-        }
-        if(isset($guids[get_input('offset')])){
-            unset($guids[get_input('offset')]);
-        }
 
-        if($guids){
+        $messages = $conversation->getMessages($_GET['limit'], $_GET['offset']);
 
-            $messages = Core\Entities::get(array('guids'=>$guids));
+        if($messages){
 
-            if($messages){
-
-                foreach($messages as $k => $message){
-                  if(isset($_GET['decrypt']) && $_GET['decrypt']){
-                    //sets the internal pointer to the decrypted message
-                    $messages[$k]->decryptMessage(Core\Session::getLoggedInUser()->guid, urldecode($_GET['password']));
-                  } else {
-                    $key = "message:".elgg_get_logged_in_user_guid();
+            foreach($messages as $k => $message){
+                if(isset($_GET['decrypt']) && $_GET['decrypt']){
+                    $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
+                } else {
+                    //support legacy clients
+                    $key = "message:$me->guid";
                     $messages[$k]->message = $messages[$k]->$key;
-                  }
                 }
-
-                $messages = array_reverse($messages);
-                $response['messages'] = Factory::exportable($messages);
-                $response['load-next'] = (string) end($messages)->guid;
-                $response['load-previous'] = (string) reset($messages)->guid;
             }
+
+            $messages = array_reverse($messages);
+            $response['messages'] = Factory::exportable($messages);
+            $response['load-next'] = (string) end($messages)->guid;
+            $response['load-previous'] = (string) reset($messages)->guid;
         }
-        $me = elgg_get_logged_in_user_guid();
-        $you = $pages[0] ;
+
         //return the public keys
         $response['publickeys'] = array(
             $me => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
