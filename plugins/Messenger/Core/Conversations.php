@@ -43,36 +43,34 @@ class Conversations
                         $ready = true;
                     continue;
                 }
-                if($i++ > 12 && !$offset)
-                    continue;
 
-                if($i++ > 24){
+                if(($i++ > 12 && !$offset) || ($i++ > 24))
                     continue;
-                }
 
                 if($user_guid == $offset){
                     unset($conversation_guids[$user_guid]);
                     continue;
                 }
-              if(is_numeric($data)){
-          $ts = $data;
-          $unread = 0;
-        } else {
-          $data = json_decode($data, true);
-          $unread = $data['unread'];
-          $ts = $data['ts'];
-        }
-        $u = new User($user_guid);
-        $u->last_msg = $ts;
-        $u->unread = $unread;
-        if($u->username && $u->guid != Session::getLoggedinUser()->guid){
-          $conversations[] = $u;
-        }
-        continue;
-      }
 
-    }
-    return $conversations;
+                if(is_numeric($data)){
+                    $ts = $data;
+                    $unread = 0;
+                } else {
+                    $data = json_decode($data, true);
+                    $unread = $data['unread'];
+                    $ts = $data['ts'];
+                }
+
+                $u = new User($user_guid);
+                $u->last_msg = $ts;
+                $u->unread = $unread;
+                if($u->username && $u->guid != Session::getLoggedinUser()->guid){
+                    $conversations[] = $u;
+                }
+                continue;
+            }
+        }
+        return $conversations;
     }
 
     public function buildConversation($users = [])

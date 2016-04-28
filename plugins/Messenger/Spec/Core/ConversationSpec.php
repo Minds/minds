@@ -6,6 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Entities\User;
+use Minds\Core\Data\Cassandra\Thrift\Indexes;
 
 class ConversationSpec extends ObjectBehavior
 {
@@ -44,6 +45,28 @@ class ConversationSpec extends ObjectBehavior
           ->setParticipant($user3)
           ->setParticipant($user4);
         $this->getIndexKey()->shouldReturn('100000000000000003:100000000000000063:100000000000000599:245660000000000063');
+    }
+
+    function it_should_return_message_and_build_entities(Indexes $db, User $user)
+    {
+        $this->beConstructedWith($db);
+
+        $messages = [];
+        for($i = 0; $i< 12; $i++){
+            $messages["123456678$i"] = '{
+              "guid": 123456678
+            }';
+        }
+
+        $db->get("object:gathering:conversation:100000000000000063", Argument::type('array'))
+          ->willReturn($messages);
+
+        $user->get('guid')->shouldBeCalled()->willReturn('100000000000000063');
+        $this->setParticipant($user);
+
+        //$db->getRow('')
+        $this->getMessages(12)->shouldHaveCount(12);
+        $this->getMessages(12)->shouldHaveKey(1234566781);
     }
 
 }

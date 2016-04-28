@@ -9,6 +9,8 @@ use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Entities\User;
 
+use Minds\Plugin\Messenger;
+
 class Conversation
 {
 
@@ -31,10 +33,15 @@ class Conversation
         return $this;
     }
 
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
     public function getMessages($limit = 12, $offset = "", $finish = "")
     {
 
-        $key = $this->getIndexKeys();
+        $key = $this->getIndexKey();
 
         $messages = $this->db->get("object:gathering:conversation:$key", [
           'limit' => $limit,
@@ -65,13 +72,11 @@ class Conversation
 
     private function permutateIndexKey($input = [])
     {
-
         $result = "";
         ksort($input);
         foreach($input as $key => $item){
             $result .= $result ? ":$key" : $key;
         }
-
         return $result;
     }
 

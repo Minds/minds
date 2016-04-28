@@ -28,6 +28,27 @@ class Message extends DenormalizedEntity{
 			return $this;
 	}
 
+	public function setMessage($message)
+	{
+			$this->message = $message;
+			$this->encrypted = false;
+			return $this;
+	}
+
+	public function getMessage($user_guid = NULL)
+	{
+			if($this->encryption && $user_guid){
+					return $this->messages[$user_guid];
+			}
+			return $this->message;
+	}
+
+	public function setMessages($user_guid, $message)
+	{
+			$this->messages[$user_guid] = $message;
+			return $this;
+	}
+
 	public function encrypt()
 	{
 			Di::_()->get('Messenger\Encryption')
