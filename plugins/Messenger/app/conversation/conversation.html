@@ -8,6 +8,19 @@
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
 
+    <div class="m-messenger-conversation-messages">
+      <div class="m-messenger-conversation-messages-message" *ngFor="#message of messages">
+          new message
+      </div>
+    </div>
+
+    <div class="m-messenger-conversation-composer">
+      <textarea placeholder="Type your message here"
+      [(ngModel)]="message"
+      (keydown.enter)="send($event)"
+      rows="1"></textarea>
+      <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event)">send_arrow</i>
+    </div>
   </div>
 
 </div>

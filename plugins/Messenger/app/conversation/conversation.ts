@@ -21,13 +21,37 @@ export class MessengerConversation {
   minds: Minds;
   session = SessionFactory.build();
 
+  guid : string;
   participants : Array<any> = [];
   open : boolean = false;
 
+  message : string = "";
+
+  constructor(public client : Client){
+
+  }
+
+  ngOnInit(){
+    this.load();
+  }
+
   set conversation(conversation : any){
+    this.guid = conversation.guid;
     if(conversation.open)
       this.open = true;
     this.participants = [ conversation ];
+  }
+
+  load(){
+    this.client.get('api/v1/conversations/' + this.guid)
+      .then((response : any) => {
+        console.log(response);
+      })
+  }
+
+  send(e){
+    e.preventDefault();
+    this.message = "";
   }
 
 }

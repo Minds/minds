@@ -8,7 +8,7 @@
 namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
-use Minds\Core\Entities;
+use Minds\Entities;
 use Minds\Helpers;
 use Minds\Plugin\Messenger;
 use Minds\Interfaces;
@@ -64,7 +64,7 @@ class conversations implements Interfaces\Api
             ));
         }
 
-        $conversation->clearCount();
+        //$conversation->clearCount();
 
         $messages = $conversation->getMessages($_GET['limit'], $_GET['offset']);
 
@@ -102,9 +102,10 @@ class conversations implements Interfaces\Api
         $conversations = (new Messenger\Core\Conversations)->getList(12, $_GET['offset']);
 
         if($conversations){
-            $response['conversations'] = Factory::exportable($conversations, array('unread', 'last_msg'));
-            $response['load-next'] = (string) end($conversations)->guid;
-            $response['load-previous'] = (string) reset($conversations)->guid;
+            $response['conversations'] = $conversations;
+            end($conversations);
+            $response['load-next'] = (string) key($conversations);
+            $response['load-previous'] = (string) key(reset($conversations));
         }
         return $response;
     }

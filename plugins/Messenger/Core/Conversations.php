@@ -30,47 +30,60 @@ class Conversations
     public function getList($limit = 12, $offset = "")
     {
         //@todo review for scalability. currently for pagination we need to load all conversation guids/time
-        $conversation_guids = $this->db->get("object:gathering:conversations:{$this->user->guid}", ['limit'=>10000]);
-        if($conversation_guids){
-            $conversations = [];
+        $conversations = $this->db->get("object:gathering:conversations:{$this->user->guid}", ['limit'=>10000]);
+        if($conversations){
+            $return = [];
 
-            arsort($conversation_guids);
+            arsort($conversations);
             $i = 0;
             $ready = false;
-            foreach($conversation_guids as $user_guid => $data){
+            foreach($conversations as $indexKey => $data){
+
                 if(!$ready && $offset){
-                    if($user_guid == $offset)
+                    if($indexKey == $offset)
                         $ready = true;
                     continue;
                 }
 
-                if(($i++ > 12 && !$offset) || ($i++ > 24))
+                if((string) $indexKey === (string) Session::getLoggedinUser()->guid)
                     continue;
 
-                if($user_guid == $offset){
-                    unset($conversation_guids[$user_guid]);
+                //if(($i++ > 12 && !$offset) || ($i++ > 24))
+                //    continue;
+
+                if($indexKey == $offset){
+                    unset($conversations[$indexKey]);
                     continue;
                 }
 
                 if(is_numeric($data)){
-                    $ts = $data;
-                    $unread = 0;
+                    $data = [
+                      'ts' => $data,
+                      'unread' => 0
+                    ];
                 } else {
                     $data = json_decode($data, true);
-                    $unread = $data['unread'];
-                    $ts = $data['ts'];
                 }
 
-                $u = new User($user_guid);
-                $u->last_msg = $ts;
-                $u->unread = $unread;
-                if($u->username && $u->guid != Session::getLoggedinUser()->guid){
-                    $conversations[] = $u;
+                //future proofing for group chat
+                foreach($data['participants'] as $k => $user_guid){
+                    if($user_guid != Session::getLoggedinUser()->guid){
+                        $user = new User($user_guid);
+                        $data['participants'][$k] = $user->export();
+                        $data['guid'] = (string) $user_guid; //for legacy support
+                        $data['name'] = $user->name;
+                        $data['username'] = $user->username;
+                    } else {
+                      unset($data['participants'][$k]);
+                    }
                 }
+                $data['participants'] = array_values($data['participants']);
+
+                $return[] = $data;
                 continue;
             }
         }
-        return $conversations;
+        return $return;
     }
 
     public function buildConversation($users = [])

@@ -13,6 +13,8 @@ namespace Minds\Plugin\Messenger;
 use Minds\Components;
 use Minds\Core;
 use Minds\Api;
+use Minds\Entities\User;
+use Minds\Plugin\Messenger;
 
 class start extends Components\Plugin
 {
@@ -38,8 +40,14 @@ class start extends Components\Plugin
           }
 
           if($mutual){
-              $conversation = new entities\conversation($params['user_guid'], $params['to_guid']);
-              $conversation->update(0, true);
+							$conversation = new Messenger\Core\Conversation();
+							$user = new User();
+							$user->guid = $params['user_guid'];
+							$to = new User();
+							$to->guid = $params['to_guid'];
+							$conversation->setParticipant($user)
+								->setParticipant($to)
+								->saveToLists();
           }
       });
 

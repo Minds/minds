@@ -65,6 +65,20 @@ class Conversation
         return $entities;
     }
 
+    public function saveToLists()
+    {
+        foreach($this->participants as $participant_guid => $participant){
+          var_dump($this->getIndexKey()); exit;
+          $this->db->set("object:gathering:conversations:$participant_guid", [
+            $this->getIndexKey() => json_encode([
+              'ts' => time(),
+              'unread' => 0,
+              'participants' => array_keys($this->participants)
+            ])
+          ]);
+        }
+    }
+
     public function getIndexKey()
     {
         return $this->permutateIndexKey($this->participants);

@@ -19,12 +19,4 @@ import { MessengerConversation } from '../conversation/conversation';
 
 export class MessengerConversationDockpanes {
 
-  constructor(public client: Client, public router: Router, public sockets: SocketsService){
-
-  }
-
-  ngOnDestroy(){
-
-  }
-
 }

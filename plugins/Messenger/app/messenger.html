@@ -1,24 +1,29 @@
 <div class="m-messenger-bar">
   <div class="m-messenger-conversations-wrappers">
-    <minds-messenger-conversation-dockpanes [conversations]="activeConversations"></minds-messenger-conversation-dockpanes>
-  </div>
-  <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
-    <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="userListToggle = !userListToggle">
-      <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
-    </div>
-    <div class="m-messenger-dockpane-container mdl-shadow--2dp">
-      <div class="m-messenger-userlist-search">
-        <i class="material-icons">search</i> <input type="text" placeholder="search">
-      </div>
-      <div class="m-messenger-userlist-conversations">
-        <div class="m-messenger-userlist-conversations-item"
-        *ngFor="#conversation of conversations"
-        (click)="openConversation(conversation)">
-          <!-- This is currently only configured for one-on-one chat -->
-          <img [src]="minds.cdn_url + 'icon/' + conversation.guid" class="mdl-shadow--2dp">
-          <span>{{conversation.username}}</span>
+    <minds-messenger-conversation-dockpanes [conversations]="activeConversations">
+
+      <minds-messenger-dockpane [style.right]="0">
+        <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
+          <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="userListToggle = !userListToggle">
+            <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
+          </div>
+          <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+            <div class="m-messenger-userlist-search">
+              <i class="material-icons">search</i> <input type="text" placeholder="search">
+            </div>
+            <div class="m-messenger-userlist-conversations">
+              <div class="m-messenger-userlist-conversations-item"
+              *ngFor="#conversation of conversations"
+              (click)="openConversation(conversation)">
+                <!-- This is currently only configured for one-on-one chat -->
+                <img [src]="minds.cdn_url + 'icon/' + conversation.guid" class="mdl-shadow--2dp">
+                <span>{{conversation.username}}</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </minds-messenger-dockpane>
+
+    </minds-messenger-conversation-dockpanes>
   </div>
 </div>

@@ -95,6 +95,12 @@ export class Messenger {
 
   openConversation(conversation){
     conversation.open = true;
+    for(let i = 0; i < this.activeConversations.length; i++){
+      if(this.activeConversations[i].guid == conversation.guid){
+        this.activeConversations[i] = conversation;
+        return;
+      }
+    }
     this.activeConversations.unshift(conversation);
   }
 
