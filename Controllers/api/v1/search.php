@@ -78,7 +78,7 @@ class search implements Interfaces\Api
           }
 
           // TODO: Check this logic
-          $response['load-next'] = (string) (max($guids) + 1);
+          $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'] + 1;
         }
 
         return Factory::response($response);

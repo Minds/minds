@@ -111,10 +111,12 @@ class Documents
     $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
     $matches = [];
 
+    $hashtags = false;
     preg_match_all($htRe, $query, $matches);
 
     if (isset($matches[2]) && $matches[2]) {
         $matches[2] = array_unique($matches[2]);
+        $hashtags = true;
 
         foreach ($matches[2] as $match) {
             $flags .= " +hashtags:\"{$match}\"";
@@ -139,6 +141,12 @@ class Documents
       ]
     ];
 
+    if($hashtags){
+        $params['body']['sort'] = [
+           [ 'time_created' => 'desc' ]
+         ];
+    }
+
     if ($opts['type']) {
       $params['type'] = $opts['type'];
     }
@@ -155,8 +163,9 @@ class Documents
       foreach ($results['hits']['hits'] as $result) {
         $guids[] = $result['_id'];
       }
-    } catch (\Exception $e) { }
-
+    } catch (\Exception $e) {
+    }
+    
     return $guids;
   }
 
