@@ -12,20 +12,25 @@ minds-messenger{
 
     .m-messenger-dockpane-container{
       display:none;
-      visibility:hidden;
     }
 
     &.m-messenger-dockpane-open{
       .m-messenger-dockpane-container{
-        visibility: visible;
         display: block;
+        width: 100%;
+        //height: 99px;
+        display: block;
+        position: relative;
+        background: rgba(255,255,255,1);
+      }
+      .m-messenger-dockpane-tab{
+        border-bottom: 1px solid #EAEAEA;
       }
     }
 
     .m-messenger-dockpane-tab{
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,1);
       border-radius: 3px 3px 0 0;
-      border-bottom: 1px solid #EAEAEA;
       height: 28px;
       width: 100%;
       display: block;
@@ -44,18 +49,67 @@ minds-messenger{
           text-transform: uppercase;
           letter-spacing: 1px;
           font-size: 11px;
+          font-weight:bold;
         }
       }
 
-    }
+    } //[end] .m-messenger-dockpane-tab
 
-    .m-messenger-dockpane-container{
-      width: 100%;
-      height: 99px;
-      display: block;
-      position: relative;
-      background: rgba(255,255,255,0.9);
-    }
 
+    &.m-messenger-userlist{
+
+      .m-messenger-userlist-search{
+        height: 30px;
+        width: 100%;
+        padding:0;
+        background: rgba(255,255,255,1);
+        box-sizing: border-box;
+
+        > i {
+          vertical-align: middle;
+          font-size: 20px;
+          padding: 0px 4px;
+        }
+        > input {
+          border: 0;
+          height: 100%;
+          width: 168px;
+          vertical-align: middle;
+          font-size: 12px;
+          line-height: 12px;
+          padding: 0;
+          -webkit-appearance: none;
+          outline: none;
+        }
+      } //[end] .m-messenger-userlist-search
+
+      .m-messenger-userlist-conversations-item{
+        cursor:pointer;
+        img{
+          width: 24px;
+          margin: 8px;
+        }
+        span{
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-size: 11px;
+        }
+      }
+    } //[end] .m-messenger-userlist
+
+  } //[end] .m-messenger-dockpane{
+
+  .m-messenger-conversations-wrappers{
+    position: absolute;
+    right: 208px;
+    bottom: 0;
   }
+
+  .m-messenger-conversation{
+    .m-messenger-dockpane-container{
+      min-height:200px;
+    }
+  }
+
 }

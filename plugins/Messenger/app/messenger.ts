@@ -12,18 +12,22 @@ import { BUTTON_COMPONENTS } from '../../components/buttons';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 
+import { MessengerConversationDockpanes } from './conversation-dockpanes/conversation-dockpanes';
+
 @Component({
   selector: 'minds-messenger',
   templateUrl: 'src/plugins/messenger/messenger.html',
-  directives: [ ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, RouterLink, MessengerConversation, MessengerSetup, InfiniteScroll ]
+  directives: [ BUTTON_COMPONENTS, Material, RouterLink, InfiniteScroll, MessengerConversationDockpanes ]
 })
 
 export class Messenger {
 
   session = SessionFactory.build();
-  conversation;
+
+  activeConversations : Array<any> = [];
   conversations : Array<Conversation> = [];
   offset : string =  "";
+
   setup : boolean = false;
   hasMoreData : boolean =  true;
   inProgress : boolean = false;
@@ -32,6 +36,8 @@ export class Messenger {
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
   listener;
+
+  userListToggle : boolean = false;
 
   constructor(public client: Client, public sockets: SocketsService){
   }
@@ -85,6 +91,11 @@ export class Messenger {
         console.log("got error" + error);
         this.inProgress = true;
       });
+  }
+
+  openConversation(conversation){
+    conversation.open = true;
+    this.activeConversations.unshift(conversation);
   }
 
   listen(){
