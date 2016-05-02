@@ -30,7 +30,9 @@
       <textarea placeholder="Type your message here"
       [(ngModel)]="message"
       (keydown.enter)="send($event)"
+      #input
       rows="1"></textarea>
+      <i class="material-icons mdl-color-text--blue-grey-600" [emoji] [for]="input">mood</i>
       <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event)">send_arrow</i>
     </div>
   </div>

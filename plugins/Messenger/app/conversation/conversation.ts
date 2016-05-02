@@ -6,6 +6,7 @@ import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
 import { AutoGrow } from '../../../directives/autogrow';
+import { Emoji } from '../../../directives/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 
 import { MessengerEncryptionFactory } from '../encryption/service';
@@ -18,7 +19,7 @@ import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective ]
+  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji ]
 })
 
 export class MessengerConversation {
