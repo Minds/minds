@@ -1,6 +1,6 @@
 <div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
 
-  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="conversation.open = !conversation.open">
+  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="dockpanes.toggle(conversation)">
     <div class="m-messenger-dockpane-tab-title">
       <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
     </div>

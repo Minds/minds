@@ -1,8 +1,13 @@
 import { Injector, Inject, provide } from 'angular2/core';
+import { Storage } from '../../../services/storage';
 
 export class MessengerConversationDockpanesService{
 
   conversations : Array<any> = [];
+
+  constructor(public storage : Storage){
+    this.loadFromCache();
+  }
 
   open(conversation){
     conversation.open = true;
@@ -13,6 +18,7 @@ export class MessengerConversationDockpanesService{
       }
     }
     this.conversations.unshift(conversation);
+    this.saveToCache();
   }
 
   close(conversation){
@@ -21,6 +27,26 @@ export class MessengerConversationDockpanesService{
         this.conversations.splice(i, 1);
       }
     }
+    this.saveToCache();
+  }
+
+  toggle(conversation){
+    for(let i = 0; i < this.conversations.length; i++){
+      if(this.conversations[i].guid == conversation.guid){
+        this.conversations[i].open = !this.conversations[i].open;
+      }
+    }
+    this.saveToCache();
+  }
+
+  private loadFromCache(){
+    let conversations = JSON.parse(this.storage.get('messenger-dockpanes'));
+    if(conversations)
+      this.conversations = conversations;
+  }
+
+  private saveToCache(){
+    this.storage.set('messenger-dockpanes', JSON.stringify(this.conversations));
   }
 
 }
@@ -30,7 +56,7 @@ export class MessengerConversationDockpanesService{
  */
 var injector = Injector.resolveAndCreate([
 	provide(MessengerConversationDockpanesService, {
-    useFactory: () => new MessengerConversationDockpanesService()
+    useFactory: () => new MessengerConversationDockpanesService(new Storage())
   })
 ]);
 

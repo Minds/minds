@@ -1,11 +1,14 @@
 <div class="m-messenger-bar">
   <div class="m-messenger-conversations-wrappers">
-    <minds-messenger-conversation-dockpanes [conversations]="activeConversations">
+    <minds-messenger-conversation-dockpanes>
 
       <minds-messenger-dockpane [style.right]="0">
         <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
           <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="userListToggle = !userListToggle">
             <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
+            <div class="m-messenger-dockpane-tab-actions">
+              <i class="material-icons">settings</i>
+            </div>
           </div>
           <div class="m-messenger-dockpane-container mdl-shadow--2dp">
             <div class="m-messenger-userlist-search">
