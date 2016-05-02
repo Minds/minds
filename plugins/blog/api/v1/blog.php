@@ -45,10 +45,9 @@ class blog implements Interfaces\Api
             break;
           case "featured":
             $guids = Core\Data\indexes::fetch('user', array('offset'=> $offset, 'limit'=> $limit ));
-                  //if (!$guids) {
-                  //    break;
-                  //}
-                  var_dump($guids); exit;
+                  if (!$guids) {
+                      break;
+                  }
                   $entities = core\Entities::get(array('guids'=>$guids));
             usort($entities, function ($a, $b) {
                         if ((int)$a->featured_id == (int) $b->featured_id) {
