@@ -1,5 +1,6 @@
 import { Injector, provide } from 'angular2/core';
 import { Client } from '../../../services/api';
+import { Storage } from '../../../services/storage';
 import { MINDS_PROVIDERS } from '../../../services/providers';
 import { HTTP_PROVIDERS } from 'angular2/http';
 
@@ -9,17 +10,23 @@ export class MessengerEncryptionService{
   private on : boolean = false;
   private setup : boolean = false;
 
-  constructor(public client : Client){
+  constructor(public client : Client, public storage : Storage){
     console.log(client);
   }
 
   isOn() : boolean {
+    if(!this.on){
+      this.on = this.storage.get('encryption-password');
+    }
     return this.on;
   }
 
   unlock(password : string){
     this.client.post('api/v1/keys/unlock', {password: password})
-      //.then
+      .then((response : any) => {
+        this.storage.set('encryption-password', response.password);
+        this.on = true;
+      });
   }
 
   isSetup() : boolean {
@@ -31,7 +38,16 @@ export class MessengerEncryptionService{
   }
 
   doSetup(password : string) : boolean {
-    this.client.post('api/v1/keys/setup', {password: password})
+    this.client.post('api/v1/keys/setup', {password: password, download: false})
+      .then((response : any) => {
+        this.storage.set('encryption-password', response.password);
+        this.setup = true;
+        this.on = true;
+      })
+  }
+
+  getEncryptionPassword() : string {
+    return this.storage.get('encryption-password');
   }
 
 }
@@ -41,7 +57,7 @@ export class MessengerEncryptionService{
  */
 var injector = Injector.resolveAndCreate([
 	provide(MessengerEncryptionService, {
-    useFactory: (client) => new MessengerEncryptionService(client),
+    useFactory: (client) => new MessengerEncryptionService(client, new Storage()),
     deps: [ Client ]
   }),
   MINDS_PROVIDERS, HTTP_PROVIDERS

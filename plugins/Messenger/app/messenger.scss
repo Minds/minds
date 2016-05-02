@@ -121,10 +121,36 @@ minds-messenger{
     .m-messenger-conversation-messages{
       max-height:142px;
       overflow:scroll;
-      padding-bottom:30px;
+
+      .minds-messenger-conversation-message-bubble {
+        display: inline-block;
+        padding: 3px $minds-padding;
+        background: #EEE;
+        border-radius: 3px;
+        font-size: 11px;
+        margin: $minds-margin/2 $minds-margin;
+        font-weight: 400;
+      }
+      .m-messenger-conversation-messages-message{
+        text-align:right;
+
+        img{
+          border-radius: 50%;
+          width: 18px;
+          margin-right: $minds-margin;
+        }
+
+        &.odd{
+          text-align:left;
+          img{
+            margin-right:0;
+            margin-left: $minds-margin;
+          }
+        }
+      }
     }
     .m-messenger-conversation-composer{
-      position: absolute;
+      position: relative;
       bottom: 0;
       max-width:100%;
 

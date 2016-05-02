@@ -39,7 +39,7 @@ export class MessengerEncryption {
     if(password.value != password2.value){
       return;
     }
-    this.encryption.doSetup(password);
+    this.encryption.doSetup(password.value);
   }
 
 }

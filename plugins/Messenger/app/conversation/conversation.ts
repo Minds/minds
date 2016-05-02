@@ -11,18 +11,19 @@ import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
 
+import { MessengerScrollDirective } from './scroll';
 import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
 
 @Component({
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption ]
+  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective ]
 })
 
 export class MessengerConversation {
 
-  minds: Minds;
+  minds: Minds = window.Minds;
   session = SessionFactory.build();
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
@@ -45,7 +46,9 @@ export class MessengerConversation {
   }
 
   load(){
-    this.client.get('api/v1/conversations/' + this.conversation.guid)
+    this.client.get('api/v1/conversations/' + this.conversation.guid, {
+        password: this.encryption.getEncryptionPassword()
+      })
       .then((response : any) => {
         this.messages = response.messages;
       })
@@ -53,14 +56,14 @@ export class MessengerConversation {
 
   send(e){
     e.preventDefault();
-    this.message = "";
     this.client.post('api/v1/conversations/' + this.conversation.guid, {
         message: this.message,
         encrypt: true
       })
       .then((response : any) => {
-
+        this.messages.push(response.message);
       });
+    this.message = "";
   }
 
 }

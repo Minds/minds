@@ -13,9 +13,16 @@
       <minds-messenger-encryption></minds-messenger-encryption>
     </div>
 
-    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()">
-      <div class="m-messenger-conversation-messages-message" *ngFor="#message of messages">
-          new message
+    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()" minds-messenger-scroll [messages]="messages">
+      <div class="m-messenger-conversation-messages-message"
+        *ngFor="#message of messages"
+        [class.odd]="message.owner.guid == session.getLoggedInUser().guid">
+          <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid == session.getLoggedInUser().guid">
+          <div class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700">
+            {{message.message}}
+          </div>
+          <span class="minds-messenger-conversation-message-ts"></span>
+          <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid != session.getLoggedInUser().guid">
       </div>
     </div>
 
