@@ -52,23 +52,28 @@ class OpenSSL implements EncryptionInterface
 
     public function encrypt()
     {
+        $messages = [];
         foreach($this->conversation->getParticipants() as $guid => $user){
             $public_key = $this->keystore->setUser($user)->getPublicKey();
             openssl_public_encrypt($this->message->getMessage(), $encrypted, $public_key);
-            $this->message->setMessages($guid, $encrypted);
+            $messages[$guid] = base64_encode($encrypted);
         }
+        $this->message->setMessages($messages);
         return $this;
     }
 
     public function decrypt()
     {
         $encrypted = $this->message->getMessage($this->user->guid);
-        $private_key = $this->keystore->setUser($user)->getPrivateKey();
-        openssl_private_decrypt($encrypted, $decrypted, openssl_get_privatekey($private_key, $this->password));
+        $private_key = $this->keystore->setUser($this->user)->getUnlockedPrivateKey();
+        openssl_private_decrypt(base64_decode($encrypted), $decrypted, openssl_get_privatekey($private_key, $this->password));
+
+        $this->message->setMessages([$this->user->guid => $decrypted], false);
+        $this->message->setMessage($decrypted, false);
         return $this;
     }
 
-    public function generateKeypair($password)
+    public function generateKeypair($password = "tmp")
     {
         $config = [
             "digest_alg" => "sha512",
@@ -90,6 +95,16 @@ class OpenSSL implements EncryptionInterface
           'public' => $pubKey,
           'private' => $privKey
         ];
+    }
+
+    public function unlockPrivateKey($private_key, $password, $newpass = "")
+    {
+        $private_key = openssl_get_privatekey($private_key, $password);
+        if(!$private_key){
+            throw new \Exception('Could not decrypt private key');
+        }
+        openssl_pkey_export($private_key, $pkeyout, $newpass);
+        return $pkeyout;
     }
 
 }

@@ -39,10 +39,21 @@ class Keystore
         return $this->user->{"plugin:user_setting:gatherings:publickey"};
     }
 
-    public function unlockPrivateKey($password = "")
+    public function unlockPrivateKey($password = "", $new_password = "")
     {
-         self::$tmpPrivateKey = $this->handler->unlockPrivateKey($this->getPrivteKey, $password);
+         self::$tmpPrivateKey = $this->handler->unlockPrivateKey($this->getPrivateKey(), $password, $new_password);
          return $this;
+    }
+
+    public function getUnlockedPrivateKey()
+    {
+        if(self::$tmpPrivateKey){
+            $_SESSION['tmpPrivateKey'] = self::$tmpPrivateKey;
+            return self::$tmpPrivateKey;
+        }
+        //tmp key is stored in the session
+        self::$tmpPrivateKey = $_SESSION['tmpPrivateKey'];
+        return self::$tmpPrivateKey;
     }
 
     public function setPublicKey($public)
@@ -60,6 +71,8 @@ class Keystore
     public function save()
     {
         //todo
+        $this->user->save();
+        return $this;
     }
 
 }

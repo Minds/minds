@@ -47,6 +47,20 @@ class start extends Components\Plugin
           }
       });
 
+			Core\Events\Dispatcher::register('export:extender', 'all', function($event){
+					$params = $event->getParameters();
+
+					if($params['entity'] instanceof User){
+						$keystore = (new Messenger\Core\Keystore())
+							->setUser($params['entity']);
+
+						if($keystore->getPrivateKey()){
+								$export = [ 'chat' => true ];
+						}
+						$event->setResponse($export);
+					}
+			});
+
 			/*$link = new Core\Navigation\Item();
 			Core\Navigation\Manager::add($link
 				->setPriority(5)

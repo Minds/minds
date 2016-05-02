@@ -8,10 +8,9 @@
 namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
-use minds\plugin\gatherings\entities;
-use minds\plugin\gatherings\helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Plugin\Messenger;
 
 class keys implements Interfaces\Api{
 
@@ -51,34 +50,49 @@ class keys implements Interfaces\Api{
 
     public function post($pages){
 
+        $openssl = new Messenger\Core\Encryption\OpenSSL();
+        $keystore = (new Messenger\Core\Keystore($openssl))
+          ->setUser(Core\Session::getLoggedInUser());
+
+        $response = [];
+
         switch($pages[0]){
             case "setup":
                 $response = array();
-                $keypair = \Minds\plugin\gatherings\helpers\openssl::newKeypair(get_input('password'));
-                //error_log(print_r($_POST,true));
-                \elgg_set_plugin_user_setting('publickey', $keypair['public'], elgg_get_logged_in_user_guid(), 'gatherings');
-                \elgg_set_plugin_user_setting('option', '1', elgg_get_logged_in_user_guid(), 'gatherings');
-                \elgg_set_plugin_user_setting('privatekey', $keypair['private'], elgg_get_logged_in_user_guid(), 'gatherings');
+                $keypair = $openssl->generateKeypair($_POST['password']);
 
-                if(!isset($_GET['download']) || $_GET['download']){
-                  $tmp = helpers\openssl::temporaryPrivateKey($keypair['private'], get_input('password'), NULL);
-                  $response['key'] = $tmp;
+                $keystore->setPublicKey($keypair['public'])
+                  ->setPrivateKey($keypair['private'])
+                  ->save();
+
+                if(!isset($_POST['download']) || $_POST['download']){
+                    $keystore->unlockPrivateKey($_POST['password']);
+                    $tmp = $keystore->getUnlockedPrivateKey();
+                    $response['key'] = $tmp;
                 } else {
-                  $tmp = helpers\openssl::temporaryPrivateKey($keypair['private'], get_input('password'), $_GET['unlock_password']);
+                    $unlockPassword = base64_encode(openssl_random_pseudo_bytes(128));
+                    $keystore->unlockPrivateKey($_POST['password'], $unlockPassword);
+                    $tmp = $keystore->getUnlockedPrivateKey();
+                    $response['password'] = urlencode($unlockPassword);
                 }
 
                 break;
             case "unlock":
             default:
-              $response = array();
 
-              $unlock_password = get_input('password');
-              $new_password = get_input('new_password');
-              $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
-              $priv = \elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings');
+                try{
+                    $unlockPassword = base64_encode(openssl_random_pseudo_bytes(128));
+                    $keystore->unlockPrivateKey($_POST['password'], $unlockPassword);
+                    $tmp = $keystore->getUnlockedPrivateKey();
+                    $response['password'] = urlencode($unlockPassword);
+                } catch (\Exception $e) {
+                    $response['status'] = 'error';
+                    $response['message'] = $e->getMessage();
+                }
+
 
               //patch for legacy private key
-              if(helpers\openssl::verify($pub, $priv, $unlock_password) === FALSE){ //hint: this should fail if pswd is set
+              /*if(helpers\openssl::verify($pub, $priv, $unlock_password) === FALSE){ //hint: this should fail if pswd is set
                 $priv = helpers\openssl::temporaryPrivateKey($priv, $unlock_password, $unlock_password);
                 \elgg_set_plugin_user_setting('privatekey', $priv, elgg_get_logged_in_user_guid(), 'gatherings');
               }
@@ -91,12 +105,7 @@ class keys implements Interfaces\Api{
                 $tmp = helpers\openssl::temporaryPrivateKey($priv, $unlock_password, $new_pswd);
                 $_SESSION['tmp_privatekey'] = $tmp;
                 $response['password'] = $new_pswd;
-              }
-
-              if(!$tmp){
-                  $response['status'] = 'error';
-                  $response['message'] = "please check your password";
-              }
+              }*/
         }
 
         return Factory::response($response);

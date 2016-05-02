@@ -74,6 +74,7 @@ class conversations implements Interfaces\Api
         if($messages){
 
             foreach($messages as $k => $message){
+              $_GET['decrypt'] = true;
                 if(isset($_GET['decrypt']) && $_GET['decrypt']){
                     $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
                 } else {
@@ -147,6 +148,7 @@ class conversations implements Interfaces\Api
           $message->message = $_POST['message'];
         }*/
         $response["message"] = $message->export();
+        $response["message"]["message"] = $_POST['message'];
 
         return Factory::response($response);
     }
