@@ -40,13 +40,9 @@ class start extends Components\Plugin
           }
 
           if($mutual){
-							$conversation = new Messenger\Core\Conversation();
-							$user = new User();
-							$user->guid = $params['user_guid'];
-							$to = new User();
-							$to->guid = $params['to_guid'];
-							$conversation->setParticipant($user)
-								->setParticipant($to)
+							$conversation = new Messenger\Entities\Conversation();
+							$conversation->setParticipant($params['user_guid'])
+								->setParticipant($params['to_guid'])
 								->saveToLists();
           }
       });

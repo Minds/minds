@@ -1,118 +1,105 @@
 <?php
 /**
- * Conversation model
+ * Messenger Conversation
  */
- 
-namespace minds\plugin\gatherings\entities;
 
-use Minds\Core;
-use Minds\Core\Data;
-use Minds\Entities\Object;
+namespace Minds\Plugin\Messenger\Entities;
 
-class conversation{
-	
-	public $participants = array();
-	public $ts = 0;
-	
-	/**
-	 * Construct a conversation 
-	 * 
-	 * @param ... user_guid, user_guid, user_guid
-	 */
-	public function __construct(){
-		$user_guids = func_get_args();
-		$this->participants = $user_guids;
+use Minds\Core\Session;
+use Minds\Core\Di\Di;
+use Minds\Entities\DenormalizedEntity;
+use Minds\Entities\User;
+
+class Conversation extends DenormalizedEntity{
+
+	protected $rowKey;
+
+	protected $exportableDefaults = [
+		'guid', 'type', 'subtype'
+	];
+	protected $type = 'messenger';
+	protected $subtype = 'conversation';
+	protected $guid;
+	protected $ts;
+	protected $unread = 0;
+	protected $participants = [];
+
+	public function __construct($db = NULL)
+	{
+			parent::__construct($db);
+			$this->rowKey = "object:gathering:conversations:" . Session::getLoggedInUser()->guid;
 	}
-	
-	public function createMessage(){
-		$message = new message();
-		$message->setRecipients($this->participants);
-		return $message;
-	}
-	
-	public function getMessages($limit = 12, $offset = ''){
-		
-	}
-	
-	/**
-	 * Update the users own list of active conversations, along with a timestamp
-	 */
-	public function update($count = 1, $force_read = false){
-		//now update this message as being the last message for the conversation. this is the list of users conversations
-		$indexes = new Data\indexes();
-		
-		$keys = array();
-		$i = 0;
-		while($i < count($this->participants)){
-			$user_guid = $this->participants[$i];
-			
-			foreach($this->participants as $key => $participant){
-                if($user_guid != $participant){
-                    $unread = $participant == elgg_get_logged_in_user_guid() ? $count : 0;
-					$indexes->insert("object:gathering:conversations:$user_guid", array($participant=> json_encode(array(
-							'ts'=>time(), 
-							'unread'=> !$force_read ? $unread : 0, 
-							'participants'=>$this->participants
-					))));
-					//create an index so we can see the unread messages.. reset on each view of the messages
-					$indexes->insert("object:gathering:conversations:unread", array($participant=> $count));
-    			}
+
+	public function setParticipant($guid)
+	{
+			if($guid instanceof User){
+					$guid = $guid->user;
 			}
-			
-			$i++;
-		}
-        
+			if(!isset($this->participants[$guid])){
+					$this->participants[$guid] = $guid;
+			}
+			return $this;
 	}
 
-    public function notify(){
-        foreach($this->participants as $participant){
-            if($participant != elgg_get_logged_in_user_guid()){
-               // \Minds\plugin\notifications\Push::queue($participant, array('message'=>'You have a new message.'));
-                Core\Queue\Client::build()->setExchange("mindsqueue")
-                                          ->setQueue("Push")
-                                          ->send(array(
-                                                "user_guid"=>$participant,
-                                                "message"=>"You have a new message.",
-                                                "uri" => 'chat'
-                                               ));
-            }
-        }
-    }
-	
-	public function clearCount(){
-		$indexes = new Data\indexes();
-		foreach($this->participants as $key => $participant){
-			$indexes->insert("object:gathering:conversations:".elgg_get_logged_in_user_guid(), array($participant=> json_encode(array(
-					'ts'=>time(), 
-					'unread'=>0, 
-					'participants'=>$this->participants
-			))));
-		}
+	public function getParticipants()
+	{
+			return $this->participants;
 	}
-		
-	/**
-	 * Return the index keys for the messages to be stored under
-	 */
-	public function getIndexKeys(){
-		return self::permutate($this->participants);
-	}
-	
-	static public function permutate($input){
-		
-		if(1 === count($input))
-			return $input;
 
-		$result = array();
-		foreach($input as $key => $item)
-			foreach(self::permutate(array_diff_key($input, array($key => $item))) as $p)
-				$result[] = "$item:$p";
-		
-		return $result;
+	public function getGuid()
+	{
+			if($this->guid){
+					return $this->guid;
+			}
+			return $this->permutateGuid($this->participants);
+	}
 
+	public function setGuid($guid)
+	{
+			$this->guid = $guid;
+			$participants = explode(':', $guid);
+			foreach($participants as $participant){
+					$this->setParticipant($participant);
+			}
 	}
-	
-	public function save($timebased = true){
-		return true;
+
+	private function permutateGuid($input = [])
+	{
+			$result = "";
+			ksort($input);
+			foreach($input as $key => $item){
+					$result .= $result ? ":$key" : $key;
+			}
+			return $result;
 	}
-	
+
+	public function saveToLists()
+	{
+			foreach($this->participants as $participant_guid => $participant){
+					$this->db->insert("object:gathering:conversations:$participant_guid", [
+						$this->getGuid() => json_encode([
+							'ts' => time(),
+							'unread' => 0,
+							'participants' => array_values($this->participants)
+						])
+					]);
+			}
+	}
+
+	public function export($keys = [])
+	{
+			$export = parent::export($keys);
+
+			foreach($this->participants as $user_guid){
+					if($user_guid != Session::getLoggedinUser()->guid){
+							$user = new User($user_guid);
+							$export['participants'][] = $user->export();
+							//$export['guid'] = (string) $user_guid; //for legacy support
+							$export['name'] = $user->name;
+							$export['username'] = $user->username;
+					}
+			}
+			return $export;
+	}
+
 }

@@ -108,11 +108,12 @@ minds-messenger{
 
   .m-messenger-conversation{
     .m-messenger-dockpane-container{
-      min-height:72px;
+      //min-height:72px;
     }
     .m-messenger-conversation-messages{
-      max-height:200px;
+      max-height:142px;
       overflow:scroll;
+      padding-bottom:30px;
     }
     .m-messenger-conversation-composer{
       position: absolute;
@@ -136,6 +137,23 @@ minds-messenger{
         cursor:pointer;
         overflow:hidden;
       }
+    }
+  }
+
+  .m-messenger-encryption{
+    input{
+      -webkit-appearance: none;
+      outline: none;
+      border: 0;
+      padding: 8px;
+      border-bottom: 1px solid #EEE;
+      width: 100%;
+    }
+    .mdl-button, button{
+      position: absolute;
+      right: 0;
+      margin-top: -33px;
+      font-size: 12px;
     }
   }
 

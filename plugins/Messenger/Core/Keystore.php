@@ -5,6 +5,8 @@
 
 namespace Minds\Plugin\Messenger\Core;
 
+use Minds\Entities;
+
 class Keystore
 {
 
@@ -20,6 +22,9 @@ class Keystore
 
     public function setUser($user)
     {
+        if(is_numeric($user)){
+            $user = Entities\Factory::build($user);
+        }
         $this->user = $user;
         return $this;
     }

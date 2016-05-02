@@ -8,6 +8,7 @@ namespace Minds\Plugin\Messenger\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Entities\User;
+use Minds\Plugin\Messenger;
 
 class Conversations
 {
@@ -37,22 +38,22 @@ class Conversations
             arsort($conversations);
             $i = 0;
             $ready = false;
-            foreach($conversations as $indexKey => $data){
+            foreach($conversations as $guid => $data){
 
                 if(!$ready && $offset){
-                    if($indexKey == $offset)
+                    if($guid == $offset)
                         $ready = true;
                     continue;
                 }
 
-                if((string) $indexKey === (string) Session::getLoggedinUser()->guid)
+                if((string) $guid === (string) Session::getLoggedinUser()->guid)
                     continue;
 
                 //if(($i++ > 12 && !$offset) || ($i++ > 24))
                 //    continue;
 
-                if($indexKey == $offset){
-                    unset($conversations[$indexKey]);
+                if($guid == $offset){
+                    unset($conversations[$guid]);
                     continue;
                 }
 
@@ -64,33 +65,16 @@ class Conversations
                 } else {
                     $data = json_decode($data, true);
                 }
+                $data['guid'] = $guid;
 
-                //future proofing for group chat
-                foreach($data['participants'] as $k => $user_guid){
-                    if($user_guid != Session::getLoggedinUser()->guid){
-                        $user = new User($user_guid);
-                        $data['participants'][$k] = $user->export();
-                        $data['guid'] = (string) $user_guid; //for legacy support
-                        $data['name'] = $user->name;
-                        $data['username'] = $user->username;
-                    } else {
-                      unset($data['participants'][$k]);
-                    }
-                }
-                $data['participants'] = array_values($data['participants']);
+                $conversation = new Messenger\Entities\Conversation();
+                $conversation->loadFromArray($data);
 
-                $return[] = $data;
+                $return[] = $conversation;
                 continue;
             }
         }
         return $return;
     }
-
-    public function buildConversation($users = [])
-    {
-
-    }
-
-
 
 }

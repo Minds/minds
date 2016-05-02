@@ -8,13 +8,17 @@
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
 
-    <div class="m-messenger-conversation-messages">
+    <div class="m-messenger-conversation-encryption-lock" *ngIf="!encryption.isOn()">
+      <minds-messenger-encryption></minds-messenger-encryption>
+    </div>
+
+    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()">
       <div class="m-messenger-conversation-messages-message" *ngFor="#message of messages">
           new message
       </div>
     </div>
 
-    <div class="m-messenger-conversation-composer">
+    <div class="m-messenger-conversation-composer" *ngIf="encryption.isOn()">
       <textarea placeholder="Type your message here"
       [(ngModel)]="message"
       (keydown.enter)="send($event)"

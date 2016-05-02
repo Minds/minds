@@ -7,6 +7,7 @@ namespace Minds\Plugin\Messenger\Entities;
 
 use Minds\Core\Di\Di;
 use Minds\Entities\DenormalizedEntity;
+use Minds\Plugin\Messenger;
 
 class Message extends DenormalizedEntity{
 
@@ -43,15 +44,18 @@ class Message extends DenormalizedEntity{
 			return $this->message;
 	}
 
-	public function setMessages($user_guid, $message)
+	public function setMessages($user_guid, $message, $encrypted = true)
 	{
 			$this->messages[$user_guid] = $message;
+			$this->encrypted = $encrypted;
 			return $this;
 	}
 
 	public function encrypt()
 	{
-			Di::_()->get('Messenger\Encryption')
+			//Di::_()->get('Messenger\Encryption')
+			(new Messenger\Core\Encryption\OpenSSL())
+				->setConversation($this->conversation)
 				->setMessage($this)
 				->encrypt();
 			$this->encrypted = true;
@@ -74,14 +78,15 @@ class Message extends DenormalizedEntity{
 			if(!$this->encrypted){
 					throw new Exception('You can not save unencrypted messages');
 			}
-
-			$this->rowKey = "object:gathering:conversation:{$this->conversation->getIndexKey()}";
-			return $this->saveToDb([
-				'guid' => $this->guid,
+			$this->getGuid();
+			$this->rowKey = "object:gathering:conversation:{$this->conversation->getGuid()}";
+			$this->saveToDb([
+				'guid' => $this->getGuid(),
 				'messages' => $this->messages,
 				'time_created' => $this->time_created ?: time(),
-				'friendly_ts' => $this->friendly_ts
+				//'friendly_ts' => $this->friendly_ts
 			]);
+			//var_dump($this->rowKey); exit;
 	}
 
 }

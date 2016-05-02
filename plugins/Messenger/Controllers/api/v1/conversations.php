@@ -48,11 +48,12 @@ class conversations implements Interfaces\Api
         $me = Core\Session::getLoggedInUser();
         $user = Entities\Factory::build($pages[0]);
 
-        $conversation = (new Messenger\Core\Conversation)
-          ->setParticipant($me)
-          ->setParticipant($user);
+        $conversation = (new Messenger\Entities\Conversation())
+          ->loadFromGuid($pages[0]);
+        $messages = (new Messenger\Core\Messages)
+          ->setConversation($conversation);
 
-        $is_subscribed = $me->isSubscribed($user->guid);
+        /*$is_subscribed = $me->isSubscribed($user->guid);
         $is_subscriber = $user->isSubscribed($me->guid);
         if(!$is_subscribed || !$is_subscriber){
             return Factory::response(array(
@@ -62,11 +63,13 @@ class conversations implements Interfaces\Api
               'subscriber' => (bool) $is_subscriber,
               'user' => $user->export()
             ));
-        }
+        }*/
 
         //$conversation->clearCount();
 
-        $messages = $conversation->getMessages($_GET['limit'], $_GET['offset']);
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
+        $offset = $_GET['offset'];
+        $messages = $messages->getMessages($limit, $offset);
 
         if($messages){
 
@@ -75,8 +78,8 @@ class conversations implements Interfaces\Api
                     $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
                 } else {
                     //support legacy clients
-                    $key = "message:$me->guid";
-                    $messages[$k]->message = $messages[$k]->$key;
+                    //$key = "message:$me->guid";
+                    //$messages[$k]->message = $messages[$k]->$key;
                 }
             }
 
@@ -102,7 +105,7 @@ class conversations implements Interfaces\Api
         $conversations = (new Messenger\Core\Conversations)->getList(12, $_GET['offset']);
 
         if($conversations){
-            $response['conversations'] = $conversations;
+            $response['conversations'] = Factory::exportable($conversations);
             end($conversations);
             $response['load-next'] = (string) key($conversations);
             $response['load-previous'] = (string) key(reset($conversations));
@@ -114,31 +117,35 @@ class conversations implements Interfaces\Api
         Factory::isLoggedIn();
 
         //error_log("got a message to send");
-        $conversation = new entities\conversation(Core\Session::getLoggedInUser()->guid, $pages[0]);
+        $conversation = new Messenger\Entities\Conversation();
+        $conversation->setGuid($pages[0]);
 
-        $message = new entities\message($conversation);
+        $message = (new Messenger\Entities\Message())
+          ->setConversation($conversation);
+
         if(isset($_POST['encrypt']) && $_POST['encrypt']){
-          $message->encryptMessage($_POST['message']);
+            $message->setMessage($_POST['message']);
+            $message->encrypt();
         } else {
-          $message->client_encrypted = true;
-          foreach($conversation->participants as $guid){
-              $key = "message:$guid";
-              $message->$key = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-          }
+            $message->client_encrypted = true;
+            foreach($conversation->getParticipants as $guid){
+                $msg = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
+                $message->setMessages($guid, $msg, true);
+            }
         }
 
         $message->save();
 
-        $conversation->update();
-        $conversation->notify();
+        //$conversation->update();
+        //$conversation->notify();
 
-        if($message->client_encrypted){
+        /*if($message->client_encrypted){
           $key = "message:".elgg_get_logged_in_user_guid();
           $message->message = $message->$key;
         } else {
           $key = "message";
           $message->message = $_POST['message'];
-        }
+        }*/
         $response["message"] = $message->export();
 
         return Factory::response($response);
