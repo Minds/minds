@@ -38,6 +38,7 @@ minds-messenger{
 
       .m-messenger-dockpane-tab-title{
         padding: 5px;
+        display: inline-block;
 
         > i {
           vertical-align: middle;
@@ -51,6 +52,13 @@ minds-messenger{
           font-size: 11px;
           font-weight:bold;
         }
+      }
+
+      > i{
+        float: right;
+        margin: 6px 8px;
+        font-size: 16px;
+        font-weight: bold;
       }
 
     } //[end] .m-messenger-dockpane-tab

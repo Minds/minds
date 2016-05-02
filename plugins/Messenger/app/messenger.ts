@@ -12,7 +12,7 @@ import { BUTTON_COMPONENTS } from '../../components/buttons';
 import { Material } from '../../directives/material';
 import { InfiniteScroll } from '../../directives/infinite-scroll';
 
-import { MessengerConversationDockpanes } from './conversation-dockpanes/conversation-dockpanes';
+import { MessengerConversationDockpanes, MessengerConversationDockpanesFactory } from './conversation-dockpanes/conversation-dockpanes';
 
 @Component({
   selector: 'minds-messenger',
@@ -24,7 +24,7 @@ export class Messenger {
 
   session = SessionFactory.build();
 
-  activeConversations : Array<any> = [];
+  dockpanes = MessengerConversationDockpanesFactory.build();
   conversations : Array<Conversation> = [];
   offset : string =  "";
 
@@ -95,13 +95,7 @@ export class Messenger {
 
   openConversation(conversation){
     conversation.open = true;
-    for(let i = 0; i < this.activeConversations.length; i++){
-      if(this.activeConversations[i].guid == conversation.guid){
-        this.activeConversations[i] = conversation;
-        return;
-      }
-    }
-    this.activeConversations.unshift(conversation);
+    this.dockpanes.open(conversation);
   }
 
   listen(){

@@ -9,14 +9,20 @@ import { AutoGrow } from '../../../directives/autogrow';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MessengerConversation } from '../conversation/conversation';
 
+import { MessengerConversationDockpanesFactory } from './service';
 
 @Component({
   selector: 'minds-messenger-conversation-dockpanes',
-  inputs: [ 'conversations' ],
+  //inputs: [ 'conversations' ],
   templateUrl: 'src/plugins/messenger/conversation-dockpanes/conversation-dockpanes.html',
   directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerConversation ]
 })
 
 export class MessengerConversationDockpanes {
 
+  dockpanes = MessengerConversationDockpanesFactory.build();
+  conversations : Array<any> = this.dockpanes.conversations;
+
 }
+
+export { MessengerConversationDockpanesFactory } from './service';

@@ -11,6 +11,7 @@ import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
 
+import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
 
 @Component({
   selector: 'minds-messenger-conversation',
@@ -25,8 +26,10 @@ export class MessengerConversation {
   session = SessionFactory.build();
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
+  dockpanes = MessengerConversationDockpanesFactory.build();
 
   guid : string;
+  conversation;
   participants : Array<any> = [];
   messages : Array<any> = [];
   open : boolean = false;
@@ -41,15 +44,8 @@ export class MessengerConversation {
     this.load();
   }
 
-  set conversation(conversation : any){
-    this.guid = conversation.guid;
-    if(conversation.open)
-      this.open = true;
-    this.participants = [ conversation ];
-  }
-
   load(){
-    this.client.get('api/v1/conversations/' + this.guid)
+    this.client.get('api/v1/conversations/' + this.conversation.guid)
       .then((response : any) => {
         this.messages = response.messages;
       })
@@ -58,7 +54,7 @@ export class MessengerConversation {
   send(e){
     e.preventDefault();
     this.message = "";
-    this.client.post('api/v1/conversations/' + this.guid, {
+    this.client.post('api/v1/conversations/' + this.conversation.guid, {
         message: this.message,
         encrypt: true
       })

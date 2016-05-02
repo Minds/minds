@@ -1,4 +1,4 @@
-import { Injector, Inject, provide } from 'angular2/core';
+import { Injector, provide } from 'angular2/core';
 import { Client } from '../../../services/api';
 import { MINDS_PROVIDERS } from '../../../services/providers';
 import { HTTP_PROVIDERS } from 'angular2/http';

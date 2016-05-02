@@ -1,9 +1,10 @@
-<div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="open">
+<div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
 
-  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="open = !open">
+  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="conversation.open = !conversation.open">
     <div class="m-messenger-dockpane-tab-title">
-      <span *ngFor="#participant of participants">{{participant.username}}</span>
+      <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
     </div>
+    <i class="material-icons" (click)="dockpanes.close(conversation)">close</i>
   </div>
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">

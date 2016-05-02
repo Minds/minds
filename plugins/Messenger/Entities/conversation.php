@@ -93,12 +93,13 @@ class Conversation extends DenormalizedEntity{
 			foreach($this->participants as $user_guid){
 					if($user_guid != Session::getLoggedinUser()->guid){
 							$user = new User($user_guid);
-							$export['participants'][] = $user->export();
+							$export['participants'][$user_guid] = $user->export();
 							//$export['guid'] = (string) $user_guid; //for legacy support
 							$export['name'] = $user->name;
 							$export['username'] = $user->username;
 					}
 			}
+			$export['participants'] = array_values($export['participants']); //make sure we are an array, not an object
 			return $export;
 	}
 
