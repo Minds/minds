@@ -44,9 +44,10 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         try {
-            $guid = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
+            $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
+            $guid = $user->guid;
             $params = array(
-                'user' => new Entities\User($guid),
+                'user' => $user,
                 'password' => $_POST['password'],
                 'friend_guid' => "",
                 'invitecode' => ""
@@ -69,9 +70,9 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             //@todo maybe put this in background process
             foreach (array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type) {
                 Core\Events\Dispatcher::trigger('notification', 'welcome', array(
-                'to'=>array($guid),
-                'from' => "100000000000000519",
-                'notification_view' => $notif_type,
+                  'to'=>array($guid),
+                  'from' => "100000000000000519",
+                  'notification_view' => $notif_type,
                 ));
             }
 
