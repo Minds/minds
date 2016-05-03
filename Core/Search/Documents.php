@@ -143,7 +143,7 @@ class Documents
 
     if($hashtags){
         $params['body']['sort'] = [
-           [ 'time_created' => 'desc' ]
+           [ '_uid' => 'desc' ]
          ];
     }
 
@@ -164,6 +164,7 @@ class Documents
         $guids[] = $result['_id'];
       }
     } catch (\Exception $e) {
+        var_dump($e); exit;
     }
     
     return $guids;
