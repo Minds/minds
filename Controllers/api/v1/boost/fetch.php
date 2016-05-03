@@ -38,14 +38,11 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
               break;
           case 'newsfeed':
-            $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
-            foreach ($boosts as $entity) {
-                $response['boosts'][] = $entity->export();
-                //bug: sometimes views weren't being calculated on scroll down
-                //\Minds\Helpers\Counters::increment($entity->guid, "impression");
-                //\Minds\Helpers\Counters::increment($entity->owner_guid, "impression");
-            }
-            if(!$boosts){
+             $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2, false);
+             foreach ($boosts as $guid => $entity) {
+                 $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string) $guid]);
+             }
+             if(!$boosts){
                 $cacher = Core\Data\cache\factory::build('apcu');
                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
                 $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> 12]);
