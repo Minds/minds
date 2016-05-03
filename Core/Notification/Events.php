@@ -120,12 +120,8 @@ class Events
 
             $remind_owner_username = null;
 
-            if ($type == 'activity' && $params->remind_object) {
-                $remind_owner = $params->getOwnerEntity();
-
-                if ($remind_owner) {
-                    $remind_owner_username = $remind_owner->username;
-                }
+            if ($type == 'activity' && isset($params->remind_object['ownerObj']['username'])) {
+                $remind_owner_username = $params->remind_object['ownerObj']['username'];
             }
 
             if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)) {
