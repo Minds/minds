@@ -29,7 +29,7 @@ class Mailer
     private function setup()
     {
         $this->mailer->isSMTP();
-        $this->mailer->SMTPKeepAlive = true;
+        //$this->mailer->SMTPKeepAlive = true;
         $this->mailer->Host = Core\Config::_()->email['smtp']['host'];
         $this->mailer->Auth = Core\Config::_()->email['smtp']['auth'];
         $this->mailer->SMTPAuth = true;
