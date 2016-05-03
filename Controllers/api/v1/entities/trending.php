@@ -78,8 +78,14 @@ class trending implements Interfaces\Api
                 $key = "user";
         }
 
+        $offset = get_input('offset');
+        if(strlen($offset) < 15){
+            $offset = (new \GUID())->migrate($offset);
+        }
+
+
         $db = new Core\Data\Call('entities_by_time');
-        $guids = $db->getRow("trending:$key", array( 'limit'=> 12, 'offset' => get_input('offset'), 'reversed' => false ));
+        $guids = $db->getRow("trending:$key", array( 'limit'=> 12, 'offset' => $offset, 'reversed' => false ));
         if (!$guids) {
             exit;
             break;
@@ -96,7 +102,7 @@ class trending implements Interfaces\Api
 
         if ($entities) {
             $response['entities'] = factory::exportable($entities);
-            $response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
+            //$response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
             $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
         }
 
