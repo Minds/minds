@@ -5,6 +5,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Material } from '../../../directives/material';
+import { Hovercard } from '../../../directives/hovercard';
 import { GoogleAds } from '../../../components/ads/google-ads';
 import { RevContent } from '../../../components/ads/revcontent';
 import { MindsTitle } from '../../../services/ux/title';
@@ -31,7 +32,7 @@ import { AttachmentService } from '../../../services/attachment';
   bindings:[ MindsTitle, AttachmentService ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll ]
+    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard ]
 })
 
 export class BlogView {

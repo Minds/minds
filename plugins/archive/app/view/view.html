@@ -27,7 +27,7 @@
     <!-- Owner box -->
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
-      <div class="minds-avatar">
+      <div class="minds-avatar" [hovercard]="entity.ownerObj.guid">
         <a [routerLink]="['/Channel', {username: entity.ownerObj.username}]">
           <img src="{{minds.cdn_url}}/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>

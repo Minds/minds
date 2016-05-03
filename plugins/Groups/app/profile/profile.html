@@ -139,7 +139,10 @@
 
         <!-- Avatars of latest users -->
         <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid">
-          <a *ngFor="#member of group.members" [routerLink]="['/Channel', {username: member.username}]" >
+          <a *ngFor="#member of group.members"
+          [routerLink]="['/Channel', {username: member.username}]"
+          [hovercard]="member.guid" [hovercardAnchor]="['left', 'bottom']"
+          >
             <img src="/icon/{{member.guid}}/small"/>
           </a>
         </div>

@@ -5,6 +5,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Material } from '../../../directives/material';
+import { Hovercard } from '../../../directives/hovercard';
 
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
@@ -22,7 +23,7 @@ import { SocialIcons } from '../../../components/social-icons/social-icons';
 })
 @View({
   templateUrl: 'src/plugins/archive/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons, Hovercard ]
 })
 
 export class ArchiveView {
