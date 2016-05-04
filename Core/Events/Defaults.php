@@ -67,6 +67,7 @@ class Defaults
 
         // Search events
         (new Core\Search\Events())->init();
+        (new Core\Events\Hooks\Register())->init();
     }
 
     public static function _()

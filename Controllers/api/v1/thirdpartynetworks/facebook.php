@@ -57,6 +57,11 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
               exit;
               break;
           case "login":
+
+              if(Core\Session::isLoggedIn()){
+                echo "already logged in..."; exit;
+              }
+
               $_SESSION['force'] = true;
 
               $helper = $facebook->getFb()->getRedirectLoginHelper();
@@ -67,12 +72,13 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
               forward($url);
               break;
           case "login-callback":
+
               try{
                   $helper = $facebook->getFb()->getRedirectLoginHelper();
                   $accessToken = $helper->getAccessToken();
 
-                  $response = $facebook->getFb()->get('/me?fields=id,name,email', $accessToken);
-                  $fb_user = $response->getGraphUser();
+                  $me = $facebook->getFb()->get('/me?fields=id,name,email', $accessToken);
+                  $fb_user = $me->getGraphUser();
                   $fb_uuid = $fb_user['id'];
 
                   if(!isset($fb_user['email'])){
@@ -89,39 +95,45 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       $guid = key($user_guids);
                       $user = new Entities\User($guid);
                       if($user->username){
-                        login($user);
-                        $json = json_encode($user->export());
-                        echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
+                          login($user);
+                          $export = $user->export();
+                          $export['new'] = false;
+                          $json = json_encode($export);
+                          echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
                       }
                   } else {
+
                       //find a username
                       $username = strtolower(preg_replace("/[^[:alnum:]]/u", '', $fb_user['name']));
-                      $i = 0;
-                      while($lu->get($username) && $i < 2){
-                        $i++;
-                        $username .= rand(0,5);
+                      while($lu->getRow($username)){
+                        $username .= rand(0,100);
                       }
+
                       $password = base64_encode(openssl_random_pseudo_bytes(128));
                       $user = register_user($username, $password, $fb_user['name'], $fb_user['email'], false);
-                      $params = array(
+                      $params = [
                           'user' => $user,
                           'password' => $_POST['password'],
                           'friend_guid' => "",
                           'invitecode' => ""
-                      );
+                      ];
                       elgg_trigger_plugin_hook('register', 'user', $params, true);
+                      Core\Events\Dispatcher::trigger('register', 'user', $params);
 
                       //again, this should be a core function, not here
                       $lu->insert("fb:$fb_uuid", [ $user->guid => $user->guid ]);
 
                       login($user);
-                      $json = json_encode($user->export());
+                      $export = $user->export();
+                      $export['new'] = true;
+                      $json = json_encode($export);
                       echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
                   }
+
               } catch(\Exception $e){
-                var_dump($e->getMessage());
-                echo "<script>window.opener.onErrorCallback(); window.close();</script>";
-                exit;
+                  echo $username;
+                  var_dump($e->getMessage()); exit;
+                  echo "<script>window.opener.onErrorCallback(); window.close();</script>"; exit;
               }
               break;
           case "accounts":
@@ -159,6 +171,31 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ];
                 $user->boostProPlus = true;
                 $user->save();
+                break;
+            case "complete-register": //changes username of a facebook account and sends welcome email
+
+                $user = Core\Session::getLoggedinUser();
+
+                //check if the requested username now exists
+                $lu = new Core\Data\Call('user_index_to_guid');
+                if(!isset($_POST['username']) || !$_POST['username']){
+                    $response['status'] = 'error';
+                    $response['message'] = 'Username must be provided';
+                    break;
+                }
+                $username = strtolower(preg_replace("/[^[:alnum:]]/u", '', $_POST['username']));
+                if($lu->getRow($username) && $username != strtolower($user->username)){
+                    $response['status'] = 'error';
+                    $response['message'] = 'Username exists';
+                    break;
+                }
+
+                $user->username = $username;
+                $user->save();
+
+                //send out email and final signup tasks
+                Core\Events\Dispatcher::trigger('register/complete', 'user', [ 'user' => $user ]);
+
                 break;
         }
 
