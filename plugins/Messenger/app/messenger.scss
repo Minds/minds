@@ -37,13 +37,13 @@ minds-messenger{
       cursor: pointer;
 
       .m-messenger-dockpane-tab-title{
-        padding: 5px;
+        padding: 5px 12px;
         display: inline-block;
 
         > i {
           vertical-align: middle;
           font-size: 17px;
-          padding: 0 8px;
+          padding: 0 8px 0 0;
         }
         > span {
           vertical-align: middle;
@@ -59,15 +59,17 @@ minds-messenger{
         text-align: right;
         vertical-align: middle;
         float: right;
+        padding-right: $minds-padding;
 
         > i{
           font-size: 14px;
-          padding: 8px;
+          padding: 8px 2px;
           line-height: 12px;
           border-radius: 0 3px 0 0;
 
           &:hover{
-            background: #EFEFEF;
+            //background: #EFEFEF;
+            color:#455a64 !important;
           }
         }
       }
