@@ -16,7 +16,7 @@ class Client
         $this->redis = $redis ?: new RedisServer();
 
         $config = Config::_()->get('redis');
-        $this->redis->connect($config['master'] ?: '127.0.0.1');
+        $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
     }
 
     public function __destruct()
