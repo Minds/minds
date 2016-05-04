@@ -54,6 +54,12 @@ class DataProvider extends Provider
         $this->di->bind('Database\ElasticSearch', function($di){
             return new ElasticSearch\Client();
         }, ['useFactory'=>true]);
+        /**
+         * PubSub bindings
+         */
+        $this->di->bind('PubSub\Redis', function($di){
+            return new PubSub\Redis\Client();
+        }, ['useFactory'=>true]);
     }
 
 }
