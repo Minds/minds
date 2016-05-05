@@ -66,7 +66,6 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 
               $helper = $facebook->getFb()->getRedirectLoginHelper();
               $url = $helper->getReRequestUrl(Core\Config::_()->site_url . 'api/v1/thirdpartynetworks/facebook/login-callback', [
-                'publish_actions',
                 'email'
               ]);
               forward($url);
@@ -110,7 +109,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       }
 
                       $password = base64_encode(openssl_random_pseudo_bytes(128));
-                      $user = register_user($username, $password, $fb_user['name'], $fb_user['email'], false);
+                      $user = register_user($username, $password, $fb_user['name'] ?: $username, $fb_user['email'], false);
                       $params = [
                           'user' => $user,
                           'password' => $_POST['password'],
@@ -131,8 +130,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                   }
 
               } catch(\Exception $e){
-                  echo $username;
-                  var_dump($e->getMessage()); exit;
+                  error_log("[fbreg]: " . $e->getMessage());
                   echo "<script>window.opener.onErrorCallback(); window.close();</script>"; exit;
               }
               break;
