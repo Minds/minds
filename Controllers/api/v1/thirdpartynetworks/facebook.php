@@ -13,6 +13,7 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
+use Minds\Plugin\Guard\Exceptions\TwoFactorRequired;
 
 class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -94,6 +95,11 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       $guid = key($user_guids);
                       $user = new Entities\User($guid);
                       if($user->username){
+                          if(!$user->fb_uuid || $user->signup_method != 'facebook'){
+                              $user->fb_uuid = $fb_uuid;
+                              $user->signup_method = 'facebook';
+                              $user->save();
+                          }
                           login($user);
                           $export = $user->export();
                           $export['new'] = false;
@@ -119,6 +125,12 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       elgg_trigger_plugin_hook('register', 'user', $params, true);
                       Core\Events\Dispatcher::trigger('register', 'user', $params);
 
+                      //@todo update analytics to say signedup with facebook
+
+                      $user->fb_uuid = $fb_uuid;
+                      $user->signup_method = 'facebook';
+                      $user->save();
+
                       //again, this should be a core function, not here
                       $lu->insert("fb:$fb_uuid", [ $user->guid => $user->guid ]);
 
@@ -128,7 +140,8 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       $json = json_encode($export);
                       echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
                   }
-
+              } catch(TwoFactorRequired $e){
+                  echo "<script>window.opener.onErrorCallback('Two factor is not supported for facebook right now'); window.close();</script>"; exit;
               } catch(\Exception $e){
                   error_log("[fbreg]: " . $e->getMessage());
                   echo "<script>window.opener.onErrorCallback(); window.close();</script>"; exit;
@@ -208,11 +221,24 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function delete($pages)
     {
         $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
-        $facebook->dropApiCredentials();
         $user = Core\Session::getLoggedInUser();
-        $user->fb = [];
-        $user->boostProPlus = false;
-        $user->save();
-        return Factory::response(array());
+        switch($pages[0]){
+            case "login":
+                $lu = new Core\Data\Call('user_index_to_guid');
+                $lu->removeRow("fb:$user->fb_uuid");
+
+                $user->fb_uuid = null;
+                $user->signup_method = 'ex-facebook';
+                $user->save();
+                break;
+            default:
+                $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
+                $facebook->dropApiCredentials();
+                $user = Core\Session::getLoggedInUser();
+                $user->fb = [];
+                $user->boostProPlus = false;
+                $user->save();
+          }
+          return Factory::response([]);
     }
 }
