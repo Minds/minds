@@ -46,6 +46,9 @@ class DenormalizedEntity
         if (!$row || !isset($row[$guid])) {
             throw new \Exception("Entity not found");
         }
+
+        $this->guid = $guid;
+        
         return $this->loadFromArray($row[$guid]);
     }
 
