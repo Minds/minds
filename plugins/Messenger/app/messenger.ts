@@ -1,10 +1,9 @@
-import { Component, View } from 'angular2/core';
+import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../services/sockets';
 import { MessengerConversation } from "./conversation/conversation";
-import { MessengerSetup } from "./setup/setup";
 import { Storage } from '../../services/storage';
 import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
@@ -16,7 +15,7 @@ import { MessengerConversationDockpanes, MessengerConversationDockpanesFactory }
 
 @Component({
   selector: 'minds-messenger',
-  templateUrl: 'src/plugins/messenger/messenger.html',
+  templateUrl: 'src/plugins/Messenger/messenger.html',
   directives: [ BUTTON_COMPONENTS, Material, RouterLink, InfiniteScroll, MessengerConversationDockpanes ]
 })
 
@@ -176,4 +175,3 @@ export class Messenger {
 
 }
 export { MessengerConversation } from './conversation/conversation';
-export { MessengerSetup } from './setup/setup';

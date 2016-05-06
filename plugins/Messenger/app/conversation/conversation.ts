@@ -1,4 +1,4 @@
-import { Component, View, ElementRef, ChangeDetectorRef } from 'angular2/core';
+import { Component, ElementRef, ChangeDetectorRef } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../../services/sockets';
@@ -19,7 +19,7 @@ import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes
 @Component({
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
-  templateUrl: 'src/plugins/messenger/conversation/conversation.html',
+  templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
   directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji ]
 })
 

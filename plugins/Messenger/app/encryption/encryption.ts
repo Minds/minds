@@ -1,4 +1,4 @@
-import { Component, View, ElementRef } from 'angular2/core';
+import { Component, ElementRef } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../../services/sockets';
@@ -15,7 +15,7 @@ import { MessengerEncryptionFactory } from './service';
   host: {
     'class': 'm-messenger-encryption'
   },
-  templateUrl: 'src/plugins/messenger/encryption/encryption.html',
+  templateUrl: 'src/plugins/Messenger/encryption/encryption.html',
   directives: [ InfiniteScroll, RouterLink, AutoGrow ]
 })
 

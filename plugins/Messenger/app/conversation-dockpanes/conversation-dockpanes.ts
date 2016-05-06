@@ -1,4 +1,4 @@
-import { Component, View, ElementRef } from 'angular2/core';
+import { Component, ElementRef } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
@@ -14,7 +14,7 @@ import { MessengerConversationDockpanesFactory } from './service';
 @Component({
   selector: 'minds-messenger-conversation-dockpanes',
   //inputs: [ 'conversations' ],
-  templateUrl: 'src/plugins/messenger/conversation-dockpanes/conversation-dockpanes.html',
+  templateUrl: 'src/plugins/Messenger/conversation-dockpanes/conversation-dockpanes.html',
   directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerConversation ]
 })
 
