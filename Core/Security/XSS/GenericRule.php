@@ -129,7 +129,7 @@ class GenericRule implements Interfaces\XSSRule
     private function cleanAttributes($string)
     {
         $dom = new \DOMDocument();
-        @$dom->loadHTML($string, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $string, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         //Evaluate Anchor tag in HTML
         $xpath = new \DOMXPath($dom);
