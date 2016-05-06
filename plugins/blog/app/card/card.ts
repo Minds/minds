@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
@@ -15,9 +15,7 @@ import { AttachmentService } from '../../../services/attachment';
   selector: 'minds-card-blog',
 
   properties: ['_blog : object'],
-  bindings: [AttachmentService]
-})
-@View({
+  bindings: [AttachmentService],
   templateUrl: 'src/plugins/blog/card/card.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, InfiniteScroll ]
 })

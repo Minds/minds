@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, Router, RouteParams } from "angular2/router";
 
@@ -17,9 +17,7 @@ import { GroupsCard } from './card/card';
 @Component({
   selector: 'minds-groups',
 
-  bindings: [ MindsTitle, GroupsService ]
-})
-@View({
+  bindings: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/groups.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, GroupsJoinButton, GroupsCard ]
 })

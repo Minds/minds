@@ -1,4 +1,4 @@
-import { Component, View } from 'angular2/core';
+import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -12,9 +12,7 @@ import { AttachmentService } from '../../../../services/attachment';
 @Component({
   selector: 'minds-archive-grid',
   properties: ['_object: object'],
-  bindings: [ AttachmentService ]
-})
-@View({
+  bindings: [ AttachmentService ],
   template: `
     <a *ngFor="#item of items"
     [routerLink]="['/Archive-View', {guid: item.guid}]"

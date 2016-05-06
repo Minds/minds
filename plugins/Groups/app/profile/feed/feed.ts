@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
@@ -27,9 +27,7 @@ interface MindsGroup {
 @Component({
   selector: 'minds-groups-profile-feed',
   bindings: [ GroupsService ],
-  inputs: [ '_group: group' ]
-})
-@View({
+  inputs: [ '_group: group' ],
   templateUrl: 'src/plugins/Groups/profile/feed/feed.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, CARDS, InfiniteScroll ]
 })

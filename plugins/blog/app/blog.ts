@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
@@ -15,9 +15,7 @@ import { BlogCard } from './card/card';
 @Component({
   selector: 'minds-blog',
 
-  bindings: [MindsTitle ]
-})
-@View({
+  bindings: [MindsTitle ],
   templateUrl: 'src/plugins/blog/list.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll, BlogCard ]
 })
