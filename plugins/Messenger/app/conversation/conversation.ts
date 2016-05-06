@@ -8,6 +8,7 @@ import { Storage } from '../../../services/storage';
 import { AutoGrow } from '../../../directives/autogrow';
 import { Emoji } from '../../../directives/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
+import { SocketsService } from '../../../services/sockets';
 
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
@@ -38,12 +39,13 @@ export class MessengerConversation {
 
   message : string = "";
 
-  constructor(public client : Client){
+  constructor(public client : Client, public sockets: SocketsService){
 
   }
 
   ngOnInit(){
     this.load();
+    this.listen();
   }
 
   load(){
@@ -51,8 +53,28 @@ export class MessengerConversation {
         password: this.encryption.getEncryptionPassword()
       })
       .then((response : any) => {
-        this.messages = response.messages;
+        if (response.messages) {
+          this.messages = response.messages;
+        }
       })
+  }
+
+  listen() {
+    if (this.conversation.socketRoomName) {
+      this.sockets.join(this.conversation.socketRoomName);
+
+      this.listener = this.sockets.subscribe('pushConversationMessage', (guid, message) => {
+        if (guid != this.conversation.guid) {
+          return;
+        }
+
+        if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
+          return;
+        }
+
+        this.messages.push(message);
+      });
+    }
   }
 
   send(e){

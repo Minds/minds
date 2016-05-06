@@ -99,11 +99,22 @@ export class Messenger {
   }
 
   listen(){
-    this.listener = this.sockets.subscribe('messageReceived', (from_guid, message) => {
+    this.sockets.join(`messenger:${window.Minds.user.guid}`);
+
+    this.listener = this.sockets.subscribe('touchConversation', (guid) => {
+      let existing = false;
       for(var i in this.conversations) {
-        if(this.conversations[i].guid == from_guid && this.conversation != from_guid) {
+        if(this.conversations[i].guid == guid && this.conversation != guid) {
           this.conversations[i].unread = 1;
+          existing = true;
         }
+      }
+
+      if (!existing) {
+        this.client.get(`api/v1/conversations/${guid}`, {}).then((response) => {
+          // this.openConversation(response);
+          console.log(`api/v1/conversations/${guid}`, response);
+        });
       }
     });
 

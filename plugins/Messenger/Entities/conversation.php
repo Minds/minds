@@ -43,7 +43,7 @@ class Conversation extends DenormalizedEntity{
 
 	public function getParticipants()
 	{
-			return $this->participants;
+			return $this->participants ?: [];
 	}
 
 	public function getGuid()
@@ -51,15 +51,28 @@ class Conversation extends DenormalizedEntity{
 			if($this->guid){
 					return $this->guid;
 			}
-			return $this->permutateGuid($this->participants);
+			return $this->permutateGuid($this->getParticipants());
+	}
+
+	public function buildSocketRoomName()
+	{
+		if (strpos($this->getGuid(), ':') !== false) {
+			return 'conversation:' . $this->getGuid();
+		}
+
+		// Fallback
+		return 'conversation:' . $this->permutateGuid($this->getParticipants());
 	}
 
 	public function setGuid($guid)
 	{
 			$this->guid = $guid;
-			$participants = explode(':', $guid);
-			foreach($participants as $participant){
+
+			if (strpos($guid, ':') !== false) {
+				$participants = explode(':', $guid);
+				foreach($participants as $participant){
 					$this->setParticipant($participant);
+				}
 			}
 	}
 
@@ -100,6 +113,8 @@ class Conversation extends DenormalizedEntity{
 					}
 			}
 			$export['participants'] = array_values($export['participants']); //make sure we are an array, not an object
+			$export['socketRoomName'] = $this->buildSocketRoomName();
+
 			return $export;
 	}
 

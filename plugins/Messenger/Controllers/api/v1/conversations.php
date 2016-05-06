@@ -13,6 +13,7 @@ use Minds\Helpers;
 use Minds\Plugin\Messenger;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Sockets;
 
 class conversations implements Interfaces\Api
 {
@@ -67,6 +68,10 @@ class conversations implements Interfaces\Api
 
         //$conversation->clearCount();
 
+        if ($conversation) {
+            $response = $conversation->export();
+        }
+
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
         $offset = $_GET['offset'];
         $messages = $messages->getMessages($limit, $offset);
@@ -92,7 +97,7 @@ class conversations implements Interfaces\Api
 
         //return the public keys
         $response['publickeys'] = array(
-            $me => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
+            (string) $me->guid => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
             $pages[0] => $user->{"plugin:user_setting:gatherings:publickey"} ?: elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
         );
 
@@ -129,7 +134,7 @@ class conversations implements Interfaces\Api
             $message->encrypt();
         } else {
             $message->client_encrypted = true;
-            foreach($conversation->getParticipants as $guid){
+            foreach($conversation->getParticipants() as $guid){
                 $msg = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
                 $message->setMessages($guid, $msg, true);
             }
@@ -149,6 +154,29 @@ class conversations implements Interfaces\Api
         }*/
         $response["message"] = $message->export();
         $response["message"]["message"] = $_POST['message'];
+
+        try {
+            (new Sockets\Events())
+            ->to($conversation->buildSocketRoomName())
+            ->emit('pushConversationMessage', (string) $conversation->getGuid(), $response["message"]);
+        } catch (\Exception $e) { /* TODO: To log or not to log */ }
+
+        if ($conversation->getParticipants()) {
+            $messenger_rooms = [];
+            foreach ($conversation->getParticipants() as $guid) {
+                if ($guid == Core\Session::getLoggedInUserGuid()) {
+                    continue;
+                }
+
+                $messenger_rooms[] = "messenger:{$guid}";
+            }
+
+            try {
+                (new Sockets\Events())
+                ->to($messenger_rooms)
+                ->emit('touchConversation', (string) $conversation->getGuid());
+            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+        }
 
         return Factory::response($response);
     }
