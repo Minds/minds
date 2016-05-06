@@ -99,10 +99,20 @@ class Events
         return isset($this->flags[$flag]) && $this->flags[$flag];
     }
 
-    public function to($room)
+    public function to($rooms)
     {
-        if (!in_array($room, $this->rooms)) {
-            $this->rooms[] = $room;
+        if (!is_array($rooms)) {
+            $rooms = [ $rooms ];
+        }
+
+        foreach ($rooms as $room) {
+            if (!$room) {
+                continue;
+            }
+            
+            if (!in_array($room, $this->rooms)) {
+                $this->rooms[] = $room;
+            }
         }
 
         return $this;
