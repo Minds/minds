@@ -9,6 +9,7 @@ use Minds\Core\Session;
 use Minds\Core\Di\Di;
 use Minds\Core\Events;
 use Minds\Entities\DenormalizedEntity;
+use Minds\Entities\User;
 use Minds\Plugin\Messenger;
 
 class Message extends DenormalizedEntity{
@@ -82,8 +83,12 @@ class Message extends DenormalizedEntity{
 		 * @param Entity $owner
 		 * @return $this
 		 */
-		public function setOwner(User $owner)
+		public function setOwner($owner = null)
 		{
+				if (!($owner instanceof User)) {
+					$owner = new User($owner);
+				}
+
 				$this->owner = $owner;
 				return $this;
 		}
