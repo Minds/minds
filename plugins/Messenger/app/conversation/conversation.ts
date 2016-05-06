@@ -1,7 +1,6 @@
 import { Component, ElementRef, ChangeDetectorRef } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
-import { SocketsService } from '../../../services/sockets';
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
