@@ -1,4 +1,4 @@
-import { Component, View, ElementRef } from 'angular2/core';
+import { Component, View, ElementRef, ChangeDetectorRef } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../../services/sockets';
@@ -39,13 +39,19 @@ export class MessengerConversation {
 
   message : string = "";
 
-  constructor(public client : Client, public sockets: SocketsService){
+  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
 
   }
 
   ngOnInit(){
     this.load();
     this.listen();
+  }
+
+  ngOnDestroy(){
+    if (this.conversation.socketRoomName) {
+      this.sockets.leave(this.conversation.socketRoomName);
+    }
   }
 
   load(){
@@ -73,6 +79,7 @@ export class MessengerConversation {
         }
 
         this.messages.push(message);
+        this.cd.markForCheck();
       });
     }
   }

@@ -112,8 +112,7 @@ export class Messenger {
 
       if (!existing) {
         this.client.get(`api/v1/conversations/${guid}`, {}).then((response) => {
-          // this.openConversation(response);
-          console.log(`api/v1/conversations/${guid}`, response);
+          this.openConversation(response);
         });
       }
     });
