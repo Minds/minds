@@ -39,7 +39,7 @@ class Messages
           'offset'=> $offset,
           //'finish'=> $finish,
           'reversed'=>true
-        ]);
+        ]) ?: [];
 
         $entities = [];
 
