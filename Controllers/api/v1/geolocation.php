@@ -16,8 +16,12 @@ class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     public function get($pages)
     {
-        $url = "http://nominatim.openstreetmap.org/search.php?q=" . urlencode($_GET['q']) . "&format=json&addressdetails=1";
-                 
+        $config = Core\Di\Di::_()->get('Config');
+        $url = "https://nominatim.openstreetmap.org/search.php?q=" . urlencode($_GET['q']) . "&format=json&addressdetails=1";
+        $url = "http://open.mapquestapi.com/nominatim/v1/search.php?key=ohEcFAArFVNvzTlwGQS5C9XGkAZ4iW9p&format=json&q=" . urlencode($_GET['q']) . "&addressdetails=1"; 
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?key=". $config->get('google-api-key') . "&address=" . urlencode($_GET['q']);
+
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -26,9 +30,34 @@ class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam
                                  
         $data = json_decode($output, true);
 
+        $results = [];
+        foreach($data['results'] as $k => $item){
+            foreach($item['address_components'] as $addr_line){
+                if($addr_line['types'][0] == "locality" || $addr_line['types'][0] == "postal_town"){
+                    $results[$k]['address']['city'] = $addr_line['long_name'];
+                }
+                if($addr_line['types'][0] == "administrative_area_level_2" || $addr_line['types'][0] == "administrative_area_level_1"){
+                    $results[$k]['address']['state'] = $addr_line['long_name'];
+                }
+                if($addr_line['types'][0] == 'country'){
+                    if($results[$k]['address']['state']){
+                        $results[$k]['address']['state'] .= ", {$addr_line['long_name']}";
+                    } else {
+                        $results[$k]['address']['state'] = $addr_line['long_name'];
+                    }
+                }
+            }
+            if(!$results[$k]['address']['city']){
+                $results[$k]['address']['city'] = $results[$k]['address']['state'];
+            }
+            $results[$k]['lat'] = $item['geometry']['location']['lat'];
+            $results[$k]['lon'] = $item['geometry']['location']['lng'];
+        }
+
+
         switch ($pages[0]) {
             case 'list':
-                return Factory::response(array('results'=>$data));
+                return Factory::response(array('results'=>$results));
                 break;
             default:
                 $city = isset($data[0]['address']['city']) ? $data[0]['address']['city'] : $data[0]['address']['town'];
