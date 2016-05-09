@@ -15,11 +15,14 @@ import { MessengerEncryption } from '../encryption/encryption';
 import { MessengerScrollDirective } from './scroll';
 import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
 
+import { MINDS_PIPES } from '../../../pipes/pipes';
+
 @Component({
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji ]
+  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji ],
+  pipes: [ MINDS_PIPES ]
 })
 
 export class MessengerConversation {
