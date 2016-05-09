@@ -43,7 +43,11 @@ export class MessengerConversation {
   }
 
   ngOnInit(){
-    this.load();
+    if(this.conversation.messages){
+      this.messages = this.conversation.messages;
+    } else {
+      this.load();
+    }
     this.listen();
   }
 
