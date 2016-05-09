@@ -111,6 +111,11 @@ minds-messenger{
         }
       } //[end] .m-messenger-userlist-search
 
+      .m-messenger-userlist-conversations{
+        max-height: 240px;
+        overflow: scroll;
+      }
+
       .m-messenger-userlist-conversations-item{
         cursor:pointer;
         img{
