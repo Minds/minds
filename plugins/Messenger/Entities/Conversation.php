@@ -41,6 +41,12 @@ class Conversation extends DenormalizedEntity{
 			return $this;
 	}
 
+    public function clearParticipants()
+    {
+        $this->participants = [];
+        return $this;
+    }
+
 	public function getParticipants()
 	{
 			return $this->participants ?: [];
@@ -80,8 +86,8 @@ class Conversation extends DenormalizedEntity{
 	{
 			$result = "";
 			ksort($input);
-			foreach($input as $key => $item){
-					$result .= $result ? ":$key" : $key;
+			foreach($input as $key => $guid){
+					$result .= $result ? ":$guid" : $guid;
 			}
 			return $result;
 	}

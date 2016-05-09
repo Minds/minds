@@ -65,10 +65,11 @@ class Conversations
                 } else {
                     $data = json_decode($data, true);
                 }
-                $data['guid'] = $guid;
 
                 $conversation = new Messenger\Entities\Conversation();
                 $conversation->loadFromArray($data);
+                $conversation->setGuid($guid);
+ 
 
                 $return[] = $conversation;
                 continue;
