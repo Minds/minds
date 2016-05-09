@@ -68,8 +68,15 @@ class Conversations
 
                 $conversation = new Messenger\Entities\Conversation();
                 $conversation->loadFromArray($data);
-                $conversation->setGuid($guid);
- 
+                //$conversation->setGuid($guid);
+                if(strpos($guid, ':') === FALSE){
+                    $conversation->clearParticipants();
+                    $conversation->setParticipant(Session::getLoggedinUser()->guid)
+                        ->setParticipant($guid);
+                } else {
+                    $conversation->setGuid($guid);
+                }
+
 
                 $return[] = $conversation;
                 continue;

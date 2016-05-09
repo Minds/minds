@@ -30,6 +30,21 @@ class Conversation extends DenormalizedEntity{
 			$this->rowKey = "object:gathering:conversations:" . Session::getLoggedInUser()->guid;
 	}
 
+    public function loadFromGuid($guid)
+    {
+        try{
+            parent::loadFromGuid($guid);
+        } catch(\Exception $e) {
+            //conversation does not exist
+            $participants = explode(':', $guid);
+            foreach($participants as $participant){
+                $this->setParticipant($participant);
+            }
+        }
+        return $this;
+    }
+
+
 	public function setParticipant($guid)
 	{
 			if($guid instanceof User){
