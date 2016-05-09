@@ -125,6 +125,10 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       elgg_trigger_plugin_hook('register', 'user', $params, true);
                       Core\Events\Dispatcher::trigger('register', 'user', $params);
 
+                      //pull in avatar
+                      $avatar_url = "https://graph.facebook.com/{$fb_uuid}/picture?type=large&width=720&height=720";
+                      $user->icontime = $this->saveAvatar($user, $avatar_url);
+
                       //@todo update analytics to say signedup with facebook
 
                       $user->fb_uuid = $fb_uuid;
@@ -240,5 +244,33 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $user->save();
           }
           return Factory::response([]);
+    }
+
+    public function saveAvatar($user, $url)
+    {
+        $icon_sizes = Core\Config::_()->get('icon_sizes');
+
+        $files = [];
+        foreach ($icon_sizes as $name => $size_info) {
+            $resized = get_resized_image_from_existing_file($url, $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
+
+            if ($resized) {
+                //@todo Make these actual entities.  See exts #348.
+                $file = new \ElggFile();
+                $file->owner_guid = $user->guid;
+                $file->setFilename("profile/{$user->guid}{$name}.jpg");
+                $file->open('write');
+                $file->write($resized);
+                $file->close();
+                $files[] = $file;
+            } else {
+                // cleanup on fail
+                foreach ($files as $file) {
+                    $file->delete();
+                }
+            }
+        }
+
+        return time();
     }
 }
