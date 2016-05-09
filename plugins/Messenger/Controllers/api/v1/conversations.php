@@ -124,7 +124,12 @@ class conversations implements Interfaces\Api
 
         //error_log("got a message to send");
         $conversation = new Messenger\Entities\Conversation();
-        $conversation->setGuid($pages[0]);
+        if(strpos($pages[0], ':') === FALSE){ //legacy messages get confused here
+            $conversation->setParticipant(Core\Session::getLoggedInUserGuid())
+              ->setParticipant($pages[0]);
+        } else {
+            $conversation->setGuid($pages[0]); 
+        }
 
         $message = (new Messenger\Entities\Message())
           ->setConversation($conversation);
@@ -157,8 +162,8 @@ class conversations implements Interfaces\Api
 
         try {
             (new Sockets\Events())
-            ->to($conversation->buildSocketRoomName())
-            ->emit('pushConversationMessage', (string) $conversation->getGuid(), $response["message"]);
+              ->to($conversation->buildSocketRoomName())
+              ->emit('pushConversationMessage', (string) $conversation->getGuid(), $response["message"]);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
         if ($conversation->getParticipants()) {
