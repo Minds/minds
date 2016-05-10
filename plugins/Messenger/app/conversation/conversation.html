@@ -23,7 +23,7 @@
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid == session.getLoggedInUser().guid">
           <div
           class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
-          [innerHtml]="message.message | tags"  
+          [innerHtml]="message.message | tags"
           ></div>
           <span class="minds-messenger-conversation-message-ts"></span>
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid != session.getLoggedInUser().guid">
@@ -34,9 +34,10 @@
       <textarea placeholder="Type your message here"
       [(ngModel)]="message"
       (keydown.enter)="send($event)"
-      #input
+      (focus)="emojiService.close()"
+      (click)="emojiService.close()"
       rows="1"></textarea>
-      <i class="material-icons mdl-color-text--blue-grey-600" [emoji]="input">mood</i>
+      <i class="material-icons mdl-color-text--blue-grey-600" (emoji)="message = message + $event.character">mood</i>
       <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event)">send_arrow</i>
     </div>
   </div>
