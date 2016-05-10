@@ -184,13 +184,19 @@ class Documents
       return null;
     }
 
+    if(isset($data['ownerObj'])){
+        unset($data['ownerObj']);
+    }
+
     foreach ($data as $item => $value) {
       if (is_bool($value)) {
         continue;
       } elseif (is_numeric($value)) {
         $value = (string) $value;
-      } elseif (is_object($value) && method_exists($value, 'export')) {
-        $value = $this->formatDocumentBody($value->export(), $call);
+      } elseif (is_object($value) || is_array($value)) {
+          unset($data[$item]);
+          continue;
+          $value = $this->formatDocumentBody($value->export(), $call);
       }
 
       $item = str_replace('.', '__', $item);

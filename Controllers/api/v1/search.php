@@ -40,7 +40,8 @@ class search implements Interfaces\Api
             break;
           case "channels":
             $opts['type'] = 'user';
-            $flags[] = "~";
+            //$flags[] = "~";
+            $_GET['q'] = "({$_GET['q']})^5 OR (*{$_GET['q']}*)";
             break;
           case "videos":
             $opts['type'] = 'object';
