@@ -33,7 +33,7 @@ export class Messenger {
   hasMoreData : boolean =  true;
   inProgress : boolean = false;
   cb : Date = new Date();
-  search : any = {};
+
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
   listener;
@@ -76,9 +76,6 @@ export class Messenger {
           return false;
         }
 
-        if(this.conversations.length == 0 && !this.conversation)
-          this.conversation = response.conversations[0].guid;
-
         if(refresh){
           this.conversations = response.conversations;
         } else {
@@ -92,6 +89,36 @@ export class Messenger {
         console.log("got error" + error);
         this.inProgress = true;
       });
+  }
+
+  search_timeout;
+  search(q : string){
+    if(this.search_timeout)
+      clearTimeout(this.search_timeout);
+
+    this.search_timeout = setTimeout(() => {
+      this.inProgress = true;
+      this.client.get('api/v1/conversations/search', {
+          q: q.value,
+          limit: 24
+        })
+        .then((response : any) => {
+          if (!response.conversations) {
+            this.hasMoreData = false;
+            this.inProgress = false;
+            return false;
+          }
+
+          this.conversations = response.conversations;
+
+          this.offset = response['load-next'];
+          this.inProgress = false;
+        })
+        .catch((error) => {
+          console.log("got error" + error);
+          this.inProgress = true;
+        });
+    }, 100);
   }
 
   openConversation(conversation){
@@ -133,45 +160,6 @@ export class Messenger {
     this.storage.destroy('private-key');
     this.setup = false;
   }
-
-  doSearch(query: string) {
-    this.inProgress = true;
-    var self = this;
-    if (!query){
-      this.load(true);
-      return true;
-    }
-
-    console.log("searching " + query);
-    this.client.get('api/v1/search', {
-      q: query,
-      type: 'user',
-      view: 'json',
-      limit: 5
-      }).then((success : MindsUserSearchResponse) =>{
-        if (success.entities){
-          self.conversations = success.entities;
-        }
-        self.inProgress = false;
-      })
-      .catch((error)=>{
-        console.log(error);
-        self.inProgress = false;
-      });
-  };
-
-  timeout : any;
-  doneTyping(event) {
-    if(this.timeout)
-      clearTimeout(this.timeout);
-    if(event.keyCode === 13) {
-      this.doSearch(event.target.value);
-      return;
-    }
-    this.timeout = setTimeout(() => {
-      this.doSearch(event.target.value);
-    }, 300);
-  };
 
   ngOnDestroy(){
     if(this.listener)
