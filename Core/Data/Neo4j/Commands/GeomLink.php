@@ -20,13 +20,11 @@ class GeomLink extends AbstractCommand
     public function execute()
     {
         $method = 'POST';
-        $path = '/db/data/index/node/geom';
-        $data = json_encode(array(
-                    "value" => "dummy",
-                    "key" => "dummy",
-                    "uri" => $this->nodeUri
-                ));
-
+        $path = '/db/data/ext/SpatialPlugin/graphdb/addNodeToLayer';
+        $data = json_encode([
+                    "layer" => "geom",
+                    "node" => $this->nodeUri
+                ]);
         // The arguments for the send method of the http client are
         // $method, $path, $body = null, $connectionAlias = null
 
