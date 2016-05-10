@@ -30,19 +30,34 @@ class SignupsIterator implements \Iterator
     }
 
     protected function getUsers(){
-        $this->cursor = -1;
-        $this->item = null;
+        //$this->cursor = -1;
+        //$this->item = null;
 
         $timestamps = array_reverse(Timestamps::span(30, 'day'));
 
         $guids = $this->db->getRow("analytics:signup:day:{$timestamps[$this->period]}", ['limit' => $this->limit, 'offset'=> $this->offset]);
+        $guids = array_keys($guids);
+        if($this->offset){
+            array_shift($guids);
+        }
+
         if(empty($guids)){
             $this->valid = false;
             return;
         }
         $this->valid = true;
-        $this->data = Entities::get(['guids' => array_keys($guids)]);
-        $this->offset = end($this->data)->guid;
+        $users = Entities::get(['guids' => $guids]);
+
+        foreach($users as $user){
+            array_push($this->data, $user);
+        }
+
+        if($this->offset == end($users)->guid){
+            $this->valid = false;
+            return;
+        }
+
+        $this->offset = end($users)->guid;
     }
 
     public function rewind() {
@@ -63,12 +78,12 @@ class SignupsIterator implements \Iterator
     public function next() {
         $this->cursor++;
         if(!isset($this->data[$this->cursor])){
-            $this->valid = false;
-        }
+            $this->getUsers();
+        }        
     }
 
     public function valid() {
-        return $this->valid;
+        return $this->valid && isset($this->data[$this->cursor]);
     }
 
 }
