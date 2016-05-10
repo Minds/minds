@@ -9,6 +9,7 @@ import { Emoji } from '../../../directives/emoji';
 import { EmojiService } from '../../../services/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { SocketsService } from '../../../services/sockets';
+import { Tooltip } from '../../../directives/tooltip';
 
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
@@ -22,7 +23,7 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji ],
+  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip ],
   pipes: [ MINDS_PIPES ]
 })
 

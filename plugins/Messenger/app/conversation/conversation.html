@@ -23,6 +23,7 @@
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid == session.getLoggedInUser().guid">
           <div
           class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+          [tooltip]="message.time_created * 1000 | date: 'medium'"
           [innerHtml]="message.message | tags"
           ></div>
           <span class="minds-messenger-conversation-message-ts"></span>
