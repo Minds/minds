@@ -34,12 +34,12 @@
     <div class="m-messenger-conversation-composer" *ngIf="encryption.isOn()">
       <textarea placeholder="Type your message here"
       [(ngModel)]="message"
-      (keydown.enter)="send($event)"
-      (focus)="emojiService.close()"
-      (click)="emojiService.close()"
+      (keydown.enter)="send($event); emoji.close()"
+      (focus)="emoji.close()"
+      (click)="emoji.close()"
       rows="1"></textarea>
-      <i class="material-icons mdl-color-text--blue-grey-600" (emoji)="message = message + $event.character">mood</i>
-      <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event)">send_arrow</i>
+      <i class="material-icons mdl-color-text--blue-grey-600" (emoji)="message = message + $event.character" #emoji="emoji">mood</i>
+      <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event); emoji.close()">send_arrow</i>
     </div>
   </div>
 

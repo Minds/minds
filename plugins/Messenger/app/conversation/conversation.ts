@@ -6,7 +6,6 @@ import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
 import { AutoGrow } from '../../../directives/autogrow';
 import { Emoji } from '../../../directives/emoji';
-import { EmojiService } from '../../../services/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { SocketsService } from '../../../services/sockets';
 import { Tooltip } from '../../../directives/tooltip';
@@ -43,7 +42,7 @@ export class MessengerConversation {
 
   message : string = "";
 
-  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef, public emojiService: EmojiService){
+  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
 
   }
 
@@ -94,8 +93,6 @@ export class MessengerConversation {
 
   send(e){
     e.preventDefault();
-
-    this.emojiService.close();
 
     this.client.post('api/v1/conversations/' + this.conversation.guid, {
         message: this.message,
