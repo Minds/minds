@@ -159,7 +159,6 @@ class conversations implements Interfaces\Api
           $message->message = $_POST['message'];
         }*/
         $response["message"] = $message->export();
-        $response["message"]["message"] = $_POST['message'];
 
         try {
             (new Sockets\Events())
