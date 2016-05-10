@@ -17,7 +17,7 @@ class Message extends DenormalizedEntity{
 		protected $conversation;
 
 		protected $exportableDefaults = [
-			'guid', 'friendly_ts', 'message', 'messages', 'type', 'subtype', 'owner_guid', 'owner'
+			'guid', 'friendly_ts', 'message', 'messages', 'type', 'subtype', 'owner_guid', 'owner', 'time_created'
 		];
 		protected $type = 'object';
 		protected $subtype = 'message';
