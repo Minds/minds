@@ -80,7 +80,7 @@ class Factory
         $user_auth_result = $user_pam->authenticate();
         if ($user_auth_result && $api_pam->authenticate() || Security\XSRF::validateRequest()) {
         } else {
-            error_log('failed authentication:: OAUTH via API');
+            //error_log('failed authentication:: OAUTH via API');
             ob_end_clean();
             header('Content-type: application/json');
             header("Access-Control-Allow-Origin: *");
@@ -153,6 +153,9 @@ class Factory
      */
     public static function exportable($entities, $exceptions = array())
     {
+        if(!$entities){
+            return [];
+        }
         foreach ($entities as $k => $entity) {
             $entities[$k] = $entity->export();
             $entities[$k]['guid'] = (string) $entities[$k]['guid']; //javascript doesn't like long numbers..
