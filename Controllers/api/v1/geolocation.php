@@ -19,7 +19,7 @@ class geolocation implements Interfaces\Api, Interfaces\ApiIgnorePam
         $config = Core\Di\Di::_()->get('Config');
         $url = "https://nominatim.openstreetmap.org/search.php?q=" . urlencode($_GET['q']) . "&format=json&addressdetails=1";
         $url = "http://open.mapquestapi.com/nominatim/v1/search.php?key=ohEcFAArFVNvzTlwGQS5C9XGkAZ4iW9p&format=json&q=" . urlencode($_GET['q']) . "&addressdetails=1"; 
-        $url = "https://maps.googleapis.com/maps/api/geocode/json?key=". $config->get('google-api-key') . "&address=" . urlencode($_GET['q']);
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?key=". $config->{'google-api-key'} . "&address=" . urlencode($_GET['q']);
 
 
         $ch = curl_init();
