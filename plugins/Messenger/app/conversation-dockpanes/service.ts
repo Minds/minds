@@ -46,7 +46,11 @@ export class MessengerConversationDockpanesService{
   }
 
   private saveToCache(){
-    this.storage.set('messenger-dockpanes', JSON.stringify(this.conversations));
+    let conversations = this.conversations;
+    for(let i = 0; i < conversations.length; i++){
+      delete conversations[i].messages;
+    }
+    this.storage.set('messenger-dockpanes', JSON.stringify(conversations));
   }
 
 }

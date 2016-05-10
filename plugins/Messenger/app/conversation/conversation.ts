@@ -7,6 +7,7 @@ import { Storage } from '../../../services/storage';
 import { AutoGrow } from '../../../directives/autogrow';
 import { Emoji } from '../../../directives/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
+import { Material } from '../../../directives/material';
 import { SocketsService } from '../../../services/sockets';
 import { Tooltip } from '../../../directives/tooltip';
 
@@ -22,7 +23,7 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip ],
+  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip ],
   pipes: [ MINDS_PIPES ]
 })
 
@@ -39,6 +40,7 @@ export class MessengerConversation {
   participants : Array<any> = [];
   messages : Array<any> = [];
   open : boolean = false;
+  inProgress : boolean = false;
 
   message : string = "";
 
@@ -62,14 +64,19 @@ export class MessengerConversation {
   }
 
   load(){
+    this.inProgress = true;
     this.client.get('api/v1/conversations/' + this.conversation.guid, {
         password: this.encryption.getEncryptionPassword()
       })
       .then((response : any) => {
+        this.inProgress = false;
         if (response.messages) {
           this.messages = response.messages;
         }
       })
+      .catch(() => {
+        this.inProgress = false;
+      });
   }
 
   listen() {
