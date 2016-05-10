@@ -1,4 +1,4 @@
-import { Component, ElementRef, ChangeDetectorRef } from 'angular2/core';
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
 import { Client } from '../../../services/api';
@@ -42,6 +42,8 @@ export class MessengerConversation {
   open : boolean = false;
   inProgress : boolean = false;
 
+  scrollEmitter : EventEmitter<any> = new EventEmitter();
+
   message : string = "";
 
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
@@ -63,15 +65,23 @@ export class MessengerConversation {
     }
   }
 
-  load(){
-    this.inProgress = true;
-    this.client.get('api/v1/conversations/' + this.conversation.guid, {
-        password: this.encryption.getEncryptionPassword()
-      })
+  load(offset : string, finish : string){
+    let opts = {
+      password: this.encryption.getEncryptionPassword()
+    };
+    if(offset){
+      opts.offset = offset;
+    } else if(finish) {
+      opts.finish = finish;
+    } else {
+      this.inProgress = true;
+    }
+    this.client.get('api/v1/conversations/' + this.conversation.guid, opts)
       .then((response : any) => {
         this.inProgress = false;
         if (response.messages) {
-          this.messages = response.messages;
+          this.messages = this.messages.concat(response.messages);
+          this.scrollEmitter.next(true);
         }
       })
       .catch(() => {
@@ -92,8 +102,10 @@ export class MessengerConversation {
           return;
         }
 
-        this.messages.push(message);
-        this.cd.markForCheck();
+        console.log(message);
+        this.load(message.guid);
+        //this.messages.push(message);
+        //this.cd.markForCheck();
       });
     }
   }
@@ -107,6 +119,7 @@ export class MessengerConversation {
       })
       .then((response : any) => {
         this.messages.push(response.message);
+        this.scrollEmitter.next(true);
       });
     this.message = "";
   }

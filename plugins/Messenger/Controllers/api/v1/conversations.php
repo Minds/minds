@@ -73,8 +73,9 @@ class conversations implements Interfaces\Api
         }
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
-        $offset = $_GET['offset'];
-        $messages = $messages->getMessages($limit, $offset);
+        $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+        $finish = isset($_GET['finish']) ? $_GET['finish'] : "";
+        $messages = $messages->getMessages($limit, $offset, $finish);
 
         if($messages){
 
@@ -128,7 +129,7 @@ class conversations implements Interfaces\Api
             $conversation->setParticipant(Core\Session::getLoggedInUserGuid())
               ->setParticipant($pages[0]);
         } else {
-            $conversation->setGuid($pages[0]); 
+            $conversation->setGuid($pages[0]);
         }
 
         $message = (new Messenger\Entities\Message())

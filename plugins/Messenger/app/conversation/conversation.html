@@ -16,7 +16,8 @@
       <minds-messenger-encryption></minds-messenger-encryption>
     </div>
 
-    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()" minds-messenger-scroll [messages]="messages">
+    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()"
+      minds-messenger-scroll [emitter]="scrollEmitter">
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"
         [hidden]="inProgress"

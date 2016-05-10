@@ -4,7 +4,7 @@ import { ScrollService } from '../../../services/ux/scroll';
 
 @Directive({
   selector: '[minds-messenger-scroll]',
-  inputs: ['messages']
+  inputs: ['emitter']
 })
 
 export class MessengerScrollDirective{
@@ -13,13 +13,14 @@ export class MessengerScrollDirective{
 
   }
 
-  set messages(messages : Array<any>){
-    if(!messages || !messages.length)
-      return;
-
-    setTimeout(() => {
-      this._element.nativeElement.scrollTop = this._element.nativeElement.scrollHeight;
-    });
+  ngOnInit(){
+    this.emitter.subscribe({
+      next: () => {
+        setTimeout(() => {
+          this._element.nativeElement.scrollTop = this._element.nativeElement.scrollHeight;
+        });
+      }
+    })
   }
 
 }
