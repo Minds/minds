@@ -250,9 +250,12 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $icon_sizes = Core\Config::_()->get('icon_sizes');
 
+        $img = file_get_contents($url);
+        file_put_contents("/tmp/fb-" . md5($url), $img);   
+
         $files = [];
         foreach ($icon_sizes as $name => $size_info) {
-            $resized = get_resized_image_from_existing_file($url, $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
+            $resized = get_resized_image_from_existing_file("/tmp/fb-" . md5($url), $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
 
             if ($resized) {
                 //@todo Make these actual entities.  See exts #348.
