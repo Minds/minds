@@ -96,6 +96,10 @@ export class Messenger {
     if(this.search_timeout)
       clearTimeout(this.search_timeout);
 
+    if(!q.value){
+      return this.load();
+    }
+
     this.search_timeout = setTimeout(() => {
       this.inProgress = true;
       this.client.get('api/v1/conversations/search', {
