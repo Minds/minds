@@ -107,7 +107,7 @@ class Conversation extends DenormalizedEntity{
 	private function permutateGuid($input = [])
 	{
 			$result = "";
-			ksort($input);
+			asort($input);
 			foreach($input as $key => $guid){
 					$result .= $result ? ":$guid" : $guid;
 			}
