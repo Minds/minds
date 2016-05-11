@@ -83,6 +83,18 @@ minds-messenger{
 
     } //[end] .m-messenger-dockpane-tab
 
+    .m-conversation-online{
+      position: absolute;
+      display: block;
+      vertical-align: middle;
+      right: 8px;
+      top: 50%;
+      top: calc(50% - 4px);
+      width:8px;
+      height:8px;
+      background:green;
+      border-radius:50%;
+    }
 
     &.m-messenger-userlist{
 
@@ -118,6 +130,8 @@ minds-messenger{
 
       .m-messenger-userlist-conversations-item{
         cursor:pointer;
+        position:relative;
+
         img{
           width: 24px;
           margin: 8px;
