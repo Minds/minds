@@ -15,7 +15,7 @@ class Conversation extends DenormalizedEntity{
 	protected $rowKey;
 
 	protected $exportableDefaults = [
-		'guid', 'type', 'subtype', 'unread', 'online'
+		'guid', 'type', 'subtype', 'unread', 'online', 'ts'
 	];
 	protected $type = 'messenger';
 	protected $subtype = 'conversation';
@@ -119,8 +119,8 @@ class Conversation extends DenormalizedEntity{
 			foreach($this->participants as $participant_guid => $participant){
 					$this->db->insert("object:gathering:conversations:$participant_guid", [
 						$this->getGuid() => json_encode([
-							'ts' => time(),
-							'unread' => 0,
+							'ts' => $this->ts ?: time(),
+							'unread' => $this->unread ?: 0,
 							'participants' => array_values($this->participants)
 						])
 					]);

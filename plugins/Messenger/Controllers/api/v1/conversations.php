@@ -114,8 +114,8 @@ class conversations implements Interfaces\Api
         if($conversations){
             $response['conversations'] = Factory::exportable($conversations);
             end($conversations);
-            $response['load-next'] = (string) key($conversations);
-            $response['load-previous'] = (string) key(reset($conversations));
+            $response['load-next'] = (int) $_GET['offset'] + count($sonversations);
+            $response['load-previous'] = (int) $_GET['offset'] - count($sonversations);
         }
         return $response;
     }

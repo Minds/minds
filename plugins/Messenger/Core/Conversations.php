@@ -16,6 +16,7 @@ class Conversations
     private $db;
     private $redis;
     private $user;
+    private $toUpgrade = [];
 
     public function __construct($db = NULL, $redis = NULL, $config = NULL)
     {
@@ -38,7 +39,6 @@ class Conversations
         if($conversations){
             $return = [];
 
-            //arsort($conversations);
             $i = 0;
             $ready = false;
             foreach($conversations as $guid => $data){
@@ -76,6 +76,7 @@ class Conversations
                     $conversation->clearParticipants();
                     $conversation->setParticipant(Session::getLoggedinUser()->guid)
                         ->setParticipant($guid);
+                    $this->toUpgrade[$guid] = $conversation;
                 } else {
                     $conversation->setGuid($guid);
                 }
@@ -90,6 +91,7 @@ class Conversations
         });
         $return = array_slice($return, 0, $limit);
         $return = $this->filterOnline($return);
+        $this->runUpgrades();
         return $return;
     }
 
@@ -120,6 +122,14 @@ class Conversations
         }
 
         return $conversations;
+    }
+
+    public function runUpgrades()
+    {
+        foreach($this->toUpgrade as $guid => $conversation){
+            $conversation->saveToLists();
+            $this->db->remove("object:gathering:conversations:{$this->user->guid}", [ $guid ]);
+        }
     }
 
 }
