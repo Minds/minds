@@ -4,6 +4,7 @@
       <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
     </div>
     <div class="m-messenger-dockpane-tab-actions">
+      <i class="material-icons mdl-color-text--blue-grey-100" [hidden]="live">sync_problem</i>
       <i class="material-icons mdl-color-text--blue-grey-300">more_vert</i>
       <i class="material-icons mdl-color-text--blue-grey-300" (click)="dockpanes.close(conversation)">close</i>
     </div>

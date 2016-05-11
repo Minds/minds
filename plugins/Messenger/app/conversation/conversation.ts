@@ -43,6 +43,7 @@ export class MessengerConversation {
   messages : Array<any> = [];
   open : boolean = false;
   inProgress : boolean = false;
+  live : boolean = true;
 
   scrollEmitter : EventEmitter<any> = new EventEmitter();
 
@@ -105,10 +106,18 @@ export class MessengerConversation {
         }
 
         console.log(message);
-        this.load(message.guid);
+        this.load(null, message.guid);
         //this.messages.push(message);
         //this.cd.markForCheck();
       });
+
+      this.sockets.subscribe('connect', () => {
+        this.live = true;
+      });
+      this.sockets.subscribe('disconnect', () => {
+        this.live = false;
+      });
+
     }
   }
 
