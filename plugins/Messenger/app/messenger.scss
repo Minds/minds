@@ -141,6 +141,12 @@ minds-messenger{
           text-transform: uppercase;
           letter-spacing: 1px;
           font-size: 11px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 132px;
+          vertical-align: middle;
+          display: inline-block;
         }
       }
     } //[end] .m-messenger-userlist
