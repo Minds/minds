@@ -15,35 +15,47 @@ export class MessengerEncryptionService{
   }
 
   isOn() : boolean {
-    if(!this.on){
-      this.on = this.storage.get('encryption-password');
-    }
+    //if(!this.on){
+    this.on = this.storage.get('encryption-password');
+    //}
     return this.on;
   }
 
   unlock(password : string){
-    this.client.post('api/v1/keys/unlock', {password: password})
-      .then((response : any) => {
-        this.storage.set('encryption-password', response.password);
-        this.on = true;
-      });
+    return new Promise((resolve, reject) => {
+      this.client.post('api/v1/keys/unlock', {password: password})
+        .then((response : any) => {
+          this.storage.set('encryption-password', response.password);
+          this.on = true;
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    });
   }
 
   isSetup() : boolean {
     //TODO: this won't work on nativescript, so move away from window var.
-    if(!this.setup){
-      this.setup = window.Minds.user.chat;
-    }
+    //if(!this.setup){
+    this.setup = window.Minds.user.chat;
+    //}
     return this.setup;
   }
 
   doSetup(password : string) : boolean {
-    this.client.post('api/v1/keys/setup', {password: password, download: false})
-      .then((response : any) => {
-        this.storage.set('encryption-password', response.password);
-        this.setup = true;
-        this.on = true;
-      })
+    return new Promise((resolve, reject) => {
+      this.client.post('api/v1/keys/setup', {password: password, download: false})
+        .then((response : any) => {
+          this.storage.set('encryption-password', response.password);
+          this.setup = true;
+          this.on = true;
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+      });
   }
 
   getEncryptionPassword() : string {

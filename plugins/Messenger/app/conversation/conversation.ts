@@ -48,6 +48,7 @@ export class MessengerConversation {
   scrollEmitter : EventEmitter<any> = new EventEmitter();
 
   message : string = "";
+  showMessages : boolean = true; //TODO: find a better way to work out if encryption has been set
 
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
 
@@ -56,8 +57,10 @@ export class MessengerConversation {
   ngOnInit(){
     if(this.conversation.messages){
       this.messages = this.conversation.messages;
-    } else {
+    } else if(this.encryption.isOn()) {
       this.load();
+    } else if(!this.encryption.isOn()) {
+      this.showMessages = false;
     }
     this.listen();
   }
@@ -82,10 +85,12 @@ export class MessengerConversation {
     this.client.get('api/v1/conversations/' + this.conversation.guid, opts)
       .then((response : any) => {
         this.inProgress = false;
-        if (response.messages) {
+        if (response.messages && (offset || finish)) {
           this.messages = this.messages.concat(response.messages);
-          this.scrollEmitter.next(true);
+        } else {
+          this.messages = response.messages;
         }
+        this.scrollEmitter.next(true);
       })
       .catch(() => {
         this.inProgress = false;

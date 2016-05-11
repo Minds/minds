@@ -12,11 +12,11 @@
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
 
-    <div class="m-messenger-conversation-encryption-lock" *ngIf="!encryption.isOn()">
-      <minds-messenger-encryption></minds-messenger-encryption>
+    <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">
+      <minds-messenger-encryption (on)="load(null, null, true); showMessages = true;"></minds-messenger-encryption>
     </div>
 
-    <div class="m-messenger-conversation-messages" *ngIf="encryption.isOn()"
+    <div class="m-messenger-conversation-messages" *ngIf="showMessages"
       minds-messenger-scroll [emitter]="scrollEmitter">
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"

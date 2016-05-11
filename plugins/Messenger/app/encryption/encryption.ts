@@ -1,4 +1,4 @@
-import { Component, ElementRef } from 'angular2/core';
+import { Component, ElementRef, EventEmitter } from 'angular2/core';
 import { Router, RouteParams, RouterLink } from "angular2/router";
 
 import { SocketsService } from '../../../services/sockets';
@@ -15,6 +15,7 @@ import { MessengerEncryptionFactory } from './service';
   host: {
     'class': 'm-messenger-encryption'
   },
+  outputs: [ 'on' ],
   templateUrl: 'src/plugins/Messenger/encryption/encryption.html',
   directives: [ InfiniteScroll, RouterLink, AutoGrow ]
 })
@@ -23,6 +24,7 @@ export class MessengerEncryption {
 
   minds: Minds;
   session = SessionFactory.build();
+  on : EventEmitter<boolean> = new EventEmitter(true);
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
 
@@ -31,7 +33,13 @@ export class MessengerEncryption {
   }
 
   unlock(password){
-    this.encryption.unlock(password.value);
+    this.encryption.unlock(password.value)
+      .then(() => {
+        this.on.next(true);
+      })
+      .catch(() => {
+
+      });
     password.value = '';
   }
 
@@ -39,7 +47,15 @@ export class MessengerEncryption {
     if(password.value != password2.value){
       return;
     }
-    this.encryption.doSetup(password.value);
+    this.encryption.doSetup(password.value)
+      .then(() => {
+        this.on.next(true);
+      })
+      .catch(() => {
+
+      });
+    password.value = '';
+    password2.value = '';
   }
 
 }
