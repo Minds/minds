@@ -27,6 +27,7 @@ class Message extends DenormalizedEntity{
 		protected $encrypted = true;
 		protected $owner_guid;
 		protected $owner;
+		protected $time_created;
 
 		public function setConversation($conversation)
 		{
@@ -121,7 +122,7 @@ class Message extends DenormalizedEntity{
 
 		public function export(array $keys = [])
     {
-        $export = parent::export();
+        $export = parent::export($keys);
         $export = array_merge($export, Events\Dispatcher::trigger('export:extender', 'all', [ 'entity' => $this ], []));
 				$export['ownerObj'] = $export['owner'];
 				$export = \Minds\Helpers\Export::sanitize($export);
