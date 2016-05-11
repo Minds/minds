@@ -18,6 +18,7 @@ import { MessengerEncryption } from '../encryption/encryption';
 
 import { MessengerScrollDirective } from './scroll';
 import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
+import { MessengerSounds } from '../sounds/service';
 
 import { MINDS_PIPES } from '../../../pipes/pipes';
 
@@ -36,6 +37,7 @@ export class MessengerConversation {
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
   dockpanes = MessengerConversationDockpanesFactory.build();
+  sounds  = new MessengerSounds();
 
   guid : string;
   conversation;
@@ -112,6 +114,7 @@ export class MessengerConversation {
 
         console.log(message);
         this.load(null, message.guid);
+        this.sounds.play('new');
         //this.messages.push(message);
         //this.cd.markForCheck();
       });
@@ -136,6 +139,7 @@ export class MessengerConversation {
       .then((response : any) => {
         this.messages.push(response.message);
         this.scrollEmitter.next(true);
+        this.sounds.play('send');
       });
     this.message = "";
   }
