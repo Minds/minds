@@ -201,7 +201,8 @@ class User extends \ElggUser
             'merchant',
             'boostProPlus',
             'fb',
-            'mature'
+            'mature',
+            'signup_method'
         ));
     }
 }

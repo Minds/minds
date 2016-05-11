@@ -1052,7 +1052,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	// Turn on email notifications by default
 	//set_user_notification_setting($user->getGUID(), 'email', true);
 
-	return $guid;
+	return $user;
 }
 
 /**
