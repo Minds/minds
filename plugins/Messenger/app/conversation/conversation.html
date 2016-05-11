@@ -25,11 +25,12 @@
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid == session.getLoggedInUser().guid">
           <div
           class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
-          [tooltip]="message.time_created * 1000 | date: 'medium'"
+          tooltip #tooltip="tooltip"
           [innerHtml]="message.message | tags"
           ></div>
           <span class="minds-messenger-conversation-message-ts"></span>
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'" *ngIf="message.owner.guid != session.getLoggedInUser().guid">
+          <minds-tooltip [properties]="tooltip">{{ message.time_created * 1000 | date: 'medium' }}</minds-tooltip>
       </div>
       <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>

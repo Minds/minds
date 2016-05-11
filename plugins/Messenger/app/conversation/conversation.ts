@@ -10,6 +10,7 @@ import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { Material } from '../../../directives/material';
 import { SocketsService } from '../../../services/sockets';
 import { Tooltip } from '../../../directives/tooltip';
+import { MindsTooltip } from '../../../components/tooltip/tooltip';
 
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
@@ -23,7 +24,7 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip ],
+  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip, MindsTooltip ],
   pipes: [ MINDS_PIPES ]
 })
 
