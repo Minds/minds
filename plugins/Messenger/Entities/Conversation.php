@@ -15,7 +15,7 @@ class Conversation extends DenormalizedEntity{
 	protected $rowKey;
 
 	protected $exportableDefaults = [
-		'guid', 'type', 'subtype'
+		'guid', 'type', 'subtype', 'unread', 'online'
 	];
 	protected $type = 'messenger';
 	protected $subtype = 'conversation';
@@ -23,6 +23,7 @@ class Conversation extends DenormalizedEntity{
 	protected $ts;
 	protected $unread = 0;
 	protected $participants = [];
+	protected $online = false;
 
 	public function __construct($db = NULL)
 	{
@@ -65,6 +66,12 @@ class Conversation extends DenormalizedEntity{
 	public function getParticipants()
 	{
 			return $this->participants ?: [];
+	}
+
+	public function setOnline($boolean)
+	{
+			$this->online = $boolean;
+			return $this;
 	}
 
 	public function getGuid()

@@ -14,11 +14,14 @@ class Conversations
 {
 
     private $db;
+    private $redis;
     private $user;
 
-    public function __construct($db = NULL)
+    public function __construct($db = NULL, $redis = NULL, $config = NULL)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Indexes');
+        $this->redis = $redis ?: new \Redis();
+        $this->config = $config ?: Di::_()->get('Config');
         $this->user = Session::getLoggedinUser();
     }
 
@@ -49,8 +52,8 @@ class Conversations
                 if((string) $guid === (string) Session::getLoggedinUser()->guid)
                     continue;
 
-                //if(($i++ > 12 && !$offset) || ($i++ > 24))
-                //    continue;
+                if(($i++ > 12 && !$offset) || ($i++ > 24))
+                    continue;
 
                 if($guid == $offset){
                     unset($conversations[$guid]);
@@ -82,7 +85,37 @@ class Conversations
                 continue;
             }
         }
+        $return = $this->filterOnline($return);
         return $return;
+    }
+
+    public function filterOnline($conversations)
+    {
+        $config = $this->config->get('redis');
+        $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
+        //put this set of conversations into redis
+        $guids = [];
+        foreach($conversations as $conversation){
+            foreach($conversation->getParticipants() as $participant){
+                if($participant != Session::getLoggedInUserGuid())
+                    $guids[$participant] = $participant;
+            }
+        }
+        array_unshift($guids, Session::getLoggedInUserGuid() . ":conversations");
+        call_user_func_array([$this->redis, 'sadd'], $guids);
+
+        //return the online users
+        $online = $this->redis->sinter("online", Session::getLoggedInUserGuid() . ":conversations");
+
+        foreach($conversations as $key => $conversation){
+            foreach($conversation->getParticipants() as $participant){
+                if(in_array($participant, $online)){
+                    $conversations[$key] = $conversation->setOnline(true);
+                }
+            }
+        }
+
+        return $conversations;
     }
 
 }
