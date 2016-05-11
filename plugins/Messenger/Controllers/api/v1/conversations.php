@@ -72,7 +72,7 @@ class conversations implements Interfaces\Api
             $response = $conversation->export();
         }
 
-        $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 6;
         $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
         $finish = isset($_GET['finish']) ? $_GET['finish'] : "";
         $messages = $messages->getMessages($limit, $offset, $finish);
