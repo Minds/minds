@@ -3,14 +3,21 @@
     <div class="m-messenger-dockpane-tab-title">
       <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
     </div>
-    <div class="m-messenger-dockpane-tab-actions">
+    <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
       <i class="material-icons mdl-color-text--blue-grey-100" [hidden]="live">sync_problem</i>
-      <i class="material-icons mdl-color-text--blue-grey-300">more_vert</i>
+      <i class="material-icons mdl-color-text--blue-grey-300"
+      (click)="ribbon.open = !ribbon.open"
+      [ngClass]="{ 'm-status-active': ribbon.open }"
+      >more_vert</i>
       <i class="material-icons mdl-color-text--blue-grey-300" (click)="dockpanes.close(conversation)">close</i>
     </div>
   </div>
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+    <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
+      <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory()" *ngIf="showMessages">delete</i>
+      <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block()">block</i>
+    </div>
 
     <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">
       <minds-messenger-encryption (on)="load(null, null, true); showMessages = true;"></minds-messenger-encryption>
@@ -40,6 +47,7 @@
     <div class="m-messenger-conversation-composer" *ngIf="encryption.isOn()">
       <textarea placeholder="Type your message here"
       [(ngModel)]="message"
+      [disabled]="blockingActionInProgress"
       (keydown.enter)="send($event); emoji.close()"
       (focus)="emoji.close()"
       (click)="emoji.close()"

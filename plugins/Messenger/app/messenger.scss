@@ -67,8 +67,8 @@ minds-messenger{
           line-height: 12px;
           border-radius: 0 3px 0 0;
 
-          &:hover{
-            //background: #EFEFEF;
+          &:hover,
+          &.m-status-active{
             color:#455a64 !important;
           }
         }
@@ -82,6 +82,31 @@ minds-messenger{
       }
 
     } //[end] .m-messenger-dockpane-tab
+
+    .m-messenger-dockpane-tab-ribbon{
+      position: absolute;
+      box-sizing: border-box;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: #ffffff;
+      text-align: left;
+      vertical-align: middle;
+      padding: 0 $minds-padding;
+      border-bottom: 1px solid #EAEAEA;
+
+      > i{
+        font-size: 16px;
+        padding: 8px 2px;
+        line-height: 12px;
+        border-radius: 0 3px 0 0;
+        cursor: pointer;
+
+        &:hover{
+          color:#455a64 !important;
+        }
+      }
+    }
 
     .m-conversation-online{
       position: absolute;

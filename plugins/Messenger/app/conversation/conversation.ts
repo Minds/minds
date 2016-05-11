@@ -51,6 +51,7 @@ export class MessengerConversation {
 
   message : string = "";
   showMessages : boolean = true; //TODO: find a better way to work out if encryption has been set
+  blockingActionInProgress: boolean = false;
 
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
 
@@ -142,5 +143,24 @@ export class MessengerConversation {
         this.sounds.play('send');
       });
     this.message = "";
+  }
+
+  deleteHistory() {
+    if (!confirm('You cannot UNDO this action. Are you sure?')) {
+      // TODO: Maybe a non-process-blocking popup?
+      return;
+    }
+
+    this.messages = []; // Optimistic
+    this.blockingActionInProgress = true;
+
+    this.client.delete('api/v1/conversations/' + this.conversation.guid, {})
+      .then((response: any) => {
+        this.blockingActionInProgress = false;
+      });
+  }
+
+  block() {
+    // TODO: Block a conversation
   }
 }
