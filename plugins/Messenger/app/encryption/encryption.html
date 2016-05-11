@@ -1,10 +1,10 @@
 <div class="m-messenger-encryption-unlock" *ngIf="encryption.isSetup()">
-  <input type="password" placeholder="Enter your messenger password to unlock" #password (keydown.enter)="unlock(password)" />
+  <input type="password" placeholder="Enter password" #password (keydown.enter)="unlock(password)" />
   <button class="mdl-button mdl-button--colored" (click)="unlock(password)">Unlock</button>
 </div>
 
 <div class="m-messenger-encryption-setup" *ngIf="!encryption.isSetup()">
-  <input type="password" placeholder="Enter your encryption password" #password1 />
+  <input type="password" placeholder="Enter a password" #password1 />
   <input type="password" placeholder="Confirm your password" #password2 (keydown.enter)="setup(password1, password2)" />
   <button class="mdl-button mdl-button--colored" (click)="setup(password1, password2)">Setup</button>
 </div>

@@ -227,14 +227,12 @@ minds-messenger{
       -webkit-appearance: none;
       outline: none;
       border: 0;
-      padding: 8px;
-      border-bottom: 1px solid #EEE;
-      width: 100%;
+      margin: 0;
+      padding: 12px;
+      width: 132px;
     }
     .mdl-button, button{
-      position: absolute;
-      right: 0;
-      margin-top: -33px;
+      padding:0;
       font-size: 12px;
     }
   }
