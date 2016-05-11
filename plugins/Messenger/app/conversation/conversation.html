@@ -1,5 +1,4 @@
 <div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
-
   <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="dockpanes.toggle(conversation)">
     <div class="m-messenger-dockpane-tab-title">
       <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
@@ -47,7 +46,7 @@
       rows="1"></textarea>
       <i class="material-icons mdl-color-text--blue-grey-600" (emoji)="message = message + $event.character" #emoji="emoji">mood</i>
       <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event); emoji.close()">send_arrow</i>
+      <minds-emoji [localDirective]="emoji"></minds-emoji>
     </div>
   </div>
-
 </div>

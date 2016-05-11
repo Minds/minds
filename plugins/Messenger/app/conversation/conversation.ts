@@ -6,6 +6,7 @@ import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
 import { AutoGrow } from '../../../directives/autogrow';
 import { Emoji } from '../../../directives/emoji';
+import { MindsEmoji } from '../../../components/emoji/emoji';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { Material } from '../../../directives/material';
 import { SocketsService } from '../../../services/sockets';
@@ -24,7 +25,7 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
   selector: 'minds-messenger-conversation',
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, Tooltip, MindsTooltip ],
+  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, MindsEmoji, Tooltip, MindsTooltip ],
   pipes: [ MINDS_PIPES ]
 })
 
