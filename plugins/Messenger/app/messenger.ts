@@ -97,7 +97,7 @@ export class Messenger {
       clearTimeout(this.search_timeout);
 
     if(!q.value){
-      return this.load();
+      return this.load(true);
     }
 
     this.search_timeout = setTimeout(() => {
