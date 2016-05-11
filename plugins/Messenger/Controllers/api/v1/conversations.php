@@ -147,7 +147,7 @@ class conversations implements Interfaces\Api
         }
 
         $message->save();
-
+        $conversation->saveToLists();
         //$conversation->update();
         //$conversation->notify();
 

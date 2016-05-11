@@ -20,7 +20,7 @@ class Conversation extends DenormalizedEntity{
 	protected $type = 'messenger';
 	protected $subtype = 'conversation';
 	protected $guid;
-	protected $ts;
+	public $ts;
 	protected $unread = 0;
 	protected $participants = [];
 	protected $online = false;

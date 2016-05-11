@@ -38,7 +38,7 @@ class Conversations
         if($conversations){
             $return = [];
 
-            arsort($conversations);
+            //arsort($conversations);
             $i = 0;
             $ready = false;
             foreach($conversations as $guid => $data){
@@ -52,8 +52,8 @@ class Conversations
                 if((string) $guid === (string) Session::getLoggedinUser()->guid)
                     continue;
 
-                if(($i++ > 12 && !$offset) || ($i++ > 24))
-                    continue;
+                //if(($i++ > 12 && !$offset) || ($i++ > 24))
+                //    continue;
 
                 if($guid == $offset){
                     unset($conversations[$guid]);
@@ -85,6 +85,10 @@ class Conversations
                 continue;
             }
         }
+        usort($return, function($a, $b){
+          return $b->ts - $a->ts;
+        });
+        $return = array_slice($return, 0, $limit);
         $return = $this->filterOnline($return);
         return $return;
     }
