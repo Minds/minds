@@ -16,7 +16,9 @@ trait Entity
         if (!$this->guid) {
             $this->guid = Core\Guid::build();
         }
-        $this->time_created = time();
+        if(!$this->time_created){
+            $this->time_created = time();
+        }
         return $this->guid;
     }
 
