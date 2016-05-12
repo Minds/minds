@@ -151,6 +151,7 @@ minds-messenger{
       .m-messenger-userlist-conversations{
         max-height: 240px;
         overflow: scroll;
+        overflow-x:hidden;
       }
 
       .m-messenger-userlist-conversations-item{
@@ -191,6 +192,7 @@ minds-messenger{
     .m-messenger-conversation-messages{
       max-height:142px;
       overflow:scroll;
+      overflow-x:hidden;
 
       .minds-messenger-conversation-message-bubble {
         display: inline-block;
