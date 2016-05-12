@@ -4,7 +4,7 @@
 
       <minds-messenger-dockpane [style.right]="0">
         <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
-          <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="userListToggle = !userListToggle">
+          <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="toggle()">
             <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
             <div class="m-messenger-dockpane-tab-actions">
               <i class="material-icons">settings</i>

@@ -45,17 +45,11 @@ export class Messenger {
 
   ngOnInit(){
     if(this.session.isLoggedIn()){
-      this.checkSetup();
-      this.load(true);
+      if(this.userListToggle)
+        this.load(true);
       this.listen();
+      this.autoRefresh();
     }
-  }
-
-  checkSetup(){
-    var self = this;
-    var key = this.storage.get('private-key');
-    if (key)
-      this.setup = true;
   }
 
   load(refresh : boolean = false) {
@@ -160,9 +154,16 @@ export class Messenger {
     }
   }
 
-  logout(){
-    this.storage.destroy('private-key');
-    this.setup = false;
+  toggle(){
+    this.userListToggle = !this.userListToggle
+    if(this.userListToggle)
+      this.load(true);
+  }
+
+  autoRefresh(){
+    setInterval(() => {
+      this.load(true);
+    }, 30000); // refresh 30 seconds
   }
 
   ngOnDestroy(){
