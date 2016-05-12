@@ -196,13 +196,15 @@ minds-messenger{
 
       .minds-messenger-conversation-message-bubble {
         display: inline-block;
-        padding: 3px $minds-padding;
+        padding: $minds-padding;
         background: #EEE;
         border-radius: 3px;
         font-size: 11px;
         margin: $minds-margin/2 $minds-margin;
         font-weight: 400;
         max-width:130px;
+        box-sizing: border-box;
+        line-height: 14px;
       }
       .m-messenger-conversation-messages-message{
         text-align:right;
