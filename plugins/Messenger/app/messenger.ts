@@ -128,30 +128,22 @@ export class Messenger {
     this.sockets.join(`messenger:${window.Minds.user.guid}`);
 
     this.listener = this.sockets.subscribe('touchConversation', (guid) => {
-      let existing = false;
+
       for(var i in this.dockpanes.conversations) {
         if(this.dockpanes.conversations[i].guid == guid) {
-          this.dockpanes.conversations[i].unread = 1;
-          existing = true;
+          this.dockpanes.conversations[i].unread = true;
+          return;
         }
       }
 
-      if (!existing) {
-        this.client.get(`api/v1/conversations/${guid}`, {
-            password: this.encryption.getEncryptionPassword()
-          })
-          .then((response) => {
-            this.openConversation(response);
-          });
-      }
-    });
+      this.client.get(`api/v1/conversations/${guid}`, {
+          password: this.encryption.getEncryptionPassword()
+        })
+        .then((response) => {
+          this.openConversation(response);
+        });
 
-    //reset the global counter
-    for(var i in window.Minds.navigation.sidebar){
-      if(window.Minds.navigation.sidebar[i].name == "Messenger"){
-        window.Minds.navigation.sidebar[i].extras.counter = 0;
-      }
-    }
+    });
   }
 
   toggle(){

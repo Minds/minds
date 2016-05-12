@@ -11,6 +11,7 @@ export class MessengerConversationDockpanesService{
 
   open(conversation){
     conversation.open = true;
+    conversation.unread = false;
     for(let i = 0; i < this.conversations.length; i++){
       if(this.conversations[i].guid == conversation.guid){
         this.conversations[i] = conversation;

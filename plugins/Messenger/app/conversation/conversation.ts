@@ -60,7 +60,7 @@ export class MessengerConversation {
   ngOnInit(){
     if(this.conversation.messages){
       this.messages = this.conversation.messages;
-    } else if(this.encryption.isOn()) {
+    } else if(this.encryption.isOn() && this.conversation.open) {
       this.load();
     } else if(!this.encryption.isOn()) {
       this.showMessages = false;
@@ -93,7 +93,10 @@ export class MessengerConversation {
         } else {
           this.messages = response.messages;
         }
-        this.scrollEmitter.next(true);
+        if(this.conversation.open){
+          this.conversation.unread = false;
+          this.scrollEmitter.next(true);
+        }
       })
       .catch(() => {
         this.inProgress = false;
@@ -113,11 +116,9 @@ export class MessengerConversation {
           return;
         }
 
-        console.log(message);
         this.load(null, message.guid);
         this.sounds.play('new');
-        //this.messages.push(message);
-        //this.cd.markForCheck();
+
       });
 
       this.sockets.subscribe('connect', () => {
