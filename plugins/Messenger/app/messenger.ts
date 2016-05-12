@@ -129,9 +129,9 @@ export class Messenger {
 
     this.listener = this.sockets.subscribe('touchConversation', (guid) => {
       let existing = false;
-      for(var i in this.conversations) {
-        if(this.conversations[i].guid == guid) {
-          this.conversations[i].unread = 1;
+      for(var i in this.dockpanes.conversations) {
+        if(this.dockpanes.conversations[i].guid == guid) {
+          this.dockpanes.conversations[i].unread = 1;
           existing = true;
         }
       }
