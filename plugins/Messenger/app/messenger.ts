@@ -114,7 +114,7 @@ export class Messenger {
         })
         .catch((error) => {
           console.log("got error" + error);
-          this.inProgress = true;
+          this.inProgress = false;
         });
     }, 100);
   }
