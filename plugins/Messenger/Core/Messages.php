@@ -63,6 +63,7 @@ class Messages
             $legacy_messages = $this->db->getRows($legacy_guids);
             foreach($legacy_messages as $guid => $message){
                 $entities[$guid] = new Messenger\Entities\Message();
+                $message['owner'] = $message['ownerObj'];
                 $entities[$guid]->loadFromArray($message);
                 $entities[$guid]->setMessages([
                     Session::getLoggedInUserGuid() => $message["message:".Session::getLoggedInUserGuid()]
