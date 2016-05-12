@@ -24,7 +24,7 @@ class start extends Components\Plugin
 
       Api\Routes::add('v1/gatherings', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
       Api\Routes::add('v1/conversations', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
-			Api\Routes::add('v1/conversations/search', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\conversations');
+			Api\Routes::add('v1/conversations/search', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\search');
       Api\Routes::add('v1/keys', '\\Minds\\Plugin\\Messenger\\Controllers\\api\\v1\\keys');
 
       /**

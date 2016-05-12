@@ -37,24 +37,24 @@ class search implements Interfaces\Api
         }
 
         $params = [
-          'limit' => isset($_GET['limit']) ? $_GET['limit'] ?: 24,
-          'type' => 'user';
+          'limit' => isset($_GET['limit']) ? $_GET['limit'] : 24,
+          'type' => 'user'
         ];
 
         $_GET['q'] = "({$_GET['q']})^5 OR (*{$_GET['q']}*)";
 
-        $guids = (new Documents())->query($_GET['q'], $opts);
+        $guids = (new Core\Search\Documents())->query($_GET['q'], $params);
         $response = [];
-
+        
         if ($guids) {
             $users = Core\Entities::get([
               'guids' => $guids
             ]);
             $conversations = [];
             foreach($users as $user){
-                $conversations[] = (new Messenger\Entities\Conversations)
-                                      ->setParticipant($user)
-                                      ->setParticipant(Core\Session::getLoggedInUser());
+                $conversations[] = (new Messenger\Entities\Conversation())
+                                      ->setParticipant($user->guid)
+                                      ->setParticipant(Core\Session::getLoggedInUserGuid());
             }
 
             $response['conversations'] = Factory::exportable($conversations);
