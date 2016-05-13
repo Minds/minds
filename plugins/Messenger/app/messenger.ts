@@ -58,6 +58,11 @@ export class Messenger {
       return false;
     this.inProgress = true;
 
+    if(refresh){
+      this.offset = "";
+      this.cb = Date.now();
+    }
+
     this.client.get('api/v1/conversations', {
         limit: 12,
         offset: this.offset,
