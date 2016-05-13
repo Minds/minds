@@ -91,7 +91,7 @@ export class MessengerConversation {
         this.inProgress = false;
         if (response.messages && (offset || finish)) {
           this.messages = this.messages.concat(response.messages);
-        } else if (response.message) {
+        } else if (response.messages) {
           this.messages = response.messages;
         } else {
           this.messages = [];
