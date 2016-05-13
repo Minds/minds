@@ -157,7 +157,7 @@ class Conversation extends DenormalizedEntity{
 	public function markAsUnread($marker)
 	{
 			$this->unread = true;
-			$this->saveToParticipants(array_diff($this->participants, [$participant]));
+			$this->saveToParticipants(array_diff($this->participants, [$marker]));
 			return $this;
 	}
 
