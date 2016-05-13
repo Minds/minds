@@ -160,11 +160,13 @@ class conversations implements Interfaces\Api
           $message->message = $_POST['message'];
         }*/
         $response["message"] = $message->export();
+        $emit['message'] = $response;
+        unset($emit['message']);
 
         try {
             (new Sockets\Events())
               ->to($conversation->buildSocketRoomName())
-              ->emit('pushConversationMessage', (string) $conversation->getGuid(), $response["message"]);
+              ->emit('pushConversationMessage', (string) $conversation->getGuid(), $emit);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
         $this->emitSocketTouch($conversation);
