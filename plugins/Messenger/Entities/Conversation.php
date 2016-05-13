@@ -116,7 +116,12 @@ class Conversation extends DenormalizedEntity{
 
 	public function saveToLists()
 	{
-			foreach($this->participants as $participant_guid => $participant){
+			return saveToParticipants($this->participants);
+	}
+
+	public function saveToParticipants($participants = [])
+	{
+			foreach($participants as $participant_guid){
 					$this->db->insert("object:gathering:conversations:$participant_guid", [
 						$this->getGuid() => json_encode([
 							'ts' => $this->ts ?: time(),
@@ -125,6 +130,35 @@ class Conversation extends DenormalizedEntity{
 						])
 					]);
 			}
+	}
+
+	public function save()
+	{
+			return $this->saveToLists();
+	}
+
+	/**
+	 * Marks the conversation as unread for participant
+	 * @param int $marker
+	 * @return $this
+	 */
+	public function markAsRead($marker)
+	{
+			$this->unread = false;
+			$this->saveToParticipants([$marker]);
+			return $this;
+	}
+
+	/**
+	 * Marks the conversation as unread for other participants
+	 * @param int $marker
+	 * @return $this
+	 */
+	public function markAsUnread($marker)
+	{
+			$this->unread = true;
+			$this->saveToParticipants(array_diff($this->participants, [$participant]));
+			return $this;
 	}
 
 	public function export($keys = [])

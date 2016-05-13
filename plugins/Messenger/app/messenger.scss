@@ -121,6 +121,19 @@ minds-messenger{
       border-radius:50%;
     }
 
+    .m-conversation-new{
+      position: absolute;
+      display: block;
+      vertical-align: middle;
+      right: 20px;
+      top: 50%;
+      top: calc(50% - 4px);
+      width:8px;
+      height:8px;
+      background:blue;
+      border-radius:50%;
+    }
+
     &.m-messenger-userlist{
 
       .m-messenger-userlist-search{

@@ -8,6 +8,7 @@
 namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Session;
 use Minds\Entities;
 use Minds\Helpers;
 use Minds\Plugin\Messenger;
@@ -90,6 +91,8 @@ class conversations implements Interfaces\Api
                 }
             }
 
+            $conversation->markAsRead(Session::getLoggedInUserGuid());
+
             $messages = array_reverse($messages);
             $response['messages'] = Factory::exportable($messages);
             $response['load-next'] = (string) end($messages)->guid;
@@ -147,9 +150,7 @@ class conversations implements Interfaces\Api
         }
 
         $message->save();
-        $conversation->saveToLists();
-        //$conversation->update();
-        //$conversation->notify();
+        $conversation->markAsUnread(Session::getLoggedInUserGuid());
 
         /*if($message->client_encrypted){
           $key = "message:".elgg_get_logged_in_user_guid();

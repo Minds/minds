@@ -6,11 +6,21 @@
         <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
           <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-700" (click)="toggle()">
             <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
-            <div class="m-messenger-dockpane-tab-actions">
-              <i class="material-icons">settings</i>
+            <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
+              <i class="material-icons"
+                (click)="ribbon.open = !ribbon.open"
+                [ngClass]="{ 'm-status-active': ribbon.open }">
+                settings
+              </i>
             </div>
           </div>
           <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+
+            <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
+              <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory()" *ngIf="showMessages">delete</i>
+              <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block()">block</i>
+            </div>
+
             <div class="m-messenger-userlist-search">
               <i class="material-icons">search</i>
               <input type="text" placeholder="search" #q (keydown)="search(q);">
@@ -23,6 +33,7 @@
                 <!-- This is currently only configured for one-on-one chat -->
                 <img [src]="minds.cdn_url + 'icon/' + conversation.guid" class="mdl-shadow--2dp">
                 <span class="m-conversation-label">{{conversation.username}}</span>
+                <span class="m-conversation-new mdl-color--blue" [hidden]="!conversation.unread"></span>
                 <span class="m-conversation-online" [hidden]="!conversation.online"></span>
               </div>
               <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
