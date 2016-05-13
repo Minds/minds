@@ -160,7 +160,7 @@ class conversations implements Interfaces\Api
           $message->message = $_POST['message'];
         }*/
         $response["message"] = $message->export();
-        $emit['message'] = $response;
+        $emit = $response['message'];
         unset($emit['message']);
 
         try {
