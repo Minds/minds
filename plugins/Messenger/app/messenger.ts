@@ -54,7 +54,7 @@ export class Messenger {
 
   load(refresh : boolean = false) {
 
-    if(this.inProgress)
+    if(this.inProgress && !refresh)
       return false;
     this.inProgress = true;
 
