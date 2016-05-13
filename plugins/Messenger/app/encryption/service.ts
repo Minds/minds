@@ -62,6 +62,11 @@ export class MessengerEncryptionService{
     return this.storage.get('encryption-password');
   }
 
+  logout(){
+    this.storage.destroy('encryption-password');
+    this.on = false;
+  }
+
 }
 
 /**

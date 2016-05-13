@@ -17,8 +17,11 @@
           <div class="m-messenger-dockpane-container mdl-shadow--2dp">
 
             <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
-              <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory()" *ngIf="showMessages">delete</i>
-              <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block()">block</i>
+              <i class="material-icons mdl-color-text--blue-grey-100"
+                title="Logout of chat"
+                (click)="logout()"
+                [hidden]="!encryption.isOn()">
+                exit_to_app</i>
             </div>
 
             <div class="m-messenger-userlist-search">

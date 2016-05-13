@@ -40,6 +40,11 @@ export class MessengerConversationDockpanesService{
     this.saveToCache();
   }
 
+  closeAll(){
+    this.conversations.splice(0, this.conversations.length);
+    this.saveToCache();
+  }
+
   private loadFromCache(){
     let conversations = JSON.parse(this.storage.get('messenger-dockpanes'));
     if(conversations)

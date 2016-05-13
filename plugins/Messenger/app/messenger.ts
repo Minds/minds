@@ -81,7 +81,7 @@ export class Messenger {
       })
       .catch((error) => {
         console.log("got error" + error);
-        this.inProgress = true;
+        this.inProgress = false;
       });
   }
 
@@ -156,6 +156,11 @@ export class Messenger {
     setInterval(() => {
       this.load(true);
     }, 30000); // refresh 30 seconds
+  }
+
+  logout(){
+    this.encryption.logout();
+    this.dockpanes.closeAll();
   }
 
   ngOnDestroy(){
