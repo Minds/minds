@@ -69,7 +69,7 @@ class Conversations
                     $data = json_decode($data, true);
                 }
 
-                $conversation = new Messenger\Entities\Conversation();
+                $conversation = new Messenger\Entities\Conversation($this->db);
                 $conversation->loadFromArray($data);
                 //$conversation->setGuid($guid);
                 if(strpos($guid, ':') === FALSE){
@@ -80,7 +80,6 @@ class Conversations
                 } else {
                     $conversation->setGuid($guid);
                 }
-
 
                 $return[] = $conversation;
                 continue;
