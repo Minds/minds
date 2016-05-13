@@ -33,6 +33,7 @@
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"
         [hidden]="inProgress"
+        [class.m-optimistic-guess]="message.optimisticGuess"
         [class.odd]="message.owner.guid == session.getLoggedInUser().guid">
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid == session.getLoggedInUser().guid"

@@ -237,6 +237,10 @@ minds-messenger{
             margin-left: $minds-margin;
           }
         }
+
+        &.m-optimistic-guess {
+          opacity: 0.6;
+        }
       }
       .m-messenger-conversation-messages-notice{
         text-align: center;

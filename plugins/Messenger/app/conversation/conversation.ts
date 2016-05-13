@@ -148,16 +148,27 @@ export class MessengerConversation {
   send(e){
     e.preventDefault();
 
+    let currentIndex = this.messages.length || 0;
+
     this.client.post('api/v1/conversations/' + this.conversation.guid, {
         message: this.message,
         encrypt: true
       })
       .then((response : any) => {
-        this.messages.push(response.message);
+        this.messages[currentIndex] = response.message;
         this.scrollEmitter.next(true);
         this.sounds.play('send');
       });
-    this.message = "";
+
+    this.messages.push({ // Optimistic
+      optimisticGuess: true,
+      owner: this.session.getLoggedInUser(),
+      message: this.message,
+      time_created: Math.floor(Date.now() / 1000)
+    });
+
+    this.message = '';
+    this.scrollEmitter.next(true);
   }
 
   deleteHistory() {
