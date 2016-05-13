@@ -120,6 +120,15 @@ class Message extends DenormalizedEntity{
 				//var_dump($this->rowKey); exit;
 		}
 
+		public function deleteAll()
+		{
+			$this->getGuid();
+			$rowKey = "object:gathering:conversation:{$this->conversation->getGuid()}";
+
+			// TODO: Is there a way to empty the row without completely removing it?
+			$this->db->removeRow($rowKey);
+		}
+
 		public function export(array $keys = [])
     {
         $export = parent::export($keys);

@@ -166,22 +166,7 @@ class conversations implements Interfaces\Api
               ->emit('pushConversationMessage', (string) $conversation->getGuid(), $response["message"]);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
-        if ($conversation->getParticipants()) {
-            $messenger_rooms = [];
-            foreach ($conversation->getParticipants() as $guid) {
-                if ($guid == Core\Session::getLoggedInUserGuid()) {
-                    continue;
-                }
-
-                $messenger_rooms[] = "messenger:{$guid}";
-            }
-
-            try {
-                (new Sockets\Events())
-                ->to($messenger_rooms)
-                ->emit('touchConversation', (string) $conversation->getGuid());
-            } catch (\Exception $e) { /* TODO: To log or not to log */ }
-        }
+        $this->emitSocketTouch($conversation);
 
         return Factory::response($response);
     }
@@ -231,14 +216,58 @@ class conversations implements Interfaces\Api
     }
 
     public function delete($pages){
+        Factory::isLoggedIn();
 
-      $message = \Minds\Entities\Factory::build($pages[1]);
-      if($message->canEdit()){
-          $message->delete();
-      }
+        $user = Core\Session::getLoggedInUser();
+        $response = [];
 
-        return Factory::response(array());
+        $conversation = new Messenger\Entities\Conversation();
+        if(strpos($pages[0], ':') === FALSE){ //legacy messages get confused here
+            $conversation->setParticipant($user)
+              ->setParticipant($pages[0]);
+        } else {
+            $conversation->setGuid($pages[0]);
+        }
 
+        $message = (new Messenger\Entities\Message())
+          ->setConversation($conversation);
+
+        $message->deleteAll();
+        $conversation->saveToLists();
+
+        try {
+            (new Sockets\Events())
+              ->to($conversation->buildSocketRoomName())
+              ->emit('clearConversation', (string) $conversation->getGuid(), [
+                  'guid' => (string) $user->guid,
+                  'name' => $user->name
+              ]);
+        } catch (\Exception $e) { /* TODO: To log or not to log */ }
+
+        $this->emitSocketTouch($conversation);
+
+        return Factory::response($response);
+    }
+
+    private function emitSocketTouch($conversation)
+    {
+        if ($conversation->getParticipants()) {
+            $messenger_rooms = [];
+
+            foreach ($conversation->getParticipants() as $guid) {
+                if ($guid == Core\Session::getLoggedInUserGuid()) {
+                    continue;
+                }
+
+                $messenger_rooms[] = "messenger:{$guid}";
+            }
+
+            try {
+                (new Sockets\Events())
+                ->to($messenger_rooms)
+                ->emit('touchConversation', (string) $conversation->getGuid());
+            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+        }
     }
 
 }

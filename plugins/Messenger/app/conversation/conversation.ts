@@ -53,8 +53,9 @@ export class MessengerConversation {
   showMessages : boolean = true; //TODO: find a better way to work out if encryption has been set
   blockingActionInProgress: boolean = false;
 
-  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
+  chatNotice: string = '';
 
+  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
   }
 
   ngOnInit(){
@@ -90,8 +91,10 @@ export class MessengerConversation {
         this.inProgress = false;
         if (response.messages && (offset || finish)) {
           this.messages = this.messages.concat(response.messages);
-        } else {
+        } else if (response.message) {
           this.messages = response.messages;
+        } else {
+          this.messages = [];
         }
         if(this.conversation.open){
           this.conversation.unread = false;
@@ -119,6 +122,17 @@ export class MessengerConversation {
         this.load(null, message.guid);
         this.sounds.play('new');
 
+      });
+
+      this.listener = this.sockets.subscribe('clearConversation', (guid, actor) => {
+        if (guid != this.conversation.guid) {
+          return;
+        }
+
+        this.messages = [];
+        this.chatNotice = `${actor.name} cleared chat history`;
+
+        this.sounds.play('new');
       });
 
       this.sockets.subscribe('connect', () => {

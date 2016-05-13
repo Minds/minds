@@ -223,6 +223,16 @@ minds-messenger{
           }
         }
       }
+      .m-messenger-conversation-messages-notice{
+        text-align: center;
+        margin: $minds-padding 0;
+        font-size: 0.7em;
+
+        >span {
+          display: inline-block;
+          padding: 0 $minds-padding;
+        }
+      }
     }
     .m-messenger-conversation-composer{
       position: relative;

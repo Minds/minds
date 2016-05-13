@@ -17,8 +17,8 @@
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
     <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
-      <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory()" *ngIf="showMessages">delete</i>
-      <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block()">block</i>
+      <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory(); ribbon.open = false" *ngIf="showMessages">delete</i>
+      <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block(); ribbon.open = false">block</i>
     </div>
 
     <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">
@@ -27,6 +27,9 @@
 
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"
       minds-messenger-scroll [emitter]="scrollEmitter">
+      <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
+        *ngIf="chatNotice"
+      ><span [innerHtml]="chatNotice"></span></div>
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"
         [hidden]="inProgress"
