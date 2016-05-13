@@ -205,9 +205,10 @@ minds-messenger{
         max-width:130px;
         box-sizing: border-box;
         line-height: 14px;
+        text-align:left;
       }
       .m-messenger-conversation-messages-message{
-        text-align:left;
+        text-align:right;
 
         img{
           border-radius: 50%;
