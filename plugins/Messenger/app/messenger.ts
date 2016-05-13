@@ -95,7 +95,7 @@ export class Messenger {
     if(this.search_timeout)
       clearTimeout(this.search_timeout);
 
-    if(!q.value){
+    if(!q.value || q.value == ""){
       return this.load(true);
     }
 
