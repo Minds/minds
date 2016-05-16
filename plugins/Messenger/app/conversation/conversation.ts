@@ -148,7 +148,12 @@ export class MessengerConversation {
   send(e){
     e.preventDefault();
 
-    let currentIndex = this.messages.length || 0;
+    let newLength = this.messages.push({ // Optimistic
+      optimisticGuess: true,
+      owner: this.session.getLoggedInUser(),
+      message: this.message,
+      time_created: Math.floor(Date.now() / 1000)
+    }), currentIndex = newLength - 1;
 
     this.client.post('api/v1/conversations/' + this.conversation.guid, {
         message: this.message,
@@ -159,13 +164,6 @@ export class MessengerConversation {
         this.scrollEmitter.next(true);
         this.sounds.play('send');
       });
-
-    this.messages.push({ // Optimistic
-      optimisticGuess: true,
-      owner: this.session.getLoggedInUser(),
-      message: this.message,
-      time_created: Math.floor(Date.now() / 1000)
-    });
 
     this.message = '';
     this.scrollEmitter.next(true);
