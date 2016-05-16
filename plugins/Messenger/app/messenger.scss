@@ -207,6 +207,10 @@ minds-messenger{
       overflow:scroll;
       overflow-x:hidden;
 
+      &.m-messenger-ribbon-open {
+        min-height: 29px;
+      }
+
       .minds-messenger-conversation-message-bubble {
         display: inline-block;
         padding: $minds-padding;

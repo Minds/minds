@@ -26,6 +26,7 @@
     </div>
 
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"
+      [class.m-messenger-ribbon-open]="ribbon.open"
       minds-messenger-scroll [emitter]="scrollEmitter">
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="chatNotice"
