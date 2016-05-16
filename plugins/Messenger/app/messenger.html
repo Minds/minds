@@ -34,10 +34,6 @@
                 notifications_off</i>
             </div>
 
-            <div class="m-messenger-userlist-search">
-              <i class="material-icons">search</i>
-              <input type="text" placeholder="search" #q (keydown)="search(q);">
-            </div>
             <div class="m-messenger-userlist-conversations">
               <div class="m-messenger-userlist-conversations-item"
               [hidden]="inProgress"
@@ -53,6 +49,12 @@
                 <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
               </div>
             </div>
+
+            <div class="m-messenger-userlist-search">
+              <i class="material-icons">search</i>
+              <input type="text" placeholder="search" #q (keydown)="search(q);">
+            </div>
+
           </div>
         </div>
       </minds-messenger-dockpane>
