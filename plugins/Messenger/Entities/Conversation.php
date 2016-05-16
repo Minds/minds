@@ -116,7 +116,7 @@ class Conversation extends DenormalizedEntity{
 
 	public function saveToLists()
 	{
-			return saveToParticipants($this->participants);
+			return $this->saveToParticipants($this->participants);
 	}
 
 	public function saveToParticipants($participants = [])
@@ -124,7 +124,7 @@ class Conversation extends DenormalizedEntity{
 			foreach($participants as $participant_guid){
 					$this->db->insert("object:gathering:conversations:$participant_guid", [
 						$this->getGuid() => json_encode([
-							'ts' => $this->ts ?: time(),
+							'ts' => $this->ts,
 							'unread' => $this->unread ?: 0,
 							'participants' => array_values($this->participants)
 						])
@@ -157,6 +157,7 @@ class Conversation extends DenormalizedEntity{
 	public function markAsUnread($marker)
 	{
 			$this->unread = true;
+			$this->ts = time();
 			$this->saveToParticipants(array_diff($this->participants, [$marker]));
 			return $this;
 	}
