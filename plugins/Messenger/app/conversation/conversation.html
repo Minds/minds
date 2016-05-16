@@ -55,7 +55,7 @@
     </div>
 
     <div class="m-messenger-conversation-composer" *ngIf="encryption.isOn()">
-      <textarea placeholder="Type your message here"
+      <textarea placeholder="Send a message..."
       [(ngModel)]="message"
       [disabled]="blockingActionInProgress"
       (keydown.enter)="send($event); emoji.close()"
