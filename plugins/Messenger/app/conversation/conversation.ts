@@ -170,7 +170,7 @@ export class MessengerConversation {
   }
 
   deleteHistory() {
-    if (!confirm('You cannot UNDO this action. Are you sure?')) {
+    if (!confirm('All messages will be deleted for all parties. You cannot UNDO this action. Are you sure?')) {
       // TODO: Maybe a non-process-blocking popup?
       return;
     }
