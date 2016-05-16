@@ -13,6 +13,8 @@ import { InfiniteScroll } from '../../directives/infinite-scroll';
 
 import { MessengerConversationDockpanes, MessengerConversationDockpanesFactory } from './conversation-dockpanes/conversation-dockpanes';
 import { MessengerEncryptionFactory } from './encryption/service';
+import { MessengerSounds } from './sounds/service';
+
 
 @Component({
   selector: 'minds-messenger',
@@ -24,6 +26,7 @@ export class Messenger {
 
   session = SessionFactory.build();
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
+  sounds = new MessengerSounds();
 
   dockpanes = MessengerConversationDockpanesFactory.build();
   conversations : Array<Conversation> = [];
