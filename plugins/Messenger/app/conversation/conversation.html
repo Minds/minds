@@ -17,8 +17,14 @@
 
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
     <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
-      <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" (click)="deleteHistory(); ribbon.open = false" *ngIf="showMessages">delete</i>
-      <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat" (click)="block(); ribbon.open = false">block</i>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="deleteHistory(); ribbon.open = false" *ngIf="showMessages">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history">delete</i>
+        Destroy
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat">block</i>
+        Block
+      </div>
     </div>
 
     <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">

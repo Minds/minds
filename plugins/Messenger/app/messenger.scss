@@ -96,15 +96,29 @@ minds-messenger{
       border-bottom: 1px solid #EAEAEA;
       z-index:1;
 
-      > i{
-        font-size: 16px;
-        padding: 8px 2px;
-        line-height: 12px;
-        border-radius: 0 3px 0 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .m-messenger-dockpane-tab-icon{
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 8px;
+        line-height: 8px;
+        padding-bottom: 8px;
         cursor: pointer;
 
-        &:hover{
-          color:#455a64 !important;
+        > i{
+          width: 100%;
+          font-size: 16px;
+          padding: 8px 2px;
+          line-height: 12px;
+          border-radius: 0 3px 0 0;
+          cursor: pointer;
+
+          &:hover{
+            color:#455a64 !important;
+          }
         }
       }
     }
