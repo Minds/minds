@@ -5,6 +5,7 @@
 namespace Minds\Plugin\Messenger\Core;
 
 use Minds\Core;
+use Minds\Core\Sockets;
 use Minds\Api;
 use Minds\Entities\User;
 use Minds\Plugin\Messenger;
@@ -19,18 +20,12 @@ class Events
         Core\Events\Dispatcher::register('subscribe', 'all', function($event) {
             $params = $event->getParameters();
 
-            $friendsof = new Core\Data\Call('friendsof');
-            $mutual = false;
+            $isMutual = (new Messenger\Core\Subscriptions)->isMutual($params['user_guid'], $params['to_guid']);
 
-            if ($item = $friendsof->getRow($params['user_guid'], [ 'offset' => $params['to_guid'], 'limit' => 1 ])) {
-                if ($item && key($item) == $params['to_guid']) {
-                    $mutual = true;
-                }
-            }
-
-            if($mutual) {
+            if ($isMutual) {
                 $conversation = new Messenger\Entities\Conversation();
-                $conversation->setParticipant($params['user_guid'])
+                $conversation
+                    ->setParticipant($params['user_guid'])
                     ->setParticipant($params['to_guid'])
                     ->saveToLists();
             }
@@ -83,6 +78,42 @@ class Events
                     $event->setResponse(true);
                 }
             }
+        });
+
+        Core\Events\Dispatcher::register('acl:block', 'all', function($event) {
+            $params = $event->getParameters();
+            $from = $params['from'];
+            $user = $params['user'];
+
+            if (!$from || !$user) {
+                return;
+            }
+
+            $isMutual = (new Messenger\Helpers\Subscriptions)->isMutual($from, $user);
+
+            try {
+                (new Sockets\Events())
+                  ->to("messenger:{$from}")
+                  ->emit('block', (string) $user);
+            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+        });
+
+        Core\Events\Dispatcher::register('acl:unblock', 'all', function($event) {
+            $params = $event->getParameters();
+            $from = $params['from'];
+            $user = $params['user'];
+
+            if (!$from || !$user) {
+                return;
+            }
+
+            $isMutual = (new Messenger\Helpers\Subscriptions)->isMutual($from, $user);
+
+            try {
+                (new Sockets\Events())
+                  ->to("messenger:{$from}")
+                  ->emit('unblock', (string) $user);
+            } catch (\Exception $e) { /* TODO: To log or not to log */ }
         });
     }
 }
