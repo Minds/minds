@@ -16,7 +16,7 @@ import { MindsTooltip } from '../../../components/tooltip/tooltip';
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerEncryption } from '../encryption/encryption';
 
-import { MessengerScrollDirective } from './scroll';
+import { MessengerScrollDirective } from '../scroll';
 import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
 import { MessengerSounds } from '../sounds/service';
 
