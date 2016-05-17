@@ -162,7 +162,6 @@ export class MessengerConversation {
       .then((response : any) => {
         this.messages[currentIndex] = response.message;
         this.scrollEmitter.next(true);
-        this.sounds.play('send');
       });
 
     this.message = '';
