@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="m-messenger-conversation-composer" *ngIf="encryption.isOn()">
+    <div class="m-messenger-conversation-composer" *ngIf="conversation.open && encryption.isOn()">
       <textarea placeholder="Send a message..."
       [(ngModel)]="message"
       [disabled]="blockingActionInProgress"
