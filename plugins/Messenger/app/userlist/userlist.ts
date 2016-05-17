@@ -39,7 +39,11 @@ export class MessengerUserlist {
 
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
-  listener;
+  messengerRoom: string;
+
+  socketSubscriptions = {
+    touchConversation: null
+  };
 
   userListToggle : boolean = false;
 
@@ -137,9 +141,10 @@ export class MessengerUserlist {
   }
 
   listen(){
-    this.sockets.join(`messenger:${window.Minds.user.guid}`);
+    this.messengerRoom = `messenger:${window.Minds.user.guid}`;
+    this.sockets.join(this.messengerRoom);
 
-    this.sockets.subscribe('touchConversation', (guid) => {
+    this.socketSubscriptions.touchConversation = this.sockets.subscribe('touchConversation', (guid) => {
 
       for(var i in this.dockpanes.conversations) {
         if(this.dockpanes.conversations[i].guid == guid) {
@@ -156,6 +161,16 @@ export class MessengerUserlist {
         });
 
     });
+  }
+
+  unListen() {
+    if (this.messengerRoom) {
+      this.sockets.leave(this.messengerRoom);
+    }
+
+    if (this.socketSubscriptions.touchConversation) {
+      this.socketSubscriptions.touchConversation.unsubscribe();
+    }
   }
 
   toggle(){
@@ -176,8 +191,7 @@ export class MessengerUserlist {
   }
 
   ngOnDestroy(){
-    if(this.listener)
-      this.listener.unsubscribe();
+    this.unListen();
   }
 
 }

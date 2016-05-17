@@ -55,6 +55,13 @@ export class MessengerConversation {
 
   chatNotice: string = '';
 
+  socketSubscriptions = {
+    pushConversationMessage: null,
+    clearConversation: null,
+    connect: null,
+    disconnect: null
+  }
+
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
   }
 
@@ -70,9 +77,7 @@ export class MessengerConversation {
   }
 
   ngOnDestroy(){
-    if (this.conversation.socketRoomName) {
-      this.sockets.leave(this.conversation.socketRoomName);
-    }
+    this.unListen();
   }
 
   load(offset?: string, finish?: string){
@@ -108,9 +113,10 @@ export class MessengerConversation {
 
   listen() {
     if (this.conversation.socketRoomName) {
+
       this.sockets.join(this.conversation.socketRoomName);
 
-      this.sockets.subscribe('pushConversationMessage', (guid, message) => {
+      this.socketSubscriptions.pushConversationMessage = this.sockets.subscribe('pushConversationMessage', (guid, message) => {
         if (guid != this.conversation.guid) {
           return;
         }
@@ -124,7 +130,7 @@ export class MessengerConversation {
 
       });
 
-      this.sockets.subscribe('clearConversation', (guid, actor) => {
+      this.socketSubscriptions.clearConversation = this.sockets.subscribe('clearConversation', (guid, actor) => {
         if (guid != this.conversation.guid) {
           return;
         }
@@ -135,13 +141,36 @@ export class MessengerConversation {
         this.sounds.play('new');
       });
 
-      this.sockets.subscribe('connect', () => {
+      this.socketSubscriptions.connect = this.sockets.subscribe('connect', () => {
         this.live = true;
       });
-      this.sockets.subscribe('disconnect', () => {
+
+      this.socketSubscriptions.disconnect = this.sockets.subscribe('disconnect', () => {
         this.live = false;
       });
 
+    }
+  }
+
+  unListen() {
+    if (this.conversation.socketRoomName) {
+      this.sockets.leave(this.conversation.socketRoomName);
+    }
+
+    if (this.socketSubscriptions.pushConversationMessage) {
+      this.socketSubscriptions.pushConversationMessage.unsubscribe();
+    }
+
+    if (this.socketSubscriptions.clearConversation) {
+      this.socketSubscriptions.clearConversation.unsubscribe();
+    }
+
+    if (this.socketSubscriptions.connect) {
+      this.socketSubscriptions.connect.unsubscribe();
+    }
+
+    if (this.socketSubscriptions.disconnect) {
+      this.socketSubscriptions.disconnect.unsubscribe();
     }
   }
 
