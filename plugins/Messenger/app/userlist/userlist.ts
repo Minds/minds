@@ -139,7 +139,7 @@ export class MessengerUserlist {
   listen(){
     this.sockets.join(`messenger:${window.Minds.user.guid}`);
 
-    this.listener = this.sockets.subscribe('touchConversation', (guid) => {
+    this.sockets.subscribe('touchConversation', (guid) => {
 
       for(var i in this.dockpanes.conversations) {
         if(this.dockpanes.conversations[i].guid == guid) {
