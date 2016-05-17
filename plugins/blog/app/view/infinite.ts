@@ -37,6 +37,8 @@ export class BlogViewInfinite {
   inProgress : boolean = false;
   moreData : boolean = true;
 
+  error: string = '';
+
   constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])
         this.guid = params.params['guid'];

@@ -75,8 +75,8 @@ export class MessengerConversation {
     }
   }
 
-  load(offset : string, finish : string){
-    let opts = {
+  load(offset?: string, finish?: string){
+    let opts: any = {
       password: this.encryption.getEncryptionPassword()
     };
     if(offset){
@@ -110,7 +110,7 @@ export class MessengerConversation {
     if (this.conversation.socketRoomName) {
       this.sockets.join(this.conversation.socketRoomName);
 
-      this.listener = this.sockets.subscribe('pushConversationMessage', (guid, message) => {
+      this.sockets.subscribe('pushConversationMessage', (guid, message) => {
         if (guid != this.conversation.guid) {
           return;
         }
@@ -124,7 +124,7 @@ export class MessengerConversation {
 
       });
 
-      this.listener = this.sockets.subscribe('clearConversation', (guid, actor) => {
+      this.sockets.subscribe('clearConversation', (guid, actor) => {
         if (guid != this.conversation.guid) {
           return;
         }

@@ -1,9 +1,6 @@
 import { Directive, ElementRef, EventEmitter } from 'angular2/core';
 import {Observable} from 'rxjs/Rx';
 
-import { ScrollService } from '../../services/ux/scroll';
-
-
 @Directive({
   selector: '[minds-messenger-scroll]',
   inputs: [ 'emitter', 'moreData' ],
@@ -14,11 +11,11 @@ export class MessengerScrollDirective{
 
   previous = new EventEmitter();
   next = new EventEmitter();
-  scroll;
+  scroll: Observable<any>;
   element;
   moreData : boolean = true;
 
-  constructor(public scroll : ScrollService, public _element: ElementRef){
+  constructor(public _element: ElementRef){
     this.element = _element.nativeElement;
     this.scroll = Observable.fromEvent(this.element, 'scroll');
   }

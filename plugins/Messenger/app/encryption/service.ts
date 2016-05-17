@@ -43,7 +43,7 @@ export class MessengerEncryptionService{
     return this.setup;
   }
 
-  doSetup(password : string) : boolean {
+  doSetup(password : string) : Promise<any> {
     return new Promise((resolve, reject) => {
       this.client.post('api/v1/keys/setup', {password: password, download: false})
         .then((response : any) => {

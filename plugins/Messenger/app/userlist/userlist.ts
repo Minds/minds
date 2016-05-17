@@ -29,13 +29,13 @@ export class MessengerUserlist {
   sounds = new MessengerSounds();
 
   dockpanes = MessengerConversationDockpanesFactory.build();
-  conversations : Array<Conversation> = [];
+  conversations : Array<any> = [];
   offset : string =  "";
 
   setup : boolean = false;
   hasMoreData : boolean =  true;
   inProgress : boolean = false;
-  cb : Date = new Date();
+  cb: number = Date.now();
 
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
@@ -94,18 +94,22 @@ export class MessengerUserlist {
   }
 
   search_timeout;
-  search(q : string){
+  search(q : string | HTMLInputElement){
     if(this.search_timeout)
       clearTimeout(this.search_timeout);
 
-    if(!q.value || q.value == ""){
+    if (typeof (<HTMLInputElement>q).value !== 'undefined') {
+      q = (<HTMLInputElement>q).value;
+    }
+
+    if(!q){
       return this.load("", true);
     }
 
     this.search_timeout = setTimeout(() => {
       this.inProgress = true;
       this.client.get('api/v1/conversations/search', {
-          q: q.value,
+          q,
           limit: 24
         })
         .then((response : any) => {
@@ -177,4 +181,4 @@ export class MessengerUserlist {
   }
 
 }
-export { MessengerConversation } from './conversation/conversation';
+export { MessengerConversation } from '../conversation/conversation';
