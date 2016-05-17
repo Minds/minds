@@ -13,21 +13,26 @@
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
 
     <div class="m-messenger-dockpane-tab-ribbon mdl-color-text--blue-grey-300" #ribbon [hidden]="!ribbon.open">
-      <div class="m-messenger-dockpane-tab-icon" (click)="logout()" [hidden]="!encryption.isOn()">
+      <div class="m-messenger-dockpane-tab-icon" (click)="logout(); ribbon.open = false" [hidden]="!encryption.isOn()">
         <i class="material-icons mdl-color-text--blue-grey-100"
           title="Logout of chat"
           >exit_to_app</i>
           Logout
       </div>
-      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.mute()" [hidden]="!sounds.canPlay()">
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.mute(); ribbon.open = false" [hidden]="!sounds.canPlay()">
         <i class="material-icons mdl-color-text--blue-grey-100"
           title="Disable sounds">notifications</i>
           Mute
       </div>
-      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.unmute()" [hidden]="sounds.canPlay()">
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.unmute(); ribbon.open = false" [hidden]="sounds.canPlay()">
         <i class="material-icons mdl-color-text--blue-grey-100"
           title="Enable sounds">notifications_off</i>
           Unmute
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="ribbon.open = false">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Enable sounds">vpn_key</i>
+          Re-key
       </div>
     </div>
 
