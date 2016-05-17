@@ -151,6 +151,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
+        if($boost->getState() != 'created'){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+            ]);
+        }
+
         if ($boost->getType() == "pro") {
             try {
                 Payments\Factory::build('braintree', ['gateway'=>'merchants'])->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
@@ -212,6 +219,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
     
         $pro = Core\Boost\Factory::build('peer', ['destination'=> $revoked ? "requested:" . Core\Session::getLoggedInUser()->guid : Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
+
+        if($boost->getState() != 'created'){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+            ]);
+        }
 
         if ($boost->getType() == "pro") {
             try {
