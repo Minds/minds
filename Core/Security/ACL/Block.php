@@ -101,6 +101,8 @@ class Block
             $user = $user->guid;
         }
 
+        Core\Events\Dispatcher::trigger('acl:block', 'all', compact('user', 'from'));
+
         return $this->db->insert("acl:blocked:$from", array($user => time()));
     }
 
@@ -122,6 +124,8 @@ class Block
         if ($user instanceof Entities\User) {
             $user = $user->guid;
         }
+
+        Core\Events\Dispatcher::trigger('acl:unblock', 'all', compact('user', 'from'));
 
         return $this->db->removeAttributes("acl:blocked:$from", array($user));
     }
