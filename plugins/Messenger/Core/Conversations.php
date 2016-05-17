@@ -32,7 +32,7 @@ class Conversations
         return $this;
     }
 
-    public function getList($limit = 12, $offset = "")
+    public function getList($limit = 12, $offset = 0)
     {
         //@todo review for scalability. currently for pagination we need to load all conversation guids/time
         $conversations = $this->db->get("object:gathering:conversations:{$this->user->guid}", ['limit'=>10000]);
@@ -42,18 +42,9 @@ class Conversations
             $i = 0;
             $ready = false;
             foreach($conversations as $guid => $data){
-
-                if(!$ready && $offset){
-                    if($guid == $offset)
-                        $ready = true;
-                    continue;
-                }
-
+             
                 if((string) $guid === (string) Session::getLoggedinUser()->guid)
                     continue;
-
-                //if(($i++ > 12 && !$offset) || ($i++ > 24))
-                //    continue;
 
                 if($guid == $offset){
                     unset($conversations[$guid]);
@@ -88,7 +79,8 @@ class Conversations
         usort($return, function($a, $b){
           return $b->ts - $a->ts;
         });
-        $return = array_slice($return, 0, $limit);
+        
+        $return = array_slice($return, (int) $offset, $limit);
         $return = $this->filterOnline($return);
         $this->runUpgrades();
         return $return;

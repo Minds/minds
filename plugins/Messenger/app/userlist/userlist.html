@@ -30,9 +30,9 @@
         notifications_off</i>
     </div>
 
-    <div class="m-messenger-userlist-conversations" minds-messenger-scroll (next)="load(offset)">
+    <div class="m-messenger-userlist-conversations" minds-messenger-scroll [moreData]="hasMoreData" (next)="load(offset)">
       <div class="m-messenger-userlist-conversations-item"
-      [hidden]="inProgress"
+      [hidden]="inProgress && !offset"
       *ngFor="#conversation of conversations"
       (click)="openConversation(conversation)">
         <!-- This is currently only configured for one-on-one chat -->

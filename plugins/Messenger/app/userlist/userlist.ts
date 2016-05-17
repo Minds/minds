@@ -161,9 +161,9 @@ export class MessengerUserlist {
   }
 
   autoRefresh(){
-    setInterval(() => {
-      this.load("", true);
-    }, 30000); // refresh 30 seconds
+//    setInterval(() => {
+//      this.load("", true);
+//    }, 30000); // refresh 30 seconds
   }
 
   logout(){

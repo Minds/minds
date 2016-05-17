@@ -6,7 +6,7 @@ import { ScrollService } from '../../services/ux/scroll';
 
 @Directive({
   selector: '[minds-messenger-scroll]',
-  inputs: [ 'emitter' ],
+  inputs: [ 'emitter', 'moreData' ],
   outputs: [ 'previous', 'next' ]
 })
 
@@ -16,6 +16,7 @@ export class MessengerScrollDirective{
   next = new EventEmitter();
   scroll;
   element;
+  moreData : boolean = true;
 
   constructor(public scroll : ScrollService, public _element: ElementRef){
     this.element = _element.nativeElement;
@@ -37,11 +38,14 @@ export class MessengerScrollDirective{
       .debounceTime(100)
       .subscribe(() => {
 
+        if(!this.moreData)
+          return;
+
         if(this.element.scrollTop <= 12){
           this.previous.next(true);
         }
 
-        if(this.element.scrollTop >= this.element.clientHeight - 12){
+        if(this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 12){
           this.next.next(true);
         }
 
