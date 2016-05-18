@@ -237,13 +237,13 @@ class Membership
             }
 
             $done = $this->relDB->create('member', $this->group->getGuid());
+            $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", true);
         } else {
             $done = $this->relDB->create('membership_request', $this->group->getGuid());
         }
 
         $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
         $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
-        $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", true);
 
         // TODO: [emi] Send a notification to target user if was awaiting
 
