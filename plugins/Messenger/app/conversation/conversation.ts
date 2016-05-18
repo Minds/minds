@@ -258,9 +258,11 @@ export class MessengerConversation {
       return;
     }
 
-    if (!confirm('This action will block all parties site-wide. Are you sure?')) {
-      // TODO: Maybe a non-process-blocking popup?
-      return;
+    if (!this.blocked) {
+      if (!confirm('This action will block all parties site-wide. Are you sure?')) {
+        // TODO: Maybe a non-process-blocking popup?
+        return;
+      }
     }
 
     this.blockingActionInProgress = true;
