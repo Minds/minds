@@ -329,6 +329,11 @@ minds-messenger{
   minds-messenger-dockpane{
     position: absolute;
     bottom: 0;
+
+    @media screen and (max-width:420px){
+      position: relative;
+      right: 0 !important;
+    }
   }
 
 }
