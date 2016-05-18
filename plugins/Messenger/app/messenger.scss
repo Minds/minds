@@ -338,3 +338,25 @@ minds-messenger{
   }
 
 }
+
+minds-messenger-channel-button{
+  > button{
+    cursor:pointer;
+    background: transparent;
+    border: 1px solid #78909c;
+    color: #78909c;
+    font-size: 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    min-width: 128px;
+
+
+    > i, &.material-icons {
+      padding-right: $minds-padding;
+      padding-bottom: 1px;
+      vertical-align:middle;
+    }
+
+  }
+}
