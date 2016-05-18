@@ -16,5 +16,5 @@
   </p>
   <input type="password" placeholder="Enter a password" #password1 />
   <input type="password" placeholder="Confirm your password" #password2 (keydown.enter)="setup(password1, password2)" />
-  <button class="mdl-button mdl-button--colored" (click)="setup(password1, password2)" [disabled]="inProgress">Change</button>
+  <button class="mdl-button mdl-button--colored" (click)="rekey(password1, password2)" [disabled]="inProgress">Change</button>
 </div>

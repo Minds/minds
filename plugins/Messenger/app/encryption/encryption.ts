@@ -63,7 +63,7 @@ export class MessengerEncryption {
     password2.value = '';
   }
 
-  setup(password, password2){
+  rekey(password, password2){
     if(password.value != password2.value){
       return;
     }

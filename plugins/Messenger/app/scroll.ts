@@ -20,7 +20,7 @@ export class MessengerScrollDirective{
     this.scroll = Observable.fromEvent(this.element, 'scroll');
   }
 
-  set emitter(emitter){
+  set emitter(emitter : any){
     emitter.subscribe({
       next: () => {
         setTimeout(() => {
