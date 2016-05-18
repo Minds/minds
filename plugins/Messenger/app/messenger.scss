@@ -69,7 +69,8 @@ minds-messenger{
 
           &:hover,
           &.m-status-active{
-            color:#455a64 !important;
+            //color:#455a64 !important;
+            color:#fff !important;
           }
         }
       }
@@ -117,8 +118,7 @@ minds-messenger{
           cursor: pointer;
 
           &:hover{
-            //color:#455a64 !important;
-            color:#fff !important;
+            color:#455a64 !important;
           }
         }
       }
