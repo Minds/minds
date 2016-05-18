@@ -21,9 +21,13 @@
         <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history">delete</i>
         Destroy
       </div>
-      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false">
-        <i class="material-icons mdl-color-text--blue-grey-100" title="Block chat">block</i>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="!blocked">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Block participants">block</i>
         Block
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="blocked">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Un-block chat">restore</i>
+        Un-block
       </div>
     </div>
 
@@ -56,12 +60,15 @@
             [routerLink]="['/Channel', {username: message.owner.username}]">
           <minds-tooltip [properties]="tooltip">{{ message.time_created * 1000 | date: 'medium' }}</minds-tooltip>
       </div>
+      <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
+        *ngIf="blocked"
+      ><span>You have blocked this chat</span></div>
       <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
       </div>
     </div>
 
-    <div class="m-messenger-conversation-composer" *ngIf="conversation.open && encryption.isOn()">
+    <div class="m-messenger-conversation-composer" *ngIf="!blocked && conversation.open && encryption.isOn()">
       <textarea placeholder="Send a message..."
       [(ngModel)]="message"
       [disabled]="blockingActionInProgress"

@@ -9,6 +9,7 @@ namespace Minds\Plugin\Messenger\Controllers\api\v1;
 
 use Minds\Core;
 use Minds\Core\Session;
+use Minds\Core\Security;
 use Minds\Entities;
 use Minds\Helpers;
 use Minds\Plugin\Messenger;
@@ -71,6 +72,18 @@ class conversations implements Interfaces\Api
 
         if ($conversation) {
             $response = $conversation->export();
+            $blocked = false;
+
+            if (is_array($response['participants'])) {
+                foreach ($response['participants'] as $participant) {
+                    if (!Security\ACL::_()->interact(Core\Session::getLoggedInUser(), $participant['guid'])) {
+                        $blocked = true;
+                        break;
+                    }
+                }
+            }
+
+            $response['blocked'] = $blocked;
         }
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 6;

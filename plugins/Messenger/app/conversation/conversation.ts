@@ -59,8 +59,12 @@ export class MessengerConversation {
     pushConversationMessage: null,
     clearConversation: null,
     connect: null,
-    disconnect: null
+    disconnect: null,
+    block: null,
+    unblock: null
   }
+
+  blocked: boolean = false;
 
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
   }
@@ -105,6 +109,8 @@ export class MessengerConversation {
           this.conversation.unread = false;
           this.scrollEmitter.next(true);
         }
+
+        this.blocked = !!response.blocked;
       })
       .catch(() => {
         this.inProgress = false;
@@ -141,6 +147,22 @@ export class MessengerConversation {
         this.sounds.play('new');
       });
 
+      this.socketSubscriptions.block = this.sockets.subscribe('block', (guid) => {
+        if (!this.hasParticipant(guid)) {
+          return;
+        }
+
+        this.blocked = true;
+      });
+
+      this.socketSubscriptions.unblock = this.sockets.subscribe('unblock', (guid) => {
+        if (!this.hasParticipant(guid)) {
+          return;
+        }
+
+        this.blocked = false;
+      });
+
       this.socketSubscriptions.connect = this.sockets.subscribe('connect', () => {
         this.live = true;
       });
@@ -172,10 +194,22 @@ export class MessengerConversation {
     if (this.socketSubscriptions.disconnect) {
       this.socketSubscriptions.disconnect.unsubscribe();
     }
+
+    if (this.socketSubscriptions.block) {
+      this.socketSubscriptions.disconnect.unsubscribe();
+    }
+
+    if (this.socketSubscriptions.unblock) {
+      this.socketSubscriptions.disconnect.unsubscribe();
+    }
   }
 
   send(e){
     e.preventDefault();
+
+    if (this.blocked) {
+      return;
+    }
 
     let newLength = this.messages.push({ // Optimistic
       optimisticGuess: true,
@@ -191,6 +225,9 @@ export class MessengerConversation {
       .then((response : any) => {
         this.messages[currentIndex] = response.message;
         this.scrollEmitter.next(true);
+      })
+      .catch(e => {
+        console.error('Error while reading conversation', e)
       });
 
     this.message = '';
@@ -209,10 +246,60 @@ export class MessengerConversation {
     this.client.delete('api/v1/conversations/' + this.conversation.guid, {})
       .then((response: any) => {
         this.blockingActionInProgress = false;
+      })
+      .catch(e => {
+        console.error('Error when deleting history', e);
+        this.blockingActionInProgress = false;
       });
   }
 
   block() {
-    // TODO: Block a conversation
+    if (!this.conversation || !this.conversation.participants) {
+      return;
+    }
+
+    if (!confirm('This action will block all parties site-wide. Are you sure?')) {
+      // TODO: Maybe a non-process-blocking popup?
+      return;
+    }
+
+    this.blockingActionInProgress = true;
+
+    let blocks = [],
+      newState = !this.blocked;
+
+    this.conversation.participants.forEach((participant: any) => {
+      if (this.blocked) {
+        blocks.push(this.client.delete(`api/v1/block/${participant.guid}`, {}));
+      } else {
+        blocks.push(this.client.put(`api/v1/block/${participant.guid}`, {}));
+      }
+    });
+
+    Promise.all(blocks)
+      .then((response: any) => {
+        this.blockingActionInProgress = false;
+        this.blocked = newState;
+      })
+      .catch(e => {
+        console.error('Error when toggling block on participants', e);
+        this.blockingActionInProgress = false;
+      });
+  }
+
+  private hasParticipant(guid: string) {
+    if (!this.conversation || !this.conversation.participants) {
+      return false;
+    }
+
+    let has = false;
+
+    this.conversation.participants.forEach((participant: any) => {
+      if (participant.guid == guid) {
+        has = true;
+      }
+    });
+
+    return has;
   }
 }
