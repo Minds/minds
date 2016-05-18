@@ -10,6 +10,8 @@ export class MessengerEncryptionService{
   private on : boolean = false;
   private setup : boolean = false;
 
+  public reKeying : boolean = false;
+
   constructor(public client : Client, public storage : Storage){
     console.log(client);
   }
@@ -50,6 +52,22 @@ export class MessengerEncryptionService{
           this.storage.set('encryption-password', response.password);
           this.setup = true;
           this.on = true;
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+      });
+  }
+
+  rekey(password : string){
+    return new Promise((resolve, reject) => {
+      this.client.post('api/v1/keys/setup', {password: password, download: false})
+        .then((response : any) => {
+          this.storage.set('encryption-password', response.password);
+          this.setup = true;
+          this.on = true;
+          this.reKeying = false;
           resolve();
         })
         .catch(() => {

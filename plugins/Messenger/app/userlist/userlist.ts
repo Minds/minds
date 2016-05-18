@@ -14,12 +14,13 @@ import { MessengerScrollDirective } from '../scroll';
 import { MessengerConversationDockpanes, MessengerConversationDockpanesFactory } from '../conversation-dockpanes/conversation-dockpanes';
 import { MessengerEncryptionFactory } from '../encryption/service';
 import { MessengerSounds } from '../sounds/service';
-
+import { MessengerEncryption } from '../encryption/encryption';
 
 @Component({
   selector: 'minds-messenger-userlist',
   templateUrl: 'src/plugins/Messenger/userlist/userlist.html',
-  directives: [ BUTTON_COMPONENTS, Material, RouterLink, MessengerConversationDockpanes, MessengerScrollDirective ]
+  directives: [ BUTTON_COMPONENTS, Material, RouterLink, MessengerConversationDockpanes,
+    MessengerEncryption, MessengerScrollDirective ]
 })
 
 export class MessengerUserlist {

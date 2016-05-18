@@ -27,18 +27,21 @@ export class MessengerEncryption {
   on : EventEmitter<boolean> = new EventEmitter(true);
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
+  inProgress : boolean = true;
 
   constructor(public client : Client){
 
   }
 
   unlock(password){
+    this.inProgress = true;
     this.encryption.unlock(password.value)
       .then(() => {
         this.on.next(true);
+        this.inProgress = false;
       })
       .catch(() => {
-
+        this.inProgress = false;
       });
     password.value = '';
   }
@@ -47,12 +50,31 @@ export class MessengerEncryption {
     if(password.value != password2.value){
       return;
     }
+    this.inProgress = true;
     this.encryption.doSetup(password.value)
       .then(() => {
         this.on.next(true);
+        this.inProgress = false;
       })
       .catch(() => {
+        this.inProgress = false;
+      });
+    password.value = '';
+    password2.value = '';
+  }
 
+  setup(password, password2){
+    if(password.value != password2.value){
+      return;
+    }
+    this.inProgress = true;
+    this.encryption.rekey(password.value)
+      .then(() => {
+        this.on.next(true);
+        this.inProgress = false;
+      })
+      .catch(() => {
+        this.inProgress = false;
       });
     password.value = '';
     password2.value = '';
