@@ -179,28 +179,10 @@ export class MessengerConversation {
       this.sockets.leave(this.conversation.socketRoomName);
     }
 
-    if (this.socketSubscriptions.pushConversationMessage) {
-      this.socketSubscriptions.pushConversationMessage.unsubscribe();
-    }
-
-    if (this.socketSubscriptions.clearConversation) {
-      this.socketSubscriptions.clearConversation.unsubscribe();
-    }
-
-    if (this.socketSubscriptions.connect) {
-      this.socketSubscriptions.connect.unsubscribe();
-    }
-
-    if (this.socketSubscriptions.disconnect) {
-      this.socketSubscriptions.disconnect.unsubscribe();
-    }
-
-    if (this.socketSubscriptions.block) {
-      this.socketSubscriptions.disconnect.unsubscribe();
-    }
-
-    if (this.socketSubscriptions.unblock) {
-      this.socketSubscriptions.disconnect.unsubscribe();
+    for (let sub in this.socketSubscriptions) {
+      if (this.socketSubscriptions[sub]) {
+        this.socketSubscriptions[sub].unsubscribe();
+      }
     }
   }
 

@@ -169,8 +169,10 @@ export class MessengerUserlist {
       this.sockets.leave(this.messengerRoom);
     }
 
-    if (this.socketSubscriptions.touchConversation) {
-      this.socketSubscriptions.touchConversation.unsubscribe();
+    for (let sub in this.socketSubscriptions) {
+      if (this.socketSubscriptions[sub]) {
+        this.socketSubscriptions[sub].unsubscribe();
+      }
     }
   }
 
