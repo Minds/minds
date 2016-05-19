@@ -37,7 +37,7 @@
 
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"
       [class.m-messenger-ribbon-open]="ribbon.open"
-      minds-messenger-scroll [emitter]="scrollEmitter">
+      minds-messenger-scroll [emitter]="scrollEmitter" (previous)="load(offset)">
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="chatNotice"
       ><span [innerHtml]="chatNotice"></span></div>
@@ -50,10 +50,25 @@
             *ngIf="message.owner.guid == session.getLoggedInUser().guid"
             [routerLink]="['/Channel', {username: message.owner.username}]">
           <div
-          class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
-          tooltip #tooltip="tooltip"
-          [innerHtml]="message.message | tags"
-          ></div>
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            tooltip #tooltip="tooltip"
+            [innerHtml]="message.message | tags"
+            *ngIf="message.subtype != 'call_ended' || message.subtype != 'call_missed'">
+          </div>
+          <!-- Call message -->
+          <div
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            tooltip #tooltip="tooltip"
+            *ngIf="message.subtype == 'call_ended'">
+            Call Ended
+          </div>
+          <!-- Call missed -->
+          <div
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            tooltip #tooltip="tooltip"
+            *ngIf="message.subtype == 'call_missed'">
+            Missed Call
+          </div>
           <span class="minds-messenger-conversation-message-ts"></span>
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid != session.getLoggedInUser().guid"

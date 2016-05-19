@@ -43,6 +43,7 @@ export class MessengerConversation {
   conversation;
   participants : Array<any> = [];
   messages : Array<any> = [];
+  offset : string = "";
   open : boolean = false;
   inProgress : boolean = false;
   live : boolean = true;
@@ -98,16 +99,24 @@ export class MessengerConversation {
     this.client.get('api/v1/conversations/' + this.conversation.guid, opts)
       .then((response : any) => {
         this.inProgress = false;
-        if (response.messages && (offset || finish)) {
-          this.messages = this.messages.concat(response.messages);
-        } else if (response.messages) {
-          this.messages = response.messages;
-        } else {
-          this.messages = [];
+        if(!response.messages){
+          return false;
         }
+
+        if (finish) {
+          this.messages = this.messages.concat(response.messages);
+          this.scrollEmitter.next(true);
+        } else if(offset){
+          this.messages = response.messages.concat(this.messages);
+          this.offset = response['load-previous'];
+        } else {
+          this.messages = response.messages;
+          this.offset = response['load-previous'];
+          this.scrollEmitter.next(true);
+        }
+
         if(this.conversation.open){
           this.conversation.unread = false;
-          this.scrollEmitter.next(true);
         }
 
         this.blocked = !!response.blocked;
