@@ -58,14 +58,12 @@
           <!-- Call message -->
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
-            tooltip #tooltip="tooltip"
             *ngIf="message.subtype == 'call_ended'">
             Call Ended
           </div>
           <!-- Call missed -->
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
-            tooltip #tooltip="tooltip"
             *ngIf="message.subtype == 'call_missed'">
             Missed Call
           </div>
