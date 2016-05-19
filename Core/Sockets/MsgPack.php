@@ -7,13 +7,15 @@ namespace Minds\Core\Sockets;
 
 class MsgPack
 {
-    public static function pack($input)
-    {
-        static $bigendian;
-        if (!isset($bigendian)) {
-            $bigendian = (pack('S', 1) == pack('n', 1));
-        }
+    protected $bigendian;
 
+    public function __construct($bigendian = null)
+    {
+        $this->bigendian = $bigendian !== null ? $bigendian : (pack('S', 1) == pack('n', 1));
+    }
+
+    public function pack($input)
+    {
         // null
         if (is_null($input)) {
             return pack('C', 0xC0);
@@ -56,7 +58,7 @@ class MsgPack
                 // pack() does not support 64-bit ints, so pack into two 32-bits
                 $h = ($input & 0xFFFFFFFF00000000) >> 32;
                 $l = $input & 0xFFFFFFFF;
-                return $bigendian ? pack('CNN', 0xCF, $l, $h) : pack('CNN', 0xCF, $h, $l);
+                return $this->bigendian ? pack('CNN', 0xCF, $l, $h) : pack('CNN', 0xCF, $h, $l);
             }
             // int8
             if ($input < 0 && $input >= -0x80) {
@@ -65,19 +67,19 @@ class MsgPack
             // int16
             if ($input < 0 && $input >= -0x8000) {
                 $p = pack('s', $input);
-                return pack('Ca2', 0xD1, $bigendian ? $p : strrev($p));
+                return pack('Ca2', 0xD1, $this->bigendian ? $p : strrev($p));
             }
             // int32
             if ($input < 0 && $input >= -0x80000000) {
                 $p = pack('l', $input);
-                return pack('Ca4', 0xD2, $bigendian ? $p : strrev($p));
+                return pack('Ca4', 0xD2, $this->bigendian ? $p : strrev($p));
             }
             // int64
             if ($input < 0 && $input >= -0x8000000000000000) {
                 // pack() does not support 64-bit ints either so pack into two 32-bits
                 $p1 = pack('l', $input & 0xFFFFFFFF);
                 $p2 = pack('l', ($input >> 32) & 0xFFFFFFFF);
-                return $bigendian ? pack('Ca4a4', 0xD3, $p1, $p2) : pack('Ca4a4', 0xD3, strrev($p2), strrev($p1));
+                return $this->bigendian ? pack('Ca4a4', 0xD3, $p1, $p2) : pack('Ca4a4', 0xD3, strrev($p2), strrev($p1));
             }
 
             throw new \InvalidArgumentException('Invalid integer: ' . $input);
@@ -86,7 +88,7 @@ class MsgPack
         // Floats
         if (is_float($input)) {
             // Just pack into a double, don't take any chances with single precision
-            return pack('C', 0xCB) . ($bigendian ? pack('d', $input) : strrev(pack('d', $input)));
+            return pack('C', 0xCB) . ($this->bigendian ? pack('d', $input) : strrev(pack('d', $input)));
         }
 
         // Strings/Raw
@@ -130,10 +132,10 @@ class MsgPack
 
             foreach ($input as $key => $elm) {
                 if ($isMap) {
-                    $buf .= static::pack($key);
+                    $buf .= $this->pack($key);
                 }
 
-                $buf .= static::pack($elm);
+                $buf .= $this->pack($elm);
             }
             return $buf;
         }

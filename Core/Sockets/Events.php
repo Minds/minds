@@ -10,6 +10,7 @@ use Minds\Core\Config;
 class Events
 {
     private $redis;
+    private $msgpack;
     private $prefix = 'socket.io';
     private $rooms = [];
     private $flags = [];
@@ -18,9 +19,10 @@ class Events
     const EVENT = 2;
     const BINARY_EVENT = 5;
 
-    public function __construct($redis = null)
+    public function __construct($redis = null, $msgpack = null)
     {
         $this->redis = $redis ?: Di::_()->get('PubSub\Redis');
+        $this->msgpack = $msgpack ?: new MsgPack();
         $this->prefix = (isset($config['socket-prefix']) ? $config['socket-prefix'] : 'socket.io') . '#';
     }
 
@@ -66,7 +68,7 @@ class Events
         }
 
         // Pack
-        $packed = MsgPack::pack([
+        $packed = $this->msgpack->pack([
             static::EMITTER_UID,
             $packet,
             $packetOpts
@@ -109,7 +111,7 @@ class Events
             if (!$room) {
                 continue;
             }
-            
+
             if (!in_array($room, $this->rooms)) {
                 $this->rooms[] = $room;
             }
