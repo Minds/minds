@@ -51,9 +51,9 @@
             [routerLink]="['/Channel', {username: message.owner.username}]">
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            *ngIf="message.subtype != 'call_ended' &&  message.subtype != 'call_missed'"
             tooltip #tooltip="tooltip"
-            [innerHtml]="message.message | tags"
-            *ngIf="message.subtype != 'call_ended' || message.subtype != 'call_missed'">
+            [innerHtml]="message.message | tags">
           </div>
           <!-- Call message -->
           <div
