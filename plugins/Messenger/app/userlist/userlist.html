@@ -43,7 +43,7 @@
       *ngFor="#conversation of conversations"
       (click)="openConversation(conversation)">
         <!-- This is currently only configured for one-on-one chat -->
-        <img [src]="minds.cdn_url + 'icon/' + conversation.username" class="mdl-shadow--2dp">
+        <img [src]="minds.cdn_url + 'icon/' + conversation.participants[0].guid" class="mdl-shadow--2dp">
         <span class="m-conversation-label">{{conversation.username}}</span>
         <span class="m-conversation-new mdl-color--blue" [hidden]="!conversation.unread"></span>
         <span class="m-conversation-online" [hidden]="!conversation.online"></span>
