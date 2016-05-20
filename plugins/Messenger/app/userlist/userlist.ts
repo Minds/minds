@@ -54,28 +54,31 @@ export class MessengerUserlist {
   ngOnInit(){
     if(this.session.isLoggedIn()){
       if(this.userListToggle)
-        this.load("", true);
+        this.load({ refresh: true });
       this.listen();
       this.autoRefresh();
     }
   }
 
-  load(offset : string = "", refresh : boolean = false) {
+  load(opts) {
 
-    if(this.inProgress && !refresh)
+    (<any>Object).assign({
+      limit: 12,
+      offset: '',
+      refresh: false
+    }, opts);
+
+    if(this.inProgress && !opts.refresh)
       return false;
+
     this.inProgress = true;
 
-    if(refresh){
+    if(opts.refresh){
       this.offset = "";
       this.cb = Date.now();
     }
 
-    this.client.get('api/v1/conversations', {
-        limit: 12,
-        offset: this.offset,
-        cb: this.cb
-      })
+    this.client.get('api/v1/conversations', opts)
       .then((response : any) => {
         if (!response.conversations) {
           this.hasMoreData = false;
@@ -83,7 +86,7 @@ export class MessengerUserlist {
           return false;
         }
 
-        if(refresh){
+        if(opts.refresh){
           this.conversations = response.conversations;
         } else {
           this.conversations = this.conversations.concat(response.conversations);
@@ -108,7 +111,7 @@ export class MessengerUserlist {
     }
 
     if(!q){
-      return this.load("", true);
+      return this.load({ refresh: true });
     }
 
     this.search_timeout = setTimeout(() => {
@@ -179,13 +182,27 @@ export class MessengerUserlist {
   toggle(){
     this.userListToggle = !this.userListToggle
     if(this.userListToggle)
-      this.load("", true);
+      this.load({ refresh: true });
   }
 
   autoRefresh(){
-//    setInterval(() => {
-//      this.load("", true);
-//    }, 30000); // refresh 30 seconds
+    setInterval(() => {
+      this.client.get('api/v1/conversations', { limit: 12 })
+        .then((response : any) => {
+          if (!response.conversations) {
+            return false;
+          }
+
+          for(let i = 0; i < this.conversations.length; i++){
+            for(let j = 0; i < response.conversations; j++){
+              if(this.conversations[i].guid == response.conversations[j].guid){
+                this.conversations[i] = response.conversations[j];
+              }
+            }
+          }
+
+        });
+    }, 30000); // refresh 30 seconds
   }
 
   logout(){

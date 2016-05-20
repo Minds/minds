@@ -37,7 +37,7 @@
     </div>
     <minds-messenger-encryption *ngIf="encryption.reKeying"></minds-messenger-encryption>
 
-    <div class="m-messenger-userlist-conversations" minds-messenger-scroll [moreData]="hasMoreData" (next)="load(offset)">
+    <div class="m-messenger-userlist-conversations" minds-messenger-scroll [moreData]="hasMoreData" (next)="load({ offset: offset })">
       <div class="m-messenger-userlist-conversations-item"
       [hidden]="inProgress && !offset"
       *ngFor="#conversation of conversations"
