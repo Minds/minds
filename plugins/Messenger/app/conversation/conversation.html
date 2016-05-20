@@ -37,13 +37,19 @@
 
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"
       [class.m-messenger-ribbon-open]="ribbon.open"
-      minds-messenger-scroll [emitter]="scrollEmitter" (previous)="load(offset)">
+      minds-messenger-scroll
+      [emitter]="scrollEmitter"
+      #scrollArea
+      (previous)="load({ offset: offset, container: scrollArea })">
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
-        *ngIf="chatNotice"
-      ><span [innerHtml]="chatNotice"></span></div>
+        *ngIf="chatNotice">
+        <span [innerHtml]="chatNotice"></span>
+      </div>
+      <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
+      </div>
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"
-        [hidden]="inProgress"
         [class.m-optimistic-guess]="message.optimisticGuess"
         [class.odd]="message.owner.guid == session.getLoggedInUser().guid">
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
@@ -74,10 +80,8 @@
           <minds-tooltip [properties]="tooltip">{{ message.time_created * 1000 | date: 'medium' }}</minds-tooltip>
       </div>
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
-        *ngIf="blocked"
-      ><span>You have blocked this chat</span></div>
-      <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
-        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
+        *ngIf="blocked">
+        <span>You have blocked this chat</span>
       </div>
     </div>
 

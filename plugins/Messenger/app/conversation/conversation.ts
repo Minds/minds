@@ -85,17 +85,21 @@ export class MessengerConversation {
     this.unListen();
   }
 
-  load(offset?: string, finish?: string){
-    let opts: any = {
-      password: this.encryption.getEncryptionPassword()
-    };
-    if(offset){
-      opts.offset = offset;
-    } else if(finish) {
-      opts.finish = finish;
-    } else {
+  load(opts: any){
+
+    opts = (<any>Object).assign({
+        limit: 5,
+        offset: '',
+        finish: '',
+        password: this.encryption.getEncryptionPassword()
+      }, opts);
+
+    let scrollView = opts.container;
+    delete opts.container;
+
+    if(!opts.finish)
       this.inProgress = true;
-    }
+
     this.client.get('api/v1/conversations/' + this.conversation.guid, opts)
       .then((response : any) => {
         this.inProgress = false;
@@ -103,12 +107,18 @@ export class MessengerConversation {
           return false;
         }
 
-        if (finish) {
+        if (opts.finish) {
           this.messages = this.messages.concat(response.messages);
           this.scrollEmitter.next(true);
-        } else if(offset){
+        } else if(opts.offset){
+          let scrollTop = scrollView.scrollTop;
+          let scrollHeight = scrollView.scrollHeight;
+          response.messages.shift();
           this.messages = response.messages.concat(this.messages);
           this.offset = response['load-previous'];
+          setTimeout(() => {
+            scrollView.scrollTop = scrollTop + scrollView.scrollHeight - scrollHeight +60;
+          });
         } else {
           this.messages = response.messages;
           this.offset = response['load-previous'];
@@ -140,7 +150,7 @@ export class MessengerConversation {
           return;
         }
 
-        this.load(null, message.guid);
+        this.load({ finish: message.guid });
         this.sounds.play('new');
 
       });
