@@ -44,17 +44,17 @@ class blog implements Interfaces\Api
             $response['load-next'] = (string) end($entities)->guid;
             break;
           case "featured":
-            $guids = Core\Data\indexes::fetch('user', array('offset'=> $offset, 'limit'=> $limit ));
-                  if (!$guids) {
-                      break;
-                  }
-                  $entities = core\Entities::get(array('guids'=>$guids));
+            $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> $offset, 'limit'=> $limit ));
+            if (!$guids) {
+              break;
+            }
+            $entities = core\Entities::get(array('guids'=>$guids));
             usort($entities, function ($a, $b) {
-                        if ((int)$a->featured_id == (int) $b->featured_id) {
-                            return 0;
-                        }
-                        return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
-                    });
+                if ((int)$a->featured_id == (int) $b->featured_id) {
+                    return 0;
+                }
+                return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+            });
             $response['blogs'] = Factory::exportable($entities);
             $response['load-next'] = (string) end($entities)->featured_id;
             break;
