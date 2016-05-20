@@ -24,6 +24,10 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
 
 @Component({
   selector: 'minds-messenger-conversation',
+  host: {
+    '(window:focus)': 'onFocus($event)',
+    '(window:blur)': 'onBlur($event)'
+  },
   properties: [ 'conversation' ],
   templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
   directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, MindsEmoji, Tooltip, MindsTooltip ],
@@ -64,6 +68,8 @@ export class MessengerConversation {
     block: null,
     unblock: null
   }
+
+  focused : boolean = true;
 
   blocked: boolean = false;
 
@@ -142,42 +148,38 @@ export class MessengerConversation {
       this.sockets.join(this.conversation.socketRoomName);
 
       this.socketSubscriptions.pushConversationMessage = this.sockets.subscribe('pushConversationMessage', (guid, message) => {
-        if (guid != this.conversation.guid) {
+        if (guid != this.conversation.guid)
           return;
-        }
 
-        if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
+        if (this.session.getLoggedInUser().guid == message.ownerObj.guid)
           return;
-        }
 
         this.load({ finish: message.guid });
-        this.sounds.play('new');
+        if(!this.focused && document.title.indexOf('\u2022') == -1)
+          document.title = "\u2022 " + document.title;
 
+        this.sounds.play('new');
       });
 
       this.socketSubscriptions.clearConversation = this.sockets.subscribe('clearConversation', (guid, actor) => {
-        if (guid != this.conversation.guid) {
+        if (guid != this.conversation.guid)
           return;
-        }
 
         this.messages = [];
         this.chatNotice = `${actor.name} cleared chat history`;
 
-        this.sounds.play('new');
       });
 
       this.socketSubscriptions.block = this.sockets.subscribe('block', (guid) => {
-        if (!this.hasParticipant(guid)) {
+        if (!this.hasParticipant(guid))
           return;
-        }
 
         this.blocked = true;
       });
 
       this.socketSubscriptions.unblock = this.sockets.subscribe('unblock', (guid) => {
-        if (!this.hasParticipant(guid)) {
+        if (!this.hasParticipant(guid))
           return;
-        }
 
         this.blocked = false;
       });
@@ -305,4 +307,16 @@ export class MessengerConversation {
 
     return has;
   }
+
+  onFocus(e){
+    this.focused = true;
+    if(document.title.indexOf('\u2022') == 0){
+      document.title = document.title.substr(1);
+    }
+  }
+
+  onBlur(e){
+    this.focused = false;
+  }
+
 }
