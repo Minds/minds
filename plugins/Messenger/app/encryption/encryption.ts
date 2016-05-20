@@ -28,6 +28,7 @@ export class MessengerEncryption {
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
   inProgress : boolean = true;
+  error : string = "";
 
   constructor(public client : Client){
 
@@ -35,12 +36,14 @@ export class MessengerEncryption {
 
   unlock(password){
     this.inProgress = true;
+    this.error = "";
     this.encryption.unlock(password.value)
       .then(() => {
         this.on.next(true);
         this.inProgress = false;
       })
       .catch(() => {
+        this.error = "Wrong password. Please try again."
         this.inProgress = false;
       });
     password.value = '';
@@ -48,15 +51,18 @@ export class MessengerEncryption {
 
   setup(password, password2){
     if(password.value != password2.value){
+      this.error = "Your passwords must match";
       return;
     }
     this.inProgress = true;
+    this.error = "";
     this.encryption.doSetup(password.value)
       .then(() => {
         this.on.next(true);
         this.inProgress = false;
       })
       .catch(() => {
+        this.error = "Sorry, there was a problem.";
         this.inProgress = false;
       });
     password.value = '';
@@ -65,8 +71,10 @@ export class MessengerEncryption {
 
   rekey(password, password2){
     if(password.value != password2.value){
+      this.error = "Your passwords must match";
       return;
     }
+    this.error = "";
     this.inProgress = true;
     this.encryption.rekey(password.value)
       .then(() => {
@@ -74,6 +82,7 @@ export class MessengerEncryption {
         this.inProgress = false;
       })
       .catch(() => {
+        this.error = "Sorry, there was a problem";
         this.inProgress = false;
       });
     password.value = '';

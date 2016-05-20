@@ -1,9 +1,11 @@
 <div class="m-messenger-encryption-unlock" *ngIf="encryption.isSetup() && !encryption.reKeying">
+  <p [hidden]="!error" class="m-messenger-error mdl-color-text--red">{{error}}</p>
   <input type="password" placeholder="Enter password" #password (keydown.enter)="unlock(password)" />
   <button class="mdl-button mdl-button--colored" (click)="unlock(password)" [disabled]="inProgress">Unlock</button>
 </div>
 
 <div class="m-messenger-encryption-setup" *ngIf="!encryption.isSetup() && !encryption.reKeying">
+  <p [hidden]="!error" class="m-messenger-error mdl-color-text--red">{{error}}</p>
   <input type="password" placeholder="Enter a password" #password1 />
   <input type="password" placeholder="Confirm your password" #password2 (keydown.enter)="setup(password1, password2)" />
   <button class="mdl-button mdl-button--colored" (click)="setup(password1, password2)" [disabled]="inProgress">Setup</button>
@@ -14,6 +16,7 @@
     Changing your encryption password will cause your previous messages to be unreadable.
     <a class="mdl-color-text--blue-grey-300" (click)="encryption.reKeying = false">Cancel</a>
   </p>
+  <p [hidden]="!error" class="m-messenger-error mdl-color-text--red">{{error}}</p>
   <input type="password" placeholder="Enter a password" #password1 />
   <input type="password" placeholder="Confirm your password" #password2 (keydown.enter)="setup(password1, password2)" />
   <button class="mdl-button mdl-button--colored" (click)="rekey(password1, password2)" [disabled]="inProgress">Change</button>
