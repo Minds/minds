@@ -136,7 +136,7 @@ export class MessengerUserlist {
           console.log("got error" + error);
           this.inProgress = false;
         });
-    }, 100);
+    }, 500);
   }
 
   openConversation(conversation){
