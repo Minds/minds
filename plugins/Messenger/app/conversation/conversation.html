@@ -1,5 +1,5 @@
 <div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
-  <div class="m-messenger-dockpane-tab mdl-color--blue-grey-700  mdl-color-text--blue-grey-100"
+  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-100"
     [class.mdl-color--amber]="conversation.unread"
     (click)="dockpanes.toggle(conversation); load(null,null, true);">
     <div class="m-messenger-dockpane-tab-title">
