@@ -49,26 +49,11 @@ class conversations implements Interfaces\Api
         $response = [];
 
         $me = Core\Session::getLoggedInUser();
-        $user = Entities\Factory::build($pages[0]);
 
         $conversation = (new Messenger\Entities\Conversation())
           ->loadFromGuid($pages[0]);
         $messages = (new Messenger\Core\Messages)
           ->setConversation($conversation);
-
-        /*$is_subscribed = $me->isSubscribed($user->guid);
-        $is_subscriber = $user->isSubscribed($me->guid);
-        if(!$is_subscribed || !$is_subscriber){
-            return Factory::response(array(
-              'status'=>'error',
-              'message' => "No mutual subscription",
-              'subscribed' => (bool) $is_subscribed,
-              'subscriber' => (bool) $is_subscriber,
-              'user' => $user->export()
-            ));
-        }*/
-
-        //$conversation->clearCount();
 
         if ($conversation) {
             $response = $conversation->export();
@@ -112,11 +97,18 @@ class conversations implements Interfaces\Api
             $response['load-previous'] = (string) reset($messages)->guid;
         }
 
-        //return the public keys
-        $response['publickeys'] = array(
-            (string) $me->guid => elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings'),
-            $pages[0] => $user->{"plugin:user_setting:gatherings:publickey"} ?: elgg_get_plugin_user_setting('publickey', $pages[0], 'gatherings')
-        );
+        $keystore = new Messenger\Core\Keystore();
+
+        if(!$offset){
+            //return the public keys
+            $response['publickeys'] = [];
+            foreach($conversation->getParticipants() as $participant_guid){
+                if($participant_guid == Session::getLoggedInUserGuid()){
+                    continue;
+                }
+                $response['publickeys'][(string) $participant_guid] = $keystore->setUser($participant_guid)->getPublicKey();
+            }
+        }
 
         return $response;
     }
