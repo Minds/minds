@@ -78,7 +78,7 @@ export class MessengerUserlist {
       this.cb = Date.now();
     }
 
-    this.client.get('api/v1/conversations', opts)
+    this.client.get('api/v2/conversations', opts)
       .then((response : any) => {
         if (!response.conversations) {
           this.hasMoreData = false;
@@ -116,7 +116,7 @@ export class MessengerUserlist {
 
     this.search_timeout = setTimeout(() => {
       this.inProgress = true;
-      this.client.get('api/v1/conversations/search', {
+      this.client.get('api/v2/conversations/search', {
           q,
           limit: 24
         })
@@ -157,7 +157,7 @@ export class MessengerUserlist {
         }
       }
 
-      this.client.get(`api/v1/conversations/${guid}`, {
+      this.client.get(`api/v2/conversations/${guid}`, {
           password: this.encryption.getEncryptionPassword()
         })
         .then((response) => {
