@@ -262,7 +262,17 @@ minds-messenger{
         &.m-optimistic-guess {
           opacity: 0.6;
         }
+
+        .m-messenger-conversations-ts{
+          display:none;
+        }
+        &:hover .m-messenger-conversations-ts{
+          display: block;
+          font-size: 8px;
+          padding: 0px 40px;
+        }
       }
+
       .m-messenger-conversation-messages-notice{
         text-align: center;
         margin: $minds-padding 0;
