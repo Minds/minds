@@ -121,6 +121,13 @@ class conversations implements Interfaces\Api
 
         if($conversations){
             $response['conversations'] = Factory::exportable($conversations);
+
+            //mobile polyfill
+            foreach($response['conversations'] as $k => $v){
+                $response['conversations'][$k]['subscribed'] = true;
+                $response['conversations'][$k]['subscriber'] = true;
+            }
+
             end($conversations);
             $response['load-next'] = (int) $_GET['offset'] + count($conversations);
             $response['load-previous'] = (int) $_GET['offset'] - count($conversations);
