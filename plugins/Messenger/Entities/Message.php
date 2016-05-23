@@ -22,7 +22,7 @@ class Message extends DenormalizedEntity{
 		protected $type = 'object';
 		protected $subtype = 'message';
 		protected $friendly_ts;
-		protected $message;
+		public $message;
 		protected $messages = [];
 		protected $encrypted = true;
 		protected $owner_guid;
@@ -106,7 +106,7 @@ class Message extends DenormalizedEntity{
 		public function save()
 		{
 				if(!$this->encrypted){
-						throw new Exception('You can not save unencrypted messages');
+						throw new \Exception('You can not save unencrypted messages');
 				}
 				$this->getGuid();
 				$this->rowKey = "object:gathering:conversation:{$this->conversation->getGuid()}";

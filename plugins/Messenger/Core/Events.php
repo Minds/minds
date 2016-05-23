@@ -20,7 +20,7 @@ class Events
         Core\Events\Dispatcher::register('subscribe', 'all', function($event) {
             $params = $event->getParameters();
 
-            $isMutual = (new Messenger\Core\Subscriptions)->isMutual($params['user_guid'], $params['to_guid']);
+            $isMutual = (new Messenger\Helpers\Subscriptions)->isMutual($params['user_guid'], $params['to_guid']);
 
             if ($isMutual) {
                 $conversation = new Messenger\Entities\Conversation();

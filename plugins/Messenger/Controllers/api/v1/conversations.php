@@ -79,13 +79,14 @@ class conversations implements Interfaces\Api
         if($messages){
 
             foreach($messages as $k => $message){
-              $_GET['decrypt'] = true;
+                if(!isset($_GET['access_token'])){
+                    $_GET['decrypt'] = true;
+                }
                 if(isset($_GET['decrypt']) && $_GET['decrypt']){
                     $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
                 } else {
                     //support legacy clients
-                    //$key = "message:$me->guid";
-                    //$messages[$k]->message = $messages[$k]->$key;
+                    $messages[$k]->message = $messages[$k]->getMessage(Core\Session::getLoggedInUserGuid());
                 }
             }
 
@@ -99,7 +100,7 @@ class conversations implements Interfaces\Api
 
         $keystore = new Messenger\Core\Keystore();
 
-        if(!$offset){
+        if(!$offset || isset($_GET['access_token'])){
             //return the public keys
             $response['publickeys'] = [];
             foreach($conversation->getParticipants() as $participant_guid){
@@ -107,6 +108,7 @@ class conversations implements Interfaces\Api
                     continue;
                 }
                 $response['publickeys'][(string) $participant_guid] = $keystore->setUser($participant_guid)->getPublicKey();
+                $response['publickeys'][$conversation->getGuid()] = $keystore->setUser($participant_guid)->getPublicKey();
             }
         }
 
@@ -154,11 +156,13 @@ class conversations implements Interfaces\Api
             $message->setMessage($_POST['message']);
             $message->encrypt();
         } else {
-            $message->client_encrypted = true;
+            $messages = [];
             foreach($conversation->getParticipants() as $guid){
-                $msg = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
-                $message->setMessages($guid, $msg, true);
+                $key = "message:$guid"; 
+                $messages[$guid] = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
             }
+            $message->setMessages($messages, true);
+            $message->message = $messages[Session::getLoggedInUserGuid()];
         }
 
         $message->save();

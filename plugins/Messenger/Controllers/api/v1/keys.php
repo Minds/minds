@@ -22,20 +22,25 @@ class keys implements Interfaces\Api{
      */
     public function get($pages){
 
-        $response = array();
-       // $_SESSION['user'] = new \Minds\Entities\User($_SESSION['user']->guid, false);
+        $response = [];
+
+        $keystore = new Messenger\Core\Keystore();
+        $keystore->setUser(Core\Session::getLoggedInUser());
+ 
+        // $_SESSION['user'] = new \Minds\Entities\User($_SESSION['user']->guid, false);
         $unlock_password = get_input('password');
         $new_password = get_input('new_password');
-        $pub = \elgg_get_plugin_user_setting('publickey', elgg_get_logged_in_user_guid(), 'gatherings');
-        $priv = \elgg_get_plugin_user_setting('privatekey', elgg_get_logged_in_user_guid(), 'gatherings');
+        $pub = $keystore->getPublicKey();
+        $priv = $keystore->getPrivateKey();
 
         //legacy password update
-        if(helpers\openssl::verify($pub, $priv, $unlock_password) === FALSE){ //hint: this should fail if pswd is set
-          $priv = helpers\openssl::temporaryPrivateKey($priv, $unlock_password, $unlock_password);
-          \elgg_set_plugin_user_setting('privatekey', $priv, elgg_get_logged_in_user_guid(), 'gatherings');
-        }
+        //if(helpers\openssl::verify($pub, $priv, $unlock_password) === FALSE){ //hint: this should fail if pswd is set
+        //  $priv = helpers\openssl::temporaryPrivateKey($priv, $unlock_password, $unlock_password);
+        //  \elgg_set_plugin_user_setting('privatekey', $priv, elgg_get_logged_in_user_guid(), 'gatherings');
+        //}
 
-        $tmp = helpers\openssl::temporaryPrivateKey($priv, $unlock_password, NULL);
+        $keystore->unlockPrivateKey($unlock_password, null);
+        $tmp = $keystore->getUnlockedPrivateKey();
 
         if(!$tmp || !$unlock_password){
           $response['status'] = 'error';
