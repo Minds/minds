@@ -189,7 +189,7 @@ export class MessengerUserlist {
     setInterval(() => {
       if(!this.userListToggle)
         return;
-      this.client.get('api/v1/conversations', { limit: 12 })
+      this.client.get('api/v2/conversations', { limit: 12 })
         .then((response : any) => {
           if (!response.conversations) {
             return false;

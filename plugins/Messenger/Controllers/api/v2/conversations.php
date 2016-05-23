@@ -169,13 +169,6 @@ class conversations implements Interfaces\Api
         $conversation->markAsUnread(Session::getLoggedInUserGuid());
         $conversation->markAsRead(Session::getLoggedInUserGuid());
 
-        /*if($message->client_encrypted){
-          $key = "message:".elgg_get_logged_in_user_guid();
-          $message->message = $message->$key;
-        } else {
-          $key = "message";
-          $message->message = $_POST['message'];
-        }*/
         $response["message"] = $message->export();
         $emit = $response['message'];
         unset($emit['message']);
@@ -185,6 +178,19 @@ class conversations implements Interfaces\Api
               ->to($conversation->buildSocketRoomName())
               ->emit('pushConversationMessage', (string) $conversation->getGuid(), $emit);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
+
+        foreach($conversation->getParticipants() as $participant){
+            if($participant == Session::getLoggedInUserGuid()){
+                continue;
+            }
+            Core\Queue\Client::build()->setExchange("mindsqueue")
+                                      ->setQueue("Push")
+                                      ->send([
+                                            "user_guid"=>$participant,
+                                            "message"=>"You have a new message.",
+                                            "uri" => 'chat'
+                                        ]);
+        }
 
         $this->emitSocketTouch($conversation);
 
