@@ -1,0 +1,100 @@
+<div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
+  <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-100"
+    [class.mdl-color--amber]="conversation.unread"
+    (click)="dockpanes.toggle(conversation); load(null,null, true);">
+    <div class="m-messenger-dockpane-tab-title">
+      <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
+    </div>
+    <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
+      <i class="material-icons mdl-color-text--blue-grey-100" [hidden]="live">sync_problem</i>
+      <i class="material-icons mdl-color-text--blue-grey-300"
+      (click)="ribbon.open = !ribbon.open"
+      [ngClass]="{ 'm-status-active': ribbon.open }"
+      >more_vert</i>
+      <i class="material-icons mdl-color-text--blue-grey-300" (click)="dockpanes.close(conversation)">close</i>
+    </div>
+  </div>
+
+  <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+    <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="deleteHistory(); ribbon.open = false" *ngIf="showMessages">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history">delete</i>
+        Destroy
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="!blocked">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Block participants">block</i>
+        Block
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="blocked">
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Un-block chat">restore</i>
+        Un-block
+      </div>
+    </div>
+
+    <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">
+      <minds-messenger-encryption (on)="load(null, null, true); showMessages = true;"></minds-messenger-encryption>
+    </div>
+
+    <div class="m-messenger-conversation-messages" *ngIf="showMessages"
+      [class.m-messenger-ribbon-open]="ribbon.open"
+      minds-messenger-scroll
+      [emitter]="scrollEmitter"
+      #scrollArea
+      (previous)="load({ offset: offset, container: scrollArea })">
+      <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
+        *ngIf="chatNotice">
+        <span [innerHtml]="chatNotice"></span>
+      </div>
+      <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
+      </div>
+      <div class="m-messenger-conversation-messages-message"
+        *ngFor="#message of messages"
+        [class.m-optimistic-guess]="message.optimisticGuess"
+        [class.odd]="message.owner.guid == session.getLoggedInUser().guid">
+          <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
+            *ngIf="message.owner.guid == session.getLoggedInUser().guid"
+            [routerLink]="['/Channel', {username: message.owner.username}]">
+          <div
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            *ngIf="message.subtype != 'call_ended' &&  message.subtype != 'call_missed'"
+            [innerHtml]="message.message | tags">
+          </div>
+          <!-- Call message -->
+          <div
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            *ngIf="message.subtype == 'call_ended'">
+            Call Ended
+          </div>
+          <!-- Call missed -->
+          <div
+            class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
+            *ngIf="message.subtype == 'call_missed'">
+            Missed Call
+          </div>
+          <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
+            *ngIf="message.owner.guid != session.getLoggedInUser().guid"
+            [routerLink]="['/Channel', {username: message.owner.username}]">
+          <div class="m-messenger-conversations-ts mdl-color-text--blue-grey-100">{{ message.time_created * 1000 | date: 'medium' }}</div>
+      </div>
+      <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
+        *ngIf="blocked">
+        <span>You have blocked this chat</span>
+      </div>
+    </div>
+
+    <div class="m-messenger-conversation-composer" *ngIf="!blocked && conversation.open && encryption.isOn()">
+      <textarea placeholder="Send a message..."
+      [(ngModel)]="message"
+      [disabled]="blockingActionInProgress"
+      (keydown.enter)="send($event); emoji.close()"
+      (focus)="emoji.close()"
+      (click)="emoji.close()"
+      autoGrow
+      rows="1"></textarea>
+      <i class="material-icons mdl-color-text--blue-grey-600" (emoji)="message = message + $event.character" #emoji="emoji">mood</i>
+      <i class="material-icons mdl-color-text--blue-grey-600" (click)="send($event); emoji.close()">send_arrow</i>
+      <minds-emoji [localDirective]="emoji"></minds-emoji>
+    </div>
+  </div>
+</div>

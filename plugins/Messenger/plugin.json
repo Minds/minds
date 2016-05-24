@@ -1,0 +1,7 @@
+{
+  "name": "messenger",
+  "version": "1.0.0",
+  "routes": {
+    "/messenger": "app/src/gatherings"
+  }
+}

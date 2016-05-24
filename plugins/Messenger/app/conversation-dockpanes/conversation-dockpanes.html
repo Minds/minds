@@ -1,0 +1,5 @@
+<minds-messenger-dockpane *ngFor="#conversation of conversations; #i = index" [style.right]="216 * (i + 1)">
+  <minds-messenger-conversation [conversation]="conversation"></minds-messenger-conversation>
+</minds-messenger-dockpane>
+
+<ng-content selector="minds-messenger-dockpane"></ng-content>

@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { RouterLink, RouteParams } from "angular2/router";
 
@@ -14,9 +14,7 @@ import { UserCard } from '../../../../controllers/cards/cards';
 @Component({
   selector: 'minds-groups-profile-requests',
   bindings: [ GroupsService ],
-  properties: ['_group : group']
-})
-@View({
+  properties: ['_group : group'],
   templateUrl: 'src/plugins/Groups/profile/requests/requests.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, UserCard ]
 })

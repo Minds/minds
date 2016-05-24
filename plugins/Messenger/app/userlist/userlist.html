@@ -1,0 +1,64 @@
+
+<div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
+  <div class="m-messenger-dockpane-tab mdl-color--blue-grey-700  mdl-color-text--blue-grey-100" (click)="toggle()">
+    <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
+    <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
+      <i class="material-icons"
+        (click)="ribbon.open = !ribbon.open"
+        [ngClass]="{ 'm-status-active': ribbon.open }">
+        settings
+      </i>
+    </div>
+  </div>
+  <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+
+    <div class="m-messenger-dockpane-tab-ribbon mdl-color-text--blue-grey-300" #ribbon [hidden]="!ribbon.open">
+      <div class="m-messenger-dockpane-tab-icon" (click)="logout(); ribbon.open = false" [hidden]="!encryption.isOn()">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Logout of chat"
+          >exit_to_app</i>
+          Logout
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.mute(); ribbon.open = false" [hidden]="!sounds.canPlay()">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Disable sounds">notifications</i>
+          Mute
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.unmute(); ribbon.open = false" [hidden]="sounds.canPlay()">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Enable sounds">notifications_off</i>
+          Unmute
+      </div>
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="encryption.reKeying = !encryption.reKeying; ribbon.open = false">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Enable sounds">vpn_key</i>
+          Re-key
+      </div>
+    </div>
+    <minds-messenger-encryption *ngIf="encryption.reKeying"></minds-messenger-encryption>
+
+    <div class="m-messenger-userlist-conversations" minds-messenger-scroll [moreData]="hasMoreData" (next)="load({ offset: offset })">
+      <div class="m-messenger-userlist-conversations-item"
+      [hidden]="inProgress && !offset"
+      *ngFor="#conversation of conversations"
+      (click)="openConversation(conversation)">
+        <!-- This is currently only configured for one-on-one chat -->
+        <img [src]="minds.cdn_url + 'icon/' + conversation.participants[0].guid" class="mdl-shadow--2dp">
+        <span class="m-conversation-label">{{conversation.username}}</span>
+        <span class="m-conversation-new mdl-color--blue" [hidden]="!conversation.unread"></span>
+        <span class="m-conversation-online" [hidden]="!conversation.online"></span>
+      </div>
+      <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
+        <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
+      </div>
+
+
+    </div>
+
+    <div class="m-messenger-userlist-search">
+      <i class="material-icons">search</i>
+      <input type="text" placeholder="Search" #q (keydown)="search(q);">
+    </div>
+
+  </div>
+</div>

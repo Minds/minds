@@ -1,4 +1,4 @@
-import { Component, View } from 'angular2/core';
+import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router } from 'angular2/router';
 
@@ -11,9 +11,7 @@ import { Material } from '../../../../directives/material';
 @Component({
   selector: 'minds-archive-theatre',
 
-  inputs: ['_object: object']
-})
-@View({
+  inputs: ['_object: object'],
   template: `
     <i class="material-icons left"
       (click)="prev()"

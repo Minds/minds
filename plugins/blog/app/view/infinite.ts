@@ -1,4 +1,4 @@
-import { Component, View, Inject } from 'angular2/core';
+import { Component, Inject } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -36,6 +36,8 @@ export class BlogViewInfinite {
 
   inProgress : boolean = false;
   moreData : boolean = true;
+
+  error: string = '';
 
   constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
       if(params.params['guid'])

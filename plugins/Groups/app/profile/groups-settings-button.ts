@@ -98,7 +98,6 @@ export class GroupsSettingsButton {
 
     this.showMenu = false;
     this.isGoingToBeDeleted = false;
-    this.isReallyGoingToBeDeleted = false;
   }
 
   toggleMenu(e){

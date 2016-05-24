@@ -1,0 +1,378 @@
+@import 'defaults.scss';
+
+minds-messenger{
+  position:fixed;
+  bottom:0;
+  right:0;
+  z-index:1;
+
+  .m-messenger-dockpane{
+    margin: 0 $minds-margin;
+    width: 200px;
+
+    .m-messenger-dockpane-container{
+      display:none;
+    }
+
+    &.m-messenger-dockpane-open{
+      .m-messenger-dockpane-container{
+        display: block;
+        width: 100%;
+        //height: 99px;
+        display: block;
+        position: relative;
+        background: rgba(255,255,255,1);
+      }
+      .m-messenger-dockpane-tab{
+        border-bottom: 1px solid #EAEAEA;
+      }
+    }
+
+    .m-messenger-dockpane-tab{
+      background: #455a64;
+      border-radius: 3px 3px 0 0;
+      height: 28px;
+      width: 100%;
+      display: block;
+      cursor: pointer;
+
+      .m-messenger-dockpane-tab-title{
+        padding: 5px 12px;
+        display: inline-block;
+
+        > i {
+          vertical-align: middle;
+          font-size: 17px;
+          padding: 0 8px 0 0;
+        }
+        > span {
+          vertical-align: middle;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-size: 11px;
+          font-weight:bold;
+        }
+      }
+
+      .m-messenger-dockpane-tab-actions{
+        display: inline-block;
+        text-align: right;
+        vertical-align: middle;
+        float: right;
+        padding-right: $minds-padding;
+
+        > i{
+          font-size: 14px;
+          padding: 8px 2px;
+          line-height: 12px;
+          border-radius: 0 3px 0 0;
+
+          &:hover,
+          &.m-status-active{
+            //color:#455a64 !important;
+            color:#fff !important;
+          }
+        }
+      }
+
+      > i{
+        float: right;
+        margin: 6px 8px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+    } //[end] .m-messenger-dockpane-tab
+
+    .m-messenger-dockpane-tab-ribbon{
+      position: absolute;
+      box-sizing: border-box;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: #ffffff;
+      text-align: left;
+      vertical-align: middle;
+      padding: 0 $minds-padding;
+      border-bottom: 1px solid #EAEAEA;
+      z-index:1;
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .m-messenger-dockpane-tab-icon{
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 8px;
+        line-height: 8px;
+        padding-bottom: 8px;
+        cursor: pointer;
+
+        > i{
+          width: 100%;
+          font-size: 16px;
+          padding: 8px 2px;
+          line-height: 12px;
+          border-radius: 0 3px 0 0;
+          cursor: pointer;
+
+          &:hover{
+            color:#455a64 !important;
+          }
+        }
+      }
+    }
+
+    .m-conversation-online{
+      position: absolute;
+      display: block;
+      vertical-align: middle;
+      right: 8px;
+      top: 50%;
+      top: calc(50% - 4px);
+      width:8px;
+      height:8px;
+      background:green;
+      border-radius:50%;
+    }
+
+    .m-conversation-new{
+      position: absolute;
+      display: block;
+      vertical-align: middle;
+      right: 20px;
+      top: 50%;
+      top: calc(50% - 4px);
+      width:8px;
+      height:8px;
+      background:blue;
+      border-radius:50%;
+    }
+
+    &.m-messenger-userlist{
+
+      .m-messenger-userlist-search{
+        height: 30px;
+        width: 100%;
+        padding:0;
+        background: rgba(255,255,255,1);
+        box-sizing: border-box;
+
+        > i {
+          vertical-align: middle;
+          font-size: 20px;
+          padding: 0px 4px;
+        }
+        > input {
+          border: 0;
+          height: 100%;
+          width: 168px;
+          vertical-align: middle;
+          font-size: 12px;
+          line-height: 12px;
+          padding: 0;
+          -webkit-appearance: none;
+          outline: none;
+        }
+      } //[end] .m-messenger-userlist-search
+
+      .m-messenger-userlist-conversations{
+        max-height: 240px;
+        overflow: scroll;
+        overflow-x:hidden;
+      }
+
+      .m-messenger-userlist-conversations-item{
+        cursor:pointer;
+        position:relative;
+
+        img{
+          width: 24px;
+          margin: 8px;
+        }
+        span{
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-size: 11px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 132px;
+          vertical-align: middle;
+          display: inline-block;
+        }
+      }
+    } //[end] .m-messenger-userlist
+
+  } //[end] .m-messenger-dockpane{
+
+  .m-messenger-conversations-wrappers{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  .m-messenger-conversation{
+    .m-messenger-dockpane-container{
+      //min-height:72px;
+    }
+    .m-messenger-conversation-messages{
+      max-height:142px;
+      overflow:scroll;
+      overflow-x:hidden;
+
+      &.m-messenger-ribbon-open {
+        min-height: 29px;
+      }
+
+      .minds-messenger-conversation-message-bubble {
+        display: inline-block;
+        padding: $minds-padding;
+        background: #EEE;
+        border-radius: 3px;
+        font-size: 11px;
+        margin: $minds-margin/2 $minds-margin;
+        font-weight: 400;
+        max-width:130px;
+        box-sizing: border-box;
+        line-height: 14px;
+        text-align:left;
+        word-break: break-word;
+      }
+      .m-messenger-conversation-messages-message{
+        text-align:right;
+
+        img{
+          border-radius: 50%;
+          width: 18px;
+          margin-right: $minds-margin;
+          cursor:pointer;
+        }
+
+        &.odd{
+          text-align:left;
+          img{
+            margin-right:0;
+            margin-left: $minds-margin;
+          }
+        }
+
+        &.m-optimistic-guess {
+          opacity: 0.6;
+        }
+
+        .m-messenger-conversations-ts{
+          display:none;
+        }
+        &:hover .m-messenger-conversations-ts{
+          display: block;
+          font-size: 8px;
+          padding: 0px 40px;
+        }
+      }
+
+      .m-messenger-conversation-messages-notice{
+        text-align: center;
+        margin: $minds-padding 0;
+        font-size: 0.7em;
+
+        >span {
+          display: inline-block;
+          padding: 0 $minds-padding;
+        }
+      }
+    }
+    .m-messenger-conversation-composer{
+      position: relative;
+      bottom: 0;
+      max-width:100%;
+
+      textarea{
+        outline: none;
+        -webkit-appearance: none;
+        border: 0;
+        resize: none;
+        width: 144px;
+        font-size: 11px;
+        vertical-align: middle;
+        padding: 8px;
+        font-family: minds_emoji;
+        line-height: 1em;
+      }
+      i{
+        width: 24px;
+        font-size: 18px;
+        vertical-align: middle;
+        cursor:pointer;
+        overflow:hidden;
+      }
+    }
+  }
+
+  .m-messenger-encryption{
+    input{
+      -webkit-appearance: none;
+      outline: none;
+      border: 0;
+      margin: 0;
+      padding: 12px;
+      width: 132px;
+    }
+    .mdl-button, button{
+      padding:0;
+      font-size: 12px;
+    }
+    p.m-messenger-error{
+      font-size: 11px;
+      margin: 0;
+      padding: 8px;
+      font-weight: bold;
+    }
+    .m-messenger-encryption-rekey{
+      p {
+        line-height: 11px;
+        font-size: 10px;
+        margin: 0;
+        padding: $minds-padding;
+      }
+      a {
+        cursor:pointer;
+      }
+    }
+  }
+
+  minds-messenger-dockpane{
+    position: absolute;
+    bottom: 0;
+
+    @media screen and (max-width:420px){
+      position: relative;
+      right: 0 !important;
+    }
+  }
+
+}
+
+minds-messenger-channel-button{
+  > button{
+    cursor:pointer;
+    background: transparent;
+    border: 1px solid #78909c;
+    color: #78909c;
+    font-size: 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    min-width: 128px;
+
+
+    > i, &.material-icons {
+      padding-right: $minds-padding;
+      padding-bottom: 1px;
+      vertical-align:middle;
+    }
+
+  }
+}

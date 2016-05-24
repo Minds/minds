@@ -1,4 +1,4 @@
-import { Component, View } from 'angular2/core';
+import { Component } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -19,9 +19,7 @@ import { SocialIcons } from '../../../components/social-icons/social-icons';
 @Component({
   selector: 'minds-archive-view',
   viewBindings: [ ],
-  bindings: [ AttachmentService ]
-})
-@View({
+  bindings: [ AttachmentService ],
   templateUrl: 'src/plugins/archive/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons, Hovercard ]
 })
