@@ -29,6 +29,11 @@ class Indexes
         return $this->db->insert($this->buildNamespace($name), $guids);
     }
 
+    public function insert($key, $columns = [])
+    {
+        return $this->set($key, $columns);
+    }
+
     /**
      * Retrieves an index entry GUIDs
      * @param  string $name

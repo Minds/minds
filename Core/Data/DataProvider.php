@@ -34,7 +34,7 @@ class DataProvider extends Provider
             return new Call();
         }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function($di){
-            return new Cassandra\Thrift\Entities(new Call('entities'));
+            return new Call('entities');
         }, ['useFactory'=>false]);
         $this->di->bind('Database\Cassandra\Indexes', function($di){
             return new Cassandra\Thrift\Indexes(new Call('entities_by_time'));
@@ -53,6 +53,12 @@ class DataProvider extends Provider
         }, ['useFactory'=>true]);
         $this->di->bind('Database\ElasticSearch', function($di){
             return new ElasticSearch\Client();
+        }, ['useFactory'=>true]);
+        /**
+         * PubSub bindings
+         */
+        $this->di->bind('PubSub\Redis', function($di){
+            return new PubSub\Redis\Client();
         }, ['useFactory'=>true]);
     }
 

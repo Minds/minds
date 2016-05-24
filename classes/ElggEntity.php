@@ -1371,7 +1371,7 @@ abstract class ElggEntity extends ElggData implements
 			    $export[$v] = $this->$v;
 			}
 		}
-		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
+		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), []) ?: []);
 		$export = \Minds\Helpers\Export::sanitize($export);
 		return $export;
 	}
