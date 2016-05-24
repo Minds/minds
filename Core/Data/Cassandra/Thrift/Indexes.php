@@ -31,7 +31,7 @@ class Indexes
 
     public function insert($key, $columns = [])
     {
-        return $this->set($name, $columns);
+        return $this->set($key, $columns);
     }
 
     /**

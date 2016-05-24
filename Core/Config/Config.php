@@ -51,10 +51,11 @@ class Config
         return $this->get($key);
     }
 
-//    public function __set($key, $value)
-//    {
-//        $this->set($key, $value);
-//    }
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+        $this->$key = $value; //nasty fallback;
+    }
 
 
 }
