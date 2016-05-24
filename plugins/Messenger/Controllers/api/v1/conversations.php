@@ -75,6 +75,9 @@ class conversations implements Interfaces\Api
             $conversation->markAsRead(Session::getLoggedInUserGuid());
 
             $messages = array_reverse($messages);
+            if($offset || $finish){
+                array_shift($messages);
+            }
             $response['messages'] = Factory::exportable($messages);
 
             foreach($response['messages'] as $k => $message){
@@ -82,8 +85,8 @@ class conversations implements Interfaces\Api
                 $response['messages'][$k]['owner_guid'] = $message['owner']['guid'];
             }
 
-            $response['load-next'] = (string) end($messages)->guid;
-            $response['load-previous'] = (string) reset($messages)->guid;
+            $response['load-next'] = (string) end($messages)->guid ?: $finish;
+            $response['load-previous'] = (string) reset($messages)->guid ?: $offset;
         }
 
         $keystore = new Messenger\Core\Keystore();
@@ -112,10 +115,11 @@ class conversations implements Interfaces\Api
 
             //mobile polyfill
             foreach($response['conversations'] as $k => $v){
-                $guids = array_diff(explode(':', $v['guid']), [Core\Session::getLoggedInUserGuid()]);
-                if($guids){
+                $guids = array_values(array_diff(explode(':', $v['guid']), [Core\Session::getLoggedInUserGuid()]));
+                var_dump($guids);
+                if($guids[0]){
                     $response['conversations'][$k]['guid'] = $guids[0];
-                }
+                } 
                 $response['conversations'][$k]['subscribed'] = true;
                 $response['conversations'][$k]['subscriber'] = true;
             }

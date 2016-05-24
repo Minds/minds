@@ -63,6 +63,7 @@ class Conversations
                 $conversation = new Messenger\Entities\Conversation($this->db);
                 $conversation->loadFromArray($data);
                 //$conversation->setGuid($guid);
+                //$this->db->remove("object:gathering:conversations:{$this->user->guid}", ["100000000000000063:100000000000000599:100000000000000599", "100000000000000599:442275590062477312:442275590062477312"]);
                 if(strpos($guid, ':') === FALSE){
                     $conversation->clearParticipants();
                     $conversation->setParticipant(Session::getLoggedinUser()->guid)
