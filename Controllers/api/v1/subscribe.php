@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Security;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -86,6 +87,16 @@ class subscribe implements Interfaces\Api
     public function post($pages)
     {
         Factory::isLoggedIn();
+
+        $canSubscribe = Security\ACL::_()->interact(Core\Session::getLoggedinUser(), $pages[0]) &&
+            Security\ACL::_()->interact($pages[0], Core\Session::getLoggedinUser());
+
+        if (!$canSubscribe) {
+            return Factory::response([
+                'status' => 'error'
+            ]);
+        }
+
         $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'subscribed');

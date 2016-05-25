@@ -9,6 +9,7 @@ namespace Minds\Controllers\api\v1;
 
 use Minds\Components\Controller;
 use Minds\Core;
+use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -63,8 +64,28 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
      */
     public function put($pages)
     {
+        Factory::isLoggedIn();
+
+        $target = new Entities\User($pages[0]);
+
+        if (!$target || !$target->guid) {
+            return Factory::response([
+                'status' => 'error'
+            ]);
+        }
+
         $block = $this->di->get('Security\ACL\Block');
-        $block->block($pages[0]);
+        $blocked = $block->block($pages[0]);
+
+        if ($blocked) {
+            // Unsubscribe self
+            Core\Session::getLoggedInUser()->unSubscribe($pages[0]);
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');
+
+            // Unsubscribe target
+            $target->unSubscribe(Core\Session::getLoggedInUserGuid());
+            Helpers\Wallet::createTransaction($pages[0], -1, Core\Session::getLoggedInUserGuid(), 'unsubscribed');
+        }
 
         return Factory::response(array());
     }
@@ -74,6 +95,8 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
      */
     public function delete($pages)
     {
+        Factory::isLoggedIn();
+
         $block = $this->di->get('Security\ACL\Block');
         $block->unBlock($pages[0]);
 
