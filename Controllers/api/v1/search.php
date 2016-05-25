@@ -12,7 +12,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Search\Documents;
 
-class search implements Interfaces\Api
+class search implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     public function get($pages)
     {
