@@ -27,7 +27,7 @@ export class MessengerEncryption {
   on : EventEmitter<boolean> = new EventEmitter(true);
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
-  inProgress : boolean = true;
+  inProgress : boolean = false;
   error : string = "";
 
   constructor(public client : Client){
