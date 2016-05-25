@@ -61,6 +61,14 @@ class entities implements Interfaces\Api
      */
     public function get($pages)
     {
+
+        if (isset($pages[2]) && strpos($pages[2], ':') !== false) {
+            $param = explode(':', $pages[2], 2);
+
+            $pages[0] = $param[0];
+            $pages[2] = $param[1];
+        }
+
         $type = "object";
         $subtype = null;
         $owner = null;
