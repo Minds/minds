@@ -51,7 +51,8 @@
       <div class="m-messenger-conversation-messages-message"
         *ngFor="#message of messages"
         [class.m-optimistic-guess]="message.optimisticGuess"
-        [class.odd]="message.owner.guid == session.getLoggedInUser().guid">
+        [class.odd]="message.owner.guid == session.getLoggedInUser().guid"
+        (click)="message.showTs = !message.showTs">
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid == session.getLoggedInUser().guid"
             [routerLink]="['/Channel', {username: message.owner.username}]">
@@ -75,7 +76,7 @@
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid != session.getLoggedInUser().guid"
             [routerLink]="['/Channel', {username: message.owner.username}]">
-          <div class="m-messenger-conversations-ts mdl-color-text--blue-grey-100">{{ message.time_created * 1000 | date: 'medium' }}</div>
+          <div [hidden]="!message.showTs" class="m-messenger-conversations-ts mdl-color-text--blue-grey-100">{{ message.time_created * 1000 | date: 'medium' }}</div>
       </div>
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="blocked">
