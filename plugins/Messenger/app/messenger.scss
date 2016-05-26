@@ -40,6 +40,10 @@ minds-messenger{
         padding: 5px 12px;
         display: inline-block;
 
+        text-overflow: ellipsis;
+        max-width: 140px;
+        overflow: hidden;
+
         > i {
           vertical-align: middle;
           font-size: 17px;
