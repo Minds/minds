@@ -45,8 +45,8 @@
         <!-- This is currently only configured for one-on-one chat -->
         <img [src]="minds.cdn_url + 'icon/' + conversation.participants[0].guid" class="mdl-shadow--2dp">
         <span class="m-conversation-label">{{conversation.username}}</span>
-        <span class="m-conversation-new mdl-color--blue" [hidden]="!conversation.unread"></span>
-        <span class="m-conversation-online" [hidden]="!conversation.online"></span>
+        <span class="m-conversation-new mdl-color--green" [hidden]="!conversation.unread"></span>
+        <span class="m-conversation-online mdl-color--blue" [hidden]="!conversation.online"></span>
       </div>
       <div [hidden]="!inProgress" style="width:100%; text-align:center; ">
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
