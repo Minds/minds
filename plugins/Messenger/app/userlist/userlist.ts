@@ -106,6 +106,8 @@ export class MessengerUserlist {
     if(this.search_timeout)
       clearTimeout(this.search_timeout);
 
+    this.conversations = [];
+
     if (typeof (<HTMLInputElement>q).value !== 'undefined') {
       q = (<HTMLInputElement>q).value;
     }
@@ -114,7 +116,10 @@ export class MessengerUserlist {
       return this.load({ refresh: true });
     }
 
+    console.log('keypress with q=' + q);
     this.search_timeout = setTimeout(() => {
+      console.log('timeout search with q=' + q);
+      return;
       this.inProgress = true;
       this.client.get('api/v2/conversations/search', {
           q,
@@ -136,7 +141,7 @@ export class MessengerUserlist {
           console.log("got error" + error);
           this.inProgress = false;
         });
-    }, 500);
+    }, 300);
   }
 
   openConversation(conversation){

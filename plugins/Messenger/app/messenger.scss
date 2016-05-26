@@ -8,7 +8,7 @@ minds-messenger{
 
   .m-messenger-dockpane{
     margin: 0 $minds-margin;
-    width: 200px;
+    width: 228px;
 
     .m-messenger-dockpane-container{
       display:none;
@@ -39,6 +39,10 @@ minds-messenger{
       .m-messenger-dockpane-tab-title{
         padding: 5px 12px;
         display: inline-block;
+
+        text-overflow: ellipsis;
+        max-width: 140px;
+        overflow: hidden;
 
         > i {
           vertical-align: middle;
@@ -133,7 +137,7 @@ minds-messenger{
       top: calc(50% - 4px);
       width:8px;
       height:8px;
-      background:green;
+      background:blue;
       border-radius:50%;
     }
 
@@ -146,11 +150,13 @@ minds-messenger{
       top: calc(50% - 4px);
       width:8px;
       height:8px;
-      background:blue;
+      background:green;
       border-radius:50%;
     }
 
     &.m-messenger-userlist{
+
+      width:200px;
 
       .m-messenger-userlist-search{
         height: 30px;
@@ -219,7 +225,7 @@ minds-messenger{
       //min-height:72px;
     }
     .m-messenger-conversation-messages{
-      max-height:142px;
+      max-height:240px;
       overflow:scroll;
       overflow-x:hidden;
 
@@ -232,14 +238,15 @@ minds-messenger{
         padding: $minds-padding;
         background: #EEE;
         border-radius: 3px;
-        font-size: 11px;
+        font-size: 12px;
         margin: $minds-margin/2 $minds-margin;
         font-weight: 400;
-        max-width:130px;
+        max-width:160px;
         box-sizing: border-box;
         line-height: 14px;
         text-align:left;
         word-break: break-word;
+        cursor:pointer;
       }
       .m-messenger-conversation-messages-message{
         text-align:right;
@@ -253,6 +260,10 @@ minds-messenger{
 
         &.odd{
           text-align:left;
+          .minds-messenger-conversation-message-bubble{
+            background:#78909c !important;
+            color:#FFF !important;
+          }
           img{
             margin-right:0;
             margin-left: $minds-margin;
@@ -264,9 +275,6 @@ minds-messenger{
         }
 
         .m-messenger-conversations-ts{
-          display:none;
-        }
-        &:hover .m-messenger-conversations-ts{
           display: block;
           font-size: 8px;
           padding: 0px 40px;
@@ -294,8 +302,8 @@ minds-messenger{
         -webkit-appearance: none;
         border: 0;
         resize: none;
-        width: 144px;
-        font-size: 11px;
+        width: 170px;
+        font-size: 12px;
         vertical-align: middle;
         padding: 8px;
         font-family: minds_emoji;
