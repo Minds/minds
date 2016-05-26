@@ -116,10 +116,8 @@ export class MessengerUserlist {
       return this.load({ refresh: true });
     }
 
-    console.log('keypress with q=' + q);
     this.search_timeout = setTimeout(() => {
-      console.log('timeout search with q=' + q);
-      return;
+
       this.inProgress = true;
       this.client.get('api/v2/conversations/search', {
           q,
