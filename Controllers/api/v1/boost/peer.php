@@ -158,6 +158,24 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        //now add to the newsfeed
+        $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
+        if(!$embeded){
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'The original post was deleted'
+            ]);
+        }
+        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+
+        $activity = new Entities\Activity();
+        $activity->p2p_boosted = true;
+        if ($embeded->remind_object) {
+            $activity->setRemind($embeded->remind_object)->save();
+        } else {
+            $activity->setRemind($embeded->export())->save();
+        }
+
         if ($boost->getType() == "pro") {
             try {
                 Payments\Factory::build('braintree', ['gateway'=>'merchants'])->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
@@ -170,18 +188,6 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             }
         } else {
             Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
-        }
-
-        //now add to the newsfeed
-        $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
-        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
-
-        $activity = new Entities\Activity();
-        $activity->p2p_boosted = true;
-        if ($embeded->remind_object) {
-            $activity->setRemind($embeded->remind_object)->save();
-        } else {
-            $activity->setRemind($embeded->export())->save();
         }
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
