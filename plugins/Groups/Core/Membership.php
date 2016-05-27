@@ -27,6 +27,8 @@ class Membership
     protected $cache;
     protected $notifications;
 
+    protected $memberCache = [];
+
     /**
      * Constructor
      * @param GroupEntity $group
@@ -321,7 +323,12 @@ class Membership
  
         $user_guid = is_object($user) ? $user->guid : $user;
 
+        if($cache && isset($this->memberCache[$user->guid])){
+            return $this->memberCache[$user->guid];
+        }
+
         if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== FALSE){
+            $this->memberCache[$user->guid] = (bool) $is;
             return (bool) $is;
         }
         

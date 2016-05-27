@@ -31,10 +31,10 @@ class Events
             $user = $params['user'];
 
             //fake group entity
-            $group = new Groups\Entities\Group();
+            $group = new Groups\Entities\Group(true, true);
             $group->setGuid($access_id); //creates a group without loading the db
 
-            $membership = (new Membership)->setGroup($group);
+            $membership = Membership::_($group);
 
             $e->setResponse($membership->isMember($user->guid));
         });
