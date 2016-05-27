@@ -39,8 +39,13 @@ class keys implements Interfaces\Api{
         //  \elgg_set_plugin_user_setting('privatekey', $priv, elgg_get_logged_in_user_guid(), 'gatherings');
         //}
 
-        $keystore->unlockPrivateKey($unlock_password, null);
-        $tmp = $keystore->getUnlockedPrivateKey();
+        try{
+            $keystore->unlockPrivateKey($unlock_password, null);
+            $tmp = $keystore->getUnlockedPrivateKey();
+        } catch(\Exception $e){
+            $response['status'] = 'error';
+            $response['message'] = "please check your password";
+        }
 
         if(!$tmp || !$unlock_password){
           $response['status'] = 'error';
@@ -93,6 +98,7 @@ class keys implements Interfaces\Api{
                 } catch (\Exception $e) {
                     $response['status'] = 'error';
                     $response['message'] = $e->getMessage();
+                    $response['message'] = "please check your password";
                 }
 
 
