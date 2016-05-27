@@ -34,7 +34,7 @@ class albums implements Interfaces\Api{
 
                 $entities = Core\Entities::get([
                   'subtype' => 'album',
-                  'owner_guid' => $owner
+                  'owner_guid' => $owner_guid
                 ]);
 
                 if(!$entities){
