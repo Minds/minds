@@ -129,7 +129,7 @@ class Notifications
 
         $rows = $db->getRow('notifications:' . $options['user_guid'] . $filterSuffix, $args);
 
-        if ($args['offset'] && $rows) {
+        if ($args['offset'] && $args['limit'] > 1 && $rows) {
             unset($rows[$args['offset']]);
         }
 

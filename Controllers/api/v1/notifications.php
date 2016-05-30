@@ -38,7 +38,7 @@ class notifications implements Interfaces\Api
      */
     public function get($pages)
     {
-        //Factory::isLoggedIn();
+        Factory::isLoggedIn();
         $response = [];
 
         if (!isset($pages[0])) {
@@ -54,6 +54,20 @@ class notifications implements Interfaces\Api
                 Factory::isLoggedIn();
                 $toggles = (new Settings\PushSettings())->getToggles();
                 $response['toggles'] = $toggles;
+                break;
+            case 'single':
+                $notifications = Helpers\Notifications::get([
+                    'reversed' => false,
+                    'limit' => 1,
+                    'offset' => $pages[1]
+                ]);
+
+                if (!$notifications) {
+                    return Factory::response([]);
+                }
+
+                $response['notification'] = Factory::exportable($notifications)[0];
+
                 break;
             case 'list':
             default:
