@@ -63,6 +63,11 @@ class notifications implements Interfaces\Api
 
                 $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
+                $filter = $pages[0];
+
+                if ($filter === 'list' || $filter === 'all') {
+                    $filter = '';
+                }
 
                 if ($limit > static::MAX_NOTIFICATIONS_PER_PAGE) {
                     $limit = static::MAX_NOTIFICATIONS_PER_PAGE;
@@ -70,7 +75,8 @@ class notifications implements Interfaces\Api
 
                 $notifications = Helpers\Notifications::get([
                     'limit' => $limit,
-                    'offset' => $offset
+                    'offset' => $offset,
+                    'filter' => $filter
                 ]);
 
                 if (!$notifications) {

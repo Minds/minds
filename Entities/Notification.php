@@ -30,6 +30,7 @@ class Notification extends DenormalizedEntity
     protected $entity;
     protected $from;
     protected $owner;
+    protected $filter;
 
     protected $exportableDefaults = [
         'type',
@@ -44,6 +45,7 @@ class Notification extends DenormalizedEntity
         'entity',
         'from',
         'owner',
+        'filter',
     ];
 
     /**
@@ -55,6 +57,8 @@ class Notification extends DenormalizedEntity
         if (!$this->to) {
             throw new \UnexpectedValueException('Missing target User');
         }
+
+        $creating = !$this->guid;
 
         // generate a GUID (if not present) before saving
         $this->getGuid();
@@ -68,18 +72,49 @@ class Notification extends DenormalizedEntity
             'access_id' => $this->access_id,
             'params' => $this->params ?: (object) [],
             'time_created' => $this->time_created,
-            'to' => $this->to->export(),
-            'entity' => $this->entity ? $this->entity->export() : null,
-            'from' => $this->from ? $this->from->export() : null,
-            'owner' => $this->owner ? $this->owner->export() : null,
+            'to' => $this->to ?: null,
+            'entity' => $this->entity ?: null,
+            'from' => $this->from ?: null,
+            'owner' => $this->owner ?: null,
+            'filter' => $this->filter,
         ];
 
-        $serialized = json_encode($data);
-        $this->db->insert('notifications:' . $this->to->guid, [
-            $this->guid => $serialized
-        ]);
+        // Might-be-exportable properties
+        foreach (['to', 'entity', 'from', 'owner'] as $exportable) {
+            if (!is_object($data[$exportable])) {
+                continue;
+            }
 
-        Notifications::increaseCounter($this->to->guid);
+            if (!method_exists($data[$exportable], 'export')) {
+                continue;
+            }
+
+            $data[$exportable] = $data[$exportable]->export();
+        }
+
+        $to = $this->to;
+
+        if (isset($this->to->guid)) {
+            $to = $this->to->guid;
+        } elseif (isset($this->to['guid'])) {
+            $to = $this->to['guid'];
+        }
+
+        $this->rowKey = 'notifications:' . $to;
+        $this->saveToDb($data);
+
+        if ($this->filter) {
+            $oldRowKey = $this->rowKey;
+            $this->rowKey = 'notifications:' . $to . ':' . $this->filter;
+
+            $this->saveToDb($data);
+
+            $this->rowKey = $oldRowKey;
+        }
+
+        if ($creating) {
+            Notifications::increaseCounter($to);
+        }
 
         return $this;
     }
@@ -265,7 +300,7 @@ class Notification extends DenormalizedEntity
      */
     public function setTo($to)
     {
-        $this->to = is_numeric($to) ? Factory::build($to) : $to; 
+        $this->to = is_numeric($to) ? Factory::build($to) : $to;
         return $this;
     }
 
@@ -295,7 +330,7 @@ class Notification extends DenormalizedEntity
      */
     public function getFrom()
     {
-     
+
         if (Core\Session::isLoggedIn()) {
             $this->from['subscribed'] = Core\Session::getLoggedInUser()->isSubscribed((int) $this->from['guid']);
             $this->from['subscriber'] = Core\Session::getLoggedInUser()->isSubscriber((int) $this->from['guid']);
@@ -332,6 +367,26 @@ class Notification extends DenormalizedEntity
     public function setOwner($owner)
     {
         $this->owner = is_numeric($owner) ? Factory::build($owner) : $owner;
+        return $this;
+    }
+
+    /**
+     * Returns the value of `filter` property
+     * @return mixed
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    /**
+     * Sets the value of `filter` property
+     * @param $filter mixed
+     * @return Entities\Notification
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
         return $this;
     }
 }

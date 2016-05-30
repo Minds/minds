@@ -9,6 +9,7 @@ use Minds\Core\Notification\Extensions\Push;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Notification\Factory as NotificationFactory;
 use Minds\Core\Notification\Entity as EntityNotification;
+use Minds\Helpers;
 
 class Events
 {
@@ -78,6 +79,16 @@ class Events
                     ->setOwner($to_user ? $to_user : static::getCurrentUser())
                     ->setParams($params['params'])
                     ->setTimeCreated(time());
+
+                if (!isset($params['filter'])) {
+                    $filter = Helpers\Notifications::parseFilter($notification);
+                } else {
+                    $filter = $params['filter'];
+                }
+
+                if ($filter) {
+                    $notification->setFilter($filter);
+                }
 
                 if (!$params['dry']) {
                     $notification->save();

@@ -10,6 +10,7 @@ use Minds\Core\Events;
 use Minds\Core\Notification\Factory as NotificationFactory;
 use Minds\Entities\Factory;
 use Minds\Helpers\Counters;
+use Minds\Entities\Notification as NotificationEntity;
 
 class Notifications
 {
@@ -104,10 +105,19 @@ class Notifications
             'user_guid' => Core\Session::getLoggedinUserGuid(),
             'reversed' => true,
             'limit' => 12,
-            'offset' => ''
+            'offset' => '',
+            'filter' => ''
         ];
 
+        $filters = [ 'tags', 'comments', 'boosts', 'groups', 'subscriptions', 'votes', 'reminds' ];
         $options = array_merge($defaults, $options);
+
+        $filter = '';
+
+        if ($options['filter'] && in_array($options['filter'], $filters)) {
+            $filter = $options['filter'];
+            $filterSuffix = ":{$filter}";
+        }
 
         $args = [
             'reversed' => $options['reversed'],
@@ -117,17 +127,63 @@ class Notifications
 
         $db = new Core\Data\Call('entities_by_time');
 
-        $rows = $db->getRow('notifications:' . $options['user_guid'], $args);
+        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filterSuffix, $args);
 
-        if ($args['offset']) {
+        if ($args['offset'] && $rows) {
             unset($rows[$args['offset']]);
         }
+
+        // if ($filter && !$args['offset'] && !$rows) {
+        //     return static::filterBackwardsPolyfill($db, $filter, $options);
+        // }
 
         $rows = static::polyfillNotifications($rows);
 
         return NotificationFactory::buildFromArray($rows);
     }
 
+    /**
+     * Fetches last 150 legacy non-filtered database rows, parses the filter they belong to,
+     * saves them onto database and returns the requested subset.
+     * @param  Call   $db
+     * @param  string $filter
+     * @param  array  $options
+     * @return array
+     */
+    protected static function filterBackwardsPolyfill($db, $filter = '', array $options = []) {
+
+        if (!$filter || !isset($options['user_guid'])) {
+            return [];
+        }
+
+        $rawRows = $db->getRow('notifications:' . $options['user_guid'], [
+            'reversed' => true,
+            'limit' => 150
+        ]) ?: [];
+
+        $rows = NotificationFactory::buildFromArray(static::polyfillNotifications($rawRows));
+        $results = [];
+
+        // [ 'tags', 'comments', 'boosts', 'groups', 'subscriptions', 'votes', 'reminds' ];
+        foreach ($rows as $row) {
+            $parsedFilter = static::parseFilter($row);
+
+            if ($parsedFilter == $filter) {
+                $results[] = $row;
+            }
+        }
+
+        // Save this set
+        foreach ($results as $row) {
+            $row->setFilter($filter);
+            $row->save();
+        }
+
+        // Return requested subset (there shouldn't be an offset specified)
+        return array_slice($results, 0 - $options['limit']);
+    }
+
+    //TODO: error_log this (to check usage)
     /**
      * Handles legacy notification rows in database
      * @param  array &$rows
@@ -179,5 +235,68 @@ class Notifications
         }
 
         return $rows;
+    }
+
+    public static function parseFilter(NotificationEntity $notification) {
+        $filter = '';
+
+        switch ($notification->getNotificationView()) {
+            case 'friends':
+            case 'missed_call':
+            case 'welcome_chat':
+            case 'welcome_discover':
+                $filter = 'subscriptions';
+                break;
+
+            case 'group_invite':
+            case 'group_kick':
+            case 'group_activity':
+                $filter = 'groups';
+                break;
+
+            case 'comment':
+                $filter = 'comments';
+                break;
+
+            case 'like':
+            case 'downvote':
+                $filter = 'votes';
+                break;
+
+            case 'remind':
+                $filter = 'reminds';
+                break;
+
+            case 'tag':
+                $filter = 'tags';
+                break;
+
+            case 'boost_gift':
+            case 'boost_submitted':
+            case 'boost_submitted_p2p':
+            case 'boost_request':
+            case 'boost_rejected':
+            case 'boost_accepted':
+            case 'boost_completed':
+            case 'boost_peer_request':
+            case 'boost_peer_accepted':
+            case 'boost_peer_rejected':
+            case 'welcome_points':
+            case 'welcome_boost':
+                $filter = 'boosts';
+                break;
+
+            case 'custom_message':
+                if (
+                    $notification->getParams() &&
+                    $notification->getParams()['message'] &&
+                    strpos($notification->getParams()['message'], 'points as a daily login reward') !== false
+                ) {
+                    $filter = 'boosts';
+                }
+                break;
+        }
+
+        return $filter;
     }
 }
