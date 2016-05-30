@@ -40,7 +40,6 @@ export class MessengerUserlist {
 
   minds: Minds = window.Minds;
   storage: Storage = new Storage();
-  messengerRoom: string;
 
   socketSubscriptions = {
     touchConversation: null
@@ -148,9 +147,6 @@ export class MessengerUserlist {
   }
 
   listen(){
-    this.messengerRoom = `messenger:${window.Minds.user.guid}`;
-    this.sockets.join(this.messengerRoom);
-
     this.socketSubscriptions.touchConversation = this.sockets.subscribe('touchConversation', (guid) => {
 
       for(var i in this.dockpanes.conversations) {
@@ -171,10 +167,6 @@ export class MessengerUserlist {
   }
 
   unListen() {
-    if (this.messengerRoom) {
-      this.sockets.leave(this.messengerRoom);
-    }
-
     for (let sub in this.socketSubscriptions) {
       if (this.socketSubscriptions[sub]) {
         this.socketSubscriptions[sub].unsubscribe();
