@@ -6,6 +6,7 @@ namespace Minds\Core\Sockets;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Config;
+use Minds\Entities\User;
 
 class Events
 {
@@ -18,6 +19,7 @@ class Events
     const EMITTER_UID = '$MINDS_ENGINE_EMITTER';
     const EVENT = 2;
     const BINARY_EVENT = 5;
+    const LIVE_ROOM_NAME = 'messenger'; // TODO: Change to `live`
 
     public function __construct($redis = null, $msgpack = null)
     {
@@ -118,6 +120,24 @@ class Events
         }
 
         return $this;
+    }
+
+    public function live($users) {
+        if (!is_array($users)) {
+            $users = [ $users ];
+        }
+
+        $rooms = [];
+
+        foreach ($users as $user) {
+            if ($user instanceof User) {
+                $user = $user->guid;
+            }
+
+            $rooms[] = static::LIVE_ROOM_NAME . ':' . $user;
+        }
+
+        return $this->to($rooms);
     }
 
     public function of($nsp)

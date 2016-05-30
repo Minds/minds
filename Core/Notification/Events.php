@@ -10,6 +10,7 @@ use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Notification\Factory as NotificationFactory;
 use Minds\Core\Notification\Entity as EntityNotification;
 use Minds\Helpers;
+use Minds\Core\Sockets;
 
 class Events
 {
@@ -99,6 +100,12 @@ class Events
                         'to' => $to_user,
                         'params' => $params
                     ]);
+
+                    try {
+                        (new Sockets\Events())
+                        ->live($to_user)
+                        ->emit('notification', (string) $notification->getGuid());
+                    } catch (\Exception $e) { /* TODO: To log or not to log */ }
                 }
 
                 $notifications[] = $notification;
