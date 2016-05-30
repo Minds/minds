@@ -44,7 +44,7 @@ class ConversationsCache
         try{
             $config = $this->config->get('redis');
             $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
-            $keys = $this->redis->smembers("object:gathering:conversations:{$this->user_guid}");
+            $return = $this->redis->smembers("object:gathering:conversations:{$this->user_guid}");
         } catch (\Exception $e){}
 
         return $return;

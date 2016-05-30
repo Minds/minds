@@ -44,18 +44,17 @@ class Conversations
         $prepared = new Cassandra\Prepared\Custom();
         $prepared->query("SELECT * from entities_by_time WHERE key=:row LIMIT :size", [
           'row' => "object:gathering:conversations:{$this->user->guid}",
-          'size' => (int) $limit
+          'size' => 10000
         ]);
 
         //check cache for ids to return
         if(!$offset){
             $guids = $this->cache->setUser($this->user)->getGuids();
-
             if($guids && is_array($guids)){
                 $prepared->query("SELECT * from entities_by_time WHERE key=:row AND column1 IN :guids LIMIT :size", [
                   'row' => "object:gathering:conversations:{$this->user->guid}",
                   'guids' => $guids,
-                  'size' => (int) $limit
+                  'size' => 1000
                 ]);
             }
         }
