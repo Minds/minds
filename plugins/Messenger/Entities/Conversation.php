@@ -9,6 +9,7 @@ use Minds\Core\Session;
 use Minds\Core\Di\Di;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\User;
+use Minds\Plugin\Messenger;
 
 class Conversation extends DenormalizedEntity{
 
@@ -121,6 +122,7 @@ class Conversation extends DenormalizedEntity{
 
 	public function saveToParticipants($participants = [])
 	{
+      $cache = new Messenger\Core\ConversationsCache();
 			foreach($participants as $participant_guid){
 					$this->db->insert("object:gathering:conversations:$participant_guid", [
 						$this->getGuid() => json_encode([
@@ -129,6 +131,7 @@ class Conversation extends DenormalizedEntity{
 							'participants' => array_values($this->participants)
 						])
 					]);
+          $cache->setUser($participant_guid)->saveList([$this]);
 			}
 	}
 
