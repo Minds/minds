@@ -13,6 +13,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
+use Minds\Core\Sockets;
 
 class comments implements Interfaces\Api
 {
@@ -29,8 +30,9 @@ class comments implements Interfaces\Api
         $guid = $pages[0];
 
         $indexes = new Data\indexes('comments');
-        $guids = $indexes->get($guid, array('limit'=>\get_input('limit', 3), 'offset'=>\get_input('offset', ''), 'reversed'=>\get_input('reversed', false)));
-        if (isset($guids[get_input('offset')])) {
+        $limit = \get_input('limit', 3);
+        $guids = $indexes->get($guid, array('limit'=>$limit, 'offset'=>\get_input('offset', ''), 'reversed'=>\get_input('reversed', false)));
+        if (isset($guids[get_input('offset')]) && $limit > 1) {
             unset($guids[get_input('offset')]);
         }
 
@@ -54,6 +56,7 @@ class comments implements Interfaces\Api
         $response['comments'] = factory::exportable($comments);
         $response['load-next'] = (string) end($comments)->guid;
         $response['load-previous'] = (string) reset($comments)->guid;
+        $response['socketRoomName'] = "comments:{$guid}";
 
         return Factory::response($response);
     }
@@ -62,6 +65,7 @@ class comments implements Interfaces\Api
     {
         $response = array();
         $error = false;
+        $emitToSocket = false;
 
         switch ($pages[0]) {
           case "update":
@@ -128,6 +132,9 @@ class comments implements Interfaces\Api
                     'notification_view'=>'comment'
                 ));
 
+                // Defer emitting after processing attachments
+                $emitToSocket = true;
+
                 \elgg_trigger_event('comment:create', 'comment', $data);
 
                 $indexes = new data\indexes();
@@ -193,6 +200,15 @@ class comments implements Interfaces\Api
         if ($modified) {
             $comment->save();
             $response['comment'] = $comment->export();
+        }
+
+        // Emit at the end because of attachment processing
+        if ($emitToSocket) {
+            try {
+                (new Sockets\Events())
+                ->to("comments:{$pages[0]}")
+                ->emit('comment', $pages[0], (string) $comment->owner_guid, (string) $comment->guid);
+            } catch (\Exception $e) { /* TODO: To log or not to log */ }
         }
 
         return Factory::response($response);
