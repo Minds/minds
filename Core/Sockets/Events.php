@@ -19,7 +19,7 @@ class Events
     const EMITTER_UID = '$MINDS_ENGINE_EMITTER';
     const EVENT = 2;
     const BINARY_EVENT = 5;
-    const LIVE_ROOM_NAME = 'messenger'; // TODO: Change to `live`
+    const LIVE_ROOM_NAME = 'live';
 
     public function __construct($redis = null, $msgpack = null)
     {
