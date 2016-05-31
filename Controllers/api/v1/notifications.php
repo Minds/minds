@@ -65,8 +65,8 @@ class notifications implements Interfaces\Api
                 if (!$notifications) {
                     return Factory::response([]);
                 }
-
-                $response['notification'] = Factory::exportable($notifications)[0];
+                $notifications = $this->polyfillResponse(Factory::exportable($notifications));
+                $response['notification'] = $notifications[0];
 
                 break;
             case 'list':
@@ -97,26 +97,7 @@ class notifications implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $response['notifications'] = Factory::exportable($notifications);
-
-                // Formatting for legacy notification handling in frontend
-                // TODO: [ignacio] refactor frontend rendering
-
-                foreach ($response['notifications'] as $key => $data) {
-                    $response['notifications'][$key]['ownerObj'] = $data['owner'];
-                    $response['notifications'][$key]['fromObj'] = $data['from'];
-                    $response['notifications'][$key]['from_guid'] = (string) $data['from']['guid'];
-
-                    if ($data['entity']) {
-                        $response['notifications'][$key]['entityObj'] = $data['entity'];
-                    }
-
-                    //temp mobile move
-                    if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
-                        unset($response['notifications'][$key]);
-                    }
-                }
-
+                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications));
                 $response['load-next'] = (string) end($notifications)->getGuid();
                 //$response['load-previous'] = (string) key($notifications)->getGuid();
 
@@ -174,5 +155,30 @@ class notifications implements Interfaces\Api
     public function delete($pages)
     {
         return Factory::response(array());
+    }
+
+    protected function polyfillResponse($notifications)
+    {
+        if (!is_array($notifications)) {
+            return $notifications;
+        }
+
+        // Formatting for legacy notification handling in frontend
+        foreach ($notifications as $key => $data) {
+            $notifications[$key]['ownerObj'] = $data['owner'];
+            $notifications[$key]['fromObj'] = $data['from'];
+            $notifications[$key]['from_guid'] = (string) $data['from']['guid'];
+
+            if ($data['entity']) {
+                $notifications[$key]['entityObj'] = $data['entity'];
+            }
+
+            //temp mobile move
+            if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
+                unset($notifications[$key]);
+            }
+        }
+
+        return $notifications;
     }
 }
