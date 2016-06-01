@@ -40,6 +40,7 @@ class Conversations
     {
 
         $conversations = [];
+        $usingCache = false;
 
         $prepared = new Cassandra\Prepared\Custom();
         $prepared->query("SELECT * from entities_by_time WHERE key=:row LIMIT :size", [
@@ -50,12 +51,13 @@ class Conversations
         //check cache for ids to return
         if(!$offset){
             $guids = $this->cache->setUser($this->user)->getGuids();
-            if($guids && is_array($guids)){
+            if($guids && is_array($guids) && count($guids) >= 12){
                 $prepared->query("SELECT * from entities_by_time WHERE key=:row AND column1 IN :guids LIMIT :size", [
                   'row' => "object:gathering:conversations:{$this->user->guid}",
                   'guids' => $guids,
                   'size' => 1000
-                ]);
+                  ]);
+                $usingCache = true;
             }
         }
 
@@ -113,7 +115,7 @@ class Conversations
         $return = array_slice($return, (int) $offset, $limit);
         $return = $this->filterOnline($return);
         $this->runUpgrades();
-        if(!$offset){
+        if(!$offset && !$usingCache){
             $this->cache->setUser($this->user)->saveList($return);
         }
         return $return;
