@@ -30,6 +30,12 @@ class newsfeed implements Interfaces\Api
             $pages[0] = 'network';
         }
 
+        $justCount = false;
+        if ($pages[0] == 'count') {
+            $justCount = true;
+            array_shift($pages);
+        }
+
         switch ($pages[0]) {
           case 'single':
               $activity = new \Minds\Entities\Activity($pages[1]);
@@ -51,6 +57,41 @@ class newsfeed implements Interfaces\Api
               'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
             );
             break;
+        }
+
+        if ($justCount) {
+            $offset = get_input('offset', '');
+
+            if (!$offset) {
+                return Factory::response([
+                    'count' => 0,
+                    'load-next' => ''
+                ]);
+            }
+
+            $guids = Core\Entities::get(array_merge(array(
+                'type' => 'activity',
+                'offset'=> $offset,
+                'timebased' => true,
+                'newest_first' => false,
+                'hydrate' => false
+            ), $options));
+
+            if (!$guids) {
+                return Factory::response([
+                    'count' => 0,
+                    'load-next' => $offset
+                ]);
+            }
+
+            if (isset($guids[$offset])) {
+                unset($guids[$offset]);
+            }
+
+            return Factory::response([
+                'count' => count($guids),
+                'load-next' => (string) end(array_values($guids)) ?: $offset
+            ]);
         }
 
         //daily campaign reward
