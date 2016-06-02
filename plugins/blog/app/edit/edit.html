@@ -36,11 +36,14 @@
       </select>
     </div>
     <div class="m-mature-info">
-      <i class="material-icons">explicit</i>
-      <select [ngModel]="blog.mature" (change)="blog.mature = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option [value]="0">Everyone</option>
-          <option [value]="1">Explicit content</option>
-      </select>
+      <a class="mdl-color-text--blue-grey-300 m-capture-mature" (click)="blog.mature = blog.mature ? 0 : 1">
+        <i class="material-icons"
+        [ngClass]="{ 'mdl-color-text--red-500': blog.mature }"
+        title="Mature content"
+        >explicit</i>
+        
+        <span [ngClass]="{ 'mdl-color-text--red-500': blog.mature }">{{ blog.mature ? 'Mature content' : 'Anyone' }}</span>
+      </a>
     </div>
   </div>
 
