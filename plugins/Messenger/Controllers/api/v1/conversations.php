@@ -246,6 +246,9 @@ class conversations implements Interfaces\Api
                 $messenger_rooms[] = "messenger:{$guid}";
             }
 
+            if(!$messenger_rooms)
+                return;
+
             try {
                 (new Sockets\Events())
                 ->to($messenger_rooms)
