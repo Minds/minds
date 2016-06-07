@@ -46,8 +46,8 @@ export class BlogViewInfinite {
       this.minds = window.Minds;
   }
 
-  ngOnInit(){
-    this.load();
+  ngAfterViewInit(){
+      this.load();
   }
 
   load(refresh : boolean = false){
@@ -59,13 +59,18 @@ export class BlogViewInfinite {
     this.client.get('api/v1/blog/' + this.guid, {})
       .then((response : MindsBlogResponse) => {
         if(response.blog){
-          this.blogs.push(response.blog);
+          this.blogs = [response.blog];
           this.title.setTitle(response.blog.title);
         } else if(this.blogs.length == 0){
           this.error = "Sorry, we couldn't load the blog";
         }
         //hack: ios rerun on low memory
-        this.applicationRef.tick();
+        this.applicationRef.run(() => {
+          this.applicationRef.tick();
+          setTimeout(() => {
+            this.applicationRef.tick()
+          }, 100);
+        });
         this.inProgress = false;
       })
       .catch((e) => {
