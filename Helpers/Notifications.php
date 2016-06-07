@@ -125,7 +125,7 @@ class Notifications
 
         $db = new Core\Data\Call('entities_by_time');
 
-        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filter, $args);
+        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filter, $args) ?: [];
 
         if ($args['offset'] && $args['limit'] > 1 && $rows) {
             unset($rows[$args['offset']]);
