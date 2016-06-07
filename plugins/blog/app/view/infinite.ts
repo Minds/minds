@@ -1,4 +1,4 @@
-import { Component, Inject } from 'angular2/core';
+import { Component, Inject, ApplicationRef } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -39,11 +39,15 @@ export class BlogViewInfinite {
 
   error: string = '';
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
+  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle,
+    private applicationRef : ApplicationRef){
       if(params.params['guid'])
         this.guid = params.params['guid'];
       this.minds = window.Minds;
-      this.load();
+  }
+
+  ngOnInit(){
+    this.load();
   }
 
   load(refresh : boolean = false){
@@ -60,6 +64,8 @@ export class BlogViewInfinite {
         } else if(this.blogs.length == 0){
           this.error = "Sorry, we couldn't load the blog";
         }
+        //hack: ios rerun on low memory
+        this.applicationRef.tick();
         this.inProgress = false;
       })
       .catch((e) => {

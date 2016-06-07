@@ -56,7 +56,10 @@ export class BlogView {
   constructor(public client: Client, public router: Router, _element : ElementRef,  public scroll: ScrollService, public title: MindsTitle, public attachment: AttachmentService){
       this.minds = window.Minds;
       this.element = _element.nativeElement;
-      this.isVisible();
+  }
+
+  ngOnInit(){
+    this.isVisible();
   }
 
   isVisible(){
