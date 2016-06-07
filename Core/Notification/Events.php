@@ -103,7 +103,7 @@ class Events
 
                     try {
                         (new Sockets\Events())
-                        ->live($to_user)
+                        ->setUser($to_user)
                         ->emit('notification', (string) $notification->getGuid());
                     } catch (\Exception $e) { /* TODO: To log or not to log */ }
                 }

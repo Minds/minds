@@ -103,44 +103,38 @@ class Events
         return isset($this->flags[$flag]) && $this->flags[$flag];
     }
 
-    public function to($rooms)
+    public function setRoom($room)
     {
-        if (!is_array($rooms)) {
-            $rooms = [ $rooms ];
+        if (!$room) {
+            $this->rooms = [];
+            return $this;
         }
-
-        foreach ($rooms as $room) {
-            if (!$room) {
-                continue;
-            }
-
-            if (!in_array($room, $this->rooms)) {
-                $this->rooms[] = $room;
-            }
-        }
-
+        
+        $this->rooms = [ $room ];
         return $this;
     }
 
-    public function live($users) {
-        if (!is_array($users)) {
-            $users = [ $users ];
-        }
-
-        $rooms = [];
-
-        foreach ($users as $user) {
-            if ($user instanceof User) {
-                $user = $user->guid;
-            }
-
-            $rooms[] = static::LIVE_ROOM_NAME . ':' . $user;
-        }
-
-        return $this->to($rooms);
+    public function setRooms(array $rooms)
+    {
+        $this->rooms = array_unique(array_filter($rooms, 'strlen'));
+        return $this;
+    }
+    
+    public function setUser($user)
+    {
+        return $this->setRoom(static::LIVE_ROOM_NAME . ':' . $user);
+    }
+    
+    public function setUsers(array $users)
+    {
+        $users = array_unique(array_filter($users, 'strlen'));
+        
+        return $this->setRooms(array_map(function($user) {
+            return static::LIVE_ROOM_NAME . ':' . $user;
+        }, $users));
     }
 
-    public function of($nsp)
+    public function setNamespace($nsp)
     {
         $this->flags['nsp'] = $nsp;
         return $this;

@@ -67,4 +67,33 @@ class Entities extends base
             return (new $default())->loadFromArray((array) $row);
         }
     }
+    
+    public static function buildNamespace(array $options)
+    {
+        $options = $options + [
+            'type' => null,
+            'subtype' => null,
+            'owner_guid' => null,
+            'container_guid' => null,
+            'network' => null,
+        ];
+        $namespace = $options['type'] ?: 'object';
+        
+        if ($options['subtype']) {
+            $namespace .= ':' . $option['subtype'];
+        }
+        
+        if ($options['owner_guid']) {
+            $namespace .= ':user:' . $options['owner_guid'];
+        }
+        
+        if ($options['container_guid']) {
+            $namespace .= ':container:' . $options['container_guid'];
+        }
+        if ($options['network']) {
+            $namespace .= ':network:' . $options['network'];
+        }
+        
+        return $namespace;
+    }
 }

@@ -781,8 +781,6 @@ function elgg_get_entities(array $options = array()) {
         'attrs'             => array(),
 
         'callback'              => 'entity_row_to_elggstar',
-
-        'hydrate'               => true,
     );
 
     $options = array_merge($defaults, $options);
@@ -843,10 +841,6 @@ function elgg_get_entities(array $options = array()) {
                     if(!$options['count']){
                         $db = new Minds\Core\Data\Call('entities_by_time');
                         $guids = $db->getRow($namespace, array('offset'=>$options['offset'], 'limit'=>$options['limit'], 'reversed'=> $options['newest_first']));
-
-                        if (!$options['hydrate']) {
-                            return $guids ?: [];
-                        }
 
                         if(!$guids){
                             return false;

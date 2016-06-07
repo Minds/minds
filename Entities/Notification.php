@@ -72,20 +72,19 @@ class Notification extends DenormalizedEntity
             'access_id' => $this->access_id,
             'params' => $this->params ?: (object) [],
             'time_created' => $this->time_created,
-            'to' => $this->to ?: null,
-            'entity' => $this->entity ?: null,
-            'from' => $this->from ?: null,
-            'owner' => $this->owner ?: null,
+            'to' => $this->to,
+            'entity' => $this->entity,
+            'from' => $this->from,
+            'owner' => $this->owner,
             'filter' => $this->filter,
         ];
 
         // Might-be-exportable properties
         foreach (['to', 'entity', 'from', 'owner'] as $exportable) {
-            if (!is_object($data[$exportable])) {
-                continue;
-            }
-
-            if (!method_exists($data[$exportable], 'export')) {
+            if (
+                !is_object($data[$exportable]) ||
+                !method_exists($data[$exportable], 'export')
+            ) {
                 continue;
             }
 

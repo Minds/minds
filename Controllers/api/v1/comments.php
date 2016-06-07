@@ -206,7 +206,7 @@ class comments implements Interfaces\Api
         if ($emitToSocket) {
             try {
                 (new Sockets\Events())
-                ->to("comments:{$pages[0]}")
+                ->setRoom("comments:{$pages[0]}")
                 ->emit('comment', $pages[0], (string) $comment->owner_guid, (string) $comment->guid);
             } catch (\Exception $e) { /* TODO: To log or not to log */ }
         }

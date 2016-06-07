@@ -109,14 +109,12 @@ class Notifications
             'filter' => ''
         ];
 
-        $filters = [ 'tags', 'comments', 'boosts', 'groups', 'subscriptions', 'votes', 'reminds' ];
+        $allowedFilters = [ 'tags', 'comments', 'boosts', 'groups', 'subscriptions', 'votes', 'reminds' ];
         $options = array_merge($defaults, $options);
-
         $filter = '';
 
-        if ($options['filter'] && in_array($options['filter'], $filters)) {
-            $filter = $options['filter'];
-            $filterSuffix = ":{$filter}";
+        if ($options['filter'] && in_array($options['filter'], $allowedFilters)) {
+            $filter = ":{$options['filter']}";
         }
 
         $args = [
@@ -127,7 +125,7 @@ class Notifications
 
         $db = new Core\Data\Call('entities_by_time');
 
-        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filterSuffix, $args);
+        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filter, $args);
 
         if ($args['offset'] && $args['limit'] > 1 && $rows) {
             unset($rows[$args['offset']]);

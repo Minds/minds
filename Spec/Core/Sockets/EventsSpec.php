@@ -91,6 +91,48 @@ class EventsSpec extends ObjectBehavior
         $this->emit('phpspec', '123456')->shouldReturn($this);
     }
 
+    function it_should_emit_to_room(RedisPubSubClient $redis, MsgPack $msgpack)
+    {
+        $this->beConstructedWith($redis, $msgpack);
+
+        $msgpack->pack([
+            OriginalEventsClass::EMITTER_UID,
+            [
+                'type' => OriginalEventsClass::EVENT,
+                'data' => [ 'phpspec', '123456' ],
+                'nsp' => '/'
+            ],
+            [ 'flags' => [], 'rooms' => [ 'phpspec:0000' ] ]
+        ])->shouldBeCalled()->willReturn('000$PHPSPEC_PACK_MOCK$000');
+
+        $redis->publish('socket.io#/#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
+
+        $this->setRoom('phpspec:0000');
+        $this->emit('phpspec', '123456')->shouldReturn($this);
+    }
+
+    function it_should_emit_to_room_overwrite(RedisPubSubClient $redis, MsgPack $msgpack)
+    {
+        $this->beConstructedWith($redis, $msgpack);
+
+        $msgpack->pack([
+            OriginalEventsClass::EMITTER_UID,
+            [
+                'type' => OriginalEventsClass::EVENT,
+                'data' => [ 'phpspec', '123456' ],
+                'nsp' => '/'
+            ],
+            [ 'flags' => [], 'rooms' => [ 'phpspec:0001' ] ]
+        ])->shouldBeCalled()->willReturn('000$PHPSPEC_PACK_MOCK$000');
+
+        $redis->publish('socket.io#/#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
+
+        $this->setRoom('phpspec:0000');
+        $this->setRoom(null);
+        $this->setRoom('phpspec:0001');
+        $this->emit('phpspec', '123456')->shouldReturn($this);
+    }
+
     function it_should_emit_to_rooms(RedisPubSubClient $redis, MsgPack $msgpack)
     {
         $this->beConstructedWith($redis, $msgpack);
@@ -107,7 +149,47 @@ class EventsSpec extends ObjectBehavior
 
         $redis->publish('socket.io#/#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
 
-        $this->to([ 'phpspec:0000', 'phpspec:0001' ]);
+        $this->setRooms([ 'phpspec:0000', 'phpspec:0001', null, false, '' ]);
+        $this->emit('phpspec', '123456')->shouldReturn($this);
+    }
+
+    function it_should_emit_to_user_room(RedisPubSubClient $redis, MsgPack $msgpack)
+    {
+        $this->beConstructedWith($redis, $msgpack);
+
+        $msgpack->pack([
+            OriginalEventsClass::EMITTER_UID,
+            [
+                'type' => OriginalEventsClass::EVENT,
+                'data' => [ 'phpspec', '123456' ],
+                'nsp' => '/'
+            ],
+            [ 'flags' => [], 'rooms' => [ 'live:0000' ] ]
+        ])->shouldBeCalled()->willReturn('000$PHPSPEC_PACK_MOCK$000');
+
+        $redis->publish('socket.io#/#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
+
+        $this->setUser('0000');
+        $this->emit('phpspec', '123456')->shouldReturn($this);
+    }
+
+    function it_should_emit_to_user_rooms(RedisPubSubClient $redis, MsgPack $msgpack)
+    {
+        $this->beConstructedWith($redis, $msgpack);
+
+        $msgpack->pack([
+            OriginalEventsClass::EMITTER_UID,
+            [
+                'type' => OriginalEventsClass::EVENT,
+                'data' => [ 'phpspec', '123456' ],
+                'nsp' => '/'
+            ],
+            [ 'flags' => [], 'rooms' => [ 'live:0000', 'live:0001' ] ]
+        ])->shouldBeCalled()->willReturn('000$PHPSPEC_PACK_MOCK$000');
+
+        $redis->publish('socket.io#/#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
+
+        $this->setUsers([ '0000', '0001', null, false, '' ]);
         $this->emit('phpspec', '123456')->shouldReturn($this);
     }
 
@@ -127,7 +209,7 @@ class EventsSpec extends ObjectBehavior
 
         $redis->publish('socket.io#/phpspec#', '000$PHPSPEC_PACK_MOCK$000')->shouldBeCalled();
 
-        $this->of('/phpspec');
+        $this->setNamespace('/phpspec');
         $this->emit('phpspec', '123456')->shouldReturn($this);
     }
 }
