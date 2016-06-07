@@ -175,7 +175,7 @@ class conversations implements Interfaces\Api
 
         try {
             (new Sockets\Events())
-              ->to($conversation->buildSocketRoomName())
+              ->setRoom($conversation->buildSocketRoomName())
               ->emit('pushConversationMessage', (string) $conversation->getGuid(), $emit);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
@@ -263,7 +263,7 @@ class conversations implements Interfaces\Api
 
         try {
             (new Sockets\Events())
-              ->to($conversation->buildSocketRoomName())
+              ->setRoom($conversation->buildSocketRoomName())
               ->emit('clearConversation', (string) $conversation->getGuid(), [
                   'guid' => (string) $user->guid,
                   'name' => $user->name
@@ -290,7 +290,7 @@ class conversations implements Interfaces\Api
 
             try {
                 (new Sockets\Events())
-                ->live($users)
+                ->setUsers($users)
                 ->emit('touchConversation', (string) $conversation->getGuid());
             } catch (\Exception $e) { /* TODO: To log or not to log */ }
         }
