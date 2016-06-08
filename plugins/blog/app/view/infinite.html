@@ -1,10 +1,15 @@
-<div class="m-error-splash" *ngIf="error && !inProgress">
-  <h3 class="mdl-color-text--red-300">{{error}}</h3>
-  <span class="mdl-color-text--blue-grey-300">The blog post may not exist</span>
+<div [hidden]="blogs.length > 0 || error" style="width:100%; text-align:center; ">
+  <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
 </div>
 
+<div class="m-error-splash" *ngIf="error && !inProgress">
+  <h3 class="mdl-color-text--red-300">{{error}}</h3>
+  <span class="mdl-color-text--blue-grey-300">Please try again later</span>
+</div>
 
-<m-blog-view *ngFor="#blog of blogs; #i = index" [blog]="blog" [index]="i"></m-blog-view>
+<div class="m-blog-view" *ngFor="#blog of blogs; #i = index">
+  <m-blog-view [blog]="blog" [index]="i"></m-blog-view>
+</div>
 
 <infinite-scroll
     distance="25%"
