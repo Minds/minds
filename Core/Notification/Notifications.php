@@ -3,12 +3,12 @@
  * Notifications helper functions
  */
 
-namespace Minds\Helpers;
+namespace Minds\Core\Notification;
 
 use Minds\Core;
 use Minds\Core\Events;
 use Minds\Core\Notification\Factory as NotificationFactory;
-use Minds\Entities\Factory;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Helpers\Counters;
 use Minds\Entities\Notification as NotificationEntity;
 
@@ -16,15 +16,24 @@ class Notifications
 {
     use \Minds\Traits\CurrentUser;
 
+    protected $db;
+    protected $user;
+
+    public function __construct($db = null)
+    {
+        $this->db = $db ?: new Core\Data\Call('entities_by_time');
+        $this->user = static::getCurrentUser();
+    }
+
     /**
-     * Gets the notifications counter value for an user
+     * Gets the notifications counter value for current user
      * @param  Entity $user    User. Use `null` to get the current one.
      * @param  array  $options
      * @return int
      */
-    public static function getCount($user = null, array $options = [])
+    public function getCount(array $options = [])
     {
-        $user = Factory::build($user ?: static::getCurrentUser(), [
+        $user = EntitiesFactory::build($this->user, [
             'cache' => true
         ]);
 
@@ -43,9 +52,9 @@ class Notifications
      * @param  User   $user
      * @return null
      */
-    public static function increaseCounter($user = null)
+    public function increaseCounter()
     {
-        $user = Factory::build($user ?: static::getCurrentUser(), [
+        $user = EntitiesFactory::build($this->user, [
             'cache' => true
         ]);
 
@@ -70,9 +79,9 @@ class Notifications
      * @param  User   $user
      * @return null
      */
-    public static function resetCounter($user = null)
+    public function resetCounter()
     {
-        $user = Factory::build($user ?: static::getCurrentUser(), [
+        $user = EntitiesFactory::build($this->user, [
             'cache' => true
         ]);
 
@@ -99,10 +108,10 @@ class Notifications
      * @param  array  $options
      * @return array
      */
-    public static function get(array $options = [])
+    public function getList(array $options = [])
     {
         $defaults = [
-            'user_guid' => Core\Session::getLoggedinUserGuid(),
+            'user_guid' => $this->user->guid,
             'reversed' => true,
             'limit' => 12,
             'offset' => '',
@@ -123,48 +132,73 @@ class Notifications
             'offset' => $options['offset']
         ];
 
-        $db = new Core\Data\Call('entities_by_time');
+        $rows = $this->db->getRow('notifications:' . $options['user_guid'] . $filter, $args) ?: [];
 
-        $rows = $db->getRow('notifications:' . $options['user_guid'] . $filter, $args) ?: [];
-
-        if ($args['offset'] && $args['limit'] > 1 && $rows) {
+        if ($args['offset'] && $rows) {
             unset($rows[$args['offset']]);
         }
 
+        // NOT USED (YET)
         // if ($filter && !$args['offset'] && !$rows) {
-        //     return static::filterBackwardsPolyfill($db, $filter, $options);
+        //     return $this->filterBackwardsPolyfill($filter, $options);
         // }
 
-        $rows = static::polyfillNotifications($rows);
+        $rows = $this->polyfillNotifications($rows);
 
         return NotificationFactory::buildFromArray($rows);
     }
 
     /**
+     * Gets a single notification from the database
+     * @param  mixed GUID
+     * @return array
+     */
+    public function getSingle($guid)
+    {
+        $rows = $this->db->getRow('notifications:' . $this->user->guid, [
+            'limit' => 1,
+            'offset' => $guid,
+            'reversed' => false
+        ]) ?: [];
+
+        if (!$rows) {
+            return false;
+        }
+
+        $rows = $this->polyfillNotifications($rows);
+
+        if (!$rows) {
+            return false;
+        }
+
+        return NotificationFactory::build(current($rows));
+    }
+
+    /**
+     * === NOT USED (YET) === 
      * Fetches last 150 legacy non-filtered database rows, parses the filter they belong to,
      * saves them onto database and returns the requested subset.
-     * @param  Call   $db
      * @param  string $filter
      * @param  array  $options
      * @return array
      */
-    protected static function filterBackwardsPolyfill($db, $filter = '', array $options = []) {
+    protected function filterBackwardsPolyfill($filter = '', array $options = []) {
 
         if (!$filter || !isset($options['user_guid'])) {
             return [];
         }
 
-        $rawRows = $db->getRow('notifications:' . $options['user_guid'], [
+        $rawRows = $this->db->getRow('notifications:' . $options['user_guid'], [
             'reversed' => true,
             'limit' => 150
         ]) ?: [];
 
-        $rows = NotificationFactory::buildFromArray(static::polyfillNotifications($rawRows));
+        $rows = NotificationFactory::buildFromArray($this->polyfillNotifications($rawRows));
         $results = [];
 
         // [ 'tags', 'comments', 'boosts', 'groups', 'subscriptions', 'votes', 'reminds' ];
         foreach ($rows as $row) {
-            $parsedFilter = static::parseFilter($row);
+            $parsedFilter = $this->parseFilter($row);
 
             if ($parsedFilter == $filter) {
                 $results[] = $row;
@@ -181,13 +215,12 @@ class Notifications
         return array_slice($results, 0 - $options['limit']);
     }
 
-    //TODO: error_log this (to check usage)
     /**
-     * Handles legacy notification rows in database
+     * Handles legacy notification rows in database (saved as string)
      * @param  array &$rows
      * @return null
      */
-    protected static function polyfillNotifications($rows)
+    protected function polyfillNotifications($rows)
     {
         $guids = [];
 
@@ -204,9 +237,11 @@ class Notifications
             return $rows;
         }
 
+        $rowCount = count($guids);
+        error_log("[DEPRECATION] User {$this->user->guid} has {$rowCount} legacy notifications.", 0);
+
         // Fetch legacy notification rows
-        $db = new Core\Data\Call('entities');
-        $notifications = $db->getRows($guids);
+        $notifications = $this->db->getRows($guids);
 
         // Post-process (apply notification rows)
         foreach ($rows as $guid => $data) {
@@ -235,7 +270,7 @@ class Notifications
         return $rows;
     }
 
-    public static function parseFilter(NotificationEntity $notification) {
+    public function parseFilter(NotificationEntity $notification) {
         $filter = '';
 
         switch ($notification->getNotificationView()) {

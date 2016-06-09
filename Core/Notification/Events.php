@@ -2,6 +2,7 @@
 namespace Minds\Core\Notification;
 
 use Minds\Entities;
+use Minds\Core;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
@@ -82,7 +83,7 @@ class Events
                     ->setTimeCreated(time());
 
                 if (!isset($params['filter'])) {
-                    $filter = Helpers\Notifications::parseFilter($notification);
+                    $filter = (new Core\Notification\Notifications())->parseFilter($notification);
                 } else {
                     $filter = $params['filter'];
                 }

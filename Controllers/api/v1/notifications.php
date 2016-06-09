@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Notification;
 use Minds\Core\Notification\Settings;
 use Minds\Interfaces;
 use Minds\Helpers;
@@ -39,6 +40,7 @@ class notifications implements Interfaces\Api
     public function get($pages)
     {
         Factory::isLoggedIn();
+        $coreNotifications = new Notification\Notifications();
         $response = [];
 
         if (!isset($pages[0])) {
@@ -48,7 +50,7 @@ class notifications implements Interfaces\Api
         switch ($pages[0]) {
 
             case 'count':
-                $response['count'] = Helpers\Notifications::getCount();
+                $response['count'] = $coreNotifications->getCount();
                 break;
             case 'settings':
                 Factory::isLoggedIn();
@@ -56,24 +58,19 @@ class notifications implements Interfaces\Api
                 $response['toggles'] = $toggles;
                 break;
             case 'single':
-                $notifications = Helpers\Notifications::get([
-                    'reversed' => false,
-                    'limit' => 1,
-                    'offset' => $pages[1]
-                ]);
+                $notification = $coreNotifications->getSingle($pages[1]);
 
-                if (!$notifications) {
+                if (!$notification) {
                     return Factory::response([]);
                 }
-                $notifications = $this->polyfillResponse(Factory::exportable($notifications));
-                $response['notification'] = $notifications[0];
+                $response['notification'] = $this->polyfillResponseStruc($notification->export());
 
                 break;
             case 'list':
             default:
                 Factory::isLoggedIn();
 
-                Helpers\Notifications::resetCounter();
+                $coreNotifications->resetCounter();
 
                 $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
@@ -87,7 +84,7 @@ class notifications implements Interfaces\Api
                     $limit = static::MAX_NOTIFICATIONS_PER_PAGE;
                 }
 
-                $notifications = Helpers\Notifications::get([
+                $notifications = $coreNotifications->getList([
                     'limit' => $limit,
                     'offset' => $offset,
                     'filter' => $filter
@@ -157,6 +154,9 @@ class notifications implements Interfaces\Api
         return Factory::response(array());
     }
 
+    /**
+     * Polyfill notifications to be readed by legacy clients
+     */
     protected function polyfillResponse($notifications)
     {
         if (!is_array($notifications)) {
@@ -165,13 +165,7 @@ class notifications implements Interfaces\Api
 
         // Formatting for legacy notification handling in frontend
         foreach ($notifications as $key => $data) {
-            $notifications[$key]['ownerObj'] = $data['owner'];
-            $notifications[$key]['fromObj'] = $data['from'];
-            $notifications[$key]['from_guid'] = (string) $data['from']['guid'];
-
-            if ($data['entity']) {
-                $notifications[$key]['entityObj'] = $data['entity'];
-            }
+            $notifications[$key] = $this->polyfillResponseStruc($data); 
 
             //temp mobile move
             if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
@@ -180,5 +174,20 @@ class notifications implements Interfaces\Api
         }
 
         return $notifications;
+    }
+
+    protected function polyfillResponseStruc($data)
+    {
+        $data['ownerObj'] = $data['owner'];
+        $data['fromObj'] = $data['from'];
+        $data['from_guid'] = (string) $data['from']['guid'];
+
+        if ($data['entity']) {
+            $data['entityObj'] = $data['entity'];
+        }
+
+        $data['legacyStruc'] = true;
+
+        return $data;
     }
 }

@@ -11,7 +11,6 @@ use Minds\Core\Data;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Core\Guid as CoreGuid;
 use Minds\Core\Queue\Client as QueueClient;
-use Minds\Helpers\Notifications;
 use Minds\Helpers\Subscriptions;
 
 class Notification extends DenormalizedEntity
@@ -112,7 +111,7 @@ class Notification extends DenormalizedEntity
         }
 
         if ($creating) {
-            Notifications::increaseCounter($to);
+            (new Core\Notification\Notifications())->increaseCounter($to);
         }
 
         return $this;
