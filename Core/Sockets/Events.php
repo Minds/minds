@@ -109,7 +109,7 @@ class Events
             $this->rooms = [];
             return $this;
         }
-        
+
         $this->rooms = [ $room ];
         return $this;
     }
@@ -119,17 +119,25 @@ class Events
         $this->rooms = array_unique(array_filter($rooms, 'strlen'));
         return $this;
     }
-    
+
     public function setUser($user)
     {
+        if ($user instanceof User) {
+            $user = $user->guid;
+        }
+
         return $this->setRoom(static::LIVE_ROOM_NAME . ':' . $user);
     }
-    
+
     public function setUsers(array $users)
     {
         $users = array_unique(array_filter($users, 'strlen'));
-        
+
         return $this->setRooms(array_map(function($user) {
+            if ($user instanceof User) {
+                $user = $user->guid;
+            }
+
             return static::LIVE_ROOM_NAME . ':' . $user;
         }, $users));
     }
