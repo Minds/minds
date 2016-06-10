@@ -35,7 +35,7 @@ class storage{
         //update if remind
         if($entity->remind_object){
           Helpers\Counters::increment($entity->remind_object['guid'], "thumbs:$direction");
-          if($entity->remind_object['entity_guid']){
+          if(!$entity->remind_object['guid'] && $entity->remind_object['entity_guid']){
             Helpers\Counters::increment($entity->remind_object['entity_guid'], "thumbs:$direction");
           }
           $cacher = Core\Data\cache\factory::build();
@@ -121,6 +121,13 @@ class storage{
             Helpers\Counters::increment($entity->entity_guid, "thumbs:$direction", -1);
         $cacher = Core\Data\cache\factory::build();
         $cacher->destroy("counter:$entity->guid:thumbs:$direction");
+
+        if($entity->remind_object){
+          Helpers\Counters::increment($entity->remind_object['guid'], "thumbs:$direction", -1);
+          if($entity->remind_object['entity_guid']){
+            Helpers\Counters::increment($entity->remind_object['entity_guid'], "thumbs:$direction", -1);
+          }
+        }
 
 
         $user_guids = $entity->{"thumbs:$direction:user_guids"} ? : array();
