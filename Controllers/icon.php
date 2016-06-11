@@ -18,16 +18,16 @@ class icon extends core\page implements Interfaces\page
         global $CONFIG;
         $guid = $pages[0];
         $cacher = Core\Data\cache\factory::build('apcu');
-        if ($cached = $cacher->get("usericon:$guid")) {
-            $join_date = $cached;
-        } else {
+        //if ($cached = $cacher->get("usericon:$guid")) {
+        //    $join_date = $cached;
+        //} else {
             $user = new Entities\User($guid);
             if (isset($user->legacy_guid) && $user->legacy_guid) {
                 $guid = $user->legacy_guid;
             }
             $join_date = $user->time_created;
-            $cacher->set("usericon:$guid", $join_date);
-        }
+        //    $cacher->set("usericon:$guid", $join_date);
+        //}
         $last_cache = isset($pages[2]) ? $pages[2] : time();
         $etag = $last_cache . $guid;
         if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
@@ -60,8 +60,8 @@ class icon extends core\page implements Interfaces\page
         }
 
         //avatar couldn't be found! remove from neo4j list
-        $prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
-        Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
+        //$prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
+        //Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
 
         $this->forward("/assets/avatars/default-$size.png");
     }
