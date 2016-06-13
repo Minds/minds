@@ -74,6 +74,11 @@ class Block
             $user = $user->guid;
         }
 
+
+        if (is_object($from)) { // Unlikely to be an user, and we cannot block anything that's not an user (yet)
+            return false;
+        }
+
         $list = $this->getBlockList($from, 1, $user);
         if (isset($list[0]) && $list[0] == $user) {
             return true;
@@ -99,6 +104,10 @@ class Block
 
         if ($user instanceof Entities\User) {
             $user = $user->guid;
+        }
+
+        if (is_object($from)) { // Unlikely to be an user, and we cannot block anything that's not an user (yet)
+            return false;
         }
 
         Core\Events\Dispatcher::trigger('acl:block', 'all', compact('user', 'from'));

@@ -154,7 +154,11 @@ class ACL
       /**
        * Check if we are the owner
        */
-      if ($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid || $entity->guid == $user->guid) {
+      if (
+          ($entity->owner_guid && $entity->owner_guid == $user->guid) ||
+          ($entity->container_guid && $entity->container_guid == $user->guid) ||
+          ($entity->guid && $entity->guid == $user->guid)
+      ) {
           return true;
       }
 
