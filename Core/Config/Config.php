@@ -41,8 +41,19 @@ class Config
         return null;
     }
 
-    public function set($key, $value)
+    public function set($key, $value = null, $opts = [])
     {
+
+        //legacy nasty fallback
+        if(property_exists($this, $key)){
+            $this->$key = $value;
+        }
+
+        $opts = array_merge([ 'recursive' => false ], $opts);
+        if($value && is_array($value) && isset($this->config[$key]) && is_array($this->config[$key]) && $opts['recursive']){
+            $this->config[$key] = array_merge($this->config[$key], $value);
+            return;
+        }
         $this->config[$key] = $value;
     }
 

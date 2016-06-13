@@ -26,6 +26,7 @@ class Minds extends base
     {
         (new Config\ConfigProvider())->register();
         //(new Core\Boost\BoostProvider())->register();
+        (new Plugins\PluginsProvider())->register();
         (new Data\DataProvider())->register();
         (new Email\EmailProvider())->register();
         //(new Core\Events\EventsProvider())->register();
@@ -73,7 +74,7 @@ class Minds extends base
         /**
          * Load the plugins
          */
-        new plugins();
+        static::$di->get('Plugins\Manager')->init();
 
         /**
          * Complete the boot process for both engine and plugins
