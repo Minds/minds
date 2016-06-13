@@ -141,6 +141,21 @@ class conversations implements Interfaces\Api
         $message = (new Messenger\Entities\Message())
           ->setConversation($conversation);
 
+        // Block check
+        foreach($conversation->getParticipants() as $guid){
+            if (Session::getLoggedInUserGuid() == $guid) {
+                continue;
+            }
+            
+            if (!Security\ACL::_()->interact($guid, Session::getLoggedInUserGuid())) {
+                // At least one people blocked on this conversation
+                // Means that we cannot chat here
+                return Factory::response([
+                    'unavailable' => true
+                ]);
+            }
+        }
+
         foreach($conversation->getParticipants() as $guid){
             $key = "message:$guid";
             $messages[$guid] = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
@@ -183,6 +198,12 @@ class conversations implements Interfaces\Api
 
     public function put($pages){
         Factory::isLoggedIn();
+
+        if (!Security\ACL::_()->interact($pages[1], Session::getLoggedInUserGuid())) {
+            return Factory::response([
+                'unavailable' => true
+            ]);
+        }
 
         switch($pages[0]){
             case 'call':

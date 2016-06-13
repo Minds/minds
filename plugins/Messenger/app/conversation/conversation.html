@@ -82,9 +82,13 @@
         *ngIf="blocked">
         <span>You have blocked this chat</span>
       </div>
+      <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
+        *ngIf="!blocked && unavailable">
+        <span>This chat is no longer available</span>
+      </div>
     </div>
 
-    <div class="m-messenger-conversation-composer" *ngIf="!blocked && conversation.open && encryption.isOn()">
+    <div class="m-messenger-conversation-composer" *ngIf="!blocked && !unavailable && conversation.open && encryption.isOn()">
       <textarea placeholder="Send a message..."
       [(ngModel)]="message"
       [disabled]="blockingActionInProgress"

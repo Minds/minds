@@ -72,6 +72,7 @@ export class MessengerConversation {
   focused : boolean = true;
 
   blocked: boolean = false;
+  unavailable: boolean = false;
 
   constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
   }
@@ -136,6 +137,7 @@ export class MessengerConversation {
         }
 
         this.blocked = !!response.blocked;
+        this.unavailable = !!response.unavailable;
       })
       .catch(() => {
         this.inProgress = false;
@@ -225,9 +227,14 @@ export class MessengerConversation {
         message: this.message,
         encrypt: true
       })
-      .then((response : any) => {
-        this.messages[currentIndex] = response.message;
-        this.scrollEmitter.next(true);
+      .then((response: any) => {
+        if (response.message) {
+          this.messages[currentIndex] = response.message;
+        } else if (response.unavailable) {
+          this.unavailable = true;
+        }
+
+        setTimeout(() => this.scrollEmitter.next(true), 50)
       })
       .catch(e => {
         console.error('Error while reading conversation', e)

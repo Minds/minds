@@ -58,6 +58,7 @@ class conversations implements Interfaces\Api
         if ($conversation) {
             $response = $conversation->export();
             $blocked = false;
+            $unavailable = false;
 
             if (is_array($response['participants'])) {
                 foreach ($response['participants'] as $participant) {
@@ -66,9 +67,19 @@ class conversations implements Interfaces\Api
                         break;
                     }
                 }
+
+                if (!$blocked) {
+                    foreach ($response['participants'] as $participant) {
+                        if (!Security\ACL::_()->interact($participant['guid'], Core\Session::getLoggedInUser())) {
+                            $unavailable = true;
+                            break;
+                        }
+                    }
+                }
             }
 
             $response['blocked'] = $blocked;
+            $response['unavailable'] = $unavailable;
         }
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 6;
@@ -152,6 +163,22 @@ class conversations implements Interfaces\Api
         $message = (new Messenger\Entities\Message())
           ->setConversation($conversation);
 
+        // Block check
+        foreach($conversation->getParticipants() as $guid){
+            if (Session::getLoggedInUserGuid() == $guid) {
+                continue;
+            }
+            
+            if (!Security\ACL::_()->interact($guid, Session::getLoggedInUserGuid())) {
+                // At least one people blocked on this conversation
+                // Means that we cannot chat here
+                return Factory::response([
+                    'unavailable' => true
+                ]);
+            }
+        }
+
+
         if(isset($_POST['encrypt']) && $_POST['encrypt']){
             $message->setMessage($_POST['message']);
             $message->encrypt();
@@ -199,6 +226,12 @@ class conversations implements Interfaces\Api
 
     public function put($pages){
         Factory::isLoggedIn();
+
+        if (!Security\ACL::_()->interact($pages[1], Session::getLoggedInUserGuid())) {
+            return Factory::response([
+                'unavailable' => true
+            ]);
+        }
 
         switch($pages[0]){
             case 'call':
