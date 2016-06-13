@@ -5,6 +5,7 @@
 namespace Minds\Core\Email;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Queue\Client as Queue;
 use Minds\Entities;
 use PHPMailer;
@@ -15,7 +16,7 @@ class Mailer
     private $queue;
     private $stats;
 
-    public function __construct($mailer = null, $queue = null)
+    public function __construct($mailer = null, $queue = null, $filter = null)
     {
         $this->mailer = $mailer ?: new PHPMailer();
         $this->setup();
@@ -24,6 +25,7 @@ class Mailer
           'failed' => 0
         ];
         $this->queue = $queue ?: Queue::build();
+        $this->filter = $filter ?: Di::_()->get('Email\SpamFilter');
     }
 
     private function setup()
@@ -53,6 +55,9 @@ class Mailer
         $this->mailer->FromName = $message->from['name'];
 
         foreach ($message->to as $to) {
+            if($this->filter->isSpam($to['email'])){
+                continue; //don't send to blacklisted domains
+            }
             $this->mailer->AddAddress($to['email'], $to['name']);
         }
 
@@ -65,7 +70,7 @@ class Mailer
         if ($this->mailer->Send()) {
             $this->stats['sent']++;
         } else {
-            $this->stats['failed']--;
+            $this->stats['failed']++;
         }
 
         return $this;
@@ -78,6 +83,11 @@ class Mailer
             ->send([
                 "message" => serialize($message)
             ]);
+    }
+
+    public function getStats()
+    {
+        return $this->stats;
     }
 
     public function __destruct()

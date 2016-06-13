@@ -15,6 +15,9 @@ class EmailProvider extends Provider
         $this->di->bind('Mailer', function($di){
             return new Mailer(new \PHPMailer());
         }, ['useFactory'=>true]);
+        $this->di->bind('Email\SpamFilter', function($di){
+            return new SpamFilter();
+        }, ['useFactory'=>true]);
     }
 
 }
