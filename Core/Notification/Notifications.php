@@ -6,9 +6,8 @@
 namespace Minds\Core\Notification;
 
 use Minds\Core;
-use Minds\Core\Events;
 use Minds\Core\Notification\Factory as NotificationFactory;
-use Minds\Entities\Factory as EntitiesFactory;
+use Minds\Entities;
 use Minds\Helpers\Counters;
 use Minds\Entities\Notification as NotificationEntity;
 
@@ -22,7 +21,18 @@ class Notifications
     public function __construct($db = null)
     {
         $this->db = $db ?: new Core\Data\Call('entities_by_time');
-        $this->user = static::getCurrentUser();
+        $this->user = Core\Session::getLoggedInUser();
+    }
+
+    /**
+     * Set the user
+     * @param $user
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     /**
@@ -33,18 +43,15 @@ class Notifications
      */
     public function getCount(array $options = [])
     {
-        $user = EntitiesFactory::build($this->user, [
-            'cache' => true
-        ]);
 
         // FIXME: [emi] In legacy code this is defaulted to true, but the operation is commented out
         $cache = isset($options['cache']) ? $options['cache'] : false;
 
         if ($cache) {
-            return $user->notifications_count;
+            return $this->user->notifications_count;
         }
 
-        return Counters::get($user, 'notifications:count', false);
+        return Counters::get($this->user, 'notifications:count', false);
     }
 
     /**
@@ -54,24 +61,19 @@ class Notifications
      */
     public function increaseCounter()
     {
-        $user = EntitiesFactory::build($this->user, [
-            'cache' => true
-        ]);
 
         try {
-            if ($user) {
-                elgg_set_ignore_access(true);
+              elgg_set_ignore_access(true);
 
-                $user->notifications_count++;
-                $user->save();
+              $this->user->notifications_count++;
+              $this->user->save();
 
-                elgg_set_ignore_access(false);
-            }
+              elgg_set_ignore_access(false);
         } catch (Exception $e) {
             // NOOP
         }
 
-        Counters::increment($user, 'notifications:count');
+        Counters::increment($this->user, 'notifications:count');
     }
 
     /**
@@ -81,24 +83,19 @@ class Notifications
      */
     public function resetCounter()
     {
-        $user = EntitiesFactory::build($this->user, [
-            'cache' => true
-        ]);
 
         try {
-            if ($user) {
-                elgg_set_ignore_access(true);
+            elgg_set_ignore_access(true);
 
-                $user->notifications_count = 0;
-                $user->save();
+            $this->user->notifications_count = 0;
+            $this->user->save();
 
-                elgg_set_ignore_access(false);
-            }
+            elgg_set_ignore_access(false);
         } catch (Exception $e) {
             // NOOP
         }
 
-        Counters::clear($user, 'notifications:count');
+        Counters::clear($this->user, 'notifications:count');
     }
 
     // -------- Reading
@@ -175,7 +172,7 @@ class Notifications
     }
 
     /**
-     * === NOT USED (YET) === 
+     * === NOT USED (YET) ===
      * Fetches last 150 legacy non-filtered database rows, parses the filter they belong to,
      * saves them onto database and returns the requested subset.
      * @param  string $filter
@@ -270,66 +267,4 @@ class Notifications
         return $rows;
     }
 
-    public function parseFilter(NotificationEntity $notification) {
-        $filter = '';
-
-        switch ($notification->getNotificationView()) {
-            case 'friends':
-            case 'missed_call':
-            case 'welcome_chat':
-            case 'welcome_discover':
-                $filter = 'subscriptions';
-                break;
-
-            case 'group_invite':
-            case 'group_kick':
-            case 'group_activity':
-                $filter = 'groups';
-                break;
-
-            case 'comment':
-                $filter = 'comments';
-                break;
-
-            case 'like':
-            case 'downvote':
-                $filter = 'votes';
-                break;
-
-            case 'remind':
-                $filter = 'reminds';
-                break;
-
-            case 'tag':
-                $filter = 'tags';
-                break;
-
-            case 'boost_gift':
-            case 'boost_submitted':
-            case 'boost_submitted_p2p':
-            case 'boost_request':
-            case 'boost_rejected':
-            case 'boost_accepted':
-            case 'boost_completed':
-            case 'boost_peer_request':
-            case 'boost_peer_accepted':
-            case 'boost_peer_rejected':
-            case 'welcome_points':
-            case 'welcome_boost':
-                $filter = 'boosts';
-                break;
-
-            case 'custom_message':
-                if (
-                    $notification->getParams() &&
-                    $notification->getParams()['message'] &&
-                    strpos($notification->getParams()['message'], 'points as a daily login reward') !== false
-                ) {
-                    $filter = 'boosts';
-                }
-                break;
-        }
-
-        return $filter;
-    }
 }
