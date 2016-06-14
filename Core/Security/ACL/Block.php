@@ -50,6 +50,10 @@ class Block
             $from = $from->guid;
         }
 
+        if(!is_string($from)){
+            return [];
+        }
+
         $list = $this->db->getRow("acl:blocked:$from", array('limit' => $limit, 'offset' => $offset));
         return $list ? array_keys($list) : array();
     }
