@@ -12,8 +12,9 @@ use Minds\Core\Data\PubSub\Redis\Client as RedisPubSubClient;
 
 class EventsSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    function it_is_initializable(RedisPubSubClient $redis)
     {
+        $this->beConstructedWith($redis);
         $this->shouldHaveType('Minds\Core\Sockets\Events');
     }
 

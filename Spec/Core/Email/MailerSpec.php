@@ -7,6 +7,7 @@ use Prophecy\Argument;
 
 use PHPMailer;
 
+use Minds\Core\Queue\Client as Queue;
 use Minds\Core\Email\SpamFilter;
 use Minds\Core\Email\Message;
 
@@ -18,9 +19,9 @@ class MailerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Email\Mailer');
     }
 
-    function it_should_not_send_a_blacklist_domain(PHPMailer $mailer, SpamFilter $filter, Message $message)
+    function it_should_not_send_a_blacklist_domain(PHPMailer $mailer, Queue $queue, SpamFilter $filter, Message $message)
     {
-        $this->beConstructedWith($mailer, null, $filter);
+        $this->beConstructedWith($mailer, $queue, $filter);
 
         $message->to = [[ 'email' => 'you@yomail.com', 'name' => 'Spam' ]];
         $message->from = [ 'email' => 'me@minds.com', 'name' => 'Sender' ];
