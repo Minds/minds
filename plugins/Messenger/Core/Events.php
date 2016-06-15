@@ -56,11 +56,11 @@ class Events
             $params = $event->getParameters();
 
             if ($params['row']->subtype == 'message') {
-                $e->setResponse(new Entities\Message($params['row']));
+                $event->setResponse(new Messenger\Entities\Message($params['row']));
             } elseif ($params['row']->subtype == 'call_missed') {
-                $e->setResponse(new Entities\CallMissed($params['row']));
+                $event->setResponse(new Messenger\Entities\CallMissed($params['row']));
             } elseif ($params['row']->subtype == 'call_ended') {
-                $e->setResponse(new Entities\CallEnded($params['row']));
+                $event->setResponse(new Messenger\Entities\CallEnded($params['row']));
             }
         });
 
