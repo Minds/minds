@@ -51,10 +51,39 @@ export class GroupsProfileFeed {
     this.group = value;
     this.guid = value.guid;
     this.load(true);
+    this.setUpPoll();
+  }
+
+  pollingTimer: any;
+  pollingOffset: string = '';
+  pollingNewPosts: number = 0;
+
+  setUpPoll() {
+    this.pollingTimer = setInterval(() => {
+      this.client.get('api/v1/newsfeed/container/' + this.guid, { offset: this.pollingOffset, count: true }, {cache: true})
+        .then((response: any) => {
+          if (typeof response.count === 'undefined') {
+            return;
+          }
+
+          this.pollingNewPosts += response.count;
+          this.pollingOffset = response['load-next'];
+        })
+        .catch(e => { console.error('Newsfeed polling', e); });
+    }, 60000);
+  }
+
+  pollingLoadNew() {
+    this.load(true);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.pollingTimer);
   }
 
   prepend(activity : any){
     this.activity.unshift(activity);
+    this.pollingOffset = activity.guid;
   }
 
   /**
@@ -64,8 +93,11 @@ export class GroupsProfileFeed {
     if(this.inProgress)
       return false;
 
-    if(refresh)
+    if(refresh) {
       this.offset = "";
+      this.pollingOffset = '';
+      this.pollingNewPosts = 0;
+    }
 
     this.inProgress = true;
     this.client.get('api/v1/newsfeed/container/' + this.guid, { limit: 12, offset: this.offset })
@@ -81,6 +113,10 @@ export class GroupsProfileFeed {
             this.activity.push(activity);
         } else {
              this.activity = response.activity;
+
+             if (typeof response.activity[0] !== 'undefined') {
+               this.pollingOffset = response.activity[0].guid;
+             }
         }
         this.offset = response['load-next'];
         this.inProgress = false;

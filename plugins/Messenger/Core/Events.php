@@ -93,7 +93,7 @@ class Events
 
             try {
                 (new Sockets\Events())
-                  ->to("messenger:{$from}")
+                  ->setUser($from)
                   ->emit('block', (string) $user);
             } catch (\Exception $e) { /* TODO: To log or not to log */ }
         });
@@ -111,7 +111,7 @@ class Events
 
             try {
                 (new Sockets\Events())
-                  ->to("messenger:{$from}")
+                  ->setUser($from)
                   ->emit('unblock', (string) $user);
             } catch (\Exception $e) { /* TODO: To log or not to log */ }
         });

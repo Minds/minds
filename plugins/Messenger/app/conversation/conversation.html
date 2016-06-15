@@ -38,6 +38,7 @@
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"
       [class.m-messenger-ribbon-open]="ribbon.open"
       minds-messenger-scroll
+      scrollLock strictScrollLock="true"
       [emitter]="scrollEmitter"
       #scrollArea
       (previous)="load({ offset: offset, container: scrollArea })">
