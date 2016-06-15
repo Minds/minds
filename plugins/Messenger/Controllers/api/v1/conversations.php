@@ -119,7 +119,7 @@ class conversations implements Interfaces\Api
                 var_dump($guids);
                 if($guids[0]){
                     $response['conversations'][$k]['guid'] = $guids[0];
-                } 
+                }
                 $response['conversations'][$k]['subscribed'] = true;
                 $response['conversations'][$k]['subscriber'] = true;
             }
@@ -174,7 +174,7 @@ class conversations implements Interfaces\Api
 
         try {
             (new Sockets\Events())
-              ->to($conversation->buildSocketRoomName())
+              ->setRoom($conversation->buildSocketRoomName())
               ->emit('pushConversationMessage', (string) $conversation->getGuid(), $emit);
         } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
@@ -257,14 +257,14 @@ class conversations implements Interfaces\Api
     private function emitSocketTouch($conversation)
     {
         if ($conversation->getParticipants()) {
-            $messenger_rooms = [];
+            $users = [];
 
             foreach ($conversation->getParticipants() as $guid) {
                 if ($guid == Core\Session::getLoggedInUserGuid()) {
                     continue;
                 }
 
-                $messenger_rooms[] = "messenger:{$guid}";
+                $users[] = $guid;
             }
 
             if(!$messenger_rooms)
@@ -272,7 +272,7 @@ class conversations implements Interfaces\Api
 
             try {
                 (new Sockets\Events())
-                ->to($messenger_rooms)
+                ->setUsers($users)
                 ->emit('touchConversation', (string) $conversation->getGuid());
             } catch (\Exception $e) { /* TODO: To log or not to log */ }
         }
