@@ -94,7 +94,7 @@ class notifications implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications))e
+                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications));
                 $response['load-next'] = (string) end($notifications)->getGuid();
                 //$response['load-previous'] = (string) key($notifications)->getGuid();
 
