@@ -8,7 +8,6 @@ namespace Minds\Entities;
 use Minds\Helpers;
 use Minds\Core\Queue;
 use Minds\Core\Analytics;
-use Minds\Entities\Factory as EntitiesFactory;
 
 class Activity extends Entity
 {
@@ -154,28 +153,14 @@ class Activity extends Entity
             $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid, 'thumbs:down');
             $export['thumbs:guid'] = (string) $this->entity_guid;
             
-            $related_entity = EntitiesFactory::build($this->entity_guid);
-            // TODO: Check performance
-            if ($related_entity) {
-                $related_export = $related_entity->export();
-                $export['thumbs:up:user_guids'] = $related_export['thumbs:up:user_guids'];
-                $export['thumbs:down:user_guids'] = $related_export['thumbs:down:user_guids'];
-            }
-            
+            // TODO: [emi] CQL to fetch thumbs user GUIDS from both entities
         } elseif ($this->remind_object) {
             if ($this->remind_object['entity_guid']) {
                 $export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:up');
                 $export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:down');
                 $export['thumbs:guid'] = (string) $this->remind_object['entity_guid'];
                 
-                $related_entity = EntitiesFactory::build($this->remind_object['entity_guid']);
-                // TODO: Check performance
-                if ($related_entity) {
-                    $related_export = $related_entity->export();
-                    $export['thumbs:up:user_guids'] = $related_export['thumbs:up:user_guids'];
-                    $export['thumbs:down:user_guids'] = $related_export['thumbs:down:user_guids'];
-                }
-                
+                // TODO: [emi] CQL to fetch thumbs user GUIDS from both entities
             } else {
                 $export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['guid'], 'thumbs:up');
                 $export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['guid'], 'thumbs:down');
