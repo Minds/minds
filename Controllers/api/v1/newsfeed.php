@@ -53,6 +53,44 @@ class newsfeed implements Interfaces\Api
             break;
         }
 
+        if (get_input('count')) {
+            $offset = get_input('offset', '');
+
+            if (!$offset) {
+                return Factory::response([
+                    'count' => 0,
+                    'load-previous' => ''
+                ]);
+            }
+            
+            $namespace = Core\Entities::buildNamespace(array_merge([
+                'type' => 'activity'
+            ], $options));
+
+            $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
+            $guids = $db->get($namespace, [
+                'limit' => 5000,
+                'offset' => $offset,
+                'reversed' => false
+            ]);
+            
+            if (isset($guids[$offset])) {
+                unset($guids[$offset]);
+            }
+            
+            if (!$guids) {
+                return Factory::response([
+                    'count' => 0,
+                    'load-previous' => $offset
+                ]);
+            }
+
+            return Factory::response([
+                'count' => count($guids),
+                'load-previous' => (string) end(array_values($guids)) ?: $offset
+            ]);
+        }
+
         //daily campaign reward
         if (Core\Session::isLoggedIn()) {
             Helpers\Campaigns\DailyRewards::reward();
@@ -63,13 +101,15 @@ class newsfeed implements Interfaces\Api
             'limit' => get_input('limit', 5),
             'offset'=> get_input('offset', '')
         ), $options));
-        if (get_input('offset')) {
+        if (get_input('offset') && !get_input('prepend')) { // don't shift if we're prepending to newsfeed
             array_shift($activity);
         }
 
+        $loadPrevious = (string) current($activity)->guid;
+
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        if ($pages[0] == 'network') {
+        if ($pages[0] == 'network' && !get_input('prepend')) { // No boosts when prepending
             try {
                 $limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit);
@@ -123,7 +163,7 @@ class newsfeed implements Interfaces\Api
         if ($activity) {
             $response['activity'] = factory::exportable($activity, array('boosted'));
             $response['load-next'] = (string) end($activity)->guid;
-            $response['load-previous'] = (string) key($activity)->guid;
+            $response['load-previous'] = $loadPrevious;
         }
 
         return Factory::response($response);

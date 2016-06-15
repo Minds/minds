@@ -23,6 +23,12 @@ class DenormalizedEntity
         $this->db = $db ?: new Data\Call('entities_by_time');
     }
 
+    public function setDb($db)
+    {
+        $this->db = $db;
+        return $this;
+    }
+
     public function setRowKey($key)
     {
         $this->rowKey = $key;
@@ -48,7 +54,7 @@ class DenormalizedEntity
         }
 
         $this->guid = $guid;
-        
+
         return $this->loadFromArray($row[$guid]);
     }
 

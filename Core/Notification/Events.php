@@ -2,17 +2,19 @@
 namespace Minds\Core\Notification;
 
 use Minds\Entities;
+use Minds\Core;
+use Minds\Core\Data;
+use Minds\Core\Queue;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
 use Minds\Core\Notification\Extensions\Push;
-use Minds\Entities\Factory as EntitiesFactory;
-use Minds\Core\Notification\Factory as NotificationFactory;
-use Minds\Core\Notification\Entity as EntityNotification;
+
+use Minds\Helpers;
+use Minds\Core\Sockets;
 
 class Events
 {
-    use \Minds\Traits\CurrentUser;
 
     /**
      * Centralized method to register Event handlers related to notifications
@@ -33,67 +35,29 @@ class Events
                 $from = $params['from'];
             }
 
-            $notifications = [];
+            if ($params['entity'] && !is_object($params['entity'])) {
+                $params['entity'] = Entities\Factory::build($params['entity']);
+            }
 
-            $from_user = EntitiesFactory::build($from ?: static::getCurrentUser(), [
+            $from_user = Entities\Factory::build($from ?: Session::getLoggedInUser(), [
                 'cache' => true
             ]);
 
-            $params = array_merge([
-                'to' => [],
-                'entity' => null,
-                'dry' => false
-            ], $params);
+            $notification = (new Entities\Notification())
+                ->setEntity($params['entity'])
+                ->setFrom($from_user)
+                ->setNotificationView($params['notification_view'])
+                ->setDescription(isset($params['description']) ? $params['description'] : '')
+                ->setParams($params['params'])
+                ->setTimeCreated(time());
 
-            if ($params['entity'] && !is_object($params['entity'])) {
-                $params['entity'] = EntitiesFactory::build($params['entity']);
-            }
-
-            if ($params['to'] && $params['entity'] && in_array($params['entity']->type, [ 'activity', 'object' ])) {
-                $muted = array_map([ __CLASS__, 'toString' ], (new EntityNotification($params['entity']))->getMutedUsers());
-                $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
-
-                $params['to'] = array_diff($params['to'], $muted);
-            }
-
-            foreach ($params['to'] as $to_user) {
-                if (!$to_user) {
-                    $to_user = $from_user;
-                }
-
-                if (is_numeric($to_user) || is_string($to_user)) {
-                    $to_user = EntitiesFactory::build((int) $to_user);
-                }
-
-                if (!$to_user) {
-                    continue;
-                }
-
-                $notification = (new Entities\Notification())
-                    ->setTo($to_user)
-                    ->setEntity($params['entity'])
-                    ->setFrom($from_user)
-                    ->setNotificationView($params['notification_view'])
-                    ->setDescription(isset($params['description']) ? $params['description'] : '')
-                    ->setOwner($to_user ? $to_user : static::getCurrentUser())
-                    ->setParams($params['params'])
-                    ->setTimeCreated(time());
-
-                if (!$params['dry']) {
-                    $notification->save();
-
-                    Push::_()->queue([
-                        'uri' => 'notification',
-                        'from' => $from_user,
-                        'to' => $to_user,
-                        'params' => $params
-                    ]);
-                }
-
-                $notifications[] = $notification;
-            }
-
-            $event->setResponse($notifications);
+            return Queue\Client::build()
+              ->setExchange('mindsqueue')
+              ->setQueue('NotificationDispatcher')
+              ->send([
+                  'notification' => serialize($notification),
+                  'to' => $params['to']
+              ]);
 
         });
 
@@ -153,6 +117,61 @@ class Events
                 }
             }
 
+        });
+
+        Dispatcher::register('notification:dispatch', 'all', function (Event $event) {
+
+            $params = $event->getParameters();
+            $notification = unserialize($params['notification']);
+
+            if(!$notification instanceof Entities\Notification){
+                return;
+            }
+
+            $db = new Data\Call('entities_by_time');
+            $notification->setDb($db);
+
+            if ($params['to'] && $params['entity'] && in_array($params['entity']->type, [ 'activity', 'object' ])) {
+                $muted = array_map([ __CLASS__, 'toString' ], (new Entity($params['entity']))->getMutedUsers());
+                $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
+                $params['to'] = array_diff($params['to'], $muted);
+            }
+
+            $manager = new Notifications();
+
+            foreach ($params['to'] as $to_user) {
+
+                if (is_numeric($to_user) || is_string($to_user)) {
+                    $to_user = Entities\Factory::build((int) $to_user);
+                }
+
+                if (!$to_user) {
+                    continue;
+                }
+
+                $notification->setTo($to_user)
+                  ->setOwner($to_user)
+                  ->save();
+
+                Push::_()->queue([
+                    'uri' => 'notification',
+                    'from' => $notification->getFrom(),
+                    'to' => $notification->getTo(),
+                    'notification' => $notification
+                ]);
+
+                $manager->setUser($to_user)
+                  ->increaseCounter($to_user);
+
+                try {
+                    (new Sockets\Events())
+                    ->setUser($to_user)
+                    ->emit('notification', (string) $notification->getGuid());
+                } catch (\Exception $e) { /* TODO: To log or not to log */ }
+
+                echo "[notification][{$notification->getGuid()}]: Saved \n";
+
+            }
         });
 
         /**
