@@ -109,7 +109,7 @@ class newsfeed implements Interfaces\Api
 
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        if ($pages[0] == 'network') {
+        if ($pages[0] == 'network' && !get_input('prepend')) { // No boosts when prepending
             try {
                 $limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit);
