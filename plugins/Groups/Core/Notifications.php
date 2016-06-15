@@ -121,6 +121,9 @@ class Notifications
                 $this->indexDb->set('notifications:' . $recipient, [
                     $notification->getGuid() => $serialized
                 ]);
+                $this->indexDb->set('notifications:' . $recipient . ':groups', [
+                    $notification->getGuid() => $serialized
+                ]);
                 echo " (dispatched) \r";
             }
 
