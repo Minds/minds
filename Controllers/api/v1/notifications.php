@@ -95,6 +95,10 @@ class notifications implements Interfaces\Api
                     if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
                         unset($response['notifications'][$key]);
                     }
+                    if(isset($_GET['access_token']) && $data['notification_view'] == 'group_activity'){
+                        $response['notifications'][$key]['notification_view'] = 'custom_message';
+                        $response['notifications'][$key]['params']['message'] = "@{$data['from']['username']} posted in {$data['params']['group']['name']}";
+                    }
                 }
 
                 $response['load-next'] = (string) end($notifications)->getGuid();
