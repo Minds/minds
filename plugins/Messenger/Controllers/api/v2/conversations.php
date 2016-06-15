@@ -321,7 +321,7 @@ class conversations implements Interfaces\Api
                 $users[] = $guid;
             }
 
-            if(!$messenger_rooms)
+            if(!$users)
                 return;
 
             try {
