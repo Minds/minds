@@ -131,8 +131,9 @@ class Events
             $db = new Data\Call('entities_by_time');
             $notification->setDb($db);
 
-            if ($params['to'] && $params['entity'] && in_array($params['entity']->type, [ 'activity', 'object' ])) {
-                $muted = array_map([ __CLASS__, 'toString' ], (new Entity($params['entity']))->getMutedUsers());
+            $entity = $notification->getEntity();
+            if ($params['to'] && $entity && in_array($entity->type, [ 'activity', 'object' ])) {
+                $muted = array_map([ __CLASS__, 'toString' ], (new Entity($entity))->getMutedUsers());
                 $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
                 $params['to'] = array_diff($params['to'], $muted);
             }
@@ -157,7 +158,8 @@ class Events
                     'uri' => 'notification',
                     'from' => $notification->getFrom(),
                     'to' => $notification->getTo(),
-                    'notification' => $notification
+                    'notification' => $notification,
+                    'params' => $notification->export()
                 ]);
 
                 $manager->setUser($to_user)
