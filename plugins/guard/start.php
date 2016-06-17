@@ -120,17 +120,21 @@ class start extends Components\Plugin{
 	 * Send an sms
 	 */
 	public function sendSMS($number, $message){
+		$result = null;
+
 		try{
 			$AccountSid = "AC2e0a25157a4e150f3a87fd6e2f21730c";
 			$AuthToken = "add6d113b8a62e1111c4795e375071de";
 			$client = new \Services_Twilio($AccountSid, $AuthToken);
-			$message = $client->account->messages->create(array(
+			$result = $client->account->messages->create(array(
 				'To' => $number,
 				'From' => "+16015640015",
 				'Body' => $message,
 			));
-		}catch(\Exception $e){
-
+		} catch(\Exception $e){
+			error_log("[guard] Twilio error: {$e->getMessage()}");
 		}
+
+		return $result ? $result->sid : false;
 	}
 }
