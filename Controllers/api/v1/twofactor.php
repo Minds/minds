@@ -57,8 +57,7 @@ class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
             case "setup":
 
                 $secret = $twofactor->createSecret();
-        				if(\Minds\plugin\guard\start::sendSMS($_POST['tel'], $twofactor->getCode($secret))){
-                    $response['code'] = $twofactor->getCode();
+                if(\Minds\plugin\guard\start::sendSMS($_POST['tel'], $twofactor->getCode($secret))){
                     $response['secret'] = $secret;
                 } else {
                     $response['status'] = "error";
