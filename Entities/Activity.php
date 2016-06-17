@@ -151,31 +151,19 @@ class Activity extends Entity
         if ($this->entity_guid && !$this->remind_object) {
             $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid, 'thumbs:up');
             $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid, 'thumbs:down');
-            $export['thumbs:guid'] = (string) $this->entity_guid;
-            
-            // TODO: [emi] CQL to fetch thumbs user GUIDS from both entities
         } elseif ($this->remind_object) {
             if ($this->remind_object['entity_guid']) {
                 $export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:up');
                 $export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:down');
-                $export['thumbs:guid'] = (string) $this->remind_object['entity_guid'];
-                
-                // TODO: [emi] CQL to fetch thumbs user GUIDS from both entities
             } else {
                 $export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['guid'], 'thumbs:up');
                 $export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['guid'], 'thumbs:down');
-                $export['thumbs:up:user_guids'] = $this->remind_object['thumbs:up:user_guids'];
-                $export['thumbs:down:user_guids'] = $this->remind_object['thumbs:down:user_guids'];
-                $export['thumbs:guid'] = (string) $this->remind_object['guid'];
             }
         } else {
             $export['thumbs:up:count'] = Helpers\Counters::get($this, 'thumbs:up');
             $export['thumbs:down:count'] = Helpers\Counters::get($this, 'thumbs:down');
-            $export['thumbs:guid'] = (string) $this->guid;
         }
-
         $export['thumbs:up:user_guids'] = $export['thumbs:up:user_guids'] ? (array) array_values($export['thumbs:up:user_guids']) : [];
-        $export['thumbs:down:user_guids'] = $export['thumbs:down:user_guids'] ? (array) array_values($export['thumbs:down:user_guids']) : [];
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
