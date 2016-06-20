@@ -159,7 +159,7 @@ class Events
                     'from' => $notification->getFrom(),
                     'to' => $notification->getTo(),
                     'notification' => $notification,
-                    'params' => $notification->export()
+                    'params' => array_merge($notification->export(), $notification->getParams())
                 ]);
 
                 $manager->setUser($to_user)
