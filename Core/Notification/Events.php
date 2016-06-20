@@ -154,12 +154,15 @@ class Events
                   ->setOwner($to_user)
                   ->save();
 
+
+                $params = $notification->getParams();
+                $params['notification_view']  = $notification->getNotificationView();
                 Push::_()->queue([
                     'uri' => 'notification',
                     'from' => $notification->getFrom(),
                     'to' => $notification->getTo(),
                     'notification' => $notification,
-                    'params' => array_merge($notification->export(), $notification->getParams())
+                    'params' => $params
                 ]);
 
                 $manager->setUser($to_user)
