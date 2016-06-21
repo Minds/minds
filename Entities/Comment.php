@@ -141,13 +141,14 @@ class Comment extends Entities\Entity
         return true;
     }
 
-    public function canEdit()
+    public function canEdit($user_guid = 0)
     {
         $entity = \Minds\Entities\Factory::build($this->parent_guid);
         if ($entity->canEdit()) {
             return true;
         }
-        return parent::canEdit();
+
+        return parent::canEdit($user_guid);
     }
 
     public function view()
