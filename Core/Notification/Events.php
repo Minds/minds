@@ -50,14 +50,19 @@ class Events
                 ->setParams($params['params'])
                 ->setTimeCreated(time());
 
-            return Queue\Client::build()
+            Queue\Client::build()
               ->setExchange('mindsqueue')
               ->setQueue('NotificationDispatcher')
               ->send([
                   'notification' => serialize($notification),
                   'to' => $params['to']
               ]);
-        });
+
+            $event->setResponse([
+                $notification
+            ]);
+        
+	});
 
         /**
          * Create a notification upon @mentioning on activities or comments
