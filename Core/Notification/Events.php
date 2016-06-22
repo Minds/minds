@@ -101,7 +101,7 @@ class Events
 
                     $user = new Entities\User(strtolower($username));
 
-                    if ($user->guid) {
+                    if ($user->guid && !Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $user)) {
                         $to[] = $user->guid;
                     }
                 }

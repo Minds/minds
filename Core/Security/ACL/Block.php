@@ -50,7 +50,7 @@ class Block
             $from = $from->guid;
         }
 
-        if(!is_string($from)){
+        if(!$from){
             return [];
         }
 
