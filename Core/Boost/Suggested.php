@@ -83,7 +83,7 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
         }
     }
 
-    public function getBoosts($limit = 15)
+    public function getBoosts($limit = 15, $increment = true)
     {
         $cacher = Core\Data\cache\factory::build();
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested") ?: [];
