@@ -43,7 +43,7 @@ class Peer implements Interfaces\BoostHandlerInterface
     public function getReviewQueue($limit, $offset = "")
     {
         $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:peer:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
+        $data = (array) $db->getRow("boost:peer:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
 
         $boosts = [];
         foreach ($data as $guid => $raw_data) {
@@ -93,7 +93,7 @@ class Peer implements Interfaces\BoostHandlerInterface
      * @param int points
      * @return boolean
      */
-    public function accept($boost, $impressions)
+    public function accept($boost, $impressions = 0)
     {
         if (!$boost instanceof Entities\Boost\Peer) {
             $boost = $this->getBoostEntity($boost);
@@ -110,7 +110,7 @@ class Peer implements Interfaces\BoostHandlerInterface
      * @param object/int $entity
      * @return boolean
      */
-    public function reject($boost, $impressions)
+    public function reject($boost)
     {
         if (!$boost instanceof Entities\Boost\Peer) {
             $boost = $this->getBoostEntity($boost);
@@ -127,7 +127,7 @@ class Peer implements Interfaces\BoostHandlerInterface
      * @param object/int $entity
      * @return boolean
      */
-    public function revoke($boost, $impressions)
+    public function revoke($boost)
     {
         if (!$boost instanceof Entities\Boost\Peer) {
             $boost = $this->getBoostEntity($boost);
