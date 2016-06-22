@@ -36,7 +36,7 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
         ]);
         foreach ($boost_objs as $boost) {
             if ($boost_backlog == null) {
-                $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
+                $boost_backlog = (time() - $mongo->getDocumentTimestamp($boost)) / (60 * 60);
             }
             $boost_impressions = $boost_impressions + $boost['impressions'];
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
@@ -49,7 +49,7 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             'sort' => [ '_id' => 1 ],
         ]);
         foreach ($boost_reviews as $obj) {
-            $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
+            $review_backlog = (time() - $mongo->getDocumentTimestamp($obj)) / (60 * 60);
             break;
         }
         $boosts = [

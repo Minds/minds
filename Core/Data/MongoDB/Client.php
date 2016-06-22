@@ -5,6 +5,7 @@
 namespace Minds\Core\Data\MongoDB;
 
 use Minds\Core\Data\Interfaces;
+use MongoDB\BSON\ObjectID;
 use MongoDB\Client as MongoClient;
 
 class Client implements Interfaces\ClientInterface
@@ -70,9 +71,11 @@ class Client implements Interfaces\ClientInterface
         }
 
         try {
-            return $this->mongodb
+            $result = $this->mongodb
                 ->selectCollection($this->db_name, $table)
                 ->insertOne($data);
+
+            return $result->getInsertedId();
         } catch (\Exception $e) {
             error_log("MongoDB Insert [" . get_class($e) . "]: {$e->getMessage()}");
         }
@@ -95,10 +98,14 @@ class Client implements Interfaces\ClientInterface
             return false;
         }
 
+        $query = $this->parseQueryObjectIds($query);
+
         try {
-            return $this->mongodb
+            $result = $this->mongodb
                 ->selectCollection($this->db_name, $table)
-                ->updateMany($query, [ '$set' => $data ], [ 'upsert' => true ]);
+                ->updateOne($query, [ '$set' => $data ], [ 'upsert' => true ]);
+
+            return $result->getMatchedCount();
         } catch (\Exception $e) {
             error_log("MongoDB Update [" . get_class($e) . "]: {$e->getMessage()}");
         }
@@ -119,8 +126,14 @@ class Client implements Interfaces\ClientInterface
             return false;
         }
 
+        $query = $this->parseQueryObjectIds($query);
+
         try {
             $options = array_merge($options, []);
+
+            if (isset($options['limit'])) {
+                $options['limit'] = intval($options['limit']);
+            }
 
             return $this->mongodb
                 ->selectCollection($this->db_name, $table)
@@ -145,9 +158,13 @@ class Client implements Interfaces\ClientInterface
             return false;
         }
 
-        return $this->mongodb
+        $query = $this->parseQueryObjectIds($query);
+
+        $result = $this->mongodb
             ->selectCollection($this->db_name, $table)
-            ->deleteMany($query);
+            ->deleteOne($query);
+
+        return $result->getDeletedCount();
     }
 
     /**
@@ -163,8 +180,55 @@ class Client implements Interfaces\ClientInterface
             return false;
         }
 
+        $query = $this->parseQueryObjectIds($query);
+
         return $this->mongodb
             ->selectCollection($this->db_name, $table)
             ->count($query);
+    }
+
+    /**
+     * Extracts the timestamp of a document from its time_created or _id fields
+     * @param mixed $document
+     * @return int
+     */
+    public function getDocumentTimestamp($document)
+    {
+        if (isset($document['time_created'])) {
+            return intval($document['time_created']);
+        } elseif (isset($document['_id']) && $document['_id'] instanceof ObjectId) {
+            $oid = (string) $document['_id'];
+            return base_convert(substr($oid, 0, 8), 16, 10);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Tries to create an ObjectId on _id query fields
+     * @param array $query
+     * @return array of modified $query
+     */
+    public function parseQueryObjectIds($query)
+    {
+        if (!isset($query['_id'])) {
+            return $query;
+        }
+
+        if (is_string($query['_id']) && $query['_id']) {
+            try {
+                $query['_id'] = new ObjectId($query['_id']);
+            } catch (\Exception $e) { /* No conversion */ }
+        } elseif (is_array($query['_id'])) {
+            array_walk($query['_id'], function(&$value) {
+                if (is_string($value) && $value) {
+                    try {
+                        $value = new ObjectId($value);
+                    } catch (\Exception $e) { /* No conversion */ }
+                }
+            });
+        }
+
+        return $query;
     }
 }

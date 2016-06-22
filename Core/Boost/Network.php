@@ -31,7 +31,8 @@ class Network implements BoostHandlerInterface
      */
     public function boost($boost, $impressions = 0)
     {
-        $this->mongo->insert("boost", $data = [
+
+        $documentId = $this->mongo->insert("boost", [
           'guid' => $boost->getGuid(),
           'owner_guid' => $boost->getOwner()->guid,
           'impressions' => $boost->getBid(),
@@ -39,8 +40,8 @@ class Network implements BoostHandlerInterface
           'type' => $this->handler
         ]);
 
-        if (isset($data['_id'])) {
-            return (string) $data['_id'];
+        if ($documentId) {
+            return (string) $documentId;
         }
 
         return $boost->getGuid();
