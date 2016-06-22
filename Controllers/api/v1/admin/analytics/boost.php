@@ -28,10 +28,8 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         $boost_backlog = null;
-        $boost_objs = $mongo->find("boost", [
-            'state'=>'approved',
-            'type'=>'newsfeed',
-        ], [
+        $boost_objs_query = [ 'state'=>'approved', 'type'=>'newsfeed' ];
+        $boost_objs = $mongo->find("boost", $boost_objs_query, [
             'sort' => [ '_id'=> 1 ],
         ]);
         foreach ($boost_objs as $boost) {
@@ -42,10 +40,8 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
 
-        $boost_reviews = $mongo->find("boost", [
-            'state'=>'review',
-            'type'=>'newsfeed',
-        ], [
+        $boost_reviews_query = [ 'state'=>'review', 'type'=>'newsfeed' ];
+        $boost_reviews = $mongo->find("boost", $boost_reviews_query, [
             'sort' => [ '_id' => 1 ],
         ]);
         foreach ($boost_reviews as $obj) {
@@ -53,15 +49,16 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             break;
         }
         $boosts = [
-          'review' =>  $boost_reviews->count(),
+          'review' =>  $mongo->count("boost", $boost_reviews_query),
           'review_backlog' => $review_backlog,
-          'approved' => $boost_objs->count(),
+          'approved' => $mongo->count("boost", $boost_objs_query),
           'approved_backlog' => $boost_backlog,
           'impressions' => $boost_impressions,
           'impressions_met' => $boost_impressions_met
         ];
 
-        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'content']);
+        $boost_objs_query = [ 'state'=>'approved', 'type'=>'content' ];
+        $boost_objs = $mongo->find("boost", $boost_objs_query);
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         foreach ($boost_objs as $boost) {
@@ -69,7 +66,7 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
         $boosts_content = [
-          'approved' => $boost_objs->count(),
+          'approved' => $mongo->count("boost", $boost_objs_query),
           'impressions' => $boost_impressions,
           'impressions_met' => $boost_impressions_met
         ];
