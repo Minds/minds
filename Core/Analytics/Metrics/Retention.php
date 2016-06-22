@@ -96,9 +96,9 @@ class Retention implements AnalyticsMetric
                 'retainedDate' => date('d-m-Y', $ts),
                 'retained' => (int) $retained[$x],
                 'signups' => (int) $signups[$x],
-                'total' => (int) $retained[$x] / $signups[$x]
+                'total' => (int) $retained[$x] / ($signups[$x] ?: 1)
               ];
-              $total += (int) $retained[$x] / $signups[$x];
+              $total += (int) $retained[$x] / ($signups[$x] ?: 1);
           }
           $data[] = [
             'timestamp' => $ts,
