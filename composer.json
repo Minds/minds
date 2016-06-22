@@ -1,51 +1,53 @@
 {
-	"name": "minds/minds",
-	"description": "The core minds social engine",
-	"require": {
-		"braintree/braintree_php" : "3.5.0",
-		"bshaffer/oauth2-server-php":"1.7",
-		"duoshuo/php-cassandra": "dev-master#8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
-		"elasticsearch/elasticsearch": "1.3.3",
-    "facebook/php-sdk-v4": "~5.0",
-    "firebase/php-jwt": "3.0.*",
-		"kramnorth/cinemr-php-sdk": "dev-master@dev",
-		"kramnorth/cinemr-php-sdk": "dev-master@dev",
-		"minds/minds-php-sdk": "dev-master@dev",
-		"Minds/Surge": "dev-master@dev",
-		"neoxygen/neoclient": "2.2.8",
-		"paypal/rest-api-sdk-php": "1.3.2",
-		"thobbs/phpcassa": "dev-master@dev",
-		"phpmailer/phpmailer": "~5.2",
-		"tijsverkoyen/twitteroauth": "dev-master@dev",
-		"twilio/sdk" : "3.13.*",
-		"videlalvaro/php-amqplib": "dev-master@dev",
-		"vscn/cruftflake": "dev-master@dev",
-		"zircote/swagger-php": "2.*@dev"
-   },
-	"repositories": [
-		{
-		    "type": "vcs",
-		    "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"
-		},
-		{
-		    "type": "vcs",
-		    "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git"
-		},
-		{
-		    "type": "vcs",
-		    "url": "https://cab1b9ee9869072e7a58a1eb593b602ec5bedcd3@github.com/davegardnerisme/cruftflake.git"
-		}
-	],
-	"autoload": {
-		"files": ["autoload.php"]
-	},
-	"config": {
-		"bin-dir": "bin"
-	},
-  "require-dev":{
-		"phpspec/phpspec": "~2.0",
-		"fabpot/php-cs-fixer": "dev-master",
+    "name": "minds/minds",
+    "description": "The core minds social engine",
+    "require": {
+        "braintree/braintree_php": "3.5.0",
+        "bshaffer/oauth2-server-php": "1.7",
+        "duoshuo/php-cassandra": "dev-master#8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
+        "elasticsearch/elasticsearch": "1.3.3",
+        "facebook/php-sdk-v4": "~5.0",
+        "firebase/php-jwt": "3.0.*",
+        "kramnorth/cinemr-php-sdk": "dev-master@dev",
+        "minds/minds-php-sdk": "dev-master@dev",
+        "Minds/Surge": "dev-master@dev",
+        "neoxygen/neoclient": "2.2.8",
+        "paypal/rest-api-sdk-php": "1.3.2",
+        "thobbs/phpcassa": "dev-master@dev",
+        "phpmailer/phpmailer": "~5.2",
+        "tijsverkoyen/twitteroauth": "dev-master@dev",
+        "twilio/sdk": "3.13.*",
+        "videlalvaro/php-amqplib": "dev-master@dev",
+        "vscn/cruftflake": "dev-master@dev",
+        "zircote/swagger-php": "2.*@dev",
+        "mongodb/mongodb": "^1.0.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/davegardnerisme/cruftflake.git"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "autoload.php"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0",
+        "fabpot/php-cs-fixer": "dev-master",
         "bossa/phpspec2-expect": "*",
-    "apigen/apigen": "4.1.1"
-  }
+        "apigen/apigen": "4.1.1"
+    }
 }

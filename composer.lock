@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3dbb5b6f9b235b173962265551edc57",
+    "hash": "e82bc9a947ab9a5a5fb7bf9ce4403384",
+    "content-hash": "ad86a7eb3c184fa0fe362f75c2fb4958",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -247,7 +248,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/50e6f794ee60403cfdf16cc6b5498182cad78dfd",
+                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
                 "reference": "8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
                 "shasum": ""
             },
@@ -702,6 +703,61 @@
             "time": "2014-10-21 17:55:40"
         },
         {
+            "name": "mongodb/mongodb",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mongodb/mongo-php-library.git",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mongodb": "^1.1.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MongoDB\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Hannes Magnusson",
+                    "email": "bjori@mongodb.com"
+                },
+                {
+                    "name": "Derick Rethans",
+                    "email": "github@derickrethans.nl"
+                }
+            ],
+            "description": "MongoDB driver library",
+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
+            "keywords": [
+                "database",
+                "driver",
+                "mongodb",
+                "persistence"
+            ],
+            "time": "2016-03-30 19:10:28"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -838,6 +894,7 @@
                 "high-availibility",
                 "neo4j"
             ],
+            "abandoned": "graphaware/neo4j-php-client",
             "time": "2015-06-20 18:10:49"
         },
         {
@@ -1039,12 +1096,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "41ee6c70758f40fa1dbf90d019ae0a66c4a09e74"
+                "reference": "ee4cdda66aff834c8125e8f2c15932461667c521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/41ee6c70758f40fa1dbf90d019ae0a66c4a09e74",
-                "reference": "41ee6c70758f40fa1dbf90d019ae0a66c4a09e74",
+                "url": "https://api.github.com/repos/symfony/config/zipball/ee4cdda66aff834c8125e8f2c15932461667c521",
+                "reference": "ee4cdda66aff834c8125e8f2c15932461667c521",
                 "shasum": ""
             },
             "require": {
@@ -1609,12 +1666,12 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/videlalvaro/php-amqplib.git",
+                "url": "https://github.com/php-amqplib/php-amqplib.git",
                 "reference": "088dfbee60f13fc2c09c67970561e931832d2b71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/088dfbee60f13fc2c09c67970561e931832d2b71",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/088dfbee60f13fc2c09c67970561e931832d2b71",
                 "reference": "088dfbee60f13fc2c09c67970561e931832d2b71",
                 "shasum": ""
             },
@@ -1657,7 +1714,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "abandoned": true,
+            "abandoned": "php-amqplib/php-amqplib",
             "time": "2016-01-25 10:49:55"
         },
         {
@@ -1665,13 +1722,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/lucasvscn/cruftflake.git",
-                "reference": "4874ef26edbf69e9c7732ecdf3ddd3673131f369"
+                "url": "https://github.com/davegardnerisme/cruftflake.git",
+                "reference": "cab1b9ee9869072e7a58a1eb593b602ec5bedcd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucasvscn/cruftflake/zipball/4874ef26edbf69e9c7732ecdf3ddd3673131f369",
-                "reference": "4874ef26edbf69e9c7732ecdf3ddd3673131f369",
+                "url": "https://api.github.com/repos/davegardnerisme/cruftflake/zipball/cab1b9ee9869072e7a58a1eb593b602ec5bedcd3",
+                "reference": "cab1b9ee9869072e7a58a1eb593b602ec5bedcd3",
                 "shasum": ""
             },
             "require": {
@@ -1691,7 +1748,6 @@
                     "Davegardnerisme\\CruftFlake\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Dave Gardner",
@@ -1700,11 +1756,15 @@
             ],
             "description": "This package provides a PHP implementation of Twitter Snoflake ID Generator algoritm",
             "keywords": [
+                "ZooKeeper",
                 "snowflake",
-                "uuid",
-                "zookeeper"
+                "uuid"
             ],
-            "time": "2015-02-13 03:23:09"
+            "support": {
+                "source": "https://github.com/davegardnerisme/cruftflake/tree/master",
+                "issues": "https://github.com/davegardnerisme/cruftflake/issues"
+            },
+            "time": "2015-03-26 12:04:57"
         },
         {
             "name": "zircote/swagger-php",
@@ -3986,12 +4046,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac"
+                "reference": "d9d21cfcc3e202ee34777d6da38897695d4d208d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
-                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
+                "url": "https://api.github.com/repos/symfony/process/zipball/d9d21cfcc3e202ee34777d6da38897695d4d208d",
+                "reference": "d9d21cfcc3e202ee34777d6da38897695d4d208d",
                 "shasum": ""
             },
             "require": {
@@ -4027,7 +4087,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-06 09:59:23"
+            "time": "2016-01-14 08:33:14"
         },
         {
             "name": "symfony/stopwatch",
