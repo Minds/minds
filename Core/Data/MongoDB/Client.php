@@ -5,9 +5,7 @@
 namespace Minds\Core\Data\MongoDB;
 
 use Minds\Core\Data\Interfaces;
-use MongoClient;
-use MongoCollection;
-use MongoId;
+use MongoDB\Client as MongoClient;
 
 class Client implements Interfaces\ClientInterface
 {
@@ -15,38 +13,47 @@ class Client implements Interfaces\ClientInterface
     private $prepared;
     private $db_name = 'minds';
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         global $CONFIG;
 
-        if (!class_exists('\MongoClient')) {
-            throw new \Exception("Mongo is not installed");
+        if (!class_exists('\MongoDB\Driver\Manager')) {
+            throw new \Exception("MongoDB Driver is not installed");
         }
 
-        $servers = isset($CONFIG->mongodb_servers) ?  $CONFIG->mongodb_servers : array('127.0.0.1');
+        if (!class_exists('\MongoDB\Client')) {
+            throw new \Exception("MongoDB Client is not installed");
+        }
+
+        $servers = isset($CONFIG->mongodb_servers) ?  $CONFIG->mongodb_servers : ['127.0.0.1'];
         $servers = implode(',', $servers);
+        $options = [];
+        $driverOptions = [];
 
         if (isset($CONFIG->mongodb_db)) {
             $this->db_name = $CONFIG->mongodb_db;
         }
 
-        try {
-            if (!$this->mongodb) {
-                $this->mongodb = new MongoClient($servers);
-            }
-        } catch (\Exception $e) {
-            error_log("MongoDB Connection: " . $e->getMessage());
+        if (isset($CONFIG->mongodb_options) && is_array($CONFIG->mongodb_options)) {
+            $options = $CONFIG->mongodb_options;
         }
 
-        register_shutdown_function(function () {
-            if ($this->mongodb) {
-                $this->mongodb->close();
+        if (isset($CONFIG->mongodb_driver_options) && is_array($CONFIG->mongodb_driver_options)) {
+            $driverOptions = $CONFIG->mongodb_driver_options;
+        }
+
+        try {
+            if (!$this->mongodb) {
+                $this->mongodb = new MongoClient("mongodb://{$servers}/", $options, $driverOptions);
             }
-        });
+        } catch (\Exception $e) {
+            error_log("MongoDB Connection [" . get_class($e) . "]: {$e->getMessage()}");
+        }
     }
 
     public function client()
     {
+        return $this->mongodb;
     }
 
     /**
@@ -55,17 +62,21 @@ class Client implements Interfaces\ClientInterface
      * @param array $data
      * @return string $_id
      */
-    public function insert($table, $data = array())
+    public function insert($table, array $data = [])
     {
         if (!$this->mongodb) {
+            error_log("MongoDB Insert: No connection");
             return false;
         }
+
         try {
-            $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-            return $collection->insert($data);
+            return $this->mongodb
+                ->selectCollection($this->db_name, $table)
+                ->insertOne($data);
         } catch (\Exception $e) {
-            error_log("MongoDB Insert: " . $e->getMessage());
+            error_log("MongoDB Insert [" . get_class($e) . "]: {$e->getMessage()}");
         }
+
         return false;
     }
 
@@ -77,21 +88,21 @@ class Client implements Interfaces\ClientInterface
      * @param array $data
      * @return string $_id
      */
-    public function update($table, $query = array(), $data = array())
+    public function update($table, array $query = [], array $data = [])
     {
         if (!$this->mongodb) {
+            error_log("MongoDB Update: No connection");
             return false;
         }
-        try {
-            $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-            if (isset($query['_id'])) {
-                $query['_id'] = new MongoId($query['_id']);
-            }
 
-            return $collection->update($query, array('$set' => $data), array("upsert" => true));
+        try {
+            return $this->mongodb
+                ->selectCollection($this->db_name, $table)
+                ->updateMany($query, [ '$set' => $data ], [ 'upsert' => true ]);
         } catch (\Exception $e) {
-            error_log("MongoDB Update: " . $e->getMessage());
+            error_log("MongoDB Update [" . get_class($e) . "]: {$e->getMessage()}");
         }
+
         return false;
     }
 
@@ -101,24 +112,23 @@ class Client implements Interfaces\ClientInterface
      * @param array $query
      * @return array of result
      */
-    public function find($table, $query = array(), $projections = array())
+    public function find($table, array $query = [], array $options = [])
     {
         if (!$this->mongodb) {
+            error_log("MongoDB Find: No connection");
             return false;
         }
-        try {
-            $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-            if (isset($query['_id']) && isset($query['_id']['$gt'])) {
-                $query['_id']['$gt'] = new MongoId($query['_id']['$gt']);
-            } elseif (isset($query['_id']) && is_string($query['_id'])) {
-                $query['_id'] = new MongoId($query['_id']);
-            }
 
-            $projections = array_merge($projections, array());
-            return $collection->find($query, $projections);
+        try {
+            $options = array_merge($options, []);
+
+            return $this->mongodb
+                ->selectCollection($this->db_name, $table)
+                ->find($query, $options);
         } catch (\exception $e) {
-            error_log("MongoDB Find: " . $e->getMessage());
+            error_log("MongoDB Find [" . get_class($e) . "]: {$e->getMessage()}");
         }
+
         return false;
     }
 
@@ -128,16 +138,16 @@ class Client implements Interfaces\ClientInterface
      * @param array $query
      * @return boolean
      */
-    public function remove($table, $query = array())
+    public function remove($table, array $query = [])
     {
         if (!$this->mongodb) {
+            error_log("MongoDB Remove: No connection");
             return false;
         }
-        $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-        if (isset($query['_id'])) {
-            $query['_id'] = new MongoId($query['_id']);
-        }
-        return $collection->remove($query);
+
+        return $this->mongodb
+            ->selectCollection($this->db_name, $table)
+            ->deleteMany($query);
     }
 
     /**
@@ -146,12 +156,15 @@ class Client implements Interfaces\ClientInterface
      * @param array $query
      * @return array of result
      */
-    public function count($table, $query = array())
+    public function count($table, array $query = [])
     {
         if (!$this->mongodb) {
+            error_log("MongoDB Count: No connection");
             return false;
         }
-        $collection = new MongoCollection($this->mongodb->selectDB($this->db_name), $table);
-        return $collection->count($query);
+
+        return $this->mongodb
+            ->selectCollection($this->db_name, $table)
+            ->count($query);
     }
 }

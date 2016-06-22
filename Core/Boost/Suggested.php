@@ -30,11 +30,15 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
     {
         $cacher = Core\Data\cache\factory::build();
 
-        $boosts = $this->mongo->find("boost", ['type'=>'suggested', 'state'=>'approved']);
+        $boosts = $this->mongo->find("boost", [
+            'type'=>'suggested',
+            'state'=>'approved',
+        ], [
+            'limit' => 15,
+        ]);
         if (!$boosts) {
             return null;
         }
-        $boosts->limit(15);
 
         $boost_guids = array();
         foreach ($boosts as $boost) {
@@ -86,16 +90,17 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
 
         $opts = [
             'type'=>'suggested',
-             'state'=>'approved',
-        ];
-        if ($mem_log) {
+            'state'=>'approved',
+        ];  
+        if($mem_log){
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
         }
-        $boosts = $this->mongo->find("boost", $opts);
+        $boosts = $this->mongo->find("boost", $opts, [
+            'limit' => 100,
+        ]);
         if (!$boosts) {
             return null;
         }
-        $boosts->limit(100);
 
         $return = [];
         foreach ($boosts as $boost) {

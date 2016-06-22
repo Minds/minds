@@ -28,8 +28,12 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
         $boost_impressions = 0;
         $boost_impressions_met = 0;
         $boost_backlog = null;
-        $boost_objs = $mongo->find("boost", ['state'=>'approved', 'type'=>'newsfeed']);
-        $boost_objs->sort(['_id'=> 1]);
+        $boost_objs = $mongo->find("boost", [
+            'state'=>'approved',
+            'type'=>'newsfeed',
+        ], [
+            'sort' => [ '_id'=> 1 ],
+        ]);
         foreach ($boost_objs as $boost) {
             if ($boost_backlog == null) {
                 $boost_backlog = (time() - $boost['_id']->getTimestamp()) / (60 * 60);
@@ -38,8 +42,12 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
             $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
         }
 
-        $boost_reviews = $mongo->find("boost", ['state'=>'review', 'type'=>'newsfeed']);
-        $boost_reviews->sort(['_id'=> 1]);
+        $boost_reviews = $mongo->find("boost", [
+            'state'=>'review',
+            'type'=>'newsfeed',
+        ], [
+            'sort' => [ '_id' => 1 ],
+        ]);
         foreach ($boost_reviews as $obj) {
             $review_backlog = (time() - $obj['_id']->getTimestamp()) / (60 * 60);
             break;

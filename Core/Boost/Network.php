@@ -58,10 +58,10 @@ class Network implements BoostHandlerInterface
         if ($offset) {
             $query['_id'] = [ '$gt' => $offset ];
         }
-        $queue = $this->mongo->find("boost", $query);
-        $queue->limit($limit);
-        $queue->sort(array('_id'=> 1));
-
+        $queue = $this->mongo->find("boost", $query, [
+            'limit' => $limit,
+            'sort' => [ '_id' => 1 ],
+        ]);
         if (!$queue) {
             return false;
         }
@@ -271,13 +271,14 @@ class Network implements BoostHandlerInterface
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
         }
 
-        $boosts = $this->mongo->find("boost", $opts);
-
+        $boosts = $this->mongo->find("boost", $opts, [
+            'limit' => 50,
+            'sort' => [ '_id' => 1 ],
+        ]);
         if (!$boosts) {
             return null;
         }
-        $boosts->sort(['_id'=> 1]);
-        $boosts->limit(50);
+
         $return = [];
         foreach ($boosts as $data) {
             if (count($return) >= $limit) {
