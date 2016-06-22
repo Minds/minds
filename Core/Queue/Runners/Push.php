@@ -59,6 +59,10 @@ class Push implements Interfaces\QueueRunner
                         return false;
                       }
 
+                      if(!$data['message']){
+                          return false;
+                      }
+
                       $message = Surge\Messages\Factory::build($user->surge_token)
                           ->setTitle($data['message'])
                           ->setMessage($data['message'])

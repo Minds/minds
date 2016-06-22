@@ -38,7 +38,7 @@ class Push implements Interfaces\NotificationExtensionInterface
         if($notification['params']['notification_view'] == 'like' || $notification['params']['notification_view'] == 'downvote'){
             return false;
         }
-
+error_log($notification['params']['notification_view']); 
         return QueueClient::build()
             ->setExchange($notification['exchange'])
             ->setQueue($notification['queue'])
@@ -79,7 +79,7 @@ class Push implements Interfaces\NotificationExtensionInterface
         $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
           Core\Session::getLoggedInUser();
 
-        $message = 'You have a notification';
+        $message = '';
 
         if (!isset($notification['params']['notification_view'])) {
             return $message;
@@ -131,6 +131,8 @@ class Push implements Interfaces\NotificationExtensionInterface
             case 'boost_completed':
                 $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $notification['params']['title']);
                 break;
+            default:
+                $message = "";
 
         }
 

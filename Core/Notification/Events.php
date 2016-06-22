@@ -174,7 +174,7 @@ class Events
                     ->emit('notification', (string) $notification->getGuid());
                 } catch (\Exception $e) { /* TODO: To log or not to log */ }
 
-                echo "[notification][{$notification->getGuid()}]: Saved \n";
+                echo "[notification][{$notification->getGuid()}]: Saved {$params['notification_view']} \n";
 
             }
         });
