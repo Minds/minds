@@ -119,7 +119,7 @@ class Peer implements BoostEntityInterface
    * @param Entity $entity
    * @return $this
    */
-  public function setEntity(Entity $entity)
+  public function setEntity($entity)
   {
       $this->entity = $entity;
       return $this;

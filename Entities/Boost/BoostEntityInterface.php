@@ -11,10 +11,11 @@ interface BoostEntityInterface
 {
     /**
    * Set the entity to boost
-   * @param Entity $entity
+   * @param mixed $entity
    * @return $this
+   * @todo   Create an interface for setEntity parameters
    */
-  public function setEntity(Entity $entity);
+  public function setEntity($entity);
 
   /**
    * Get the entity
