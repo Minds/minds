@@ -44,11 +44,10 @@ class Sessions implements \SessionHandlerInterface
                 return $result['data'];
             }
         } catch (Exception $e) {
-            exit;
-            return false;
+            return '';
         }
 
-        return false;
+        return '';
     }
 
     public function write($session_id, $session_data)

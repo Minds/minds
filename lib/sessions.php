@@ -371,6 +371,7 @@ function logout() {
 
     if(session_id() !== ''){
 	    session_destroy();
+        session_start();
         session_regenerate_id(true);
     }
 	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
