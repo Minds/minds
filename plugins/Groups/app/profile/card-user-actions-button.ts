@@ -1,5 +1,5 @@
-import { Component, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
+import { Component, EventEmitter } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
 
 import { Modal } from '../../../components/modal/modal';
 import { GroupsService } from '../groups-service';
@@ -38,7 +38,7 @@ import { GroupsService } from '../groups-service';
   </m-modal>
   `,
   directives: [ CORE_DIRECTIVES, Modal ],
-  bindings: [ GroupsService ]
+  providers: [ GroupsService ]
 })
 
 export class GroupsCardUserActionsButton {

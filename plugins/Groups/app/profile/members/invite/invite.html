@@ -19,7 +19,7 @@
       <input type="text" [(ngModel)]="q" (keyup)="search()" placeholder="Search for a channel"/>
 
       <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white" [hidden]="users.length == 0 || !searching">
-        <div *ngFor="#user of users" (click)="invite(user);" class="m-search-inline-item m-block">
+        <div *ngFor="let user of users" (click)="invite(user);" class="m-search-inline-item m-block">
           <div class="m-avatar">
             <img src="{{minds.cdn_url}}/icon/{{user.guid}}/small" class="mdl-shadow--2dp"/>
           </div>

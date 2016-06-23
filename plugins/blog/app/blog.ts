@@ -1,6 +1,6 @@
-import { Component, Inject } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
+import { Component, Inject } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { ROUTER_DIRECTIVES, Router, RouteParams } from "@angular/router-deprecated";
 
 import { MindsTitle } from '../../services/ux/title';
 import { Client } from '../../services/api';
@@ -15,7 +15,7 @@ import { BlogCard } from './card/card';
 @Component({
   selector: 'minds-blog',
 
-  bindings: [MindsTitle ],
+  providers: [MindsTitle ],
   templateUrl: 'src/plugins/blog/list.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll, BlogCard ]
 })

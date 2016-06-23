@@ -1,6 +1,6 @@
-import { Component, Inject, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { RouterLink, Router, RouteParams } from "angular2/router";
+import { Component, Inject, EventEmitter } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from './groups-service';
 
@@ -14,7 +14,7 @@ import { SignupOnActionModal } from '../../components/modal/modal';
   selector: 'minds-groups-join-button',
 
   properties: ['_group: group'],
-  bindings: [ GroupsService ],
+  providers: [ GroupsService ],
   outputs:[ 'membership' ],
   template: `
     <button class="minds-group-join-button" *ngIf="!group['is:banned'] && !group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()">Join</button>

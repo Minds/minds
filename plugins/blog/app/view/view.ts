@@ -1,6 +1,6 @@
-import { Component, Inject, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
+import { Component, Inject, ElementRef } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
@@ -29,7 +29,7 @@ import { AttachmentService } from '../../../services/attachment';
   host: {
     'class': 'm-blog'
   },
-  bindings:[ MindsTitle, AttachmentService ],
+  providers:[ MindsTitle, AttachmentService ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
     GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard ]

@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter } from 'angular2/core';
-import { Router, RouteParams, RouterLink } from "angular2/router";
+import { Component, ElementRef, EventEmitter } from '@angular/core';
+import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
 
 import { SocketsService } from '../../../services/sockets';
 import { Client } from '../../../services/api';
@@ -24,7 +24,7 @@ export class MessengerEncryption {
 
   minds: Minds;
   session = SessionFactory.build();
-  on : EventEmitter<boolean> = new EventEmitter(true);
+  on : EventEmitter<any> = new EventEmitter(true);
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
   inProgress : boolean = false;

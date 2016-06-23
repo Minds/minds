@@ -1,6 +1,6 @@
-import { Component, Inject } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
+import { Component, Inject } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { ROUTER_DIRECTIVES, Router, RouteParams } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
@@ -15,7 +15,7 @@ import { AttachmentService } from '../../../services/attachment';
   selector: 'minds-card-blog',
 
   properties: ['_blog : object'],
-  bindings: [AttachmentService],
+  providers: [AttachmentService],
   templateUrl: 'src/plugins/blog/card/card.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, InfiniteScroll ]
 })

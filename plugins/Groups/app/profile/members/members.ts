@@ -1,6 +1,6 @@
-import { Component } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { RouterLink, RouteParams } from "angular2/router";
+import { Component } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { RouterLink, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../../groups-service';
 
@@ -21,7 +21,7 @@ import { GroupsCardUserActionsButton } from '../card-user-actions-button';
   templateUrl: 'src/plugins/Groups/profile/members/members.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll,
       GroupsProfileMembersInvite, GroupsCardUserActionsButton ],
-  bindings: [ GroupsService ]
+  providers: [ GroupsService ]
 })
 
 export class GroupsProfileMembers {

@@ -1,5 +1,5 @@
 <minds-messenger-dockpane
-  *ngFor="#conversation of conversations; #i = index"
+  *ngFor="let conversation of conversations; let i = index"
   [style.right]="216 + (240 * i)">
   <minds-messenger-conversation [conversation]="conversation"></minds-messenger-conversation>
 </minds-messenger-dockpane>

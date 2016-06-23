@@ -1,5 +1,5 @@
-import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from 'angular2/core';
-import { Router, RouteParams, RouterLink } from "angular2/router";
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';

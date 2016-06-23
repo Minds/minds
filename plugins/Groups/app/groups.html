@@ -7,7 +7,7 @@
       </minds-add-card>
     </a>
 
-    <div class="mdl-cell mdl-cell--4-col" *ngFor="#group of groups">
+    <div class="mdl-cell mdl-cell--4-col" *ngFor="let group of groups">
       <minds-card-group [group]="group"></minds-card-group>
     </div>
 

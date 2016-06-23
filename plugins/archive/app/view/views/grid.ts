@@ -1,6 +1,6 @@
-import { Component } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
+import { Component } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
@@ -12,9 +12,9 @@ import { AttachmentService } from '../../../../services/attachment';
 @Component({
   selector: 'minds-archive-grid',
   properties: ['_object: object'],
-  bindings: [ AttachmentService ],
+  providers: [ AttachmentService ],
   template: `
-    <a *ngFor="#item of items"
+    <a *ngFor="let item of items"
     [routerLink]="['/Archive-View', {guid: item.guid}]"
     [ngClass]="{ 'm-mature-thumbnail': attachment.shouldBeBlurred(item) }"
     >

@@ -7,7 +7,7 @@
     </minds-add-card>
   </a>
 
-  <div class="mdl-cell mdl-cell--4-col" *ngFor="#blog of blogs">
+  <div class="mdl-cell mdl-cell--4-col" *ngFor="let blog of blogs">
     <minds-card-blog [object]="blog" class=" mdl-card mdl-shadow--2dp minds-banner-card">
     </minds-card-blog>
   </div>

@@ -1,6 +1,6 @@
-import { Component, Inject, ApplicationRef, ChangeDetectorRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "angular2/router";
+import { Component, Inject, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
@@ -21,7 +21,7 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 
 @Component({
   selector: 'm-blog-view-infinite',
-  bindings:[ MindsTitle ],
+  providers:[ MindsTitle ],
   templateUrl: 'src/plugins/blog/view/infinite.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, BlogView, InfiniteScroll ]
 })
