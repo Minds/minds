@@ -25,6 +25,8 @@ class EmailRewards
           case "retention-28":
             $points = 100;
             break;
+          case "birthday":
+            $points = 1000;
           default:
             return;
         }
