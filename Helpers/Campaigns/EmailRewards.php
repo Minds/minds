@@ -25,12 +25,12 @@ class EmailRewards
           case "retention-28":
             $points = 100;
             break;
-          case "birthday":
+          case "birthday-2016":
             $points = 1000;
+            break;
           default:
             return;
         }
-
 
         if ($cacher->get("rewarded:email:$campaign:$user_guid") == true) {
             return;
