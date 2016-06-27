@@ -63,6 +63,12 @@ class DataProvider extends Provider
         $this->di->bind('PubSub\Redis', function($di){
             return new PubSub\Redis\Client();
         }, ['useFactory'=>true]);
+        /**
+         * HTTP bindings
+         */
+        $this->di->bind('Http\Json', function($di){
+            return new Http\Curl\Json\Client();
+        }, ['useFactory'=>true]);
     }
 
 }
