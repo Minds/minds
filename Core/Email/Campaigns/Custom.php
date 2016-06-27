@@ -54,7 +54,7 @@ class Custom
         $skipped = 0;
         foreach($this->getUsers() as $user){
 
-            $user->email = 'john@minds.com';
+            $user->email = 'mark@minds.com';
 
             if(!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes"){
                 $skipped++;

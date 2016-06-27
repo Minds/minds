@@ -26,7 +26,7 @@ class EmailRewards
             $points = 100;
             break;
           case "birthday-2016":
-            $points = 1000;
+            $points = 5000;
             break;
           default:
             return;
