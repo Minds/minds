@@ -14,7 +14,7 @@ class Translations
     protected $http;
     protected $config;
 
-    public function __construct($http = null)
+    public function __construct($http = null, $config = null)
     {
         $di = Core\Di\Di::_();
 
