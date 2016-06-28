@@ -92,6 +92,30 @@ class Defaults
               return $meta;
           }
         });
+
+        Manager::add('/register', function ($slugs = []) {
+
+            $meta = [
+              'title' => 'Register',
+              'description' => $this->config->site_description,
+              'og:title' => 'Register',
+              'og:description' => $this->config->site_description,
+              'og:url' => $this->config->site_url . 'register',
+              'og:image' => $this->config->site_url . 'assets/screenshots/register.png',
+              'og:image:width' => 2000,
+              'og:image:height' => 1000
+            ];
+
+            if(isset($_GET['referrer'])){
+                $user = new Entities\User(strtolower($_GET['referrer']));
+                if($user->name){
+                    $meta['title'] = $meta['og:title'] = "Join $user->name on {$this->config->site_name}";
+                }
+            }
+
+            return $meta;
+
+        });
     }
 
     public static function _()
