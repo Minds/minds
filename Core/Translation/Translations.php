@@ -8,6 +8,7 @@ namespace Minds\Core\Translation;
 
 use Minds\Core;
 use Minds\Entities;
+use Minds\Core\Translation\Storage;
 
 class Translations
 {
@@ -24,14 +25,24 @@ class Translations
 
     public function translateEntity($guid, $target = 'en')
     {
+        $storage = new Storage(); 
+
         if (!$guid) {
             return false;
         }
 
-        // TODO: Read from cache store
-
         if (!$target) {
             $target = 'en';
+        }
+
+        $stored = $storage->get($guid, $target);
+
+        if ($stored !== false) {
+            // Saved in cache store
+            return [
+                'content' => $stored['content'],
+                'source' => $stored['source_language']
+            ];
         }
 
         $entity = Entities\Factory::build($guid);
@@ -50,9 +61,13 @@ class Translations
 
         // TODO: Check comments support
 
-        // TODO: Save to cache store
+        $translation = $this->translateText($message, $target);
 
-        return $this->translateText($message, $target);
+        if ($translation) {
+            $storage->set($guid, $target, $translation['source'], $translation['content']);
+        }
+
+        return $translation;
     }
 
     public function translateText($query, $target = 'en')
@@ -64,7 +79,7 @@ class Translations
         if (!$query) {
             // Don't send empty strings to service
             return [
-                'result' => '',
+                'content' => '',
                 'source' => $target
             ];
         }
@@ -79,14 +94,14 @@ class Translations
             return false;
         }
 
-        $source = false;
+        $source = '';
 
         if (isset($response['data']['translations'][0]['detectedSourceLanguage'])) {
             $source = $response['data']['translations'][0]['detectedSourceLanguage'];
         }
 
         return [
-            'result' => $response['data']['translations'][0]['translatedText'],
+            'content' => $response['data']['translations'][0]['translatedText'],
             'source' => $source
         ];
     }

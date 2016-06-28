@@ -93,6 +93,14 @@ class Call
             $client = Client::build('Cassandra', array('keyspace'=>$this->keyspace, 'servers'=>array($this->servers[0] . ':9042')));
             $query = new Cassandra\Prepared\System();
             $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
+            
+            $query = new Cassandra\Prepared\System();
+            $client->request($query->createTable('translations', [
+                'guid' => 'varchar',
+                'language' => 'varchar',
+                'source_language' => 'varchar',
+                'content' => 'text',
+            ], [ 'guid', 'language' ]));
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit;
