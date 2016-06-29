@@ -109,7 +109,7 @@ class Defaults
             if(isset($_GET['referrer'])){
                 $user = new Entities\User(strtolower($_GET['referrer']));
                 if($user->name){
-                    $meta['title'] = $meta['og:title'] = "Join $user->name on {$this->config->site_name}";
+                    $meta['title'] = $meta['og:title'] = "Join $user->name on {$this->config->site_name} and get 100 views";
                     $meta['og:url'] = "{$this->config->site_url}register?referrer={$user->username}";
                 }
             }
