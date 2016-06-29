@@ -11,11 +11,8 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-// @codingStandardsIgnoreStart
 class languages implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
-    // @codingStandardsIgnoreEnd
-
     /**
      * Get the list of supported languages
      */

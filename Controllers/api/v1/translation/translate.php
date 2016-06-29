@@ -11,23 +11,12 @@ use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-// @codingStandardsIgnoreStart
 class translate implements Interfaces\Api
 {
-    // @codingStandardsIgnoreEnd
-
     /**
-     * Not used
+     * Translates an entity
      */
     public function get($pages)
-    {
-        return Factory::response([]);
-    }
-
-    /**
-     * Translates an activity
-     */
-    public function post($pages)
     {
         if (!isset($pages[0])) {
             return Factory::response([]);
@@ -42,6 +31,14 @@ class translate implements Interfaces\Api
         return Factory::response([
             'translation' => (new Core\Translation\Translations())->translateEntity($pages[0], $target)
         ]);
+    }
+
+    /**
+     * Not used
+     */
+    public function post($pages)
+    {
+        return Factory::response([]);
     }
 
 
