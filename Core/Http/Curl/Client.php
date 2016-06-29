@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Data\Http\Curl;
+namespace Minds\Core\Http\Curl;
 
 class Client
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Minds\Core\Data\Http\Curl\Json;
+namespace Minds\Core\Http\Curl\Json;
 
-use Minds\Core\Data\Http\Curl;
+use Minds\Core\Http\Curl;
 
 class Client extends Curl\Client
 {

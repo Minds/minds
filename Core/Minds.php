@@ -34,6 +34,7 @@ class Minds extends base
         (new Payments\PaymentsProvider())->register();
         (new Queue\QueueProvider())->register();
         (new Security\SecurityProvider())->register();
+        (new Http\HttpProvider())->register();
     }
 
     /**
