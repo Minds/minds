@@ -12,18 +12,18 @@ use Minds\Core\Translation\Storage;
 
 class Translations
 {
-    protected $http;
-    protected $config;
+    protected $cache;
+    protected $service;
 
-    public function __construct($http = null, $config = null)
+    public function __construct($cache = null, $service = null)
     {
         $di = Core\Di\Di::_();
 
-        $this->http = $http ?: $di->get('Http\Json');
-        $this->config = $config ?: $di->get('Config');
+        $this->cache = $cache ?: $di->get('Cache');
+        $this->service = $service ?: $di->get('Translation\Service');
     }
 
-    public function translateEntity($guid, $target = 'en')
+    public function translateEntity($guid, $target = null)
     {
         $storage = new Storage(); 
 
@@ -70,39 +70,12 @@ class Translations
         return $translation;
     }
 
-    public function translateText($query, $target = 'en')
+    public function translateText($content, $target = null, $source = null)
     {
         if (!$target) {
             $target = 'en';
         }
 
-        if (!$query) {
-            // Don't send empty strings to service
-            return [
-                'content' => '',
-                'source' => $target
-            ];
-        }
-
-        $apiKey = $this->config->get('google-api-key');
-        $query = urlencode($query);
-        $url = "https://www.googleapis.com/language/translate/v2?key={$apiKey}&target={$target}&q={$query}";
-
-        $response = $this->http->get($url);
-
-        if (!isset($response['data']['translations'][0]['translatedText'])) {
-            return false;
-        }
-
-        $source = '';
-
-        if (isset($response['data']['translations'][0]['detectedSourceLanguage'])) {
-            $source = $response['data']['translations'][0]['detectedSourceLanguage'];
-        }
-
-        return [
-            'content' => $response['data']['translations'][0]['translatedText'],
-            'source' => $source
-        ];
+        return $this->service->translate($content, $target, $source);
     }
 }
