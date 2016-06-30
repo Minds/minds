@@ -28,8 +28,17 @@ class translate implements Interfaces\Api
             $target = $_GET['target'];
         }
 
+        $user = Core\Session::getLoggedInUser();
+        $changed = (new Core\Translation\Languages())->changeUserLanguage($user, $target);
+
+        if ($changed) {
+            $user->save();
+            $_SESSION['user'] = $user;
+        }
+
         return Factory::response([
-            'translation' => (new Core\Translation\Translations())->translateEntity($pages[0], $target)
+            'translation' => (new Core\Translation\Translations())->translateEntity($pages[0], $target),
+            'purgeLanguagesCache' => $changed,
         ]);
     }
 

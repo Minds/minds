@@ -24,8 +24,18 @@ class languages implements Interfaces\Api, Interfaces\ApiIgnorePam
             $target = $_GET['target'];
         }
 
+        $languages = (new Core\Translation\Languages());
+        $preferred = [ 'en', 'es', 'fr' ];
+        $user = Core\Session::getLoggedinUser();
+
+        if ($user && $user->defaultLang) {
+            $preferred = [ $user->defaultLang ];
+        }
+
+        $result = $languages->getLanguages($target, $preferred);
+
         return Factory::response([
-            'languages' => (new Core\Translation\Languages())->getLanguages($target)
+            'languages' => $result
         ]);
     }
 
