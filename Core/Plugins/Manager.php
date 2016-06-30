@@ -66,6 +66,7 @@ class Manager
             $plugin = self::buildPlugin($id);
             try {
                 $plugin->start();
+                $plugin->init();
             } catch (Exception $e) {}
         }
 
