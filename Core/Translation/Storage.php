@@ -20,12 +20,13 @@ class Storage
         $this->db = $db ?: $di->get('Database\Cassandra\Cql');
     }
 
-    public function get($guid, $target)
+    public function get($guid, $field, $target)
     {
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("SELECT * FROM translations WHERE guid=:guid AND language=:language LIMIT 1", [
+        $prepared->query("SELECT * FROM translations WHERE guid=:guid AND field=:field AND language=:language LIMIT 1", [
             'guid' => (string) $guid,
-            'language' => $target
+            'field' => $field,
+            'language' => $target,
         ]);
 
         $result = (array) $this->db->request($prepared);
@@ -37,7 +38,7 @@ class Storage
         return $result[0];
     }
 
-    public function set($guid, $target, $sourceLanguage, $content)
+    public function set($guid, $field, $target, $sourceLanguage, $content)
     {
         if (!$guid || !$target) {
             return false;
@@ -50,8 +51,9 @@ class Storage
         $content = (string) $content;
 
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("INSERT INTO translations (guid, language, source_language, content) VALUES (:guid, :language, :sourcelanguage, :content)", [
+        $prepared->query("INSERT INTO translations (guid, field, language, source_language, content) VALUES (:guid, :field, :language, :sourcelanguage, :content)", [
             'guid' => (string) $guid,
+            'field' => $field,
             'language' => $target,
             'sourcelanguage' => $sourceLanguage,
             'content' => $content,
@@ -68,9 +70,10 @@ class Storage
 
     CREATE TABLE translations (
         guid varchar,
+        field varchar,
         language varchar,
         source_language varchar,
         content text,
-        PRIMARY KEY (guid, language)
+        PRIMARY KEY (guid, field, language)
     );
 */

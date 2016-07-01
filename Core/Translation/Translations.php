@@ -35,7 +35,7 @@ class Translations
             $target = 'en';
         }
 
-        $stored = $storage->get($guid, $target);
+        $stored = $storage->get($guid, 'message', $target);
 
         if ($stored !== false) {
             // Saved in cache store
@@ -64,7 +64,7 @@ class Translations
         $translation = $this->translateText($message, $target);
 
         if ($translation) {
-            $storage->set($guid, $target, $translation['source'], $translation['content']);
+            $storage->set($guid, 'message', $target, $translation['source'], $translation['content']);
         }
 
         return $translation;
