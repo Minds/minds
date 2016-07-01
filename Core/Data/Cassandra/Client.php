@@ -6,6 +6,7 @@ namespace Minds\Core\Data\Cassandra;
 
 use Cassandra as CassandraLibrary;
 use Minds\Core\Data\Interfaces;
+use Minds\Core\Config;
 
 class Client implements Interfaces\ClientInterface
 {
@@ -57,5 +58,10 @@ class Client implements Interfaces\ClientInterface
 
         $response = $this->cassandra->syncRequest($batchRequest);
         //return $response->fetchAll();
+    }
+
+    public function getPrefix()
+    {
+        return Config::_()->get('multi')['prefix'];
     }
 }
