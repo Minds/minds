@@ -29,7 +29,7 @@ class languages implements Interfaces\Api, Interfaces\ApiIgnorePam
         $user = Core\Session::getLoggedinUser();
 
         if ($user && $user->defaultLang) {
-            $preferred = [ $user->defaultLang ];
+            $preferred = array_unique([ 'en', $user->defaultLang ]);
         }
 
         $result = $languages->getLanguages($target, $preferred);
