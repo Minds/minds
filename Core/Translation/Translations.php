@@ -15,6 +15,8 @@ class Translations
     protected $cache;
     protected $service;
 
+    const MAX_CONTENT_LENGTH = 1000;
+
     public function __construct($cache = null, $service = null)
     {
         $di = Core\Di\Di::_();
@@ -60,6 +62,10 @@ class Translations
         }
 
         // TODO: Check comments support
+
+        if (strlen($message) > static::MAX_CONTENT_LENGTH) {
+            $message = substr($message, 0, static::MAX_CONTENT_LENGTH);
+        }
 
         $translation = $this->translateText($message, $target);
 
