@@ -97,10 +97,11 @@ class Call
             $query = new Cassandra\Prepared\System();
             $client->request($query->createTable('translations', [
                 'guid' => 'varchar',
+                'field' => 'varchar',
                 'language' => 'varchar',
                 'source_language' => 'varchar',
                 'content' => 'text',
-            ], [ 'guid', 'language' ]));
+            ], [ 'guid', 'field', 'language' ]));
         } catch (\Exception $e) {
             echo $e->getMessage();
             exit;
