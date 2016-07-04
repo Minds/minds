@@ -40,7 +40,7 @@ class Translations
         $entity = null; // Lazily-loaded if needed
         $translation = [];
 
-        foreach ([ 'message', 'title', 'blurb' ] as $field) {
+        foreach ([ 'message', 'title', 'blurb', 'description' ] as $field) {
             $stored = $storage->get($guid, $field, $target);
 
             if ($stored !== false) {
@@ -68,6 +68,14 @@ class Translations
                         $content = $entity->getMessage();
                     } elseif (property_exists($entity, 'message') || isset($entity->message)) {
                         $content = $entity->message;
+                    }
+                    break;
+
+                case 'description':
+                    if (method_exists($entity, 'getDescription')) {
+                        $content = $entity->getDescription();
+                    } elseif (property_exists($entity, 'description') || isset($entity->description)) {
+                        $content = $entity->description;
                     }
                     break;
 
