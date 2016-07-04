@@ -28,6 +28,8 @@ class translate implements Interfaces\Api
             $target = $_GET['target'];
         }
 
+        $translation = (object) (new Core\Translation\Translations())->translateEntity($pages[0], $target);
+
         $user = Core\Session::getLoggedInUser();
         $changed = (new Core\Translation\Languages())->changeUserLanguage($user, $target);
 
@@ -37,7 +39,7 @@ class translate implements Interfaces\Api
         }
 
         return Factory::response([
-            'translation' => (new Core\Translation\Translations())->translateEntity($pages[0], $target),
+            'translation' => $translation,
             'purgeLanguagesCache' => $changed,
         ]);
     }

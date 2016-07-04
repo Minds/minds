@@ -27,7 +27,7 @@ class Translations
 
     public function translateEntity($guid, $target = null)
     {
-        $storage = new Storage(); 
+        $storage = new Storage();
 
         if (!$guid) {
             return false;
@@ -37,40 +37,65 @@ class Translations
             $target = 'en';
         }
 
-        $stored = $storage->get($guid, 'message', $target);
+        $entity = null; // Lazily-loaded if needed
+        $translation = [];
 
-        if ($stored !== false) {
-            // Saved in cache store
-            return [
-                'content' => $stored['content'],
-                'source' => $stored['source_language']
-            ];
-        }
+        foreach ([ 'message', 'title', 'blurb' ] as $field) {
+            $stored = $storage->get($guid, $field, $target);
 
-        $entity = Entities\Factory::build($guid);
+            if ($stored !== false) {
+                // Saved in cache store
+                $translation[$field] = [
+                    'content' => $stored['content'],
+                    'source' => $stored['source_language']
+                ];
+                continue;
+            }
 
-        if (!$entity) {
-            return false;
-        }
+            if (!$entity) {
+                $entity = Entities\Factory::build($guid);
+            }
 
-        $message = '';
+            if (!$entity) {
+                continue;
+            }
 
-        if (method_exists($entity, 'getMessage')) {
-            $message = $entity->getMessage();
-        } elseif (property_exists($entity, 'message') || isset($entity->message)) {
-            $message = $entity->message;
-        }
+            $content = '';
 
-        // TODO: Check comments support
+            switch ($field) {
+                case 'message':
+                    if (method_exists($entity, 'getMessage')) {
+                        $content = $entity->getMessage();
+                    } elseif (property_exists($entity, 'message') || isset($entity->message)) {
+                        $content = $entity->message;
+                    }
+                    break;
 
-        if (strlen($message) > static::MAX_CONTENT_LENGTH) {
-            $message = substr($message, 0, static::MAX_CONTENT_LENGTH);
-        }
+                case 'title':
+                case 'blurb':
+                    if (!$entity->custom_type) {
+                        continue 2; // exit switch AND continue foreach
+                    }
 
-        $translation = $this->translateText($message, $target);
+                    if (property_exists($entity, $field) || isset($entity->{$field})) {
+                        $content = $entity->{$field};
+                    }
+                    break;
+            }
 
-        if ($translation) {
-            $storage->set($guid, 'message', $target, $translation['source'], $translation['content']);
+            if (strlen($content) === 0) {
+                continue;
+            }
+
+            if (strlen($content) > static::MAX_CONTENT_LENGTH) {
+                $content = substr($content, 0, static::MAX_CONTENT_LENGTH);
+            }
+
+            $translation[$field] = $this->translateText($content, $target);
+
+            if ($translation[$field]) {
+                $storage->set($guid, $field, $target, $translation[$field]['source'], $translation[$field]['content']);
+            }
         }
 
         return $translation;
