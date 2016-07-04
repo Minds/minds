@@ -6,6 +6,7 @@
 namespace Minds\Entities;
 
 use Minds\Helpers;
+use Minds\Core;
 use Minds\Core\Queue;
 use Minds\Core\Analytics;
 
@@ -62,6 +63,8 @@ class Activity extends Entity
         foreach ($indexes as $index) {
             $db->removeAttributes($index, array($this->guid));
         }
+
+        (new Core\Translation\Storage())->purge($this->guid);
 
         Queue\Client::build()->setExchange("mindsqueue")
                             ->setQueue("FeedCleanup")

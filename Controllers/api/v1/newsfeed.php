@@ -333,6 +333,7 @@ class newsfeed implements Interfaces\Api
                     }
 
                     $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
+                    (new Core\Translation\Storage())->purge($activity->guid);
                     $activity->save();
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }

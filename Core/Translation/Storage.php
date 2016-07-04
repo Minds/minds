@@ -63,6 +63,20 @@ class Storage
 
         return isset($result[0]) ? $result[0] : false;
     }
+
+    public function purge($guid)
+    {
+        if (!$guid) {
+            return false;
+        }
+
+        $prepared = new Cassandra\Prepared\Custom();
+        $prepared->query("DELETE FROM translations WHERE guid=:guid", [
+            'guid' => (string) $guid,
+        ]);
+
+        return $this->db->request($prepared);
+    }
 }
 
 /*
