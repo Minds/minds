@@ -127,6 +127,8 @@ class Activity extends Entity
                 'thumbnail_src',
                 'remind_object',
                 'entity_guid',
+                'featured',
+                'featured_guid',
                 'custom_type',
                 'custom_data',
                 'thumbs:up:count',

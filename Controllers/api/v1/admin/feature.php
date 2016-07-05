@@ -42,10 +42,10 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
         $entity = Entities\Factory::build($pages[0]);
 
         if (!$entity) {
-            return Factory::response(array(
-          'status' => 'error',
-          'message' => "Entity not found"
-        ));
+            return Factory::response([
+              'status' => 'error',
+              'message' => "Entity not found"
+            ]);
         }
         if (!$entity->featured_id || $entity->featured_id == 0) {
             $entity->feature();

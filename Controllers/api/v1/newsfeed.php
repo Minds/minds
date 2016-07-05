@@ -46,6 +46,15 @@ class newsfeed implements Interfaces\Api
                 'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
             );
             break;
+          case 'featured':
+            $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
+            $guids = $db->getRow('activity:featured', [ 'limit' => 24 ]);
+            if($guids){
+                $options['guids'] = $guids;
+            } else {
+                return Factory::response([]);
+            }
+            break;
           case 'container':
             $options = array(
               'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
@@ -62,7 +71,7 @@ class newsfeed implements Interfaces\Api
                     'load-previous' => ''
                 ]);
             }
-            
+
             $namespace = Core\Entities::buildNamespace(array_merge([
                 'type' => 'activity'
             ], $options));
@@ -73,11 +82,11 @@ class newsfeed implements Interfaces\Api
                 'offset' => $offset,
                 'reversed' => false
             ]);
-            
+
             if (isset($guids[$offset])) {
                 unset($guids[$offset]);
             }
-            
+
             if (!$guids) {
                 return Factory::response([
                     'count' => 0,

@@ -60,6 +60,11 @@ class Indexes
         }
     }
 
+    public function getRow($row, array $opts = [])
+    {
+        return $this->db->getRow($row, $opts);
+    }
+
     /**
      * Counts index entry GUIDs
      * @param  string $name
