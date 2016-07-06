@@ -47,6 +47,10 @@ class Custom
     public function send()
     {
 
+        $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
+        $featured = Entities::get(['guids' => $featured_guids]);
+        $this->template->set('featured', $featured);
+
         $this->template->setTemplate('default.tpl');
         $this->template->setBody("./Templates/$this->templateKey.tpl");
 
