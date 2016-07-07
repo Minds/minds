@@ -57,7 +57,7 @@
     <!-- END: Google adsense block -->
 
     <div class="mdl-cell mdl-cell--12-col minds-blog-body"
-    innerHtml="{{blog.description}}"
+    [innerHtml]="blog.description | safe"
     [ngClass]="{ 'm-mature-text': attachment.shouldBeBlurred(blog) }"
     ></div>
   </div>
