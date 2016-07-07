@@ -138,6 +138,11 @@ class Events
                 $params['to'] = array_diff($params['to'], $muted);
             }
 
+            $from_user = $notification->getFrom();
+            if (is_numeric($from_user) || is_string($from_user)) {
+                $from_user = Entities\Factory::build($from_user);
+            }
+
             $manager = new Notifications();
 
             foreach ($params['to'] as $to_user) {
@@ -147,6 +152,11 @@ class Events
                 }
 
                 if (!$to_user) {
+                    continue;
+                }
+
+                if ($from_user->guid && Core\Security\ACL\Block::_()->isBlocked($from_user, $to_user)) {
+                    // echo "{$from_user->username} is blocked by {$to_user->username}, skipping.";
                     continue;
                 }
 
