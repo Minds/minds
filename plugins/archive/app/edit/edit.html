@@ -23,13 +23,13 @@
     <div class="m-license-info">
       <i class="material-icons">public</i>
       <select [ngModel]="entity.license" (change)="entity.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option *ngFor="#l of licenses" [value]="l.value">{{l.text}}</option>
+          <option *ngFor="let l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
     <div class="m-visibility-info">
       <i class="material-icons">visibility</i>
       <select [ngModel]="entity.access_id" (change)="entity.access_id = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
-          <option *ngFor="#a of access" [value]="a.value">{{a.text}}</option>
+          <option *ngFor="let a of access" [value]="a.value">{{a.text}}</option>
       </select>
     </div>
     <div class="m-mature-info">

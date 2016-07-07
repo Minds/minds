@@ -9,7 +9,7 @@
 
 <div class="minds-list">
 
-    <minds-activity *ngFor="#a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
+    <minds-activity *ngFor="let a of activity" [object]="a" class="mdl-card mdl-shadow--2dp item"></minds-activity>
     <infinite-scroll
         distance="25%"
         (load)="load()"

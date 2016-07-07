@@ -1,4 +1,4 @@
-import { Injector, Inject, provide } from 'angular2/core';
+import { ReflectiveInjector, Inject, provide } from '@angular/core';
 import { Storage } from '../../../services/storage';
 
 export class MessengerConversationDockpanesService{
@@ -64,7 +64,7 @@ export class MessengerConversationDockpanesService{
 /**
  * @todo ideally we want this inside the bootstrap
  */
-var injector = Injector.resolveAndCreate([
+var injector = ReflectiveInjector.resolveAndCreate([
 	provide(MessengerConversationDockpanesService, {
     useFactory: () => new MessengerConversationDockpanesService(new Storage())
   })

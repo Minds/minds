@@ -1,5 +1,5 @@
-import { Component, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
+import { Component, EventEmitter } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
 
 import { Client } from '../../../../../services/api';
 import { Material } from '../../../../../directives/material';
@@ -12,7 +12,7 @@ import { GroupsService } from '../../../groups-service';
   events: ['invited'],
   templateUrl: 'src/plugins/Groups/profile/members/invite/invite.html',
   directives: [ CORE_DIRECTIVES, Material ],
-  bindings: [ GroupsService ]
+  providers: [ GroupsService ]
 })
 
 export class GroupsProfileMembersInvite {

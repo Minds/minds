@@ -1,8 +1,8 @@
-import { Injector, provide } from 'angular2/core';
+import { ReflectiveInjector, provide } from '@angular/core';
 import { Client } from '../../../services/api';
 import { Storage } from '../../../services/storage';
 import { MINDS_PROVIDERS } from '../../../services/providers';
-import { HTTP_PROVIDERS } from 'angular2/http';
+import { HTTP_PROVIDERS } from '@angular/http';
 
 
 export class MessengerEncryptionService{
@@ -90,7 +90,7 @@ export class MessengerEncryptionService{
 /**
  * @todo ideally we want this inside the bootstrap
  */
-var injector = Injector.resolveAndCreate([
+var injector = ReflectiveInjector.resolveAndCreate([
 	provide(MessengerEncryptionService, {
     useFactory: (client) => new MessengerEncryptionService(client, new Storage()),
     deps: [ Client ]

@@ -1,6 +1,6 @@
-import { Component, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteParams, RouterLink, Location, ROUTER_DIRECTIVES } from 'angular2/router';
+import { Component, EventEmitter } from '@angular/core';
+import { CORE_DIRECTIVES, Location } from '@angular/common';
+import { Router, RouteParams, RouterLink, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 
 import { Modal } from '../../../components/modal/modal';
 import { GroupsService } from '../groups-service';
@@ -33,7 +33,7 @@ import { GroupsService } from '../groups-service';
     </m-modal>
   `,
   directives: [ CORE_DIRECTIVES, Modal ],
-  bindings: [ GroupsService ]
+  providers: [ GroupsService ]
 })
 
 export class GroupsSettingsButton {

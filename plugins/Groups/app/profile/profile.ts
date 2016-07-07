@@ -1,6 +1,6 @@
-import { Component, Inject } from 'angular2/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
-import { RouterLink, RouteParams } from "angular2/router";
+import { Component, Inject } from '@angular/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
+import { RouterLink, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../groups-service';
 
@@ -27,7 +27,7 @@ import { ChannelModules } from '../../../controllers/channels/modules/modules';
 @Component({
   selector: 'minds-groups-profile',
   pipes: [ TagsPipe ],
-  bindings: [ MindsTitle, GroupsService ],
+  providers: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/profile/profile.html',
   directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, BUTTON_COMPONENTS, RouterLink, CARDS, GroupsJoinButton,
     GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar, GroupsSettingsButton, ChannelModules, TagsInput,

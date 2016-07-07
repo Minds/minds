@@ -3,7 +3,7 @@
     [class.mdl-color--amber]="conversation.unread"
     (click)="dockpanes.toggle(conversation); load(null,null, true);">
     <div class="m-messenger-dockpane-tab-title">
-      <span *ngFor="#participant of conversation.participants">{{participant.username}}</span>
+      <span *ngFor="let participant of conversation.participants">{{participant.username}}</span>
     </div>
     <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
       <i class="material-icons mdl-color-text--blue-grey-100" [hidden]="live">sync_problem</i>
@@ -49,7 +49,7 @@
         <div class="mdl-spinner mdl-js-spinner is-active" [mdl] style="margin: 16px auto;"></div>
       </div>
       <div class="m-messenger-conversation-messages-message"
-        *ngFor="#message of messages"
+        *ngFor="let message of messages"
         [class.m-optimistic-guess]="message.optimisticGuess"
         [class.odd]="message.owner.guid == session.getLoggedInUser().guid"
         (click)="message.showTs = !message.showTs">

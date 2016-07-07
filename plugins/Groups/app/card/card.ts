@@ -1,6 +1,6 @@
-import { Component, Inject } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { RouterLink, Router, RouteParams } from "angular2/router";
+import { Component, Inject } from '@angular/core';
+import { CORE_DIRECTIVES } from '@angular/common';
+import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../groups-service';
 
@@ -13,7 +13,7 @@ import { GroupsJoinButton } from '../groups-join-button';
 @Component({
   selector: 'minds-card-group',
   inputs: ['group'],
-  bindings: [ GroupsService ],
+  providers: [ GroupsService ],
   templateUrl: 'src/plugins/Groups/card/card.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, GroupsJoinButton ]
 })

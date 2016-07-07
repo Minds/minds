@@ -92,7 +92,7 @@
 
         <div [hidden]="editing || !group.tags" *ngIf="group.tags">
           <i class="material-icons mdl-color-text--blue-grey-300">local_offer</i>
-          <span *ngFor="#tag of group.tags">{{tag}}</span>
+          <span *ngFor="let tag of group.tags">{{tag}}</span>
         </div>
 
         <div *ngIf="editing && group['is:owner']">
@@ -139,7 +139,7 @@
 
         <!-- Avatars of latest users -->
         <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid">
-          <a *ngFor="#member of group.members"
+          <a *ngFor="let member of group.members"
           [routerLink]="['/Channel', {username: member.username}]"
           [hovercard]="member.guid" [hovercardAnchor]="['left', 'bottom']"
           >

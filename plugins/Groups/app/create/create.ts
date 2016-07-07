@@ -1,6 +1,6 @@
-import { Component } from 'angular2/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from 'angular2/common';
-import { Router, RouterLink } from "angular2/router";
+import { Component } from '@angular/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
+import { Router, RouterLink } from "@angular/router-deprecated";
 
 import { GroupsService } from '../groups-service';
 
@@ -19,7 +19,7 @@ import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
   host: {
     '(keydown)': 'keyDown($event)'
   },
-  bindings: [ MindsTitle, GroupsService ],
+  providers: [ MindsTitle, GroupsService ],
   templateUrl: 'src/plugins/Groups/create/create.html',
   directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite, TagsInput ]
 })

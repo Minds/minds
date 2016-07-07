@@ -7,7 +7,7 @@
   <span class="mdl-color-text--blue-grey-300">Please try again later</span>
 </div>
 
-<div class="m-blog-view" *ngFor="#blog of blogs; #i = index">
+<div class="m-blog-view" *ngFor="let blog of blogs; let i = index">
   <m-blog-view [blog]="blog" [index]="i"></m-blog-view>
 </div>
 
