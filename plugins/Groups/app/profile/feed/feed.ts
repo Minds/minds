@@ -123,4 +123,10 @@ export class GroupsProfileFeed {
       });
   }
 
+  delete(activity){
+    for(var i in this.activity){
+      if(this.activity[i] == activity)
+        this.activity.splice(i,1);
+    }
+  }
 }

@@ -39,6 +39,20 @@ class Events
             $e->setResponse($membership->isMember($user->guid));
         });
 
+        Dispatcher::register('acl:write', 'activity', function($e) {
+            $params = $e->getParameters();
+            $entity = $params['entity'];
+            $user = $params['user'];
+
+            $group = $entity->getContainerEntity();
+
+            if (!($group instanceof Groups\Entities\Group)) {
+                return;
+            }
+
+            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
+        });
+
         Dispatcher::register('acl:read', 'group', function($e) {
             $params = $e->getParameters();
             $group = $params['entity'];
@@ -52,7 +66,7 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
-            $e->setResponse($group->isOwner($user->guid) || $group->isMember($user->guid));
+            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
         });
 
         Dispatcher::register('activity:container', 'group', function ($e) {
@@ -70,7 +84,7 @@ class Events
 
             $notifications = (new Notifications)->setGroup($group);
             $e->setResponse($notifications->send($params['params']));
-            echo "[]: sent to $group->guid \n"; 
+            echo "[]: sent to $group->guid \n";
         });
 
         Dispatcher::register('cleanup:dispatch', 'group', function ($e) {
