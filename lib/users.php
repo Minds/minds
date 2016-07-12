@@ -1000,23 +1000,23 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	access_show_hidden_entities(true);
 
 	if (!validate_email_address($email)) {
-		throw new RegistrationException(elgg_echo('registration:emailnotvalid'));
+		throw new RegistrationException("Invalid email");
 	}
 
 	if (!validate_password($password)) {
-		throw new RegistrationException(elgg_echo('registration:passwordnotvalid'));
+		throw new RegistrationException("Invalid password");
 	}
 
 	if (!validate_username($username)) {
-		throw new RegistrationException(elgg_echo('registration:usernamenotvalid'));
+		throw new RegistrationException("Invalid username");
 	}
 
 	if ($user = get_user_by_username($username)) {
-		throw new RegistrationException(elgg_echo('registration:userexists'));
+		throw new RegistrationException("User exits");
 	}
 
 	if ((!$allow_multiple_emails) && (get_user_by_email($email))) {
-		throw new RegistrationException(elgg_echo('registration:dupeemail'));
+		throw new RegistrationException("Duplicated email");
 	}
 
 	access_show_hidden_entities($access_status);
