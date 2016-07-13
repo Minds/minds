@@ -41,7 +41,7 @@ try {
     $minds->loadLegacy();
 
     if (isset($help)) {
-        $handler->help($hanlder->getExecCommand());
+        $handler->help($handler->getExecCommand());
     } else {
         $errorlevel = $handler->{$handler->getExecCommand()}();
         echo PHP_EOL;
