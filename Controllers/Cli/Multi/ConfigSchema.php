@@ -10,16 +10,21 @@ use Minds\Cli;
 
 class ConfigSchema extends Cli\Controller implements Interfaces\CliControllerInterface
 {
-    public function help()
+    protected $config;
+
+    public function __construct($config = null)
+    {
+        $this->config = $config ?: Di::_()->get('Config');
+    }
+
+    public function help($command = null)
     {
         $this->out('TBD');
     }
 
     public function exec(array $args = [])
     {
-        $config = Di::_()->get('Config');
-
-        $db = new Data\Call(null, $config->multi['cassandra']->keyspace);
+        $db = new Data\Call(null, $this->config->multi['cassandra']->keyspace);
         $db->installSchema();
     }
 }

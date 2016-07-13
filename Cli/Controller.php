@@ -6,6 +6,8 @@ class Controller
     protected $args = [];
     protected $opts = [];
 
+    private $_execCommand;
+
     public function out($strings)
     {
         if (!is_array($strings)) {
@@ -35,10 +37,17 @@ class Controller
                 }
 
                 $this->opts[$arg[0]] = isset($arg[1]) ? $arg[1] : true;
+            } elseif (!$this->_execCommand && count($this->args) === 0 && method_exists($this, $arg)) {
+                $this->_execCommand = $arg;
             } else {
                 $this->args[] = $arg;
             }
         }
+    }
+
+    public function getExecCommand()
+    {
+        return $this->_execCommand ?: 'exec';
     }
 
     public function getOpts(array $opts)

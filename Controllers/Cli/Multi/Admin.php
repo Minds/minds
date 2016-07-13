@@ -10,35 +10,30 @@ use Minds\Exceptions\CliException;
 
 class Admin extends Cli\Controller implements Interfaces\CliControllerInterface
 {
-    public function help()
+    public function help($command = null)
     {
         $this->out('[opts]: --domain --username --email --password');
     }
 
     public function exec()
     {
-        $config = Di::_()->get('Config');
+        throw new CliException('Did you mean: multi admin create?');
+    }
 
-        if (!isset($this->args[0])) {
-            throw new CliException('Specify a subcommand');
-        }
+    public function create()
+    {
+        $opts = $this->getOpts(['domain', 'username', 'email', 'password']);
 
-        switch($this->args[0]){
-            case "create":
-                $opts = $this->getOpts(['domain', 'username', 'email', 'password']);
+        $site = new Site();
+        $site->loadFromDomain($opts['domain']);
 
-                $site = new Site();
-                $site->loadFromDomain($opts['domain']);
+        $provisioner = Di::_()->get('Multi\Provisioner');
+        $provisioner->setSite($site);
 
-                $provisioner = Di::_()->get('Multi\Provisioner');
-                $provisioner->setSite($site);
+        $success = $provisioner->setupAdmin($opts['username'], $opts['email'], $opts['password']);
 
-                $success = $provisioner->setupAdmin($opts['username'], $opts['email'], $opts['password']);
-
-                if (!$success) {
-                    throw new CliException("The user could not be saved");
-                }
-                break;
+        if (!$success) {
+            throw new CliException("The user could not be saved");
         }
     }
 }

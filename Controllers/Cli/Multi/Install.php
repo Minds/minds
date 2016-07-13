@@ -10,7 +10,7 @@ use Minds\Exceptions\CliException;
 
 class Install extends Cli\Controller implements Interfaces\CliControllerInterface
 {
-    public function help()
+    public function help($command = null)
     {
         $this->out('[opts]: --domain --name');
     }

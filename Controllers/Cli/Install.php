@@ -14,7 +14,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
         define('__MINDS_INSTALLING__', true);
     }
 
-    public function help()
+    public function help($command = null)
     {
         $this->out('TBD');
     }
