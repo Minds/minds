@@ -7,6 +7,7 @@ if (PHP_SAPI !== 'cli') {
 
 require_once(dirname(__FILE__) . "/../engine/vendor/autoload.php");
 error_reporting(E_ALL);
+date_default_timezone_set('UTC');
 
 $_SCRIPTNAME = basename(__FILE__);
 
