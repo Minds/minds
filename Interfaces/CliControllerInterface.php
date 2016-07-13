@@ -6,7 +6,7 @@ namespace Minds\Interfaces;
 
 interface CliControllerInterface
 {
-
-    public function exec(array $args = []);
-
+    public function help();
+    public function exec();
+    public function setArgs(array $args);
 }

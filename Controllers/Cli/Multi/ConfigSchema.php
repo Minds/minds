@@ -6,25 +6,20 @@ use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Cli\Factory;
+use Minds\Cli;
 
-class ConfigSchema implements Interfaces\CliControllerInterface
+class ConfigSchema extends Cli\Controller implements Interfaces\CliControllerInterface
 {
+    public function help()
+    {
+        $this->out('TBD');
+    }
 
     public function exec(array $args = [])
     {
-
-        if($args[0] == "--help"){
-            echo "[opts]: --domain --name \n";
-            exit;
-        }
-
         $config = Di::_()->get('Config');
 
         $db = new Data\Call(null, $config->multi['cassandra']->keyspace);
         $db->installSchema();
-
-        echo "\n";
     }
-
 }

@@ -5,35 +5,33 @@ namespace Minds\Controllers\Cli\Multi;
 use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Cli\Factory;
+use Minds\Cli;
+use Minds\Exceptions\CliException;
 
-class Install implements Interfaces\CliControllerInterface
+class Install extends Cli\Controller implements Interfaces\CliControllerInterface
 {
-
-    public function exec(array $args = [])
+    public function help()
     {
+        $this->out('[opts]: --domain --name');
+    }
 
-        if($args[0] == "--help"){
-            echo "[opts]: --domain --name \n";
-            exit;
-        }
+    public function exec()
+    {
+        $opts = $this->getOpts(['domain', 'name']);
 
-        $opts = Factory::getOpts(['domain', 'name'], $args);
-
-        if(!$opts['domain']){
-            throw new \Exception('Domain needs to be supplied');
+        if (!$opts['domain']) {
+            throw new CliException('Specify a domain name');
         }
 
         $site = new Entities\Multi\Site();
         $site->setDomain($opts['domain']);
+        $site->setName($opts['name'] ?: 'Minds');
 
         $provisioner = Di::_()->get('Multi\Provisioner');
-        $provisioner->setSite($site)
-          ->install([]);
+        $provisioner
+            ->setSite($site)
+            ->install([]);
 
         $site->save();
-
-        echo "\n";
     }
-
 }

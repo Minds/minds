@@ -5,24 +5,28 @@ namespace Minds\Controllers\Cli\Multi;
 use Minds\Core\Di\Di;
 use Minds\Entities\Multi\Site;
 use Minds\Interfaces;
-use Minds\Cli\Factory;
+use Minds\Cli;
+use Minds\Exceptions\CliException;
 
-class Admin implements Interfaces\CliControllerInterface
+class Admin extends Cli\Controller implements Interfaces\CliControllerInterface
 {
-
-    public function exec(array $args = [])
+    public function help()
     {
+        $this->out('[opts]: --domain --username --email --password');
+    }
 
-        if($args[0] == "--help"){
-            echo "[opts]: --domain --name \n";
-            exit;
+    public function exec()
+    {
+        $config = Di::_()->get('Config');
+
+        if (!isset($this->args[0])) {
+            throw new CliException('Specify a subcommand');
         }
 
-        $config = Di::_()->get('Config');
-        $opts = Factory::getOpts(['domain', 'name', 'username', 'email', 'password'], $args);
-
-        switch($args[0]){
+        switch($this->args[0]){
             case "create":
+                $opts = $this->getOpts(['domain', 'username', 'email', 'password']);
+
                 $site = new Site();
                 $site->loadFromDomain($opts['domain']);
 
@@ -31,13 +35,10 @@ class Admin implements Interfaces\CliControllerInterface
 
                 $success = $provisioner->setupAdmin($opts['username'], $opts['email'], $opts['password']);
 
-                if(!$success){
-                    throw new \Exception("The user could not be saved");
+                if (!$success) {
+                    throw new CliException("The user could not be saved");
                 }
                 break;
         }
-
-        echo "\n";
     }
-
 }

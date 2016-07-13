@@ -17,7 +17,6 @@ class Factory
      */
     public static function build($segments)
     {
-
         $route = implode('\\', $segments);
         $loop = count($segments);
         while ($loop >= 0) {
@@ -34,8 +33,8 @@ class Factory
                 $class_name = Routes::$routes[$actual];
                 if (class_exists($class_name)) {
                     $handler = new $class_name();
-                    $pages = array_splice($segments, $loop) ?: array();
-                    return $handler->exec($pages);
+                    $handler->setArgs(array_splice($segments, $loop) ?: []);
+                    return $handler;
                 }
             }
 
@@ -43,23 +42,12 @@ class Factory
             $class_name = "\\Minds\\Controllers\\cli\\$route";
             if (class_exists($class_name)) {
                 $handler = new $class_name();
-                $pages = array_splice($segments, $loop) ?: array();
-                return $handler->exec($pages);
+                $handler->setArgs(array_splice($segments, $loop) ?: []);
+                return $handler;
             }
             --$loop;
         }
-    }
 
-    public static function getOpts(array $opts = [], $argv = [])
-    {
-        $return = array_flip($opts);
-        foreach($opts as $opt){
-            $pos = array_search("--$opt", $argv);
-            if($pos !== FALSE){
-                $return[$opt] = $argv[$pos+1];
-            }
-        }
-        return $return;
+        return false;
     }
-
 }
