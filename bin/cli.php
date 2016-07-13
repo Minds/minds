@@ -40,6 +40,10 @@ try {
     $minds->loadConfigs();
     $minds->loadLegacy();
 
+    if (method_exists($handler, 'setApp')) {
+        $handler->setApp($minds);
+    }
+
     if (isset($help)) {
         $handler->help($handler->getExecCommand());
     } else {
@@ -48,11 +52,11 @@ try {
         exit((int) $errorlevel);
     }
 } catch (Minds\Exceptions\CliException $e) {
-    echo "{$_SCRIPTNAME}: {$e->getMessage()}" . PHP_EOL;
+    echo PHP_EOL . "{$_SCRIPTNAME}: [ERROR] {$e->getMessage()}" . PHP_EOL;
     exit(1);
 } catch (\Exception $e) {
     $exceptionClass = get_class($e);
-    echo "{$_SCRIPTNAME}: [{$exceptionClass}] {$e->getMessage()}" . PHP_EOL;
+    echo PHP_EOL . "{$_SCRIPTNAME}: [EXCEPTION:{$exceptionClass}] {$e->getMessage()}" . PHP_EOL;
     exit(1);
 }
 
