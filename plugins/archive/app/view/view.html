@@ -90,7 +90,7 @@
     </div>
 
 
-    <div class="mdl-cell mdl-cell--12-col m-discovery-full-description" [innerHtml]="entity.description" [hidden]="!entity.description"></div>
+    <div class="mdl-cell mdl-cell--12-col m-discovery-full-description" [innerHtml]="entity.description | safe" *ngIf="entity.description"></div>
 
 
 </div>
