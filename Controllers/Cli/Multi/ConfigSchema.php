@@ -2,8 +2,8 @@
 
 namespace Minds\Controllers\Cli\Multi;
 
+use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Cli;
@@ -24,7 +24,12 @@ class ConfigSchema extends Cli\Controller implements Interfaces\CliControllerInt
 
     public function exec(array $args = [])
     {
-        $db = new Data\Call(null, $this->config->multi['cassandra']->keyspace);
-        $db->installSchema();
+        $options = [
+            'cassandra-keyspace' => $this->config->multi['cassandra']->keyspace,
+            'cassandra-server' => $this->config['cassandra-server'],
+            'cassandra-replication-factor' => $this->config['cassandra-replication-factor'],
+        ];
+
+        (new Core\Provisioner\Provisioners\CassandraProvisioner)->provision($options);
     }
 }

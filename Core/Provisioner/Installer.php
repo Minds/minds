@@ -1,12 +1,12 @@
 <?php
-namespace Minds\Core;
+namespace Minds\Core\Provisioner;
 
-use Minds\Core\Data;
+use Minds\Core;
 use Minds\Entities;
 use Minds\Exceptions\ProvisionException;
 use \ElggSite;
 
-class Provisioner
+class Installer
 {
     protected $app;
 
@@ -109,25 +109,11 @@ class Provisioner
         file_put_contents($target, $result);
     }
 
-    public function setupStorage()
+    public function setupStorage(Provisioners\ProvisionerInterface $storage = null)
     {
-        $db = new Data\Call(
-            null,
-            $this->options['cassandra-keyspace'],
-            [ $this->options['cassandra-server'] ]
-        );
-
-        if ($db->keyspaceExists()) {
-            throw new ProvisionException('Minds storage is already provisioned');
-        }
-        
-        $db->createKeyspace([
-            'strategy_options' => [
-                'replication_factor' => $this->options['cassandra-replication-factor']
-            ]
-        ]);
-
-        $db->installSchema();
+        // TODO: DI?
+        $storage = $storage ?: new Provisioners\CassandraProvisioner();
+        $storage->provision($this->options);
     }
 
     public function setupSite()

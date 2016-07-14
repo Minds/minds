@@ -24,7 +24,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
         try {
             $this->out('Installing Minds...', $this::OUTPUT_PRE);
 
-            $provisioner = new Core\Provisioner();
+            $provisioner = new Core\Provisioner\Installer();
             $provisioner
                 ->setApp($this->getApp())
                 ->setOptions($this->getAllOpts()); 

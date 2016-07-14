@@ -53,59 +53,9 @@ class Call
         }
     }
 
-    /**
-     * Install the schema
-     *
-     * @return void
-     */
-    public function installSchema()
+    public function describeKeyspace()
     {
-        $cfs = array(
-            //'site' => array('site_id' => 'UTF8Type'),
-            'plugin' => array('active' => 'IntegerType'),
-            //'config' => array(),
-            'entities'=> array('type'=>'UTF8Type'),
-            'entities_by_time' => array(),
-            'user_index_to_guid' => array(),
-            'session' => array(),
-            'friends' => array(), //@replace with relationships soon
-            'friendsof' => array(), //@replace with relationships soon
-            'relationships' => array(), //this is a new index for relationships (friends will be merged into here soon)
-        );
-
-        $ks = $this->pool->describe_keyspace();
-
-        foreach ($cfs as $cf => $indexes) {
-            $exists = false;
-            foreach ($ks->cf_defs as $cfdef) {
-                if ($cfdef->name == $cf) {
-                    $exists = true;
-                    break;
-                }
-            }
-            if (!$exists) {
-                error_log("Installing $cf...\n");
-                $this->createCF($cf, $indexes);
-            }
-        }
-
-        try {
-            $client = Client::build('Cassandra', array('keyspace'=>$this->keyspace, 'servers'=>array($this->servers[0] . ':9042')));
-            $query = new Cassandra\Prepared\System();
-            $client->request($query->createTable("counters", array("guid"=>"varchar", "metric"=>"varchar", "count"=>"counter"), array("guid", "metric")));
-            
-            $query = new Cassandra\Prepared\System();
-            $client->request($query->createTable('translations', [
-                'guid' => 'varchar',
-                'field' => 'varchar',
-                'language' => 'varchar',
-                'source_language' => 'varchar',
-                'content' => 'text',
-            ], [ 'guid', 'field', 'language' ]));
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit;
-        }
+        return $this->pool->describe_keyspace();
     }
 
     /**
