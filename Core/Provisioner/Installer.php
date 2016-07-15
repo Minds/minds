@@ -52,27 +52,39 @@ class Installer
 
     public function checkOptions()
     {
-        if (!isset($this->options['domain'])) {
+        if (!isset($this->options['domain']) || !$this->options['domain']) {
             throw new ProvisionException('Domain name was not provided');
+        } elseif (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['domain'])) {
+            throw new ProvisionException('Domain name is invalid');
         }
 
-        if (!isset($this->options['username'])) {
+        if (!isset($this->options['username']) || !$this->options['username']) {
             throw new ProvisionException('Admin username was not provided');
+        } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $this->options['username'])) {
+            throw new ProvisionException('Admin username is invalid');
         }
 
-        if (!isset($this->options['password'])) {
+        if (!isset($this->options['password']) || !$this->options['password']) {
             throw new ProvisionException('Admin password was not provided');
+        } elseif (strlen($this->options['password']) < 6) {
+            throw new ProvisionException('Admin password is too short');
         }
 
-        if (!isset($this->options['email'])) {
+        if (!isset($this->options['email']) || !$this->options['email']) {
             throw new ProvisionException('Admin email was not provided');
+        } elseif (!filter_var($this->options['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new ProvisionException('Admin email is invalid');
         }
 
-        // TODO: Check parameters formatting (specially domains, urls or numbers)
+        // TODO: Check other parameters formatting (specially domains, urls or numbers)
     }
 
-    public function buildConfig()
+    public function buildConfig(array $flags = [])
     {
+        $flags = array_merge([
+            'returnResult' => false
+        ], $flags);
+
         $source = $this->app->root . DIRECTORY_SEPARATOR . 'settings.example.php';
         $target = $this->app->root . DIRECTORY_SEPARATOR . 'settings.php';
 
@@ -104,6 +116,10 @@ class Installer
 
             return (string) $this->options[$matches[1]];
         }, $template);
+
+        if ($flags['returnResult']) {
+            return $result;
+        }
 
         // Write template
         file_put_contents($target, $result);
@@ -143,7 +159,7 @@ class Installer
         if (!$guid) {
             throw new ProvisionException('Cannot create new User entity');
         }
-    
+
         $user = new Entities\User($guid);
         $user->admin = 'yes';
         $user->validated = true;
