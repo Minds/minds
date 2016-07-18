@@ -7,6 +7,7 @@
  */
 namespace minds\plugin\guard;
 
+use Minds\Core\Di\Di;
 use Minds\Components;
 use Minds\Core;
 use Minds\Api;
@@ -122,13 +123,15 @@ class start extends Components\Plugin{
 	public function sendSMS($number, $message){
 		$result = null;
 
+        $config = Di::_()->get('Config')->get('twilio');
+
 		try{
-			$AccountSid = "AC2e0a25157a4e150f3a87fd6e2f21730c";
-			$AuthToken = "add6d113b8a62e1111c4795e375071de";
+			$AccountSid = $config['account_sid'];
+			$AuthToken = $config['auth_token'];
 			$client = new \Services_Twilio($AccountSid, $AuthToken);
 			$result = $client->account->messages->create(array(
 				'To' => $number,
-				'From' => "+16015640015",
+				'From' => $config['from'],
 				'Body' => $message,
 			));
 		} catch(\Exception $e){
