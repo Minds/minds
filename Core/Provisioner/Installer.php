@@ -2,7 +2,9 @@
 namespace Minds\Core\Provisioner;
 
 use Minds\Core;
-use Minds\Entities;
+use Minds\Entities\Site;
+use Minds\Entities\User;
+use Minds\Entities\Activity;
 use Minds\Exceptions\ProvisionException;
 use \ElggSite;
 
@@ -160,7 +162,7 @@ class Installer
 
     public function setupSite($site = null)
     {
-        $site = $site ?: new Entities\Site();
+        $site = $site ?: new Site();
         $site->name = $this->options['site-name'];
         $site->url = $this->getSiteUrl();
         $site->access_id = ACCESS_PUBLIC;
@@ -186,7 +188,7 @@ class Installer
             throw new ProvisionException('Cannot create new User entity');
         }
 
-        $user = new Entities\User($guid);
+        $user = new User($guid);
         $user->admin = 'yes';
         $user->validated = true;
         $user->validated_method = 'admin_user';
@@ -196,7 +198,7 @@ class Installer
             throw new ProvisionException('Cannot grant privileges to new User entity');
         }
 
-        $activity = new Entities\Activity();
+        $activity = new Activity();
         $activity->owner_guid = $guid;
         $activity->setMessage('Hello Minds!');
         $activitySaved = $activity->save();
