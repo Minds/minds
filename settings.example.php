@@ -93,4 +93,14 @@ $CONFIG->set('twilio', [
     'from' => '{{twilio-from}}'
 ]);
 
-$CONFIG->set('google-api-key', '{{google-api-key}}');
+$CONFIG->set('google', [
+    'geolocation' => '{{google-api-key}}',
+    'translation' => '{{google-api-key}}',
+    'push' => '{{google-api-key}}',
+]);
+
+$CONFIG->set('apple', [
+    'sandbox' => {{apple-sandbox-enabled}},
+    'cert' => '{{apple-certificate}}'
+]);
+

@@ -30,8 +30,9 @@ class Installer
             'twilio-auth-token' => '',
             'twilio-from' => '',
             'google-api-key' => '',
+            'apple-sandbox-enabled' => 0,
+            'apple-certificate' => '',
             'site-name' => 'Minds',
-            'site-email' => 'root@localhost',
             'no-https' => false,
         ];
 
@@ -123,6 +124,14 @@ class Installer
         if (!isset($this->options['socket-server-uri'])) {
             $this->options['socket-server-uri'] = $this->options['domain'] . ':8010';
         }
+
+        if (!isset($this->options['site-email'])) {
+            $this->options['site-email'] = $this->options['email'];
+        }
+
+        $this->options['apple-sandbox-enabled'] =
+            isset($this->options['apple-sandbox-enabled']) && $this->options['apple-sandbox-enabled'] ?
+            1 : 0;
 
         // Inject options
 

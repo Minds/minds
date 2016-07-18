@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Queue\Runners;
 
+use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Core\Queue\Interfaces;
 use Minds\Core\Queue;
@@ -29,15 +30,18 @@ class Push implements Interfaces\QueueRunner
                    global $CONFIG;
                    $CONFIG->cassandra->keyspace = $keyspace;
 
+                   $config = Di::_()->get('Config');
+                   $googleConfig = $config->get('google');
+                   $appleConfig = $config->get('apple');
+
                    try {
                       $config = new Surge\Config([
                         'Apple' => [
-                          'cert'=> '/var/secure/apns-production.pem'
-                          //'sandbox'=>true,
-                          //'cert'=> '/var/secure/apns.pem'
+                          'cert' => $appleConfig['cert'],
+                          'sandbox' => $appleConfig['sandbox'],
                         ],
                         'Google' => [
-                          'api_key' => 'AIzaSyCp0LVJLY7SzTlxPqVn2-2zWZXQKb1MscQ'
+                          'api_key' => $googleConfig['push'],
                         ]
                       ]);
 
