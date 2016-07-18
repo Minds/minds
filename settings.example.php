@@ -87,4 +87,10 @@ $CONFIG->set('facebook', [
     'app_secret' => '{{facebook-app-secret}}'
 ]);
 
+$CONFIG->set('twilio', [
+    'account_sid' => '{{twilio-account-sid}}',
+    'auth_token' => '{{twilio-auth-token}}',
+    'from' => '{{twilio-from}}'
+]);
+
 $CONFIG->set('google-api-key', '{{google-api-key}}');
