@@ -5,6 +5,9 @@ namespace Spec\Minds\Core\Provisioner;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
+use Minds\Core\Minds;
+use Minds\Entities\Site;
+
 class InstallerSpec extends ObjectBehavior
 {
     function it_is_initializable()
@@ -12,15 +15,22 @@ class InstallerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Provisioner\Installer');
     }
 
-    function it_should_check_options_valid()
-    {
+    function let(Minds $minds) {
+        $this->setApp($minds);
+
         $this->setOptions([
+            'overwrite-settings' => true,
             'domain' => 'phpspec.minds.io',
             'username' => 'phpspec',
             'password' => 'phpspec1',
             'email' => 'phpspec@minds.io',
+            'site-name' => 'PHPSpec Minds',
+            'site-email' => 'phpspec@minds.io',
         ]);
+    }
 
+    function it_should_check_options_valid()
+    {
         $this
             ->shouldNotThrow('Minds\\Exceptions\\ProvisionException')
             ->duringCheckOptions();
@@ -124,20 +134,27 @@ class InstallerSpec extends ObjectBehavior
 
     function it_should_build_config()
     {
-        $this->setApp((object) [
-            'root' => __MINDS_ROOT__
-        ]);
-        
-        $this->setOptions([
-            'overwrite-settings' => true,
-            'domain' => 'phpspec.minds.io',
-            'username' => 'phpspec',
-            'password' => 'phpspec1',
-            'email' => 'phpspec@minds.io',
-        ]);
+        $this
+            ->shouldNotThrow('\\ProvisionException')
+            ->duringBuildConfig([ 'returnResult' => true ]);
+    }
+
+    function it_should_setup_site(Site $site)
+    {
+        $site->set('name', 'PHPSpec Minds')->shouldBeCalled();
+        $site->set('url', 'https://phpspec.minds.io/')->shouldBeCalled();
+        $site->set('access_id', 2)->shouldBeCalled();
+        $site->set('email', 'phpspec@minds.io')->shouldBeCalled();
+
+        $site->save()->willReturn(true)->shouldBeCalled();
 
         $this
-            ->shouldNotThrow('\\Exception')
-            ->duringBuildConfig([ 'returnResult' => true ]);
+            ->shouldNotThrow('\\ProvisionException')
+            ->duringSetupSite($site);
+    }
+
+    function it_should_get_site_url()
+    {
+        $this->getSiteUrl()->shouldReturn('https://phpspec.minds.io/');
     }
 }
