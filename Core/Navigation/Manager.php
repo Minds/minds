@@ -103,6 +103,7 @@ class Manager
             ->setParams(array(
                 'filter' => 'analytics'
             ))
+            ->setVisibility(-1)
             ->addSubItem((new Item())
                 ->setPriority(1)
                 ->setIcon('trending_up')
@@ -139,9 +140,7 @@ class Manager
                 ->setParams(array(
                     'filter' => 'reports'
                 )));
-        if (Core\Session::isLoggedIn() && Core\Session::getLoggedinUser()->isAdmin()) {
-            self::add($admin);
-        }
+        self::add($admin);
 
         self::add((new Item())
             ->setPriority(3)
