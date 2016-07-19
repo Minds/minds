@@ -69,15 +69,21 @@ class Google implements TranslationServiceInterface
             ];
         }
 
-        $url = 'https://www.googleapis.com/language/translate/v2?' . http_build_query([
+        $url = 'https://www.googleapis.com/language/translate/v2';
+        $data = [
             'key' => $this->apiKey,
             'target' => $target,
             'source' => $source,
             'q' => $content
-        ]);
+        ];
 
         try {
-            $response = $this->http->get($url);
+            $response = $this->http->post($url, $data, [
+                'headers' => [
+                    'Content-Type: application/x-www-form-urlencoded',
+                    'X-HTTP-Method-Override: GET'
+                ]
+            ]);
         } catch (\Exception $e) { }
 
         if (!isset($response['data']['translations'][0]['translatedText'])) {

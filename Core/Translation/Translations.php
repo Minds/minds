@@ -15,7 +15,7 @@ class Translations
     protected $cache;
     protected $service;
 
-    const MAX_CONTENT_LENGTH = 1000;
+    const MAX_CONTENT_LENGTH = 5000;
 
     public function __construct($cache = null, $service = null)
     {
