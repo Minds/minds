@@ -45,12 +45,13 @@ class Defaults
                     return array();
                 }
 
+
                 return $meta = [
-                'title' => $user->name . ' | Minds',
-                'og:title' =>  $user->name . ' | Minds',
+                'title' => $user->name . ' | ' . $this->config->site_name,
+                'og:title' =>  $user->name . ' | ' . $this->config->site_name,
                 'og:type' => 'website',
-                'description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
-                'og:description' => "Subscribe to @$user->username on Minds. " . strip_tags($user->briefdescription),
+                'description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
+                'og:description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
                 'og:url' => $this->config->site_url . $user->username,
                 'og:image' => $user->getIconUrl('master'),
                 'og:image:width' => 2000,
@@ -73,15 +74,15 @@ class Defaults
                 }
 
                 $meta = [
-                'title' => $activity->title ?: $activity->message,
-                'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
-                'og:title' => $activity->title ?: $activity->message,
-                'og:description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
-                'og:url' => $activity->getUrl(),
-                'og:image' => $activity->custom_type == 'batch' ? $activity->custom_data[0]['src'] : $activity->thumbnail_src,
-                'og:image:width' => 2000,
-                'og:image:height' => 1000
-              ];
+                  'title' => $activity->title ?: $activity->message,
+                  'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on {$this->config->site_name}",
+                  'og:title' => $activity->title ?: $activity->message,
+                  'og:description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on {$this->config->site_name}",
+                  'og:url' => $activity->getUrl(),
+                  'og:image' => $activity->custom_type == 'batch' ? $activity->custom_data[0]['src'] : $activity->thumbnail_src,
+                  'og:image:width' => 2000,
+                  'og:image:height' => 1000
+                ];
 
                 if ($activity->custom_type == 'video') {
                     $meta['og:type'] = "video";
