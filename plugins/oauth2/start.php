@@ -8,12 +8,14 @@ namespace minds\plugin\oauth2;
 
 use Minds\Core;
 
-class start extends \ElggPlugin{
+class start extends \ElggPlugin
+{
 
     /**
      * Initialize the oauth2 plugin
      */
-    public function init() {
+    public function init()
+    {
 
         /**
          * @todo update this once minds gets a better PAM system
@@ -25,7 +27,7 @@ class start extends \ElggPlugin{
         $user_auth_result = $user_pam->authenticate();
     //    var_dump( $user_auth_result ); exit;
     
-    	elgg_register_plugin_hook_handler('logged_in_user', 'user', array($this, 'loggedInUserEntity'));
+        elgg_register_plugin_hook_handler('logged_in_user', 'user', array($this, 'loggedInUserEntity'));
         
         
         core\Router::registerRoutes(array(
@@ -34,20 +36,19 @@ class start extends \ElggPlugin{
             '/oauth2/authorize' => "\\minds\\plugin\\oauth2\\pages\\authorize",
             '/oauth2/applications' => "\\minds\\plugin\\oauth2\\pages\\applications",
         ));
-
     }
 
-    public static function loggedInUserEntity(){
-
-	$bearer = new \OAuth2\TokenType\Bearer();
+    public static function loggedInUserEntity()
+    {
+        $bearer = new \OAuth2\TokenType\Bearer();
         $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
  
         // Get the token data
         $token = get_input('access_token', $access_token);
 
-        if($token){
+        if ($token) {
             static $OAUTH2_LOGGED_IN;
-            if($OAUTH2_LOGGED_IN){
+            if ($OAUTH2_LOGGED_IN) {
                 return $OAUTH2_LOGGED_IN;
             }
         
@@ -69,33 +70,34 @@ class start extends \ElggPlugin{
      *
      * @return bool
      */
-    public static function pam($credentials = NULL) {
-    
+    public static function pam($credentials = null)
+    {
         $storage = new storage();
         $server = new \OAuth2\Server($storage);
 
-	    if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
+        if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
             return false;
         }
         
        //can not have a session too
-        if(session_status() == PHP_SESSION_ACTIVE)
-            session_destroy(); 
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
 
 
-	    $bearer = new \OAuth2\TokenType\Bearer();
-	    $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
+        $bearer = new \OAuth2\TokenType\Bearer();
+        $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
  
         // Get the token data
         $token = $storage->getAccessToken(get_input('access_token', $access_token));
 
         static $OAUTH2_LOGGED_IN;
         $user = new \ElggUser($token['user_id']);
-        if($user->enabled != "yes"){
+        if ($user->enabled != "yes") {
             $user->enable();
         }
 
-        if($user->guid && !$user->isBanned()){
+        if ($user->guid && !$user->isBanned()) {
             $OAUTH2_LOGGED_IN = $user;
             return true;
         }
@@ -103,25 +105,24 @@ class start extends \ElggPlugin{
         return false;
     }
     
-    public static function generateSecret(){
-        
-        return sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x',
+    public static function generateSecret()
+    {
+        return sprintf('%04x%04x%04x%04x%04x%04x%04x%04x',
             // 32 bits for "time_low"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
             // 16 bits for "time_mid"
-            mt_rand( 0, 0xffff ),
+            mt_rand(0, 0xffff),
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
-            mt_rand( 0, 0x0fff ) | 0x4000,
+            mt_rand(0, 0x0fff) | 0x4000,
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand( 0, 0x3fff ) | 0x8000,
+            mt_rand(0, 0x3fff) | 0x8000,
             // 48 bits for "node"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
-
 }
 /*function oauth2_page_handler($page) {
 
@@ -136,9 +137,9 @@ class start extends \ElggPlugin{
     $pages = $base . '/pages/oauth2';
 
     switch ($page[0]) {
-    	
-		case 'token': 
-			require $pages . "/token.php";
+
+        case 'token':
+            require $pages . "/token.php";
             break;
 
         case 'authorize':
@@ -162,9 +163,9 @@ class start extends \ElggPlugin{
         case 'register':
             require $pages . "/register.php";
             break;
-		case 'sso':
-			oauth2_SSO();
-			break;
+        case 'sso':
+            oauth2_SSO();
+            break;
 
         case 'applications':
         default:
@@ -180,21 +181,21 @@ class start extends \ElggPlugin{
  * Auto login if a cookie is found
  */
 /*function oauth2_SSO(){
- 	// Load our oauth2 library
-	elgg_load_library('oauth2');
-	$storage = new ElggOAuth2DataStore();
-	$ia = elgg_set_ignore_access();
-	$token = $storage->getAccessToken(get_input('access_token'));
-	elgg_set_ignore_access($ia);
-	if(!$token['user_id']){
-		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+    // Load our oauth2 library
+    elgg_load_library('oauth2');
+    $storage = new ElggOAuth2DataStore();
+    $ia = elgg_set_ignore_access();
+    $token = $storage->getAccessToken(get_input('access_token'));
+    elgg_set_ignore_access($ia);
+    if(!$token['user_id']){
+        header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
 
-	}
-    	$user = get_entity($token['user_id']);
-	if(!$user)
-		header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+    }
+        $user = get_entity($token['user_id']);
+    if(!$user)
+        header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
 
-	login($user);
-	header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
+    login($user);
+    header('Location: ' . get_input('redirect_uri', $_SERVER['HTTP_REFERRER']));
 
 }*/

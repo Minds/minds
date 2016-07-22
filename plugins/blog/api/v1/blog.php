@@ -46,7 +46,7 @@ class blog implements Interfaces\Api
           case "featured":
             $guids = Core\Data\indexes::fetch('object:blog:featured', array('offset'=> $offset, 'limit'=> $limit ));
             if (!$guids) {
-              break;
+                break;
             }
             $entities = core\Entities::get(array('guids'=>$guids));
             usort($entities, function ($a, $b) {
@@ -85,8 +85,8 @@ class blog implements Interfaces\Api
             $response['load-next'] = $entities ? (string) end($entities)->guid : null;
             break;
           case "next":
-            if (!isset($pages[1])){
-              return Factory::response([
+            if (!isset($pages[1])) {
+                return Factory::response([
                 'status' => 'error',
                 'message' => 'Not blog reference guid provided'
               ]);
@@ -101,8 +101,8 @@ class blog implements Interfaces\Api
                 $blogs = $db->getRow("object:blog:featured", ['limit'=>1, 'offset'=>$offset]);
             //}
 
-            if(!$blogs){
-              return Factory::response([]);
+            if (!$blogs) {
+                return Factory::response([]);
             }
 
             //$guids = array_keys($blogs);
@@ -115,11 +115,11 @@ class blog implements Interfaces\Api
             break;
           case is_numeric($pages[0]):
             $guid = $pages[0];
-            if(strlen($guid) < 15){
+            if (strlen($guid) < 15) {
                 $guid = (new \GUID())->migrate($guid);
             }
             $blog = new entities\Blog($guid);
-            if(!$blog->title && !$blog->description){
+            if (!$blog->title && !$blog->description) {
                 break;
             }
             $response['blog'] = $blog->export();
@@ -194,13 +194,13 @@ class blog implements Interfaces\Api
         $response['guid'] = (string) $blog->guid;
 
         $activity_post = false;
-        if((!isset($pages[0]) || $pages[0] == "new") && $blog->access_id == 2){
+        if ((!isset($pages[0]) || $pages[0] == "new") && $blog->access_id == 2) {
             $activity_post = true;
-        } elseif($original_access != 2 && $blog->access_id == 2){
+        } elseif ($original_access != 2 && $blog->access_id == 2) {
             $activity_post = true;
         }
 
-        if($activity_post){
+        if ($activity_post) {
             (new Activity())
               ->setTitle($blog->title)
               ->setBlurb(strip_tags($blog->description))

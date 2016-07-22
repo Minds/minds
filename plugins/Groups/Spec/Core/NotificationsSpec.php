@@ -11,12 +11,12 @@ use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class NotificationsSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Notifications');
     }
 
-    function it_should_get_recipients(GroupEntity $group, Relationships $db)
+    public function it_should_get_recipients(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -31,7 +31,7 @@ class NotificationsSpec extends ObjectBehavior
         $this->getRecipients([ 'exclude' => [ 1 ] ])->shouldReturn(['2', '3', '4', '5', '8']);
     }
 
-    function it_should_get_muted_members(GroupEntity $group, Relationships $db)
+    public function it_should_get_muted_members(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -45,7 +45,7 @@ class NotificationsSpec extends ObjectBehavior
         $this->getMutedMembers()->shouldReturn([6, 7]);
     }
 
-    function it_should_check_muted_members_in_batch(GroupEntity $group, Relationships $db)
+    public function it_should_check_muted_members_in_batch(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -58,7 +58,7 @@ class NotificationsSpec extends ObjectBehavior
         $this->isMutedBatch([11, 12, 14])->shouldReturn([11 => true, 12 => true, 14 => false]);
     }
 
-    function it_should_check_if_its_muted(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_check_if_its_muted(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -72,7 +72,7 @@ class NotificationsSpec extends ObjectBehavior
         $this->isMuted($user)->shouldReturn(true);
     }
 
-    function it_should_mute(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_mute(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -86,7 +86,7 @@ class NotificationsSpec extends ObjectBehavior
         $this->mute($user)->shouldReturn(true);
     }
 
-    function it_should_unmute(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_unmute(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -99,5 +99,4 @@ class NotificationsSpec extends ObjectBehavior
 
         $this->unmute($user)->shouldReturn(true);
     }
-
 }

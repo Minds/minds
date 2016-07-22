@@ -150,7 +150,8 @@ class group implements Interfaces\Api
             // Join group
             try {
                 $group->join($user, [ 'force' => true ]);
-            } catch (GroupOperationException $e) { }
+            } catch (GroupOperationException $e) {
+            }
         }
 
         // Legacy behavior
@@ -166,11 +167,12 @@ class group implements Interfaces\Api
             $invitees = $_POST['invitees'];
 
             foreach ($invitees as $invitee) {
-                if(is_numeric($invitee)){
+                if (is_numeric($invitee)) {
                     try {
                         $invitee = new User($invitee);
                         $invitations->invite($invitee);
-                    } catch (GroupOperationException $e) { }
+                    } catch (GroupOperationException $e) {
+                    }
                 }
             }
         }
@@ -210,7 +212,8 @@ class group implements Interfaces\Api
      * @param  GroupEntity $group
      * @return GroupEntity
      */
-    protected function uploadAvatar(GroupEntity $group) {
+    protected function uploadAvatar(GroupEntity $group)
+    {
         $icon_sizes = Core\Config::_()->get('icon_sizes');
         $group_owner = EntitiesFactory::build($group->getOwnerObj());
 

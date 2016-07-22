@@ -13,14 +13,13 @@ use Minds\Plugin\Messenger;
 
 class Conversations
 {
-
     private $db;
     private $indexDb;
     private $redis;
     private $user;
     private $toUpgrade = [];
 
-    public function __construct($db = NULL, $indexDb = NULL, $redis = NULL, $cache = NULL, $config = NULL)
+    public function __construct($db = null, $indexDb = null, $redis = null, $cache = null, $config = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
         $this->indexDb = $db ?: Di::_()->get('Database\Cassandra\Indexes');
@@ -38,7 +37,6 @@ class Conversations
 
     public function getList($limit = 12, $offset = 0)
     {
-
         $conversations = [];
         $usingCache = false;
 
@@ -49,9 +47,9 @@ class Conversations
         ]);
 
         //check cache for ids to return
-        if(!$offset){
+        if (!$offset) {
             $guids = $this->cache->setUser($this->user)->getGuids();
-            if($guids && is_array($guids) && count($guids) >= 12){
+            if ($guids && is_array($guids) && count($guids) >= 12) {
                 $prepared->query("SELECT * from entities_by_time WHERE key=:row AND column1 IN :guids LIMIT :size", [
                   'row' => "object:gathering:conversations:{$this->user->guid}",
                   'guids' => $guids,
@@ -62,27 +60,27 @@ class Conversations
         }
 
         $result = (array) $this->db->request($prepared);
-        foreach($result as $item){
+        foreach ($result as $item) {
             $key = $item['column1'];
             $conversations[$key] = $item['value'];
         }
 
-        if($conversations){
+        if ($conversations) {
             $return = [];
 
             $i = 0;
             $ready = false;
-            foreach($conversations as $guid => $data){
-
-                if((string) $guid === (string) Session::getLoggedinUser()->guid)
+            foreach ($conversations as $guid => $data) {
+                if ((string) $guid === (string) Session::getLoggedinUser()->guid) {
                     continue;
+                }
 
-                if($guid == $offset){
+                if ($guid == $offset) {
                     unset($conversations[$guid]);
                     continue;
                 }
 
-                if(is_numeric($data)){
+                if (is_numeric($data)) {
                     $data = [
                       'ts' => $data,
                       'unread' => 0
@@ -95,7 +93,7 @@ class Conversations
                 $conversation->loadFromArray($data);
                 //$conversation->setGuid($guid);
                 //$this->db->remove("object:gathering:conversations:{$this->user->guid}", ["100000000000000063:100000000000000599:100000000000000599", "100000000000000599:442275590062477312:442275590062477312"]);
-                if(strpos($guid, ':') === FALSE){
+                if (strpos($guid, ':') === false) {
                     $conversation->clearParticipants();
                     $conversation->setParticipant(Session::getLoggedinUser()->guid)
                         ->setParticipant($guid);
@@ -108,14 +106,14 @@ class Conversations
                 continue;
             }
         }
-        usort($return, function($a, $b){
-          return $b->ts - $a->ts;
+        usort($return, function ($a, $b) {
+            return $b->ts - $a->ts;
         });
 
         $return = array_slice($return, (int) $offset, $limit);
         $return = $this->filterOnline($return);
         $this->runUpgrades();
-        if(!$offset && !$usingCache){
+        if (!$offset && !$usingCache) {
             $this->cache->setUser($this->user)->saveList($return);
         }
         return $return;
@@ -123,15 +121,16 @@ class Conversations
 
     public function filterOnline($conversations)
     {
-        try{
+        try {
             $config = $this->config->get('redis');
             $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
             //put this set of conversations into redis
             $guids = [];
-            foreach($conversations as $conversation){
-                foreach($conversation->getParticipants() as $participant){
-                    if($participant != Session::getLoggedInUserGuid())
+            foreach ($conversations as $conversation) {
+                foreach ($conversation->getParticipants() as $participant) {
+                    if ($participant != Session::getLoggedInUserGuid()) {
                         $guids[$participant] = $participant;
+                    }
                 }
             }
             array_unshift($guids, Session::getLoggedInUserGuid() . ":conversations");
@@ -140,24 +139,24 @@ class Conversations
             //return the online users
             $online = $this->redis->sinter("online", Session::getLoggedInUserGuid() . ":conversations");
 
-            foreach($conversations as $key => $conversation){
-                foreach($conversation->getParticipants() as $participant){
-                    if(in_array($participant, $online)){
+            foreach ($conversations as $key => $conversation) {
+                foreach ($conversation->getParticipants() as $participant) {
+                    if (in_array($participant, $online)) {
                         $conversations[$key] = $conversation->setOnline(true);
                     }
                 }
             }
-        } catch(\Exception $e){}
+        } catch (\Exception $e) {
+        }
 
         return $conversations;
     }
 
     public function runUpgrades()
     {
-        foreach($this->toUpgrade as $guid => $conversation){
+        foreach ($this->toUpgrade as $guid => $conversation) {
             $conversation->saveToLists();
             $this->indexDb->remove("object:gathering:conversations:{$this->user->guid}", [ $guid ]);
         }
     }
-
 }

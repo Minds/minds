@@ -51,7 +51,7 @@ class search implements Interfaces\Api
               'guids' => $guids
             ]);
             $conversations = [];
-            foreach($users as $user){
+            foreach ($users as $user) {
                 $conversations[] = (new Messenger\Entities\Conversation())
                                       ->setParticipant($user->guid)
                                       ->setParticipant(Core\Session::getLoggedInUserGuid());
@@ -62,19 +62,20 @@ class search implements Interfaces\Api
         }
 
         return Factory::response($response);
-
     }
 
-    public function post($pages){
+    public function post($pages)
+    {
         return Factory::response([]);
     }
 
-    public function put($pages){
+    public function put($pages)
+    {
         return Factory::response([]);
     }
 
-    public function delete($pages){
+    public function delete($pages)
+    {
         return Factory::response([]);
     }
-
 }

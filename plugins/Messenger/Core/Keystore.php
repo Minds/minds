@@ -9,20 +9,19 @@ use Minds\Entities;
 
 class Keystore
 {
-
-    static public $tmpPrivateKey;
+    public static $tmpPrivateKey;
 
     private $handler;
     private $user;
 
-    public function __construct($handler = NULL)
+    public function __construct($handler = null)
     {
         $this->handler = $handler ?: new Encryption\OpenSSL();
     }
 
     public function setUser($user)
     {
-        if(is_numeric($user)){
+        if (is_numeric($user)) {
             $user = Entities\Factory::build($user);
         }
         $this->user = $user;
@@ -41,13 +40,13 @@ class Keystore
 
     public function unlockPrivateKey($password = "", $new_password = "")
     {
-         self::$tmpPrivateKey = $this->handler->unlockPrivateKey($this->getPrivateKey(), $password, $new_password);
-         return $this;
+        self::$tmpPrivateKey = $this->handler->unlockPrivateKey($this->getPrivateKey(), $password, $new_password);
+        return $this;
     }
 
     public function getUnlockedPrivateKey()
     {
-        if(self::$tmpPrivateKey){
+        if (self::$tmpPrivateKey) {
             $_SESSION['tmpPrivateKey'] = self::$tmpPrivateKey;
             return self::$tmpPrivateKey;
         }
@@ -74,5 +73,4 @@ class Keystore
         $this->user->save();
         return $this;
     }
-
 }

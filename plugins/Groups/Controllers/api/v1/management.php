@@ -35,8 +35,7 @@ class management implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $actor = Session::getLoggedInUser();
 
-        if (!$group || !$group->getGuid())
-        {
+        if (!$group || !$group->getGuid()) {
             return Factory::response([
                 'done' => false,
                 'error' => 'No group'
@@ -84,8 +83,7 @@ class management implements Interfaces\Api
         $group = EntitiesFactory::build($pages[0]);
         $actor = Session::getLoggedInUser();
 
-        if (!$group || !$group->getGuid())
-        {
+        if (!$group || !$group->getGuid()) {
             return Factory::response([
                 'done' => false,
                 'error' => 'No group'

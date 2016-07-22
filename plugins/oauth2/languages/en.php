@@ -8,13 +8,13 @@
 $english = array(
 
     // Object subtypes
-	'item:object:oauth2_client'        => 'OAuth2 Clients',
-	'item:object:oauth2_access_token'  => 'OAuth2 Access Tokens',
-	'item:object:oauth2_refresh_token' => 'OAuth2 Refresh Tokens',
-	'item:object:oauth2_auth_code'     => 'OAuth2 Authoriation Codes',
+    'item:object:oauth2_client'        => 'OAuth2 Clients',
+    'item:object:oauth2_access_token'  => 'OAuth2 Access Tokens',
+    'item:object:oauth2_refresh_token' => 'OAuth2 Refresh Tokens',
+    'item:object:oauth2_auth_code'     => 'OAuth2 Authoriation Codes',
 
     'admin:settings:oauth2' => 'Connected Applications',
-	'oauth2:register:title'            => 'Register Application',
+    'oauth2:register:title'            => 'Register Application',
     'oauth2:applications:admin_title'  => 'Registered Applications',
     'oauth2:applications:title'        => 'Your Registered Applications',
     'oauth2:add'                       => 'Register Application',
@@ -37,7 +37,7 @@ $english = array(
     'oauth2:register:registered'   => 'Successfully registered application',
 
     // Delete action
-    'oauth2:application:not_found'     => 'Application not found',    
+    'oauth2:application:not_found'     => 'Application not found',
     'oauth2:application:deleted'       => 'The application was successfully deleted',
     'oauth2:application:cannot_delete' => 'Failed to delete the application',
 );

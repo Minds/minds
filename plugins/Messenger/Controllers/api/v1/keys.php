@@ -12,7 +12,8 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Plugin\Messenger;
 
-class keys implements Interfaces\Api{
+class keys implements Interfaces\Api
+{
 
     /**
      * Returns the private key belonging to a user
@@ -20,8 +21,8 @@ class keys implements Interfaces\Api{
      *
      * API:: /v1/keys
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         $response = [];
 
         $keystore = new Messenger\Core\Keystore();
@@ -39,34 +40,33 @@ class keys implements Interfaces\Api{
         //  \elgg_set_plugin_user_setting('privatekey', $priv, elgg_get_logged_in_user_guid(), 'gatherings');
         //}
 
-        try{
+        try {
             $keystore->unlockPrivateKey($unlock_password, null);
             $tmp = $keystore->getUnlockedPrivateKey();
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $response['status'] = 'error';
             $response['message'] = "please check your password";
         }
 
-        if(!$tmp || !$unlock_password){
-          $response['status'] = 'error';
-          $response['message'] = "please check your password";
+        if (!$tmp || !$unlock_password) {
+            $response['status'] = 'error';
+            $response['message'] = "please check your password";
         } else {
             $response['key'] = $tmp;
         }
 
         return Factory::response($response);
-
     }
 
-    public function post($pages){
-
+    public function post($pages)
+    {
         $openssl = new Messenger\Core\Encryption\OpenSSL();
         $keystore = (new Messenger\Core\Keystore($openssl))
           ->setUser(Core\Session::getLoggedInUser());
 
         $response = [];
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "setup":
                 $response = array();
                 $keypair = $openssl->generateKeypair($_POST['password']);
@@ -75,7 +75,7 @@ class keys implements Interfaces\Api{
                   ->setPrivateKey($keypair['private'])
                   ->save();
 
-                if(!isset($_POST['download']) || $_POST['download']){
+                if (!isset($_POST['download']) || $_POST['download']) {
                     $keystore->unlockPrivateKey($_POST['password']);
                     $tmp = $keystore->getUnlockedPrivateKey();
                     $response['key'] = $tmp;
@@ -90,7 +90,7 @@ class keys implements Interfaces\Api{
             case "unlock":
             default:
 
-                try{
+                try {
                     $unlockPassword = base64_encode(openssl_random_pseudo_bytes(128));
                     $keystore->unlockPrivateKey($_POST['password'], $unlockPassword);
                     $tmp = $keystore->getUnlockedPrivateKey();
@@ -120,20 +120,15 @@ class keys implements Interfaces\Api{
         }
 
         return Factory::response($response);
-
-
     }
 
-    public function put($pages){
-
+    public function put($pages)
+    {
         return Factory::response(array());
-
     }
 
-    public function delete($pages){
-
+    public function delete($pages)
+    {
         return Factory::response(array());
-
     }
-
 }

@@ -9,10 +9,7 @@ use Minds\Core\Di\Provider;
 
 class GroupsProvider extends Provider
 {
-
     public function register()
     {
-
     }
-
 }

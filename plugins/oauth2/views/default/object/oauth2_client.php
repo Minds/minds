@@ -8,9 +8,9 @@
  * @link http://minds.com
  */
 
-$full = elgg_extract('full_view', $vars, FALSE);
+$full = elgg_extract('full_view', $vars, false);
 
-if (!$entity = elgg_extract('entity', $vars, FALSE)) {
+if (!$entity = elgg_extract('entity', $vars, false)) {
     return true;
 }
 
@@ -48,9 +48,9 @@ $owner_link = elgg_view('output/url', array(
             </li>
             <li class="elgg-menu-item-delete">
                 <?php echo elgg_view('output/confirmlink', array(
-                    'title' => 'Delete Application', 
-                    'href' => elgg_get_site_url() . 'action/oauth2/delete?guid=' . $entity->guid, 
-                    'text' => 'Delete')); 
+                    'title' => 'Delete Application',
+                    'href' => elgg_get_site_url() . 'action/oauth2/delete?guid=' . $entity->guid,
+                    'text' => 'Delete'));
                 ?>
             </li>
         </ul>

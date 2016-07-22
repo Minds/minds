@@ -53,8 +53,8 @@ class groups implements Interfaces\Api
             break;
         }
 
-        if(!$guids){
-          return Factory::response([]);
+        if (!$guids) {
+            return Factory::response([]);
         }
 
         $groups = Entities::get(['guids' => $guids]);

@@ -22,5 +22,4 @@ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Viga: Järgnevate saajate e-post
 //$PHPMAILER_LANG['signing']              = 'Signing Error: ';
 //$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
 //$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
-?>
+//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';;

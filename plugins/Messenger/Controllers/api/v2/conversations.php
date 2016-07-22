@@ -28,12 +28,11 @@ class conversations implements Interfaces\Api
      */
     public function get($pages)
     {
-
         Factory::isLoggedIn();
 
         $response = [];
 
-        if(isset($pages[0])){
+        if (isset($pages[0])) {
             $response = $this->getConversation($pages);
         } else {
             $response = $this->getList();
@@ -41,7 +40,6 @@ class conversations implements Interfaces\Api
 
 
         return Factory::response($response);
-
     }
 
     private function getConversation($pages)
@@ -87,13 +85,12 @@ class conversations implements Interfaces\Api
         $finish = isset($_GET['finish']) ? $_GET['finish'] : "";
         $messages = $messages->getMessages($limit, $offset, $finish);
 
-        if($messages){
-
-            foreach($messages as $k => $message){
-                if(!isset($_GET['access_token'])){
+        if ($messages) {
+            foreach ($messages as $k => $message) {
+                if (!isset($_GET['access_token'])) {
                     $_GET['decrypt'] = true;
                 }
-                if(isset($_GET['decrypt']) && $_GET['decrypt']){
+                if (isset($_GET['decrypt']) && $_GET['decrypt']) {
                     $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
                 } else {
                     //support legacy clients
@@ -111,11 +108,11 @@ class conversations implements Interfaces\Api
 
         $keystore = new Messenger\Core\Keystore();
 
-        if(!$offset || isset($_GET['access_token'])){
+        if (!$offset || isset($_GET['access_token'])) {
             //return the public keys
             $response['publickeys'] = [];
-            foreach($conversation->getParticipants() as $participant_guid){
-                if($participant_guid == Session::getLoggedInUserGuid()){
+            foreach ($conversation->getParticipants() as $participant_guid) {
+                if ($participant_guid == Session::getLoggedInUserGuid()) {
                     continue;
                 }
                 $response['publickeys'][(string) $participant_guid] = $keystore->setUser($participant_guid)->getPublicKey();
@@ -132,11 +129,11 @@ class conversations implements Interfaces\Api
 
         $conversations = (new Messenger\Core\Conversations)->getList(12, $_GET['offset']);
 
-        if($conversations){
+        if ($conversations) {
             $response['conversations'] = Factory::exportable($conversations);
 
             //mobile polyfill
-            foreach($response['conversations'] as $k => $v){
+            foreach ($response['conversations'] as $k => $v) {
                 $response['conversations'][$k]['subscribed'] = true;
                 $response['conversations'][$k]['subscriber'] = true;
             }
@@ -148,12 +145,13 @@ class conversations implements Interfaces\Api
         return $response;
     }
 
-    public function post($pages){
+    public function post($pages)
+    {
         Factory::isLoggedIn();
 
         //error_log("got a message to send");
         $conversation = new Messenger\Entities\Conversation();
-        if(strpos($pages[0], ':') === FALSE){ //legacy messages get confused here
+        if (strpos($pages[0], ':') === false) { //legacy messages get confused here
             $conversation->setParticipant(Core\Session::getLoggedInUserGuid())
               ->setParticipant($pages[0]);
         } else {
@@ -164,7 +162,7 @@ class conversations implements Interfaces\Api
           ->setConversation($conversation);
 
         // Block check
-        foreach($conversation->getParticipants() as $guid){
+        foreach ($conversation->getParticipants() as $guid) {
             if (Session::getLoggedInUserGuid() == $guid) {
                 continue;
             }
@@ -179,12 +177,12 @@ class conversations implements Interfaces\Api
         }
 
 
-        if(isset($_POST['encrypt']) && $_POST['encrypt']){
+        if (isset($_POST['encrypt']) && $_POST['encrypt']) {
             $message->setMessage($_POST['message']);
             $message->encrypt();
         } else {
             $messages = [];
-            foreach($conversation->getParticipants() as $guid){
+            foreach ($conversation->getParticipants() as $guid) {
                 $key = "message:$guid";
                 $messages[$guid] = base64_encode(base64_decode(rawurldecode($_POST[$key]))); //odd bug sometimes with device base64..
             }
@@ -204,10 +202,11 @@ class conversations implements Interfaces\Api
             (new Sockets\Events())
               ->setRoom($conversation->buildSocketRoomName())
               ->emit('pushConversationMessage', (string) $conversation->getGuid(), $emit);
-        } catch (\Exception $e) { /* TODO: To log or not to log */ }
+        } catch (\Exception $e) { /* TODO: To log or not to log */
+        }
 
-        foreach($conversation->getParticipants() as $participant){
-            if($participant == Session::getLoggedInUserGuid()){
+        foreach ($conversation->getParticipants() as $participant) {
+            if ($participant == Session::getLoggedInUserGuid()) {
                 continue;
             }
             Core\Queue\Client::build()->setExchange("mindsqueue")
@@ -224,7 +223,8 @@ class conversations implements Interfaces\Api
         return Factory::response($response);
     }
 
-    public function put($pages){
+    public function put($pages)
+    {
         Factory::isLoggedIn();
 
         if (!Security\ACL::_()->interact($pages[1], Session::getLoggedInUserGuid())) {
@@ -233,7 +233,7 @@ class conversations implements Interfaces\Api
             ]);
         }
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case 'call':
                \Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
                                                 ->setQueue("Push")
@@ -271,17 +271,17 @@ class conversations implements Interfaces\Api
         }
 
         return Factory::response(array());
-
     }
 
-    public function delete($pages){
+    public function delete($pages)
+    {
         Factory::isLoggedIn();
 
         $user = Core\Session::getLoggedInUser();
         $response = [];
 
         $conversation = new Messenger\Entities\Conversation();
-        if(strpos($pages[0], ':') === FALSE){ //legacy messages get confused here
+        if (strpos($pages[0], ':') === false) { //legacy messages get confused here
             $conversation->setParticipant($user)
               ->setParticipant($pages[0]);
         } else {
@@ -301,7 +301,8 @@ class conversations implements Interfaces\Api
                   'guid' => (string) $user->guid,
                   'name' => $user->name
               ]);
-        } catch (\Exception $e) { /* TODO: To log or not to log */ }
+        } catch (\Exception $e) { /* TODO: To log or not to log */
+        }
 
         $this->emitSocketTouch($conversation);
 
@@ -321,15 +322,16 @@ class conversations implements Interfaces\Api
                 $users[] = $guid;
             }
 
-            if(!$users)
+            if (!$users) {
                 return;
+            }
 
             try {
                 (new Sockets\Events())
                 ->setUsers($users)
                 ->emit('touchConversation', (string) $conversation->getGuid());
-            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+            } catch (\Exception $e) { /* TODO: To log or not to log */
+            }
         }
     }
-
 }

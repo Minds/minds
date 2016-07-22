@@ -9,38 +9,36 @@ use Minds\Entities\User;
 
 class KeystoreSpec extends ObjectBehavior
 {
-
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Messenger\Core\Keystore');
     }
 
-    function it_should_return_a_private_key(User $user)
+    public function it_should_return_a_private_key(User $user)
     {
         $this->setUser($user);
         $user->get('plugin:user_setting:gatherings:privatekey')->willReturn('got-private-key');
         $this->getPrivateKey()->shouldReturn('got-private-key');
     }
 
-    function it_should_return_a_public_key(User $user)
+    public function it_should_return_a_public_key(User $user)
     {
         $this->setUser($user);
         $user->get('plugin:user_setting:gatherings:publickey')->willReturn('got-public-key');
         $this->getPublicKey()->shouldReturn('got-public-key');
     }
 
-    function it_should_set_a_public_key(User $user)
+    public function it_should_set_a_public_key(User $user)
     {
         $this->setUser($user);
         $user->set('plugin:user_setting:gatherings:publickey', 'here-is-a-public-key')->shouldBeCalled();
         $this->setPublicKey('here-is-a-public-key')->shouldReturn($this);
     }
 
-    function it_should_set_a_private_key(User $user)
+    public function it_should_set_a_private_key(User $user)
     {
         $this->setUser($user);
         $user->set('plugin:user_setting:gatherings:privatekey', 'here-is-a-private-key')->shouldBeCalled();
         $this->setPrivateKey('here-is-a-private-key')->shouldReturn($this);
     }
-
 }

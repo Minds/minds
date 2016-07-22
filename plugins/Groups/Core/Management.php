@@ -101,6 +101,4 @@ class Management
 
         return (bool) $done;
     }
-
-
 }

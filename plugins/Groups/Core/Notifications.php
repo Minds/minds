@@ -90,7 +90,6 @@ class Notifications
         $offset = "";
 
         while (true) {
-
             echo "[notification]: Running from $offset \n";
 
             $guids = $this->getRecipients([
@@ -99,7 +98,7 @@ class Notifications
                 'offset' => $offset
             ]);
 
-            if($offset){
+            if ($offset) {
                 array_shift($guids);
             }
 
@@ -114,7 +113,7 @@ class Notifications
             $offset = end($guids);
 
             $i = 0;
-            foreach($guids as $recipient){
+            foreach ($guids as $recipient) {
                 $i++;
                 $pct = ($i / count($guids)) * 100;
                 echo "[notification]: $i / " . count($guids) . " ($pct%) ";
@@ -135,7 +134,6 @@ class Notifications
             if (!$offset) {
                 break;
             }
-
         }
         echo "[notification]: Dispatch complete for $activity->guid \n";
     }

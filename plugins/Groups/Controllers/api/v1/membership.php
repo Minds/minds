@@ -147,7 +147,6 @@ class membership implements Interfaces\Api
             }
 
             return Factory::response($response);
-
         } catch (GroupOperationException $e) {
             return Factory::response([
                 'done' => false,
@@ -184,8 +183,7 @@ class membership implements Interfaces\Api
 
         // Normal join
         try {
-
-            if($invitations->isInvited($user)){
+            if ($invitations->isInvited($user)) {
                 $joined = $invitations->accept();
             } else {
                 $joined = $group->join($user);

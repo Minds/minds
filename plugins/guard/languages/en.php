@@ -2,8 +2,8 @@
 
 
 $english = array(
-	
-	'guard:twofactor' => 'Two factor authentication'
+    
+    'guard:twofactor' => 'Two factor authentication'
 );
-		
+        
 add_translation("en", $english);

@@ -13,12 +13,12 @@ use Minds\Core\Security\ACL;
 
 class MembershipSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Membership');
     }
 
-    function it_should_get_members(GroupEntity $group, Relationships $db)
+    public function it_should_get_members(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -31,7 +31,7 @@ class MembershipSpec extends ObjectBehavior
         $this->getMembers([ 'hydrate' => false ])->shouldReturn([1, 2]);
     }
 
-    function it_should_get_members_count(GroupEntity $group, Relationships $db)
+    public function it_should_get_members_count(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -44,7 +44,7 @@ class MembershipSpec extends ObjectBehavior
         $this->getMembersCount()->shouldReturn(2);
     }
 
-    function it_should_get_requests(GroupEntity $group, Relationships $db)
+    public function it_should_get_requests(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -57,7 +57,7 @@ class MembershipSpec extends ObjectBehavior
         $this->getRequests([ 'hydrate' => false ])->shouldReturn([3, 4, 5]);
     }
 
-    function it_should_get_requests_count(GroupEntity $group, Relationships $db)
+    public function it_should_get_requests_count(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -70,7 +70,7 @@ class MembershipSpec extends ObjectBehavior
         $this->getRequestsCount()->shouldReturn(3);
     }
 
-    function it_should_join_a_public_group(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_join_a_public_group(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -90,7 +90,7 @@ class MembershipSpec extends ObjectBehavior
         $this->join($user)->shouldReturn(true);
     }
 
-    function it_should_not_join_a_public_group_if_banned(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_not_join_a_public_group_if_banned(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -109,7 +109,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringJoin($user);
     }
 
-    function it_should_request_to_join_a_closed_group(GroupEntity $group, Relationships $db, User $user, ACL $acl)
+    public function it_should_request_to_join_a_closed_group(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -131,7 +131,7 @@ class MembershipSpec extends ObjectBehavior
         $this->join($user)->shouldReturn(true);
     }
 
-    function it_should_forcefully_join_an_admin(GroupEntity $group, Relationships $db, User $user, ACL $acl)
+    public function it_should_forcefully_join_an_admin(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -154,7 +154,7 @@ class MembershipSpec extends ObjectBehavior
         $this->join($user)->shouldReturn(true);
     }
 
-    function it_should_leave(GroupEntity $group, Relationships $db, User $user, Notifications $notifications)
+    public function it_should_leave(GroupEntity $group, Relationships $db, User $user, Notifications $notifications)
     {
         $this->beConstructedWith($db, $notifications);
 
@@ -172,7 +172,7 @@ class MembershipSpec extends ObjectBehavior
         $this->leave($user)->shouldReturn(true);
     }
 
-    function it_should_kick(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    public function it_should_kick(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
         $this->beConstructedWith($db, $notifications, $acl);
 
@@ -196,7 +196,7 @@ class MembershipSpec extends ObjectBehavior
         $this->kick($user)->shouldReturn(true);
     }
 
-    function it_should_not_kick_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    public function it_should_not_kick_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
         $this->beConstructedWith($db, $notifications, $acl);
 
@@ -231,7 +231,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringKick($user);
     }*/
 
-    function it_should_check_if_its_a_member(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_check_if_its_a_member(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -245,7 +245,7 @@ class MembershipSpec extends ObjectBehavior
         $this->isMember($user)->shouldReturn(true);
     }
 
-    function it_should_ban(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    public function it_should_ban(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
         $this->beConstructedWith($db, $notifications, $acl);
 
@@ -270,7 +270,7 @@ class MembershipSpec extends ObjectBehavior
         $this->ban($user)->shouldReturn(true);
     }
 
-    function it_should_not_ban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    public function it_should_not_ban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
         $this->beConstructedWith($db, $notifications, $acl);
 
@@ -289,7 +289,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringBan($user);
     }
 
-    function it_should_not_ban_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
+    public function it_should_not_ban_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, Notifications $notifications, ACL $acl)
     {
         $this->beConstructedWith($db, $notifications, $acl);
 
@@ -309,7 +309,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringBan($user);
     }
 
-    function it_should_unban(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    public function it_should_unban(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -328,7 +328,7 @@ class MembershipSpec extends ObjectBehavior
         $this->unban($user)->shouldReturn(true);
     }
 
-    function it_should_not_unban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    public function it_should_not_unban_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -346,7 +346,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringUnban($user);
     }
 
-    function it_should_check_if_its_banned(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_check_if_its_banned(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -360,7 +360,7 @@ class MembershipSpec extends ObjectBehavior
         $this->isBanned($user)->shouldReturn(true);
     }
 
-    function it_should_check_banned_users(GroupEntity $group, Relationships $db)
+    public function it_should_check_banned_users(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -373,7 +373,7 @@ class MembershipSpec extends ObjectBehavior
         $this->getBannedUsers([ 'hydrate' => false ])->shouldReturn([3, 4, 5]);
     }
 
-    function it_should_check_banned_users_in_batch(GroupEntity $group, Relationships $db)
+    public function it_should_check_banned_users_in_batch(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -386,7 +386,7 @@ class MembershipSpec extends ObjectBehavior
         $this->isBannedBatch([3, 4, 6])->shouldReturn([3 => true, 4 => true, 6 => false]);
     }
 
-    function it_should_check_request(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_check_request(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -400,7 +400,7 @@ class MembershipSpec extends ObjectBehavior
         $this->isAwaiting($user)->shouldReturn(true);
     }
 
-    function it_should_cancel_request(GroupEntity $group, Relationships $db, User $user, ACL $acl)
+    public function it_should_cancel_request(GroupEntity $group, Relationships $db, User $user, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -415,7 +415,7 @@ class MembershipSpec extends ObjectBehavior
         $this->cancelRequest($user)->shouldReturn(true);
     }
 
-    function it_should_cancel_request_if_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    public function it_should_cancel_request_if_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -434,7 +434,7 @@ class MembershipSpec extends ObjectBehavior
         $this->cancelRequest($user)->shouldReturn(true);
     }
 
-    function it_should_not_cancel_request_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
+    public function it_should_not_cancel_request_if_not_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl)
     {
         $this->beConstructedWith($db, null, $acl);
 
@@ -451,7 +451,7 @@ class MembershipSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringCancelRequest($user);
     }
 
-    function it_should_accept_all_requests(GroupEntity $group, Relationships $db)
+    public function it_should_accept_all_requests(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -472,5 +472,4 @@ class MembershipSpec extends ObjectBehavior
         $this->setGroup($group);
         $this->acceptAllRequests();
     }
-
 }

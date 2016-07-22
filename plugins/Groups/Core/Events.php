@@ -39,7 +39,7 @@ class Events
             $e->setResponse($membership->isMember($user->guid));
         });
 
-        Dispatcher::register('acl:write', 'activity', function($e) {
+        Dispatcher::register('acl:write', 'activity', function ($e) {
             $params = $e->getParameters();
             $entity = $params['entity'];
             $user = $params['user'];
@@ -53,7 +53,7 @@ class Events
             $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
         });
 
-        Dispatcher::register('acl:read', 'group', function($e) {
+        Dispatcher::register('acl:read', 'group', function ($e) {
             $params = $e->getParameters();
             $group = $params['entity'];
             $user = $params['user'];
@@ -61,7 +61,7 @@ class Events
             $e->setResponse($group->isMember($user->guid));
         });
 
-        Dispatcher::register('acl:write', 'group', function($e) {
+        Dispatcher::register('acl:write', 'group', function ($e) {
             $params = $e->getParameters();
             $group = $params['entity'];
             $user = $params['user'];

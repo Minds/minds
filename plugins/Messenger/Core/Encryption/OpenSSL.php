@@ -9,14 +9,13 @@ use Minds\Plugin\Messenger;
 
 class OpenSSL implements EncryptionInterface
 {
-
     private $keystore;
     private $conversation;
     private $user;
     private $password;
     private $message;
 
-    public function __construct($keystore = NULL)
+    public function __construct($keystore = null)
     {
         $this->keystore = $keystore ?: new Messenger\Core\Keystore($this);
     }
@@ -53,7 +52,7 @@ class OpenSSL implements EncryptionInterface
     public function encrypt()
     {
         $messages = [];
-        foreach($this->conversation->getParticipants() as $guid => $user){
+        foreach ($this->conversation->getParticipants() as $guid => $user) {
             $public_key = $this->keystore->setUser($user)->getPublicKey();
             openssl_public_encrypt($this->message->getMessage(), $encrypted, $public_key);
             $messages[$guid] = base64_encode($encrypted);
@@ -100,11 +99,10 @@ class OpenSSL implements EncryptionInterface
     public function unlockPrivateKey($private_key, $password, $newpass = "")
     {
         $private_key = openssl_get_privatekey($private_key, $password);
-        if(!$private_key){
+        if (!$private_key) {
             throw new \Exception('Could not decrypt private key');
         }
         openssl_pkey_export($private_key, $pkeyout, $newpass);
         return $pkeyout;
     }
-
 }

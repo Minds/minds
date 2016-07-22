@@ -20,7 +20,7 @@ class Membership
 {
     use Actorable;
 
-    static private $_ = [];
+    private static $_ = [];
 
     protected $group;
     protected $relDB;
@@ -74,7 +74,7 @@ class Membership
             'inverse' => true
         ]);
 
-        if($opts['offset']){
+        if ($opts['offset']) {
             array_shift($guids);
         }
 
@@ -97,7 +97,7 @@ class Membership
      */
     public function getMembersCount($cached = true)
     {
-        if(($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")) !== FALSE){
+        if (($count = $this->cache->get("group:{$this->group->getGuid()}:members:count")) !== false) {
             return $count;
         }
         $this->relDB->setGuid($this->group->getGuid());
@@ -147,7 +147,7 @@ class Membership
      */
     public function getRequestsCount($cached = true)
     {
-        if($count = $this->cache->get("group:{$this->group->getGuid()}:requests:count")){
+        if ($count = $this->cache->get("group:{$this->group->getGuid()}:requests:count")) {
             return $count;
         }
         $this->relDB->setGuid($this->group->getGuid());
@@ -235,7 +235,8 @@ class Membership
             if ($this->isAwaiting($user_guid)) {
                 try {
                     $this->cancelRequest($user_guid);
-                } catch (GroupOperationException $e) { }
+                } catch (GroupOperationException $e) {
+                }
             }
 
             $done = $this->relDB->create('member', $this->group->getGuid());
@@ -323,11 +324,11 @@ class Membership
  
         $user_guid = is_object($user) ? $user->guid : $user;
 
-        if($cache && isset($this->memberCache[$user->guid])){
+        if ($cache && isset($this->memberCache[$user->guid])) {
             return $this->memberCache[$user->guid];
         }
 
-        if($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== FALSE){
+        if ($cache && ($is = $this->cache->get("group:{$this->group->getGuid()}:isMember:$user_guid")) !== false) {
             $this->memberCache[$user->guid] = (bool) $is;
             return (bool) $is;
         }
@@ -539,7 +540,7 @@ class Membership
 
     public static function _($group)
     {
-        if(!isset(self::$_[$group->guid])){
+        if (!isset(self::$_[$group->guid])) {
             self::$_[$group->guid] = (new Membership)->setGroup($group);
         }
         return self::$_[$group->guid];

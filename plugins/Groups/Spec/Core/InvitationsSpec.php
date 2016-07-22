@@ -13,12 +13,12 @@ use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class InvitationsSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Invitations');
     }
 
-    function it_should_get_invitations(GroupEntity $group, Relationships $db)
+    public function it_should_get_invitations(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -31,7 +31,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->getInvitations([ 'hydrate' => false ])->shouldReturn([11, 12, 13]);
     }
 
-    function it_should_check_invited_users_in_batch(GroupEntity $group, Relationships $db)
+    public function it_should_check_invited_users_in_batch(GroupEntity $group, Relationships $db)
     {
         $this->beConstructedWith($db);
 
@@ -44,7 +44,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->isInvitedBatch([11, 12, 14])->shouldReturn([11 => true, 12 => true, 14 => false]);
     }
 
-    function it_should_check_if_its_invited(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_check_if_its_invited(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -58,7 +58,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->isInvited($user)->shouldReturn(true);
     }
 
-    function it_should_invite_to_a_public_group(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
+    public function it_should_invite_to_a_public_group(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
     {
         $this->beConstructedWith($db, $acl, $friendsDB);
 
@@ -82,7 +82,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->invite($user, [ 'notify' => false ])->shouldReturn(true);
     }
 
-    function it_should_not_invite_to_a_private_group(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
+    public function it_should_not_invite_to_a_private_group(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
     {
         $this->beConstructedWith($db, $acl, $friendsDB);
 
@@ -105,7 +105,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringInvite($user, [ 'notify' => false ]);
     }
 
-    function it_should_invite_to_a_private_group_by_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
+    public function it_should_invite_to_a_private_group_by_an_owner(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
     {
         $this->beConstructedWith($db, $acl, $friendsDB);
 
@@ -131,7 +131,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->invite($user, [ 'notify' => false ])->shouldReturn(true);
     }
 
-    function it_should_uninvite(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
+    public function it_should_uninvite(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
     {
         $this->beConstructedWith($db, $acl, $friendsDB);
 
@@ -155,7 +155,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->uninvite($user)->shouldReturn(true);
     }
 
-    function it_should_not_uninvite_a_non_subscriber(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
+    public function it_should_not_uninvite_a_non_subscriber(GroupEntity $group, Relationships $db, User $user, User $actor, ACL $acl, Call $friendsDB)
     {
         $this->beConstructedWith($db, $acl, $friendsDB);
 
@@ -178,7 +178,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringUninvite($user);
     }
 
-    function it_should_accept(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_accept(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -196,7 +196,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->accept()->shouldReturn(true);
     }
 
-    function it_should_fail_to_accept_if_not_invited(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_fail_to_accept_if_not_invited(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -214,7 +214,7 @@ class InvitationsSpec extends ObjectBehavior
         $this->shouldThrow('\Minds\Plugin\Groups\Exceptions\GroupOperationException')->duringAccept();
     }
 
-    function it_should_decline(GroupEntity $group, Relationships $db, User $user)
+    public function it_should_decline(GroupEntity $group, Relationships $db, User $user)
     {
         $this->beConstructedWith($db);
 
@@ -229,5 +229,4 @@ class InvitationsSpec extends ObjectBehavior
         $this->setActor($user);
         $this->decline()->shouldReturn(true);
     }
-
 }

@@ -13,12 +13,11 @@ use Minds\Plugin\Messenger;
 
 class ConversationsCache
 {
-
     private $redis;
     private $user;
     private $user_guid;
 
-    public function __construct($redis = NULL, $config = NULL)
+    public function __construct($redis = null, $config = null)
     {
         $this->redis = $redis ?: new \Redis();
         $this->config = $config ?: Di::_()->get('Config');
@@ -27,10 +26,10 @@ class ConversationsCache
 
     public function setUser($user)
     {
-        if($user instanceof User){
+        if ($user instanceof User) {
             $this->user = $user;
             $this->user_guid = $user->guid;
-        } elseif(is_string($user)) {
+        } elseif (is_string($user)) {
             $this->user_guid = $user;
         }
 
@@ -41,11 +40,12 @@ class ConversationsCache
     {
         $return = [];
 
-        try{
+        try {
             $config = $this->config->get('redis');
             $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
             $return = $this->redis->smembers("object:gathering:conversations:{$this->user_guid}");
-        } catch (\Exception $e){}
+        } catch (\Exception $e) {
+        }
 
         return $return;
     }
@@ -53,15 +53,15 @@ class ConversationsCache
 
     public function saveList($conversations)
     {
-        try{
+        try {
             $config = $this->config->get('redis');
             $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
-            $guids = array_map(function($c){
+            $guids = array_map(function ($c) {
                 return $c->getGuid();
             }, $conversations);
             array_unshift($guids, "object:gathering:conversations:{$this->user_guid}");
             call_user_func_array([$this->redis, 'sadd'], $guids);
-        } catch (\Exception $e){}
+        } catch (\Exception $e) {
+        }
     }
-
 }

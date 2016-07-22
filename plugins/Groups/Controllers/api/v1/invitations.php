@@ -111,8 +111,7 @@ class invitations implements Interfaces\Api
         $user = Session::getLoggedInUser();
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        if (!$group || !$group->getGuid())
-        {
+        if (!$group || !$group->getGuid()) {
             return Factory::response([
                 'done' => false,
                 'error' => 'No group'
@@ -176,8 +175,7 @@ class invitations implements Interfaces\Api
         $user = Session::getLoggedInUser();
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        if (!$group || !$group->getGuid())
-        {
+        if (!$group || !$group->getGuid()) {
             return Factory::response([
                 'done' => false,
                 'error' => 'No group'

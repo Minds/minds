@@ -29,7 +29,7 @@ class tokenResponse extends \OAuth2\ResponseType\AccessToken
             "access_token" => $this->generateAccessToken(),
             "expires_in" => $this->config['access_lifetime'],
             "token_type" => $this->config['token_type'],
-	    "user_id" => $user_id,
+        "user_id" => $user_id,
             "scope" => $scope
         );
 
@@ -52,5 +52,4 @@ class tokenResponse extends \OAuth2\ResponseType\AccessToken
 
         return $token;
     }
-
 }

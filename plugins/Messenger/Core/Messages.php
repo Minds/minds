@@ -13,13 +13,12 @@ use Minds\Plugin\Messenger;
 
 class Messages
 {
-
     private $indexes;
     private $db;
     private $conversation;
     private $participants = [];
 
-    public function __construct($db = NULL, $indexes = NULL)
+    public function __construct($db = null, $indexes = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Entities');
         $this->indexes = $indexes ?: Di::_()->get('Database\Cassandra\Indexes');
@@ -33,7 +32,6 @@ class Messages
 
     public function getMessages($limit = 12, $offset = "", $finish = "")
     {
-
         $this->conversation->setGuid(null); //legacy messages get confused here
         $guid = $this->conversation->getGuid();
 
@@ -48,9 +46,9 @@ class Messages
 
         $entities = [];
 
-        foreach($messages as $guid => $json){
+        foreach ($messages as $guid => $json) {
             $message = json_decode($json, true);
-            if(!is_array($message)){
+            if (!is_array($message)) {
                 //@todo polyfill for legacy messages (new messages are now denomalized)
                 $legacy_guids[$guid] = $json;
                 continue;
@@ -59,9 +57,9 @@ class Messages
             $entities[$guid]->loadFromArray($message);
         }
 
-        if($legacy_guids){
+        if ($legacy_guids) {
             $legacy_messages = $this->db->getRows($legacy_guids);
-            foreach($legacy_messages as $guid => $message){
+            foreach ($legacy_messages as $guid => $message) {
                 $entities[$guid] = new Messenger\Entities\Message();
                 $message['owner'] = $message['ownerObj'];
                 $entities[$guid]->loadFromArray($message);
@@ -69,12 +67,8 @@ class Messages
                     Session::getLoggedInUserGuid() => $message["message:".Session::getLoggedInUserGuid()]
                     ], true);
             }
-
         }
 
         return $entities;
     }
-
-
-
 }

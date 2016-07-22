@@ -17,7 +17,7 @@ class Events
         /**
         * if it's a mutual match then create a conversation
         */
-        Core\Events\Dispatcher::register('subscribe', 'all', function($event) {
+        Core\Events\Dispatcher::register('subscribe', 'all', function ($event) {
             $params = $event->getParameters();
 
             $isMutual = (new Messenger\Helpers\Subscriptions)->isMutual($params['user_guid'], $params['to_guid']);
@@ -34,14 +34,14 @@ class Events
         /**
          * Extend User->export()
          */
-        Core\Events\Dispatcher::register('export:extender', 'all', function($event) {
+        Core\Events\Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
 
-            if ($params['entity'] instanceof User){
+            if ($params['entity'] instanceof User) {
                 $keystore = (new Messenger\Core\Keystore())
                     ->setUser($params['entity']);
 
-                if ($keystore->getPrivateKey()){
+                if ($keystore->getPrivateKey()) {
                     $export = [ 'chat' => true ];
                 }
 
@@ -52,7 +52,7 @@ class Events
         /**
          * Extend Entity mapper
          */
-        Core\Events\Dispatcher::register('entities:map', 'all', function($event) {
+        Core\Events\Dispatcher::register('entities:map', 'all', function ($event) {
             $params = $event->getParameters();
 
             if ($params['row']->subtype == 'message') {
@@ -67,12 +67,12 @@ class Events
         /**
          * Extend ACL for Messages entity checks
          */
-        Core\Events\Dispatcher::register('acl:read', 'all', function($event) {
+        Core\Events\Dispatcher::register('acl:read', 'all', function ($event) {
             $params = $event->getParameters();
             $message = $params['entity'];
             $user = $params['user'];
 
-            if($message instanceof Entities\Message){
+            if ($message instanceof Entities\Message) {
                 $key = "message:$user->guid";
                 if ($message->$key) {
                     $event->setResponse(true);
@@ -80,7 +80,7 @@ class Events
             }
         });
 
-        Core\Events\Dispatcher::register('acl:block', 'all', function($event) {
+        Core\Events\Dispatcher::register('acl:block', 'all', function ($event) {
             $params = $event->getParameters();
             $from = $params['from'];
             $user = $params['user'];
@@ -95,10 +95,11 @@ class Events
                 (new Sockets\Events())
                   ->setUser($from)
                   ->emit('block', (string) $user);
-            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+            } catch (\Exception $e) { /* TODO: To log or not to log */
+            }
         });
 
-        Core\Events\Dispatcher::register('acl:unblock', 'all', function($event) {
+        Core\Events\Dispatcher::register('acl:unblock', 'all', function ($event) {
             $params = $event->getParameters();
             $from = $params['from'];
             $user = $params['user'];
@@ -113,7 +114,8 @@ class Events
                 (new Sockets\Events())
                   ->setUser($from)
                   ->emit('unblock', (string) $user);
-            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+            } catch (\Exception $e) { /* TODO: To log or not to log */
+            }
         });
     }
 }

@@ -11,7 +11,7 @@ elgg_set_context('settings');
 $options = array(
     'type'       => 'object',
     'subtype'    => 'oauth2_client',
-    'limit'      => 10,    
+    'limit'      => 10,
     'full_view'  => false,
     'list_class' => 'x1',
     'masonry' => false
@@ -30,10 +30,10 @@ $content = elgg_view_form('oauth2/register');
 $content .= elgg_list_entities($options);
 
 $params = array(
-    'title'   => $title, 
+    'title'   => $title,
     'content' => $content,
     'filter'  => '',
-	'sidebar_class' => 'elgg-sidebar-alt'
+    'sidebar_class' => 'elgg-sidebar-alt'
 );
 $body = elgg_view_layout('one_sidebar', $params);
 

@@ -1,8 +1,8 @@
 <?php
 /**
  * Twitter service handler
- * 
- * Unfortunately, most of twitters php sdks are pretty crap, so we need to do a lot of the authentication work ourselves. 
+ *
+ * Unfortunately, most of twitters php sdks are pretty crap, so we need to do a lot of the authentication work ourselves.
  */
 
 namespace minds\plugin\social\services;
@@ -11,30 +11,33 @@ use Minds\Components;
 use Minds\Core;
 use TijsVerkoyen;
 
-class twitter extends core\base{
-	
-	public function init(){
-
-	}
+class twitter extends core\base
+{
+    public function init()
+    {
+    }
 
     private $token;
     private $secret;
 
-    public function __construct($params = array()){
-        if(isset($params['access_token'])){
-            list($this->token, $this->secret) = explode('&&',$params['access_token']);
+    public function __construct($params = array())
+    {
+        if (isset($params['access_token'])) {
+            list($this->token, $this->secret) = explode('&&', $params['access_token']);
         }
     }
 
-	public function authorizeURL(){
-		$tw = $this->tw();
-		$token = $this->requestToken();
-		$url = $tw::SECURE_API_URL . '/oauth/authenticate?oauth_token=' . $token['oauth_token'];
-		return $url;
-	}
-	
-	public function authorizeCallback(){
-        if(core\Session::getLoggedinUser()->guid && !isset($_REQUEST['client_id'])){
+    public function authorizeURL()
+    {
+        $tw = $this->tw();
+        $token = $this->requestToken();
+        $url = $tw::SECURE_API_URL . '/oauth/authenticate?oauth_token=' . $token['oauth_token'];
+        return $url;
+    }
+    
+    public function authorizeCallback()
+    {
+        if (core\Session::getLoggedinUser()->guid && !isset($_REQUEST['client_id'])) {
             $tw = $this->tw();
             $response = $tw->oAuthAccessToken($_REQUEST['oauth_token'], $_REQUEST['oauth_verifier']);
             
@@ -50,40 +53,40 @@ class twitter extends core\base{
         //echo json_encode($response);
     }
 
-	public function post($activity){
-
+    public function post($activity)
+    {
         error_log($this->token);
         error_log($this->secret);
 
         $message = $activity['message'];
-		if(strlen($message) > 115){
-			$message = substr($message,0,105) . '...';
-		}
-        $message .= " " . $activity['perma_url']; 
+        if (strlen($message) > 115) {
+            $message = substr($message, 0, 105) . '...';
+        }
+        $message .= " " . $activity['perma_url'];
         error_log("mesage is ".$message);
-        if(!$message)
-			return true;
-		$tw = $this->tw();
+        if (!$message) {
+            return true;
+        }
+        $tw = $this->tw();
    
         $tw->setOAuthToken($this->token ?: \elgg_get_plugin_user_setting('twitter_access_token', core\Session::getLoggedinUser()->guid, 'social'));
-		$tw->setOAuthTokenSecret($this->secret ?: \elgg_get_plugin_user_setting('twitter_access_secret', core\Session::getLoggedinUser()->guid, 'social'));
-		$tw->statusesUpdate($message);
+        $tw->setOAuthTokenSecret($this->secret ?: \elgg_get_plugin_user_setting('twitter_access_secret', core\Session::getLoggedinUser()->guid, 'social'));
+        $tw->statusesUpdate($message);
         error_log("set API request to twitter");
-
-	}
-	
-	public function tw(){
-		return  new TijsVerkoyen\Twitter\Twitter(elgg_get_plugin_setting('twitter_api_key','social'), elgg_get_plugin_setting('twitter_api_secret','social'));
-	}
-	public function requestToken(){
-		$tw = $this->tw();
-		$response = $tw->oAuthRequestToken(elgg_get_site_url() . 'plugin/social/redirect/twitter');
-		return $response;
-	}
-	
-	public function call($endpoint, $method, $params){
-		
-	}
-		
+    }
+    
+    public function tw()
+    {
+        return  new TijsVerkoyen\Twitter\Twitter(elgg_get_plugin_setting('twitter_api_key', 'social'), elgg_get_plugin_setting('twitter_api_secret', 'social'));
+    }
+    public function requestToken()
+    {
+        $tw = $this->tw();
+        $response = $tw->oAuthRequestToken(elgg_get_site_url() . 'plugin/social/redirect/twitter');
+        return $response;
+    }
+    
+    public function call($endpoint, $method, $params)
+    {
+    }
 }
-	

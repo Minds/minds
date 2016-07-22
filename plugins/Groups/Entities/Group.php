@@ -17,7 +17,6 @@ use Minds\Plugin\Groups\Core\Management;
 
 class Group extends NormalizedEntity
 {
-
     protected $type = 'group';
     protected $guid;
     protected $ownerObj;
@@ -106,7 +105,6 @@ class Group extends NormalizedEntity
      */
     public function delete()
     {
-
         $this->unFeature();
 
         Di::_()->get('Queue')
@@ -136,7 +134,7 @@ class Group extends NormalizedEntity
      */
     public function __get($name)
     {
-        switch($name){
+        switch ($name) {
           case 'guid':
             return $this->getGuid();
             break;
@@ -285,7 +283,7 @@ class Group extends NormalizedEntity
      */
     public function getOwnerGuids()
     {
-        if(empty($this->owner_guids) && $this->owner_guid){
+        if (empty($this->owner_guids) && $this->owner_guid) {
             $this->owner_guids[] = $this->owner_guid;
         }
         return $this->owner_guids ?: [];
@@ -328,7 +326,7 @@ class Group extends NormalizedEntity
      */
     public function isAwaiting($user = null)
     {
-        if($this->isMember($user)){
+        if ($this->isMember($user)) {
             return false;
         }
         return Membership::_($this)->isAwaiting($user);
@@ -341,7 +339,7 @@ class Group extends NormalizedEntity
      */
     public function isInvited($user = null)
     {
-        if($this->isMember()){
+        if ($this->isMember()) {
             return false;
         }
         return (new Invitations)->setGroup($this)
@@ -440,7 +438,7 @@ class Group extends NormalizedEntity
     public function getActivityCount()
     {
         $cache = Di::_()->get('Cache');
-        if($count = $cache->get("activity:container:{$this->getGuid()}")){
+        if ($count = $cache->get("activity:container:{$this->getGuid()}")) {
             return $count;
         }
         $count = $this->indexDb->count("activity:container:{$this->getGuid()}");
@@ -450,7 +448,7 @@ class Group extends NormalizedEntity
 
     public function getRequestsCount()
     {
-        if($this->isPublic()){
+        if ($this->isPublic()) {
             return 0;
         }
         return Membership::_($this)->getRequestsCount();

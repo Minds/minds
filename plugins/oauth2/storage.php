@@ -7,8 +7,13 @@ namespace minds\plugin\oauth2;
 use OAuth2;
 use Minds\Core\data;
 
-class storage implements OAuth2\Storage\AccessTokenInterface, OAuth2\Storage\RefreshTokenInterface,
-OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterface, OAuth2\Storage\AuthorizationCodeInterface {
+class storage implements
+OAuth2\Storage\AccessTokenInterface,
+OAuth2\Storage\RefreshTokenInterface,
+OAuth2\Storage\ClientCredentialsInterface,
+OAuth2\Storage\UserCredentialsInterface,
+OAuth2\Storage\AuthorizationCodeInterface
+{
 
     /**
      * Check restricted grant types of corresponding client identifier.
@@ -32,33 +37,38 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
     }
     
     /**
-     * 
+     *
      * DATA GET/SET Method
      */
-    public function set($key, $values, $expires = NULL){
+    public function set($key, $values, $expires = null)
+    {
         $db = new Data\Call('entities');
-        foreach($values as $k => $v)
-            if($v === NULL)
+        foreach ($values as $k => $v) {
+            if ($v === null) {
                 unset($values[$k]);
+            }
+        }
 
-        return $db->insert($key, $values, $expires > 0 ? $expires - time(): NULL);
+        return $db->insert($key, $values, $expires > 0 ? $expires - time(): null);
     }
     
-    public function get($key){
+    public function get($key)
+    {
         $db = new Data\Call('entities');
         return $db->getRow($key);
     }
     
-    public function remove($key){
+    public function remove($key)
+    {
         $db = new Data\Call('entities');
         return $db->removeRow($key);
     }
 
 
     /**
-     * 
+     *
      * CLIENT CREDENTIALS
-     * 
+     *
      */
      
      /**
@@ -74,8 +84,8 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_3
      */
-    public function checkClientCredentials($client_id, $client_secret = null){
-
+    public function checkClientCredentials($client_id, $client_secret = null)
+    {
         $client = new entities\client($client_id);
         
         if ($client) {
@@ -85,8 +95,8 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
         return false;
     }
     
-    public function getClientDetails($client_id){
-
+    public function getClientDetails($client_id)
+    {
         $access = elgg_get_ignore_access();
         elgg_set_ignore_access(true);
 
@@ -120,8 +130,9 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_2
      */
-    public function isPublicClient($client_id){
-        return true;   
+    public function isPublicClient($client_id)
+    {
+        return true;
     }
 
 
@@ -131,14 +142,15 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      * @return
      * STRING the space-delineated scope list for the specified client_id
      */
-    public function getClientScope($client_id){
+    public function getClientScope($client_id)
+    {
         return "";
     }
 
     /**
-     * 
+     *
      * ACCESS TOKENS
-     * 
+     *
      */
      
        /**
@@ -156,7 +168,8 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_7
      */
-    public function getAccessToken($token){
+    public function getAccessToken($token)
+    {
         return $this->get($token);
     }
 
@@ -173,14 +186,15 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_4
      */
-    public function setAccessToken($token, $client_id, $user_id, $expires, $scope = null){
-        return $this->set($token, array('client_id'=>$client_id, 'user_id' => $user_id, 'scope'=>$scope, 'expires'=>$expires), $expires > 0 ? $expires : NULL);
+    public function setAccessToken($token, $client_id, $user_id, $expires, $scope = null)
+    {
+        return $this->set($token, array('client_id'=>$client_id, 'user_id' => $user_id, 'scope'=>$scope, 'expires'=>$expires), $expires > 0 ? $expires : null);
     }
 
     /**
-     * 
+     *
      * REFRESH TOKENS
-     * 
+     *
      */
 
     /**
@@ -206,7 +220,8 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_6
      */
-    public function getRefreshToken($refresh_token){
+    public function getRefreshToken($refresh_token)
+    {
         return $this->get($refresh_token);
     }
     
@@ -234,8 +249,9 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_6
      */
-    public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null){
-        return $this->set($refresh_token, array('client_id'=>$client_id, 'user_id'=>$user_id, 'expires'=>$expires, 'scope'=>$scope), $expires > 0 ? $expires : NULL);
+    public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
+    {
+        return $this->set($refresh_token, array('client_id'=>$client_id, 'user_id'=>$user_id, 'expires'=>$expires, 'scope'=>$scope), $expires > 0 ? $expires : null);
     }
     
     /**
@@ -254,14 +270,15 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_6
      */
-    public function unsetRefreshToken($refresh_token){
+    public function unsetRefreshToken($refresh_token)
+    {
         return $this->remove($refresh_token);
     }
 
     /**
-     * 
+     *
      * AUTHORIZATION CODES
-     * 
+     *
      */
 
     /**
@@ -290,7 +307,8 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_4
      */
-    public function getAuthorizationCode($code){
+    public function getAuthorizationCode($code)
+    {
         return $this->get($code);
     }
     
@@ -314,8 +332,9 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_4
      */
-    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null){
-        return $this->set($code, array('client_id'=>$client_id, 'user_id'=>$user_id, 'redirect_uri'=>$redirect_uri, 'expires'=>$expires, 'scope'=>$scope), $expires > 0 ? $expires : NULL);
+    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null)
+    {
+        return $this->set($code, array('client_id'=>$client_id, 'user_id'=>$user_id, 'redirect_uri'=>$redirect_uri, 'expires'=>$expires, 'scope'=>$scope), $expires > 0 ? $expires : null);
     }
     /**
      * once an Authorization Code is used, it must be exipired
@@ -329,14 +348,15 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *    that authorization code
      *
      */
-    public function expireAuthorizationCode($code){
+    public function expireAuthorizationCode($code)
+    {
         return $this->remove($code);
     }
 
     /****
-     * 
+     *
      * USER CREDENTIALS
-     * 
+     *
      **/
 
     /**
@@ -369,8 +389,9 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      *
      * @ingroup oauth2_section_4
      */
-    public function checkUserCredentials($username, $password){
-	$username = strtolower($username);
+    public function checkUserCredentials($username, $password)
+    {
+        $username = strtolower($username);
         $result = elgg_authenticate($username, $password);
 
         if ($result !== true) {
@@ -392,16 +413,16 @@ OAuth2\Storage\ClientCredentialsInterface, OAuth2\Storage\UserCredentialsInterfa
      * );
      * @endcode
      */
-    public function getUserDetails($username=null){
-	$username = strtolower($username);
+    public function getUserDetails($username=null)
+    {
+        $username = strtolower($username);
         $user = new \Minds\Entities\User($username);
-        if($user->guid)
+        if ($user->guid) {
             return array(
                 'user_id' => (string) $user->guid,
                 'scope' => ''
             );
+        }
         return false;
     }
-
-
 }

@@ -13,7 +13,6 @@
 $entity = null;
 elgg_set_context('settings');
 if ($page[0] == 'edit' && $entity = get_entity($page[1])) {
-
     if (!elgg_instanceof($entity, 'object', 'oauth2_client') || !$entity->canEdit()) {
         register_error(elgg_echo('oauth2:register:app_not_found'));
         forward(REFERRER);
@@ -25,7 +24,7 @@ $title = elgg_echo('oauth2:register:title');
 $content = elgg_view_form('oauth2/register', null, array('entity' => $entity));
 
 $params = array(
-    'title'   => $title, 
+    'title'   => $title,
     'content' => $content,
     'filter'  => '',
     'sidebar_class' => 'elgg-sidebar-alt'

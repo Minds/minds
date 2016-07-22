@@ -13,7 +13,8 @@ use Minds\Interfaces;
 use minds\plugin\archive\entities;
 use Minds\Api\Factory;
 
-class albums implements Interfaces\Api{
+class albums implements Interfaces\Api
+{
 
     /**
      * Return the archive items
@@ -21,13 +22,15 @@ class albums implements Interfaces\Api{
      *
      * API:: /v1/archive/albums || :guid
      */
-    public function get($pages){
+    public function get($pages)
+    {
         $response = [];
 
-        if(!isset($pages[0]))
+        if (!isset($pages[0])) {
             $pages = ['list'];
+        }
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "list":
 
                 $owner_guid = isset($pages[1]) && is_numeric($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
@@ -37,32 +40,34 @@ class albums implements Interfaces\Api{
                   'owner_guid' => $owner_guid
                 ]);
 
-                if(!$entities){
-                  $album = new entities\album();
-                  $album->title = "My Album";
-                  $album->owner_guid = $owner_guid;
-                  $album->save();
-                  $entities = [$album];
+                if (!$entities) {
+                    $album = new entities\album();
+                    $album->title = "My Album";
+                    $album->owner_guid = $owner_guid;
+                    $album->save();
+                    $entities = [$album];
                 }
 
                 break;
             case "children":
-            default;
-                if(is_numeric($pages[0]))
-                  $album_guid = $pages[0];
-                else
-                  $album_guid = $pages[1];
+            default:
+                if (is_numeric($pages[0])) {
+                    $album_guid = $pages[0];
+                } else {
+                    $album_guid = $pages[1];
+                }
 
                 $db = new Core\Data\Call('entities_by_time');
                 $guids = $db->getRow("object:container:$album_guid", [
                   'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
                   'offset' => isset($_GET['offset']) ? $_GET['offset'] : ""
                 ]);
-                if(isset($_GET['offset']))
-                  unset($guids[$_GET['offset']]);
+                if (isset($_GET['offset'])) {
+                    unset($guids[$_GET['offset']]);
+                }
 
-                if(!$guids){
-                  return Factory::response([]);
+                if (!$guids) {
+                    return Factory::response([]);
                 }
 
                 $entities = Core\Entities::get([
@@ -71,14 +76,13 @@ class albums implements Interfaces\Api{
 
         }
 
-        if($entities){
-          $response["entities"] = Factory::exportable($entities);
-          $response['load-next'] = (string) end($entities)->guid;
-          $response['load-previous'] = (string) reset($entities)->guid;
+        if ($entities) {
+            $response["entities"] = Factory::exportable($entities);
+            $response['load-next'] = (string) end($entities)->guid;
+            $response['load-previous'] = (string) reset($entities)->guid;
         }
 
         return Factory::response($response);
-
     }
 
     /**
@@ -87,12 +91,11 @@ class albums implements Interfaces\Api{
      *
      * API:: /v1/archive/album | :guid
      */
-    public function post($pages){
-
+    public function post($pages)
+    {
         Factory::isLoggedIn();
 
-        if(!isset($pages[0])){
-
+        if (!isset($pages[0])) {
             $album = new entities\album();
             $album->title = $_POST['title'];
             $album->save();
@@ -106,21 +109,19 @@ class albums implements Interfaces\Api{
         $album = new entities\album($pages[0]);
         $entity_guids = $_POST['guids'];
         $guids = array();
-        foreach($entity_guids as $guid){
-          $guids[$guid] = time();
+        foreach ($entity_guids as $guid) {
+            $guids[$guid] = time();
         }
         $album->addChildren($guids);
 
         return Factory::response(array('status'=>'success'));
-
     }
 
     /**
      */
-    public function put($pages){
-
+    public function put($pages)
+    {
         return Factory::response(array());
-
     }
 
     /**
@@ -129,14 +130,13 @@ class albums implements Interfaces\Api{
      *
      * API:: /v1/archive/album/:guid
      */
-    public function delete($pages){
-
+    public function delete($pages)
+    {
         $album = new entities\album($pages[0]);
-        if($album->canEdit())
+        if ($album->canEdit()) {
             $album->delete();
+        }
 
         return Factory::response();
-
     }
-
 }

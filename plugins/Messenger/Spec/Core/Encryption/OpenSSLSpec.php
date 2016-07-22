@@ -12,18 +12,17 @@ use Minds\Plugin\Messenger\Core\Keystore;
 
 class OpenSSLSpec extends ObjectBehavior
 {
-
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Messenger\Core\Encryption\EncryptionInterface');
     }
 
-    function it_should_set_a_message_entity(Message $message)
+    public function it_should_set_a_message_entity(Message $message)
     {
         $this->setMessage($message)->getMessage()->shouldHaveType('Minds\Plugin\Messenger\Entities\Message');
     }
 
-    function it_should_encrypt_a_message(Message $message, Conversation $conversation, Keystore $keystore,
+    public function it_should_encrypt_a_message(Message $message, Conversation $conversation, Keystore $keystore,
       User $user1, User $user2)
     {
         $this->beConstructedWith($keystore);
@@ -67,5 +66,4 @@ class OpenSSLSpec extends ObjectBehavior
         $this->setMessage($message);
         $this->encrypt();
     }*/
-
 }

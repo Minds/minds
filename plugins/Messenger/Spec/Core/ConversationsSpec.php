@@ -7,10 +7,8 @@ use Prophecy\Argument;
 
 class ConversationsSpec extends ObjectBehavior
 {
-
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Messenger\Core\Conversations');
     }
-
 }

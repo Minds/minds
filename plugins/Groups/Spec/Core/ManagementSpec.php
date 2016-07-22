@@ -12,12 +12,12 @@ use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 class ManagementSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Plugin\Groups\Core\Management');
     }
 
-    function it_should_grant(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
+    public function it_should_grant(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
     {
         $this->beConstructedWith($db, $acl);
 
@@ -40,7 +40,7 @@ class ManagementSpec extends ObjectBehavior
         $this->grant($user)->shouldReturn(true);
     }
 
-    function it_should_revoke(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
+    public function it_should_revoke(GroupEntity $group, Relationships $db, ACL $acl, User $user, User $actor)
     {
         $this->beConstructedWith($db, $acl);
 
@@ -61,5 +61,4 @@ class ManagementSpec extends ObjectBehavior
         $this->setActor($actor);
         $this->revoke($user)->shouldReturn(true);
     }
-
 }
