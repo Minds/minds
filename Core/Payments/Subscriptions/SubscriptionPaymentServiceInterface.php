@@ -10,7 +10,6 @@ use Minds\Core\Payments\Subscriptions\Subscription;
 
 interface SubscriptionPaymentServiceInterface
 {
-
     public function createCustomer(Customer $customer);
 
     public function createPaymentMethod(PaymentMethod $payment_method);
@@ -18,5 +17,4 @@ interface SubscriptionPaymentServiceInterface
     public function createSubscription(Subscription $subscription);
 
     public function getSubscription($subscription_id);
-
 }

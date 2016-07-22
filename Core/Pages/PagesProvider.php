@@ -11,12 +11,10 @@ use Minds\Core\Di\Provider;
 
 class PagesProvider extends Provider
 {
-
     public function register()
     {
-        $this->di->bind('PagesManager', function($di){
+        $this->di->bind('PagesManager', function ($di) {
             return new Manager(new Data\Call('entities_by_time'), new Data\Call('user_index_to_guid'));
         }, ['useFactory'=>true]);
     }
-
 }

@@ -18,7 +18,7 @@ class Menu
         $footer = Di::_()->get('PagesManager')->getMenu('footer');
 
         usort($footer, function ($a, $b) {
-          return strcmp($b->getTitle(), $a->getTitle());
+            return strcmp($b->getTitle(), $a->getTitle());
         });
 
         foreach ($footer as $page) {
@@ -26,8 +26,8 @@ class Menu
             $listed = true;
 
             if ($page->getSubtype() == 'link') {
-              $front_path = '';
-              $listed = false;
+                $front_path = '';
+                $listed = false;
             }
 
             Navigation\Manager::add(

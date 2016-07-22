@@ -93,8 +93,9 @@ class settings implements Interfaces\Api
         $response = array();
         if (!$user->save()) {
             //update or session
-            if($user->getGuid() == Core\Session::getLoggedInUser()->getGuid())
+            if ($user->getGuid() == Core\Session::getLoggedInUser()->getGuid()) {
                 $_SESSION['user'] = $user;
+            }
 
             $response['status'] = 'error';
         }

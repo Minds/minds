@@ -55,7 +55,7 @@ class Mailer
         $this->mailer->FromName = $message->from['name'];
 
         foreach ($message->to as $to) {
-            if($this->filter->isSpam($to['email'])){
+            if ($this->filter->isSpam($to['email'])) {
                 continue; //don't send to blacklisted domains
             }
             $this->mailer->AddAddress($to['email'], $to['name']);
@@ -92,7 +92,7 @@ class Mailer
 
     public function __destruct()
     {
-        if($this->mailer){
+        if ($this->mailer) {
             $this->mailer->SmtpClose();
         }
     }

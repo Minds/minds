@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Entity
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -17,7 +17,7 @@ class entity implements Interfaces\Api
     /**
      * Returns the entities
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"entities"},
      *     summary="Returns a single entity",

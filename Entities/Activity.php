@@ -175,7 +175,7 @@ class Activity extends Entity
         $export['mature'] = (bool) $export['mature'];
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
-          $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'],'plays');
+            $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
         }
 
         return $export;

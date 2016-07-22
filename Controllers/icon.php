@@ -22,10 +22,10 @@ class icon extends core\page implements Interfaces\page
         //    $join_date = $cached;
         //} else {
             $user = new Entities\User($guid);
-            if (isset($user->legacy_guid) && $user->legacy_guid) {
-                $guid = $user->legacy_guid;
-            }
-            $join_date = $user->time_created;
+        if (isset($user->legacy_guid) && $user->legacy_guid) {
+            $guid = $user->legacy_guid;
+        }
+        $join_date = $user->time_created;
         //    $cacher->set("usericon:$guid", $join_date);
         //}
         $last_cache = isset($pages[2]) ? $pages[2] : time();

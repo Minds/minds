@@ -82,8 +82,8 @@ class comments implements Interfaces\Api
                 $content = $_POST['description'];
             }
 
-            if(!$content && !$_POST['attachment_guid']){
-              return Factory::response([
+            if (!$content && !$_POST['attachment_guid']) {
+                return Factory::response([
                 'status' => 'error',
                 'message' => 'You must enter a message'
               ]);
@@ -103,8 +103,8 @@ class comments implements Interfaces\Api
             if ($parent instanceof Entities\Activity && $parent->remind_object) {
                 $parent = (object) $parent->remind_object;
             }
-            if(!$_POST['comment'] && !$_POST['attachment_guid']){
-              return Factory::response([
+            if (!$_POST['comment'] && !$_POST['attachment_guid']) {
+                return Factory::response([
                 'status' => 'error',
                 'message' => 'You must enter a message'
               ]);
@@ -122,8 +122,9 @@ class comments implements Interfaces\Api
                     unset($subscribers[$comment->owner_guid]);
                 }
 
-                if($parent->owner_guid != Core\Session::getLoggedinUser()->guid)
+                if ($parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+                }
 
                 Core\Events\Dispatcher::trigger('notification', 'all', array(
                     'to' => $subscribers,
@@ -170,12 +171,12 @@ class comments implements Interfaces\Api
                 $attachment->access_id = 2;
 
                 if ($attachment instanceof \Minds\Interfaces\Flaggable) {
-                  $attachment->setFlag('mature', $comment->getMature());
+                    $attachment->setFlag('mature', $comment->getMature());
                 }
 
                 $attachment->save();
 
-                switch($attachment->subtype){
+                switch ($attachment->subtype) {
                   case "image":
                     $comment->setCustom('batch', [[
                       'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
@@ -208,7 +209,8 @@ class comments implements Interfaces\Api
                 (new Sockets\Events())
                 ->setRoom("comments:{$pages[0]}")
                 ->emit('comment', $pages[0], (string) $comment->owner_guid, (string) $comment->guid);
-            } catch (\Exception $e) { /* TODO: To log or not to log */ }
+            } catch (\Exception $e) { /* TODO: To log or not to log */
+            }
         }
 
         return Factory::response($response);

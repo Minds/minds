@@ -13,20 +13,20 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Security;
 
-class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
+class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam
+{
 
     /**
      * NOT AVAILABLE
      */
-    public function get($pages){
-
+    public function get($pages)
+    {
         $response = [];
 
         $user = Core\Session::getLoggedInUser();
         $response['telno'] = $user->telno;
 
         return Factory::response($response);
-
     }
 
     /**
@@ -39,8 +39,9 @@ class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
      *     @SWG\Response(name="200", description="Array")
      * )
      */
-    public function post($pages){
-        if(!Core\Security\XSRF::validateRequest()){
+    public function post($pages)
+    {
+        if (!Core\Security\XSRF::validateRequest()) {
             return false;
         }
 
@@ -48,16 +49,16 @@ class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
         $user = Core\Session::getLoggedInUser();
         $response = [];
 
-        if(!isset($pages[0])){
+        if (!isset($pages[0])) {
             $pages[0] = 'authenticate';
         }
 
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "setup":
 
                 $secret = $twofactor->createSecret();
-                if(\Minds\plugin\guard\start::sendSMS($_POST['tel'], $twofactor->getCode($secret))){
+                if (\Minds\plugin\guard\start::sendSMS($_POST['tel'], $twofactor->getCode($secret))) {
                     $response['secret'] = $secret;
                 } else {
                     $response['status'] = "error";
@@ -69,7 +70,7 @@ class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 $secret = $pages[1];
                 $code = $_POST['code'];
                 $telno = $_POST['telno'];
-                if($twofactor->verifyCode($secret, $code, 1)){
+                if ($twofactor->verifyCode($secret, $code, 1)) {
                     $response['status'] = "success";
                     $response['message'] = "2factor now setup";
                     $user->twofactor = true;
@@ -83,50 +84,49 @@ class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam{
                 break;
             case "authenticate":
 
-            		//get our one user twofactor token
-            		$lookup = new Core\Data\lookup('twofactor');
-            		$return = $lookup->get($_POST['token']);
-            		$lookup->remove($pages[0]);
+                    //get our one user twofactor token
+                    $lookup = new Core\Data\lookup('twofactor');
+                    $return = $lookup->get($_POST['token']);
+                    $lookup->remove($pages[0]);
 
-            		//we allow for 120 seconds (2 mins) after we send a code
-            		if($return['_guid'] && $return['ts'] > time()-120){
-            			$user = new Entities\User($return['_guid']);
-            			$secret = $return['secret'];
-            		}else {
-                  header('HTTP/1.1 401 Unauthorized', true, 401);
-                  $response['status'] = 'error';
-                  $response['message'] = 'Invalid token';
-            		}
+                    //we allow for 120 seconds (2 mins) after we send a code
+                    if ($return['_guid'] && $return['ts'] > time()-120) {
+                        $user = new Entities\User($return['_guid']);
+                        $secret = $return['secret'];
+                    } else {
+                        header('HTTP/1.1 401 Unauthorized', true, 401);
+                        $response['status'] = 'error';
+                        $response['message'] = 'Invalid token';
+                    }
 
-            		if($twofactor->verifyCode($secret, $_POST['code'], 1)){
+                    if ($twofactor->verifyCode($secret, $_POST['code'], 1)) {
+                        global $TWOFACTOR_SUCCESS;
+                        $TWOFACTOR_SUCCESS = true;
+                        \login($user, true);
 
-            			global $TWOFACTOR_SUCCESS;
-            			$TWOFACTOR_SUCCESS = true;
-            			\login($user, true);
-
-                  $response['status'] = 'success';
-                  $response['user'] = $user->export();
-
-            		} else {
-                  header('HTTP/1.1 401 Unauthorized', true, 401);
-                  $response['status'] = 'error';
-                  $response['message'] = 'Could not verify.';
-            		}
+                        $response['status'] = 'success';
+                        $response['user'] = $user->export();
+                    } else {
+                        header('HTTP/1.1 401 Unauthorized', true, 401);
+                        $response['status'] = 'error';
+                        $response['message'] = 'Could not verify.';
+                    }
                 break;
         }
 
         return Factory::response($response);
-
     }
 
-    public function put($pages){}
+    public function put($pages)
+    {
+    }
 
-    public function delete($pages){
+    public function delete($pages)
+    {
         $user = Core\Session::getLoggedInUser();
         $user->twofactor = false;
         $user->telno = false;
         $user->save();
         return Factory::response([]);
     }
-
 }

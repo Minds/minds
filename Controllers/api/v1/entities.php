@@ -61,7 +61,6 @@ class entities implements Interfaces\Api
      */
     public function get($pages)
     {
-
         if (isset($pages[2]) && strpos($pages[2], ':') !== false) {
             $param = explode(':', $pages[2], 2);
 
@@ -93,7 +92,7 @@ class entities implements Interfaces\Api
         if ($pages[1] != "all") {
             switch ($pages[1]) {
                 case "images":
-                case "image";
+                case "image":
                     $type = "object";
                     $subtype = "image";
                     break;

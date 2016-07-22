@@ -10,7 +10,6 @@ use Minds\Helpers;
 
 class wall extends core\page implements Interfaces\page
 {
-
     public function get($pages)
     {
         forward('archive/thumbnail/' . $pages[1]);
@@ -18,7 +17,6 @@ class wall extends core\page implements Interfaces\page
 
     public function post($pages)
     {
-
     }
 
     public function put($pages)

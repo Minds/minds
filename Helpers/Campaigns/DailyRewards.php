@@ -8,7 +8,7 @@ class DailyRewards
 {
     public static function reward()
     {
-        if(!Core\Session::isLoggedin()){
+        if (!Core\Session::isLoggedin()) {
             return false;
         }
 

@@ -9,8 +9,8 @@ use Minds\Entities;
 use Minds\Helpers;
 use Minds\Core\Events\Dispatcher;
 
-class Register{
-
+class Register
+{
     public function init()
     {
         Dispatcher::register('register', 'user', function ($event) {
@@ -45,20 +45,21 @@ class Register{
                 if ($user->guid) {
                     Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                     //create graph connection for future referral trees
-                    try{
+                    try {
                         $prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
                         $prepared->setQuery('MATCH (referrer:User {guid: {referrer_guid}}), (user:User {guid: {user_guid}}) MERGE (referrer)-[:REFER]->(user)', [
                           'referrer_guid' => (string) Core\Session::getLoggedInUserGuid(),
                           'user_guid' => (string) $user->guid
                         ]);
                         Core\Data\Client::build('Neo4j')->request($prepared);
-                    } catch (\Exception $e){}
+                    } catch (\Exception $e) {
+                    }
                     $params['user']->subscribe($user->guid);
                 }
             }
         });
 
-        Dispatcher::register('register/complete', 'user', function($event) {
+        Dispatcher::register('register/complete', 'user', function ($event) {
             $params = $event->getParameters();
             //send welcome email
             $template = new Core\Email\Template();
@@ -77,5 +78,4 @@ class Register{
             $mailer->queue($message);
         });
     }
-
 }

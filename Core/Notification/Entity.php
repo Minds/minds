@@ -6,7 +6,8 @@ namespace Minds\Core\Notification;
 
 use Minds\Core\Data\Relationships;
 
-class Entity {
+class Entity
+{
     protected $guid;
     protected $db;
 

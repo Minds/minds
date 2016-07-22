@@ -114,7 +114,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ]);
             }
         } else {
-            if((int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) < $boost->getBid()){
+            if ((int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) < $boost->getBid()) {
                 return Factory::response([
                     'status' => 'error',
                     'stage' => 'transaction',
@@ -151,7 +151,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
-        if($boost->getState() != 'created'){
+        if ($boost->getState() != 'created') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
@@ -160,7 +160,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         //now add to the newsfeed
         $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
-        if(!$embeded){
+        if (!$embeded) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'The original post was deleted'
@@ -199,10 +199,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         ]);
 
         //Now forward through to social networks if selected
-        if($boost->shouldPostToFacebook()){
+        if ($boost->shouldPostToFacebook()) {
             $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
             $facebook->getApiCredentials();
-            if($boost->getScheduledTs() > time()){
+            if ($boost->getScheduledTs() > time()) {
                 $facebook->schedule($boost->getScheduledTs());
             }
             $facebook->post($embeded);
@@ -226,7 +226,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $pro = Core\Boost\Factory::build('peer', ['destination'=> $revoked ? "requested:" . Core\Session::getLoggedInUser()->guid : Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
-        if($boost->getState() != 'created'){
+        if ($boost->getState() != 'created') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
@@ -245,13 +245,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             }
         } else {
             $message = "Rejected Peer Boost";
-            if($revoked){
+            if ($revoked) {
                 $message = "Revoked Peer Boost";
             }
             Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $message);
         }
 
-        if($revoked){
+        if ($revoked) {
             $pro->revoke($pages[0]);
         } else {
             Core\Events\Dispatcher::trigger('notification', 'boost', [

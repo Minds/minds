@@ -61,14 +61,13 @@ class Notifications
      */
     public function increaseCounter()
     {
-
         try {
-              elgg_set_ignore_access(true);
+            elgg_set_ignore_access(true);
 
-              $this->user->notifications_count++;
-              $this->user->save();
+            $this->user->notifications_count++;
+            $this->user->save();
 
-              elgg_set_ignore_access(false);
+            elgg_set_ignore_access(false);
         } catch (Exception $e) {
             // NOOP
         }
@@ -83,7 +82,6 @@ class Notifications
      */
     public function resetCounter()
     {
-
         try {
             elgg_set_ignore_access(true);
 
@@ -179,8 +177,8 @@ class Notifications
      * @param  array  $options
      * @return array
      */
-    protected function filterBackwardsPolyfill($filter = '', array $options = []) {
-
+    protected function filterBackwardsPolyfill($filter = '', array $options = [])
+    {
         if (!$filter || !isset($options['user_guid'])) {
             return [];
         }
@@ -266,5 +264,4 @@ class Notifications
 
         return $rows;
     }
-
 }

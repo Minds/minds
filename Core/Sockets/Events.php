@@ -133,7 +133,7 @@ class Events
     {
         $users = array_unique(array_filter($users, 'strlen'));
 
-        return $this->setRooms(array_map(function($user) {
+        return $this->setRooms(array_map(function ($user) {
             if ($user instanceof User) {
                 $user = $user->guid;
             }

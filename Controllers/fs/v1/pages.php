@@ -16,7 +16,6 @@ class pages implements Interfaces\FS
 {
     public function get($pages)
     {
-
         $root = Core\Config::_()->dataroot;
         $path = $pages[0];
         $filepath = "$root/page_banners/" . $path . ".jpg";

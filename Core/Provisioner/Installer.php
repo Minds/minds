@@ -51,7 +51,8 @@ class Installer
         return $this;
     }
 
-    public function setOptions(array $options = []) {
+    public function setOptions(array $options = [])
+    {
         $this->options = array_merge($this->defaults, $options);
         return $this;
     }
@@ -137,7 +138,7 @@ class Installer
 
         // Inject options
 
-        $result = preg_replace_callback('/\{\{([a-z0-9\-_]+)\}\}/', function($matches) {
+        $result = preg_replace_callback('/\{\{([a-z0-9\-_]+)\}\}/', function ($matches) {
             if (!isset($this->options[$matches[1]])) {
                 throw new ProvisionException("Configuration key `{$matches[1]}` is not present on defaults or command line arguments");
             }

@@ -12,14 +12,13 @@ use Facebook\Facebook as FacebookSDK;
 
 class Facebook implements NetworkInterface
 {
-
     private $db;
     private $fb;
     private $credentials = [];
 
     private $data = [];
 
-    public function __construct($db = NULL, $fb = NULL)
+    public function __construct($db = null, $fb = null)
     {
         $this->db = $db ?: new Data\Call('entities_by_time');
         $this->fb = $fb ?: new FacebookSDK([
@@ -61,10 +60,12 @@ class Facebook implements NetworkInterface
     public function getApiCredentials()
     {
         $data = $this->db->getRow(Core\Session::getLoggedInUser()->guid . ":thirdpartynetworks:credentials");
-        if(isset($data['facebook:uuid']))
+        if (isset($data['facebook:uuid'])) {
             $this->credentials['uuid'] = $data['facebook:uuid'];
-        if(isset($data['facebook:access_token']))
+        }
+        if (isset($data['facebook:access_token'])) {
             $this->credentials['access_token'] = $data['facebook:access_token'];
+        }
         return $this;
     }
 
@@ -80,14 +81,13 @@ class Facebook implements NetworkInterface
      */
     public function post($entity)
     {
-
-        if($entity->remind_object){
+        if ($entity->remind_object) {
             $entity = new Entities\Activity($entity->remind_object);
         }
 
         //$this->data['message'] = $entity->message;
 
-        if($entity->perma_url){
+        if ($entity->perma_url) {
             $this->data = array_merge($this->data, [
               'link' => $entity->perma_url,
               'name' => $entity->title,
@@ -97,10 +97,10 @@ class Facebook implements NetworkInterface
         }
 
         //Custom image posts
-        if(($entity->thumbnail_src && !$entity->perma_url) || $entity->custom_type == 'batch'){
+        if (($entity->thumbnail_src && !$entity->perma_url) || $entity->custom_type == 'batch') {
             $this->data['url'] = $entity->thumbnail_src;
 
-            if($entity->custom_type == 'batch'){
+            if ($entity->custom_type == 'batch') {
                 $this->data['url'] = $entity->custom_data[0]['src'];
             }
 
@@ -109,7 +109,7 @@ class Facebook implements NetworkInterface
         }
 
         //Custom video posts
-        if($entity->custom_type == 'video'){
+        if ($entity->custom_type == 'video') {
             $this->title = $entity->title;
             $this->data['file_url'] = Core\Config::_()->site_url . "/api/v1/archive/{$entity->custom_data['guid']}/play";
             $this->fb->post("/{$this->credentials['uuid']}/videos", $this->data, $this->credentials['access_token']);
@@ -137,20 +137,19 @@ class Facebook implements NetworkInterface
         $response = $this->fb->get('/me/accounts', $this->credentials['access_token']);
         $accounts = [];
         $edge = $response->getGraphEdge();
-        foreach($edge as $account){
-          $accounts[] = $account->asArray();
+        foreach ($edge as $account) {
+            $accounts[] = $account->asArray();
         }
         return $accounts;
     }
 
     public function getPage()
     {
-        if($this->credentials['uuid'] == 'me' || !$this->credentials['uuid']){
+        if ($this->credentials['uuid'] == 'me' || !$this->credentials['uuid']) {
             return false;
         }
         $response = $this->fb->get('/' . $this->credentials['uuid'], $this->credentials['access_token']);
         $user = $response->getGraphUser();
         return $user->asArray();
     }
-
 }

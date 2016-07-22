@@ -11,7 +11,6 @@ use Minds\Core\Analytics\Timestamps;
 
 class SignupsOffsetIterator implements \Iterator
 {
-
     private $cursor = -1;
 
     private $item;
@@ -22,28 +21,30 @@ class SignupsOffsetIterator implements \Iterator
 
     private $valid = true;
 
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         $this->db = $db ?: new Data\Call('entities_by_time');
         $this->position = 0;
     }
 
-    public function setPeriod($period = NULL)
+    public function setPeriod($period = null)
     {
         $this->period = $period;
         $this->getUsers();
     }
 
-    protected function getUsers(){
+    protected function getUsers()
+    {
         $timestamps = array_reverse(Timestamps::span($this->period+1, 'day'));
 
         $guids = $this->db->getRow("user", ['limit' => $this->limit, 'offset'=> $this->offset]);
         $guids = array_keys($guids);
 
-        if($this->offset){
+        if ($this->offset) {
             array_shift($guids);
         }
 
-        if(empty($guids)){
+        if (empty($guids)) {
             $this->valid = false;
             return;
         }
@@ -51,49 +52,53 @@ class SignupsOffsetIterator implements \Iterator
         $users = Entities::get(['guids' => $guids]);
 
         $pushed = 0;
-        foreach($users as $user){
-            if($user->time_created < $timestamps[$this->period]){
+        foreach ($users as $user) {
+            if ($user->time_created < $timestamps[$this->period]) {
                 array_push($this->data, $user);
                 $pushed++;
             }
         }
 
-        if($this->offset == end($users)->guid){
+        if ($this->offset == end($users)->guid) {
             $this->valid = false;
             return;
         }
 
         $this->offset = end($users)->guid;
-        if(!$pushed){
+        if (!$pushed) {
             error_log("no users past period " . date('d-m-Y', end($users)->time_created));
             $this->getUsers();
         }
     }
 
-    public function rewind() {
-        if ($this->cursor >= 0){
+    public function rewind()
+    {
+        if ($this->cursor >= 0) {
             $this->getUsers();
         }
         $this->next();
     }
 
-    public function current() {
+    public function current()
+    {
         return $this->data[$this->cursor];
     }
 
-    public function key() {
+    public function key()
+    {
         return $this->cursor;
     }
 
-    public function next() {
+    public function next()
+    {
         $this->cursor++;
-        if(!isset($this->data[$this->cursor])){
+        if (!isset($this->data[$this->cursor])) {
             $this->getUsers();
         }
     }
 
-    public function valid() {
+    public function valid()
+    {
         return $this->valid && isset($this->data[$this->cursor]);
     }
-
 }

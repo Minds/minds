@@ -107,7 +107,7 @@ class DenormalizedEntity
      */
     public function __get($name)
     {
-        if($name == 'guid'){
+        if ($name == 'guid') {
             return $this->getGuid();
         }
     }

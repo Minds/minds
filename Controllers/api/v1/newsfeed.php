@@ -49,7 +49,7 @@ class newsfeed implements Interfaces\Api
           case 'featured':
             $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
             $guids = $db->getRow('activity:featured', [ 'limit' => 24 ]);
-            if($guids){
+            if ($guids) {
                 $options['guids'] = $guids;
             } else {
                 return Factory::response([]);
@@ -128,16 +128,16 @@ class newsfeed implements Interfaces\Api
                     //if (get_input('offset')) {
                       //bug: sometimes views weren't being calculated on scroll down
                       \Minds\Helpers\Counters::increment($boost->guid, "impression");
-                      \Minds\Helpers\Counters::increment($boost->owner_guid, "impression");
+                    \Minds\Helpers\Counters::increment($boost->owner_guid, "impression");
                     //}
                 }
-                if(!$boosts){
+                if (!$boosts) {
                     $cacher = Core\Data\cache\factory::build('apcu');
                     $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
                     $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> $limit]);
                     if ($guids) {
                         $blogs = Core\Entities::get(['guids'=>$guids]);
-                        foreach($blogs as $blog){
+                        foreach ($blogs as $blog) {
                             $boost = new Entities\Activity();
                             $boost->guid = $blog->guid;
                             $boost->owner_guid = $blog->owner_guid;
@@ -151,7 +151,7 @@ class newsfeed implements Interfaces\Api
                             $boost->boosted = true;
                             array_unshift($activity, $boost);
                         }
-                        if(count($blogs) < 5){
+                        if (count($blogs) < 5) {
                             $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
                         } else {
                             $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
@@ -235,8 +235,8 @@ class newsfeed implements Interfaces\Api
                            */
                            switch ($embeded->subtype) {
                                case 'blog':
-                                  if($embeded->owner_guid == Core\Session::getLoggedInUserGuid()){
-                                    $activity->setTitle($embeded->title)
+                                  if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
+                                      $activity->setTitle($embeded->title)
                                       ->setBlurb(strip_tags($embeded->description))
                                       ->setURL($embeded->getURL())
                                       ->setThumbnail($embeded->getIconUrl())
@@ -256,7 +256,7 @@ class newsfeed implements Interfaces\Api
                                   }
                                   break;
                                 case 'video':
-                                    if($embeded->owner_guid == Core\Session::getLoggedInUserGuid()){
+                                    if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
                                         $activity->setFromEntity($embeded)
                                           ->setCustom('video', [
                                               'thumbnail_src'=>$embeded->getIconUrl(),
@@ -284,7 +284,7 @@ class newsfeed implements Interfaces\Api
                                     }
                                     break;
                                 case 'image':
-                                    if($embeded->owner_guid == Core\Session::getLoggedInUserGuid()){
+                                    if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
                                         $activity->setCustom('batch', [[
                                           'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
                                           'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,
@@ -362,12 +362,12 @@ class newsfeed implements Interfaces\Api
                     $attachment->access_id = 2;
 
                     if ($attachment instanceof \Minds\Interfaces\Flaggable) {
-                      $attachment->setFlag('mature', $activity->getMature());
+                        $attachment->setFlag('mature', $activity->getMature());
                     }
 
                     $attachment->save();
 
-                    switch($attachment->subtype){
+                    switch ($attachment->subtype) {
                       case "image":
                         $activity->setCustom('batch', [[
                           'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
@@ -386,15 +386,15 @@ class newsfeed implements Interfaces\Api
                             ->setTitle($attachment->message);
                         break;
                     }
-
                 }
 
                 $container = null;
 
                 if (isset($_POST['container_guid']) && $_POST['container_guid']) {
                     $activity->container_guid = $_POST['container_guid'];
-                    if($container = Entities\Factory::build($activity->container_guid))
+                    if ($container = Entities\Factory::build($activity->container_guid)) {
                         $activity->containerObj = $container->export();
+                    }
                     $activity->indexes = [
                       "activity:container:$activity->container_guid",
                       "activity:network:$activity->owner_guid"

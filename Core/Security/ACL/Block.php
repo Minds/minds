@@ -50,7 +50,7 @@ class Block
             $from = $from->guid;
         }
 
-        if(!$from){
+        if (!$from) {
             return [];
         }
 
@@ -160,7 +160,6 @@ class Block
             } elseif ($entity && $this->isBlocked($user, $entity)) {
                 $e->setResponse(false);
             }
-
         });
     }
 

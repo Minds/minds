@@ -64,12 +64,12 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
             ]);
         }
 
-        switch($pages[1]){
+        switch ($pages[1]) {
             case "header":
-              try{
-                $page = (new Entities\Page())->loadFromGuid($pages[0]);
-              } catch (\Exception $e){
-                return Factory::response([
+              try {
+                  $page = (new Entities\Page())->loadFromGuid($pages[0]);
+              } catch (\Exception $e) {
+                  return Factory::response([
                   'status' => 'error',
                   'message' => 'page not found'
                 ]);
@@ -99,7 +99,7 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
               $subtype = 'page';
 
               if (isset($_POST['subtype'])) {
-                $subtype = $_POST['subtype'];
+                  $subtype = $_POST['subtype'];
               }
 
               $page = (new Entities\Page())
@@ -139,9 +139,9 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
         // Workaround for links
         // TODO: ^^ Maybe make it permanent (not use $pages), or fix services/client.ts to accept data as JSON-encoded
         if (isset($_GET['path'])) {
-          $path = $_GET['path'];
+            $path = $_GET['path'];
         } else {
-          $path = $pages[0];
+            $path = $pages[0];
         }
 
         if (!$path) {

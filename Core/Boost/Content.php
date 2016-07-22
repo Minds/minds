@@ -12,7 +12,5 @@ use Minds\Helpers;
  */
 class Content extends Network implements BoostHandlerInterface
 {
-
     protected $handler = 'content';
-
 }

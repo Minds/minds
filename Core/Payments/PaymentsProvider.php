@@ -17,12 +17,11 @@ use Braintree_MerchantAccount;
 
 class PaymentsProvider extends Provider
 {
-
     public function register()
     {
-        $this->di->bind('BraintreePayments', function($di){
+        $this->di->bind('BraintreePayments', function ($di) {
             $config = $di->get('Config');
-            $braintree = new Braintree\Braintree(new Braintree_Configuration(),$di->get('Config'));
+            $braintree = new Braintree\Braintree(new Braintree_Configuration(), $di->get('Config'));
             /*$braintree->setConfig([
               'environment' => $config->payments['braintree']['default']['environment'] ?: 'sandbox',
               'merchant_id' => $config->payments['braintree']['default']['merchant_id'],
@@ -33,5 +32,4 @@ class PaymentsProvider extends Provider
             return $braintree;
         }, ['useFactory'=>true]);
     }
-
 }

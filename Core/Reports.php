@@ -96,7 +96,8 @@ class Reports
      * @param  array $opts
      * @return array
      */
-    public function get($guid) {
+    public function get($guid)
+    {
         if (!$guid) {
             return false;
         }
@@ -109,7 +110,8 @@ class Reports
      * @param  mixed   $guid
      * @return boolean
      */
-    public function archive($guid) {
+    public function archive($guid)
+    {
         if (!$guid) {
             return false;
         }
@@ -130,7 +132,8 @@ class Reports
      * @param  string  $guid
      * @return boolean
      */
-    public function explicit($guid) {
+    public function explicit($guid)
+    {
         if (!$guid) {
             return;
         }
@@ -179,7 +182,8 @@ class Reports
      * @param  string  $guid
      * @return boolean
      */
-    public function delete($guid) {
+    public function delete($guid)
+    {
         if (!$guid) {
             return;
         }
@@ -222,7 +226,8 @@ class Reports
      * @param  mixed $entity
      * @return boolean
      */
-    protected function enableMatureFlag($entity = null) {
+    protected function enableMatureFlag($entity = null)
+    {
         if (!$entity || !is_object($entity)) {
             return false;
         }

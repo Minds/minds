@@ -1,10 +1,10 @@
 <?php
 /**
  * Minds API - pseudo router
- * 
+ *
  * @version 1
  * @author Mark Harding
- * 
+ *
  * @SWG\Swagger(
  *     schemes={"https"},
  *     host="www.minds.com",

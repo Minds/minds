@@ -38,7 +38,7 @@ class Client implements Interfaces\QueueClient
             $channel->close();
             $connection->close();
             //error_log("SHUTDOWN RABBITMQ CONNECTIONS");
-            }, $this->channel, $this->connection);
+        }, $this->channel, $this->connection);
     }
 
     public function setExchange($name = "default_exchange", $type = "direct")

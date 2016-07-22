@@ -22,16 +22,15 @@ class Email implements Interfaces\QueueRunner
         $client->setExchange("mindsqueue", "direct")
                ->setQueue("Email")
                ->receive(function ($data) use ($mailer) {
-                  echo "[email]: Received an email \n";
+                   echo "[email]: Received an email \n";
 
-                  $data = $data->getData();
+                   $data = $data->getData();
 
-                  $message = unserialize($data['message']);
+                   $message = unserialize($data['message']);
 
-                  $mailer->send($message);
+                   $mailer->send($message);
 
-                  echo "[email]: delivered to {$message->to[0]['name']} ($message->subject) \n";
-
+                   echo "[email]: delivered to {$message->to[0]['name']} ($message->subject) \n";
                });
         $this->run();
     }

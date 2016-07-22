@@ -12,8 +12,5 @@ use Minds\Helpers;
  */
 class Newsfeed extends Network implements BoostHandlerInterface
 {
-
     protected $handler = 'newsfeed';
-
-
 }

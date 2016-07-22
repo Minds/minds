@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Logout Endpoint
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -21,7 +21,7 @@ class logout implements Interfaces\Api
     /**
      * Logout
      * @param $pages
-     * 
+     *
      * @SWG\Post(
      *     summary="Logout",
      *     path="/v1/logout",

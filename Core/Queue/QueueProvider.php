@@ -14,10 +14,9 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class QueueProvider extends Provider
 {
-
     public function register()
     {
-        $this->di->bind('Queue', function($di){
+        $this->di->bind('Queue', function ($di) {
             $config = $di->get('Config');
             return new RabbitMQ\Client(
               $config,
@@ -30,5 +29,4 @@ class QueueProvider extends Provider
                 ));
         }, ['useFactory'=>true]);
     }
-
 }

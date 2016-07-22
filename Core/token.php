@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple page tokens 
+ * Simple page tokens
  */
 namespace Minds\Core;
 

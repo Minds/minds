@@ -24,8 +24,9 @@ class thumbProxy extends core\page implements Interfaces\page
             $src = "https:$src";
         }
 
-        if(strpos($src, 'blog/header/') !== FALSE)
+        if (strpos($src, 'blog/header/') !== false) {
             $src = str_replace('blog/header/', 'fs/v1/banners/', $src);
+        }
 
 
         //get the original file

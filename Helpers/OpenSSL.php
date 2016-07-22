@@ -9,7 +9,7 @@ class OpenSSL
 {
     /**
      * Returns a new keypair
-     * 
+     *
      * @param string $password
      * @return array - Public & Private
      */
@@ -39,7 +39,7 @@ class OpenSSL
     
     /**
      * Encrypts data
-     * 
+     *
      * @param string $data
      * @param string $public_key
      * @return string
@@ -53,7 +53,7 @@ class OpenSSL
     
     /**
      * Decrypt data
-     * 
+     *
      * @param string $encrypted
      * @param string $private_key
      * @param string @password - default = ''

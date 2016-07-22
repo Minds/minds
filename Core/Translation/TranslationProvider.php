@@ -14,7 +14,7 @@ class TranslationProvider extends Provider
         /**
          * Translation bindings
          */
-        $this->di->bind('Translation\Service', function($di){
+        $this->di->bind('Translation\Service', function ($di) {
             return new Services\Google();
         }, ['useFactory'=>true]);
     }

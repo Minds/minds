@@ -203,7 +203,6 @@ class Relationships
         $offset = '';
 
         while (true) {
-
             $guids = $this->db->getRow("{$this->guid}:{$rel}{$this_inverse_keyword}", [
                 'limit' => 500,
                 'offset' => $offset
@@ -236,7 +235,6 @@ class Relationships
             if (!$offset) {
                 break;
             }
-
         }
         return $this->db->removeRow("{$this->guid}:{$rel}{$this_inverse_keyword}");
     }

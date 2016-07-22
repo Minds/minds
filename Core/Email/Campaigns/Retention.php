@@ -15,7 +15,6 @@ use Minds\Core\Analytics\Iterators;
 
 class Retention
 {
-
     protected $db;
     protected $template;
     protected $mailer;
@@ -31,20 +30,19 @@ class Retention
 
     public function setPeriod($period = 1)
     {
-        if(is_int($period))
-          return $this;
+        if (is_int($period)) {
+            return $this;
+        }
         $this->period = $period;
         return $this;
     }
 
     public function send()
     {
-
-
         $template = "mass";
         $subject = "Top 10 blogs and your boost bonus";
 
-        switch($this->period){
+        switch ($this->period) {
             case 3:
                 $featured_guids = (new Call('entities_by_time'))->getRow("object:image:featured", ['limit' => 10]);
                 $subject = "Top 10 images and your boost bonus";
@@ -72,9 +70,8 @@ class Retention
 
         $queued = 0;
         $skipped = 0;
-        foreach($this->getUsers() as $user){
-
-            if(!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes"){
+        foreach ($this->getUsers() as $user) {
+            if (!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes") {
                 $skipped++;
                 echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
                 continue;
@@ -91,7 +88,7 @@ class Retention
               ->setSubject($subject)
               ->setHtml($this->template);
 
-            if($this->period >= 30){
+            if ($this->period >= 30) {
                 $message->setSubject("Top 10 viral blogs of the week");
             }
 
@@ -103,8 +100,9 @@ class Retention
         echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
     }
 
-    protected function getUsers(){
-        if($this->period < 30){
+    protected function getUsers()
+    {
+        if ($this->period < 30) {
             $users = new Iterators\SignupsIterator;
             $users->setPeriod($this->period);
             return $users;
@@ -115,5 +113,4 @@ class Retention
             return $users;
         }
     }
-
 }

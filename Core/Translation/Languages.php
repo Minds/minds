@@ -62,22 +62,25 @@ class Languages
         return true;
     }
 
-    protected function sortAndPrependPreferred(array $languages, array $prepend) {
-        array_walk($languages, function(&$language) use ($prepend) {
+    protected function sortAndPrependPreferred(array $languages, array $prepend)
+    {
+        array_walk($languages, function (&$language) use ($prepend) {
             if (in_array($language['language'], $prepend)) {
                 $language['isPreferred'] = true;
             }
         });
 
-        usort($languages, function($a, $b) {
+        usort($languages, function ($a, $b) {
             $aPreferred = isset($a['isPreferred']);
             $bPreferred = isset($b['isPreferred']);
 
             if ($aPreferred && $bPreferred) {
                 return 0;
-            } else if (!$aPreferred && !$bPreferred) {
+            } elseif (!$aPreferred && !$bPreferred) {
                 if (isset($a['name']) && isset($b['name'])) {
-                    if ($a['name'] == $b['name']) return 0;
+                    if ($a['name'] == $b['name']) {
+                        return 0;
+                    }
 
                     return $a['name'] > $b['name'] ? 1 : -1;
                 }

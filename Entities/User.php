@@ -11,15 +11,15 @@ use Minds\Helpers;
 
 class User extends \ElggUser
 {
-
-
-    public function setMature($value) {
-      $this->mature = $value ? 1 : 0;
-      return $this;
+    public function setMature($value)
+    {
+        $this->mature = $value ? 1 : 0;
+        return $this;
     }
 
-    public function getMature() {
-      return $this->mature;
+    public function getMature()
+    {
+        return $this->mature;
     }
 
     /**
@@ -167,12 +167,12 @@ class User extends \ElggUser
         }
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
         $export['impressions'] = $this->getImpressions();
-        if($this->fb && is_string($this->fb)){
-          $export['fb'] = json_decode($this->fb, true);
+        if ($this->fb && is_string($this->fb)) {
+            $export['fb'] = json_decode($this->fb, true);
         }
 
         if (isset($export['mature'])) {
-          $export['mature'] = (int) $export['mature'];
+            $export['mature'] = (int) $export['mature'];
         }
         return $export;
     }
@@ -185,9 +185,10 @@ class User extends \ElggUser
         return $app->total();
     }
 
-    public function getIconURL($size = 'medium') {
-      $join_date = $this->getTimeCreated();
-      return elgg_get_site_url() . "icon/$this->guid/$size/$join_date/$this->icontime/" . Core\Config::_()->lastcache;
+    public function getIconURL($size = 'medium')
+    {
+        $join_date = $this->getTimeCreated();
+        return elgg_get_site_url() . "icon/$this->guid/$size/$join_date/$this->icontime/" . Core\Config::_()->lastcache;
     }
 
     public function getExportableValues()

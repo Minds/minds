@@ -13,7 +13,6 @@ use Minds\Helpers;
 
 class Network extends Entities\DenormalizedEntity implements BoostEntityInterface
 {
-
     public $type = 'boost';
     public $subtype = 'network';
 

@@ -16,9 +16,9 @@ class Cluster implements Interfaces\QueueRunner
         $client->setExchange("topic_demo", "topic")
             ->setQueue("", "ping.*")
             ->receive(function ($data) {
-               echo "Received a message";
-               var_dump($data->getData());
-               echo "\n\n";
-           });
+                echo "Received a message";
+                var_dump($data->getData());
+                echo "\n\n";
+            });
     }
 }

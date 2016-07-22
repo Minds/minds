@@ -71,7 +71,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         }
 
         $boost = Core\Boost\Factory::build($type)->getBoostEntity($guid);
-        if(!$boost){
+        if (!$boost) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'boost not found'
@@ -80,12 +80,12 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
 
         if ($action == 'accept') {
             $success = Core\Boost\Factory::build($type)->accept($boost);
-            if(!$success){
+            if (!$success) {
                 $response['status'] = 'error';
             }
         } elseif ($action == 'reject') {
             $success = Core\Boost\Factory::build($type)->reject($boost);
-            if($success){
+            if ($success) {
                 Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "boost refund");
             } else {
                 $response['status'] = 'error';

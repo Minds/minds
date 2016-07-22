@@ -12,7 +12,6 @@ use Minds\Helpers;
  */
 class Network implements BoostHandlerInterface
 {
-
     protected $handler = 'newsfeed';
     protected $mongo;
     protected $db;
@@ -32,7 +31,6 @@ class Network implements BoostHandlerInterface
      */
     public function boost($boost, $impressions = 0)
     {
-
         $this->mongo->insert("boost", $data = [
           'guid' => $boost->getGuid(),
           'owner_guid' => $boost->getOwner()->guid,
@@ -41,11 +39,11 @@ class Network implements BoostHandlerInterface
           'type' => $this->handler
         ]);
 
-        if(isset($data['_id']))
+        if (isset($data['_id'])) {
             return (string) $data['_id'];
+        }
 
         return $boost->getGuid();
-
     }
 
      /**
@@ -56,7 +54,6 @@ class Network implements BoostHandlerInterface
      */
     public function getReviewQueue($limit, $offset = "")
     {
-
         $query = [ 'state'=>'review', 'type'=> $this->handler ];
         if ($offset) {
             $query['_id'] = [ '$gt' => $offset ];
@@ -66,7 +63,7 @@ class Network implements BoostHandlerInterface
         $queue->sort(array('_id'=> 1));
 
         if (!$queue) {
-          return false;
+            return false;
         }
 
         $guids = [];
@@ -78,8 +75,8 @@ class Network implements BoostHandlerInterface
             //$this->mongo->remove("boost", ['_id' => $_id]);
         }
 
-        if(!$guids){
-          return false;
+        if (!$guids) {
+            return false;
         }
 
         $db = new Data\Call('entities_by_time');
@@ -97,7 +94,7 @@ class Network implements BoostHandlerInterface
             $boost = (new Entities\Boost\Network())
               ->loadFromArray(json_decode($raw_data, true));
             //double check
-            if(isset($guids[$boost->getId()])){
+            if (isset($guids[$boost->getId()])) {
                 $boosts[] = $boost;
             }
         }
@@ -160,7 +157,6 @@ class Network implements BoostHandlerInterface
      */
     public function accept($boost, $impressions = 0)
     {
-
         $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved']);
         $boost->setState('approved');
         if ($accept) {
@@ -221,7 +217,7 @@ class Network implements BoostHandlerInterface
      */
     private function expireBoost($boost)
     {
-        if(!$boost){
+        if (!$boost) {
             return;
         }
 
@@ -249,13 +245,13 @@ class Network implements BoostHandlerInterface
     private function patchThumbs($boosts)
     {
         $keys = [];
-        foreach($boosts as $boost){
+        foreach ($boosts as $boost) {
             $keys[] = "thumbs:up:entity:$boost->guid";
         }
         $thumbs = $this->db->getRows($keys, ['offset'=> Core\Session::getLoggedInUserGuid()]);
-        foreach($boosts as $k => $boost){
+        foreach ($boosts as $k => $boost) {
             $key = "thumbs:up:entity:$boost->guid";
-            if(isset($thumbs[$key])){
+            if (isset($thumbs[$key])) {
                 $boosts[$k]->{'thumbs:up:user_guids'} = array_keys($thumbs[$key]);
             }
         }
@@ -271,7 +267,7 @@ class Network implements BoostHandlerInterface
             'type'=>$this->handler,
             'state'=>'approved',
         ];
-        if($mem_log){
+        if ($mem_log) {
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
         }
 
@@ -292,7 +288,7 @@ class Network implements BoostHandlerInterface
             }
 
             $impressions = $data['impressions'];
-            if($increment){
+            if ($increment) {
                 //increment impression counter
                 Helpers\Counters::increment((string) $data['_id'], "boost_impressions", 1);
                 //get the current impressions count for this boost
@@ -304,8 +300,7 @@ class Network implements BoostHandlerInterface
             $legacy_boost = false;
 
             if ($count > $impressions) {
-
-                if($legacy_boost){
+                if ($legacy_boost) {
                     $this->mongo->remove("boost", ['_id' => $data['_id']]);
                 /*    Core\Events\Dispatcher::trigger('notification', 'boost', [
                       'to'=>array($entity->owner_guid),
@@ -325,17 +320,18 @@ class Network implements BoostHandlerInterface
             array_push($mem_log, (string) $data['_id']);
             $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler", $mem_log, (12 * 3600));
 
-            if($legacy_boost){
+            if ($legacy_boost) {
                 $return[] = $entity;
             } else {
                 $return[$data['guid']] = $boost->getEntity();
             }
         }
-        if(empty($return) && !empty($mem_log)){
+        if (empty($return) && !empty($mem_log)) {
             $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler");
             $this->tries++;
-            if($this->tries > 2)
+            if ($this->tries > 2) {
                 return $this->getBoosts($limit, $increment);
+            }
         }
         $return = $this->patchThumbs($return);
         return $return;

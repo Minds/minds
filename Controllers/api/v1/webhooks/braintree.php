@@ -28,8 +28,8 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
 
   /**
    */
-  public function post($pages){
-
+  public function post($pages)
+  {
       error_log("[webhooks]:: hit first entrace point");
 
       $gateway = isset($pages[0]) ? $pages[0] : 'default';
@@ -43,8 +43,7 @@ class braintree implements Interfaces\Api, Interfaces\ApiIgnorePam
       $webhooks->setSignature($_POST['bt_signature'])
         ->setPayload($_POST['bt_payload'])
         ->run();
-
-    }
+  }
 
 
     public function put($pages)

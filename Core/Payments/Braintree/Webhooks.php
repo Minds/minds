@@ -25,7 +25,6 @@ use Minds\Core\Payments\Subscriptions\Subscription;
 
 class Webhooks
 {
-
     protected $payload;
     protected $signature;
     protected $notification;
@@ -41,7 +40,7 @@ class Webhooks
     ];
     protected $hooks;
 
-    public function __construct($hooks = NULL, $braintree = NULL)
+    public function __construct($hooks = null, $braintree = null)
     {
         $this->hooks = $hooks ?: new Payments\Hooks();
         $this->braintree = $braintree;
@@ -73,7 +72,8 @@ class Webhooks
       * Run the notification hook
       * @return $this
       */
-    public function run(){
+    public function run()
+    {
         $this->buildNotification();
         $this->routeAlias();
         return $this;
@@ -86,7 +86,7 @@ class Webhooks
 
     protected function routeAlias()
     {
-        if(method_exists($this, $this->aliases[$this->notification->kind])){
+        if (method_exists($this, $this->aliases[$this->notification->kind])) {
             $method = $this->aliases[$this->notification->kind];
             $this->$method();
         }
@@ -105,7 +105,7 @@ class Webhooks
           'params' => ['message'=>$message],
           'message'=>$message
         ]);
-  }
+    }
 
     /**
      * @return void
@@ -184,5 +184,4 @@ class Webhooks
     {
         error_log("[webook]:: check is OK!");
     }
-
 }

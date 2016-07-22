@@ -56,7 +56,7 @@ class clusters extends base
     
     /**
      * Call
-     * 
+     *
      * @description Vital for inter-node communications
      */
     public function call($method, $address, $endpoint, array $data = array(), $secret = false)
@@ -146,7 +146,7 @@ class clusters extends base
         }
         /**
          * Now create a pseudo account and import information from the user
-         * 
+         *
          * @todo maybe integrate OAuth2.0 at the point
          */
         
@@ -191,7 +191,7 @@ class clusters extends base
 
     /**
      * Generate a signature
-     * 
+     *
      * @param array $data
      * @param string $secret
      * @param string
@@ -274,7 +274,7 @@ class clusters extends base
     
     /**
      * Sync activity feeds
-     * 
+     *
      * @param object $user - the user object
      */
     public function syncFeeds($user)

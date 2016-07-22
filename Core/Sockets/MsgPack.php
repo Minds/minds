@@ -96,9 +96,9 @@ class MsgPack
             $len = strlen($input);
             if ($len < 32) {
                 return pack('Ca*', 0xA0 | $len, $input);
-            } else if ($len <= 0xFFFF) {
+            } elseif ($len <= 0xFFFF) {
                 return pack('Cna*', 0xDA, $len, $input);
-            } else if ($len <= 0xFFFFFFFF) {
+            } elseif ($len <= 0xFFFFFFFF) {
                 return pack('CNa*', 0xDB, $len, $input);
             } else {
                 throw new \InvalidArgumentException('Input overflows (2^32)-1 byte max');
@@ -122,9 +122,9 @@ class MsgPack
             $buf = '';
             if ($len < 16) {
                 $buf .= pack('C', ($isMap ? 0x80 : 0x90) | $len);
-            } else if ($len <= 0xFFFF) {
+            } elseif ($len <= 0xFFFF) {
                 $buf .= pack('Cn', ($isMap ? 0xDE : 0xDC), $len);
-            } else if ($len <= 0xFFFFFFFF) {
+            } elseif ($len <= 0xFFFFFFFF) {
                 $buf .= pack('CN', ($isMap ? 0xDF : 0xDD), $len);
             } else {
                 throw new \InvalidArgumentException('Input overflows (2^32)-1 max elements');

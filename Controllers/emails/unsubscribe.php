@@ -27,7 +27,6 @@ class unsubscribe extends core\page implements Interfaces\page
     <h1>Thanks @$user->username. Come back soon!</h1>
     <strong>You have now been unsubscribed from future emails</strong>
 HTML;
-
     }
     
     public function post($pages)

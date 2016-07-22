@@ -79,7 +79,7 @@ class trending implements Interfaces\Api
         }
 
         $offset = get_input('offset');
-        if(strlen($offset) < 15){
+        if (strlen($offset) < 15) {
             $offset = (new \GUID())->migrate($offset);
         }
 
@@ -97,8 +97,9 @@ class trending implements Interfaces\Api
 
         return Factory::response($response);
 
-        if(!isset($_GET['load-next']) && isset($_GET['offset']))
+        if (!isset($_GET['load-next']) && isset($_GET['offset'])) {
             $_GET['load-next'] = $_GET['offset'];
+        }
 
         if ($entities) {
             $response['entities'] = factory::exportable($entities);

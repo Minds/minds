@@ -8,7 +8,6 @@ use Minds\Core;
 
 class Hooks
 {
-
     private $hooks = [];
 
     public function loadDefaults()
@@ -18,7 +17,7 @@ class Hooks
 
     public function register($hook)
     {
-        if(class_implements($hook, 'Minds\Core\Payments\HookInterface')){
+        if (class_implements($hook, 'Minds\Core\Payments\HookInterface')) {
             $this->hooks[] = $hook;
         }
         return $this;
@@ -26,13 +25,11 @@ class Hooks
 
     public function __call($function, $vars = [])
     {
-        foreach($this->hooks as $hook){
-            if(method_exists($hook, $function)){
+        foreach ($this->hooks as $hook) {
+            if (method_exists($hook, $function)) {
                 call_user_func_array([$hook, $function], $vars);
             }
         }
         return $this;
     }
-
-
 }

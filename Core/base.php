@@ -6,8 +6,7 @@ namespace Minds\Core;
 
 class base
 {
-
-    static public $di;
+    public static $di;
 
     public function __construct()
     {

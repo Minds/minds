@@ -6,7 +6,6 @@ namespace Minds\Core\Payments;
 
 class PaymentMethod
 {
-    
     private $customer;
     private $payment_method_nonce;
     private $token;
@@ -50,5 +49,4 @@ class PaymentMethod
         
         return $this;
     }
-    
 }

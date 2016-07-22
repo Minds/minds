@@ -25,7 +25,7 @@ class wallet implements Interfaces\Api
      */
     public function get($pages)
     {
-//        Factory::isLoggedIn();
+        //        Factory::isLoggedIn();
         $response = [];
 
         switch ($pages[0]) {
@@ -65,14 +65,15 @@ class wallet implements Interfaces\Api
                 Factory::isLoggedIn();
                 $db = new Core\Data\Call("user_index_to_guid");
                 $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
-                if(!isset($subscriptionIds[0])){
+                if (!isset($subscriptionIds[0])) {
                     return Factory::response([]);
                 }
 
                 $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
                 $subscription = $braintree->getSubscription($subscriptionIds[0]);
-                if($subscription)
-                  $response['subscription'] = $subscription->export();
+                if ($subscription) {
+                    $response['subscription'] = $subscription->export();
+                }
                 break;
         }
 
@@ -97,7 +98,7 @@ class wallet implements Interfaces\Api
                 $usd = $ex_rate * $points;
 
 
-                try{
+                try {
                     $card = \minds\plugin\payments\services\paypal::factory()->createCard([
                         'type' => $_POST['type'],
                         'number' => (int) str_replace(' ', '', $_POST['number']),
@@ -107,7 +108,7 @@ class wallet implements Interfaces\Api
                         'name' => $_POST['name'],
                         'name2' => $_POST['name2']
                     ]);
-                } catch(\Exception $e){
+                } catch (\Exception $e) {
                     return Factory::response(array('status'=>'error'));
                 }
 
@@ -169,7 +170,6 @@ class wallet implements Interfaces\Api
                 $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
                 $db = new Core\Data\Call("user_index_to_guid");
                 try {
-
                     $customer = $payment_service->createCustomer(
                         (new Payments\Customer)
                         ->setId(Core\Session::getLoggedInUser()->guid)
@@ -183,7 +183,7 @@ class wallet implements Interfaces\Api
                     );
 
                     $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
-                    if($subscriptionIds){
+                    if ($subscriptionIds) {
                         $payment_service->cancelSubscription(
                             (new Payments\Subscriptions\Subscription)
                             ->setId($subscriptionIds[0])
@@ -202,7 +202,6 @@ class wallet implements Interfaces\Api
                     return Factory::response([
                         'subscriptionId' => $subscription->getId()
                     ]);
-
                 } catch (\Exception $e) {
                     return Factory::response([
                       'status' => 'error',
@@ -225,7 +224,7 @@ class wallet implements Interfaces\Api
 
     public function delete($pages)
     {
-        switch($pages[0]){
+        switch ($pages[0]) {
           case "subscription":
               $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
               $db = new Core\Data\Call("user_index_to_guid");

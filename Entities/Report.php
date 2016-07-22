@@ -71,8 +71,8 @@ class Report extends DenormalizedEntity
         return $this->saveToDb($data);
     }
 
-    public function saveToDb($data) {
-
+    public function saveToDb($data)
+    {
         if ($this->dirty_state) {
             $states = $this->valid_states;
 

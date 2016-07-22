@@ -6,7 +6,6 @@ namespace Minds\Core\Payments;
 
 class Customer
 {
-    
     private $id;
     private $email;
     
@@ -37,5 +36,4 @@ class Customer
         
         return $this;
     }
-    
 }

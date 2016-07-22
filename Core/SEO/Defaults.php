@@ -22,7 +22,6 @@ class Defaults
 
     public function init()
     {
-
         Manager::setDefaults([
           'title' =>  $this->config->site_name,
           'description' => $this->config->site_description,
@@ -40,13 +39,13 @@ class Defaults
          * Channel default SEO roots
          */
         Manager::add('/', function ($slugs = array()) {
-          if (isset($slugs[0]) && is_string($slugs[0])) {
-              $user = new Entities\User(strtolower($slugs[0]));
-              if (!$user->guid) {
-                  return array();
-              }
+            if (isset($slugs[0]) && is_string($slugs[0])) {
+                $user = new Entities\User(strtolower($slugs[0]));
+                if (!$user->guid) {
+                    return array();
+                }
 
-              return $meta = [
+                return $meta = [
                 'title' => $user->name . ' | Minds',
                 'og:title' =>  $user->name . ' | Minds',
                 'og:type' => 'website',
@@ -57,23 +56,23 @@ class Defaults
                 'og:image:width' => 2000,
                 'og:image:height' => 1000
               ];
-          }
+            }
         });
 
         /**
          * Activity SEO default
          */
         Manager::add('/newsfeed', function ($slugs = []) {
-          if (isset($slugs[0]) && is_numeric($slugs[0])) {
-              $activity = new Entities\Activity($slugs[0]);
-              if (!$activity->guid) {
-                  return [];
-              }
-              if($activity->remind_object){
-                $activity = new Entities\Activity($activity->remind_object);
-              }
+            if (isset($slugs[0]) && is_numeric($slugs[0])) {
+                $activity = new Entities\Activity($slugs[0]);
+                if (!$activity->guid) {
+                    return [];
+                }
+                if ($activity->remind_object) {
+                    $activity = new Entities\Activity($activity->remind_object);
+                }
 
-              $meta = [
+                $meta = [
                 'title' => $activity->title ?: $activity->message,
                 'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on Minds",
                 'og:title' => $activity->title ?: $activity->message,
@@ -84,17 +83,16 @@ class Defaults
                 'og:image:height' => 1000
               ];
 
-              if($activity->custom_type == 'video'){
-                  $meta['og:type'] = "video";
-                  $meta['og:image'] = $activity->custom_data['thumbnail_src'];
-              }
+                if ($activity->custom_type == 'video') {
+                    $meta['og:type'] = "video";
+                    $meta['og:image'] = $activity->custom_data['thumbnail_src'];
+                }
 
-              return $meta;
-          }
+                return $meta;
+            }
         });
 
         Manager::add('/register', function ($slugs = []) {
-
             $meta = [
               'title' => 'Register',
               'description' => $this->config->site_description,
@@ -106,16 +104,15 @@ class Defaults
               'og:image:height' => 1000
             ];
 
-            if(isset($_GET['referrer'])){
+            if (isset($_GET['referrer'])) {
                 $user = new Entities\User(strtolower($_GET['referrer']));
-                if($user->name){
+                if ($user->name) {
                     $meta['title'] = $meta['og:title'] = "Join $user->name on {$this->config->site_name} and get 100 views";
                     $meta['og:url'] = "{$this->config->site_url}register?referrer={$user->username}";
                 }
             }
 
             return $meta;
-
         });
     }
 

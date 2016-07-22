@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Newsfeed API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -16,7 +16,7 @@ class neo implements Interfaces\Api
 {
     /**
      * Neo test functions
-     * 
+     *
      * API:: /v1/neo/
      */
     public function get($pages)

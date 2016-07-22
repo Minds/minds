@@ -57,8 +57,7 @@ class Sessions implements \SessionHandlerInterface
         $params = session_get_cookie_params();
 
         try {
-
-            if($this->session && $this->session['data'] == $session_data){
+            if ($this->session && $this->session['data'] == $session_data) {
                 return true; //no change detected
             }
 

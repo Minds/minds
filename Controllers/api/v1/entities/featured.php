@@ -59,7 +59,7 @@ class featured implements Interfaces\Api
         $subtype = null;
 
         switch ($pages[0]) {
-            case "video";
+            case "video":
             case "videos":
                 $subtype = "video";
                 break;
@@ -104,17 +104,17 @@ class featured implements Interfaces\Api
         if (isset($_GET['offset']) && $_GET['offset']) {
             array_shift($guids);
         }
-        if(!$guids){
+        if (!$guids) {
             return Factory::response([]);
         }
         $options = ['guids'=>$guids];
         $entities = core\Entities::get($options);
 
         usort($entities, function ($a, $b) {
-          if ((int)$a->featured_id == (int) $b->featured_id) {
-              return 0;
-          }
-          return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+            if ((int)$a->featured_id == (int) $b->featured_id) {
+                return 0;
+            }
+            return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
         });
 
         if ($entities) {

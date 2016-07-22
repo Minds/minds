@@ -8,7 +8,6 @@ use Minds\Core\Payments;
 
 interface SubscriptionsHookInterface extends Payments\HookInterface
 {
-
     public function onCharged($subscription);
 
     public function onActive($subscription);
@@ -18,5 +17,4 @@ interface SubscriptionsHookInterface extends Payments\HookInterface
     public function onOverdue($subscription);
 
     public function onCanceled($subscription);
-
 }

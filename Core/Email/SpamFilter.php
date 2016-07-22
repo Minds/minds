@@ -4,7 +4,6 @@ namespace Minds\Core\Email;
 
 class SpamFilter
 {
-
     protected $domains = [];
 
     public function __construct()
@@ -18,9 +17,9 @@ class SpamFilter
      */
     protected function getList()
     {
-        if(!$this->domains){
+        if (!$this->domains) {
             $domains = file(dirname(__FILE__) . '/blacklist.txt');
-            foreach($domains as $domain){
+            foreach ($domains as $domain) {
                 $this->domains[trim($domain)] = true;
             }
         }
@@ -34,10 +33,9 @@ class SpamFilter
     public function isSpam($email)
     {
         list(, $domain) = explode('@', $email);
-        if(isset($this->domains[$domain])){
+        if (isset($this->domains[$domain])) {
             return true;
         }
         return false;
     }
-
 }

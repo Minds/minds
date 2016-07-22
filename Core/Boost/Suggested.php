@@ -41,30 +41,30 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             $boost_guids[] = $boost['guid'];
         }
 
-            $prepared = new Data\Neo4j\Prepared\Common();
-            $result= Data\Client::build('Neo4j')->request($prepared->getActed($boost_guids));
-            $rows = $result->getRows();
+        $prepared = new Data\Neo4j\Prepared\Common();
+        $result= Data\Client::build('Neo4j')->request($prepared->getActed($boost_guids));
+        $rows = $result->getRows();
 
-            foreach ($boosts as $boost) {
-                $seen = false;
-                if ($rows) {
-                    foreach ($rows['items'] as $item) {
-                        if ($item['guid'] == $boost['guid']) {
-                            $seen = true;
-                        }
+        foreach ($boosts as $boost) {
+            $seen = false;
+            if ($rows) {
+                foreach ($rows['items'] as $item) {
+                    if ($item['guid'] == $boost['guid']) {
+                        $seen = true;
                     }
                 }
-                if ($seen) {
-                    continue;
-                }
+            }
+            if ($seen) {
+                continue;
+            }
 
                 //get the current impressions count for this boost
                 $count = Helpers\Counters::get($boost['guid'], "boost_swipes", false);
-                if ($count > $boost['impressions']) {
-                    //remove from boost queue
+            if ($count > $boost['impressions']) {
+                //remove from boost queue
                     $this->mongo->remove("boost", array('_id' => $boost['_id']));
-                    $entity = \Minds\Entities\Factory::build($boost['guid']);
-                    Core\Events\Dispatcher::trigger('notification', 'boost', array(
+                $entity = \Minds\Entities\Factory::build($boost['guid']);
+                Core\Events\Dispatcher::trigger('notification', 'boost', array(
                     'to'=>array($entity->owner_guid),
                     'from' => 100000000000000519,
                     'entity' => $entity,
@@ -73,23 +73,22 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
                     'params' => array('impressions'=>$boost['impressions']),
                     'impressions' => $boost['impressions']
                     ));
-                    continue; //max count met
-                }
-                return $boost;
+                continue; //max count met
             }
+            return $boost;
+        }
     }
 
     public function getBoosts($limit = 15)
     {
-
         $cacher = Core\Data\cache\factory::build();
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested") ?: [];
 
         $opts = [
             'type'=>'suggested',
              'state'=>'approved',
-        ];  
-        if($mem_log){
+        ];
+        if ($mem_log) {
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
         }
         $boosts = $this->mongo->find("boost", $opts);
@@ -129,11 +128,10 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             $cacher->set(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested", $mem_log, (12 * 3600));
             $return[] = $entity;
         }
-        if(empty($return) && !empty($mem_log)){
+        if (empty($return) && !empty($mem_log)) {
             $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:suggested");
             return $this->getBoosts($limit);
         }
         return $return;
     }
-
 }

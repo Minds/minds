@@ -17,7 +17,7 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
         if (!isset($_GET['q']) || !$_GET['q']) {
-          return Factory::response([
+            return Factory::response([
             'status' => 'error',
             'message' => 'Missing query'
           ]);
@@ -29,9 +29,9 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
         $flags = [];
 
         if (isset($_GET['type']) && $_GET['type']) {
-          $opts['type'] = $_GET['type'];
+            $opts['type'] = $_GET['type'];
         } elseif (isset($pages[0]) && $pages[0]) {
-          $opts['type'] = $pages[0];
+            $opts['type'] = $pages[0];
         }
 
         switch ($opts['type']) {
@@ -63,20 +63,20 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
         $opts['flags'] = $flags;
 
         if (isset($_GET['offset']) && $_GET['offset']) {
-          $opts['offset'] = $_GET['offset'];
+            $opts['offset'] = $_GET['offset'];
         }
 
         $guids = (new Documents())->query($_GET['q'], $opts);
         $response = [];
 
         if ($guids) {
-          $response['entities'] = Factory::exportable(Core\Entities::get([
+            $response['entities'] = Factory::exportable(Core\Entities::get([
             'guids' => $guids
           ]));
 
-          if (isset($_GET['access_token'])) {
-            $response[$opts['type'] ?: 'all'][] = $response['entities'];
-          }
+            if (isset($_GET['access_token'])) {
+                $response[$opts['type'] ?: 'all'][] = $response['entities'];
+            }
 
           // TODO: Check this logic
           $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'] + 1;

@@ -10,7 +10,6 @@ use Minds\Helpers;
 
 class search extends Core\page implements Interfaces\page
 {
-
     public function get($pages)
     {
         $this->forward('api/v1/search?q=' . $_GET['q']);
@@ -18,7 +17,6 @@ class search extends Core\page implements Interfaces\page
 
     public function post($pages)
     {
-
     }
 
     public function put($pages)

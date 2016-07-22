@@ -3,7 +3,6 @@ namespace Minds\Core\Email;
 
 class Template
 {
-
     protected $template;
     protected $template_path;
     protected $data = [];
@@ -16,13 +15,12 @@ class Template
      */
     public function __construct()
     {
-
     }
 
     public function setTemplate($template = 'default')
     {
         $this->template = $this->findTemplate($template);
-        if(!$this->template){
+        if (!$this->template) {
             $this->template = __MINDS_ROOT__ . '/Components/Email/default.tpl';
         }
         return $this;
@@ -41,7 +39,6 @@ class Template
      */
     public function set($key, $value = null)
     {
-
         if (!is_array($key)) {
             $this->data[$key] = $value;
             return $this;
@@ -52,7 +49,6 @@ class Template
         }
 
         return $this;
-
     }
 
     /**
@@ -77,22 +73,20 @@ class Template
             $template = substr($template, 1);
             $file = $dir . $template;
 
-            if(file_exists($file)){
+            if (file_exists($file)) {
                 return $file;
             }
-
         }
 
         if (strpos($template, '/') !== 0) {
             $template = __MINDS_ROOT__ . '/Components/Email/' . $template;
         }
 
-        if(file_exists($template)){
+        if (file_exists($template)) {
             return $template;
         }
 
         return;
-
     }
 
     public function render()
@@ -110,7 +104,6 @@ class Template
      */
     protected function compile($file, $vars = [])
     {
-
         $vars = array_merge($this->data, $vars);
 
         ob_start();
@@ -122,6 +115,5 @@ class Template
         ob_end_clean();
 
         return $contents;
-
     }
 }

@@ -7,8 +7,7 @@ namespace Minds\Core\Di;
 
 class Di
 {
-
-    static private $_;
+    private static $_;
     private $bindings = [];
     private $factories = [];
 
@@ -19,10 +18,10 @@ class Di
      */
     public function get($alias)
     {
-        if(isset($this->bindings[$alias])){
+        if (isset($this->bindings[$alias])) {
             $binding = $this->bindings[$alias];
-            if($binding->isFactory()){
-                if(!isset($this->factories[$alias])){
+            if ($binding->isFactory()) {
+                if (!isset($this->factories[$alias])) {
                     $this->factories[$alias] = call_user_func($binding->getFunction(), $this);
                 }
                 return $this->factories[$alias];
@@ -47,7 +46,7 @@ class Di
           'immutable' => false
         ], $options);
 
-        if($options['immutable'] && isset($this->bindings[$alias])){
+        if ($options['immutable'] && isset($this->bindings[$alias])) {
             throw new ImmutableException();
         }
 
@@ -62,12 +61,11 @@ class Di
      * Singleton loader
      * @return Di
      */
-    static public function _()
+    public static function _()
     {
-        if(!self::$_){
+        if (!self::$_) {
             self::$_ = new Di;
         }
         return self::$_;
     }
-
 }

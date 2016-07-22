@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds  Data Warehouse Runner
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -16,7 +16,7 @@ class warehouse implements Interfaces\Api
 {
     /**
      * Data warehouse
-     * 
+     *
      * API:: /v1/data/warehouse
      */
     public function get($pages)

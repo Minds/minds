@@ -12,7 +12,6 @@ use Minds\Core\Notification\Factory as NotificationFactory;
 
 class PushSettings
 {
-
     protected $types = [
       'daily' => true,
       'comment' => true,
@@ -56,7 +55,7 @@ class PushSettings
     public function getToggles()
     {
         $types = $this->db->getRow('settings:push:toggles:' . $this->userGuid) ?: [];
-        foreach($types as $toggle => $value){
+        foreach ($types as $toggle => $value) {
             $this->types[$toggle] = (bool) $value;
         }
         return $this->types;
@@ -94,5 +93,4 @@ class PushSettings
         $this->toBeSaved = [];
         return $this;
     }
-
 }

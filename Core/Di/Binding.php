@@ -6,7 +6,6 @@ namespace Minds\Core\Di;
 
 class Binding
 {
-
     private $function;
     private $isFactory;
     private $isImmutable;
@@ -43,5 +42,4 @@ class Binding
     {
         return $this->isImmutable;
     }
-
 }

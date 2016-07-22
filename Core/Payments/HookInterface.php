@@ -8,6 +8,4 @@ use Minds\Core\Payments;
 
 interface HookInterface
 {
-
-
 }

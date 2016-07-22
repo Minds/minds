@@ -64,7 +64,7 @@ class boost implements Interfaces\Api
                 $response['points'] = reset($guids);*/
                 $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
                 $boost = $pro->getBoostEntity($pages[0]);
-                if($boost->getState() != 'created'){
+                if ($boost->getState() != 'created') {
                     return Factory::response(['status'=>'error', 'message'=>'entity not in boost queue']);
                 }
                 $response['entity'] = $boost->getEntity()->export();
@@ -81,14 +81,14 @@ class boost implements Interfaces\Api
               $boosts = $pro->getReviewQueue(100);
               $boost_entities = [];
               //only show 'point boosts and 'created' (not accepted or rejected)
-              foreach($boosts as $i => $boost){
-                if($boost->getType() != 'points' || $boost->getState() != 'created'){
-                    unset($boosts[$i]);
-                    continue;
-                }
-                $boost_entities[$i] = $boost->getEntity();
-                $boost_entities[$i]->guid = $boost->getGuid();
-                $boost_entities[$i]->points = $boost->getBid();
+              foreach ($boosts as $i => $boost) {
+                  if ($boost->getType() != 'points' || $boost->getState() != 'created') {
+                      unset($boosts[$i]);
+                      continue;
+                  }
+                  $boost_entities[$i] = $boost->getEntity();
+                  $boost_entities[$i]->guid = $boost->getGuid();
+                  $boost_entities[$i]->points = $boost->getBid();
               }
 
               $response['boosts'] = factory::exportable($boost_entities, array('points'));
@@ -138,19 +138,19 @@ class boost implements Interfaces\Api
 
         $response = [];
         $entity = Entities\Factory::build($pages[1]);
-        if(!$entity){
-          return Factory::response(['status' => 'error', 'message' => 'entity not found']);
+        if (!$entity) {
+            return Factory::response(['status' => 'error', 'message' => 'entity not found']);
         }
 
-        if($pages[0] == "object" || $pages[0] == "user" || $pages[0] == "suggested"){
+        if ($pages[0] == "object" || $pages[0] == "user" || $pages[0] == "suggested") {
             $pages[0] = "content";
         }
 
-        if($pages[0] == "activity"){
+        if ($pages[0] == "activity") {
             $pages[0] = "newsfeed";
         }
 
-        switch(ucfirst($pages[0])){
+        switch (ucfirst($pages[0])) {
           case "Newsfeed":
           case "Content":
 
@@ -164,11 +164,11 @@ class boost implements Interfaces\Api
               ->setHandler(lcfirst($pages[0]));
 
             $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost);
-            if($result){
-                if(isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200){
-                  $transactionId = "free";
+            if ($result) {
+                if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200) {
+                    $transactionId = "free";
                 } else {
-                  $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
+                    $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
                 }
                 $boost->setId((string) $result)
                   ->setTransactionId($transactionId)
@@ -189,7 +189,7 @@ class boost implements Interfaces\Api
               'destination'=>isset($_POST['destination']) ? $_POST['destination'] : null
             ])->boost($entity, $impressions);
             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "p2p boost");
-            if($result){
+            if ($result) {
                 Core\Events\Dispatcher::trigger('notification', 'boost', [
                   'to'=> [ $pages[2] ],
                   'entity' => $pages[1],
@@ -222,7 +222,7 @@ class boost implements Interfaces\Api
         $boost = $pro->getBoostEntity($pages[0]);
 
         //double check status before issuing points
-        if($boost->getState() != 'created'){
+        if ($boost->getState() != 'created') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
@@ -280,7 +280,7 @@ class boost implements Interfaces\Api
         $boost = $pro->getBoostEntity($pages[0]);
 
         //double check status before issuing points
-        if($boost->getState() != 'created'){
+        if ($boost->getState() != 'created') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'

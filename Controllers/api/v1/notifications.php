@@ -112,10 +112,10 @@ class notifications implements Interfaces\Api
      */
     public function post($pages)
     {
-        if(!isset($pages[0])){
+        if (!isset($pages[0])) {
             $pages[0] = 'token';
         }
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "settings":
                 $settings = new Settings\PushSettings();
                 $settings->setToggle($_POST['id'], $_POST['toggle'])
@@ -165,13 +165,13 @@ class notifications implements Interfaces\Api
 
         // Formatting for legacy notification handling in frontend
         foreach ($notifications as $key => $data) {
-            $notifications[$key] = $this->polyfillResponseStruc($data); 
+            $notifications[$key] = $this->polyfillResponseStruc($data);
 
             //temp mobile move
-            if(isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request'){
+            if (isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request') {
                 unset($notifications[$key]);
             }
-            if(isset($_GET['access_token']) && $data['notification_view'] == 'group_activity'){
+            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_activity') {
                 $notifications[$key]['notification_view'] = 'custom_message';
                 $notifications['notifications'][$key]['params']['message'] = "@{$data['from']['username']} posted in {$data['params']['group']['name']}";
             }

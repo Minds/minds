@@ -24,7 +24,6 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function get($pages)
     {
-
         $response = [];
 
         switch ($pages[0]) {
@@ -42,40 +41,40 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
              foreach ($boosts as $guid => $entity) {
                  $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string) $guid]);
              }
-             if(!$boosts){
-                $cacher = Core\Data\cache\factory::build('apcu');
-                $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
-                $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> 12]);
-                if (!$guids) {
-                    break;
-                }
-                $blogs = Core\Entities::get(['guids'=>$guids]);
-                usort($blogs, function ($a, $b) {
-                    if ((int)$a->featured_id == (int) $b->featured_id) {
-                        return 0;
-                    }
-                    return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
-                });
-                foreach($blogs as $blog){
-                    $boostObj = new Entities\Activity();
-                    $boostObj->guid = $blog->guid;
-                    $boostObj->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
-                    $boostObj->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
-                    $boost = $boostObj->setTitle($blog->title)
+             if (!$boosts) {
+                 $cacher = Core\Data\cache\factory::build('apcu');
+                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
+                 $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> 12]);
+                 if (!$guids) {
+                     break;
+                 }
+                 $blogs = Core\Entities::get(['guids'=>$guids]);
+                 usort($blogs, function ($a, $b) {
+                     if ((int)$a->featured_id == (int) $b->featured_id) {
+                         return 0;
+                     }
+                     return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+                 });
+                 foreach ($blogs as $blog) {
+                     $boostObj = new Entities\Activity();
+                     $boostObj->guid = $blog->guid;
+                     $boostObj->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
+                     $boostObj->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
+                     $boost = $boostObj->setTitle($blog->title)
                           ->setBlurb(strip_tags($blog->description))
                           ->setURL($blog->getURL())
                           ->setThumbnail($blog->getIconUrl())
                           ->setFromEntity($blog)
                           ->export();
-                    $boost['boosted'] = true;
-                    $response['boosts'][] = $boost;
-                }
-                if(count($response['boosts']) < 5){
-                    $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
-                } else {
-                    $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
-                }
-            }
+                     $boost['boosted'] = true;
+                     $response['boosts'][] = $boost;
+                 }
+                 if (count($response['boosts']) < 5) {
+                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
+                 } else {
+                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
+                 }
+             }
         }
 
         return Factory::response($response);
@@ -85,7 +84,6 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function post($pages)
     {
-
     }
 
     /**
@@ -94,7 +92,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function put($pages)
     {
         $boost = Core\Boost\Factory::build($pages[0])->getBoostEntity($pages[1]);
-        if(!$boost){
+        if (!$boost) {
             return Factory::response([
               'status' => 'error',
               'message' => 'Boost not found'
@@ -112,6 +110,5 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function delete($pages)
     {
-
     }
 }

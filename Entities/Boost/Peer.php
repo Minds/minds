@@ -256,14 +256,15 @@ class Peer implements BoostEntityInterface
 
     public function shouldPostToFacebook()
     {
-        if($this->postToFacebook){
+        if ($this->postToFacebook) {
             return true;
         }
         return false;
     }
 
-    public function postToFacebook($boolean){
-        if($boolean){
+    public function postToFacebook($boolean)
+    {
+        if ($boolean) {
             $this->postToFacebook = true;
         }
         return $this;

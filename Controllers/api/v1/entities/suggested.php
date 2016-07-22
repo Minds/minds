@@ -1,7 +1,7 @@
 <?php
 /**
  * Minds Suggested API
- * 
+ *
  * @version 1
  * @author Mark Harding
  */
@@ -19,7 +19,7 @@ class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam
     /**
      * Returns the entities
      * @param array $pages
-     * 
+     *
      * @SWG\GET(
      *     tags={"entities"},
      *     summary="Returns suggested entities",

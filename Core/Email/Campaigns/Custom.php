@@ -15,7 +15,6 @@ use Minds\Core\Analytics\Iterators;
 
 class Custom
 {
-
     protected $db;
     protected $template;
     protected $mailer;
@@ -46,7 +45,6 @@ class Custom
 
     public function send()
     {
-
         $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
         $featured = Entities::get(['guids' => $featured_guids]);
         $this->template->set('featured', $featured);
@@ -56,11 +54,10 @@ class Custom
 
         $queued = 0;
         $skipped = 0;
-        foreach($this->getUsers() as $user){
-
+        foreach ($this->getUsers() as $user) {
             $user->email = 'mark@minds.com';
 
-            if(!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes"){
+            if (!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes") {
                 $skipped++;
                 echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
                 continue;
@@ -85,11 +82,11 @@ class Custom
         echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
     }
 
-    protected function getUsers(){
+    protected function getUsers()
+    {
         //scan all users and return past 30 day period
         $users = new Iterators\SignupsOffsetIterator;
         $users->setPeriod($this->period);
         return $users;
     }
-
 }

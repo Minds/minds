@@ -22,5 +22,4 @@ class Config extends Config\Config
         //error_log('[deprecated]: CONFIG should be called from the DI ' . print_r(debug_backtrace(), true));
         return self::_();
     }
-
 }

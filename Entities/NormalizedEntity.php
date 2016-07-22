@@ -103,7 +103,7 @@ class NormalizedEntity
      */
     public function getGuid()
     {
-        if(!$this->guid){
+        if (!$this->guid) {
             $this->guid = Core\Guid::build();
         }
         return (string) $this->guid;
@@ -117,15 +117,15 @@ class NormalizedEntity
         //@todo check if the entity is allowed to be featured
         $this->featured_id = Core\Guid::build();
 
-    		$this->indexDb->set("$this->type:featured", [ $this->featured_id => $this->getGUID() ]);
-        if($this->subtype){
-    		    $this->indexDb->set("$this->type:$this->subtype:featured", [ $this->featured_id => $this->getGUID() ]);
+        $this->indexDb->set("$this->type:featured", [ $this->featured_id => $this->getGUID() ]);
+        if ($this->subtype) {
+            $this->indexDb->set("$this->type:$this->subtype:featured", [ $this->featured_id => $this->getGUID() ]);
         }
 
-    		$this->featured = 1;
-    		$this->save();
+        $this->featured = 1;
+        $this->save();
 
-    		return $this->featured_id;
+        return $this->featured_id;
     }
 
     /**
@@ -133,11 +133,11 @@ class NormalizedEntity
      */
     public function unFeature()
     {
-        if($this->featured_id){
-          //supports legacy imports
+        if ($this->featured_id) {
+            //supports legacy imports
           $this->indexDb->remove("$this->type:featured", [ $this->featured_id ]);
-          $this->indexDb->remove("$this->type:$this->subtype:featured", [ $this->featured_id ]);
-          $this->featured_id = null;
+            $this->indexDb->remove("$this->type:$this->subtype:featured", [ $this->featured_id ]);
+            $this->featured_id = null;
         }
 
         $this->featured = 0;
@@ -153,13 +153,13 @@ class NormalizedEntity
      */
     public function __call($name, array $args = [])
     {
-        if(strpos($name, 'set', 0) === 0){
+        if (strpos($name, 'set', 0) === 0) {
             $attribute = str_replace('set', '', $name);
             $attribute = lcfirst($attribute);
             $this->$attribute = $args[0];
             return $this;
         }
-        if(strpos($name, 'get', 0) === 0){
+        if (strpos($name, 'get', 0) === 0) {
             $attribute = str_replace('get', '', $name);
             $attribute = lcfirst($attribute);
             return $this->$attribute;

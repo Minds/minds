@@ -28,7 +28,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 
       $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
 
-      switch($pages[0]){
+      switch ($pages[0]) {
           case "login-url":
               $helper = $facebook->getFb()->getRedirectLoginHelper();
               $url = $helper->getLoginUrl('', [
@@ -59,8 +59,9 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           case "login":
 
-              if(Core\Session::isLoggedIn()){
-                echo "already logged in..."; exit;
+              if (Core\Session::isLoggedIn()) {
+                  echo "already logged in...";
+                  exit;
               }
 
               $_SESSION['force'] = true;
@@ -73,7 +74,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           case "login-callback":
 
-              try{
+              try {
                   $helper = $facebook->getFb()->getRedirectLoginHelper();
                   $accessToken = $helper->getAccessToken();
 
@@ -81,7 +82,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                   $fb_user = $me->getGraphUser();
                   $fb_uuid = $fb_user['id'];
 
-                  if(!isset($fb_user['email'])){
+                  if (!isset($fb_user['email'])) {
                       return $this->get(['login']);
                   }
 
@@ -90,12 +91,12 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                   $user_guids = $lu->getRow("fb:$fb_uuid");
 
                   //check if a user matches this uuid from facebook
-                  if($user_guids){
+                  if ($user_guids) {
                       //login.. this logic should be in a core class
                       $guid = key($user_guids);
                       $user = new Entities\User($guid);
-                      if($user->username){
-                          if(!$user->fb_uuid || $user->signup_method != 'facebook'){
+                      if ($user->username) {
+                          if (!$user->fb_uuid || $user->signup_method != 'facebook') {
                               $user->fb_uuid = $fb_uuid;
                               $user->signup_method = 'facebook';
                               $user->save();
@@ -104,14 +105,15 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                           $export = $user->export();
                           $export['new'] = false;
                           $json = json_encode($export);
-                          echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
+                          echo "<script>window.opener.onSuccessCallback($json); window.close();</script>";
+                          exit;
                       }
                   } else {
 
                       //find a username
                       $username = strtolower(preg_replace("/[^[:alnum:]]/u", '', $fb_user['name']));
-                      while($lu->getRow($username)){
-                        $username .= rand(0,100);
+                      while ($lu->getRow($username)) {
+                          $username .= rand(0, 100);
                       }
 
                       $password = base64_encode(openssl_random_pseudo_bytes(128));
@@ -142,13 +144,16 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                       $export = $user->export();
                       $export['new'] = true;
                       $json = json_encode($export);
-                      echo "<script>window.opener.onSuccessCallback($json); window.close();</script>"; exit;
+                      echo "<script>window.opener.onSuccessCallback($json); window.close();</script>";
+                      exit;
                   }
-              } catch(TwoFactorRequired $e){
-                  echo "<script>window.opener.onErrorCallback('Two factor is not supported for facebook right now'); window.close();</script>"; exit;
-              } catch(\Exception $e){
+              } catch (TwoFactorRequired $e) {
+                  echo "<script>window.opener.onErrorCallback('Two factor is not supported for facebook right now'); window.close();</script>";
+                  exit;
+              } catch (\Exception $e) {
                   error_log("[fbreg]: " . $e->getMessage());
-                  echo "<script>window.opener.onErrorCallback(); window.close();</script>"; exit;
+                  echo "<script>window.opener.onErrorCallback(); window.close();</script>";
+                  exit;
               }
               break;
           case "accounts":
@@ -169,7 +174,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $response = [];
 
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "select-page":
                 $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
                 $accessToken = $_POST['accessToken'];
@@ -193,13 +198,13 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                 //check if the requested username now exists
                 $lu = new Core\Data\Call('user_index_to_guid');
-                if(!isset($_POST['username']) || !$_POST['username']){
+                if (!isset($_POST['username']) || !$_POST['username']) {
                     $response['status'] = 'error';
                     $response['message'] = 'Username must be provided';
                     break;
                 }
                 $username = strtolower(preg_replace("/[^[:alnum:]]/u", '', $_POST['username']));
-                if($lu->getRow($username) && $username != strtolower($user->username)){
+                if ($lu->getRow($username) && $username != strtolower($user->username)) {
                     $response['status'] = 'error';
                     $response['message'] = 'Username exists';
                     break;
@@ -226,7 +231,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
         $user = Core\Session::getLoggedInUser();
-        switch($pages[0]){
+        switch ($pages[0]) {
             case "login":
                 $lu = new Core\Data\Call('user_index_to_guid');
                 $lu->removeRow("fb:$user->fb_uuid");
@@ -243,7 +248,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $user->boostProPlus = false;
                 $user->save();
           }
-          return Factory::response([]);
+        return Factory::response([]);
     }
 
     public function saveAvatar($user, $url)
@@ -251,7 +256,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
         $icon_sizes = Core\Config::_()->get('icon_sizes');
 
         $img = file_get_contents($url);
-        file_put_contents("/tmp/fb-" . md5($url), $img);   
+        file_put_contents("/tmp/fb-" . md5($url), $img);
 
         $files = [];
         foreach ($icon_sizes as $name => $size_info) {

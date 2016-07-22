@@ -27,7 +27,6 @@ use Braintree_Test_MerchantAccount;
 
 class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceInterface
 {
-
     private $config;
     private $btConfig;
     private $gateway;
@@ -40,7 +39,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     public function setConfig($config)
     {
-        if(isset($config['gateway'])){
+        if (isset($config['gateway'])) {
             $gateway = $config['gateway'];
         } else {
             $gateway = 'default';
@@ -62,7 +61,7 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
         $this->btConfig->setPrivateKey($config['private_key']);
         $this->gateway = new Braintree_Gateway($this->btConfig);
         //this is a hack for webhooks
-        Braintree_Configuration::$global = $this->btConfig; 
+        Braintree_Configuration::$global = $this->btConfig;
         //call_user_func([$this->btConfig, 'gateway']);
         return $this;
     }
@@ -95,11 +94,11 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             'submitForSettlement' => $sale->getSettle() //let the seller approve or deny
           ]
         ];
-        if($sale->getFee()){
-          $opts['serviceFeeAmount'] = $sale->getFee();
+        if ($sale->getFee()) {
+            $opts['serviceFeeAmount'] = $sale->getFee();
         }
-        if($sale->getMerchant()){
-          $opts['merchantAccountId'] = $sale->getMerchant()->guid;
+        if ($sale->getMerchant()) {
+            $opts['merchantAccountId'] = $sale->getMerchant()->guid;
         }
 
         $result = $this->gateway->transaction()->sale($opts);
@@ -289,8 +288,9 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
             return $merchant;
         } catch (\Exception $e) {
-            if($e instanceof \Braintree_Exception_NotFound)
+            if ($e instanceof \Braintree_Exception_NotFound) {
                 return false;
+            }
             throw new \Exception($e->getMessage());
         }
     }
@@ -303,7 +303,6 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     public function createCustomer(Customer $customer)
     {
-
         $id = $customer->getId() ?: Guid::build();
 
         try {
@@ -312,17 +311,17 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             $braintree_customer = null;
         }
 
-        if ($braintree_customer)
+        if ($braintree_customer) {
             $customer->setId($braintree_customer->id);
-        else {
+        } else {
             $result = $this->gateway->customer()->create([
                 'id' => $id,
                 'email' => strtolower($customer->getEmail())
             ]);
 
-            if ($result->success)
+            if ($result->success) {
                 $customer->setId($result->customer->id);
-            else {
+            } else {
                 $errors = $result->errors->deepAll();
                 throw new \Exception($errors[0]->message);
             }
@@ -333,7 +332,6 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     public function createPaymentMethod(PaymentMethod $payment_method)
     {
-
         $result = $this->gateway->paymentMethod()->create([
             'customerId' => $payment_method->getCustomer()->getId(),
             'paymentMethodNonce' => $payment_method->getPaymentMethodNonce(),
@@ -349,12 +347,10 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             $errors = $result->errors->deepAll();
             throw new \Exception($errors[0]->message);
         }
-
     }
 
     public function createSubscription(Subscription $subscription)
     {
-
         $result = $this->gateway->subscription()->create([
             'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
             'planId' => $subscription->getPlanId(),
@@ -371,18 +367,15 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             $errors = $result->errors->deepAll();
             throw new \Exception($errors[0]->message);
         }
-
     }
 
     public function getSubscription($subscription_id)
     {
-
         try {
-
             $result = $this->gateway->subscription()->find($subscription_id);
 
             $addOns = [];
-            foreach($result->addOns as $addOn){
+            foreach ($result->addOns as $addOn) {
                 $addOns[] = [
                   'id' => $addOn->id,
                   'quantity' => $addOn->quantity,
@@ -399,11 +392,9 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
               ->setPlanId($result->planId)
               ->setTrialPeriod($result->trialPeriod)
               ->setAddOns($addOns);
-
         } catch (\Braintree_Exception_NotFound $e) {
             return null;
         }
-
     }
 
     public function cancelSubscription(Subscription $subscription)
@@ -414,7 +405,6 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
 
     public function updateSubscription(Subscription $subscription)
     {
-
         $result = $this->gateway->subscription()->update($subscription->getId(), [
           //  'id' => $subscription->getId(),
             'paymentMethodToken' => $subscription->getPaymentMethod()->getToken(),
@@ -432,7 +422,5 @@ class Braintree implements PaymentServiceInterface, SubscriptionPaymentServiceIn
             $errors = $result->errors->deepAll();
             throw new \Exception($errors[0]->message);
         }
-
     }
-
 }

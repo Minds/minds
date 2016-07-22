@@ -49,7 +49,7 @@ class Router
             Helpers\Analytics::increment("active");
         }
 
-        if(isset($_GET['__e_ct_guid'])){
+        if (isset($_GET['__e_ct_guid'])) {
             Helpers\Analytics::increment("active", time(), $_GET['__e_ct_guid']);
             Helpers\Analytics::increment("email:clicks", time(), $_GET['__e_ct_guid']);
             Helpers\Campaigns\EmailRewards::reward($_GET['campaign'], $_GET['__e_ct_guid']);

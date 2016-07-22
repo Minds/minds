@@ -34,5 +34,4 @@ interface NetworkInterface
      * @return $this
      */
     public function schedule($timestamp);
-
 }

@@ -56,6 +56,4 @@ class Config
         $this->set($key, $value);
         $this->$key = $value; //nasty fallback;
     }
-
-
 }

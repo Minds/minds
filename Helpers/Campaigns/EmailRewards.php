@@ -9,16 +9,15 @@ class EmailRewards
 {
     public static function reward($campaign, $user_guid)
     {
-
-        if(!is_numeric($user_guid)){
-          return;
+        if (!is_numeric($user_guid)) {
+            return;
         }
 
         $user = new Entities\User($user_guid);
 
         $cacher = Core\Data\cache\factory::build('apcu');
 
-        switch($campaign){
+        switch ($campaign) {
           case "retention-1":
           case "retention-3":
           case "retention-7":

@@ -26,9 +26,9 @@ class Analytics
     /**
      * @return void
      */
-    public static function increment($metric = "active", $ts = null, $user_guid = NULL)
+    public static function increment($metric = "active", $ts = null, $user_guid = null)
     {
-        if(!$user_guid){
+        if (!$user_guid) {
             $user_guid = Core\Session::getLoggedinUser()->guid;
         }
         $db = new Core\Data\Call('entities_by_time');

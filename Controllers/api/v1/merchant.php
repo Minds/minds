@@ -49,16 +49,16 @@ class merchant implements Interfaces\Api
           break;
         case "settings":
 
-          try{
+          try {
               $merchant = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getMerchant(Core\Session::getLoggedInUser()->guid);
-          } catch(\Exception $e){
+          } catch (\Exception $e) {
               return Factory::response([
                 'status' => 'error',
                 'message' => $e->getMessage()
               ]);
           }
 
-          if(!$merchant){
+          if (!$merchant) {
               $user = Core\Session::getLoggedInUser();
               $user->merchant = (int) 0;
               $user->save();
@@ -83,8 +83,8 @@ class merchant implements Interfaces\Api
           break;
         }
 
-        return Factory::response($response);
-    }
+      return Factory::response($response);
+  }
 
     public function post($pages)
     {

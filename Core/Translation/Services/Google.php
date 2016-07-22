@@ -31,7 +31,6 @@ class Google implements TranslationServiceInterface
      */
     public function languages($target = 'en')
     {
-
         $url = 'https://www.googleapis.com/language/translate/v2/languages?' . http_build_query([
             'key' => $this->apiKey,
             'target' => $target
@@ -39,7 +38,8 @@ class Google implements TranslationServiceInterface
 
         try {
             $response = $this->http->get($url);
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+        }
 
         if (!isset($response['data']['languages'])) {
             return false;
@@ -86,7 +86,8 @@ class Google implements TranslationServiceInterface
                     'X-HTTP-Method-Override: GET'
                 ]
             ]);
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+        }
 
         if (!isset($response['data']['translations'][0]['translatedText'])) {
             return false;

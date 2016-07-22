@@ -27,7 +27,6 @@ class Events
          * Create a notification when triggered
          */
         Dispatcher::register('notification', 'all', function (Event $event) {
-
             $params = $event->getParameters();
             $from = null;
 
@@ -58,14 +57,12 @@ class Events
                   'notification' => serialize($notification),
                   'to' => $params['to']
               ]);
-
         });
 
         /**
          * Create a notification upon @mentioning on activities or comments
          */
         Dispatcher::register('create', 'all', function ($hook, $type, $params = []) {
-
             if ($type != 'activity' && $type != 'comment') {
                 return;
             }
@@ -116,15 +113,13 @@ class Events
                     ]);
                 }
             }
-
         });
 
         Dispatcher::register('notification:dispatch', 'all', function (Event $event) {
-
             $params = $event->getParameters();
             $notification = unserialize($params['notification']);
 
-            if(!$notification instanceof Entities\Notification){
+            if (!$notification instanceof Entities\Notification) {
                 return;
             }
 
@@ -146,7 +141,6 @@ class Events
             $manager = new Notifications();
 
             foreach ($params['to'] as $to_user) {
-
                 if (is_numeric($to_user) || is_string($to_user)) {
                     $to_user = Entities\Factory::build((int) $to_user);
                 }
@@ -182,10 +176,10 @@ class Events
                     (new Sockets\Events())
                     ->setUser($to_user)
                     ->emit('notification', (string) $notification->getGuid());
-                } catch (\Exception $e) { /* TODO: To log or not to log */ }
+                } catch (\Exception $e) { /* TODO: To log or not to log */
+                }
 
                 echo "[notification][{$notification->getGuid()}]: Saved {$params['notification_view']} \n";
-
             }
         });
 

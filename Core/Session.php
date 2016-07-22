@@ -89,9 +89,10 @@ class Session extends base
 
     public static function regenerate($new_id = true, $user = null)
     {
-        $_SESSION['user'] = $user ?: new Entities\User( $_SESSION['guid'], false);
-        if($new_id)
+        $_SESSION['user'] = $user ?: new Entities\User($_SESSION['guid'], false);
+        if ($new_id) {
             session_regenerate_id(true);
+        }
     }
 
     /**

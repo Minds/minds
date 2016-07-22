@@ -6,7 +6,6 @@ namespace Minds\Core\Payments\Subscriptions;
 
 class Subscription
 {
-
     private $payment_method;
     private $id;
 
@@ -147,7 +146,8 @@ class Subscription
         return $this;
     }
 
-    public function getExportableValues() {
+    public function getExportableValues()
+    {
         return [
             'balance',
             'price',
@@ -160,8 +160,8 @@ class Subscription
         ];
     }
 
-    public function export(){
-
+    public function export()
+    {
         $export = [];
 
         foreach ($this->getExportableValues() as $v) {
@@ -174,6 +174,5 @@ class Subscription
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', ['entity' => $this], []));
         $export = \Minds\Helpers\Export::sanitize($export);
         return $export;
-
     }
 }

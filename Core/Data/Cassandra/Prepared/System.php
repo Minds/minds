@@ -21,7 +21,7 @@ class System implements Interfaces\PreparedInterface
     
     /**
      * Create a table
-     * 
+     *
      * @param string $table - the table name
      * @param array $columns. Column name => type
      * @parAM array $primary_keys - $key
@@ -43,7 +43,7 @@ class System implements Interfaces\PreparedInterface
     
     /**
      * Alter a table, add a column
-     * 
+     *
      * @param string $table
      * @param string $column_name
      * @param string $column_type

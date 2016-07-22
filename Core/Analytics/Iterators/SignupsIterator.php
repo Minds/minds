@@ -8,7 +8,6 @@ use Minds\Core\Analytics\Timestamps;
 
 class SignupsIterator implements \Iterator
 {
-
     private $cursor = -1;
     private $item;
 
@@ -18,18 +17,20 @@ class SignupsIterator implements \Iterator
 
     private $valid = true;
 
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         $this->db = $db ?: new Data\Call('entities_by_time');
         $this->position = 0;
     }
 
-    public function setPeriod($period = NULL)
+    public function setPeriod($period = null)
     {
         $this->period = $period;
         $this->getUsers();
     }
 
-    protected function getUsers(){
+    protected function getUsers()
+    {
         //$this->cursor = -1;
         //$this->item = null;
 
@@ -37,22 +38,22 @@ class SignupsIterator implements \Iterator
 
         $guids = $this->db->getRow("analytics:signup:day:{$timestamps[$this->period]}", ['limit' => $this->limit, 'offset'=> $this->offset]);
         $guids = array_keys($guids);
-        if($this->offset){
+        if ($this->offset) {
             array_shift($guids);
         }
 
-        if(empty($guids)){
+        if (empty($guids)) {
             $this->valid = false;
             return;
         }
         $this->valid = true;
         $users = Entities::get(['guids' => $guids]);
 
-        foreach($users as $user){
+        foreach ($users as $user) {
             array_push($this->data, $user);
         }
 
-        if($this->offset == end($users)->guid){
+        if ($this->offset == end($users)->guid) {
             $this->valid = false;
             return;
         }
@@ -60,30 +61,34 @@ class SignupsIterator implements \Iterator
         $this->offset = end($users)->guid;
     }
 
-    public function rewind() {
-        if ($this->cursor >= 0){
+    public function rewind()
+    {
+        if ($this->cursor >= 0) {
             $this->getUsers();
         }
         $this->next();
     }
 
-    public function current() {
+    public function current()
+    {
         return $this->data[$this->cursor];
     }
 
-    public function key() {
+    public function key()
+    {
         return $this->cursor;
     }
 
-    public function next() {
+    public function next()
+    {
         $this->cursor++;
-        if(!isset($this->data[$this->cursor])){
+        if (!isset($this->data[$this->cursor])) {
             $this->getUsers();
-        }        
+        }
     }
 
-    public function valid() {
+    public function valid()
+    {
         return $this->valid && isset($this->data[$this->cursor]);
     }
-
 }

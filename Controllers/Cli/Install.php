@@ -27,7 +27,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
             $provisioner = new Core\Provisioner\Installer();
             $provisioner
                 ->setApp($this->getApp())
-                ->setOptions($this->getAllOpts()); 
+                ->setOptions($this->getAllOpts());
 
             $this->out('- Checking passed options:', $this::OUTPUT_INLINE);
             $provisioner->checkOptions();
