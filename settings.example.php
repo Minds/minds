@@ -1,16 +1,14 @@
 <?php
-
-global $CONFIG;
+$CONFIG = Minds\Core\Di\Di::_()->get('Config');
 
 /*
  * Cassandra configuration
  */
-$CONFIG->cassandra = new stdClass;
-$CONFIG->cassandra->keyspace = '{{cassandra_keyspace}}';
-$CONFIG->cassandra->servers = array('{{cassandra_server}}');
-
-$CONFIG->cassandra->cql_servers = array('{{cassandra_server}}:9042');
-
+$CONFIG->cassandra = (object) [
+    'keyspace'    => '{{cassandra-keyspace}}',
+    'servers'     => [ '{{cassandra-server}}' ],
+    'cql_servers' => [ '{{cassandra-server}}:9042' ]
+];
 
 /**
  * Other Elgg Settings
@@ -20,9 +18,9 @@ $CONFIG->path = '{{path}}';
 $CONFIG->plugins_path = '{{path}}plugins/';
 $CONFIG->pluginspath = '{{path}}plugins/';
 $CONFIG->dataroot = '{{dataroot}}';
-$CONFIG->default_site = '{{default_site}}';
-$CONFIG->site_id = '{{default_site}}';
-$CONFIG->__site_secret__ = '{{site_secret}}';
+$CONFIG->default_site = '{{default-site}}';
+$CONFIG->site_id = '{{default-site}}';
+$CONFIG->__site_secret__ = '{{site-secret}}';
 
 /**
  * Overrides default system cache path from inside data root to custom location.
@@ -30,15 +28,15 @@ $CONFIG->__site_secret__ = '{{site_secret}}';
  * @global string $CONFIG->system_cache_path
  * @name $CONFIG->system_cache_path
  */
-$CONFIG->system_cache_path = '/tmp/elgg_system_cache/';
+$CONFIG->system_cache_path = '{{cache-path}}';
 
 /**
  * Elasticsearch Settings
  */
 //server for elasticsearch
-$CONFIG->elasticsearch_server = 'http://localhost:9200/';
+$CONFIG->elasticsearch_server = '{{elasticsearch-server}}';
 //namespace
-$CONFIG->elasticsearch_prefix = 'mehmac_';
+$CONFIG->elasticsearch_prefix = '{{elasticsearch-prefix}}';
 
 /**
  * Memcache setup (optional)
@@ -79,3 +77,30 @@ $CONFIG->broken_mta = false;
  * @global int $CONFIG->min_password_length
  */
 $CONFIG->min_password_length = 6;
+
+$CONFIG->set('sockets-jwt-secret', '{{jwt-secret}}');
+$CONFIG->set('sockets-jwt-domain', '{{jwt-domain}}');
+$CONFIG->set('sockets-server-uri', '{{socket-server-uri}}');
+
+$CONFIG->set('facebook', [
+    'app_id' => '{{facebook-app-id}}',
+    'app_secret' => '{{facebook-app-secret}}'
+]);
+
+$CONFIG->set('twilio', [
+    'account_sid' => '{{twilio-account-sid}}',
+    'auth_token' => '{{twilio-auth-token}}',
+    'from' => '{{twilio-from}}'
+]);
+
+$CONFIG->set('google', [
+    'geolocation' => '{{google-api-key}}',
+    'translation' => '{{google-api-key}}',
+    'push' => '{{google-api-key}}',
+]);
+
+$CONFIG->set('apple', [
+    'sandbox' => {{apple-sandbox-enabled}},
+    'cert' => '{{apple-certificate}}'
+]);
+

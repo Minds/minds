@@ -17,7 +17,9 @@ class Google implements TranslationServiceInterface
         $this->http = $http ?: $di->get('Http\Json');
         $this->config = $config ?: $di->get('Config');
 
-        $this->apiKey = $this->config->get('google-api-key') ?: '';
+        $googleConfig = $this->config->get('google');
+
+        $this->apiKey = $googleConfig['translation'] ?: '';
     }
 
     /**

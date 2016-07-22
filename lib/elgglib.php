@@ -977,7 +977,7 @@ function fatalErrorShutdownHandler(){
 
 	$last_error = error_get_last();
 
-	if($last_error['type'] == E_ERROR){
+	if($last_error['type'] == E_ERROR && php_sapi_name() != "cli"){
 		error_log('Fatal error: '.nl2br(htmlentities(print_r($last_error, true), ENT_QUOTES, 'UTF-8')));
 		// Wipe any existing output buffer
 		ob_end_clean();
