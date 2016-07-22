@@ -7,6 +7,7 @@
  */
 namespace minds\plugin\guard;
 
+use Minds\Core\Di\Di;
 use Minds\Components;
 use Minds\Core;
 use Minds\Api;
@@ -49,22 +50,22 @@ class start extends Components\Plugin
 
     protected function prohbitedDomains()
     {
-        return array(
-                        //shorts
-                    //	't.co', 'goo.gl', 'ow.ly', 'bitly.com', 'bit.ly','tinyurl.com','bit.do','go2.do',
-                    //	'adf.ly', 'adcrun.ch', 'zpag.es','ity.im', 'q.gs', 'lnk.co', 'is.gd',
-                        //full
-                        'movieblog.tumblr.com', 'moviehdstream.wordpress.com', 'moviehq.tumblr.com', 'moviehq.webs.com',
-                        'moviehq.wordpress.com', 'movieo.wordpress.com', 'movieonline.tumblr.com', 'movieonline.webs.com',
-                        'movieonline.wordpress.com', 'movieonlinehd.tumblr.com', 'movieonlinehd.webs.com', 'movieonlinehd.wordpress.com',
-                        'movies.tumblr.com', 'moviesf.tumblr.com', 'moviesgodetia.com', 'movieslinks4u', 'moviesmount.com',
-                        'moviesmonster.biz', 'moviesondesktop', 'moviesonlinefree.biz', 'moviestream.wordpress.com',
-                        'movieontop.com', 'afllivestreaming.com.au', 'londonolympiccorner', 'nrllivestreaming.com.au',
-                        '24x7livestreamtvchannels.com', 'www.edogo.us', 'all4health.in', 'watches4a.co.uk', 'es.jennyjoseph.com',
-                        'allsportslive24x7.blogspot.com', 'boxing-tv-2014-live-stream.blogspot.com', 'amarblogdalima.blogspot.com',
-                        'www.officialtvstream.com.es', 'topsalor.com', 'busybo.org', 'www.nowvideo.sx', '180upload.com', 'allmyvideos.net',
-                        'busybo.org', 'hdmovieshouse.biz'
-                    );
+        return [
+            //shorts
+            //	't.co', 'goo.gl', 'ow.ly', 'bitly.com', 'bit.ly','tinyurl.com','bit.do','go2.do',
+            //	'adf.ly', 'adcrun.ch', 'zpag.es','ity.im', 'q.gs', 'lnk.co', 'is.gd',
+            //full
+            'movieblog.tumblr.com', 'moviehdstream.wordpress.com', 'moviehq.tumblr.com', 'moviehq.webs.com',
+            'moviehq.wordpress.com', 'movieo.wordpress.com', 'movieonline.tumblr.com', 'movieonline.webs.com',
+            'movieonline.wordpress.com', 'movieonlinehd.tumblr.com', 'movieonlinehd.webs.com', 'movieonlinehd.wordpress.com',
+            'movies.tumblr.com', 'moviesf.tumblr.com', 'moviesgodetia.com', 'movieslinks4u', 'moviesmount.com',
+            'moviesmonster.biz', 'moviesondesktop', 'moviesonlinefree.biz', 'moviestream.wordpress.com',
+            'movieontop.com', 'afllivestreaming.com.au', 'londonolympiccorner', 'nrllivestreaming.com.au',
+            '24x7livestreamtvchannels.com', 'www.edogo.us', 'all4health.in', 'watches4a.co.uk', 'es.jennyjoseph.com',
+            'allsportslive24x7.blogspot.com', 'boxing-tv-2014-live-stream.blogspot.com', 'amarblogdalima.blogspot.com',
+            'www.officialtvstream.com.es', 'topsalor.com', 'busybo.org', 'www.nowvideo.sx', '180upload.com', 'allmyvideos.net',
+            'busybo.org', 'hdmovieshouse.biz'
+        ];
     }
 
     protected function strposa($haystack, $needles, $offset = 0)
@@ -134,13 +135,15 @@ class start extends Components\Plugin
     {
         $result = null;
 
+        $config = Di::_()->get('Config')->get('twilio');
+
         try {
-            $AccountSid = "AC2e0a25157a4e150f3a87fd6e2f21730c";
-            $AuthToken = "add6d113b8a62e1111c4795e375071de";
+            $AccountSid = $config['account_sid'];
+            $AuthToken = $config['auth_token'];
             $client = new \Services_Twilio($AccountSid, $AuthToken);
             $result = $client->account->messages->create(array(
                 'To' => $number,
-                'From' => "+16015640015",
+                'From' => $config['from'],
                 'Body' => $message,
             ));
         } catch (\Exception $e) {
