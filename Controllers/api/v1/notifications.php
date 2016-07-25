@@ -173,7 +173,7 @@ class notifications implements Interfaces\Api
             }
             if (isset($_GET['access_token']) && $data['notification_view'] == 'group_activity') {
                 $notifications[$key]['notification_view'] = 'custom_message';
-                $notifications['notifications'][$key]['params']['message'] = "@{$data['from']['username']} posted in {$data['params']['group']['name']}";
+                $notifications[$key]['params']['message'] = "@{$data['from']['username']} posted in {$data['params']['group']['name']}";
             }
         }
 
