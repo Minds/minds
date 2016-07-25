@@ -194,8 +194,10 @@ class ElggUser extends ElggEntity
         }
 
         try{
-            $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
-            Minds\Core\Data\Client::build('Neo4j')->request($prepared->createUser($this));
+            if($new){
+                $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
+                Minds\Core\Data\Client::build('Neo4j')->request($prepared->createUser($this));
+            }
         }catch (\Exception $e){}
 		return $this->guid;
 	}
