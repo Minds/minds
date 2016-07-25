@@ -3,12 +3,11 @@
  * Call missed messages
  */
 
-namespace minds\plugin\gatherings\entities;
+namespace Minds\Plugin\Messenger\Entites;
 
 use Minds\Entities\Object;
-use minds\plugin\gatherings\helpers;
 
-class CallMissed extends message
+class CallMissed extends LegacyMessage
 {
     private $conversation;
     private $message;
@@ -40,4 +39,5 @@ class CallMissed extends message
                 "friendly_ts"
             ));
     }
+
 }

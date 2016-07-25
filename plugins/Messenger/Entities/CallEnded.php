@@ -3,12 +3,11 @@
  * Call ended messages
  */
 
-namespace minds\plugin\gatherings\entities;
+namespace Minds\Plugin\Messenger\Entities;;
 
 use Minds\Entities\Object;
-use minds\plugin\gatherings\helpers;
 
-class CallEnded extends message
+class CallEnded extends LegacyMessage
 {
     private $conversation;
     private $message;
@@ -41,4 +40,5 @@ class CallEnded extends message
                 "duration"
             ));
     }
+
 }
