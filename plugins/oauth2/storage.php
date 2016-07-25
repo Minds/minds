@@ -417,11 +417,13 @@ OAuth2\Storage\AuthorizationCodeInterface
     {
         $username = strtolower($username);
         $user = new \Minds\Entities\User($username);
-        if ($user->guid) {
+        if ($user->guid && $user->password) {
             return array(
                 'user_id' => (string) $user->guid,
                 'scope' => ''
             );
+        } else {
+            error_log("[oauth2]: $username is fake?");
         }
         return false;
     }
