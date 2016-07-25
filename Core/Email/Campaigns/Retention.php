@@ -57,6 +57,7 @@ class Retention
             case 28:
                 $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
                 $template = "reward";
+                break;
             default:
                 $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
         }
@@ -71,6 +72,8 @@ class Retention
         $queued = 0;
         $skipped = 0;
         foreach ($this->getUsers() as $user) {
+            
+                  //$user = new \Minds\Entities\User('markna');      
             if (!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes") {
                 $skipped++;
                 echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
@@ -94,7 +97,7 @@ class Retention
 
             //send email
             $this->mailer->queue($message);
-
+//break;            
             echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
         }
         echo "[emails]: Completed ($queued queued | $skipped skipped) \n";

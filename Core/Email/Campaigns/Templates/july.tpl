@@ -7,7 +7,7 @@
     </tr>
     <tr>
       <td>
-        Based on the insanely positive reaction to our last giveaway, here's 1,000 more points which can be exchanged for 1,000 views on the content of your choice! Stay subscribed to receive more. Enjoy!
+        Here's 1,000 points which can be exchanged for 1,000 views on the content of your choice! Stay subscribed to receive more. Enjoy!
       </td>
     </tr>
   </tbody>
@@ -21,7 +21,7 @@
     <tr>
       <td height="20px"></td>
       <td height="20px" style="text-align:center;">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>blog/featured?__e_ct_guid=<?= $vars['guid']?>&campaign=birthday-2016"
+        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed?__e_ct_guid=<?= $vars['guid']?>&campaign=july-20-2016"
           style="padding:16px 32px; background-color:#4caf50; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
           Claim 1000 views
         </a>

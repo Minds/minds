@@ -7,7 +7,7 @@
     </tr>
     <tr>
       <td>
-        You are awesome. To show our appreciation for being a part of Minds, here are 5,000 points, which can be exchanged for 5,000 views on the content of your choice. Enjoy!
+        You are awesome. To show our appreciation for being a part of Minds, here are 5,000 points which can be exchanged for 5,000 views on the content of your choice. Enjoy!
       </td>
     </tr>
   </tbody>
@@ -44,7 +44,7 @@
           <li>Tap the button above and login.</li>
           <li>Make a post.</li>
           <li>Hit the Boost button.</li>
-          <li>Choose "Full Network:".</li>
+          <li>Choose "Full Network".</li>
           <li>Enter the amount of points you want to spend.</li>
           <li>Confirm the Boost.</li>
           <li>Check back in a couple days to see the results!</li>

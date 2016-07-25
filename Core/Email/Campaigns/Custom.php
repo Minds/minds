@@ -22,7 +22,7 @@ class Custom
     protected $subject = "";
     protected $templateKey = "";
 
-    protected $period = 1;
+    protected $period = 0;
 
     public function __construct(Call $db = null, Template $template = null, Mailer $mailer = null)
     {
@@ -55,7 +55,8 @@ class Custom
         $queued = 0;
         $skipped = 0;
         foreach ($this->getUsers() as $user) {
-            $user->email = 'mark@minds.com';
+
+            //$user->email = 'john@minds.com';
 
             if (!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes") {
                 $skipped++;
@@ -76,7 +77,7 @@ class Custom
 
             //send email
             $this->mailer->queue($message);
-
+            //exit;
             echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
         }
         echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
