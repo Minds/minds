@@ -28,7 +28,7 @@ class token extends core\page implements Interfaces\page
     public function post($pages)
     {
         header("Access-Control-Allow-Origin: *");
-        error_log('hit the token page..');
+        //error_log('hit the token page..');
         $storage = new storage();
         
          // create array of supported grant types
@@ -49,8 +49,8 @@ class token extends core\page implements Interfaces\page
         }
         
         $server = new OAuth2\Server($storage, $config, $grantTypes);
-        $server->addResponseType(new \minds\plugin\oauth2\tokenResponse($storage, $storage, $config), 'token');
-        error_log('hit me..');
+	    $server->addResponseType(new \minds\plugin\oauth2\tokenResponse($storage, $storage, $config), 'token');
+     //error_log('hit me..'); 
         return $server->handleTokenRequest(OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response())->send();
     }
     
