@@ -64,7 +64,8 @@ class start extends Components\Plugin
             '24x7livestreamtvchannels.com', 'www.edogo.us', 'all4health.in', 'watches4a.co.uk', 'es.jennyjoseph.com',
             'allsportslive24x7.blogspot.com', 'boxing-tv-2014-live-stream.blogspot.com', 'amarblogdalima.blogspot.com',
             'www.officialtvstream.com.es', 'topsalor.com', 'busybo.org', 'www.nowvideo.sx', '180upload.com', 'allmyvideos.net',
-            'busybo.org', 'hdmovieshouse.biz'
+            'busybo.org', 'hdmovieshouse.biz', 'sportblog.info', 'psport.space', 'discus.space', 'euro2016.it.ua', 'neymar.space',
+            'espnstream.space', '2016.vn.u', 'blogstream.space'
         ];
     }
 
