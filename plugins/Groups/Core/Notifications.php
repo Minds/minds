@@ -4,6 +4,7 @@
 */
 namespace Minds\Plugin\Groups\Core;
 
+use Minds\Core\Security;
 use Minds\Core\Entities;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
@@ -88,6 +89,7 @@ class Notifications
         $serialized = json_encode($notification->export());
 
         $offset = "";
+        $from_user = $notification->getFrom();
 
         while (true) {
             echo "[notification]: Running from $offset \n";
@@ -117,6 +119,11 @@ class Notifications
                 $i++;
                 $pct = ($i / count($guids)) * 100;
                 echo "[notification]: $i / " . count($guids) . " ($pct%) ";
+
+                if ($from_user->guid && Security\ACL\Block::_()->isBlocked($from_user, $recipient)) {
+                    continue;
+                }
+
                 $this->indexDb->set('notifications:' . $recipient, [
                     $notification->getGuid() => $serialized
                 ]);
