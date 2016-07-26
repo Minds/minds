@@ -24,7 +24,7 @@ class EmailRewards
           case "retention-28":
             $points = 100;
             break;
-          case "july-20-2016":
+          case "july-26-2016":
             $points = 1000;
             break;
           default:
