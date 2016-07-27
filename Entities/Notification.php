@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Notification Entity
- */
-
 namespace Minds\Entities;
 
 use Minds\Core;
@@ -12,6 +7,9 @@ use Minds\Entities\DenormalizedEntity;
 use Minds\Core\Queue\Client as QueueClient;
 use Minds\Helpers\Subscriptions;
 
+/**
+ * Notification Entity
+ */
 class Notification extends DenormalizedEntity
 {
     use \Minds\Traits\CurrentUser;

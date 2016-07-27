@@ -1,7 +1,4 @@
 <?php
-/**
- * Network Boost Entity
- */
 namespace Minds\Entities\Boost;
 
 use Minds\Core;
@@ -11,6 +8,9 @@ use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Helpers;
 
+/**
+ * Network Boost Entity
+ */
 class Network extends Entities\DenormalizedEntity implements BoostEntityInterface
 {
     public $type = 'boost';
@@ -33,9 +33,9 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     ];
 
     /**
-     * Load from the database
-     * @param $guid
-     * @return $this
+     * Loads from the database using a GUID
+     * @param  $guid
+     * @throws \Exception
      */
     public function loadFromDB($guid)
     {
@@ -43,8 +43,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     }
 
     /**
-     * Load from an array
-     * @param array $array
+     * Loads from an array
+     * @param  array $array
      * @return $this
      */
     public function loadFromArray($array)
@@ -64,7 +64,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     }
 
     /**
-     * Save to the database
+     * Write to database
      * @return string - $guid
      */
     public function save()
@@ -253,6 +253,10 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         return $this->handler;
     }
 
+    /**
+     * Exports the boost onto an array
+     * @return array
+     */
     public function export(array $keys = [])
     {
         $export = parent::export();

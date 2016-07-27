@@ -1,7 +1,4 @@
 <?php
-/**
- * Minds Normalized Entity
- */
 namespace Minds\Entities;
 
 use Minds\Core;
@@ -9,6 +6,9 @@ use Minds\Core\Data;
 use Minds\Helpers;
 use Minds\Traits;
 
+/**
+* Normalized Entity
+*/
 class NormalizedEntity
 {
     use Traits\Entity;
@@ -26,11 +26,11 @@ class NormalizedEntity
     }
 
     /**
-     * Load from guid
-     * @param guid
-     * @return $this
-     * @throws Exception
-     */
+    * Load entity data from a GUID
+    * @param  $guid
+    * @return $this
+    * @throws \Exception
+    */
     public function loadFromGuid($guid)
     {
         $row = $this->db->getRow($guid);
@@ -42,10 +42,10 @@ class NormalizedEntity
     }
 
     /**
-     * Load an entity from an array
-     * @param array
-     * @return $this
-     */
+    * Load entity data from an array
+    * @param  $array
+    * @return $this
+    */
     public function loadFromArray($array)
     {
         foreach ($array as $key => $value) {
@@ -67,10 +67,10 @@ class NormalizedEntity
     }
 
     /**
-     * Save the normalized entity to the database
-     * @param array $data
-     * @return boolean
-     */
+    * Save the normalized entity to the database
+    * @param  array $data
+    * @return bool
+    */
     protected function saveToDb($data)
     {
         foreach ($data as $k => $v) {
@@ -87,9 +87,9 @@ class NormalizedEntity
     }
 
     /**
-     * Save to indexes
-     * @return void
-     */
+    * Save to indexes
+    * @return null
+    */
     protected function saveToIndex()
     {
         foreach ($this->indexes as $index) {
@@ -98,9 +98,9 @@ class NormalizedEntity
     }
 
     /**
-     * Gets `guid`
-     * @return mixed
-     */
+    * Gets `guid`
+    * @return mixed
+    */
     public function getGuid()
     {
         if (!$this->guid) {
@@ -110,7 +110,8 @@ class NormalizedEntity
     }
 
     /**
-     * Feature
+     * Adds a reference to this entity on the `featured` index
+     * @return mixed - the featured ID
      */
     public function feature()
     {
@@ -129,13 +130,14 @@ class NormalizedEntity
     }
 
     /**
-     * Un-Feature
+     * Removes this entity's reference from the `featured` index
+     * @return bool|null
      */
     public function unFeature()
     {
         if ($this->featured_id) {
             //supports legacy imports
-          $this->indexDb->remove("$this->type:featured", [ $this->featured_id ]);
+            $this->indexDb->remove("$this->type:featured", [ $this->featured_id ]);
             $this->indexDb->remove("$this->type:$this->subtype:featured", [ $this->featured_id ]);
             $this->featured_id = null;
         }
@@ -149,7 +151,7 @@ class NormalizedEntity
     }
 
     /**
-     * Auto set/get hanlders
+     * Magic method for getter and setters.
      */
     public function __call($name, array $args = [])
     {
@@ -168,8 +170,8 @@ class NormalizedEntity
     }
 
     /**
-     * Export the entity
-     * @param array $keys
+     * Export the entity onto an array
+     * @param  array $keys
      * @return array
      */
     public function export(array $keys = [])

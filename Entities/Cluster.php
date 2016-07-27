@@ -1,12 +1,11 @@
 <?php
-/**
- * Minds cluster entity
- */
-
 namespace Minds\Entities;
 
 use Minds\Core\data;
 
+/**
+ * Cluster Entity
+ */
 class Cluster extends Entity
 {
     public $ttl = 1800; //keep nodes valid for half an hour
@@ -16,6 +15,11 @@ class Cluster extends Entity
         $this->cluster = 'master';
     }
 
+    /**
+     * Return an array of node indexes
+     * @param  integer $limit
+     * @return array
+     */
     public function getNodes($limit=10000)
     {
         $db = new Data\Call('user_index_to_guid');
@@ -25,9 +29,8 @@ class Cluster extends Entity
     }
 
     /**
-     * Stores the other nodes in the lookup column family
-     *
-     * @param string $server_addr -
+     * Stores a node in the index
+     * @param string $server_addr
      */
     public function join($server_addr)
     {
@@ -36,6 +39,10 @@ class Cluster extends Entity
         return $this->getNodes();
     }
 
+    /**
+     * TBD. Not implemented.
+     * @return mixed
+     */
     public function leave()
     {
     }

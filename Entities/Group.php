@@ -1,11 +1,10 @@
 <?php
-/**
- * Minds group entity.
- * (this will replace the outdated Elgg entity system in the near future)
- */
-
 namespace Minds\Entities;
 
+/**
+ * Legacy Group Entity
+ * @deprecated Replace in favor of Plugin\Groups\Entities\Group
+ */
 class Group extends \ElggGroup
 {
 }

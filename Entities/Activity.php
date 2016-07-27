@@ -1,8 +1,4 @@
 <?php
-/**
- * Minds activity entity.
- */
-
 namespace Minds\Entities;
 
 use Minds\Helpers;
@@ -10,13 +6,16 @@ use Minds\Core;
 use Minds\Core\Queue;
 use Minds\Core\Analytics;
 
+/**
+ * Activity Entity
+ */
 class Activity extends Entity
 {
     public $indexes = null;
 
     /**
-     * Initialise attributes
-     * @return void
+     * Initialize entity attributes
+     * @return null
      */
     public function initializeAttributes()
     {
@@ -36,6 +35,11 @@ class Activity extends Entity
         parent::__construct($guid);
     }
 
+    /**
+     * Saves the activity
+     * @param  bool  $index - save to index
+     * @return mixed        - the GUID
+     */
     public function save($index = true)
     {
 
@@ -49,6 +53,10 @@ class Activity extends Entity
         return $guid;
     }
 
+    /**
+     * Deletes the activity entity and indexes
+     * @return bool
+     */
     public function delete()
     {
         if ($this->p2p_boosted) {
@@ -79,7 +87,7 @@ class Activity extends Entity
     /**
      * Returns an array of indexes into which this entity is stored
      *
-     * @param bool $ia - ignore access
+     * @param  bool $ia - ignore access
      * @return array
      */
     protected function getIndexKeys($ia = false)
@@ -117,6 +125,10 @@ class Activity extends Entity
         return $indexes;
     }
 
+    /**
+     * Returns an array of which Entity attributes are exportable
+     * @return array
+     */
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(),
@@ -143,6 +155,10 @@ class Activity extends Entity
             ));
     }
 
+    /**
+     * Exports the activity onto an array
+     * @return array
+     */
     public function export()
     {
         $export = parent::export();
@@ -182,7 +198,8 @@ class Activity extends Entity
     }
 
     /**
-     * Return a friendly url
+     * Returns a friendly URL
+     * @return string
      */
     public function getURL()
     {
@@ -191,6 +208,7 @@ class Activity extends Entity
 
     /**
      * Returns the owner entity
+     * @return mixed
      */
     public function getOwnerEntity($brief = false)
     {
@@ -337,6 +355,7 @@ class Activity extends Entity
 
     /**
      * Return the count for this entity
+     * @return int
      */
     public function getImpressions()
     {

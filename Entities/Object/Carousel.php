@@ -1,17 +1,15 @@
 <?php
-/**
- * Minds object entity.
- * (this will replace the outdated Elgg entity system in the near future)
- */
-
 namespace Minds\Entities\Object;
 
 use Minds\Entities;
 
+/**
+ * Carousel Entity
+ */
 class Carousel extends Entities\Object
 {
     /**
-     * Initialise attributes
+     * Initialize entity attributes
      * @return void
      */
     public function initializeAttributes()

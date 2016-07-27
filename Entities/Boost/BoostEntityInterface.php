@@ -1,12 +1,11 @@
 <?php
-/**
- * Boost Entity Interface
- */
-
 namespace Minds\Entities\Boost;
 
 use Minds\Entities\Entity;
 
+/**
+ * Boost Entity Interface
+ */
 interface BoostEntityInterface
 {
     /**

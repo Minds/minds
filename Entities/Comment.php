@@ -1,8 +1,4 @@
 <?php
-/**
- * Comments entity
- */
-
 namespace Minds\Entities;
 
 use Minds\Entities;
@@ -11,10 +7,17 @@ use Minds\Core\Data;
 use Minds\Core\Security;
 use Minds\Helpers;
 
+/**
+ * Comments Entity
+ */
 class Comment extends Entities\Entity
 {
     private $parent;
 
+    /**
+     * Initializes attributes
+     * @return null
+     */
     public function initializeAttributes()
     {
         parent::initializeAttributes();
@@ -26,6 +29,10 @@ class Comment extends Entities\Entity
         ));
     }
 
+    /**
+     * Sets the Comment parent entity
+     * @param Entity $parent
+     */
     public function setParent($parent)
     {
         $this->parent = $parent;
@@ -33,6 +40,11 @@ class Comment extends Entities\Entity
         return $this;
     }
 
+    /**
+     * Sets the custom metadata
+     * @param string $type
+     * @param array  $data
+     */
     public function setCustom($type, $data = array())
     {
         $this->custom_type = $type;
@@ -40,6 +52,10 @@ class Comment extends Entities\Entity
         return $this;
     }
 
+    /**
+     * Sets the attachment GUID
+     * @param mixed $guid
+     */
     public function setAttachmentGuid($guid)
     {
         $this->attachment_guid = $guid;
@@ -109,6 +125,10 @@ class Comment extends Entities\Entity
         return $this;
     }
 
+    /**
+     * Saves the comment entity and its indexes
+     * @return bool
+     */
     public function save()
     {
 
@@ -127,6 +147,10 @@ class Comment extends Entities\Entity
         return $this->guid;
     }
 
+    /**
+     * Deletes the comment entity and its indexes
+     * @return bool
+     */
     public function delete()
     {
         $db = new Data\Call('entities');
@@ -141,6 +165,10 @@ class Comment extends Entities\Entity
         return true;
     }
 
+    /**
+     * Checks if the comment is editable (writable) by the current user
+     * @return bool
+     */
     public function canEdit($user_guid = 0)
     {
         $entity = \Minds\Entities\Factory::build($this->parent_guid);
@@ -151,11 +179,20 @@ class Comment extends Entities\Entity
         return parent::canEdit($user_guid);
     }
 
+    /**
+     * Echoes the comment view
+     * @deprecated This method is no longer used
+     * @return void
+     */
     public function view()
     {
         echo \elgg_view('comment/default', array('entity'=>$this));
     }
 
+    /**
+     * Get parent entity's permalink URL
+     * @return string|null
+     */
     public function getURL()
     {
         $entity = Entities::build(new Entities\Entity($this->parent_guid));
@@ -164,6 +201,10 @@ class Comment extends Entities\Entity
         }
     }
 
+    /**
+     * Returns an array of which Entity attributes are exportable
+     * @return array
+     */
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
@@ -185,6 +226,10 @@ class Comment extends Entities\Entity
         ));
     }
 
+    /**
+     * Exports the comment onto an array
+     * @return array
+     */
     public function export()
     {
         $export = parent::export();

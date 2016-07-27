@@ -1,7 +1,4 @@
 <?php
-/**
- * Minds Denormalized Entity
- */
 namespace Minds\Entities;
 
 use Minds\Core;
@@ -9,6 +6,9 @@ use Minds\Core\Data;
 use Minds\Helpers;
 use Minds\Traits;
 
+/**
+ * Denormalized Entity
+ */
 class DenormalizedEntity
 {
     use Traits\Entity;
@@ -23,28 +23,40 @@ class DenormalizedEntity
         $this->db = $db ?: new Data\Call('entities_by_time');
     }
 
+    /**
+     * Set this entity's database store
+     * @param object $db
+     */
     public function setDb($db)
     {
         $this->db = $db;
         return $this;
     }
 
+    /**
+     * Set this entity's row key
+     * @param string $key
+     */
     public function setRowKey($key)
     {
         $this->rowKey = $key;
         return $this;
     }
 
+    /**
+     * Get this entity's row key
+     * @return string|null
+     */
     public function getRowKey()
     {
         return $this->rowKey;
     }
 
     /**
-     * Load from guid
-     * @param guid
+     * Load entity data from a GUID
+     * @param  $guid
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      */
     public function loadFromGuid($guid)
     {
@@ -59,8 +71,8 @@ class DenormalizedEntity
     }
 
     /**
-     * Load an entity from an array
-     * @param array
+     * Load entity data from an array
+     * @param  $array
      * @return $this
      */
     public function loadFromArray($array)
@@ -85,8 +97,8 @@ class DenormalizedEntity
 
     /**
      * Save the denormalized entity to the database
-     * @param array $data
-     * @return boolean
+     * @param  array $data
+     * @return bool
      */
     protected function saveToDb($data)
     {
@@ -95,6 +107,7 @@ class DenormalizedEntity
 
     /**
      * Delete the denormalized entity
+     * @return bool
      */
     public function delete()
     {
@@ -102,8 +115,8 @@ class DenormalizedEntity
     }
 
     /**
-     * A small hack to always grab the guid without the getGuid() method
-     * @return string/void
+     * Magic getter.
+     * @return string|void
      */
     public function __get($name)
     {
@@ -113,8 +126,8 @@ class DenormalizedEntity
     }
 
     /**
-     * Export the entity
-     * @param array $keys
+     * Export the entity onto an array
+     * @param  array $keys
      * @return array
      */
     public function export(array $keys = [])

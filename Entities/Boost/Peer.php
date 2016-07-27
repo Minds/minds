@@ -1,7 +1,4 @@
 <?php
-/**
- * Peer Boost Entity
- */
 namespace Minds\Entities\Boost;
 
 use Minds\Core;
@@ -11,6 +8,9 @@ use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Helpers;
 
+/**
+ * Peer Boost Entity
+ */
 class Peer implements BoostEntityInterface
 {
     private $db;
@@ -38,9 +38,9 @@ class Peer implements BoostEntityInterface
     }
 
   /**
-   * Load from the database
-   * @param $guid
-   * @return $this
+   * Loads from database using a GUID
+   * @param  $guid
+   * @throws \Exception
    */
   public function loadFromDB($guid)
   {
@@ -48,8 +48,8 @@ class Peer implements BoostEntityInterface
   }
 
   /**
-   * Load from an array
-   * @param array $array
+   * Loads from an array
+   * @param  array $array
    * @return $this
    */
   public function loadFromArray($array)
@@ -70,7 +70,7 @@ class Peer implements BoostEntityInterface
   }
 
   /**
-   * Save to the database
+   * Write to the database
    * @return string - $guid
    */
   public function save()
@@ -243,17 +243,29 @@ class Peer implements BoostEntityInterface
         return $this;
     }
 
+    /**
+     * Get the schedule timestamp
+     * @return int
+     */
     public function getScheduledTs()
     {
         return $this->scheduledTs ?: time();
     }
 
+    /**
+     * Set the schedule timestamp
+     * @param int $ts
+     */
     public function setScheduledTs($ts)
     {
         $this->scheduledTs = $ts;
         return $this;
     }
 
+    /**
+     * Checks if it should be posted to Facebook
+     * @return bool
+     */
     public function shouldPostToFacebook()
     {
         if ($this->postToFacebook) {
@@ -262,6 +274,11 @@ class Peer implements BoostEntityInterface
         return false;
     }
 
+    /**
+     * Enables the flag that indicates boost should be posted to Facebook
+     * @param  bool $boolean
+     * @return $this
+     */
     public function postToFacebook($boolean)
     {
         if ($boolean) {
@@ -270,6 +287,10 @@ class Peer implements BoostEntityInterface
         return $this;
     }
 
+    /**
+     * Exports the boost onto an array
+     * @return array
+     */
     public function export()
     {
         $export = [

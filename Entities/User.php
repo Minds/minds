@@ -1,30 +1,38 @@
 <?php
-/**
- * Minds user entity.
- * (this will replace the outdated Elgg entity system in the near future)
- */
-
 namespace Minds\Entities;
 
 use Minds\Core;
 use Minds\Helpers;
 
+/**
+ * User Entity
+ * @todo Do not inherit from ElggUser
+ */
 class User extends \ElggUser
 {
+    /**
+     * Sets the `mature` flag
+     * @param  bool|int $value
+     * @return $this
+     */
     public function setMature($value)
     {
         $this->mature = $value ? 1 : 0;
         return $this;
     }
 
+    /**
+     * Gets the `mature` flag
+     * @return bool|int
+     */
     public function getMature()
     {
-        return $this->mature;
+      return $this->mature;
     }
 
     /**
      * Sets and encrypts a users email address
-     * @param $email
+     * @param  string $email
      * @return $this
      */
     public function setEmail($email)
@@ -50,16 +58,32 @@ class User extends \ElggUser
         return Helpers\OpenSSL::decrypt(base64_decode($this->email), file_get_contents($CONFIG->encryptionKeys['email']['private']));
     }
 
+    /**
+     * Subscribes user to another user
+     * @param  mixed  $guid
+     * @param  array  $data - metadata
+     * @return mixed
+     */
     public function subscribe($guid, $data = array())
     {
         return \Minds\Helpers\Subscriptions::subscribe($this->guid, $guid, $data);
     }
 
+    /**
+     * Unsubscribes from another user
+     * @param  mixed $guid
+     * @return mixed
+     */
     public function unSubscribe($guid)
     {
         return \Minds\Helpers\Subscriptions::unSubscribe($this->guid, $guid, $data);
     }
 
+    /**
+     * Checks if subscribed to another user.
+     * @param  mixed $guid   - the user to check subscription to
+     * @return boolean
+     */
     public function isSubscriber($guid)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -83,6 +107,12 @@ class User extends \ElggUser
         return $return;
     }
 
+    /**
+     * Checks if subscribed to another user in a
+     * reversed way than isSubscribed()
+     * @param  mixed $guid   - the user to check subscription to
+     * @return boolean
+     */
     public function isSubscribed($guid)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -123,6 +153,10 @@ class User extends \ElggUser
         return (int) $return;
     }
 
+    /**
+     * Gets the number of subscriptions
+     * @return int
+     */
     public function getSubscriptonsCount()
     {
         if ($this->host) {
@@ -142,9 +176,7 @@ class User extends \ElggUser
 
     /**
      * Set the secret key for clusters to use
-     *
      * @todo - should we use oauth2 instead. should this be stored in its own row rather than in the user object?
-     *
      * @param string $host
      */
     public function setSecretKey($host)
@@ -154,6 +186,10 @@ class User extends \ElggUser
         $this->save();
     }
 
+    /**
+     * Exports to an array
+     * @return array
+     */
     public function export()
     {
         $export = parent::export();
@@ -177,6 +213,10 @@ class User extends \ElggUser
         return $export;
     }
 
+    /**
+     * Get the number of impressions for the user
+     * @return int
+     */
     public function getImpressions()
     {
         $app = Core\Analytics\App::_()
@@ -185,12 +225,21 @@ class User extends \ElggUser
         return $app->total();
     }
 
+    /**
+     * Gets the user's icon URL
+     * @param  string $size
+     * @return string
+     */
     public function getIconURL($size = 'medium')
     {
         $join_date = $this->getTimeCreated();
         return elgg_get_site_url() . "icon/$this->guid/$size/$join_date/$this->icontime/" . Core\Config::_()->lastcache;
     }
 
+    /**
+     * Returns an array of which Entity attributes are exportable
+     * @return array
+     */
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(

@@ -5,15 +5,16 @@ use Minds\Core;
 use Minds\Core\Data;
 
 /**
- * Build an entity based on an array, object or guid
+ * Entities Factory
  */
 class Factory
 {
     private static $entitiesCache = [];
 
     /**
-     * Build the entity
-     * @param mixed $value
+     * Build an entity based an GUID, an array or an object
+     * @param  mixed  $value
+     * @param  array  $options - ['cache' => bool]
      * @return Entity
      */
     public static function build($value, array $options = [])
@@ -34,11 +35,11 @@ class Factory
             $row['guid'] = $value;
         } elseif (is_object($value) || is_array($value)) {
 
-            // TODO: [emi] Check with Mark if we can just read ->guid and if not empty we'll load from cache
+            // @todo Check if we can just read ->guid and if not empty we'll load from cache
             $row = $value;
         } elseif (is_string($value)) {
 
-            // TODO: [emi] Check with Mark if we can just read ->guid and if not empty we'll load from cache
+            // @todo Check if we can just read ->guid and if not empty we'll load from cache
             $row = json_decode($value, true);
         } else {
             return false;
