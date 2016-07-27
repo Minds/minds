@@ -1,19 +1,20 @@
 <?php
-/**
- * Counters
- */
 namespace Minds\Helpers;
 
 use Minds\Core;
 
+/**
+ * Helper for metric counters
+ * @todo Avoid static and use proper DI (check $client at methods)
+ */
 class Counters
 {
     /**
-     * Increment a count
-     *
-     * @param mixed Entity or number - $entity
-     * @param string $metric
-     * @param int $value - defaults to 1
+     * Increment a metric count
+     * @param  Entity|number $entity
+     * @param  string        $metric
+     * @param  int           $value  - Value to increment. Defaults to 1.
+     * @param  Data\Client   $client - Database. Defaults to Cassandra.
      * @return void
      */
     public static function increment($entity, $metric, $value = 1, $client = null)
@@ -42,10 +43,11 @@ class Counters
     }
 
     /**
-     * Decrement a count
-     *
-     * @param mixed Entity or number - $entity
-     * @param string $metric
+     * Decrements a metric count
+     * @param  Entity|number $entity
+     * @param  string        $metric
+     * @param  int           $value  - Value to increment. Defaults to 1.
+     * @param  Data\Client   $client - Database. Defaults to Cassandra.
      * @return void
      */
     public static function decrement($entity, $metric, $value = 1, $client = null)
@@ -70,8 +72,12 @@ class Counters
     }
 
     /**
-     * Increment a batch
-     * @return $this
+     * Increment metric count on several entities
+     * @param  array         $entities
+     * @param  string        $metric
+     * @param  int           $value  - Value to increment. Defaults to 1.
+     * @param  Data\Client   $client - Database. Defaults to Cassandra.
+     * @return void
      */
     public static function incrementBatch($entities, $metric, $value = 1, $client = null)
     {
@@ -102,9 +108,11 @@ class Counters
     }
 
     /**
-     * Return the count for a single entity/metric
-     * @param mixed Entity or number - $entity
-     * @param string $metric
+     * Returns the count for a single metric on an entity
+     * @param  Entity|number  $entity
+     * @param  string         $metric
+     * @param  boolean        $cache  - use a cache for result?
+     * @param  Data\Client    $client - Database. Defaults to Cassandra.
      * @return int
      */
     public static function get($entity, $metric, $cache = true, $client = null)
@@ -138,11 +146,12 @@ class Counters
     }
 
     /**
-     * Reset a counter
-     * @param mixed - Entity or number $entity
-     * @param string $metric
-     * @param int $value (optional)
-     * @return void;
+     * Resets a metric counter for an entity
+     * @param  Entity|number  $entity
+     * @param  string         $metric
+     * @param  number         $value  - Resetted value. Defaults to 0.
+     * @param  Data\Client    $client - Database. Defaults to Cassandra.
+     * @return int
      */
     public static function clear($entity, $metric, $value = 0, $client = null)
     {

@@ -1,11 +1,16 @@
 <?php
-/**
- * Entities helper
- */
 namespace Minds\Helpers;
 
+/**
+ * Helper for entities operations
+ */
 class Entities
 {
+    /**
+     * Builds setter method name for a certain underscore-named field
+     * @param  string $key
+     * @return string
+     */
     public static function buildSetter($key)
     {
         $parts = explode('_', $key);
@@ -16,6 +21,11 @@ class Entities
         return $method;
     }
 
+    /**
+     * Builds getter method name for a certain underscore-named field
+     * @param  string $key
+     * @return string
+     */
     public static function buildGetter($key)
     {
         $parts = explode('_', $key);

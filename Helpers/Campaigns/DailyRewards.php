@@ -4,8 +4,16 @@ namespace Minds\Helpers\Campaigns;
 use Minds\Core;
 use Minds\Helpers;
 
+/**
+ * Helper for daily rewards
+ * @todo Avoid static method and user proper DI.
+ */
 class DailyRewards
 {
+    /**
+     * Grants daily reward and sends notification to current user
+     * @return boolean|null
+     */
     public static function reward()
     {
         if (!Core\Session::isLoggedin()) {

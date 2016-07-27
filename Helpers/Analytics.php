@@ -5,16 +5,17 @@ use Minds\Core;
 use Minds\Core\Data;
 
 /**
- * A helper class to provide request metrics
+ * Helper to provide request metrics
+ * @todo Avoid static and use proper DI
  */
 class Analytics
 {
     /**
      * Get MAU or DAU
-     * @param $metric
-     * @param $reference - eg. daily, monthly
-     * @param int $ts
-     * @return int - the count
+     * @param  string $metric
+     * @param  string $reference - eg. daily, monthly
+     * @param  int    $ts        - timestamp
+     * @return int
      */
     public static function get($metric = "active", $reference = "day", $ts = null)
     {
@@ -24,7 +25,11 @@ class Analytics
     }
 
     /**
-     * @return void
+     * Increments a metric
+     * @param  string     $metric
+     * @param  int        $ts        - timestamp
+     * @param  mixed|null $user_guid - acting user. Null for current.
+     * @return null
      */
     public static function increment($metric = "active", $ts = null, $user_guid = null)
     {
@@ -39,7 +44,11 @@ class Analytics
     }
 
     /**
-     * Get timestamp to nearest 5 minutes
+     * Gets a timestamp based on a string, and optionally on the
+     * passed timestamp.
+     * @param  string   $reference
+     * @param  int|null $ts        - timestamp. Null for current time.
+     * @return int
      */
     public static function buildTS($reference = "day", $ts = null)
     {

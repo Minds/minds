@@ -5,8 +5,18 @@ use Minds\Core;
 use Minds\Helpers;
 use Minds\Entities;
 
+/**
+ * Helper for Email Rewards
+ * @todo Avoid static and use proper DI
+ */
 class EmailRewards
 {
+    /**
+     * Grants an email reward to an user
+     * @param  string $campaign
+     * @param  mixed  $user_guid
+     * @return null
+     */
     public static function reward($campaign, $user_guid)
     {
         if (!is_numeric($user_guid)) {

@@ -5,16 +5,16 @@ use Minds\Core;
 use Minds\Core\Events;
 
 /**
- * Subscriptions helpers
- *
- * Helper methods for subscriptions
+ * Helper for Users subscriptions
+ * @todo Avoid static and use proper DI
  */
 class Subscriptions
 {
     /**
      * Subscribe a user to a user
-     * @param long $user_guid - the user who is doing the action, eg. me
-     * @param long $to_guid - the user to subscribe to
+     * @param  mixed $user_guid - the user who is doing the action, eg. me
+     * @param  mixed $to_guid   - the user to subscribe to
+     * @param  array $data      - metadata. Optional.
      * @return boolean
      */
     public static function subscribe($user_guid, $to_guid, $data = array())
@@ -70,6 +70,12 @@ class Subscriptions
         return (bool) $return;
     }
 
+    /**
+     * Unsubscribes a user from a user
+     * @param  mixed $user - the user who is doing the action, eg. me
+     * @param  mixed $from - the user to unsubscribe from
+     * @return boolean
+     */
     public static function unSubscribe($user, $from)
     {
         $return = false;
@@ -105,6 +111,12 @@ class Subscriptions
         return (bool) $return;
     }
 
+    /**
+     * Checks if a user is subscribed to another.
+     * @param  mixed $user - the user who is doing the action, eg. me
+     * @param  mixed $to   - the user to check subscription to
+     * @return boolean
+     */
     public static function isSubscribed($user, $to)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -128,6 +140,13 @@ class Subscriptions
         return (bool) $return ;
     }
 
+    /**
+     * Checks if a user is subscribed to another in a
+     * reversed way than isSubscribed()
+     * @param  mixed $user - the user who is doing the action, eg. me
+     * @param  mixed $to   - the user to check subscription to
+     * @return boolean
+     */
     public static function isSubscriber($user, $to)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -151,10 +170,20 @@ class Subscriptions
         return (bool) $return;
     }
 
+    /**
+     * TBD. Not implemented.
+     * @param  mixed $user
+     * @return mixed
+     */
     public static function getSubscriptions($user)
     {
     }
 
+    /**
+     * TBD. Not implemented.
+     * @param  mixed $user
+     * @return mixed
+     */
     public static function getSubscribers($user)
     {
     }

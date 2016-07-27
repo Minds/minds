@@ -4,10 +4,15 @@ namespace Minds\Helpers;
 use Minds\Core;
 
 /**
- * Helper for exporting
+ * Helper for exporting API responses
  */
 class Export
 {
+    /**
+     * Recursively sanitizes an array of data.
+     * @param  array $array
+     * @return array
+     */
     public static function sanitize($array)
     {
         $return = array();

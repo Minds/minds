@@ -1,13 +1,14 @@
 <?php
-/**
- * Validate php
- */
 namespace Minds\Helpers;
 
+/**
+ * Helper to validate JSON
+ * @todo This class might be either deprecated or merged into a more complete JSON helper.
+ */
 class Validation
 {
     /**
-     * Check if is json
+     * Check if the passed string is a valid JSON
      * @return boolean
      */
     public static function isJson($string)

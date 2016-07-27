@@ -5,14 +5,17 @@ use Minds\Core;
 use Minds\Core\Data;
 
 /**
- * A helper class to provide request metrics
+ * Helper for request metric counters
+ * @todo Avoid static and use proper DI (check $client at methods)
+ * @todo Perhaps this can inherit methods from Helpers\Analytics
  */
 class RequestMetrics
 {
     private static $namespace = "requestmetrics";
+
     /**
-     * Increment
-     * @param $metric
+     * Increments a request counter metric
+     * @param  $metric
      * @return void
      */
     public static function increment($metric = "all")
@@ -22,10 +25,10 @@ class RequestMetrics
     }
 
     /**
-     * Get request metrics
-     * @param $metric
-     * @param int $ts
-     * @return int - the count
+     * Gets a request metric counter
+     * @param  string $metric
+     * @param  int    $ts
+     * @return int
      */
     public static function get($metric = "all", $ts = null)
     {
@@ -47,7 +50,9 @@ class RequestMetrics
     }
 
     /**
-     * Get timestamp to nearest 5 minutes
+     * Gets a 5-minute rounded timestamp
+     * @param  int|null $ts        - timestamp. Null for current time.
+     * @return int
      */
     public static function buildTS($ts = null)
     {
