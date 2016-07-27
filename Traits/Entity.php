@@ -1,11 +1,13 @@
 <?php
-/**
- * Minds entity traits
- */
 namespace Minds\Traits;
 
 use Minds\Core;
 
+/**
+ * Trait for Entities GUID
+ * @todo Deprecate this
+ * @deprecated Remove in favour of normal inheritance
+ */
 trait Entity
 {
     /**

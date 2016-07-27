@@ -8,16 +8,16 @@ interface BoostHandlerInterface
 {
     /**
      * Boost an entity, place in a review queue first
-     * @param object/int $entity - the entity to boost
-     * @param int $impressions
-     * @return boolean
+     * @param object|int $entity - the entity to boost
+     * @param int        $impressions
+     * @return bool
      */
     public function boost($entity, $impressions);
 
 
     /**
      * Return boosts for review
-     * @param int $limit
+     * @param int    $limit
      * @param string $offset
      * @return array
      */
@@ -25,9 +25,9 @@ interface BoostHandlerInterface
 
     /**
      * Accept a boost
-     * @param object/int $entity
-     * @param int impressions
-     * @return boolean
+     * @param object|int $entity
+     * @param int        $impressions
+     * @return bool
      */
     public function accept($entity, $impressions);
 

@@ -1,9 +1,9 @@
 <?php
-
 namespace Minds\Interfaces;
 
 /**
- * Apply this interface to api classes which want to bypass the PAM functions
+ * Flag-like interface that enforces the current user to have
+ * administrative privileges to execute the controller.
  */
 interface ApiAdminPam
 {

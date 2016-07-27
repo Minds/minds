@@ -1,15 +1,14 @@
 <?php
-/**
- * XSS Rule
- */
-
 namespace Minds\Interfaces;
 
+/**
+ * Interface for XSS Rule
+ */
 interface XSSRule
 {
     /**
      * Set the dirty string to sanitize
-     * @param $string
+     * @param  $string
      * @return $this
      */
     public function setString($string);
@@ -22,7 +21,7 @@ interface XSSRule
 
     /**
      * Set the allowed tags or attributes
-     * @param array $allowed
+     * @param  array $allowed
      * @return $this
      */
     public function setAllowed($allowed = []);

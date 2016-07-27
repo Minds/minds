@@ -1,9 +1,13 @@
 <?php
-
 namespace Minds\Traits;
 
 use Minds\Core\Session;
 
+/**
+ * Trait to read current user's session
+ * @todo Deprecate this.
+ * @deprecated Remove in favour of DI.
+ */
 trait CurrentUser
 {
     /**

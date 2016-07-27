@@ -1,17 +1,16 @@
 <?php
+namespace Minds\Cli;
+
 /**
- * Cli Router
+ * CLI Router
  */
-
-namespace Minds\CLi;
-
 class Routes
 {
     public static $routes = array();
 
     /**
-     * Add to router
-     * @param string $route - the route, eg. v1/banners
+     * Adds a custom CLI route resolution
+     * @param string $route - the route, eg. multi/admin/users
      * @param string $class - the route of the class
      * @return void
      */

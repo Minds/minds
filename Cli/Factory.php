@@ -1,5 +1,4 @@
 <?php
-
 namespace Minds\Cli;
 
 use Minds\Interfaces;
@@ -7,13 +6,15 @@ use Minds\Helpers;
 use Minds\Core\Security;
 
 /**
- * The Minds Cli factory
-  */
+ * CLI Factory
+ */
 class Factory
 {
     /**
-     * Builds the Cli controller
-     * This is almost like an autoloader
+     * Returns a Cli\Controller instance for the passed $segments,
+     * or null if the class is not found.
+     * @param  string $segments
+     * @return mixed|null
      */
     public static function build($segments)
     {
@@ -51,7 +52,12 @@ class Factory
         return false;
     }
 
-    // TODO: [future] Create an Inflector class and use this on other routers (e.g. /api)
+    /**
+     * Camelizes namespaces and paths (from underscore notation)
+     * @todo Create an Inflector class and use this on other routers (e.g. /api)
+     * @param  string $namespace [description]
+     * @return string
+     */
     public static function toCamelNsp($namespace)
     {
         $namespace = explode('\\', $namespace);

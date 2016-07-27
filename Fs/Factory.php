@@ -7,13 +7,17 @@ use Minds\Helpers;
 use Minds\Core\Security;
 
 /**
- * The Minds Fs factory
-  */
+ * FS Factory
+ */
 class Factory
 {
     /**
-     * Builds the FS controller
-     * This is almost like an autoloader
+     * Executes an Fs\Controller method for the passed $segments
+     * based on the current HTTP request method,
+     * or null if the class is not found.
+     * @todo Create an Fs\Controller base class to be used
+     * @param string $segments - String representing a route
+     * @return mixed|null
      */
     public static function build($segments)
     {
@@ -54,8 +58,8 @@ class Factory
     }
 
     /**
-     * PAM checker
-     * @todo list to tokens for private pieces of data
+     * Check PAM policies for current user.
+     * @todo List to tokens for private pieces of data
      */
     public static function pamCheck()
     {

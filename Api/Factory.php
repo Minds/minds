@@ -8,13 +8,16 @@ use Minds\Core\Security;
 use Minds\Core\Session;
 
 /**
- * The minds API factory
-  */
+ * API Factory
+ */
 class Factory
 {
     /**
-     * Builds the api controller
-     * This is almost like an autoloader
+     * Executes an Api\Controller method for the passed $segments
+     * based on the current HTTP request method,
+     * or null if the class is not found.
+     * @param string $segments - String representing a route
+     * @return mixed|null
      */
     public static function build($segments)
     {
@@ -70,7 +73,8 @@ class Factory
     }
 
     /**
-     * PAM checker
+     * Terminates an API response based on PAM policies for current user
+     * @return bool|null
      */
     public static function pamCheck()
     {
@@ -79,6 +83,7 @@ class Factory
         $api_pam = new \ElggPAM('api');
         $user_auth_result = $user_pam->authenticate();
         if ($user_auth_result && $api_pam->authenticate() || Security\XSRF::validateRequest()) {
+            return true;
         } else {
             //error_log('failed authentication:: OAUTH via API');
             ob_end_clean();
@@ -91,7 +96,8 @@ class Factory
     }
 
     /**
-     * Check if a user is an admin
+     * Terminates an API response if the current user is not an administrator
+     * @return bool|null
      */
     private static function adminCheck()
     {
@@ -109,11 +115,14 @@ class Factory
     }
 
     /**
-     * Helper to check if LoggedIn
+     * Terminates an API response if there's no user session
+     * @return bool|null
      */
     public static function isLoggedIn()
     {
-        if(!Session::isLoggedIn()){
+        if(Session::isLoggedIn()){
+            return true;
+        } else {
             ob_end_clean();
             header('Content-type: application/json');
             header("Access-Control-Allow-Origin: *");
@@ -129,9 +138,8 @@ class Factory
     }
 
     /**
-     * Builds an api response
+     * Builds an API response
      * @param array $data
-     *
      */
     public static function response($data = array())
     {

@@ -2,6 +2,10 @@
 
 namespace Minds\Traits;
 
+/**
+ * Trait for HTTP Methods
+ * @todo Check trait vs classic inheritance
+ */
 trait HttpMethodsInput
 {
     /**
