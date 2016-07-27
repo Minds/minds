@@ -17,15 +17,20 @@ apt-get install -y \
   curl \
   git \
   php$php_version \
+  php$php_version-bcmath \
+  php$php_version-common \
+  php$php_version-ctype \
   php$php_version-fpm \
-  php$php_version-pdo \
+  php$php_version-mbstring \
   php$php_version-mysql \
   php$php_version-mysqlnd \
   php$php_version-mysqli \
   php$php_version-mcrypt \
-  php$php_version-ctype \
+  php$php_version-pdo \
   dsc22 cassandra=2.2.7 cassandra-tools=2.2.7 \
-  openjdk-8-jre
+  openjdk-8-jre \
+  rabbitmq-server \
+  openssl
   #php$php_version-zlib \
   #php$php_version-gd \
   #php$php_version-intl \
@@ -73,10 +78,23 @@ sed -i "s/^listen_address:.*/listen_address: 127.0.0.1/" /etc/cassandra/cassandr
 sed -i "s/^\(\s*\)- seeds:.*/\1- seeds: 127.0.0.1/" /etc/cassandra/cassandra.yaml
 sed -i "s/^rpc_address:.*/rpc_address: 0.0.0.0/" /etc/cassandra/cassandra.yaml
 sed -i "s/^# broadcast_address:.*/broadcast_address: 127.0.0.1/" /etc/cassandra/cassandra.yaml
-#RUN sed -i "s/^# broadcast_rpc_address:.*/broadcast_rpc_address: 127.0.0.1/" /root/cassandra/conf/cassandra.yaml
+sed -i "s/^# broadcast_rpc_address:.*/broadcast_rpc_address: 127.0.0.1/" /etc/cassandra/cassandra.yaml
 sed -i 's/^start_rpc.*$/start_rpc: true/' /etc/cassandra/cassandra.yaml
 
 # start services
-service php$php_version-fpm restart &
-service nginx restart &
-service cassandra restart &
+service php$php_version-fpm restart
+service nginx restart
+service cassandra restart
+
+
+if [ -f "/var/www/Minds/engine/settings.php" ]
+then
+	echo "[Success]: Minds is already installed";
+else
+  sleep 10s
+  php /var/www/Minds/bin/cli.php install \
+    --domain=dev.minds.io \
+    --username=mark \
+    --password=temp123 \
+    --email=mark@minds.com
+fi

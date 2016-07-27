@@ -42,6 +42,6 @@ end
   config.vm.box = "ubuntu/trusty64"
   config.vm.network :private_network, ip: "10.54.0.111"
 
-  config.vm.provision :shell, path: "bin/bootstrap-ubuntu.sh"
+  config.vm.provision :shell, path: "bin/bootstrap-ubuntu.sh", run: 'always'
 
 end
