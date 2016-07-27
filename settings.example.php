@@ -78,6 +78,13 @@ $CONFIG->broken_mta = false;
  */
 $CONFIG->min_password_length = 6;
 
+$CONFIG->set('plugins', [
+  'Messager',
+  'Groups',
+  'blog',
+  'archive'
+]);
+
 $CONFIG->set('sockets-jwt-secret', '{{jwt-secret}}');
 $CONFIG->set('sockets-jwt-domain', '{{jwt-domain}}');
 $CONFIG->set('sockets-server-uri', '{{socket-server-uri}}');
@@ -100,7 +107,6 @@ $CONFIG->set('google', [
 ]);
 
 $CONFIG->set('apple', [
-    'sandbox' => {{apple-sandbox-enabled}},
+    'sandbox' => '{{apple-sandbox-enabled}}',
     'cert' => '{{apple-certificate}}'
 ]);
-
