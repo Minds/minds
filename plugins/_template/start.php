@@ -1,0 +1,24 @@
+<?php
+/**
+ * {{plugin.name}}
+ * @author {{plugin.author}}
+ */
+
+namespace Minds\Plugin\{{plugin.name}};
+
+use Minds\Core;
+use Minds\Components;
+use Minds\Api;
+
+class start extends Components\Plugin
+{
+
+    public function init()
+    {
+
+        //initialise our first api
+        Api\Factory::add('v1/{{plugin.lc_name}}', 'Minds\\Plugin\\HelloWorld\\Controllers\\api\\v1\\{{plugin.name}}');
+
+    }
+
+}
