@@ -1,14 +1,17 @@
 <?php
-/**
- * Minds Boost Provider
- */
-
 namespace Minds\Core\Boost;
 
 use Minds\Core\Di\Provider;
 
+/**
+ * Boost Providers
+ */
 class BoostProvider extends Provider
 {
+    /**
+     * Registers providers onto DI
+     * @return null
+     */
     public function register()
     {
         $this->di->bind('Boost\Network', function ($di) {

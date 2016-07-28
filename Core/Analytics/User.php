@@ -1,12 +1,12 @@
 <?php
-/**
- * Minds Analytics: User factory
- */
 namespace Minds\Core\Analytics;
 
 use Minds\Core;
 use Minds\Interfaces\AnalyticsMetric;
 
+/**
+ * User Factory for Analytics
+ */
 class User
 {
     private static $_;
@@ -18,6 +18,11 @@ class User
     {
     }
 
+    /**
+     * Instanciates a new Metrics class
+     * @param  string|AnalyticsMetric $metric - Metric class name or instance
+     * @return $this
+     */
     public function setMetric($metric)
     {
         if (is_string($metric)) {
@@ -36,6 +41,10 @@ class User
         return $this;
     }
 
+    /**
+     * Sets metric key
+     * @param string $key
+     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -45,31 +54,36 @@ class User
         return $this;
     }
 
+    /**
+     * Increments metric counter
+     * @return mixed
+     */
     public function increment()
     {
         return $this->metric->increment();
     }
 
-  /**
-   * Return a set of analytics for a timespan
-   * @param int $span - eg. 3 (will return 3 units, eg 3 day, 3 months)
-   * @param string $unit - eg. day, month, year
-   * @param int $timestamp (optional) - sets the base to work off
-   * @return array
-   */
-  public function get($span = 3, $unit = "day", $timestamp = null)
-  {
-      return $this->metric->get($span, $unit, $timestamp);
-  }
+    /**
+     * Return a set of analytics for a timespan
+     * @param int    $span - eg. 3 (will return 3 units, eg 3 day, 3 months)
+     * @param string $unit - eg. day, month, year
+     * @param int    $timestamp (optional) - sets the base to work off
+     * @return array
+     */
+    public function get($span = 3, $unit = "day", $timestamp = null)
+    {
+        return $this->metric->get($span, $unit, $timestamp);
+    }
 
-  /**
-   * Factory builder
-   */
-  public function _()
-  {
-      if (!self::$_) {
-          self::$_ = new User();
-      }
-      return self::$_;
-  }
+    /**
+     * Factory singleton builder
+     * @return static
+     */
+    public function _()
+    {
+        if (!self::$_) {
+            self::$_ = new User();
+        }
+        return self::$_;
+    }
 }

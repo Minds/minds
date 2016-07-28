@@ -8,13 +8,18 @@ use Minds\Helpers;
 use Minds\Interfaces;
 
 /**
- * LEGACY Suggested boost handler
+ * Legacy Suggested Boost Handler
  */
 class Suggested extends Network implements Interfaces\BoostHandlerInterface
 {
     protected $handler = 'suggested';
     protected $useNeo = true;
 
+    /**
+     * Specifies if the handler should use Neo4j
+     * @param  bool $use
+     * @return $this
+     */
     public function useNeo($use = true)
     {
         $this->useNeo = $use;
@@ -23,7 +28,9 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
 
 
     /**
-     * Return a boost
+     * Gets a single boost
+     * @todo Is $offset needed?
+     * @param  string $offset
      * @return array
      */
     public function getBoost($offset = "")
@@ -83,6 +90,12 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
         }
     }
 
+    /**
+     * Gets all boosts
+     * @param  integer $limit
+     * @param  boolean $increment
+     * @return array
+     */
     public function getBoosts($limit = 15, $increment = true)
     {
         $cacher = Core\Data\cache\factory::build();
@@ -91,7 +104,7 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
         $opts = [
             'type'=>'suggested',
             'state'=>'approved',
-        ];  
+        ];
         if($mem_log){
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
         }
@@ -107,7 +120,7 @@ class Suggested extends Network implements Interfaces\BoostHandlerInterface
             if (count($return) >= $limit) {
                 break;
             }
-           
+
             if (in_array((string)$boost['_id'], $mem_log)) {
                 continue; // already seen
             }

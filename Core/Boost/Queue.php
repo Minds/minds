@@ -1,5 +1,4 @@
 <?php
-
 namespace Minds\Core\Boost;
 
 /**
@@ -10,7 +9,7 @@ class Queue
     public static function add()
     {
     }
-    
+
     public static function run()
     {
     }

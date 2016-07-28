@@ -9,6 +9,7 @@ use Minds\Helpers;
 
 /**
  * Newsfeed Boost handler
+ * @todo Proper DI
  */
 class Network implements BoostHandlerInterface
 {
@@ -25,8 +26,8 @@ class Network implements BoostHandlerInterface
 
     /**
      * Boost an entity
-     * @param object/int $entity - the entity to boost
-     * @param int $impressions
+     * @param  object/int $entity - the entity to boost
+     * @param  int        $impressions
      * @return boolean
      */
     public function boost($boost, $impressions = 0)
@@ -49,8 +50,8 @@ class Network implements BoostHandlerInterface
 
      /**
      * Return boosts for review
-     * @param int $limit
-     * @param string $offset
+     * @param  int    $limit
+     * @param  string $offset
      * @return array
      */
     public function getReviewQueue($limit, $offset = "")
@@ -115,8 +116,8 @@ class Network implements BoostHandlerInterface
 
     /**
      * Get our own submitted Boosts
-     * @param int $limit
-     * @param string $offset
+     * @param  int    $limit
+     * @param  string $offset
      * @return array
      */
     public function getOutbox($limit, $offset = "")
@@ -137,6 +138,11 @@ class Network implements BoostHandlerInterface
         return $boosts;
     }
 
+    /**
+     * Gets a single boost entity
+     * @param  mixed $guid
+     * @return object
+     */
     public function getBoostEntity($guid)
     {
         $db = new Data\Call('entities_by_time');
@@ -152,8 +158,8 @@ class Network implements BoostHandlerInterface
 
     /**
      * Accept a boost
-     * @param mixed $_id
-     * @param int impressions
+     * @param  mixed $_id
+     * @param  int   $impressions Optional. Defaults to 0.
      * @return boolean
      */
     public function accept($boost, $impressions = 0)
@@ -182,7 +188,7 @@ class Network implements BoostHandlerInterface
 
     /**
      * Reject a boost
-     * @param mixed $_id
+     * @param  mixed $_id
      * @return boolean
      */
     public function reject($boost)
@@ -213,8 +219,8 @@ class Network implements BoostHandlerInterface
 
     /**
      * Expire a boost from the queue
-     * @param Object $boost
-     * @return void
+     * @param  object $boost
+     * @return null
      */
     private function expireBoost($boost)
     {
@@ -239,9 +245,9 @@ class Network implements BoostHandlerInterface
     }
 
     /**
-     * Excuse the horrible mess here!!
-     * (sorry!)
-     * @return array
+     * Polyfills boost thumbs
+     * @param  string[] $boosts
+     * @return string[]
      */
     private function patchThumbs($boosts)
     {
@@ -259,6 +265,12 @@ class Network implements BoostHandlerInterface
         return $boosts;
     }
 
+    /**
+     * Gets all boosts
+     * @param  integer $limit
+     * @param  boolean $increment
+     * @return array
+     */
     public function getBoosts($limit = 2, $increment = true)
     {
         $cacher = Core\Data\cache\factory::build('apcu');

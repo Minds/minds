@@ -1,4 +1,6 @@
 <?php
+namespace Minds\Core\Config;
+
 /**
  * Minds Config manager
  *
@@ -6,8 +8,6 @@
  * @todo - make this not an array access but simple 1 param
  * @todo - make so we don't have a global $CONFIG.
  */
-namespace Minds\Core\Config;
-
 class Config
 {
     public static $_;
@@ -18,6 +18,10 @@ class Config
         $this->init();
     }
 
+    /**
+     * Initializes Config. Adds default configurations.
+     * @return null
+     */
     public function init()
     {
         //$this->lastcache = 0;
@@ -33,6 +37,11 @@ class Config
         $this->config['minusername'] = 2;
     }
 
+    /**
+     * Gets a config value
+     * @param  string $key
+     * @return mixed
+     */
     public function get($key)
     {
         if (isset($this->config[$key])) {
@@ -41,6 +50,13 @@ class Config
         return null;
     }
 
+    /**
+     * Sets a config value
+     * @param  string $key
+     * @param  mixed  $value
+     * @param  array  $opts   Optional.
+     * @return null
+     */
     public function set($key, $value = null, $opts = [])
     {
 
@@ -57,11 +73,18 @@ class Config
         $this->config[$key] = $value;
     }
 
+    /**
+     * Magic Method to get a value
+     */
     public function __get($key)
     {
         return $this->get($key);
     }
 
+    /**
+     * Magic method to set a value.
+     * @todo Deprecate.
+     */
     public function __set($key, $value)
     {
         $this->set($key, $value);

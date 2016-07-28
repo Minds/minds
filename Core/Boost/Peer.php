@@ -1,5 +1,4 @@
 <?php
-
 namespace Minds\Core\Boost;
 
 use Minds\Core;
@@ -10,7 +9,7 @@ use Minds\Helpers;
 use Minds\Core\Payments;
 
 /**
- * Pro boost handler
+ * Peer Boost Handler
  */
 class Peer implements Interfaces\BoostHandlerInterface
 {
@@ -24,10 +23,10 @@ class Peer implements Interfaces\BoostHandlerInterface
     }
 
    /**
-     * Boost an entity
-     * @param object/int $entity - the entity to boost
-     * @param int $points
-     * @return boolean
+     * Boost an entity. Not used.
+     * @param  object/int $entity - the entity to boost
+     * @param  int $points
+     * @return null
      */
     public function boost($entity, $points)
     {
@@ -35,9 +34,9 @@ class Peer implements Interfaces\BoostHandlerInterface
     }
 
      /**
-     * Return all pro boosts
-     * @param int $limit
-     * @param string $offset
+     * Return all peer boosts
+     * @param  int    $limit
+     * @param  string $offset
      * @return array
      */
     public function getReviewQueue($limit, $offset = "")
@@ -56,8 +55,8 @@ class Peer implements Interfaces\BoostHandlerInterface
 
     /**
      * Get our own submitted Boosts
-     * @param int $limit
-     * @param string $offset
+     * @param  int    $limit
+     * @param  string $offset
      * @return array
      */
     public function getOutbox($limit, $offset = "")
@@ -74,6 +73,11 @@ class Peer implements Interfaces\BoostHandlerInterface
         return $boosts;
     }
 
+    /**
+     * Gets a single boost entity
+     * @param  mixed  $_id
+     * @return object
+     */
     public function getBoostEntity($_id)
     {
         $db = new Data\Call('entities_by_time');
@@ -83,14 +87,15 @@ class Peer implements Interfaces\BoostHandlerInterface
         }
 
         $boost = (new Entities\Boost\Peer($db))
-        ->loadFromArray(json_decode($data[$_id], true));
+            ->loadFromArray(json_decode($data[$_id], true));
+
         return $boost;
     }
 
     /**
      * Accept a boost and do a remind
-     * @param object/int $entity
-     * @param int points
+     * @param  object|int $entity
+     * @param  int        $impressions
      * @return boolean
      */
     public function accept($boost, $impressions = 0)
@@ -100,14 +105,14 @@ class Peer implements Interfaces\BoostHandlerInterface
         }
 
         $boost->setState('accepted')
-        ->save();
+            ->save();
 
         return true;
     }
 
     /**
      * Reject a boost
-     * @param object/int $entity
+     * @param  object|int $entity
      * @return boolean
      */
     public function reject($boost)
@@ -124,7 +129,7 @@ class Peer implements Interfaces\BoostHandlerInterface
 
     /**
      * Revoke a boost
-     * @param object/int $entity
+     * @param  object|int $entity
      * @return boolean
      */
     public function revoke($boost)
@@ -140,7 +145,7 @@ class Peer implements Interfaces\BoostHandlerInterface
     }
 
     /**
-     * Return a boost
+     * Return a boost. Not used.
      * @return array
      */
     public function getBoost($offset = "")

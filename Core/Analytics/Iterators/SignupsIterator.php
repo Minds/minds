@@ -6,6 +6,9 @@ use Minds\Core\Entities;
 use Minds\Core\Data;
 use Minds\Core\Analytics\Timestamps;
 
+/**
+ * Iterator that loops through all signups
+ */
 class SignupsIterator implements \Iterator
 {
     private $cursor = -1;
@@ -23,12 +26,20 @@ class SignupsIterator implements \Iterator
         $this->position = 0;
     }
 
+    /**
+     * Sets the period to cycle through
+     * @param string $period
+     */
     public function setPeriod($period = null)
     {
         $this->period = $period;
         $this->getUsers();
     }
 
+    /**
+     * Fetch all the users who signed up
+     * @return array
+     */
     protected function getUsers()
     {
         //$this->cursor = -1;
@@ -61,6 +72,10 @@ class SignupsIterator implements \Iterator
         $this->offset = end($users)->guid;
     }
 
+    /**
+     * Rewind the array cursor
+     * @return null
+     */
     public function rewind()
     {
         if ($this->cursor >= 0) {
@@ -69,16 +84,28 @@ class SignupsIterator implements \Iterator
         $this->next();
     }
 
+    /**
+     * Get the current cursor's data
+     * @return mixed
+     */
     public function current()
     {
         return $this->data[$this->cursor];
     }
 
+    /**
+     * Get cursor's key
+     * @return mixed
+     */
     public function key()
     {
         return $this->cursor;
     }
 
+    /**
+     * Goes to the next cursor
+     * @return null
+     */
     public function next()
     {
         $this->cursor++;
@@ -87,6 +114,10 @@ class SignupsIterator implements \Iterator
         }
     }
 
+    /**
+     * Checks if the cursor is valid
+     * @return bool
+     */
     public function valid()
     {
         return $this->valid && isset($this->data[$this->cursor]);

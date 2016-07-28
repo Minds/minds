@@ -1,5 +1,4 @@
 <?php
-
 namespace Minds\Core\Boost;
 
 use Minds\Core;
@@ -10,7 +9,7 @@ use Minds\Helpers;
 
 /**
  * Channel boost handler
- * DEPRECATED. Please use the Peer controller instead. This is for polyfill support of mobile only
+ * @deprecated Please use the Peer controller instead. This is for polyfill support of mobile only
  */
 class Channel implements Interfaces\BoostHandlerInterface
 {

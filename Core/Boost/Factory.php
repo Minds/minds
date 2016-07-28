@@ -11,8 +11,8 @@ class Factory
 {
     /**
      * Build the handler
-     * @param string $handler
-     * @param array $options (optional)
+     * @param  string $handler
+     * @param  array  $options (optional)
      * @return BoostHandlerInterface
      */
     public static function build($handler, $options = array(), $db = null)

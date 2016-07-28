@@ -1,7 +1,4 @@
 <?php
-/**
- * Retention Metric
- */
 namespace Minds\Core\Analytics\Metrics;
 
 use Minds\Helpers;
@@ -9,6 +6,9 @@ use Minds\Core;
 use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
+/**
+ * Retention Metric
+ */
 class Retention implements AnalyticsMetric
 {
     private $db;
@@ -69,47 +69,51 @@ class Retention implements AnalyticsMetric
         return true;
     }
 
-  /**
-  * Return a set of analytics for a timespan
-  * @param int $span - eg. 3 (will return 3 units, eg 3 day, 3 months)
-  * @param string $unit - eg. day, month, year
-  * @param int $timestamp (optional) - sets the base to work off
-  * @return array
-  */
-  public function get($span = 1, $unit = 'day', $timestamp = null)
-  {
-      $intervals = [1,3,7,28];
-      $spans = Timestamps::span($span+1, $unit);
-      $timestamps = array_reverse(Timestamps::span(30, $unit));
-      $data = [];
-      foreach ($spans as $ts) {
-          $totals = [];
-          $total = 0;
-          $retained = [];
-          $signups = [];
-          foreach ($intervals as $x) {
-              $retained[$x] = (int) $this->db->countRow("{$this->namespace}:$x:$ts");
-              $signups[$x] = (int) $this->db->countRow("analytics:signup:day:{$timestamps[$x+1]}");
-              $totals[] = [
-                'day' => $x,
-                'signupDate' => date('d-m-Y', $timestamps[$x+1]),
-                'retainedDate' => date('d-m-Y', $ts),
-                'retained' => (int) $retained[$x],
-                'signups' => (int) $signups[$x],
-                'total' => (int) $retained[$x] / ($signups[$x] ?: 1)
-              ];
-              $total += (int) $retained[$x] / ($signups[$x] ?: 1);
-          }
-          $data[] = [
-            'timestamp' => $ts,
-            'date' => date('d-m-Y', $ts),
-            'total' => $total / count($totals),
-            'totals' => $totals
-          ];
-      }
-      return $data;
-  }
+    /**
+     * Return a set of analytics for a timespan
+     * @param  int    $span - eg. 3 (will return 3 units, eg 3 day, 3 months)
+     * @param  string $unit - eg. day, month, year
+     * @param  int    $timestamp (optional) - sets the base to work off
+     * @return array
+     */
+    public function get($span = 1, $unit = 'day', $timestamp = null)
+    {
+        $intervals = [1,3,7,28];
+        $spans = Timestamps::span($span+1, $unit);
+        $timestamps = array_reverse(Timestamps::span(30, $unit));
+        $data = [];
+        foreach ($spans as $ts) {
+            $totals = [];
+            $total = 0;
+            $retained = [];
+            $signups = [];
+            foreach ($intervals as $x) {
+                $retained[$x] = (int) $this->db->countRow("{$this->namespace}:$x:$ts");
+                $signups[$x] = (int) $this->db->countRow("analytics:signup:day:{$timestamps[$x+1]}");
+                $totals[] = [
+                    'day' => $x,
+                    'signupDate' => date('d-m-Y', $timestamps[$x+1]),
+                    'retainedDate' => date('d-m-Y', $ts),
+                    'retained' => (int) $retained[$x],
+                    'signups' => (int) $signups[$x],
+                    'total' => (int) $retained[$x] / ($signups[$x] ?: 1)
+                ];
+                $total += (int) $retained[$x] / ($signups[$x] ?: 1);
+            }
+            $data[] = [
+                'timestamp' => $ts,
+                'date' => date('d-m-Y', $ts),
+                'total' => $total / count($totals),
+                'totals' => $totals
+            ];
+        }
+        return $data;
+    }
 
+    /**
+     * Returns total metric counter
+     * @return int
+     */
     public function total()
     {
         return 0;
