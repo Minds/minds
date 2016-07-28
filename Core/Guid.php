@@ -1,13 +1,18 @@
 <?php
-/**
- * Get guids from our ZMQ servers, with fallback if we can't connect in time
- */
 namespace Minds\Core;
 
+/**
+ * GUID Builder (ZQM servers + fallbacks)
+ * @todo Avoid static and use DI
+ */
 class Guid
 {
     public static $socket;
 
+    /**
+     * Generates a GUID
+     * @return mixed
+     */
     public static function build()
     {
         $guid = null;
@@ -26,16 +31,19 @@ class Guid
         if (!$guid) {
             $g = new \GUID();
             $guid = $g->generate();
-            ;
         }
         return $guid;
     }
 
+    /**
+     * Connects to GUID generation server
+     * @return \ZMQSocket
+     */
     public static function connect()
     {
         global $CONFIG;
         $port = 5599;
-        
+
         $socket = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REQ);
         $socket->connect("tcp://localhost:{$port}");
         $socket->setSockOpt(\ZMQ::SOCKOPT_LINGER, 0);

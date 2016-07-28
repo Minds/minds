@@ -1,7 +1,4 @@
 <?php
-/**
- * Reporting operations
- */
 namespace Minds\Core;
 
 use Minds\Core;
@@ -10,6 +7,9 @@ use Minds\Entities;
 use Minds\Entities\Report;
 use Minds\Helpers;
 
+/**
+ * Minds Reports
+ */
 class Reports
 {
     public function __construct($db = null)

@@ -1,12 +1,13 @@
 <?php
-/**
- * Minds session manager
- */
 namespace Minds\Core;
 
 use Minds\Core;
 use Minds\Entities;
 
+/**
+ * Minds Session Manager
+ * @todo Session Name should be configurable
+ */
 class Session extends base
 {
     private $session_name = 'minds';
@@ -69,6 +70,7 @@ class Session extends base
 
     /**
      * Shutdown function to remove the session
+     * @return null
      */
     public function shutdown()
     {
@@ -87,6 +89,12 @@ class Session extends base
         }
     }
 
+    /**
+     * Regenerates the session.
+     * @param  bool  $new_id Regenerate the session ID too?
+     * @param  User  $user   Current user override
+     * @return null
+     */
     public static function regenerate($new_id = true, $user = null)
     {
         $_SESSION['user'] = $user ?: new Entities\User($_SESSION['guid'], false);
@@ -97,7 +105,7 @@ class Session extends base
 
     /**
      * Create a JWT token for our web socket integration
-     * @return void
+     * @return null
      */
     public static function generateJWTCookie()
     {
@@ -111,7 +119,7 @@ class Session extends base
     }
 
     /**
-     * Check if the user is logged in
+     * Check if there's an user logged in
      */
     public static function isLoggedin()
     {
@@ -125,7 +133,7 @@ class Session extends base
     }
 
     /**
-     * Check if the user is an admin
+     * Check if the current user is an administrator
      */
     public static function isAdmin()
     {
@@ -142,7 +150,7 @@ class Session extends base
     }
 
     /**
-     * Get the logged in user entity
+     * Get the logged in user's entity
      */
     public static function getLoggedinUser()
     {
@@ -167,7 +175,7 @@ class Session extends base
     }
 
     /**
-     * Get the logged in user guid
+     * Get the logged in user's entity GUID
      */
     public static function getLoggedInUserGuid()
     {

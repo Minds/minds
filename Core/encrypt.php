@@ -1,18 +1,23 @@
 <?php
-/**
- * Minds encryption
- */
 namespace Minds\Core;
 
+/**
+ * Minds Encryption
+ */
 class encrypt extends base
 {
     private $key;
- 
+
     public function __construct($key)
     {
         $this->setKey($key);
     }
- 
+
+    /**
+     * Encrypts a plain-text string using Minds standards
+     * @param  string $encrypt
+     * @return string
+     */
     public function encrypt($encrypt)
     {
         $encrypt = serialize($encrypt);
@@ -23,7 +28,12 @@ class encrypt extends base
         $encoded = base64_encode($passcrypt) . '|' . base64_encode($iv);
         return $encoded;
     }
- 
+
+    /**
+     * Decrypts an encrypted string using Minds standards
+     * @param  string $decrypt
+     * @return string
+     */
     public function decrypt($decrypt)
     {
         $decrypt = explode('|', $decrypt);
@@ -43,7 +53,11 @@ class encrypt extends base
         $decrypted = unserialize($decrypted);
         return $decrypted;
     }
- 
+
+    /**
+     * Sets the ecryption key to be used when encrypting/decryption
+     * @param string $key - a 32 byte hexadecimal string
+     */
     public function setKey($key)
     {
         if (\ctype_xdigit($key) && strlen($key) === 64) {

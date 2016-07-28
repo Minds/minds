@@ -1,23 +1,32 @@
 <?php
-/**
- * Defacto entities controller for minds
- */
 namespace Minds\Core;
 
-use Minds\Core\data;
+use Minds\Core\Data;
 
+/**
+ * Minds Entities Controller
+ */
 class Entities extends base
 {
     public function init()
     {
     }
 
-
+    /**
+     * Get entities
+     * @param  array  $options
+     * @return array
+     */
     public static function get(array $options = array())
     {
         return \elgg_get_entities($options);
     }
 
+    /**
+     * List entities
+     * @param  array $options
+     * @return array
+     */
     public static function view($options)
     {
         //	$options['count'] = NULL;
@@ -25,11 +34,10 @@ class Entities extends base
     }
 
     /**
-     * Builds an entity object, based on the row
-     *
-     * @param mixed $row
-     * @param bool $cache - cache or load from cache?
-     * @return object
+     * Builds an entity object based on the values passed (GUID, array, object, etc)
+     * @param  mixed  $row
+     * @param  bool   $cache - cache or load from cache?
+     * @return Entity
      */
     public static function build($row, $cache = true)
     {
@@ -67,7 +75,12 @@ class Entities extends base
             return (new $default())->loadFromArray((array) $row);
         }
     }
-    
+
+    /**
+     * Builds an entity row key namespace based on static::get() options
+     * @param  array  $options
+     * @return string
+     */
     public static function buildNamespace(array $options)
     {
         $options = $options + [
@@ -78,22 +91,22 @@ class Entities extends base
             'network' => null,
         ];
         $namespace = $options['type'] ?: 'object';
-        
+
         if ($options['subtype']) {
             $namespace .= ':' . $option['subtype'];
         }
-        
+
         if ($options['owner_guid']) {
             $namespace .= ':user:' . $options['owner_guid'];
         }
-        
+
         if ($options['container_guid']) {
             $namespace .= ':container:' . $options['container_guid'];
         }
         if ($options['network']) {
             $namespace .= ':network:' . $options['network'];
         }
-        
+
         return $namespace;
     }
 }

@@ -1,9 +1,9 @@
 <?php
-/**
- * Minds main class
- */
 namespace Minds\Core;
 
+/**
+ * Core Minds Engine
+ */
 class Minds extends base
 {
     public $root = __MINDS_ROOT__;
@@ -11,7 +11,8 @@ class Minds extends base
     public static $booted = false;
 
     /**
-     * Initialise the site
+     * Initializes the site
+     * @return null
      */
     public function init()
     {
@@ -19,8 +20,8 @@ class Minds extends base
     }
 
     /**
-     * Initialize our providers
-     * @return void
+     * Register our DI providers
+     * @return null
      */
     public function initProviders()
     {
@@ -40,7 +41,8 @@ class Minds extends base
     }
 
     /**
-     * Start the minds engine
+     * Start the Minds engine
+     * @return null
      */
     public function start()
     {
@@ -93,7 +95,8 @@ class Minds extends base
     }
 
     /**
-     * Load settings
+     * Load settings files
+     * @return null
      */
     public function loadConfigs()
     {
@@ -116,7 +119,8 @@ class Minds extends base
 
 
     /**
-     * Load the legacy files for elgg
+     * Load the legacy files for Elgg framework
+     * @todo Deprecate this
      */
     public function loadLegacy()
     {
@@ -144,15 +148,23 @@ class Minds extends base
         }
     }
 
+    /**
+     * Detects if there are multisite settings present
+     * @return bool
+     */
     public function detectMultisite()
     {
-        if (file_exists(dirname(dirname(dirname(__MINDS_ROOT__))) ."/config.json")) {
+        if (file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
             return true;
         }
 
         return false;
     }
 
+    /**
+     * Check if Minds is installed, if not redirect to install script
+     * @return null
+     */
     public function checkInstalled()
     {
         /**
@@ -168,6 +180,10 @@ class Minds extends base
         }
     }
 
+    /**
+     * TBD. Not used
+     * @return bool
+     */
     public static function getVersion()
     {
         return false;

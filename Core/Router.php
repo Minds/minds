@@ -1,11 +1,11 @@
 <?php
-/**
- * The minds router.
- */
 namespace Minds\Core;
 
 use Minds\Helpers;
 
+/**
+ * Minds Core Router
+ */
 class Router
 {
     // these are core pages, other pages are registered by plugins
@@ -23,7 +23,9 @@ class Router
     /**
      * Route the pages
      * (fallback to elgg page handler if we fail)
-     *
+     * @param  string $uri
+     * @param  string $method
+     * @return null
      */
     public function route($uri = null, $method = null)
     {
@@ -82,7 +84,9 @@ class Router
     }
 
     /**
-     * Legacy fallback...
+     * Legacy Router fallback
+     * @param  string   $uri
+     * @return boolean
      */
     public function legacyRoute($uri)
     {
@@ -100,7 +104,8 @@ class Router
     }
 
     /**
-     * Detect the content type and apply the viewtype
+     * Detects request content type and apply the corresponding polyfills
+     * @return null
      */
     public function detectContentType()
     {
@@ -113,8 +118,8 @@ class Router
     }
 
     /**
-     * PHP sucks when it comes to json post data... this is a hack
-     *
+     * Populates $_POST and $_REQUEST with request's JSON payload
+     * @return null
      */
     public function postDataFix()
     {
@@ -129,10 +134,10 @@ class Router
     }
 
     /**
-     * Register routes...
+     * Register routes
      *
-     * @param array $routes - an array of routes to handlers
-     * @return array - the array of all your routes
+     * @param  array $routes - an array of routes to handlers
+     * @return array         - the array of all your routes
      */
     public static function registerRoutes($routes = array())
     {

@@ -1,14 +1,19 @@
 <?php
-/**
- * Minds page controller. All page handler should extends upon this class.
- */
 namespace Minds\Core;
 
+/**
+ * Minds Page Controller
+ * @todo Proper class capitalization
+ */
 class page extends base
 {
     public $context = null;
     public $csrf = true;
 
+    /**
+     * Initializes the controller
+     * @return null
+     */
     public function init()
     {
         \elgg_set_context($this->context);
@@ -19,6 +24,10 @@ class page extends base
         }
     }
 
+    /**
+     * TBD. Not implemented.
+     * @return mixed
+     */
     public function setup()
     {
     }
@@ -48,9 +57,8 @@ class page extends base
 
     /**
      * Render the page
-     * (in the future this will handler all pages, but for now we will pass to elgg_view_page)
-     *
-     * @param array $params - options to pass
+     * @todo handle all pages
+     * @param  array  $params - options to pass
      * @return string - the page.
      */
     public function render(array $params = array())
@@ -66,11 +74,9 @@ class page extends base
 
     /**
      * Forward a page
-     *
-     * @param string $location - the url to move to
-     * @param string $reason - the reason for the move
-     *
-     * @return void
+     * @param  string $location - the url to move to
+     * @param  string $reason   - the reason for the move
+     * @return null
      */
     public function forward($location = "", $reason = 'system')
     {

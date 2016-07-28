@@ -1,9 +1,10 @@
 <?php
-/**
- * Minds base object. All classes inherit this.
- */
 namespace Minds\Core;
 
+/**
+ * Minds Base Object - All objects should inherit from this
+ * @todo Proper class capitalization
+ */
 class base
 {
     public static $di;

@@ -1,18 +1,14 @@
 <?php
-/**
- * Handles plugins for Minds
- *
- */
 namespace Minds\Core;
 
+/**
+ * Minds Plugins Controller
+ */
 class plugins extends base
 {
     public static $path;
     public static $cache = array();
 
-    /**
-     * Construct plugins
-     */
     public function __construct()
     {
         self::$path = dirname(__MINDS_ROOT__) . "/plugins/";
@@ -24,8 +20,7 @@ class plugins extends base
 
     /**
      * Returns all available plugins in the plugin directory
-     *
-     * @param string $dir - the directory to discover from
+     * @param  string $dir - the directory to discover from
      * @return array
      */
     private static function getFromDir($dir = null)
@@ -53,9 +48,8 @@ class plugins extends base
 
     /**
      * Get plugins
-     *
-     * @param string $status - eg. active
-     * @return array of objects
+     * @param  string   $status - eg. active
+     * @return object[]
      */
     public static function get($status = 'active')
     {
@@ -110,6 +104,7 @@ class plugins extends base
 
     /**
      * Load plugins
+     * @return bool|null
      */
     private function load()
     {
@@ -150,6 +145,10 @@ class plugins extends base
         return $return;
     }
 
+    /**
+     * Calls the init() method on all active plugins
+     * @return null
+     */
     public function initPlugins()
     {
         $plugins = self::get('active');
@@ -160,7 +159,7 @@ class plugins extends base
 
     /**
      * Check if a plugin is active
-     * @param string $id - the id of the plugin
+     * @param  string $id - the id of the plugin
      * @return bool
      */
     public static function isActive($id)
@@ -174,8 +173,8 @@ class plugins extends base
     /**
      * Save to cache
      * @todo make this a generic minds function
-     * @param string $key
-     * @param array $data
+     * @param  string $key
+     * @param  array  $data
      * @return bool
      */
     public static function saveToCache($key, $data)
@@ -191,8 +190,8 @@ class plugins extends base
     /**
      * Get from cache
      * @todo maek this a generic minds function
-     * @param string $key
-     * @return array
+     * @param  string $key
+     * @return array|bool
      */
     public static function getFromCache($key)
     {
@@ -206,8 +205,11 @@ class plugins extends base
         return false;
     }
 
+
     /**
-     * Purge cache
+     * Purge Minds Cache
+     * @param  string $key
+     * @return bool
      */
     public static function purgeCache($key)
     {
@@ -227,9 +229,8 @@ class plugins extends base
 
     /**
      * Factory to load a plugin entity
-     * @param string/int $guid - the name of the plugin (ie. in the plugin directory)
-     * @param array $data - if passed, it will the load the plugin with settings information
-     *
+     * @param  mixed  $guid - the name of the plugin (ie. in the plugin directory)
+     * @param  array  $data - Optional. Settings information.
      * @return object
      */
      public static function factory($guid, $data = null)
