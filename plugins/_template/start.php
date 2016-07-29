@@ -17,7 +17,7 @@ class start extends Components\Plugin
     {
 
         //initialise our first api
-        Api\Factory::add('v1/{{plugin.lc_name}}', 'Minds\\Plugin\\{{plugin.name}}\\Controllers\\api\\v1\\{{plugin.name}}');
+        Api\Routes::add('v1/{{plugin.lc_name}}', 'Minds\\Plugin\\{{plugin.name}}\\Controllers\\api\\v1\\{{plugin.name}}');
 
     }
 
