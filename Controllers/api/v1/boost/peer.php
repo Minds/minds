@@ -85,6 +85,14 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
+            return Factory::response([
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => "You are not allowed to boost to @{$destination->username}'s channel"
+            ]);
+        }
+
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
           ->setType($_POST['type'])
