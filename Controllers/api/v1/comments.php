@@ -89,7 +89,7 @@ class comments implements Interfaces\Api
               ]);
             }
 
-            $comment->description = urldecode($content);
+            $comment->description = rawurldecode($content);
 
             if (isset($_POST['mature'])) {
                 $comment->setMature($_POST['mature']);
@@ -111,7 +111,7 @@ class comments implements Interfaces\Api
             }
 
             $comment = new Entities\Comment();
-            $comment->description = urldecode($_POST['comment']);
+            $comment->description = rawurldecode($_POST['comment']);
             $comment->setParent($parent);
             $comment->setMature(isset($_POST['mature']) && !!$_POST['mature']);
 
@@ -155,10 +155,10 @@ class comments implements Interfaces\Api
         $modified = false;
 
         if (!$error && isset($_POST['title']) && $_POST['title']) {
-            $comment->setTitle(urldecode($_POST['title']))
-                ->setBlurb(urldecode($_POST['description']))
-                ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
-                ->setThumbnail(urldecode($_POST['thumbnail']));
+            $comment->setTitle(rawurldecode($_POST['title']))
+                ->setBlurb(rawurldecode($_POST['description']))
+                ->setURL(\elgg_normalize_url(rawurldecode($_POST['url'])))
+                ->setThumbnail(rawurldecode($_POST['thumbnail']));
 
             $modified = true;
         }

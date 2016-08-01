@@ -202,7 +202,7 @@ class newsfeed implements Interfaces\Api
                 $message = '';
 
                 if (isset($_POST['message'])) {
-                    $message = urldecode($_POST['message']);
+                    $message = rawurldecode($_POST['message']);
                 }
 
                 /*if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
@@ -343,14 +343,14 @@ class newsfeed implements Interfaces\Api
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
 
                 if (isset($_POST['message'])) {
-                    $activity->setMessage(urldecode($_POST['message']));
+                    $activity->setMessage(rawurldecode($_POST['message']));
                 }
 
                 if (isset($_POST['title']) && $_POST['title']) {
-                    $activity->setTitle(urldecode($_POST['title']))
-                        ->setBlurb(urldecode($_POST['description']))
-                        ->setURL(\elgg_normalize_url(urldecode($_POST['url'])))
-                        ->setThumbnail(urldecode($_POST['thumbnail']));
+                    $activity->setTitle(rawurldecode($_POST['title']))
+                        ->setBlurb(rawurldecode($_POST['description']))
+                        ->setURL(\elgg_normalize_url(rawurldecode($_POST['url'])))
+                        ->setThumbnail(rawurldecode($_POST['thumbnail']));
                 }
 
                 if (isset($_POST['attachment_guid']) && $_POST['attachment_guid']) {
@@ -413,10 +413,10 @@ class newsfeed implements Interfaces\Api
                             'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? $_POST['twitter'] : false
                         ),
                         'data' => array(
-                            'message' => urldecode($_POST['message']),
-                            'perma_url'=> isset($_POST['url']) ? \elgg_normalize_url(urldecode($_POST['url'])) : \elgg_normalize_url($activity->getURL()),
-                            'thumbnail_src' =>  isset($_POST['thumbnail']) ? urldecode($_POST['thumbnail']) : null,
-                            'description' => isset($_POST['description']) ? $_POST['description'] : null
+                            'message' => rawurldecode($_POST['message']),
+                            'perma_url'=> isset($_POST['url']) ? \elgg_normalize_url(rawurldecode($_POST['url'])) : \elgg_normalize_url($activity->getURL()),
+                            'thumbnail_src' =>  isset($_POST['thumbnail']) ? rawurldecode($_POST['thumbnail']) : null,
+                            'description' => isset($_POST['description']) ? rawurldecode($_POST['description']) : null
                         )
                     ));
 
