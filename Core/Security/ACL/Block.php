@@ -59,6 +59,34 @@ class Block
     }
 
     /**
+     * Check if a user can be block
+     * @param Entities\User $user - check if this user is blocked
+     * @param mixed (Entities\User | string) - from this user
+     * @return boolean
+     */
+    public function canBlock($user, $from = null)
+    {
+        if (!$from) {
+            $from = Core\Session::getLoggedinUser();
+        }
+
+        if (!is_object($user)) {
+            $user = Entities\Factory::build($user);
+        }
+
+        // Cannot block non-users
+        if (!$user || !($user instanceof Entities\User)) {
+            return false;
+        }
+
+        if ($user->admin == 'yes') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Check if a user is blocked
      * @param Entities\User $user - check if this user is blocked
      * @param mixed (Entities\User | string) - from this user

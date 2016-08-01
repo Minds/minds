@@ -70,11 +70,20 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
 
         if (!$target || !$target->guid) {
             return Factory::response([
-                'status' => 'error'
+                'status' => 'error',
+                'message' => 'Invalid target'
             ]);
         }
 
         $block = $this->di->get('Security\ACL\Block');
+
+        if (!$block->canBlock($pages[0])) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'User cannot be blocked'
+            ]);
+        }
+
         $blocked = $block->block($pages[0]);
 
         if ($blocked) {
