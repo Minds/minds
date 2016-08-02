@@ -1,7 +1,7 @@
 <div class="m-messenger-conversation m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="conversation.open">
   <div class="m-messenger-dockpane-tab mdl-color-text--blue-grey-100"
     [class.mdl-color--amber]="conversation.unread"
-    (click)="dockpanes.toggle(conversation); load(null,null, true);">
+    (click)="dockpanes.toggle(conversation); initialLoad()">
     <div class="m-messenger-dockpane-tab-title">
       <span *ngFor="let participant of conversation.participants">{{participant.username}}</span>
     </div>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="m-messenger-conversation-encryption-lock" *ngIf="!showMessages">
-      <minds-messenger-encryption (on)="load(null, null, true); showMessages = true;"></minds-messenger-encryption>
+      <minds-messenger-encryption (on)="initialLoad(); showMessages = true;"></minds-messenger-encryption>
     </div>
 
     <div class="m-messenger-conversation-messages" *ngIf="showMessages"

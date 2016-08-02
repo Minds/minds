@@ -82,7 +82,7 @@ export class MessengerConversation {
     if(this.conversation.messages){
       this.messages = this.conversation.messages;
     } else if(this.encryption.isOn() && this.conversation.open) {
-      this.load();
+      this.initialLoad();
     } else if(!this.encryption.isOn()) {
       this.showMessages = false;
     }
@@ -91,6 +91,10 @@ export class MessengerConversation {
 
   ngOnDestroy(){
     this.unListen();
+  }
+
+  initialLoad() {
+    this.load({ limit: 10 });
   }
 
   load(opts: any = {}){
