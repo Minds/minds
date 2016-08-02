@@ -476,12 +476,31 @@ class newsfeed implements Interfaces\Api
     public function delete($pages)
     {
         $activity = new Entities\Activity($pages[0]);
+
         if (!$activity->guid) {
             return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
         }
 
         if (!$activity->canEdit()) {
             return Factory::response(array('status'=>'error', 'message'=>'you don\'t have permission'));
+        }
+
+        $owner = $activity->getOwnerEntity();
+
+        if (
+            $activity->entity_guid &&
+            in_array($activity->custom_type, ['batch', 'video'])
+        ) {
+            // Delete attachment object
+            try {
+                $attachment = Entities\Factory::build($activity->entity_guid);
+
+                if ($attachment && $owner->guid == $attachment->owner_guid) {
+                    $attachment->delete();
+                }
+            } catch (\Exception $e) {
+                error_log("Cannot delete attachment: {$activity->entity_guid}");
+            }
         }
 
         if ($activity->delete()) {
