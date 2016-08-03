@@ -35,7 +35,8 @@ class languages implements Interfaces\Api, Interfaces\ApiIgnorePam
         $result = $languages->getLanguages($target, $preferred);
 
         return Factory::response([
-            'languages' => $result
+            'languages' => $result,
+            'userDefault' =>  $user->defaultLang ?: null
         ]);
     }
 
