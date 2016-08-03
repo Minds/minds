@@ -65,7 +65,11 @@
       <div class="m-group-info-name mdl-color-text--blue-grey-800">
 
         <div [hidden]="editing || !group.name">
-          <h1>{{group.name}}</h1>
+          <h1>
+            <a class="m-isomorphic-link" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]">
+              {{group.name}}
+            </a>
+          </h1>
         </div>
 
         <div *ngIf="editing && group['is:owner']">
