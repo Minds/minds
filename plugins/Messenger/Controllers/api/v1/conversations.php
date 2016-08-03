@@ -170,6 +170,8 @@ class conversations implements Interfaces\Api
         $emit = $response['message'];
         unset($emit['message']);
 
+        $emit['localClientId'] = isset($_POST['localClientId']) ? $_POST['localClientId'] : null;
+
         try {
             (new Sockets\Events())
               ->setRoom($conversation->buildSocketRoomName())
