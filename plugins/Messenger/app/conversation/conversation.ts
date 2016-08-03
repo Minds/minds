@@ -36,13 +36,14 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
 })
 
 export class MessengerConversation {
-
   minds: Minds = window.Minds;
   session = SessionFactory.build();
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
   dockpanes = MessengerConversationDockpanesFactory.build();
   sounds  = new MessengerSounds();
+
+  localClientId: string;
 
   guid : string;
   conversation;
@@ -75,7 +76,8 @@ export class MessengerConversation {
   blocked: boolean = false;
   unavailable: boolean = false;
 
-  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
+  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef) {
+    this.buildLocalClientId();
   }
 
   ngOnInit(){
@@ -158,14 +160,24 @@ export class MessengerConversation {
         if (guid != this.conversation.guid)
           return;
 
-        if (this.session.getLoggedInUser().guid == message.ownerObj.guid)
-          return;
+        let fromSelf = false;
+
+        if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
+          if (this.localClientId == message.localClientId) {
+            return;
+          }
+
+          fromSelf = true;
+        }
 
         this.load({ finish: message.guid });
-        if(!this.focused && document.title.indexOf('\u2022') == -1)
-          document.title = "\u2022 " + document.title;
 
-        this.sounds.play('new');
+        if (!fromSelf) {
+          if(!this.focused && document.title.indexOf('\u2022') == -1)
+            document.title = "\u2022 " + document.title;
+
+          this.sounds.play('new');
+        }
       });
 
       this.socketSubscriptions.clearConversation = this.sockets.subscribe('clearConversation', (guid, actor) => {
@@ -230,7 +242,8 @@ export class MessengerConversation {
 
     this.client.post('api/v2/conversations/' + this.conversation.guid, {
         message: this.message,
-        encrypt: true
+        encrypt: true,
+        localClientId: this.localClientId
       })
       .then((response: any) => {
         if (response.message) {
@@ -331,4 +344,7 @@ export class MessengerConversation {
     this.focused = false;
   }
 
+  buildLocalClientId() {
+    this.localClientId = (Math.random() + 1).toString(36).substring(7);
+  }
 }
