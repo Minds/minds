@@ -13,6 +13,8 @@ Please report all security issues to security@minds.com.
 
 AGPLv3. Please see the license file of each repository.
 
+Minds is an extension of [Elgg](https://elgg.org).
+
 ## Repositories
 
 Minds is split into multiple components:
