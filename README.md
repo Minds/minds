@@ -6,8 +6,12 @@ Backend system for Minds. Please run inside of [the minds repo](https://github.c
 ### Building
 
 - `composer install`
+- 
 
 ### Contributing
+
+### Security reports
+Please report all security issues to security@minds.com. 
 
 #### Bug reports
 Bug reports should be prefixed with `(bug): ` and include as much information as possible. Please use the search tool first to avoid duplicates.
