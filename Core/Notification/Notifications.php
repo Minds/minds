@@ -43,14 +43,6 @@ class Notifications
      */
     public function getCount(array $options = [])
     {
-
-        // FIXME: [emi] In legacy code this is defaulted to true, but the operation is commented out
-        $cache = isset($options['cache']) ? $options['cache'] : false;
-
-        if ($cache) {
-            return $this->user->notifications_count;
-        }
-
         return Counters::get($this->user, 'notifications:count', false);
     }
 
@@ -61,17 +53,6 @@ class Notifications
      */
     public function increaseCounter()
     {
-        try {
-            elgg_set_ignore_access(true);
-
-            $this->user->notifications_count++;
-            $this->user->save();
-
-            elgg_set_ignore_access(false);
-        } catch (Exception $e) {
-            // NOOP
-        }
-
         Counters::increment($this->user, 'notifications:count');
     }
 
@@ -82,17 +63,6 @@ class Notifications
      */
     public function resetCounter()
     {
-        try {
-            elgg_set_ignore_access(true);
-
-            $this->user->notifications_count = 0;
-            $this->user->save();
-
-            elgg_set_ignore_access(false);
-        } catch (Exception $e) {
-            // NOOP
-        }
-
         Counters::clear($this->user, 'notifications:count');
     }
 
