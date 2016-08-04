@@ -6,6 +6,9 @@ ___Copyright 2016___
 ## Introduction
 An open-source, encrypted and reward-based social networking platform. https://minds.com | https://minds.org
 
+## Security reports
+Please report all security issues to security@minds.com. 
+
 ## License
 
 AGPLv3. Please see the license file of each repository.
