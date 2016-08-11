@@ -43,7 +43,7 @@ class Router
         $segments = explode('/', $route);
         $method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
 
-        if ($method == 'post' && !$_POST) {
+        if ($method == 'post') {
             $this->postDataFix();
         }
 
