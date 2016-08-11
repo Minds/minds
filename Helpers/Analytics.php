@@ -57,6 +57,9 @@ class Analytics
             $ts = time();
         }
         switch ($reference) {
+          case "hour":
+            return $ts - ($ts % 3600);
+            break;
           case "day":
             $reference = "midnight";
             break;
