@@ -2,6 +2,7 @@
     "name": "minds/minds",
     "description": "The core minds social engine",
     "require": {
+        "aws/aws-sdk-php": "^2.8",
         "braintree/braintree_php": "3.5.0",
         "bshaffer/oauth2-server-php": "1.7",
         "duoshuo/php-cassandra": "dev-master#8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
