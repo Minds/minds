@@ -3,7 +3,7 @@
  * A simple factory
  */
 
-namespace Minds\Plugin\Archive\Core\Services;
+namespace Minds\plugin\archive\Core\Services;
 
 class Factory
 {
@@ -17,7 +17,7 @@ class Factory
     public static function build($service)
     {
         $service = ucfirst($service);
-        $class = "Minds\\Plugin\\Archive\\Core\\Services\\$service";
+        $class = "Minds\\plugin\\archive\\Core\\Services\\$service";
         if (class_exists($class)) {
             return new $class;
         }

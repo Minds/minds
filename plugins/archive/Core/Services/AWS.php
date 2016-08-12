@@ -3,7 +3,7 @@
  * Minds Archive AWS Service
  */
 
-namespace Minds\Plugin\Archive\Core\Services;
+namespace Minds\plugin\archive\Core\Services;
 
 use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
@@ -43,14 +43,15 @@ class AWS implements ServiceInterface
     {
         try {
             if (is_string($file)) {
-
+                
                 $result =  $this->s3->putObject([
                   'ACL' => 'public-read',
                   'Bucket' => 'cinemr',
                   'Key' => "$this->dir/$this->key/source",
-                  'ContentLength' => $_SERVER['CONTENT_LENGTH'],
+                  //'ContentLength' => $_SERVER['CONTENT_LENGTH'],
+                  //'ContentLength' => filesize($file),
                   'Body' => fopen($file, 'r'),
-                ]);
+                  ]);
                 return $this;
 
             } elseif (is_resource($file)) {

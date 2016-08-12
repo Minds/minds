@@ -11,7 +11,7 @@ use Minds\Entities\Object;
 use cinemr;
 use Minds\Helpers;
 
-use Minds\Plugin\Archive\Core\Services\Factory;
+use Minds\plugin\archive\Core\Services\Factory;
 
 class video extends object
 {
