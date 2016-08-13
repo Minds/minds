@@ -135,13 +135,13 @@ class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam
         $options['guids'] = $guids;
  
         $entities = Core\Entities::get($options);
-        $boost = Core\Boost\Factory::build("Suggested")->getBoost();
+        /*$boost = Core\Boost\Factory::build("Suggested")->getBoost();
         if ($boost && $boost['guid']) {
             $boost_guid = $boost['guid'];
             $boost_object = entities\Factory::build($boost_guid);
             $boost_object->boosted = true;
             array_splice($entities, 2, 0, array($boost_guid => $boost_object));
-        }
+        }*/
 
         $diff = microtime(true) - $ts;
         //error_log("loaded suggested entities in $diff");
