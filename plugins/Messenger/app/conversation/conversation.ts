@@ -1,4 +1,4 @@
-import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Renderer, ViewChild } from '@angular/core';
 import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
@@ -43,7 +43,7 @@ export class MessengerConversation {
   dockpanes = MessengerConversationDockpanesFactory.build();
   sounds  = new MessengerSounds();
 
-  localClientId: string;
+  tabId: string;
 
   guid : string;
   conversation;
@@ -76,8 +76,8 @@ export class MessengerConversation {
   blocked: boolean = false;
   unavailable: boolean = false;
 
-  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef) {
-    this.buildLocalClientId();
+  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer) {
+    this.buildTabId();
   }
 
   ngOnInit(){
@@ -163,7 +163,7 @@ export class MessengerConversation {
         let fromSelf = false;
 
         if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
-          if (this.localClientId == message.localClientId) {
+          if (this.tabId == message.tabId) {
             return;
           }
 
@@ -243,7 +243,7 @@ export class MessengerConversation {
     this.client.post('api/v2/conversations/' + this.conversation.guid, {
         message: this.message,
         encrypt: true,
-        localClientId: this.localClientId
+        tabId: this.tabId
       })
       .then((response: any) => {
         if (response.message) {
@@ -344,7 +344,7 @@ export class MessengerConversation {
     this.focused = false;
   }
 
-  buildLocalClientId() {
-    this.localClientId = (Math.random() + 1).toString(36).substring(7);
+  buildTabId() {
+    this.tabId = (Math.random() + 1).toString(36).substring(7);
   }
 }
