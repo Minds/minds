@@ -4,7 +4,7 @@
  */
 
 /**
- * The time with microseconds when the Elgg engine was started.
+ * The time with microseconds when the Minds engine was started.
  *
  * @global float
  */

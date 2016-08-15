@@ -4,7 +4,6 @@ if (!defined('__MINDS_ROOT__')) {
 }
 // prep core classes to be autoloadable
 spl_autoload_register('_minds_autoload');
-//elgg_register_classes(dirname(__FILE__) . '/legacy/classes');
 
 /**
  * Autoload classes
