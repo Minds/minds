@@ -76,14 +76,6 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
         }
 
         $block = $this->di->get('Security\ACL\Block');
-
-        if (!$block->canBlock($pages[0])) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'User cannot be blocked'
-            ]);
-        }
-
         $blocked = $block->block($pages[0]);
 
         if ($blocked) {

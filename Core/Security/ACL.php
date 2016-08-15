@@ -163,6 +163,13 @@ class ACL
       }
 
       /**
+       * Is this user an admin?
+       */
+      if ($user->isAdmin()) {
+          return true;
+      }
+
+      /**
        * Allow plugins to extend the ACL check
        */
       if (Core\Events\Dispatcher::trigger('acl:interact', $entity->type, array('entity'=>$entity, 'user'=>$user), null) === false) {
