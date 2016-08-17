@@ -102,7 +102,7 @@ class newsfeed implements Interfaces\Api
 
         //daily campaign reward
         if (Core\Session::isLoggedIn()) {
-            Helpers\Campaigns\DailyRewards::reward();
+            Helpers\Campaigns\HourlyRewards::reward();
         }
 
         $activity = Core\Entities::get(array_merge(array(
