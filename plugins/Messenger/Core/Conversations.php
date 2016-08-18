@@ -42,7 +42,7 @@ class Conversations
 
         $prepared = new Cassandra\Prepared\Custom();
         $prepared->query("SELECT * from entities_by_time WHERE key=:row LIMIT :size", [
-          'row' => "object:gathering:conversations:{$this->user->guid}",
+          'row' => "{$this->db->getPrefix()}object:gathering:conversations:{$this->user->guid}",
           'size' => 10000
         ]);
 
