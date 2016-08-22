@@ -140,7 +140,7 @@ class ACL
      */
     public function interact($entity, $user = null)
     {
-        if (!$user) {
+        if (!$user || !is_object($user)) {
             $user = Core\Session::getLoggedinUser();
         }
 
