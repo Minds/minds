@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CORE_DIRECTIVES } from '@angular/common';
 import { Router } from '@angular/router-deprecated';
 
-import { MindsVideo } from '../../../../components/video';
+import { MindsVideo, VideoAds } from '../../../../components/video';
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
@@ -10,7 +10,6 @@ import { Material } from '../../../../directives/material';
 
 @Component({
   selector: 'minds-archive-theatre',
-
   inputs: ['_object: object'],
   template: `
     <i class="material-icons left"
@@ -28,8 +27,11 @@ import { Material } from '../../../../directives/material';
 	    [muted]="false"
 	    [src]="[{ 'uri': object.src['720.mp4'] }, { 'uri': object.src['360.mp4'] }]"
         [log]="object.guid"
-        [playCount]="false">
+        [playCount]="false"
+        #player>
+        <video-ads [player]="player" style='display:block'></video-ads>
       </minds-video>
+
     </div>
     <i class="material-icons right"
       (click)="next()"
@@ -38,7 +40,7 @@ import { Material } from '../../../../directives/material';
     </i>
     <ng-content></ng-content>
   `,
-  directives: [ CORE_DIRECTIVES, MindsVideo, Material ]
+  directives: [ CORE_DIRECTIVES, MindsVideo, Material, VideoAds ]
 })
 
 export class ArchiveTheatre {
