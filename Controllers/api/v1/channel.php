@@ -51,7 +51,7 @@ class channel implements Interfaces\Api
             'large' => $user->getIconURL('large'),
             'master' => $user->getIconURL('master')
         );
-        
+
         $response['channel']['briefdescription'] = $response['channel']['briefdescription'] ?: '';
         $response['channel']['city'] = $response['channel']['city'] ?: "";
         $response['channel']['gender'] = $response['channel']['gender'] ?: "";
@@ -189,7 +189,8 @@ class channel implements Interfaces\Api
                     return Factory::response(array('status'=>'error'));
                 }
                 $update = array();
-                foreach (array('name', 'website', 'briefdescription', 'gender', 'dob', 'city', 'coordinates') as $field) {
+                foreach (['name', 'website', 'briefdescription', 'gender',
+                  'dob', 'city', 'coordinates', 'monetized'] as $field) {
                     if (isset($_POST[$field])) {
                         $update[$field] = $_POST[$field];
                         $owner->$field = $_POST[$field];
