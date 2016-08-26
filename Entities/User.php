@@ -10,6 +10,13 @@ use Minds\Helpers;
  */
 class User extends \ElggUser
 {
+    protected function initializeAttributes() {
+        $this->attributes['mature'] = 0;
+        $this->attributes['social_profiles'] = [];
+
+        parent::initializeAttributes();
+    }
+
     /**
      * Sets the `mature` flag
      * @param  bool|int $value
@@ -56,6 +63,42 @@ class User extends \ElggUser
             return $this->email;
         }
         return Helpers\OpenSSL::decrypt(base64_decode($this->email), file_get_contents($CONFIG->encryptionKeys['email']['private']));
+    }
+
+    /**
+     * Sets (overrides) social profiles information
+     * @return $this
+     */
+    public function setSocialProfiles(array $social_profiles)
+    {
+        $this->social_profiles = $social_profiles;
+        return $this;
+    }
+
+    /**
+     * Sets (or clears) a single social profile
+     * @return $this
+     */
+    public function setSocialProfile($key, $value = null)
+    {
+        if ($value === null || $value === '') {
+            if (isset($this->social_profiles[$key])) {
+                unset($this->social_profiles[$key]);
+            }
+        } else {
+            $this->social_profiles[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns all set social profiles
+     * @return array
+     */
+    public function getSocialProfiles()
+    {
+        return $this->social_profiles ?: [];
     }
 
     /**
@@ -252,7 +295,9 @@ class User extends \ElggUser
             'boostProPlus',
             'fb',
             'mature',
-            'signup_method'
+            'monetized',
+            'signup_method',
+            'social_profiles'
         ));
     }
 }

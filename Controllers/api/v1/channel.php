@@ -196,6 +196,40 @@ class channel implements Interfaces\Api
                     }
                 }
 
+                if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
+                    $allowedKeys = [
+                        'minds',
+                        'facebook',
+                        'twitter',
+                        'youtube_user',
+                        'youtube_channel',
+                        'soundcloud',
+                        'reddit',
+                        'linkedin',
+                    ];
+                    $profiles = [];
+
+                    foreach ($_POST['social_profiles'] as $profile) {
+                        if (!isset($profile['key']) || !isset($profile['value'])) {
+                            continue;
+                        }
+
+                        $key = $profile['key'];
+                        $value = $profile['value'];
+                        
+                        if (!in_array($key, $allowedKeys) || !$value || !is_string($value)) {
+                            continue;
+                        }
+
+                        $profiles[] = [
+                            'key' => $profile['key'],
+                            'value' => $profile['value'],
+                        ];
+                    }
+
+                    $owner->setSocialProfiles($profiles);
+                }
+
                 if (isset($_POST['coordinates'])) {
                     //update neo4j with our coordinates
                     $prepared = new Core\Data\Neo4j\Prepared\Common();
