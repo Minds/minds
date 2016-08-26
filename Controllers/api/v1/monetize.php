@@ -59,6 +59,12 @@ class monetize implements Interfaces\Api
         $entity->monetized = true;
         $entity->save();
 
+        $db = new Core\Data\Call('entities_by_time');
+        $e = new Core\Data\Call('entities');
+        foreach ($db->getRow("activity:entitylink:$entity->guid") as $guid => $ts) {
+            $e->insert($guid, ['monetized' => true]);
+        }
+
         return Factory::response(array());
     }
 
@@ -78,6 +84,12 @@ class monetize implements Interfaces\Api
 
         $entity->monetized = false;
         $entity->save();
+
+        $db = new Core\Data\Call('entities_by_time');
+        $e = new Core\Data\Call('entities');
+        foreach ($db->getRow("activity:entitylink:$entity->guid") as $guid => $ts) {
+            $e->insert($guid, ['monetized' => false]);
+        }
 
         return Factory::response(array());
     }
