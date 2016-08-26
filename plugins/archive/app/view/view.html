@@ -50,6 +50,7 @@
       </minds-button-edit>
 
       <minds-button-feature [object]="entity" *ngIf="session.isAdmin()"></minds-button-feature>
+      <minds-button-monetize [object]="entity" *ngIf="session.getLoggedInUser().monetized"></minds-button-monetize>
 
       <div class="mdl-layout-spacer"></div>
       <minds-button-remind [object]="entity"></minds-button-remind>

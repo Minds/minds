@@ -140,7 +140,8 @@ class video extends object
         return array_merge(parent::getExportableValues(), array(
           'thumbnail',
                 'cinemr_guid',
-                'license'
+                'license',
+                'monetized'
             ));
     }
 

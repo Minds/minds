@@ -29,7 +29,7 @@ import { Material } from '../../../../directives/material';
         [log]="object.guid"
         [playCount]="false"
         #player>
-        <video-ads [player]="player" style='display:block'></video-ads>
+        <video-ads [player]="player" *ngIf="object.monetized"></video-ads>
       </minds-video>
 
     </div>
