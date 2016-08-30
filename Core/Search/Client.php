@@ -17,8 +17,8 @@ class Client extends \Elasticsearch\Client
         }
 
         $opts = array_merge([
-      'hosts' => $hosts
-    ], $opts);
+          'hosts' => $hosts
+        ], $opts);
 
         parent::__construct($opts);
     }
