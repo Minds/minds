@@ -180,7 +180,7 @@ class Documents
             'text' => $query,
             'completion' => [
               'field' => 'suggest',
-              'fuzzy' => [ 'fuzziness' => 2 ]
+             // 'fuzzy' => [ 'fuzziness' => 2 ]
             ]
           ]
         ]
@@ -254,8 +254,20 @@ class Documents
       if($body['type'] == 'user'){
         $body['suggest'] = [
           'input' => [ $body['username'], $body['name'] ],
-          'output' => "@{$body['username']}"
+          'output' => "@{$body['username']}",
+          'weight' => 1,
+          'payload' => [
+            'guid' => $body['guid'],
+            'name' => $body['name'],
+            'username' => $body['username']
+          ]
         ];
+        if($body['featured_id']){
+            $body['suggest']['weight'] += 50;
+        }
+        if($body['admin']){
+            $body['suggest']['weight'] += 100;
+        }
       }
 
       return $body;

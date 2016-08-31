@@ -23,8 +23,6 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        (new Documents())->index(new \Minds\Entities\User('mark'));
-        //(new Documents())->setupSuggestedMappings();
         $suggestions = (new Documents())->suggestQuery($_GET['q']);
 
         $response['suggestions'] = $suggestions['suggestion'][0]['options'];
