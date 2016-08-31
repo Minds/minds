@@ -290,6 +290,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if ($activity_post) {
             Core\Events\Dispatcher::trigger('social', 'dispatch', array(
+              'entity' => $entity,
               'services' => array(
                   'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
                   'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? true : false

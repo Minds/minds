@@ -30,7 +30,7 @@ class start extends Components\Plugin
                 '/plugin/social/authorize' => "$path\\pages\\authorize"
                 ));
 
-        Core\Events\Dispatcher::register('social', 'dispatch', array($this, 'dispatch'));
+        // Core\Events\Dispatcher::register('social', 'dispatch', array($this, 'dispatch'));
 
         \elgg_register_event_handler('pagesetup', 'system', array($this, 'pageSetup'));
         //\elgg_register_event_handler('create', 'activity', array($this, 'postHook'));
