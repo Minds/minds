@@ -3,7 +3,7 @@
  * Facebook integration
  */
 
-namespace Minds\Core\ThirdPartyNetworks;
+namespace Minds\Core\ThirdPartyNetworks\Networks;
 
 use Minds\Core;
 use Minds\Core\Data;
@@ -12,15 +12,13 @@ use Facebook\Facebook as FacebookSDK;
 
 class Facebook implements NetworkInterface
 {
-    private $db;
     private $fb;
     private $credentials = [];
 
     private $data = [];
 
-    public function __construct($db = null, $fb = null)
+    public function __construct($fb = null)
     {
-        $this->db = $db ?: new Data\Call('entities_by_time');
         $this->fb = $fb ?: new FacebookSDK([
           'app_id' => Core\Config::_()->facebook['app_id'],
           'app_secret' => Core\Config::_()->facebook['app_secret'],
@@ -35,11 +33,12 @@ class Facebook implements NetworkInterface
      */
     public function setApiCredentials($credentials = [])
     {
-        $data = [
-          'facebook:uuid' => $credentials['uuid'],
-          'facebook:access_token' => $credentials['access_token'],
-        ];
-        $this->db->insert(Core\Session::getLoggedInUser()->guid . ":thirdpartynetworks:credentials", $data);
+        Core\Di\Di::_()->get('ThirdPartyNetworks\Credentials')
+            ->set(Core\Session::getLoggedInUser()->guid, 'facebook', [
+                'uuid' => $credentials['uuid'],
+                'access_token' => $credentials['access_token']
+            ]);
+        
         return $this;
     }
 
@@ -49,7 +48,12 @@ class Facebook implements NetworkInterface
      */
     public function dropApiCredentials()
     {
-        $this->db->removeAttributes(Core\Session::getLoggedInUser()->guid . ":thirdpartynetworks:credentials", ['facebook:uuid', 'facebook:access_token']);
+        Core\Di\Di::_()->get('ThirdPartyNetworks\Credentials')
+            ->drop(Core\Session::getLoggedInUser()->guid, 'facebook', [
+                'uuid',
+                'access_token'
+            ]);
+        
         return $this;
     }
 
@@ -59,13 +63,12 @@ class Facebook implements NetworkInterface
      */
     public function getApiCredentials()
     {
-        $data = $this->db->getRow(Core\Session::getLoggedInUser()->guid . ":thirdpartynetworks:credentials");
-        if (isset($data['facebook:uuid'])) {
-            $this->credentials['uuid'] = $data['facebook:uuid'];
-        }
-        if (isset($data['facebook:access_token'])) {
-            $this->credentials['access_token'] = $data['facebook:access_token'];
-        }
+        $this->credentials = Core\Di\Di::_()->get('ThirdPartyNetworks\Credentials')
+            ->get(Core\Session::getLoggedInUser()->guid, 'facebook', [
+                'uuid',
+                'access_token'
+            ]);
+        
         return $this;
     }
 
@@ -85,7 +88,11 @@ class Facebook implements NetworkInterface
             $entity = new Entities\Activity($entity->remind_object);
         }
 
-        //$this->data['message'] = $entity->message;
+        if ($entity->title) {
+            $this->data['message'] = $entity->title;
+        } elseif ($entity->message) {
+            $this->data['message'] = $entity->message;
+        }
 
         if ($entity->perma_url) {
             $this->data = array_merge($this->data, [
@@ -104,13 +111,24 @@ class Facebook implements NetworkInterface
                 $this->data['url'] = $entity->custom_data[0]['src'];
             }
 
+            if (isset($this->data['message'])) {
+                $this->data['caption'] = $this->data['message'];
+                unset($this->data['message']);
+            }
+
             $this->fb->post("/{$this->credentials['uuid']}/photos", $this->data, $this->credentials['access_token']);
             return true;
         }
 
         //Custom video posts
         if ($entity->custom_type == 'video') {
-            $this->title = $entity->title;
+
+            if (isset($this->data['message'])) {
+                $this->data['description'] = $this->data['message'];
+                unset($this->data['message']);
+            }
+
+            $this->data['title'] = $entity->title;
             $this->data['file_url'] = Core\Config::_()->site_url . "/api/v1/archive/{$entity->custom_data['guid']}/play";
             $this->fb->post("/{$this->credentials['uuid']}/videos", $this->data, $this->credentials['access_token']);
             return true;
@@ -118,6 +136,17 @@ class Facebook implements NetworkInterface
 
         $this->fb->post("/{$this->credentials['uuid']}/feed", $this->data, $this->credentials['access_token']);
         return true;
+    }
+
+    /**
+     * Export API information for end-user displaying
+     * @return array
+     */
+    public function export()
+    {
+        return [
+            'connected' => isset($this->credentials['access_token']) && $this->credentials['access_token']
+        ];
     }
 
     /**

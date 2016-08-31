@@ -94,6 +94,11 @@ $CONFIG->set('facebook', [
     'app_secret' => '{{facebook-app-secret}}'
 ]);
 
+$CONFIG->set('twitter', [
+    'app_id' => '{{twitter-app-id}}',
+    'app_secret' => '{{twitter-app-id}}'
+]);
+
 $CONFIG->set('twilio', [
     'account_sid' => '{{twilio-account-sid}}',
     'auth_token' => '{{twilio-auth-token}}',

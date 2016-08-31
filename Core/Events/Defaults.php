@@ -68,6 +68,9 @@ class Defaults
         // Search events
         (new Core\Search\Events())->init();
         (new Core\Events\Hooks\Register())->init();
+
+        // Third-Party Networks events
+        (new Core\ThirdPartyNetworks\Events())->register();
     }
 
     public static function _()

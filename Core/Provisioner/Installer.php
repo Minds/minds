@@ -28,6 +28,8 @@ class Installer
             'elasticsearch-prefix' => 'mehmac_',
             'facebook-app-id' => '',
             'facebook-app-secret' => '',
+            'twitter-app-id' => '',
+            'twitter-app-secret' => '',
             'twilio-account-sid' => '',
             'twilio-auth-token' => '',
             'twilio-from' => '',

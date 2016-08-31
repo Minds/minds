@@ -21,7 +21,8 @@
         "videlalvaro/php-amqplib": "dev-master@dev",
         "vscn/cruftflake": "dev-master#cab1b9ee9869072e7a58a1eb593b602ec5bedcd3",
         "zircote/swagger-php": "2.*@dev",
-        "mongodb/mongodb": "^1.0.0"
+        "mongodb/mongodb": "^1.0.0",
+        "abraham/twitteroauth": "^0.6.4"
     },
     "repositories": [
         {

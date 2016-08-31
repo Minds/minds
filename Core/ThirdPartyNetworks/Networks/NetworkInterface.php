@@ -3,7 +3,7 @@
  * Third party network interface
  */
 
-namespace Minds\Core\ThirdPartyNetworks;
+namespace Minds\Core\ThirdPartyNetworks\Networks;
 
 interface NetworkInterface
 {
@@ -34,4 +34,10 @@ interface NetworkInterface
      * @return $this
      */
     public function schedule($timestamp);
+
+    /**
+     * Export API information for end-user displaying
+     * @return array
+     */
+    public function export();
 }

@@ -408,6 +408,7 @@ class newsfeed implements Interfaces\Api
                 if ($guid = $activity->save()) {
                     Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 10, $guid, 'Post');
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
+                        'entity' => $activity,
                         'services' => array(
                             'facebook' => isset($_POST['facebook']) && $_POST['facebook'] ? $_POST['facebook'] : false,
                             'twitter' => isset($_POST['twitter']) && $_POST['twitter'] ? $_POST['twitter'] : false

@@ -15,10 +15,10 @@ class Factory
     public static function build($handler, $options = array())
     {
         $handler = ucfirst($handler);
-        $handler = "Minds\\Core\\ThirdPartyNetworks\\$handler";
+        $handler = "Minds\\Core\\ThirdPartyNetworks\\Networks\\$handler";
         if (class_exists($handler)) {
             $class = new $handler($options);
-            if ($class instanceof NetworkInterface) {
+            if ($class instanceof Networks\NetworkInterface) {
                 return $class;
             }
         }

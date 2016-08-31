@@ -38,6 +38,8 @@ class settings implements Interfaces\Api
         $response['channel'] = $user->export();
         $response['channel']['email'] = $user->getEmail();
 
+        $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
+
         return Factory::response($response);
     }
 
