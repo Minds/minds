@@ -31,7 +31,16 @@ class DocumentsSpec extends ObjectBehavior
           'featured_id' => null,
           'admin' => null,
           'suggest' => [
-            'input' => [ 'mark', 'MarkEdward Harding', 'Mark', 'Edward', 'Harding'],
+            'input' => [
+              'mark',
+              'MarkEdward Harding',
+              'Mark Edward Harding',
+              'Mark Harding Edward',
+              'Edward Mark Harding',
+              'Edward Harding Mark',
+              'Harding Mark Edward',
+              'Harding Edward Mark'
+            ],
             'output' => "@mark",
             'weight' => 1,
             'payload' => [

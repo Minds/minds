@@ -254,20 +254,11 @@ class Documents
       if($body['type'] == 'user'){
         $inputs = [ $body['username'], $body['name'] ];
         //split out the name based on CamelCase
-        $inputs = array_unique(
-          array_merge(
-            $inputs,
-            preg_split(
-              '/([\s])?(?=[A-Z])/',
-              $body['name'],
-              -1,
-              PREG_SPLIT_NO_EMPTY
-            )
-          )
-        );
+        $nameParts = preg_split('/([\s])?(?=[A-Z])/', $body['name'], -1, PREG_SPLIT_NO_EMPTY);
+        $inputs = array_unique(array_merge($inputs, $this->permutateInputs($nameParts)));
 
         $body['suggest'] = [
-          'input' => $inputs,
+          'input' => array_values($inputs),
           'output' => "@{$body['username']}",
           'weight' => 1,
           'payload' => [
@@ -285,6 +276,22 @@ class Documents
       }
 
       return $body;
+  }
+
+  protected function permutateInputs($inputs)
+  {
+      if (count($inputs) === 1) {
+          return $inputs;
+      }
+
+      $result = [];
+      foreach ($inputs as $key => $item) {
+          foreach ($this->permutateInputs(array_diff_key($inputs, [$key => $item])) as $p) {
+              $result[] = "$item $p";
+          }
+      }
+
+      return $result;
   }
 
   /**
