@@ -252,8 +252,22 @@ class Documents
       }
 
       if($body['type'] == 'user'){
+        $inputs = [ $body['username'], $body['name'] ];
+        //split out the name based on CamelCase
+        $inputs = array_unique(
+          array_merge(
+            $inputs,
+            preg_split(
+              '/([\s])?(?=[A-Z])/',
+              $body['name'],
+              -1,
+              PREG_SPLIT_NO_EMPTY
+            )
+          )
+        );
+
         $body['suggest'] = [
-          'input' => [ $body['username'], $body['name'] ],
+          'input' => $inputs,
           'output' => "@{$body['username']}",
           'weight' => 1,
           'payload' => [
