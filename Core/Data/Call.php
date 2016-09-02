@@ -45,7 +45,7 @@ class Call
     private function ini()
     {
         try {
-            $this->pool = Pool::build($this->keyspace, $this->servers, null, 2);
+            $this->pool = Pool::build($this->keyspace, $this->servers, 1, 2);
             if ($this->cf_name) {
                 $this->cf = $this->getCf($this->cf_name);
             }
