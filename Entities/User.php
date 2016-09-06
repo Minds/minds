@@ -253,6 +253,11 @@ class User extends \ElggUser
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
         }
+
+        if (is_string($export['social_profiles'])) {
+            $export['social_profiles'] = json_decode($export['social_profiles']);
+        }
+
         return $export;
     }
 
