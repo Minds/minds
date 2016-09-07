@@ -44,7 +44,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
              if (!$boosts) {
                  $cacher = Core\Data\cache\factory::build('apcu');
                  $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
-                 $guids = Core\Data\indexes::fetch('trending:image', ['offset'=> $offset, 'limit'=> 12]);
+                 $guids = Core\Data\indexes::fetch('object:image:featured', ['offset'=> $offset, 'limit'=> 12]);
                  if (!$guids) {
                      break;
                  }
@@ -83,7 +83,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                  if (count($response['boosts']) < 5) {
                      $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", "");
                  } else {
-                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", key(array_slice($guids, -1, 1, TRUE )));
+                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", end($entities)->guid);
                  }
              }
         }
