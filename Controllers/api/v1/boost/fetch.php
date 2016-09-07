@@ -43,36 +43,47 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
              }
              if (!$boosts) {
                  $cacher = Core\Data\cache\factory::build('apcu');
-                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
-                 $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> 12]);
+                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
+                 $guids = Core\Data\indexes::fetch('trending:image', ['offset'=> $offset, 'limit'=> 12]);
                  if (!$guids) {
                      break;
                  }
-                 $blogs = Core\Entities::get(['guids'=>$guids]);
-                 usort($blogs, function ($a, $b) {
+                 $entities = Core\Entities::get(['guids'=>$guids]);
+                 usort($entities, function ($a, $b) {
                      if ((int)$a->featured_id == (int) $b->featured_id) {
                          return 0;
                      }
                      return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
                  });
-                 foreach ($blogs as $blog) {
-                     $boostObj = new Entities\Activity();
-                     $boostObj->guid = $blog->guid;
-                     $boostObj->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
-                     $boostObj->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
-                     $boost = $boostObj->setTitle($blog->title)
-                          ->setBlurb(strip_tags($blog->description))
-                          ->setURL($blog->getURL())
-                          ->setThumbnail($blog->getIconUrl())
-                          ->setFromEntity($blog)
-                          ->export();
-                     $boost['boosted'] = true;
-                     $response['boosts'][] = $boost;
+                 foreach ($entities as $entity) {
+                      $boost = new Entities\Activity();
+                      $boost->guid = $entity->guid;
+                      $boost->owner_guid = $entity->owner_guid;
+                      $boost->{'thumbs:up:user_guids'} = $entity->{'thumbs:up:user_guids'};
+                      $boost->{'thumbs:down:user_guids'} = $entity->{'thumbs:down:user_guids'};
+                      $boost->setTitle($entity->title);
+                      $boost->setFromEntity($entity);
+                      switch ($entity->subtype) {
+                        case "blog":
+                            $boost->setBlurb(strip_tags($entity->description))
+                              ->setURL($entity->getURL())
+                              ->setThumbnail($entity->getIconUrl());
+                            break;
+                        case "image":
+                            $boost->setCustom('batch', [[
+                              'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$entity->guid,
+                              'href'=> $entity->getUrl(),
+                              'mature' => $entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false
+                            ]]);
+                            break;
+                      }
+                      $boost->boosted = true;
+                     $response['boosts'][] = $boost->export();
                  }
                  if (count($response['boosts']) < 5) {
-                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", "");
+                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", "");
                  } else {
-                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset", end($blogs)->featured_id);
+                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", key(array_slice($guids, -1, 1, TRUE )));
                  }
              }
         }
