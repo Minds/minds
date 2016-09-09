@@ -228,6 +228,7 @@ class channel implements Interfaces\Api
                     }
 
                     $owner->setSocialProfiles($profiles);
+                    $update['social_profiles'] = json_encode($profiles);
                 }
 
                 if (isset($_POST['coordinates'])) {
