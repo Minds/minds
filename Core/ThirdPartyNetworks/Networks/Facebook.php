@@ -88,10 +88,10 @@ class Facebook implements NetworkInterface
             $entity = new Entities\Activity($entity->remind_object);
         }
 
-        if ($entity->title) {
-            $this->data['message'] = $entity->title;
-        } elseif ($entity->message) {
+        if ($entity->message) {
             $this->data['message'] = $entity->message;
+        } elseif ($entity->title) {
+            $this->data['message'] = $entity->title;
         }
 
         if ($entity->perma_url) {
