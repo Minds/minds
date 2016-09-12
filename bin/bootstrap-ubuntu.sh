@@ -139,6 +139,9 @@ echo Cloning engine like a ninja
 git clone -q -b dev_env_fixes https://www.github.com/bortloff/engine /var/www/Minds/engine
 
 cd /var/www/Minds/engine; composer install
+# Need to stuff a fix into guzzle
+echo Forcing a fix into guzzlehttp
+wget -q https://raw.githubusercontent.com/bortloff/engine/dev_env_fixes/vendor/guzzlehttp/guzzle/src/Event/Emitter.php -O /var/www/Minds/engine/vendor/guzzlehttp/guzzle/src/Event/Emitter.php
 cd /var/www/Minds/front
 npm install
 gulp build
