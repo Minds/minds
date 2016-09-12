@@ -112,9 +112,11 @@ service nginx stop
 service cassandra stop
 
 # download latest engine and front
-
-git clone https://www.github.com/minds/front /var/www/Minds/front
-git clone https://www.github.com/minds/engine /var/www/Minds/engine
+# For right now, we're going to clone from the bortloff repo and
+# dev_env_fixes branch. When we merge to upstream, we can revert this
+# commit.
+git clone -b dev_env_fixes https://www.github.com/bortloff/front /var/www/Minds/front
+git clone -b dev_env_fixes https://www.github.com/bortloff/engine /var/www/Minds/engine
 
 cd /var/www/Minds/engine; composer install
 cd /var/www/Minds/front
