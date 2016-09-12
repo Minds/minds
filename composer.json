@@ -10,7 +10,6 @@
         "facebook/php-sdk-v4": "~5.0",
         "firebase/php-jwt": "3.0.*",
         "kramnorth/cinemr-php-sdk": "dev-master@dev",
-        "minds/minds-php-sdk": "dev-master@dev",
         "Minds/Surge": "dev-master@dev",
         "neoxygen/neoclient": "2.2.8",
         "paypal/rest-api-sdk-php": "1.3.2",
@@ -25,10 +24,6 @@
         "abraham/twitteroauth": "^0.6.4"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/minds-php-sdk.git"
-        },
         {
             "type": "vcs",
             "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git"
