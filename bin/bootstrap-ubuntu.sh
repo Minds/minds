@@ -7,14 +7,12 @@ fpm_conf="/etc/php/$php_version/fpm/pool.d/www.conf"
 add-apt-repository ppa:ondrej/php
 add-apt-repository ppa:openjdk-r/ppa
 echo "deb http://debian.datastax.com/community stable main" > /etc/apt/sources.list.d/cassandra.sources.list
-curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+curl -sL http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
 
-apt-get update
 apt-get install -y \
   nginx \
-  wget \
   openssh-client \
-  curl \
   git \
   php$php_version \
   php$php_version-bcmath \
@@ -27,10 +25,13 @@ apt-get install -y \
   php$php_version-mysqli \
   php$php_version-mcrypt \
   php$php_version-pdo \
+  php$php_version-curl \
+  php$php_version-xml \
   dsc22 cassandra=2.2.7 cassandra-tools=2.2.7 \
   openjdk-8-jre \
   rabbitmq-server \
-  openssl
+  openssl \
+  nodejs 
   #php$php_version-zlib \
   #php$php_version-gd \
   #php$php_version-intl \
@@ -46,6 +47,30 @@ apt-get install -y \
   #php$php_version-phar \
   #php$php_version-soap \
   #php$php_version-dom && \
+
+# install composer
+curl -sS https://getcomposer.org/installer | php$php_version
+mv composer.phar /usr/bin/composer
+chmod 755 /usr/bin/composer
+
+npm install -g gulp
+
+# install infrastructure to make mongodb driver
+# TODO: when php7.1-mongodb comes out of beta, drop this line
+
+apt-get install -y php-pear php$php_version-dev autoconf g++ make libssl-dev libcurl4-openssl-dev pkg-config libsasl2-dev libpcre3-dev
+
+# install mongodb driver
+
+pecl install mongodb
+echo '; priority=20' > /etc/php/$php_version/mods-available/mongodb.ini
+echo 'extension=mongodb.so' | tee /etc/php/$php_version/mods-available/mongodb.ini
+ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/cli/conf.d/20-mongodb.ini
+ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/fpm/conf.d/20-mongodb.ini
+
+# install zip/unzip
+
+apt-get install -y zip unzip
 
 # Setup nginx configs
 rm -rf /etc/nginx/sites-enabled/default
@@ -81,20 +106,35 @@ sed -i "s/^# broadcast_address:.*/broadcast_address: 127.0.0.1/" /etc/cassandra/
 sed -i "s/^# broadcast_rpc_address:.*/broadcast_rpc_address: 127.0.0.1/" /etc/cassandra/cassandra.yaml
 sed -i 's/^start_rpc.*$/start_rpc: true/' /etc/cassandra/cassandra.yaml
 
-# start services
-service php$php_version-fpm restart
-service nginx restart
-service cassandra restart
+# stop services until install finishes
+service php$php_version-fpm stop
+service nginx stop
+service cassandra stop
 
+# download latest engine and front
+
+git clone https://www.github.com/minds/front /var/www/Minds/front
+git clone https://www.github.com/minds/engine /var/www/Minds/engine
+
+cd /var/www/Minds/engine; composer install
+cd /var/www/Minds/front
+npm install
+gulp build
+gulp build.index
 
 if [ -f "/var/www/Minds/engine/settings.php" ]
 then
-	echo "[Success]: Minds is already installed";
-else
-  sleep 10s
-  php /var/www/Minds/bin/cli.php install \
-    --domain=dev.minds.io \
-    --username=mark \
-    --password=temp123 \
-    --email=mark@minds.com
+	# This is a provisioning script; we shouldn't have it here already
+	rm /var/www/Minds/engine/settings.php
 fi
+
+sleep 10s
+php /var/www/Minds/bin/cli.php install \
+  --domain=dev.minds.io \
+  --username=mark \
+  --password=temp123 \
+  --email=mark@minds.com
+
+service php$php_version-fpm start
+service nginx start
+service cassandra start
