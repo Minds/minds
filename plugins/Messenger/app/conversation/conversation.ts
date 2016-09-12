@@ -1,4 +1,4 @@
-import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Renderer, ViewChild } from '@angular/core';
 import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
 
 import { Client } from '../../../services/api';
@@ -36,13 +36,14 @@ import { MINDS_PIPES } from '../../../pipes/pipes';
 })
 
 export class MessengerConversation {
-
   minds: Minds = window.Minds;
   session = SessionFactory.build();
 
   encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
   dockpanes = MessengerConversationDockpanesFactory.build();
   sounds  = new MessengerSounds();
+
+  tabId: string;
 
   guid : string;
   conversation;
@@ -75,14 +76,15 @@ export class MessengerConversation {
   blocked: boolean = false;
   unavailable: boolean = false;
 
-  constructor(public client : Client, public sockets: SocketsService, public cd: ChangeDetectorRef){
+  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer) {
+    this.buildTabId();
   }
 
   ngOnInit(){
     if(this.conversation.messages){
       this.messages = this.conversation.messages;
     } else if(this.encryption.isOn() && this.conversation.open) {
-      this.load();
+      this.initialLoad();
     } else if(!this.encryption.isOn()) {
       this.showMessages = false;
     }
@@ -91,6 +93,10 @@ export class MessengerConversation {
 
   ngOnDestroy(){
     this.unListen();
+  }
+
+  initialLoad() {
+    this.load({ limit: 10 });
   }
 
   load(opts: any = {}){
@@ -154,14 +160,24 @@ export class MessengerConversation {
         if (guid != this.conversation.guid)
           return;
 
-        if (this.session.getLoggedInUser().guid == message.ownerObj.guid)
-          return;
+        let fromSelf = false;
+
+        if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
+          if (this.tabId == message.tabId) {
+            return;
+          }
+
+          fromSelf = true;
+        }
 
         this.load({ finish: message.guid });
-        if(!this.focused && document.title.indexOf('\u2022') == -1)
-          document.title = "\u2022 " + document.title;
 
-        this.sounds.play('new');
+        if (!fromSelf) {
+          if(!this.focused && document.title.indexOf('\u2022') == -1)
+            document.title = "\u2022 " + document.title;
+
+          this.sounds.play('new');
+        }
       });
 
       this.socketSubscriptions.clearConversation = this.sockets.subscribe('clearConversation', (guid, actor) => {
@@ -226,7 +242,8 @@ export class MessengerConversation {
 
     this.client.post('api/v2/conversations/' + this.conversation.guid, {
         message: this.message,
-        encrypt: true
+        encrypt: true,
+        tabId: this.tabId
       })
       .then((response: any) => {
         if (response.message) {
@@ -327,4 +344,7 @@ export class MessengerConversation {
     this.focused = false;
   }
 
+  buildTabId() {
+    this.tabId = (Math.random() + 1).toString(36).substring(7);
+  }
 }

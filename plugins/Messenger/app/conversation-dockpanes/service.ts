@@ -7,6 +7,10 @@ export class MessengerConversationDockpanesService{
 
   constructor(public storage : Storage){
     this.loadFromCache();
+
+    setInterval(() => {
+      this.syncFromCache();
+    }, 1000);
   }
 
   open(conversation){
@@ -22,13 +26,16 @@ export class MessengerConversationDockpanesService{
     this.saveToCache();
   }
 
-  close(conversation){
+  close(conversation, saveToCache: boolean = true){
     for(let i = 0; i < this.conversations.length; i++){
       if(this.conversations[i].guid == conversation.guid){
         this.conversations.splice(i, 1);
       }
     }
-    this.saveToCache();
+    
+    if (saveToCache) {
+      this.saveToCache();
+    }
   }
 
   toggle(conversation){
@@ -43,6 +50,31 @@ export class MessengerConversationDockpanesService{
   closeAll(){
     this.conversations.splice(0, this.conversations.length);
     this.saveToCache();
+  }
+
+  private syncFromCache() {
+    // Only sync closed conversations
+    let savedConversations = JSON.parse(this.storage.get('messenger-dockpanes')),
+      conversations = this.conversations,
+      savedConversationGuids = [], closedConversations = [];
+
+    if (!savedConversations) {
+      return;
+    }
+
+    for (let i = 0; i < savedConversations.length; i++) {
+      savedConversationGuids.push(savedConversations[i].guid);
+    }
+
+    for (let i = 0; i < conversations.length; i++) {
+      if (savedConversationGuids.indexOf(conversations[i].guid) === -1) {
+        closedConversations.push(conversations[i]);
+      }
+    }
+
+    for (let i = 0; i < closedConversations.length; i++) {
+      this.close(closedConversations[i], false);
+    }
   }
 
   private loadFromCache(){

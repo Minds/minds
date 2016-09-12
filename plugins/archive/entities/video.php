@@ -11,6 +11,8 @@ use Minds\Entities\Object;
 use cinemr;
 use Minds\Helpers;
 
+use Minds\plugin\archive\Core\Services\Factory;
+
 class video extends object
 {
     private $cinemr;
@@ -55,17 +57,7 @@ class video extends object
      */
     public function getSourceUrl($transcode = '720.mp4')
     {
-        /*$cacher = \Minds\Core\Data\cache\factory::build();
-        if($return = $cacher->get("$this->guid:transcode:$transcode"))
-            return $return;
-
-        $cinemr = $this->cinemr();
-        $expires = time() + ((60*60*60)*24*7*4);
-        if($this->access_id == 0)
-            $expires = time() + (60*60*60);
-        $url =  $cinemr::factory('media')->get($this->cinemr_guid."/transcodes/$transcode", $expires);
-        $cacher->set("$this->guid:transcode:$transcode", $url, 1440);*/
-    $url = Core\Config::_()->cinemr_url . $this->cinemr_guid . '/' . $transcode;
+        $url = Core\Config::_()->cinemr_url . $this->cinemr_guid . '/' . $transcode;
         return $url;
     }
 
@@ -76,12 +68,19 @@ class video extends object
 
     public function upload($filepath)
     {
-        $cinemr = $this->cinemr();
-        $data = $cinemr::factory('media')->put(null, $filepath);
-        $this->cinemr_guid = $data['guid'];
+        if(!$this->guid){
+            $this->guid = Core\Guid::build();
+        }
+
+        $aws = Factory::build('AWS');
+        $aws->setKey($this->getGuid())
+          ->saveToFilestore($filepath)
+          ->transcode();
+
+        $this->cinemr_guid = $this->getGuid();
     }
 
-    public function getIconUrl()
+    public function getIconUrl($size = "medium")
     {
         $domain = elgg_get_site_url();
         global $CONFIG;
