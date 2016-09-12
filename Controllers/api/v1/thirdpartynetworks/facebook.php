@@ -199,6 +199,13 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 break;
             case "complete-register": //changes username of a facebook account and sends welcome email
 
+                if(!Core\Security\XSRF::validateRequest()){
+                    return Factory::response([
+                      'status' => 'error',
+                      'message' => 'XSRF token not found or does not match'
+                    ]);
+                }
+
                 $user = Core\Session::getLoggedinUser();
 
                 //check if the requested username now exists
