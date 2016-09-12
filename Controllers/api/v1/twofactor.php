@@ -13,7 +13,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Security;
 
-class twofactor implements Interfaces\Api, Interfaces\ApiIgnorePam
+class twofactor implements Interfaces\Api
 {
 
     /**
