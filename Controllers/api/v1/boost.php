@@ -136,6 +136,13 @@ class boost implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
         }
 
+        if ($impressions <= 0) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must boost positive points'
+            ]);
+        }
+
         $response = [];
         $entity = Entities\Factory::build($pages[1]);
         if (!$entity) {
