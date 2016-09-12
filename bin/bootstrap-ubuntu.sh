@@ -37,7 +37,7 @@ apt-get install -y \
   #php$php_version-intl \
   #php$php_version-memcached \
   #php$php_version-sqlite3 \
-  #4php$php_version-pgsql \
+  #php$php_version-pgsql \
   #php$php_version-xml \
   #php$php_version-xsl \
   #php$php_version-curl \
@@ -55,22 +55,34 @@ chmod 755 /usr/bin/composer
 
 npm install -g gulp
 
-# install infrastructure to make mongodb driver
-# TODO: when php7.1-mongodb comes out of beta, drop this line
-
-apt-get install -y php-pear php$php_version-dev autoconf g++ make libssl-dev libcurl4-openssl-dev pkg-config libsasl2-dev libpcre3-dev
-
 # install mongodb driver
+# 7.1 doesn't have a proper driver yet as of 12092016
+noob_mongodb_install() {
+    apt-get install -y  php-pear \
+        php$php_version-dev \
+        autoconf \
+	g++ \
+	make \
+	libssl-dev \
+	libcurl4-openssl-dev \
+	pkg-config \
+	libsasl2-dev \
+	libpcre3-dev \
+	zip \
+	unzip
 
-pecl install mongodb
-echo '; priority=20' > /etc/php/$php_version/mods-available/mongodb.ini
-echo 'extension=mongodb.so' | tee /etc/php/$php_version/mods-available/mongodb.ini
-ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/cli/conf.d/20-mongodb.ini
-ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/fpm/conf.d/20-mongodb.ini
+    pecl install mongodb
+    echo '; priority=20' > /etc/php/$php_version/mods-available/mongodb.ini
+    echo 'extension=mongodb.so' | tee /etc/php/$php_version/mods-available/mongodb.ini
+    ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/cli/conf.d/20-mongodb.ini
+    ln -s /etc/php/$php_version/mods-available/mongodb.ini /etc/php/$php_version/fpm/conf.d/20-mongodb.ini;
+}
 
-# install zip/unzip
-
-apt-get install -y zip unzip
+if [ $php_version == "7.1" ]; then
+    noob_mongodb_install
+else
+    apt-get install php5-mongo
+fi
 
 # Setup nginx configs
 rm -rf /etc/nginx/sites-enabled/default
@@ -112,11 +124,19 @@ service nginx stop
 service cassandra stop
 
 # download latest engine and front
+
+# git throws a bitchfit if we don't do this
+
+rm -rf /var/www/Minds/front
+rm -rf /var/www/Minds/engine
+
 # For right now, we're going to clone from the bortloff repo and
 # dev_env_fixes branch. When we merge to upstream, we can revert this
 # commit.
-git clone -b dev_env_fixes https://www.github.com/bortloff/front /var/www/Minds/front
-git clone -b dev_env_fixes https://www.github.com/bortloff/engine /var/www/Minds/engine
+echo Cloning front like a ninja
+git clone -q -b dev_env_fixes https://www.github.com/bortloff/front /var/www/Minds/front
+echo Cloning engine like a ninja
+git clone -q -b dev_env_fixes https://www.github.com/bortloff/engine /var/www/Minds/engine
 
 cd /var/www/Minds/engine; composer install
 cd /var/www/Minds/front
@@ -130,13 +150,14 @@ then
 	rm /var/www/Minds/engine/settings.php
 fi
 
-sleep 10s
+service php$php_version-fpm start
+service nginx start
+service cassandra start
+
+sleep 10
 php /var/www/Minds/bin/cli.php install \
   --domain=dev.minds.io \
   --username=mark \
   --password=temp123 \
   --email=mark@minds.com
 
-service php$php_version-fpm start
-service nginx start
-service cassandra start
