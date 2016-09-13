@@ -2,7 +2,10 @@
 namespace Minds\Helpers;
 
 use Minds\Core;
+use Minds\Core\Security;
 use Minds\Core\Events;
+use Minds\Entities\User;
+use Minds\Helpers\Wallet;
 
 /**
  * Helper for Users subscriptions
@@ -186,5 +189,66 @@ class Subscriptions
      */
     public static function getSubscribers($user)
     {
+    }
+
+    public static function registerEvents()
+    {
+        Events\Dispatcher::register('subscription:dispatch', 'all', function(Events\Event $event) {
+            $params = $event->getParameters();
+
+            $currentUser = new User($params['currentUser']);
+            $guids = $params['guids'];
+
+            if (!is_array($guids)) {
+                $guids = [ $guids ];
+            }
+
+            if (!$currentUser || !($currentUser instanceof User)) {
+                $event->setResponse([ 'done' => false, 'error' => 'INVALID_USER' ]);
+                return;
+            }
+
+            $results = [];
+
+            foreach ($guids as $guid) {
+                try {
+                    $target = new User($guid);
+
+                    if (!($target instanceof User) || !$target->guid) {
+                        $results[] = [
+                            'guid' => $guid,
+                            'done' => false,
+                            'error' => 'INVALID_TARGET'
+                        ];
+                        continue;
+                    }
+
+                    $canSubscribe = Security\ACL::_()->interact($currentUser, $target) &&
+                        Security\ACL::_()->interact($target, $currentUser);
+
+                    if (!$canSubscribe) {
+                        $results[] = [
+                            'guid' => $guid,
+                            'done' => false,
+                            'error' => 'BLOCKED_USER'
+                        ];
+                        continue;
+                    }
+
+                    $success = $currentUser->subscribe($target->guid);
+                    Wallet::createTransaction($currentUser->guid, 1, $target->guid, 'subscribed');
+
+                    $results[] = [ 'guid' => $guid, 'done' => true ];
+                } catch (\Exception $e) {
+                    $results[] = [
+                        'guid' => $guid,
+                        'done' => false,
+                        'exception' => $e
+                    ];
+                }
+            }
+
+            $event->setResponse([ 'done' => true, 'results' => $results ]);
+        });
     }
 }

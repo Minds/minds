@@ -71,6 +71,9 @@ class Defaults
 
         // Third-Party Networks events
         (new Core\ThirdPartyNetworks\Events())->register();
+
+        // Subscription Queue events
+        Helpers\Subscriptions::registerEvents();
     }
 
     public static function _()

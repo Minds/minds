@@ -9,6 +9,7 @@ namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
 use Minds\Core\Security;
+use Minds\Core\Queue;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -87,6 +88,23 @@ class subscribe implements Interfaces\Api
     public function post($pages)
     {
         Factory::isLoggedIn();
+
+        if ($pages[0] === 'batch') {
+            $guids = explode(',', $_POST['guids']);
+
+            array_walk($guids, function(&$guid) {
+                $guid = trim($guid);
+            });
+
+            Queue\Client::build()
+              ->setQueue('SubscriptionDispatcher')
+              ->send([
+                  'currentUser' => Core\Session::getLoggedInUser()->guid,
+                  'guids' => $guids
+              ]);
+
+            return Factory::response(['status' => 'success']);
+        }
 
         $canSubscribe = Security\ACL::_()->interact(Core\Session::getLoggedinUser(), $pages[0]) &&
             Security\ACL::_()->interact($pages[0], Core\Session::getLoggedinUser());
