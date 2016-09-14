@@ -93,10 +93,20 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        $bid = intval($_POST['bid']);
+
+        if ($bid <= 0) {
+            return Factory::response([
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => "{$bid} is not a valid amount of points"
+            ]);
+        }
+
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
           ->setType($_POST['type'])
-          ->setBid($_POST['bid'])
+          ->setBid($bid)
           ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
           ->postToFacebook($_POST['postToFacebook'])
