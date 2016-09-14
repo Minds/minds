@@ -38,6 +38,7 @@ class Minds extends base
         (new Security\SecurityProvider())->register();
         (new Http\HttpProvider())->register();
         (new Translation\TranslationProvider())->register();
+        (new Categories\CategoriesProvider())->register();
         (new ThirdPartyNetworks\ThirdPartyNetworksProvider())->register();
     }
 
