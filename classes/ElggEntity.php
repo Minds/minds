@@ -1074,8 +1074,7 @@ abstract class ElggEntity extends ElggData implements
 			}
 
 			if(in_array($this->access_id, array(2, -2, 1))){
-					Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
-							->setQueue("FeedDispatcher")
+					Minds\Core\Queue\Client::build()->setQueue("FeedDispatcher")
 							->send(array(
 									"guid" => $this->guid,
 									"owner_guid" => $this->owner_guid,
@@ -1231,8 +1230,7 @@ abstract class ElggEntity extends ElggData implements
 			foreach($this->getIndexKeys() as $rowkey)
 				$db->removeAttributes($rowkey, array($this->guid), false);
 
-			Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
-            ->setQueue("FeedCleanup")
+			Minds\Core\Queue\Client::build()->setQueue("FeedCleanup")
             ->send(array(
                 "guid" => $this->guid,
                 "owner_guid" => $this->owner_guid,

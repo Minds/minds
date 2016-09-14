@@ -13,8 +13,7 @@ class NotificationDispatcher implements Interfaces\QueueRunner
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setExchange("mindsqueue", "direct")
-            ->setQueue("NotificationDispatcher")
+        $client->setQueue("NotificationDispatcher")
             ->receive(function ($data) {
                 $data = $data->getData();
                 $type = isset($data['type']) ? $data['type'] : 'entity';

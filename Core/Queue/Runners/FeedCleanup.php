@@ -16,8 +16,7 @@ class FeedCleanup implements Interfaces\QueueRunner
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("FeedCleanup")
+        $client->setQueue("FeedCleanup")
                ->receive(function ($data) {
                    echo "Received a feed cleanup request \n";
 

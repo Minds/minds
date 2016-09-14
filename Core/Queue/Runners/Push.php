@@ -18,8 +18,7 @@ class Push implements Interfaces\QueueRunner
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("Push")
+        $client->setQueue("Push")
                ->receive(function ($data) {
                    echo "[push]: Received a push notification \n";
 

@@ -17,7 +17,6 @@ class CleanupDispatcher implements Interfaces\QueueRunner
     {
         $client = Queue\Client::Build();
         $client
-        ->setExchange("mindsqueue", "direct")
         ->setQueue("CleanupDispatcher")
         ->receive(function ($data) {
             $type = isset($data['type']) ? $data['type'] : 'all';

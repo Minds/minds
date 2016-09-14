@@ -16,8 +16,7 @@ class FeedDispatcher implements Interfaces\QueueRunner
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("FeedDispatcher")
+        $client->setQueue("FeedDispatcher")
                ->receive(function ($data) {
                    echo "Received a feed dispatch request \n";
 

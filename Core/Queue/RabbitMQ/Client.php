@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Queue\RabbitMQ;
 
+use Minds\Core\Di\Di;
 use Minds\Core\Queue\Interfaces;
 use Minds\Core\Queue\Message;
 use PhpAmqpLib\Connection\AMQPConnection;
@@ -53,8 +54,10 @@ class Client implements Interfaces\QueueClient
 
     public function setQueue($name = "", $binder = "")
     {
-        if (!$this->exchange) {
-            throw new \Exception("setExchange() must be called prio to setQueue");
+        if (!$this->exchange) { 
+            $this->setExchange(
+                Di::_()->get('Config')->get('queue')['exchange']
+            );
         }
 
         if (!$binder) {

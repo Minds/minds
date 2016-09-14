@@ -19,8 +19,7 @@ class Email implements Interfaces\QueueRunner
     {
         $mailer = new Core\Email\Mailer();
         $client = Queue\Client::Build();
-        $client->setExchange("mindsqueue", "direct")
-               ->setQueue("Email")
+        $client->setQueue("Email")
                ->receive(function ($data) use ($mailer) {
                    echo "[email]: Received an email \n";
 

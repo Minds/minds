@@ -2,6 +2,7 @@
 namespace Minds\Core\Notification\Extensions;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Interfaces;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Queue\Client as QueueClient;
@@ -22,7 +23,7 @@ class Push implements Interfaces\NotificationExtensionInterface
     public function queue(array $notification = [])
     {
         $notification = array_merge([
-            'exchange' => 'mindsqueue',
+            'exchange' => Di::_()->get('Config')->get('queue')['exchange'],
             'queue' => 'Push',
             'uri' => null,
             'to' => null,

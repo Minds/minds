@@ -26,6 +26,7 @@ class Installer
             'cache-path' => '/tmp/minds-cache/',
             'elasticsearch-server' => 'http://localhost:9200/',
             'elasticsearch-prefix' => 'mehmac_',
+            'queue-exchange' => 'mindsqueue',
             'facebook-app-id' => '',
             'facebook-app-secret' => '',
             'twitter-app-id' => '',

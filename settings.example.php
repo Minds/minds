@@ -57,6 +57,12 @@ $CONFIG->memcache_servers = array (
     array('server2', 11211)
 );*/
 
+/**
+ * Queue Settings
+ */
+$CONFIG->queue = [
+    'exchange' => '{{ queue-exchange }}'
+];
 
 /**
  * Use non-standard headers for broken MTAs.

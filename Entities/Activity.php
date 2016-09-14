@@ -74,8 +74,7 @@ class Activity extends Entity
 
         (new Core\Translation\Storage())->purge($this->guid);
 
-        Queue\Client::build()->setExchange("mindsqueue")
-                            ->setQueue("FeedCleanup")
+        Queue\Client::build()->setQueue("FeedCleanup")
                             ->send(array(
                                 "guid" => $this->guid,
                                 "owner_guid" => $this->owner_guid,

@@ -52,7 +52,6 @@ class Events
 
             try {
                 Queue\Client::build()
-                  ->setExchange('mindsqueue')
                   ->setQueue('NotificationDispatcher')
                   ->send([
                       'notification' => serialize($notification),

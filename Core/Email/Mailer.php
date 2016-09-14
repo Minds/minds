@@ -79,8 +79,7 @@ class Mailer
     public function queue($message)
     {
         try {
-            $this->queue->setExchange("mindsqueue")
-                ->setQueue("Email")
+            $this->queue->setQueue("Email")
                 ->send([
                     "message" => serialize($message)
                 ]);
