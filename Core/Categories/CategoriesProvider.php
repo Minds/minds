@@ -16,6 +16,6 @@ class CategoriesProvider extends Provider
          */
         $this->di->bind('Categories\Repository', function ($di) {
             return new Repository;
-        }, ['useFactory'=>true]);
+        }, ['useFactory'=>false]);
     }
 }

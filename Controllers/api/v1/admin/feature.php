@@ -9,6 +9,7 @@
 namespace Minds\Controllers\api\v1\admin;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -49,50 +50,19 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
         }
         if (!$entity->featured_id || $entity->featured_id == 0) {
             $entity->feature();
-            $newsfeed = true;
 
-/*            $activity = new Entities\Activity();
-            switch ($entity->subtype) {
-          case 'blog':
-            $activity->setTitle($entity->title)
-                ->setBlurb($entity->excerpt)
-                ->setUrl($entity->getURL())
-              ->setThumbnail($entity->getIconURL());
-            break;
-          case 'video':
-            $activity->setFromEntity($entity)
-              ->setCustom('video', array(
-                  'thumbnail_src'=>$entity->getIconUrl(),
-                  'guid'=>$entity->guid))
-              ->setTitle($entity->title)
-              ->setBlurb($entity->description);
-            break;
-          case 'image':
-            $activity->setFromEntity($entity)
-             ->setCustom('batch', array(array('src'=>elgg_get_site_url() . 'archive/thumbnail/'.$entity->guid, 'href'=>elgg_get_site_url() . 'archive/view/'.$entity->container_guid.'/'.$entity->guid)))
-              ->setTitle($entity->title);
-            break;
-          default:
-            $newsfeed = false;
-        }
-
-            if ($newsfeed) {
-                $activity->owner_guid = $entity->owner_guid;
-                $activity->indexes = array('activity:featured');
-                $activity->save();
-            }
-
-            $to_guid = $entity->getOwnerGuid();
-            $user = get_user_by_username('minds');
-            Core\Events\Dispatcher::trigger('notification', 'all', array(
-          'to' => array($to_guid),
-          'from'=> 100000000000000519,
-            'entity'=>$entity,
-            'description'=>$message,
-            'notification_view'=>'feature'
-        ));*/
+            $repository = Di::_()->get('Categories\Repository');
+            $repository->setFilter('featured')
+              ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+              ->setType($entity->subtype ?: $entity->type)
+              ->add($entity->guid);
         } else {
             $entity->unFeature();
+            $repository = Di::_()->get('Categories\Repository');
+            $repository->setFilter('featured')
+              ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+              ->setType($entity->subtype ?: $entity->type)
+              ->remove($entity->guid);
         }
         $entity->save();
 
@@ -115,6 +85,12 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
 
         $entity->unFeature();
         $entity->save();
+
+        $repository = Di::_()->get('Categories\Repository');
+        $repository->setFilter('featured')
+          ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+          ->setType($entity->subtype ?: $entity->type)
+          ->remove($entity->guid);
 
         return Factory::response(array());
     }

@@ -13,7 +13,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class featured implements Interfaces\Api, Interfaces\ApiIgnorePam
+class featured implements Interfaces\Api
 {
     /**
      * Returns the entities
@@ -22,8 +22,6 @@ class featured implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function get($pages)
     {
-
-        $key = "";
 
         $repository = Di::_()->get('Categories\Repository');
         $repository->setFilter('featured');

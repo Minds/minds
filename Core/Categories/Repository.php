@@ -81,4 +81,52 @@ class Repository
         }
     }
 
+    public function add($guid)
+    {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        if (empty($this->categories)) {
+            return $this;
+        }
+        foreach ($this->categories as $category) {
+            $query->query("INSERT INTO categories
+              (type, category, filter, guid)
+              VALUES (:type, :category, :filter, :guid)",
+              [
+                'type' => $this->type,
+                'filter' => $this->filter,
+                'category' => $category,
+                'guid' => $guid
+              ]);
+            try {
+                $result = $this->db->request($query);
+            } catch (\Exception $e) { }
+        }
+        return $this;
+    }
+
+    public function remove($guid, $category)
+    {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        if (empty($this->categories)) {
+            return $this;
+        }
+        foreach ($this->categories as $category) {
+            $query->query("DELETE FROM categories
+              WHERE type = :type
+              AND category = :category
+              AND filter = :filter
+              AND guid = :guid",
+              [
+                'type' => $this->type,
+                'filter' => $this->filter,
+                'category' => $category,
+                'guid' => $guid
+              ]);
+            try {
+                $result = $this->db->request($query);
+            } catch (\Exception $e) { }
+        }
+        return $this;
+    }
+
 }
