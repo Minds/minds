@@ -236,8 +236,6 @@ class boost implements Interfaces\Api
             ]);
         }
 
-        Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
-
         //now add to the newsfeed
         $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
         \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
@@ -259,6 +257,9 @@ class boost implements Interfaces\Api
         ]);
 
         $pro->accept($pages[0]);
+
+        Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
+
         $response['status'] = 'success';
 
         return Factory::response($response);
