@@ -57,6 +57,10 @@ class Message extends DenormalizedEntity
         return $this;
     }
 
+    public function getMessages() {
+        return $this->messages;
+    }
+
     public function encrypt()
     {
         //Di::_()->get('Messenger\Encryption')

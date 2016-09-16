@@ -190,6 +190,28 @@ class conversations implements Interfaces\Api
             $message->message = $messages[Session::getLoggedInUserGuid()];
         }
 
+        if (!$this->hasValidMessages($message)) {
+            // Likely, a participant hasn't set their public key
+            $origins = $this->getInvalidMessageOrigins($message);
+
+            $username = Session::getLoggedInUser()->username;
+            $notification = "{$username} wants to chat with you! Open messenger, set your password and start chatting right away.";
+
+            foreach ($origins as $origin) {
+                Core\Events\Dispatcher::trigger('notification', 'Messenger', [
+                    'to' => [ $origin ],
+                    'from' => Session::getLoggedInUserGuid(),
+                    'notification_view' => 'custom_message',
+                    'params' => [ 'message' => $notification ],
+                    'message' => $notification
+                ]);
+            }
+
+            return Factory::response([
+                'invalid' => true
+            ]);
+        }
+
         $message->save();
         $conversation->markAsUnread(Session::getLoggedInUserGuid());
         $conversation->markAsRead(Session::getLoggedInUserGuid());
@@ -335,5 +357,30 @@ class conversations implements Interfaces\Api
             } catch (\Exception $e) { /* TODO: To log or not to log */
             }
         }
+    }
+
+    private function hasValidMessages($message) {
+        $messages = $message->getMessages();
+
+        foreach ($messages as $guid => $message) {
+            if ($message === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    private function getInvalidMessageOrigins($message) {
+        $messages = $message->getMessages();
+        $origins = [];
+
+        foreach ($messages as $guid => $message) {
+            if ($message === false) {
+                $origins[] = $guid;
+            }
+        }
+
+        return $origins;
     }
 }

@@ -75,6 +75,7 @@ export class MessengerConversation {
 
   blocked: boolean = false;
   unavailable: boolean = false;
+  invalid: boolean = false;
 
   constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer) {
     this.buildTabId();
@@ -173,6 +174,8 @@ export class MessengerConversation {
         this.load({ finish: message.guid });
 
         if (!fromSelf) {
+          this.invalid = false;
+
           if(!this.focused && document.title.indexOf('\u2022') == -1)
             document.title = "\u2022 " + document.title;
 
@@ -186,6 +189,7 @@ export class MessengerConversation {
 
         this.messages = [];
         this.chatNotice = `${actor.name} cleared chat history`;
+        this.invalid = false;
 
       });
 
@@ -229,7 +233,7 @@ export class MessengerConversation {
   send(e){
     e.preventDefault();
 
-    if (this.blocked) {
+    if (this.blocked || !this.message) {
       return;
     }
 
@@ -250,6 +254,8 @@ export class MessengerConversation {
           this.messages[currentIndex] = response.message;
         } else if (response.unavailable) {
           this.unavailable = true;
+        } else if (response.invalid) {
+          this.invalid = true;
         }
 
         setTimeout(() => this.scrollEmitter.next(true), 50)

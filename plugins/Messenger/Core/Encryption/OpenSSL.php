@@ -54,6 +54,12 @@ class OpenSSL implements EncryptionInterface
         $messages = [];
         foreach ($this->conversation->getParticipants() as $guid => $user) {
             $public_key = $this->keystore->setUser($user)->getPublicKey();
+
+            if (!$public_key) {
+                $messages[$guid] = false;
+                continue; // Avoid log warnings
+            }
+
             openssl_public_encrypt($this->message->getMessage(), $encrypted, $public_key);
             $messages[$guid] = base64_encode($encrypted);
         }
