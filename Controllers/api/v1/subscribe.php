@@ -90,11 +90,8 @@ class subscribe implements Interfaces\Api
         Factory::isLoggedIn();
 
         if ($pages[0] === 'batch') {
-            $guids = explode(',', $_POST['guids']);
+            $guids = $_POST['guids'];
 
-            array_walk($guids, function(&$guid) {
-                $guid = trim($guid);
-            });
 
             Queue\Client::build()
               ->setQueue('SubscriptionDispatcher')
