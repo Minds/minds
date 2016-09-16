@@ -41,6 +41,7 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
     public function put($pages)
     {
         $entity = Entities\Factory::build($pages[0]);
+        $category = isset($pages[1]) ? $pages[1] : 'other';
 
         if (!$entity) {
             return Factory::response([
@@ -50,20 +51,22 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
         }
         if (!$entity->featured_id || $entity->featured_id == 0) {
             $entity->feature();
+            $entity->category = $category;
 
             $repository = Di::_()->get('Categories\Repository');
             $repository->setFilter('featured')
-              ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+              ->setCategories([$category])
               ->setType($entity->subtype ?: $entity->type)
               ->add($entity->guid);
         } else {
             $entity->unFeature();
             $repository = Di::_()->get('Categories\Repository');
             $repository->setFilter('featured')
-              ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+              ->setCategories([$entity->category])
               ->setType($entity->subtype ?: $entity->type)
               ->remove($entity->guid);
         }
+
         $entity->save();
 
         return Factory::response(array());
@@ -75,6 +78,7 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
     public function delete($pages)
     {
         $entity = Entities\Factory::build($pages[0]);
+        $category = isset($pages[1]) ? $pages[1] : $entity->category;
 
         if (!$entity) {
             return Factory::response(array(
@@ -88,7 +92,7 @@ class feature implements Interfaces\Api, Interfaces\ApiAdminPam
 
         $repository = Di::_()->get('Categories\Repository');
         $repository->setFilter('featured')
-          ->setCategories(isset($_GET['categories']) ? $_GET['categories'] : ['other'])
+          ->setCategories([$category])
           ->setType($entity->subtype ?: $entity->type)
           ->remove($entity->guid);
 

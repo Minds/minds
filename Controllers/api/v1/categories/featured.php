@@ -25,7 +25,10 @@ class featured implements Interfaces\Api
 
         $repository = Di::_()->get('Categories\Repository');
         $repository->setFilter('featured');
-        $repository->setCategories($_GET['categories']);
+
+        if (isset($_GET['categories'])) {
+            $repository->setCategories(explode(',', $_GET['categories']));
+        }
 
         switch($pages[0]){
           case "channel":
