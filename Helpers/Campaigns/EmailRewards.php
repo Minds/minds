@@ -26,17 +26,18 @@ class EmailRewards
         $user = new Entities\User($user_guid);
 
         $cacher = Core\Data\cache\factory::build('apcu');
-
+        $label = $campaign;
         switch ($campaign) {
           case "retention-1":
           case "retention-3":
           case "retention-7":
           case "retention-28":
             $points = 100;
+            $label = "Check-in bonus";
             break;
-          case "july-26-2016":
+          case "august-23-2016":
             $points = 1000;
-            break;
+            break; 
           default:
             return;
         }
@@ -51,7 +52,7 @@ class EmailRewards
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
-            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email click. ($campaign)");
+            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email click. ($label)");
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }
