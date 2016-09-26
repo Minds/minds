@@ -73,8 +73,16 @@ class boost implements Interfaces\Api
             case "rates":
               $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
               $response['rate'] = $this->rate;
-              $response['cap'] = 5000;
-              $response['min'] = 5;
+
+              $config = array_merge([
+                  'network' => [
+                      'min' => 100,
+                      'max' => 5000,
+                  ],
+              ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+
+              $response['cap'] = $config['network']['max'];
+              $response['min'] = $config['network']['min'];
             break;
             case "p2p":
               $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
@@ -136,10 +144,17 @@ class boost implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a whole number'));
         }
 
-        if ($impressions <= 0) {
+        $config = array_merge([
+            'network' => [
+                'min' => 100,
+                'max' => 5000,
+            ],
+        ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+
+        if ($impressions < $config['network']['min'] || $impressions > $config['network']['max']) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'You must boost positive points'
+                'message' => "You must boost between {$config['network']['min']} and {$config['network']['max']} points"
             ]);
         }
 

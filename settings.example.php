@@ -115,3 +115,14 @@ $CONFIG->set('apple', [
     'sandbox' => '{{apple-sandbox-enabled}}',
     'cert' => '{{apple-certificate}}'
 ]);
+
+$CONFIG->set('boost', [
+    'network' => [
+        'min' => 100,
+        'max' => 5000,
+    ],
+    'peer' => [
+        'min' => 100,
+        'max' => 5000000
+    ],
+]);

@@ -1012,11 +1012,11 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	}
 
 	if ($user = get_user_by_username($username)) {
-		throw new RegistrationException("User exits");
+		throw new RegistrationException("Username already in use");
 	}
 
 	if ((!$allow_multiple_emails) && (get_user_by_email($email))) {
-		throw new RegistrationException("Duplicated email");
+		throw new RegistrationException("Email already in use");
 	}
 
 	access_show_hidden_entities($access_status);

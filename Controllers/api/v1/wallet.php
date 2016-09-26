@@ -38,8 +38,15 @@ class wallet implements Interfaces\Api
                 $btc = ($satoshi / 1000000000);
 
                 $response['count'] = $count;
-                $response['cap'] = 5000;
-                $response['min'] = 10;
+                $config = array_merge([
+                    'network' => [
+                        'min' => 100,
+                        'max' => 5000,
+                    ],
+                ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+
+                $response['cap'] = $config['network']['max'];
+                $response['min'] = $config['network']['min'];
                 $response['boost_rate'] = 1;
                 $response['ex'] = array(
                     'usd' => 0.01

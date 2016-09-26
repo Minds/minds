@@ -94,12 +94,18 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         $bid = intval($_POST['bid']);
+        $config = array_merge([
+            'peer' => [
+                'min' => 100,
+                'max' => 5000000,
+            ]
+        ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
 
-        if ($bid <= 0) {
+        if ($bid < $config['peer']['min'] || $bid > $config['peer']['max']) {
             return Factory::response([
                 'status' => 'error',
                 'stage' => 'initial',
-                'message' => "{$bid} is not a valid amount of points"
+                'message' => "You must boost between {$config['peer']['min']} and {$config['peer']['max']} points"
             ]);
         }
 
