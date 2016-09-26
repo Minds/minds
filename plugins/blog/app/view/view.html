@@ -37,7 +37,7 @@
       <minds-button-edit [routerLink]="['/Blog-Edit', { guid: blog.guid }]" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit || session.isAdmin()">
         <button class="material-icons">edit</button>
       </minds-button-edit>
-      <minds-button-edit (click)="delete()"  *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <minds-button-edit (click)="deleteToggle = true"  *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">close</button>
       </minds-button-edit>
       <minds-button-feature [object]="blog" *ngIf="session.isAdmin()"></minds-button-feature>
@@ -100,3 +100,20 @@
 <div class="mdl-grid blogs-grid" style="max-width:660px" *ngIf="blog.guid">
   <minds-comments [object]="blog"></minds-comments>
 </div>
+
+<m-modal-confirm *ngIf="deleteToggle"
+  [open]="true"
+  [closeAfterAction]=true
+  (closed)="deleteToggle = false"
+  (actioned)="delete($event)"
+  yesButton="Delete permanently"
+>
+  <p confirm-message>
+      Are you sure you want to delete this blog? <br>
+      <br>
+      There's no UNDO!
+  </p>
+  <p confirm-success-message>
+      The blog has been deleted.
+  </p>
+</m-modal-confirm>

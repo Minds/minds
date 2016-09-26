@@ -45,7 +45,7 @@
         <button class="material-icons">edit</button>
       </minds-button-edit>
 
-      <minds-button-edit (click)="delete()"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <minds-button-edit (click)="deleteToggle = true"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">close</button>
       </minds-button-edit>
 
@@ -107,3 +107,20 @@
 <div class="mdl-grid archive-grid" style="width:100%; max-width:660px" *ngIf="entity.guid && entity.subtype != 'album'">
   <minds-comments [object]="entity"></minds-comments>
 </div>
+
+<m-modal-confirm *ngIf="deleteToggle"
+  [open]="true"
+  [closeAfterAction]=true
+  (closed)="deleteToggle = false"
+  (actioned)="delete($event)"
+  yesButton="Delete permanently"
+>
+  <p confirm-message>
+      Are you sure you want to delete this? <br>
+      <br>
+      There's no UNDO!
+  </p>
+  <p confirm-success-message>
+      The media has been deleted.
+  </p>
+</m-modal-confirm>

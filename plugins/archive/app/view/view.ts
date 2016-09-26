@@ -9,6 +9,7 @@ import { Hovercard } from '../../../directives/hovercard';
 
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
+import { ConfirmModal } from '../../../components/modal/modal';
 
 import { ArchiveTheatre } from './views/theatre';
 import { ArchiveGrid } from './views/grid';
@@ -20,7 +21,7 @@ import { SocialIcons } from '../../../components/social-icons/social-icons';
   selector: 'minds-archive-view',
   providers: [ AttachmentService ],
   templateUrl: 'src/plugins/archive/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons, Hovercard ]
+  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons, Hovercard, ConfirmModal ]
 })
 
 export class ArchiveView {
@@ -31,6 +32,7 @@ export class ArchiveView {
   session = SessionFactory.build();
   inProgress : boolean = true;
   error : string = "";
+  deleteToggle: boolean = false;
 
   constructor(public client: Client,public router: Router, public params: RouteParams, public attachment: AttachmentService){
       if(params.params['guid'])
@@ -58,14 +60,12 @@ export class ArchiveView {
   }
 
   delete(){
-    if(confirm("Are you sure?")){
-      this.client.delete('api/v1/archive/' + this.guid)
-        .then((response : any) => {
-          this.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
-        })
-        .catch((e) => {
-        });
-    }
+    this.client.delete('api/v1/archive/' + this.guid)
+      .then((response : any) => {
+        this.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
+      })
+      .catch((e) => {
+      });
   }
 
 }

@@ -12,7 +12,7 @@ import { MindsTitle } from '../../../services/ux/title';
 import { MindsFatBanner } from '../../../components/banner';
 import { Comments } from '../../../controllers/comments/comments';
 import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { ShareModal } from '../../../components/modal/modal';
+import { ShareModal, ConfirmModal } from '../../../components/modal/modal';
 import { SocialIcons } from '../../../components/social-icons/social-icons';
 import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { ScrollService } from '../../../services/ux/scroll';
@@ -32,7 +32,7 @@ import { AttachmentService } from '../../../services/attachment';
   providers:[ MindsTitle, AttachmentService ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard ]
+    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard, ConfirmModal ]
 })
 
 export class BlogView {
@@ -42,6 +42,7 @@ export class BlogView {
   blog : MindsBlogEntity;
   session = SessionFactory.build();
   sharetoggle : boolean = false;
+  deleteToggle: boolean = false;
   element;
 
   inProgress : boolean = false;
