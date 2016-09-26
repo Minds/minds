@@ -29,6 +29,18 @@ class Manager
             ->setPath('/Capture');
         self::add($capture);
 
+        $discovery_trending = new Item();
+        $discovery_trending
+            ->setPriority(2)
+            ->setIcon('trending_up')
+            ->setName('Trending')
+            ->setTitle('Trending (Discovery)')
+            ->setPath('/Discovery')
+            ->setParams(array(
+                'filter' => 'trending',
+                'type' => ''
+            ));
+
         $discovery_suggested = new Item();
         $discovery_suggested
             ->setPriority(1)
@@ -41,18 +53,6 @@ class Manager
                 'type' => ''
             ))
             ->setVisibility(0); //only show for loggedin
-
-        $discovery_trending = new Item();
-        $discovery_trending
-            ->setPriority(2)
-            ->setIcon('trending_up')
-            ->setName('Trending')
-            ->setTitle('Trending (Discovery)')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'trending',
-                'type' => ''
-            ));
 
         $discovery_featured = new Item();
         $discovery_featured
@@ -85,11 +85,11 @@ class Manager
             ->setTitle('Discovery')
             ->setPath('/Discovery')
             ->setParams(array(
-                'filter' => 'suggested',
+                'filter' => 'trending',
                 'type' => ''
             ))
-            ->addSubItem($discovery_suggested)
             ->addSubItem($discovery_trending)
+            ->addSubItem($discovery_suggested)
             ->addSubItem($discovery_featured)
             ->addSubItem($discovery_my);
         self::add($discovery);
