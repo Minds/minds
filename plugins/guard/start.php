@@ -65,7 +65,14 @@ class start extends Components\Plugin
             'allsportslive24x7.blogspot.com', 'boxing-tv-2014-live-stream.blogspot.com', 'amarblogdalima.blogspot.com',
             'www.officialtvstream.com.es', 'topsalor.com', 'busybo.org', 'www.nowvideo.sx', '180upload.com', 'allmyvideos.net',
             'busybo.org', 'hdmovieshouse.biz', 'sportblog.info', 'psport.space', 'discus.space', 'euro2016.it.ua', 'neymar.space',
-            'espnstream.space', '2016.vn.u', 'blogstream.space'
+            'espnstream.space', '2016.vn.u', 'blogstream.space', 'liveextratime.xyz', 'thebestlive.xyz', 'streamoffside.xyz', 'sportmaster2014.page.tl',
+            'bloggersdelight.dk', 'watchsportslive.space', 'freeforward.xyz', 'live4sports.xyz', 'streamfun.xyz', 'angelfire.com', 'streamtime.xyz',
+            'futebol2star.com', 'live2sport.com', 'newssports.space', 'onlineolympics.xyz', 'liveolympics.xyz', 'streamontv.xyz', 'londonschedule.com',
+            'onlineolympics.space', 'sportwinning.xyz', 'streamworld.xyz', 'streamtop.xyz', 'livechampion.xyz', 'playstreams.xyz', 'live4sport.xyz',
+            'streampage.xyz', 'calendarsport.space', 'fsport.space', 'euro2016.od.ua', 'streambig.xyz', 'sportprediction.xyz', 'streamwork.xyz',
+            'r041.donnael.com', '2016.lt.ua', 'vipleague.se', 'liveonline.company', 'liveolympics.space', 'seoandvideomarketing.com.au', 'vipbox.sx',
+            'germanypolandlivestream.club', 'sportgoal.xyz', 'ggdbsale.com', 'gorillasteroids.eu', 'watchlivesports.space', 'penaltyshootout.xyz',
+            'streamgroup.xyz', 'streamnew.xyz', 'cottonsport.space', 'gosport.space', 'streambest.xyz', 'penaltyspot.xyz', 'streamthe.xyz'
         ];
     }
 
