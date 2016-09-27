@@ -50,18 +50,20 @@ class Events
                 ->setParams($params['params'])
                 ->setTimeCreated(time());
 
-            Queue\Client::build()
-              ->setExchange('mindsqueue')
-              ->setQueue('NotificationDispatcher')
-              ->send([
-                  'notification' => serialize($notification),
-                  'to' => $params['to']
-              ]);
+            try {
+                Queue\Client::build()
+                  ->setExchange('mindsqueue')
+                  ->setQueue('NotificationDispatcher')
+                  ->send([
+                      'notification' => serialize($notification),
+                      'to' => $params['to']
+                  ]);
+            } catch (\Exception $e) {}
 
             $event->setResponse([
                 $notification
             ]);
-        
+
 	});
 
         /**

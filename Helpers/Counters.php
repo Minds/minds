@@ -73,6 +73,7 @@ class Counters
 
     /**
      * Increment metric count on several entities
+     * BUT DON'T ACTUALLY BATCH BECAUSE CASSANDRA MOANS
      * @param  array         $entities
      * @param  string        $metric
      * @param  int           $value  - Value to increment. Defaults to 1.
@@ -81,27 +82,26 @@ class Counters
      */
     public static function incrementBatch($entities, $metric, $value = 1, $client = null)
     {
-        $prepared = array();
         if (!$client) {
             $client = Core\Data\Client::build('Cassandra');
         }
         $query = new Core\Data\Cassandra\Prepared\Counters();
         foreach ($entities as $entity) {
             if (is_numeric($entity) || is_string($entity)) {
-                $prepared[] = $query->update($entity, $metric, $value)->build();
+                $client->request($query->update($entity, $metric, $value));
             } elseif ($entity->guid) {
-                $prepared[] = $query->update($entity->guid, $metric, $value)->build();
+                $client->request($query->update($entity->guid, $metric, $value));
                 if ($entity->remind_object && isset($entity->remind_object['guid'])) {
-                    $prepared[] = $query->update($entity->remind_object['guid'], $metric, $value)->build();
+                    $client->request($query->update($entity->remind_object['guid'], $metric, $value));
                 }
 
                 if ($entity->owner_guid) {
-                    $prepared[] = $query->update($entity->owner_guid, $metric, $value)->build();
+                    $client->request($query->update($entity->owner_guid, $metric, $value));
                 }
             }
         }
         try {
-            $client->batchRequest($prepared);
+            $client->request($prepared);
         } catch (\Exception $e) {
             error_log("exception in batch increment " . $e->getMessage());
         }
@@ -155,6 +155,7 @@ class Counters
      */
     public static function clear($entity, $metric, $value = 0, $client = null)
     {
+      return;
         if (is_numeric($entity) || is_string($entity)) {
             $guid = $entity;
         } else {

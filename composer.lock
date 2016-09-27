@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "448d464e0e74713191a384a96fe8ad31",
-    "content-hash": "5f81797ff9a56c0f4e74bbf46bbfe1be",
+    "hash": "dfbc6a52ab8ccdd31aa98e2c3c9087c7",
+    "content-hash": "73957c29d27fe819e51143ac0e833444",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -234,6 +234,57 @@
             "time": "2015-04-24 03:00:33"
         },
         {
+            "name": "datastax/php-driver",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/datastax/php-driver.git",
+                "reference": "919d5873445c7ff3cb2c278e1f733994f96cb553"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/datastax/php-driver/zipball/919d5873445c7ff3cb2c278e1f733994f96cb553",
+                "reference": "919d5873445c7ff3cb2c278e1f733994f96cb553",
+                "shasum": ""
+            },
+            "require-dev": {
+                "behat/behat": "~3.0.6",
+                "ext-cassandra": "*",
+                "php": ">=5.5.0",
+                "phpunit/php-code-coverage": "~2.0",
+                "phpunit/php-token-stream": "~1.3",
+                "phpunit/phpunit": "~4.8",
+                "symfony/process": "~2.1"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Bulat Shakirzyanov",
+                    "email": "bulat.shakirzyanov@datastax.com",
+                    "homepage": "http://avalanche123.com"
+                },
+                {
+                    "name": "Michael Penick",
+                    "email": "michael.penick@datastax.com",
+                    "homepage": "https://github.com/mpenick"
+                }
+            ],
+            "description": "DataStax PHP Driver for Apache Cassandra",
+            "homepage": "http://datastax.github.io/php-driver/",
+            "keywords": [
+                "cassandra",
+                "database",
+                "datastax",
+                "driver",
+                "nosql"
+            ],
+            "time": "2016-08-08 18:26:14"
+        },
+        {
             "name": "doctrine/annotations",
             "version": "v1.2.7",
             "source": {
@@ -356,53 +407,6 @@
             "time": "2014-09-09 13:34:57"
         },
         {
-            "name": "duoshuo/php-cassandra",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/duoshuo/php-cassandra.git",
-                "reference": "8268f9af0ed9d4faf5a1c71a79680ec345e98c93"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/duoshuo/php-cassandra/zipball/8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
-                "reference": "8268f9af0ed9d4faf5a1c71a79680ec345e98c93",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Cassandra\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Evseev Nikolay",
-                    "email": "evseevnn@gmail.com"
-                },
-                {
-                    "name": "Shen Zhenyu",
-                    "email": "zhenyupku@gmail.com"
-                }
-            ],
-            "description": "Cassandra client library for PHP, which support Protocol v3 and asynchronous request",
-            "keywords": [
-                "cassandra",
-                "cql",
-                "database",
-                "driver",
-                "nosql"
-            ],
-            "time": "2015-03-06 12:44:41"
-        },
-        {
             "name": "elasticsearch/elasticsearch",
             "version": "v1.3.3",
             "source": {
@@ -514,7 +518,6 @@
                 "facebook",
                 "sdk"
             ],
-            "abandoned": "facebook/graph-sdk",
             "time": "2016-08-09 11:32:26"
         },
         {
@@ -653,7 +656,6 @@
                 "rest",
                 "web service"
             ],
-            "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18 18:23:50"
         },
         {
@@ -803,16 +805,16 @@
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240"
+                "reference": "3c742f3ceffc4dc67fee02dc6ebfc2e7cb403b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
-                "reference": "faf8a1d86b5c10684ef91fa6c81475b0c7f95240",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/3c742f3ceffc4dc67fee02dc6ebfc2e7cb403b7c",
+                "reference": "3c742f3ceffc4dc67fee02dc6ebfc2e7cb403b7c",
                 "shasum": ""
             },
             "require": {
@@ -854,7 +856,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2016-03-30 19:10:28"
+            "time": "2016-09-23 19:38:29"
         },
         {
             "name": "monolog/monolog",
@@ -994,7 +996,6 @@
                 "high-availibility",
                 "neo4j"
             ],
-            "abandoned": "graphaware/neo4j-php-client",
             "time": "2015-06-20 18:10:49"
         },
         {
@@ -1153,22 +1154,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/5277094ed527a1c4477177d102fe4c53551953e0",
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.0"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1182,12 +1191,13 @@
                 }
             ],
             "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2016-09-19 16:02:08"
         },
         {
             "name": "symfony/config",
@@ -1633,15 +1643,15 @@
         },
         {
             "name": "thobbs/phpcassa",
-            "version": "dev-master",
+            "version": "dev-minds-legacy",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thobbs/phpcassa.git",
+                "url": "https://github.com/Minds/phpcassa.git",
                 "reference": "787ecce4501d519de5c7448dd74f67c5cba0c5d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thobbs/phpcassa/zipball/787ecce4501d519de5c7448dd74f67c5cba0c5d5",
+                "url": "https://api.github.com/repos/Minds/phpcassa/zipball/787ecce4501d519de5c7448dd74f67c5cba0c5d5",
                 "reference": "787ecce4501d519de5c7448dd74f67c5cba0c5d5",
                 "shasum": ""
             },
@@ -1657,7 +1667,6 @@
                     "lib/autoload.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1670,8 +1679,11 @@
             "description": "PHP Cassandra Library",
             "homepage": "https://github.com/thobbs/phpcassa",
             "keywords": [
-                "cassandra"
+                "Cassandra"
             ],
+            "support": {
+                "source": "https://github.com/Minds/phpcassa/tree/master"
+            },
             "time": "2015-04-02 19:31:04"
         },
         {
@@ -1978,7 +1990,7 @@
             "authors": [
                 {
                     "name": "Ondřej Nešpor",
-                    "homepage": "https://github.com/andrewsville"
+                    "homepage": "https://github.com/Andrewsville"
                 },
                 {
                     "name": "Jaroslav Hanslík",
@@ -2274,12 +2286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "e0fd68056b82e57a3a1dd326569655f1d47a9a2d"
+                "reference": "13a21d85789f4e6534610722842019b864980bec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/e0fd68056b82e57a3a1dd326569655f1d47a9a2d",
-                "reference": "e0fd68056b82e57a3a1dd326569655f1d47a9a2d",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/13a21d85789f4e6534610722842019b864980bec",
+                "reference": "13a21d85789f4e6534610722842019b864980bec",
                 "shasum": ""
             },
             "require": {
@@ -2331,7 +2343,7 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "abandoned": "friendsofphp/php-cs-fixer",
-            "time": "2016-09-07 06:36:28"
+            "time": "2016-09-26 20:57:02"
         },
         {
             "name": "herrera-io/json",
@@ -2692,16 +2704,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "08efb9414d847643848932ef8163d5b66d6d0380"
+                "reference": "7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/08efb9414d847643848932ef8163d5b66d6d0380",
-                "reference": "08efb9414d847643848932ef8163d5b66d6d0380",
+                "url": "https://api.github.com/repos/nette/latte/zipball/7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9",
+                "reference": "7d30f7bfd58cb017c47d7e14ed93286ce2ca1bc9",
                 "shasum": ""
             },
             "require": {
@@ -2754,7 +2766,7 @@
                 "templating",
                 "twig"
             ],
-            "time": "2016-07-31 11:41:46"
+            "time": "2016-09-27 13:10:19"
         },
         {
             "name": "michelf/php-markdown",
@@ -2809,16 +2821,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "d47e06c90589184f8846fe7483a885b34168c370"
+                "reference": "95433f75bf33dbbd779ef331161ddf1e38325bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/d47e06c90589184f8846fe7483a885b34168c370",
-                "reference": "d47e06c90589184f8846fe7483a885b34168c370",
+                "url": "https://api.github.com/repos/nette/application/zipball/95433f75bf33dbbd779ef331161ddf1e38325bed",
+                "reference": "95433f75bf33dbbd779ef331161ddf1e38325bed",
                 "shasum": ""
             },
             "require": {
@@ -2879,7 +2891,7 @@
             ],
             "description": "Nette Application MVC Component",
             "homepage": "https://nette.org",
-            "time": "2016-07-31 11:40:56"
+            "time": "2016-09-27 09:49:35"
         },
         {
             "name": "nette/bootstrap",
@@ -3073,16 +3085,16 @@
         },
         {
             "name": "nette/di",
-            "version": "v2.4.2",
+            "version": "v2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "e3ae78a0f6cf921968e3298f57a7628d27feef72"
+                "reference": "aa40af0766b990fbe052d6efe89382d6df2ae641"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/e3ae78a0f6cf921968e3298f57a7628d27feef72",
-                "reference": "e3ae78a0f6cf921968e3298f57a7628d27feef72",
+                "url": "https://api.github.com/repos/nette/di/zipball/aa40af0766b990fbe052d6efe89382d6df2ae641",
+                "reference": "aa40af0766b990fbe052d6efe89382d6df2ae641",
                 "shasum": ""
             },
             "require": {
@@ -3129,7 +3141,7 @@
             ],
             "description": "Nette Dependency Injection Component",
             "homepage": "https://nette.org",
-            "time": "2016-07-30 15:30:12"
+            "time": "2016-09-21 16:51:11"
         },
         {
             "name": "nette/finder",
@@ -3189,16 +3201,16 @@
         },
         {
             "name": "nette/http",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "659e277017006edf12d4fc86bf54a060e56c71ac"
+                "reference": "313a0b7a1a702af1652ff5cc279741ff1228a15f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/659e277017006edf12d4fc86bf54a060e56c71ac",
-                "reference": "659e277017006edf12d4fc86bf54a060e56c71ac",
+                "url": "https://api.github.com/repos/nette/http/zipball/313a0b7a1a702af1652ff5cc279741ff1228a15f",
+                "reference": "313a0b7a1a702af1652ff5cc279741ff1228a15f",
                 "shasum": ""
             },
             "require": {
@@ -3209,9 +3221,9 @@
                 "nette/nette": "<2.2"
             },
             "require-dev": {
-                "nette/di": "^2.3",
+                "nette/di": "^2.4",
                 "nette/tester": "~2.0",
-                "tracy/tracy": "^2.3"
+                "tracy/tracy": "^2.4"
             },
             "suggest": {
                 "ext-fileinfo": "to detect type of uploaded files"
@@ -3245,7 +3257,7 @@
             ],
             "description": "Nette HTTP Component",
             "homepage": "https://nette.org",
-            "time": "2016-06-25 09:59:54"
+            "time": "2016-09-27 09:54:17"
         },
         {
             "name": "nette/mail",
@@ -3832,16 +3844,16 @@
         },
         {
             "name": "phpspec/phpspec",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "7e7e104de01b5052195cefefcd0b29f1add4c116"
+                "reference": "153ebd99d9b842e0c99a024c41f970d79db46475"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/7e7e104de01b5052195cefefcd0b29f1add4c116",
-                "reference": "7e7e104de01b5052195cefefcd0b29f1add4c116",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/153ebd99d9b842e0c99a024c41f970d79db46475",
+                "reference": "153ebd99d9b842e0c99a024c41f970d79db46475",
                 "shasum": ""
             },
             "require": {
@@ -3906,7 +3918,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2016-09-04 11:59:15"
+            "time": "2016-09-26 20:28:11"
         },
         {
             "name": "phpspec/prophecy",
@@ -4208,16 +4220,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "66834d3e3566bb5798db7294619388786ae99394"
+                "reference": "e827b5254d3e58c736ea2c5616710983d80b0b70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/66834d3e3566bb5798db7294619388786ae99394",
-                "reference": "66834d3e3566bb5798db7294619388786ae99394",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/e827b5254d3e58c736ea2c5616710983d80b0b70",
+                "reference": "e827b5254d3e58c736ea2c5616710983d80b0b70",
                 "shasum": ""
             },
             "require": {
@@ -4250,7 +4262,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2015-11-21 02:21:41"
+            "time": "2016-09-14 15:17:56"
         },
         {
             "name": "symfony/options-resolver",
@@ -4579,7 +4591,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "duoshuo/php-cassandra": 20,
         "kramnorth/cinemr-php-sdk": 20,
         "minds/surge": 20,
         "thobbs/phpcassa": 20,
