@@ -41,25 +41,22 @@ class Conversations
         $usingCache = false;
 
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("SELECT * from entities_by_time WHERE key=:row LIMIT :size", [
-          'row' => "{$this->db->getPrefix()}object:gathering:conversations:{$this->user->guid}",
-          'size' => 10000
+        $prepared->query("SELECT * from entities_by_time WHERE key= ? LIMIT ?", [
+          "{$this->db->getPrefix()}object:gathering:conversations:{$this->user->guid}",
+          10000
         ]);
 
         //check cache for ids to return
         if (!$offset) {
             $guids = $this->cache->setUser($this->user)->getGuids();
             if ($guids && is_array($guids) && count($guids) >= 12) {
-                $prepared->query("SELECT * from entities_by_time WHERE key=:row AND column1 IN :guids LIMIT :size", [
-                  'row' => "object:gathering:conversations:{$this->user->guid}",
-                  'guids' => $guids,
-                  'size' => 1000
-                  ]);
+                $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
+                  [ "object:gathering:conversations:{$this->user->guid}", $guids, 1000 ]);
                 $usingCache = true;
             }
         }
 
-        $result = (array) $this->db->request($prepared);
+        $result = $this->db->request($prepared);
         foreach ($result as $item) {
             $key = $item['column1'];
             $conversations[$key] = $item['value'];
