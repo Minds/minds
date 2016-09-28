@@ -134,7 +134,7 @@ class Counters
         try {
             $result = $client->request($query->get($guid, $metric));
             if (isset($result[0]) && isset($result[0]['count'])) {
-                $count = $result[0]['count'];
+                $count = (int) $result[0]['count'];
             } else {
                 $count =  0;
             }
