@@ -26,12 +26,11 @@ class Storage
         $prepared->query("SELECT * FROM translations WHERE guid= ? AND field= ? AND language= ? LIMIT 1",
           [ (string) $guid, $field, $target ]);
 
-        $result = (array) $this->db->request($prepared);
+        $result = $this->db->request($prepared);
 
-        if (!$result) {
-            return false;
+        if (!$result[0]) {
+           return false;
         }
-
         return $result[0];
     }
 
