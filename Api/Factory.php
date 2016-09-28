@@ -21,10 +21,10 @@ class Factory
      */
     public static function build($segments)
     {
-        try {
-            Helpers\RequestMetrics::increment('api');
-        } catch (\Exception $e) {
-        }
+        //try {
+        //    Helpers\RequestMetrics::increment('api');
+        //} catch (\Exception $e) {
+        //}
 
         $method = strtolower($_SERVER['REQUEST_METHOD']);
 
