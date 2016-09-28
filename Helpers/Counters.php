@@ -155,7 +155,6 @@ class Counters
      */
     public static function clear($entity, $metric, $value = 0, $client = null)
     {
-      return;
         if (is_numeric($entity) || is_string($entity)) {
             $guid = $entity;
         } else {
