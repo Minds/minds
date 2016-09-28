@@ -7,6 +7,7 @@ namespace Minds\Core\data;
 class Client
 {
     private static $default = '\Minds\Core\Data\cassandra\client';
+    private static $clients = [];
 
     /**
      * Build the client
@@ -25,8 +26,12 @@ class Client
             $handler = "\\Minds\\Core\\Data\\$handler\\Client";
         }
 
+        if (isset(self::$clients[$handler])) {
+            return self::$clients[$handler];
+        }
+
         if (class_exists($handler)) {
-            return new $handler($options);
+            return self::$clients[$handler] = new $handler($options);
         } else {
             throw new \Exception("Factory not found");
         }
