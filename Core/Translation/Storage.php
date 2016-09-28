@@ -23,11 +23,8 @@ class Storage
     public function get($guid, $field, $target)
     {
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("SELECT * FROM translations WHERE guid=:guid AND field=:field AND language=:language LIMIT 1", [
-            'guid' => (string) $guid,
-            'field' => $field,
-            'language' => $target,
-        ]);
+        $prepared->query("SELECT * FROM translations WHERE guid= ? AND field= ? AND language= ? LIMIT 1",
+          [ (string) $guid, $field, $target ]);
 
         $result = (array) $this->db->request($prepared);
 
@@ -51,13 +48,8 @@ class Storage
         $content = (string) $content;
 
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("INSERT INTO translations (guid, field, language, source_language, content) VALUES (:guid, :field, :language, :sourcelanguage, :content)", [
-            'guid' => (string) $guid,
-            'field' => $field,
-            'language' => $target,
-            'sourcelanguage' => $sourceLanguage,
-            'content' => $content,
-        ]);
+        $prepared->query("INSERT INTO translations (guid, field, language, source_language, content) VALUES (?, ?, ?, ?, ?)",
+          [ (string) $guid, $field, $target, $sourceLanguage, $content ]);
 
         $result = (array) $this->db->request($prepared);
 
@@ -71,9 +63,7 @@ class Storage
         }
 
         $prepared = new Cassandra\Prepared\Custom();
-        $prepared->query("DELETE FROM translations WHERE guid=:guid", [
-            'guid' => (string) $guid,
-        ]);
+        $prepared->query("DELETE FROM translations WHERE guid= ?", [ (string) $guid ]);
 
         return $this->db->request($prepared);
     }
