@@ -17,7 +17,7 @@ class Client implements Interfaces\ClientInterface
     public function __construct(array $options = array())
     {
         $this->cluster = Driver::cluster()
-           //->withContactPoints(Config::_()->cassandra->cql_servers)
+           ->withContactPoints(... Config::_()->cassandra->cql_servers)
            ->withPort(9042)
            ->build();
         $this->session = $this->cluster->connect(Config::_()->cassandra->keyspace);
