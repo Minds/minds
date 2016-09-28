@@ -71,7 +71,7 @@ class keys implements Interfaces\Api
                   ->save();
 
                 if (!isset($_POST['download']) || $_POST['download']) {
-                    $keystore->unlockPrivateKey($_POST['password']);
+                    $keystore->unlockPrivateKey($_POST['password'], null);
                     $tmp = $keystore->getUnlockedPrivateKey();
                     $response['key'] = $tmp;
                 } else {
