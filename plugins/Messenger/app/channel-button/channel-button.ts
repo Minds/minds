@@ -40,7 +40,7 @@ export class MessengerChannelButton {
 
   private buildConversation(){
     return {
-      guid: this.permutate(), //TODO: permutate!
+      guid: this.permutate(),
       participants: [ this.user ],
       open: true
     };
@@ -48,7 +48,7 @@ export class MessengerChannelButton {
 
   private permutate(){
     let participants = [ this.user.guid, this.session.getLoggedInUser().guid ];
-    participants.sort((a, b) => { return a[1] - b[1]; });
+    participants.sort((a, b) => a < b ? -1 : 1);
     return participants.join(':');
   }
 
