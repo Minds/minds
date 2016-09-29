@@ -61,13 +61,13 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->query("SELECT * FROM categories
-          WHERE type = :type
-          AND filter = :filter
-          AND category IN :categories
+          WHERE type = ?
+          AND filter = ?
+          AND category IN ?
           ALLOW FILTERING", [
-            'type' => $this->type,
-            'filter' => $this->filter,
-            'categories' => $this->getCategories()
+            $this->type,
+            $this->filter,
+            \Cassandra\Type::collection(\Cassandra\Type::text())->create(... $this->getCategories())
           ]);
         try {
             $result = $this->db->request($query);
@@ -90,13 +90,8 @@ class Repository
         foreach ($this->categories as $category) {
             $query->query("INSERT INTO categories
               (type, category, filter, guid)
-              VALUES (:type, :category, :filter, :guid)",
-              [
-                'type' => $this->type,
-                'filter' => $this->filter,
-                'category' => $category,
-                'guid' => $guid
-              ]);
+              VALUES (?, ?, ?, ?)",
+              [ $this->type, $this->filter, $category, (string) $guid ]);
             try {
                 $result = $this->db->request($query);
             } catch (\Exception $e) { }
@@ -112,16 +107,8 @@ class Repository
         }
         foreach ($this->categories as $category) {
             $query->query("DELETE FROM categories
-              WHERE type = :type
-              AND category = :category
-              AND filter = :filter
-              AND guid = :guid",
-              [
-                'type' => $this->type,
-                'filter' => $this->filter,
-                'category' => $category,
-                'guid' => $guid
-              ]);
+              WHERE type = ? AND category = ? AND filter = ? AND guid = ?",
+              [ $this->type, $this->filter, $category, (string) $guid ]);
             try {
                 $result = $this->db->request($query);
             } catch (\Exception $e) { }
