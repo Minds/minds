@@ -1,7 +1,9 @@
 Minds
 ==========
 
-___Copyright 2016___
+___Copyright Minds 2012 - 2016___
+
+Copyright for portions of Minds are held by [Elgg](http://elgg.org), 2013 as part of the [Elgg](http://elgg.org) project. All other copyright for Minds is held by Minds, Inc.
 
 ## Introduction
 An open-source, encrypted and reward-based social networking platform. https://minds.com | https://minds.org
