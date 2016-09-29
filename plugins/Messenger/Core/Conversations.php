@@ -50,8 +50,10 @@ class Conversations
         if (!$offset) {
             $guids = $this->cache->setUser($this->user)->getGuids();
             if ($guids && is_array($guids) && count($guids) >= 12) {
+                $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
+                    ->create(... $guids);
                 $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
-                  [ "object:gathering:conversations:{$this->user->guid}", $guids, 1000 ]);
+                  [ "object:gathering:conversations:{$this->user->guid}", $collection, 1000 ]);
                 $usingCache = true;
             }
         }
