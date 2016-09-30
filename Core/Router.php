@@ -47,9 +47,9 @@ class Router
             $this->postDataFix();
         }
 
-        //if (Session::isLoggedin()) {
-        //    Helpers\Analytics::increment("active");
-        //}
+        if (Session::isLoggedin()) {
+            Helpers\Analytics::increment("active");
+        }
 
         if (isset($_GET['__e_ct_guid'])) {
             Helpers\Analytics::increment("active", time(), $_GET['__e_ct_guid']);
