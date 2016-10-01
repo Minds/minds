@@ -23,7 +23,7 @@ class Client implements Interfaces\ClientInterface
         $this->session = $this->cluster->connect(Config::_()->cassandra->keyspace);
     }
 
-    public function request(Interfaces\PreparedInterface $request)
+    public function request(Interfaces\PreparedInterface $request, $silent = false)
     {
         $cql = $request->build();
         try{
@@ -34,11 +34,12 @@ class Client implements Interfaces\ClientInterface
                   'arguments' => $cql['values']
               ])
             );
-
+            if (!$silent) {
+              return $response = $future->get();
+            }
         }catch(\Exception $e){
             return false;
         }
-        return $response = $future->get();
     }
 
     public function batchRequest($requests = array())
