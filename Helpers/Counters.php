@@ -34,7 +34,7 @@ class Counters
         }
         $query = new Core\Data\Cassandra\Prepared\Counters();
         try {
-            $client->request($query->update($guid, $metric, $value));
+            $client->request($query->update($guid, $metric, $value), true);
         } catch (\Exception $e) {
         }
         //error_log("$guid:$metric:$value");
@@ -88,15 +88,15 @@ class Counters
         $query = new Core\Data\Cassandra\Prepared\Counters();
         foreach ($entities as $entity) {
             if (is_numeric($entity) || is_string($entity)) {
-                $client->request($query->update($entity, $metric, $value));
+                $client->request($query->update($entity, $metric, $value), true);
             } elseif ($entity->guid) {
-                $client->request($query->update($entity->guid, $metric, $value));
+                $client->request($query->update($entity->guid, $metric, $value), true);
                 if ($entity->remind_object && isset($entity->remind_object['guid'])) {
-                    $client->request($query->update($entity->remind_object['guid'], $metric, $value));
+                    $client->request($query->update($entity->remind_object['guid'], $metric, $value), true);
                 }
 
                 if ($entity->owner_guid) {
-                    $client->request($query->update($entity->owner_guid, $metric, $value));
+                    $client->request($query->update($entity->owner_guid, $metric, $value), true);
                 }
             }
         }
