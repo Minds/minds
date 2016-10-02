@@ -67,7 +67,7 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                     case 'video':
                         if (!$entity->thumbnail) {
                             $cinemr = $entity->cinemr();
-                            $ret = $cinemr::factory('media')->get($entity->cinemr_guid.'/thumbnail');
+                            $ret = $CONFIG->cinemr_url . $entity->cinemr_guid.'/thumbnail-00001.png';
                             forward($ret);
                             exit;
                         }
