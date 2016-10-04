@@ -86,7 +86,7 @@ class Manager
             ->setPath('/Discovery')
             ->setParams(array(
                 'filter' => 'trending',
-                'type' => ''
+                'type' => 'channels'
             ))
             ->addSubItem($discovery_trending)
             ->addSubItem($discovery_suggested)
