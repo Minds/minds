@@ -12,7 +12,7 @@
 
 <div class="mdl-grid m-blog-container blogs-grid mdl-color--white mdl-shadow--4dp" style="max-width:660px" *ngIf="blog.guid">
 
-  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="top"></google-ad>
+  <pd-ad *ngIf="blog.monetized" type="banner" location="top"></pd-ad>
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
@@ -52,9 +52,7 @@
   </div>
 
   <div style="width:100%; padding:8px;">
-    <!-- START: Google adsense block -->
-    <google-ad *ngIf="blog.monetized && index == 0"></google-ad>
-    <!-- END: Google adsense block -->
+    <pd-ad *ngIf="blog.monetized && index == 0" type="square" location="inline"></pd-ad>
 
     <div class="mdl-cell mdl-cell--12-col minds-blog-body"
     [innerHtml]="blog.description | safe"
@@ -62,14 +60,12 @@
     ></div>
   </div>
 
-  <!-- START: Google adsense block -->
-  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="bottom"></google-ad>
-  <!-- END: Google adsense block -->
 
   <div style="width:100%; padding:8px;">
     <!-- START: RevContent block -->
-    <revcontent *ngIf="blog.monetized"></revcontent>
+    <!--<revcontent *ngIf="blog.monetized"></revcontent>-->
     <!-- END: RevContent block -->
+    <pd-ad *ngIf="blog.monetized" type="context" location="bottom"></pd-ad>
   </div>
 
   <!-- Additional block -->
