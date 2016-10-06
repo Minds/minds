@@ -23,7 +23,7 @@ import { Material } from '../../../../directives/material';
     <div class="minds-archive-stage" *ngIf="object.subtype == 'video'">
       <minds-video
       [poster]="object.thumbnail_src"
-	    [autoplay]="true"
+	    [autoplay]="false"
 	    [muted]="false"
 	    [src]="[{ 'uri': object.src['720.mp4'] }, { 'uri': object.src['360.mp4'] }]"
         [log]="object.guid"
