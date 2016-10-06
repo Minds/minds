@@ -79,15 +79,19 @@ class settings implements Interfaces\Api
             $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
         }
 
+        if (isset($_POST['monetized']) && $_POST['monetized']) {
+            $user->monetized = $_POST['monetized'];
+        }
+
         if (isset($_POST['password']) && $_POST['password']) {
             if (!Core\Security\Password::check($user, $_POST['password'])) {
                 return Factory::response(array(
-              'status' => 'error',
-              'message' => 'You current password is incorrect'
-            ));
+                  'status' => 'error',
+                  'message' => 'You current password is incorrect'
+                ));
             }
-          //need to create a new salt and hash...
-          $user->salt = Core\Security\Password::salt();
+            //need to create a new salt and hash...
+            $user->salt = Core\Security\Password::salt();
             $user->password = Core\Security\Password::generate($user, $_POST['new_password']);
             $user->override_password = true;
         }

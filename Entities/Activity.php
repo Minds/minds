@@ -151,7 +151,8 @@ class Activity extends Entity
                 'thumbs:down:count',
                 'thumbs:down:user_guids',
                 'p2p_boosted',
-                'mature'
+                'mature',
+                'monetized'
             ));
     }
 
