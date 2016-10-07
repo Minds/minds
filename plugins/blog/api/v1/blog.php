@@ -175,6 +175,13 @@ class blog implements Interfaces\Api
             //$blog->setMature($_POST['mature']);
         }
 
+        if (!$blog->canEdit()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Sorry, you do not have permission'
+              ]);
+        }
+
         $blog->save();
 
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
