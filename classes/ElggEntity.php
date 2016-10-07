@@ -1047,7 +1047,10 @@ abstract class ElggEntity extends ElggData implements
 		/*if(!$this->guid)
 			$this->guid = GUID::generate();*/
 		$new = true;
-		if($this->guid){
+        if($this->guid){
+            if (!$this->canEdit()) {
+                return false;
+            }
 			$new = false;
 			elgg_trigger_event('update', $this->type, $this);
 			//@todo review... memecache actually make us slower anyway.. do we need it?
