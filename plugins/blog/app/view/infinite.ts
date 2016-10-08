@@ -65,8 +65,8 @@ export class BlogViewInfinite {
           this.error = "Sorry, we couldn't load the blog";
         }
         //hack: ios rerun on low memory
-        //this.cd.markForCheck();
-        //this.applicationRef.tick();
+        this.cd.markForCheck();
+        this.applicationRef.tick();
         this.inProgress = false;
       })
       .catch((e) => {

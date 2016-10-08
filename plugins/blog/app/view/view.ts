@@ -8,7 +8,6 @@ import { Material } from '../../../directives/material';
 import { Hovercard } from '../../../directives/hovercard';
 import { GoogleAds } from '../../../components/ads/google-ads';
 import { RevContent } from '../../../components/ads/revcontent';
-import { PDAds } from '../../../components/ads/pd-ads';
 import { MindsTitle } from '../../../services/ux/title';
 import { MindsFatBanner } from '../../../components/banner';
 import { Comments } from '../../../controllers/comments/comments';
@@ -33,7 +32,7 @@ import { AttachmentService } from '../../../services/attachment';
   providers:[ MindsTitle, AttachmentService ],
   templateUrl: 'src/plugins/blog/view/view.html',
   directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, RevContent, PDAds, ShareModal, SocialIcons, InfiniteScroll, Hovercard, ConfirmModal ]
+    GoogleAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard, ConfirmModal ]
 })
 
 export class BlogView {
