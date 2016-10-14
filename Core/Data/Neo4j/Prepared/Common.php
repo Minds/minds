@@ -423,8 +423,7 @@ class Common implements Interfaces\PreparedInterface
 
         $this->template = "start n = node:geom({filter})
             MATCH (u:User {guid:{guid}}), (n)-[:HAS]->(p:Property { avatar:true })
-            WHERE n.last_active > {active}
-            AND NOT u-[:ACTED]->n
+            WHERE NOT u-[:ACTED]->n
             AND NOT u.guid = n.guid
             RETURN n as fof
             SKIP {skip}
