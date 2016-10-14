@@ -273,7 +273,7 @@ class Common implements Interfaces\PreparedInterface
      */
     public function getTrendingUsers($skip = 0, $limit = 12)
     {
-        $this->template = "MATCH ()-[r:SUBSCRIBED]-(user:User) WHERE user.last_active > {ts} RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT {limit}";
+        $this->template = "MATCH ()-[r:SUBSCRIBED]->(user:User) WHERE user.last_active > {ts} RETURN user, count(r) as c ORDER BY c DESC, user.guid SKIP {skip} LIMIT {limit}";
         $this->values = array(
             'skip' => (int) $skip,
             'limit' => (int) $limit,
