@@ -18,7 +18,7 @@ import { GroupsService } from '../groups-service';
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()">Re-invite to Group</li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()">Make Admin</li>
-    <li class="mdl-menu__item" *ngIf="group['is:creator'] && !user['is:creator'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()">Remove as Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()">Remove as Admin</li>
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
