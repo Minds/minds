@@ -56,7 +56,7 @@ class Client implements Interfaces\QueueClient
     {
         if (!$this->exchange) { 
             $this->setExchange(
-                Di::_()->get('Config')->get('queue')['exchange']
+                Di::_()->get('Config')->get('queue')['exchange'] ?: 'mindsqueue'
             );
         }
 
