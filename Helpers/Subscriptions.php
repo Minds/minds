@@ -67,6 +67,7 @@ class Subscriptions
                 'to'=>array($to_guid),
                 'entity' => $user_guid,
                 'notification_view' => 'friends',
+                'from' => $user_guid,
                 'params' => array()
                 ));
 
