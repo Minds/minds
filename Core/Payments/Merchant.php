@@ -19,11 +19,14 @@ class Merchant
     private $street;
     private $city;
     private $region;
+    private $country;
     private $postCode;
 
     private $accountNumber;
     private $routingNumber;
     private $destination;
+
+    private $verified = false;
 
     private $status = "processing";
 
@@ -141,6 +144,17 @@ class Merchant
         return $this;
     }
 
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
     public function getPostCode()
     {
         return $this->postCode;
@@ -185,6 +199,17 @@ class Merchant
             throw new \Exception("$destination is not a valid payout method");
         }
         $this->destination = $destination;
+        return $this;
+    }
+
+    public function isVerified()
+    {
+        return (bool) $this->verified;
+    }
+
+    public function markAsVerified()
+    {
+        $this->verified = true;
         return $this;
     }
 

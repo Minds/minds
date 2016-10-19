@@ -217,6 +217,13 @@ class User extends \ElggUser
         return (int) $return;
     }
 
+    public function getMerchant(){
+        if ($this->merchant && !is_array($this->merchant)) {
+            return json_decode($this->merchant, true);
+        }
+        return $this->merchant;
+    }
+
     /**
      * Set the secret key for clusters to use
      * @todo - should we use oauth2 instead. should this be stored in its own row rather than in the user object?
@@ -248,6 +255,10 @@ class User extends \ElggUser
         $export['impressions'] = $this->getImpressions();
         if ($this->fb && is_string($this->fb)) {
             $export['fb'] = json_decode($this->fb, true);
+        }
+
+        if ($this->merchant) {
+            $export['merchant'] = json_decode($this->merchant, true);
         }
 
         if (isset($export['mature'])) {

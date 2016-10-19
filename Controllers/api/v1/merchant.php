@@ -30,8 +30,10 @@ class merchant implements Interfaces\Api
       switch ($pages[0]) {
         case "sales":
           $merchant = (new Payments\Merchant)
-            ->setGuid(Core\Session::getLoggedInUser()->guid);
-          $sales = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getSales($merchant);
+            ->setGuid(Core\Session::getLoggedInUser()->merchant['id']);
+
+          $stripe = Core\Di\Di::_()->get('StripePayments');
+          $sales = $stripe->getSales($merchant);
 
           foreach ($sales as $sale) {
               $response['sales'][] = [
@@ -49,8 +51,9 @@ class merchant implements Interfaces\Api
           break;
         case "settings":
 
+          $stripe = Core\Di\Di::_()->get('StripePayments');
           try {
-              $merchant = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getMerchant(Core\Session::getLoggedInUser()->guid);
+              $merchant = $stripe->getMerchant(Core\Session::getLoggedInUser()->getMerchant()['id']);
           } catch (\Exception $e) {
               return Factory::response([
                 'status' => 'error',
@@ -59,9 +62,6 @@ class merchant implements Interfaces\Api
           }
 
           if (!$merchant) {
-              $user = Core\Session::getLoggedInUser();
-              $user->merchant = (int) 0;
-              $user->save();
               return Factory::response([
                 'status' => 'error',
                 'message' => 'Not a merchant account'
@@ -104,18 +104,22 @@ class merchant implements Interfaces\Api
               ->setStreet($_POST['street'])
               ->setCity($_POST['city'])
               ->setRegion($_POST['region'])
+              ->setCountry($_POST['country'])
               ->setPostCode($_POST['postCode'])
               ->setDestination($_POST['venmo'] ? 'email' : 'bank')
               ->setAccountNumber($_POST['accountNumber'])
               ->setRoutingNumber($_POST['routingNumber']);
 
             try {
-                $id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->addMerchant($merchant);
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $id = $stripe->addMerchant($merchant);
                 $response['id'] = $id;
 
                 $user = Core\Session::getLoggedInUser();
-                $user->merchant = true;
-                $user->{"merchant_status"} = 'processing';
+                $user->merchant = [
+                  'service' => 'stripe',
+                  'id' => $id
+                ];
                 $user->save();
             } catch (\Exception $e) {
                 $response['status'] = "error";
@@ -123,6 +127,16 @@ class merchant implements Interfaces\Api
             }
 
             break;
+          case "verification":
+
+              try {
+                  $stripe = Core\Di\Di::_()->get('StripePayments');
+                  $stripe->verifyMerchant(Core\Session::getLoggedInUser()->getMerchant()['id'], $_FILES['file']);
+              } catch (\Exception $e) {
+                  $response['status'] = "error";
+                  $response['message'] = $e->getMessage();
+              }
+              break;
           case "update":
             $merchant = (new Payments\Merchant())
               ->setGuid(Core\Session::getLoggedInUser()->guid)
@@ -144,7 +158,10 @@ class merchant implements Interfaces\Api
                 $response['id'] = $id;
 
                 $user = Core\Session::getLoggedInUser();
-                $user->merchant = true;
+                $user->merchant = [
+                  'service' => 'stripe',
+                  'id' => $id
+                ];
                 $user->save();
             } catch (\Exception $e) {
                 $response['status'] = "error";
