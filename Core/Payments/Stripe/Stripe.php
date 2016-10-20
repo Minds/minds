@@ -54,20 +54,25 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
         $opts = [
           'amount' => $sale->getAmount(),
+          'capture' => false,
           'currency' => 'usd',
           'source' => $sale->getNonce(),
           'metadata' => [
+            'orderId' => $sale->getOrderId(),
             'first_name' => $sale->getCustomerId()
           ],
         ];
         if ($sale->getFee()) {
-            $opts['application_fee'] = $sale->getFee();
+            $opts['application_fee'] = round($sale->getFee());
         }
         if ($sale->getMerchant()) {
-            $opts['destination'] = $sale->getMerchant()->guid;
+            $user = new Entities\User($sale->getMerchant()->guid);
+            $opts['destination'] = $user->getMerchant()['id'];
         }
 
-        if ($result->success) {
+        $result = StripeSDK\Charge::create($opts);
+
+        if ($result->status == 'succeeded') {
             return $result->id;
         }
 
@@ -93,6 +98,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
      */
     public function voidSale(Sale $sale)
     {
+        StripeSDK\Refund::create([
+          "charge" => $sale->getId()
+        ]);
     }
 
     /**
@@ -102,6 +110,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
      */
     public function refundSale(Sale $sale)
     {
+        StripeSDK\Refund::create([
+          "charge" => $sale->getId()
+        ]);
     }
 
     /**
@@ -118,10 +129,10 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         foreach ($results->data as $transaction) {
             $sales[] = (new Sale)
               ->setId($transaction->id)
-              ->setAmount($transaction->amount)
-              ->setStatus($transaction->status)
+              ->setAmount($transaction->amount / 100)
+              ->setStatus($transaction->outcome['seller_message'])
               ->setMerchant($merchant)
-              ->setOrderId($transaction->id)
+              ->setOrderId($transaction->metadata['orderId'])
               ->setCustomerId($transaction->customer['first_name'])
               ->setCreatedAt($transaction->created)
               ->setSettledAt($transaction->updated);
