@@ -1,11 +1,14 @@
 <?php
 $_SCRIPTNAME = basename(__FILE__);
 
+/*
 if (PHP_SAPI !== 'cli') {
     echo "{$_SCRIPTNAME} this is a CLI script" . PHP_EOL;
     exit(1);
 }
+ */
 
+//require_once(dirname(__FILE__) . "/../engine/autoload.php");
 require_once(dirname(__FILE__) . "/../engine/vendor/autoload.php");
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
