@@ -35,8 +35,8 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "august-23-2016":
-            $points = 1000;
+          case "october-24-2016":
+            $points = 500;
             break; 
           default:
             return;
