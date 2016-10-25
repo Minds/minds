@@ -315,6 +315,7 @@ class newsfeed implements Interfaces\Api
                 return Factory::response(array('guid'=>$activity->guid));
                 break;
             default:
+                //essentially an edit
                 if (is_numeric($pages[0])) {
                     $activity = new Entities\Activity($pages[0]);
                     if (!$activity->canEdit()) {
@@ -330,6 +331,10 @@ class newsfeed implements Interfaces\Api
 
                     if (isset($_POST['mature'])) {
                         $activity->setMature($_POST['mature']);
+                    }
+
+                    if (isset($_POST['paywall'])) {
+                        $activity->setPayWall($_POST['paywall']);
                     }
 
                     $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
@@ -403,6 +408,10 @@ class newsfeed implements Interfaces\Api
 
                 if (isset($_POST['access_id'])) {
                     $activity->access_id = $_POST['access_id'];
+                }
+
+                if (isset($_POST['paywall'])) {
+                    $activity->setPayWall($_POST['paywall']);
                 }
 
                 if ($guid = $activity->save()) {

@@ -25,7 +25,7 @@ class Activity extends Entity
             'owner_guid' => elgg_get_logged_in_user_guid(),
             'access_id' => 2, //private,
             'mature' => false,
-
+            'paywall' => false
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -151,7 +151,8 @@ class Activity extends Entity
                 'thumbs:down:user_guids',
                 'p2p_boosted',
                 'mature',
-                'monetized'
+                'monetized',
+                'paywall'
             ));
     }
 
@@ -192,6 +193,11 @@ class Activity extends Entity
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
+        }
+
+        if ($this->paywall) {
+            $export['message'] = null;
+            $export['custom_data'] = null;
         }
 
         return $export;
@@ -351,6 +357,25 @@ class Activity extends Entity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    /**
+     * Sets if there is a paywall or not
+     * @param mixed $value
+     */
+    public function setPayWall($value)
+    {
+        $this->paywall = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Checks if there is a paywall for this post
+     * @return boolean
+     */
+    public function isPayWall()
+    {
+        return (bool) $this->paywall;
     }
 
     /**
