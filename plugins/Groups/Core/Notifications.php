@@ -75,7 +75,9 @@ class Notifications
     public function send($params)
     {
         $activity = EntitiesFactory::build($params['activity']);
-
+        if (!$activity) {
+            return false;
+        }
         //generate only one notification, because it's quicker that way
         $notification = (new NotificationEntity())
             ->setTo($activity->getOwner())
