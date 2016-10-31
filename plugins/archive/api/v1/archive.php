@@ -149,7 +149,23 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                 switch ($pages[0]) {
                   case 'video':
                   default:
-                    error_log("[upload][log]:: start video");
+                      error_log("[upload][log]:: start video");
+
+
+                      //check length
+                      $length = exec("ffmpeg -i {$_FILES['file']['tmp_name']} 2>&1  | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//");
+                      $timeSplit = explode(':', $length);
+
+                      $hours = $timeSplit[0];
+                      $mins = $timeSplit[1];
+
+                      if($hours > 1 || $mins >= 40){
+                          return Factory::response([
+                            'status' => 'error',
+                            'message' => "Video of $hours(hr),$mins(mins) is too long and must be less than 40 mins."
+                          ]);
+                      }
+
                       $video = new entities\video();
                       $video->upload($_FILES['file']['tmp_name']);
                       $video->access_id = 0;
