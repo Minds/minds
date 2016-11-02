@@ -197,8 +197,10 @@ class group implements Interfaces\Api
         }
 
         try {
+            $group->delete();
+
             return Factory::response([
-                'done' => $group->delete()
+                'done' => true
             ]);
         } catch (GroupOperationException $e) {
             return Factory::response([
