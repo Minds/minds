@@ -41,6 +41,10 @@ class channel implements Interfaces\Api
             return Factory::response(array('status'=>'error', 'message'=>'The user is disabled'));
         }
 
+        if ($user->banned == 'yes' && !Core\Session::isAdmin()) {
+            return Factory::response(array('status'=>'error', 'message'=>'The user is banned'));
+        }
+
         $return = Factory::exportable(array($user));
 
         $response['channel'] = $return[0];
