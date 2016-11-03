@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-php_version="7.1"
+php_version="5.6"
 php_conf="/etc/php/$php_version/fpm/php.ini"
 fpm_conf="/etc/php/$php_version/fpm/pool.d/www.conf"
+cassandra_version="2.2.8"
 
 add-apt-repository ppa:ondrej/php
 add-apt-repository ppa:openjdk-r/ppa
@@ -17,6 +18,7 @@ apt-get install -y \
   curl \
   git \
   php$php_version \
+  php$php_version-dev \
   php$php_version-bcmath \
   php$php_version-common \
   php$php_version-ctype \
@@ -27,22 +29,22 @@ apt-get install -y \
   php$php_version-mysqli \
   php$php_version-mcrypt \
   php$php_version-pdo \
-  dsc22 cassandra=2.2.7 cassandra-tools=2.2.7 \
+  dsc22 cassandra=$cassandra_version cassandra-tools=$cassandra_version \
   openjdk-8-jre \
   rabbitmq-server \
-  openssl
+  openssl \
   #php$php_version-zlib \
   #php$php_version-gd \
   #php$php_version-intl \
   #php$php_version-memcached \
   #php$php_version-sqlite3 \
-  #4php$php_version-pgsql \
-  #php$php_version-xml \
+  #php$php_version-pgsql \
+  php$php_version-xml \
   #php$php_version-xsl \
-  #php$php_version-curl \
-  #php$php_version-openssl \
+  php$php_version-curl \
+  php$php_version-openssl \
   #php$php_version-iconv \
-  #php$php_version-json \
+  php$php_version-json
   #php$php_version-phar \
   #php$php_version-soap \
   #php$php_version-dom && \
@@ -80,6 +82,19 @@ sed -i "s/^rpc_address:.*/rpc_address: 0.0.0.0/" /etc/cassandra/cassandra.yaml
 sed -i "s/^# broadcast_address:.*/broadcast_address: 127.0.0.1/" /etc/cassandra/cassandra.yaml
 sed -i "s/^# broadcast_rpc_address:.*/broadcast_rpc_address: 127.0.0.1/" /etc/cassandra/cassandra.yaml
 sed -i 's/^start_rpc.*$/start_rpc: true/' /etc/cassandra/cassandra.yaml
+
+# Setup cassandra driver
+apt-get install -y php-pear php5-dev libgmp-dev libpcre3-dev g++ make cmake libssl-dev openssl
+git clone https://github.com/datastax/php-driver.git
+cd php-driver
+git submodule update --init
+cd ext
+wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
+wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
+dpkg -i libuv_1.8.0-1_amd64.deb
+dpkg -i libuv-dev_1.8.0-1_amd64.deb
+./install.sh
+echo "extension=cassandra.so" > /etc/php/5.6/fpm/conf.d/20-cassandra.ini
 
 # start services
 service php$php_version-fpm restart
