@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Payments\PayWall;
+namespace Minds\Core\Payments\Plans;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -10,9 +10,8 @@ class Repository
     private $db;
     private $config;
 
-    private $filter;
-    private $type;
-    private $categories;
+    private $entity_guid;
+    private $user_guid;
 
     public function __construct($db = NULL, $config = NULL)
     {
@@ -43,7 +42,7 @@ class Repository
         ], $opts);
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM paywall WHERE entity_guid = ?", [
+        $query->query("SELECT * FROM plans WHERE entity_guid = ?", [
             $this->entity_guid
           ]);
         try {
@@ -65,8 +64,9 @@ class Repository
     {
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM paywall WHERE entity_guid = ? AND user_guid = ?", [
-            $this->entity_guid, $this->user_guid
+        $query->query("SELECT * FROM plans
+          WHERE entity_guid = ? AND plan = ? AND user_guid = ?", [
+            $this->entity_guid, $this->plan, $this->user_guid
           ]);
         try {
             $result = $this->db->request($query);
@@ -80,13 +80,20 @@ class Repository
         }
     }
 
-    public function add($subscription_id, $status, $expires)
+    public function add($plan)
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("INSERT INTO paywall
-          (entity_guid, user_guid, subscription_id, status, expires)
-          VALUES (?, ?, ?)",
-          [ $this->entity_guid, $this->user_guid, $subscription_id, $status, $expires);
+        $query->query("INSERT INTO plans
+          (entity_guid, plan, user_guid, status, expires, payment_id, payment_ts)
+          VALUES (?, ?, ?, ?, ?)",
+          [ $plan->getEntityGuid(),
+            $plan->getName(),
+            $plan->getUserGuid(),
+            $plan->getStatus(),
+            $plan->getExpires(),
+            $plan->getPaymentId(),
+            $plan->getPaymentTs()
+          ]);
         try {
             $result = $this->db->request($query);
         } catch (\Exception $e) { }

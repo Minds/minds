@@ -121,6 +121,7 @@ class merchant implements Interfaces\Api
                   'id' => $id
                 ];
                 $user->save();
+
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
@@ -163,6 +164,19 @@ class merchant implements Interfaces\Api
                   'id' => $id
                 ];
                 $user->save();
+            } catch (\Exception $e) {
+                $response['status'] = "error";
+                $response['message'] = $e->getMessage();
+            }
+            break;
+          case "exclusive":
+            try {
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $user = Core\Session::getLoggedInUser();
+                $stripe->createPlan((object) [
+                  'id' => "{$user->guid}:exclusive",
+                  'amount' => $_POST['amount'],
+                ]);
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();

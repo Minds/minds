@@ -54,9 +54,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
         $opts = [
           'amount' => $sale->getAmount(),
-          'capture' => false,
+          'capture' => $sale->shouldCapture(),
           'currency' => 'usd',
-          'source' => $sale->getNonce(),
+          'source' => $sale->getNonce() || $sale->getCustomerId(),
           'metadata' => [
             'orderId' => $sale->getOrderId(),
             'first_name' => $sale->getCustomerId()
@@ -258,14 +258,61 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     public function createCustomer(Customer $customer)
     {
+
+        $opts = [
+          'metadata' => [
+            'user_guid' => $customer->getUser()->getGuid()
+          ]
+        ];
+
+        if ($customer->getPaymentToken()) {
+            $opts['source'] = $customer->getPaymentToken();
+        }
+
+        $result = StripeSDK\Customer::create($opts);
+
+        $customer->setId($result->id);
+        return $customer;
+    }
+
+    public function getCustomer(Customer $customer)
+    {
+        $result = StripeSDK\Customer::retrieve($customer->getId());
+        $customer->setPaymentMethods($result->sources->data);
+        return $customer;
     }
 
     public function createPaymentMethod(PaymentMethod $payment_method)
     {
     }
 
+    public function getPlan($id){
+        try {
+            $result = StripeSDK\Plan::retrieve($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return $result;
+    }
+
+    public function createPlan($plan)
+    {
+        $result = Stripe\Plan::create([
+          'amount' => $plan->amount,
+          'interval' => 'monthly',
+          'name' => $plan->id,
+          'currency' => "usd",
+          'id' => $plan->id
+        ]);
+    }
+
+    /**
+     * STRIPE DOES NOT SUPPORT SUBSCRIPTIONS.
+     * USE MINDS DAILY PROCESSOR
+     */
     public function createSubscription(Subscription $subscription)
     {
+
     }
 
     public function getSubscription($subscription_id)
