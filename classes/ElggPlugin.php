@@ -88,13 +88,13 @@ class ElggPlugin extends ElggEntity {
 			//exit;
 		}
 			// check if we're loading an existing plugin
-			$db = new Minds\Core\Data\Call('plugin');
+			/*$db = new Minds\Core\Data\Call('plugin');
 			$existing_plugin = $db->getRow($this->guid);
 			if($existing_plugin){
 				foreach($existing_plugin as $k => $v){
 					$this->attributes[$k] = $v;
 				}
-			}
+            }*/
 		}
 		if(!$plugin || !is_string($plugin))
 			$plugin = $this->guid;
