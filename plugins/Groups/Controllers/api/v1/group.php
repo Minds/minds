@@ -196,6 +196,12 @@ class group implements Interfaces\Api
             return Factory::response([]);
         }
 
+        if (!Session::isAdmin() && !$group->isOwner($user)) {
+            return Factory::response([
+                'error' => 'You cannot delete this group'
+            ]);
+        }
+
         try {
             $group->delete();
 
