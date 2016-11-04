@@ -60,43 +60,50 @@ class Repository
     /**
      * Return a subscription to an entity
      */
-    public function getSubscription()
+    public function getSubscription($planId)
     {
-
+        $plan = new Plan();
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->query("SELECT * FROM plans
           WHERE entity_guid = ? AND plan = ? AND user_guid = ?", [
-            $this->entity_guid, $this->plan, $this->user_guid
+            (string) $this->entity_guid,
+            (string) $planId,
+            (string) $this->user_guid
           ]);
         try {
             $result = $this->db->request($query);
-            $guids = [];
-            foreach ($result as $row) {
-                $guids[] = $row['guid'];
-            }
-            return $guids;
+            $plan->setEntityGuid($result[0]['entity_guid'])
+              ->setName($result[0]['plan'])
+              ->setUserGuid($result[0]['user_guid'])
+              ->setStatus($result[0]['status'])
+              ->setExpires($result[0]['expires'])
+              ->setSubscriptionId($result[0]['subscription_id']);
+
         } catch (\Exception $e) {
-            return [];
+
         }
+
+        return $plan;
     }
 
     public function add($plan)
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->query("INSERT INTO plans
-          (entity_guid, plan, user_guid, status, expires, payment_id, payment_ts)
-          VALUES (?, ?, ?, ?, ?)",
-          [ $plan->getEntityGuid(),
-            $plan->getName(),
-            $plan->getUserGuid(),
-            $plan->getStatus(),
-            $plan->getExpires(),
-            $plan->getPaymentId(),
-            $plan->getPaymentTs()
+          (entity_guid, plan, user_guid, status, subscription_id, expires)
+          VALUES (?, ?, ?, ?, ?, ?)",
+          [
+            (string) $plan->getEntityGuid(),
+            (string) $plan->getName(),
+            (string) $plan->getUserGuid(),
+            (string) $plan->getStatus(),
+            (string) $plan->getSubscriptionId(),
+            (int) $plan->getExpires(),
           ]);
         try {
             $result = $this->db->request($query);
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+        }
         return $this;
     }
 

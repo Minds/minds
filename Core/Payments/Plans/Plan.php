@@ -13,8 +13,7 @@ class Plan
     private $entity_guid;
     private $user_guid;
     private $expires = -1;
-    private $payment_id;
-    private $payment_ts = 0;
+    private $subscription_id;
 
     /**
     * Set the name of the plan
@@ -91,7 +90,7 @@ class Plan
     * Get the entity_guid of the plan
     * @return string
     */
-    public function getEntityGuid()
+    public function getUserGuid()
     {
         return $this->user_guid;
     }
@@ -117,42 +116,23 @@ class Plan
     }
 
     /**
-    * Set the payment id
+    * Set the subscripion id
     * @param string $id
     * @return $this;
     */
-    public function setPaymentId($id)
+    public function setSubscriptionId($id)
     {
-        $this->payment_id = $id;
+        $this->subscription_id = $id;
         return $this;
     }
 
     /**
-    * Get the payment id
+    * Get the subscription id
     * @return string
     */
-    public function getPaymentId()
+    public function getSubscriptionId()
     {
-        return $this->user_guid;
+        return $this->subscription_id;
     }
 
-    /**
-    * Set the payment id
-    * @param int $ts
-    * @return $this;
-    */
-    public function setPaymentTs($ts)
-    {
-        $this->payment_ts = (int) $ts;
-        return $this;
-    }
-
-    /**
-    * Get the payment ts
-    * @return int
-    */
-    public function getPaymentts()
-    {
-        return (int) $this->ts;
-    }
 }

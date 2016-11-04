@@ -123,7 +123,14 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
      */
     public function getSales(Merchant $merchant, array $options = array())
     {
-        $results = StripeSDK\Charge::all(["limit" => 3]);
+        $results = StripeSDK\Charge::all(
+          [
+            'limit' => 3
+          ],
+          [
+            'stripe_account' => $merchant->getId()
+          ]);
+
 
         $sales = [];
         foreach ($results->data as $transaction) {
@@ -192,7 +199,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
         if($result->id){
             $merchant->setGuid($result->id);
-            return $result->id;
+            return $result;
         }
 
         throw new \Exception($result->message);
@@ -286,9 +293,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
     }
 
-    public function getPlan($id){
+    public function getPlan($id, $merchant){
         try {
-            $result = StripeSDK\Plan::retrieve($id);
+            $result = StripeSDK\Plan::retrieve($id, [ 'stripe_account' => $merchant ]);
         } catch (\Exception $e) {
             return false;
         }
@@ -297,22 +304,66 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     public function createPlan($plan)
     {
-        $result = Stripe\Plan::create([
-          'amount' => $plan->amount,
-          'interval' => 'monthly',
-          'name' => $plan->id,
-          'currency' => "usd",
-          'id' => $plan->id
-        ]);
+        $result = StripeSDK\Plan::create(
+          [
+            'amount' => $plan->amount,
+            'interval' => 'month',
+            'name' => $plan->id,
+            'currency' => "usd",
+            'id' => $plan->id
+          ],
+          [
+            'stripe_account' => $plan->merchantId
+          ]
+        );
+        return $result;
     }
 
-    /**
-     * STRIPE DOES NOT SUPPORT SUBSCRIPTIONS.
-     * USE MINDS DAILY PROCESSOR
-     */
+    public function deletePlan($id, $merchant)
+    {
+        $plan = StripeSDK\Plan::retrieve($id,[ 'stripe_account' => $merchant ]);
+        $plan->delete();
+    }
+
     public function createSubscription(Subscription $subscription)
     {
 
+        try {
+
+            //subscriptions need to clone customers
+            $token = StripeSDK\Token::create(
+              [
+                'customer' => $subscription->getCustomer()->getId()
+              ],
+              [
+                'stripe_account' => $subscription->getMerchant()->getId()
+              ]
+            );
+
+            $customer = StripeSDK\Customer::create(
+              [
+                'source' => $token->id,
+              ],
+              [
+                'stripe_account' => $subscription->getMerchant()->getId()
+              ]
+            );
+
+            $result = StripeSDK\Subscription::create(
+              [
+                'customer' => $customer->id,
+                'plan' => $subscription->getPlanId()
+              ],
+              [
+                'stripe_account' => $subscription->getMerchant()->getId()
+              ]
+            );
+
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+
+        return $result->id;
     }
 
     public function getSubscription($subscription_id)

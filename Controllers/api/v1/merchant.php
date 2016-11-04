@@ -30,20 +30,26 @@ class merchant implements Interfaces\Api
       switch ($pages[0]) {
         case "sales":
           $merchant = (new Payments\Merchant)
-            ->setGuid(Core\Session::getLoggedInUser()->merchant['id']);
+            ->setId(Core\Session::getLoggedInUser()->getMerchant()['id']);
 
+          $guid = Core\Session::getLoggedInUser()->guid;
           $stripe = Core\Di\Di::_()->get('StripePayments');
-          $sales = $stripe->getSales($merchant);
 
-          foreach ($sales as $sale) {
-              $response['sales'][] = [
-                'id' => $sale->getId(),
-                'status' => $sale->getStatus(),
-                'amount' => $sale->getAmount(),
-                'fee' => $sale->getFee(),
-                'orderId' => $sale->getOrderId(),
-                'customerId' => $sale->getCustomerId()
-              ];
+          try{
+              $sales = $stripe->getSales($merchant);
+
+              foreach ($sales as $sale) {
+                  $response['sales'][] = [
+                    'id' => $sale->getId(),
+                    'status' => $sale->getStatus(),
+                    'amount' => $sale->getAmount(),
+                    'fee' => $sale->getFee(),
+                    'orderId' => $sale->getOrderId(),
+                    'customerId' => $sale->getCustomerId()
+                  ];
+              }
+          } catch (\Exception $e) {
+
           }
 
           break;
@@ -112,14 +118,23 @@ class merchant implements Interfaces\Api
 
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
-                $id = $stripe->addMerchant($merchant);
-                $response['id'] = $id;
+                $result = $stripe->addMerchant($merchant);
+                $response['id'] = $result->id;
 
                 $user = Core\Session::getLoggedInUser();
                 $user->merchant = [
                   'service' => 'stripe',
-                  'id' => $id
+                  'id' => $result->id
                 ];
+
+                //save public and private keys in lookup
+                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
+                $guid = Core\Session::getLoggedInUser()->guid;
+                $lu->set("{$guid}:stripe", [
+                  'public' => $result->keys['publishable'],
+                  'secret' => $result->keys['secret']
+                ]);
+
                 $user->save();
 
             } catch (\Exception $e) {
@@ -171,11 +186,19 @@ class merchant implements Interfaces\Api
             break;
           case "exclusive":
             try {
-                $stripe = Core\Di\Di::_()->get('StripePayments');
                 $user = Core\Session::getLoggedInUser();
+                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
+
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+
+                try {
+                  $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
+                } catch(\Exception $e){}
+
                 $stripe->createPlan((object) [
-                  'id' => "{$user->guid}:exclusive",
-                  'amount' => $_POST['amount'],
+                  'id' => "exclusive",
+                  'amount' => $_POST['amount'] * 100,
+                  'merchantId' => $user->getMerchant()['id']
                 ]);
             } catch (\Exception $e) {
                 $response['status'] = "error";

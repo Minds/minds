@@ -28,6 +28,11 @@ class Customer
         return $this;
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
     public function getEmail()
     {
         return $this->email;
@@ -43,7 +48,7 @@ class Customer
     public function getId()
     {
         if (!$this->id) {
-            $this->lu->get("{$this->user->guid}:payments:customer_id");
+            $this->id = $this->lu->get("{$this->user->guid}:payments")['customer_id'];
         }
         return $this->id;
     }
@@ -52,7 +57,9 @@ class Customer
     {
         $this->id = $id;
         if ($this->user) {
-            $this->lu->set("{$this->user->guid}:payments:customer_id", $id);
+            $this->lu->set("{$this->user->guid}:payments", [
+              'customer_id' => $id
+            ]);
         }
         return $this;
     }

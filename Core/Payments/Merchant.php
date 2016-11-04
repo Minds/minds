@@ -8,6 +8,7 @@ use Minds\Entities\User;
 
 class Merchant
 {
+    private $id;
     private $guid;
 
     private $firstName;
@@ -32,6 +33,17 @@ class Merchant
 
     public function __construct()
     {
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getGuid()

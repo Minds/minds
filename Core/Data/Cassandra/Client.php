@@ -38,6 +38,7 @@ class Client implements Interfaces\ClientInterface
               return $response = $future->get();
             }
         }catch(\Exception $e){
+          //var_dump($e); exit;
             return false;
         }
     }

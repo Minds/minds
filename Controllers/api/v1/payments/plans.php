@@ -9,6 +9,7 @@ namespace Minds\Controllers\api\v1\payments;
 
 use Minds\Core;
 use Minds\Helpers;
+use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
@@ -36,16 +37,32 @@ class plans implements Interfaces\Api
               break;
           case "exclusive":
               $stripe = Core\Di\Di::_()->get('StripePayments');
-              $plan = $stripe->getPlan("{$pages[1]}:exclusive");
+              $entity = Entities\Factory::build($pages[1]);
 
-              if ($plan) {
-                  $response['amount'] = $plan->amount;
+              $repo = new Payments\Plans\Repository();
+              $plan = $repo->setEntityGuid($entity->owner_guid)
+                ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+                ->getSubscription('exclusive');
+
+              if ($plan->getStatus() == 'active') {
+                  $response['subscribed'] = true;
+                  $entity->paywall = false;
+                  $response['entity'] = $entity->export();
               } else {
-                  $response = [
-                    'status' => 'error',
-                    'message' => "We couldn't find the plan"
-                  ];
+                  $response['subscribed'] = false;
+
+                  $plan = $stripe->getPlan("exclusive", $entity->getMerchant()['id']);
+
+                  if ($plan) {
+                      $response['amount'] = $plan->amount;
+                  } else {
+                      $response = [
+                        'status' => 'error',
+                        'message' => "We couldn't find the plan"
+                      ];
+                  }
               }
+
               break;
       }
 
@@ -57,6 +74,7 @@ class plans implements Interfaces\Api
         $response = [];
 
         $stripe = Core\Di\Di::_()->get('StripePayments');
+        $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
 
         switch ($pages[0]) {
           case "subscribe":
@@ -73,39 +91,39 @@ class plans implements Interfaces\Api
 
               if (!$customer->getId()) {
                   //create the customer on stripe
-                  $customer->setPaymentToken($_POST['token']);
-                  $customer = $stipe->createCustomer($customer);
+                  $customer->setPaymentToken($_POST['nonce']);
+                  $customer = $stripe->createCustomer($customer);
               }
 
-              $subscription = (new Payments\Subscriptions\Subscription())
-                ->setCustomer($customer)
-                ->setPlanId($pages[1] . ":" . $pages[2]);
+              $merchant = (new Payments\Merchant)
+                ->setId($entity->getMerchant()['id']);
+
+              try {
+                  $subscription = (new Payments\Subscriptions\Subscription())
+                    ->setCustomer($customer)
+                    ->setMerchant($merchant)
+                    ->setPlanId($pages[2]);
+
+                  $subscription_id = $stripe->createSubscription($subscription);
+              } catch (\Exception $e) {
+                  return Factory::response([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                  ]);
+              }
 
               $plan = (new Payments\Plans\Plan)
                 ->setName($pages[2])
                 ->setEntityGuid($pages[1])
                 ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-                ->setStatus('pending')
+                ->setSubscriptionId($subscription_id)
+                ->setStatus('active')
                 ->setExpires(-1); //indefinite
 
               $repo = new Payments\Plans\Repository();
               $repo->add($plan);
 
-              //charge the customer now, to give immediate access
-              $sale = (new Payments\Sale())
-                ->capture() //charge immediately
-                ->setAmount($entity->getMerchant()['exclusive']['amount'])
-                ->setMerchant($entity)
-                ->setCustomerId($customer->id);
-              $id = $stripe->setSale($sale);
-
-              $plan->setPaymentId($id)
-                ->setPaymentTs(time())
-                ->setStatus('active');
-              $repo->add($plan);
-
               break;
-
         }
 
         return Factory::response($response);
