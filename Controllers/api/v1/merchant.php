@@ -200,6 +200,17 @@ class merchant implements Interfaces\Api
                   'amount' => $_POST['amount'] * 100,
                   'merchantId' => $user->getMerchant()['id']
                 ]);
+
+                $merchant = $user->getMerchant();
+                $merchant['exclusive'] = [
+                  'enabled' => true,
+                  'amount' => $_POST['amount'] * 100,
+                  'intro' => $_POST['intro']
+                ];
+
+                $user->merchant = $merchant;
+                $user->save();
+
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
