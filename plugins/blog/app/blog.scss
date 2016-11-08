@@ -77,16 +77,50 @@ minds-blog-view{
   }
 }
 .minds-blog-body{
-  //padding-top:$minds-padding * 2;
   padding:0 $minds-padding;
 
-  p{
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  p, ul, ol, blockquote {
     font-size:16px;
     font-family:Lato, Helvetica, Arial, sans-serif;
     color: #6a6a6a;
     font-weight: 400;
     line-height: 30px;
-    padding-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 0.5em;
+  }
+
+  ul, ol {
+    margin: 0 0 0.5em 1em;
+
+    li {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  blockquote {
+    padding: $minds-padding 0 $minds-padding 0.5em;
+    border-left: 2px solid #6a6a6a;
+
+    &:before, &:after {
+      position: initial;
+      content: initial;
+    }
+
+    p, ul, ol {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
