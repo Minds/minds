@@ -21,7 +21,7 @@ class Register
             $minds = new Entities\User('minds');
             $params['user']->subscribe($minds->guid);
 
-            Helpers\Wallet::createTransaction($guid, 100, $guid, "Welcome.");
+            Helpers\Wallet::createTransaction($guid, 100, $guid, "Welcome");
             Core\Events\Dispatcher::trigger('notification', 'welcome', array(
                 'to'=>array($guid),
                 'from' => 100000000000000519,

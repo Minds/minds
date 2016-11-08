@@ -122,7 +122,7 @@ class wallet implements Interfaces\Api
                 try {
                     $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->getID());
                     if ($response['id']) {
-                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
                     }
                 } catch (\Exception $e) {
                     $response['status'] = 'error';
@@ -140,7 +140,7 @@ class wallet implements Interfaces\Api
                         $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
                         if ($payment->getId()) {
                             //ok, now charge!
-                            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
                             Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
                         } else {
                             $response['status'] = 'error';
@@ -163,7 +163,7 @@ class wallet implements Interfaces\Api
 
                 try {
                     $result = Payments\Factory::build('braintree', ['gateway'=>'default'])->setSale($sale);
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "purchase");
+                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
                     Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
                 } catch (\Exception $e) {
                     $response['status'] = "error";

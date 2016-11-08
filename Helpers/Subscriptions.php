@@ -237,7 +237,7 @@ class Subscriptions
                     }
 
                     $success = $currentUser->subscribe($target->guid);
-                    Wallet::createTransaction($currentUser->guid, 1, $target->guid, 'subscribed');
+                    Wallet::createTransaction($currentUser->guid, 1, $target->guid, 'Subscribed');
 
                     $results[] = [ 'guid' => $guid, 'done' => true ];
                 } catch (\Exception $e) {

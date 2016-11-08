@@ -52,7 +52,7 @@ class EmailRewards
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
-            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email click. ($label)");
+            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }

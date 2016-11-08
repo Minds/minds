@@ -34,7 +34,7 @@ class HourlyRewards
             $db->insert("analytics:rewarded:hourly:$ts", array(Core\Session::getLoggedinUser()->guid => time()));
 
             $points = rand(20,50);
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, Core\Session::getLoggedinUser()->guid, "Hourly reward.");
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, Core\Session::getLoggedinUser()->guid, "Hourly Reward");
             $message = "You have received $points points as an hourly reward. Hit the newsfeed every hour to receive more points!";
             Core\Events\Dispatcher::trigger('notification', 'dailyReward', array(
               'to'=>array(Core\Session::getLoggedinUser()->guid),

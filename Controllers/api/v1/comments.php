@@ -123,7 +123,7 @@ class comments implements Interfaces\Api
                 }
 
                 if ($parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'comment');
+                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'Comment');
                 }
 
                 Core\Events\Dispatcher::trigger('notification', 'all', array(
