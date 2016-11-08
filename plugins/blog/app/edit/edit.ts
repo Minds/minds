@@ -33,7 +33,7 @@ export class BlogEdit {
     title: '',
     description: '',
     access_id: 2,
-    license: 'all-rights-reserved',
+    license: 'attribution-sharealike-cc',
     fileKey: 'header',
     mature: 0
   };

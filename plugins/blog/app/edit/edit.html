@@ -25,7 +25,7 @@
 
     <div class="m-license-info">
       <i class="material-icons">public</i>
-      <select (ngModel)="blog.license" (change)="blog.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">>
+      <select [ngModel]="blog.license" (change)="blog.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">
           <option *ngFor="let l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
