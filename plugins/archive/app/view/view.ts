@@ -1,27 +1,18 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { Router, ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-import { Hovercard } from '../../../directives/hovercard';
-
-import { Comments } from '../../../controllers/comments/comments';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { ConfirmModal } from '../../../components/modal/modal';
-
-import { ArchiveTheatre } from './views/theatre';
-import { ArchiveGrid } from './views/grid';
 
 import { AttachmentService } from '../../../services/attachment';
-import { SocialIcons } from '../../../components/social-icons/social-icons';
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-archive-view',
   providers: [ AttachmentService ],
-  templateUrl: 'src/plugins/archive/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, ArchiveTheatre, ArchiveGrid, SocialIcons, Hovercard, ConfirmModal ]
+  templateUrl: 'view.html'
 })
 
 export class ArchiveView {
@@ -34,11 +25,23 @@ export class ArchiveView {
   error : string = "";
   deleteToggle: boolean = false;
 
-  constructor(public client: Client,public router: Router, public params: RouteParams, public attachment: AttachmentService){
-      if(params.params['guid'])
-        this.guid = params.params['guid'];
-      this.minds = window.Minds;
-      this.load();
+  constructor(public client: Client,public router: Router, public route: ActivatedRoute, public attachment: AttachmentService){
+  }
+
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.minds = window.Minds;
+
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['guid']) {
+        this.guid = params['guid'];
+        this.load();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   load(refresh : boolean = false){
@@ -62,7 +65,7 @@ export class ArchiveView {
   delete(){
     this.client.delete('api/v1/archive/' + this.guid)
       .then((response : any) => {
-        this.router.navigate(['/Discovery', {filter: 'owner', type: null}]);
+        this.router.navigate(['/discovery/owner']);
       })
       .catch((e) => {
       });

@@ -1,17 +1,15 @@
 import { Component, EventEmitter } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
 
 import { Client } from '../../../../../services/api';
-import { Material } from '../../../../../directives/material';
 import { GroupsService } from '../../../groups-service';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups-profile-members-invite',
   inputs: ['_group : group'],
-  events: ['invited'],
-  templateUrl: 'src/plugins/Groups/profile/members/invite/invite.html',
-  directives: [ CORE_DIRECTIVES, Material ],
+  outputs: ['invited'],
+  templateUrl: 'invite.html',
   providers: [ GroupsService ]
 })
 

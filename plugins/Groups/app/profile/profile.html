@@ -5,16 +5,16 @@
   <div class="mdl-grid groups-grid-bottom group-header-bar" style="max-width:900px" *ngIf="group">
 
     <div class="mdl-cell mdl-cell--8-col groups-tabs mdl-tabs__tab-bar" *ngIf="group">
-      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]" class="mdl-tabs__tab minds-first-tab mdl-color-text--blue-grey-50">
-        <span>Feed</span>
+      <a [routerLink]="['/groups/profile', group.guid, 'activity']" class="mdl-tabs__tab minds-first-tab mdl-color-text--blue-grey-50">
+        <span i18n>Feed</span>
         <b>{{group['activity:count']}}</b>
       </a>
-      <a [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'members'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
-        <span>Members</span>
+      <a [routerLink]="['/groups/profile', group.guid, 'members']" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <span i18n>Members</span>
         <b>{{group['members:count']}}</b>
       </a>
-      <a *ngIf="group['is:owner'] && group.membership != 2" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'requests'}]" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
-        <span>Requests</span>
+      <a *ngIf="group['is:owner'] && group.membership != 2" [routerLink]="['/groups/profile', group.guid, 'requests']" class="mdl-tabs__tab mdl-color-text--blue-grey-50">
+        <span i18n>Requests</span>
         <b>{{group['requests:count']}}</b>
       </a>
 
@@ -23,7 +23,7 @@
           <button class="material-icons">mode_edit</button>
         </minds-button-edit>
         <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group['is:owner']">
-          <button>Save changes</button>
+          <button i18n>Save changes</button>
         </minds-button-edit>
         <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
         <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
@@ -66,14 +66,14 @@
 
         <div [hidden]="editing || !group.name">
           <h1>
-            <a class="m-isomorphic-link" [routerLink]="['/Groups-Profile', {guid: group.guid, filter: 'activity'}]">
+            <a class="m-isomorphic-link" [routerLink]="['/groups/profile', group.guid, 'activity']">
               {{group.name}}
             </a>
           </h1>
         </div>
 
         <div *ngIf="editing && group['is:owner']">
-          <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
+          <input type="text" class="h1" name="name" [(ngModel)]="group.name" placeholder="Enter a name" i18n-placeholder />
         </div>
 
       </div>
@@ -86,7 +86,7 @@
         </div>
 
         <div *ngIf="editing && group['is:owner']">
-          <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+          <textarea name="briefdescription" [(ngModel)]="group.briefdescription" placeholder="Enter a brief description" i18n-placeholder></textarea>
         </div>
 
       </div>
@@ -111,19 +111,19 @@
 
         <div [hidden]="editing || group.membership != 2">
           <i class="material-icons mdl-color-text--blue-grey-300">public</i>
-          <span>Open Group</span>
+          <span i18n>Open Group</span>
         </div>
 
         <div [hidden]="editing || group.membership != 0">
           <i class="material-icons mdl-color-text--blue-grey-300">lock</i>
-          <span>Closed Group</span>
+          <span i18n>Closed Group</span>
         </div>
 
         <div *ngIf="editing && group['is:owner']">
           <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
-          <select class="icon-prefix" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
-            <option value="2">Open Group</option>
-            <option value="0">Closed Group</option>
+          <select class="icon-prefix" name="membership" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
+            <option value="2" i18n>Open Group</option>
+            <option value="0" i18n>Closed Group</option>
           </select>
         </div>
 
@@ -137,14 +137,14 @@
       <!-- Members -->
       <div class="m-group-info-members">
         <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text">Members</h2>
-          <a [routerLink]="['/Groups-Profile', { guid: group.guid, filter: 'members' }]" class="mdl-color-text--blue-grey-400">Invite</a>
+          <h2 class="mdl-card__title-text" i18n>Members</h2>
+          <a [routerLink]="['/groups/profile', group.guid, 'members']" class="mdl-color-text--blue-grey-400" i18n>Invite</a>
         </div>
 
         <!-- Avatars of latest users -->
         <div class="mdl-card__supporting-text mdl-color-text--grey-600 members-grid">
           <a *ngFor="let member of group.members"
-          [routerLink]="['/Channel', {username: member.username}]"
+          [routerLink]="['/', member.username]"
           [hovercard]="member.guid" [hovercardAnchor]="['left', 'bottom']"
           >
             <img src="/icon/{{member.guid}}/small"/>
@@ -157,8 +157,8 @@
     <!-- images  -->
     <minds-channel-modules [container]="group" type="image">
 
-      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:'container:' + group.guid, type:'images'}]">
-        View More
+      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/discovery', 'container:' + group.guid, 'images']">
+        <!-- i18n -->View More<!-- /i18n -->
       </a>
     </minds-channel-modules>
 
@@ -167,8 +167,8 @@
     <!-- videos  -->
     <minds-channel-modules [container]="group" type="video" limit="6">
 
-      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/Discovery', {filter:'container:' + group.guid, type:'videos'}]">
-        View More
+      <a class="mdl-card__supporting-text mdl-color-text--grey-600" [routerLink]="['/discovery', 'container:' + group.guid, 'videos']">
+        <!-- i18n -->View More<!-- /i18n -->
       </a>
     </minds-channel-modules>
 

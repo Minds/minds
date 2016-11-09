@@ -1,9 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
 
-import { Modal } from '../../../components/modal/modal';
 import { GroupsService } from '../groups-service';
-
 
 @Component({
   selector: 'minds-groups-card-user-actions-button',
@@ -14,30 +11,29 @@ import { GroupsService } from '../groups-service';
   </button>
 
   <ul class="minds-dropdown-menu" [hidden]="!showMenu">
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="removePrompt()">Remove from Group</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()">Re-invite to Group</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item">Invited</span></li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()">Make Admin</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()">Remove as Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="removePrompt()" i18n>Remove from Group</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()" i18n>Re-invite to Group</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item" i18n>Invited</span></li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()" i18n>Make Admin</li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()" i18n>Remove as Admin</li>
   </ul>
   <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
   <m-modal [open]="kickPrompt">
       <div class="mdl-card__supporting-text">
-        <p>Are you sure you want to remove {{ user.username }} from {{ group.name }}?</p>
-        <p><input type="checkbox" #ban> Ban permanently</p>
+        <p i18n>Are you sure you want to remove {{ user.username }} from {{ group.name }}?</p>
+        <p><input type="checkbox" #ban> <!-- i18n -->Ban permanently<!-- /i18n --></p>
       </div>
       <div class="minds-modal-dialog-actions">
         <button (click)="kick(ban.checked)" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-          Confirm
+          <!-- i18n -->Confirm<!-- /i18n -->
         </button>
         <button (click)="cancelRemove()" class="mdl-button mdl-js-button mdl-button--colored">
-          Cancel
+          <!-- i18n -->Cancel<!-- /i18n -->
         </button>
       </div>
   </m-modal>
   `,
-  directives: [ CORE_DIRECTIVES, Modal ],
   providers: [ GroupsService ]
 })
 

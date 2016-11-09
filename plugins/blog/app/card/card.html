@@ -1,4 +1,4 @@
-<a [routerLink]="['/Blog-View', {guid: blog.guid}]"
+<a [routerLink]="['/blog/view', blog.guid]"
   class="mdl-card__title minds-blog-thumbnail"
   style="height:180px; margin-bottom:80px; background:#333; background-size:cover;"
   [ngStyle]="{background: '#333 url(' + blog.thumbnail_src + ') center center / cover'}"
@@ -11,12 +11,12 @@
 <!-- Owner block -->
 <div class="mdl-card__supporting-text mdl-color-text--grey-600 m-title-block m-title-block-fixed m-title-block-with-actions" *ngIf="blog.ownerObj && blog.ownerObj.username">
 
-		<a [routerLink]="['/Blog-View', {guid: blog.guid}]" class="mdl-color-text--blue-grey-700">
+		<a [routerLink]="['/blog/view', blog.guid]" class="mdl-color-text--blue-grey-700">
 			<strong>{{ blog.title }}</strong>
 		</a>
 
 		<div class="m-inline-owner-block">
-			<a [routerLink]="['/Channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-300">
+			<a [routerLink]="['/', blog.ownerObj.username]" class="mdl-color-text--blue-grey-300">
 				<img src="/icon/{{blog.ownerObj.guid}}/small" class="mdl-shadow--2dp"/>
 				{{blog.ownerObj.username}}
 			</a>
@@ -28,7 +28,7 @@
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 m-action-tabs m-action-tabs-fixed">
 	<minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
 	<minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
-	<minds-button-comment [object]="blog" [routerLink]="['/Archive-View', {guid: blog.guid}]"></minds-button-comment>
+	<minds-button-comment [object]="blog" [routerLink]="['/archive/view', blog.guid]"></minds-button-comment>
 	<minds-button-remind [object]="blog"></minds-button-remind>
 	<minds-button-feature [object]="blog" *ngIf="session.isAdmin()"></minds-button-feature>
 </div>

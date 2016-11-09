@@ -1,17 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { RouterLink, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../../groups-service';
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
-import { Material } from '../../../../directives/material';
-import { InfiniteScroll } from '../../../../directives/infinite-scroll';
-
-import { Poster } from '../../../../controllers/newsfeed/poster/poster';
-import { CARDS } from '../../../../controllers/cards/cards';
-
 
 interface MindsGroupResponse{
   group : MindsGroup
@@ -25,11 +17,11 @@ interface MindsGroup {
 
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups-profile-feed',
   providers: [ GroupsService ],
   inputs: [ '_group: group' ],
-  templateUrl: 'src/plugins/Groups/profile/feed/feed.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, Material, RouterLink, Poster, CARDS, InfiniteScroll ]
+  templateUrl: 'feed.html'
 })
 
 export class GroupsProfileFeed {

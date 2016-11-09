@@ -1,27 +1,19 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { Router, RouterLink } from "@angular/router-deprecated";
+import { Router } from "@angular/router";
 
 import { GroupsService } from '../groups-service';
 
 import { MindsTitle } from '../../../services/ux/title';
 import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-import { MindsBanner } from '../../../components/banner';
-import { MindsAvatar } from '../../../components/avatar';
-import { TagsInput } from '../../../components/forms/tags-input/tags';
-
-import { GroupsProfileMembersInvite } from '../profile/members/invite/invite';
-
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups-create',
   host: {
     '(keydown)': 'keyDown($event)'
   },
   providers: [ MindsTitle, GroupsService ],
-  templateUrl: 'src/plugins/Groups/create/create.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, FORM_DIRECTIVES, MindsBanner, MindsAvatar, GroupsProfileMembersInvite, TagsInput ]
+  templateUrl: 'create.html'
 })
 
 export class GroupsCreator {
@@ -105,7 +97,7 @@ export class GroupsCreator {
           avatar: this.avatar
         })
         .then(() => {
-          this.router.navigate(['/Groups-Profile', { guid, filter: '' }]);
+          this.router.navigate(['/groups/profile', guid]);
         });
 
     })

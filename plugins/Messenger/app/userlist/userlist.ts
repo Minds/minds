@@ -1,35 +1,29 @@
-import { Component } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { ROUTER_DIRECTIVES, Router, RouteParams, RouterLink } from "@angular/router-deprecated";
+import { Component, Injector } from '@angular/core';
 
 import { SocketsService } from '../../../services/sockets';
 
 import { Storage } from '../../../services/storage';
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { Material } from '../../../directives/material';
 
-import { MessengerScrollDirective } from '../scroll';
-import { MessengerConversationDockpanes, MessengerConversationDockpanesFactory } from '../conversation-dockpanes/conversation-dockpanes';
-import { MessengerEncryptionFactory } from '../encryption/service';
+import { MessengerConversationDockpanesService } from '../conversation-dockpanes/conversation-dockpanes';
+import { MessengerEncryptionService } from '../encryption/service';
 import { MessengerSounds } from '../sounds/service';
 import { MessengerEncryption } from '../encryption/encryption';
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-messenger-userlist',
-  templateUrl: 'src/plugins/Messenger/userlist/userlist.html',
-  directives: [ BUTTON_COMPONENTS, Material, RouterLink, MessengerConversationDockpanes,
-    MessengerEncryption, MessengerScrollDirective ]
+  templateUrl: 'userlist.html'
 })
 
 export class MessengerUserlist {
 
   session = SessionFactory.build();
-  encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
+  encryption = this.injector.get(MessengerEncryptionService);
   sounds = new MessengerSounds();
 
-  dockpanes = MessengerConversationDockpanesFactory.build();
+  dockpanes = this.injector.get(MessengerConversationDockpanesService);
   conversations : Array<any> = [];
   offset : string =  "";
 
@@ -47,7 +41,7 @@ export class MessengerUserlist {
 
   userListToggle : boolean = false;
 
-  constructor(public client: Client, public sockets: SocketsService){
+  constructor(public client: Client, public sockets: SocketsService, private injector: Injector){
   }
 
   ngOnInit(){

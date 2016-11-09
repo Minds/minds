@@ -1,4 +1,4 @@
-import { ReflectiveInjector, Inject, provide } from '@angular/core';
+import { ReflectiveInjector } from '@angular/core';
 import { Storage } from '../../../services/storage';
 
 export class MessengerConversationDockpanesService{
@@ -91,19 +91,8 @@ export class MessengerConversationDockpanesService{
     this.storage.set('messenger-dockpanes', JSON.stringify(conversations));
   }
 
-}
+  static _() {
+    return new MessengerConversationDockpanesService(new Storage());
+  }
 
-/**
- * @todo ideally we want this inside the bootstrap
- */
-var injector = ReflectiveInjector.resolveAndCreate([
-	provide(MessengerConversationDockpanesService, {
-    useFactory: () => new MessengerConversationDockpanesService(new Storage())
-  })
-]);
-
-export class MessengerConversationDockpanesFactory {
-	static build(){
-		return injector.get(MessengerConversationDockpanesService);
-	}
 }

@@ -1,23 +1,19 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { ROUTER_DIRECTIVES, Router, RouteParams } from "@angular/router-deprecated";
+import { ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { MindsTitle } from '../../services/ux/title';
 import { Client } from '../../services/api';
 import { SessionFactory } from '../../services/session';
-import { Material } from '../../directives/material';
-import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsBlogListResponse } from '../../interfaces/responses';
-
-import { BlogCard } from './card/card';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-blog',
-
   providers: [MindsTitle ],
-  templateUrl: 'src/plugins/blog/list.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll, BlogCard ]
+  templateUrl: 'list.html'
 })
 
 export class Blog {
@@ -32,12 +28,17 @@ export class Blog {
   _filter : string = "featured";
   _filter2 : string = "";
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle){
-      this._filter = params.params['filter'];
-      this.minds = window.Minds;
+  constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle){
+  }
 
-      this.title.setTitle("Blogs");
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.title.setTitle("Blogs");
+    this.minds = window.Minds;
 
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      this._filter = params['filter'];
+    
       switch(this._filter){
         case "trending":
           this.title.setTitle("Trending Blogs");
@@ -54,7 +55,17 @@ export class Blog {
           this._filter = "owner";
       }
 
+      this.inProgress = false;
+      this.offset = '';
+      this.moreData = true;
+      this.blogs = [];
+
       this.load();
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   load(refresh : boolean = false){

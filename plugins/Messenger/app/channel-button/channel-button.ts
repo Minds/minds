@@ -1,22 +1,15 @@
-import { Component, ElementRef, ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Injector } from '@angular/core';
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
-import { AutoGrow } from '../../../directives/autogrow';
-import { Emoji } from '../../../directives/emoji';
-import { MindsEmoji } from '../../../components/emoji/emoji';
-import { InfiniteScroll } from '../../../directives/infinite-scroll';
-import { Material } from '../../../directives/material';
 
-import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
-
+import { MessengerConversationDockpanesService } from '../conversation-dockpanes/service';
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-messenger-channel-button',
-  templateUrl: 'src/plugins/Messenger/channel-button/channel-button.html',
-  directives: [ InfiniteScroll, RouterLink, Material ],
+  templateUrl: 'channel-button.html',
   inputs: [ 'user' ]
 })
 
@@ -27,9 +20,9 @@ export class MessengerChannelButton {
 
   user : any;
 
-  dockpanes = MessengerConversationDockpanesFactory.build();
+  dockpanes = this.injector.get(MessengerConversationDockpanesService);
 
-  constructor(public client : Client){
+  constructor(public client : Client, private injector: Injector){
   }
 
   chat(){

@@ -18,16 +18,16 @@
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
     <div class="m-messenger-dockpane-tab-ribbon" #ribbon [hidden]="!ribbon.open">
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="deleteHistory(); ribbon.open = false" *ngIf="showMessages">
-        <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history">delete</i>
-        Destroy
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Delete chat history" i18n-title>delete</i>
+        <!-- i18n -->Destroy<!-- /i18n -->
       </div>
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="!blocked">
-        <i class="material-icons mdl-color-text--blue-grey-100" title="Block participants">block</i>
-        Block
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Block participants" i18n-title>block</i>
+        <!-- i18n -->Block<!-- /i18n -->
       </div>
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="block(); ribbon.open = false" *ngIf="blocked">
-        <i class="material-icons mdl-color-text--blue-grey-100" title="Un-block chat">restore</i>
-        Un-block
+        <i class="material-icons mdl-color-text--blue-grey-100" title="Un-block chat" i18n-title>restore</i>
+        <!-- i18n -->Un-block<!-- /i18n -->
       </div>
     </div>
 
@@ -55,7 +55,7 @@
         (click)="message.showTs = !message.showTs">
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid == session.getLoggedInUser().guid"
-            [routerLink]="['/Channel', {username: message.owner.username}]">
+            [routerLink]="['/', message.owner.username]">
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
             *ngIf="message.subtype != 'call_ended' &&  message.subtype != 'call_missed'"
@@ -65,35 +65,37 @@
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
             *ngIf="message.subtype == 'call_ended'">
-            Call Ended
+            <!-- i18n -->Call Ended<!-- /i18n -->
           </div>
           <!-- Call missed -->
           <div
             class="minds-messenger-conversation-message-bubble mdl-color--blue-grey-50 mdl-color-text--blue-grey-700"
             *ngIf="message.subtype == 'call_missed'">
-            Missed Call
+            <!-- i18n -->Missed Call<!-- /i18n -->
           </div>
           <img [src]="minds.cdn_url + 'icon/' + message.owner.guid + '/small'"
             *ngIf="message.owner.guid != session.getLoggedInUser().guid"
-            [routerLink]="['/Channel', {username: message.owner.username}]">
+            [routerLink]="['/', message.owner.username]">
           <div [hidden]="!message.showTs" class="m-messenger-conversations-ts mdl-color-text--blue-grey-100">{{ message.time_created * 1000 | date: 'medium' }}</div>
       </div>
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="blocked">
-        <span>You have blocked this chat</span>
+        <span i18n>You have blocked this chat</span>
       </div>
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="!blocked && unavailable">
-        <span>This chat is no longer available</span>
+        <span i18n>This chat is no longer available</span>
       </div>
       <div class="m-messenger-conversation-messages-notice mdl-color-text--blue-grey-100"
         *ngIf="!blocked && invalid">
-        <span>Awaiting other party&hellip;</span>
+        <span i18n>Awaiting other party&hellip;</span>
       </div>
     </div>
 
     <div class="m-messenger-conversation-composer" *ngIf="!blocked && !unavailable && !invalid && conversation.open && encryption.isOn()">
       <textarea placeholder="Send a message..."
+      i18n-placeholder
+      name="message"
       [(ngModel)]="message"
       [disabled]="blockingActionInProgress"
       (keydown.enter)="send($event); emoji.close()"

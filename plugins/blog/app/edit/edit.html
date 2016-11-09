@@ -14,9 +14,11 @@
 
   <div class="mdl-cell mdl-cell--12-col">
     <textarea
+      name="title"
       [(ngModel)]="blog.title"
       class="m-h1-input"
       placeholder="Your title"
+      i18n-placeholder
       [autoGrow]
      ></textarea>
   </div>
@@ -25,13 +27,13 @@
 
     <div class="m-license-info">
       <i class="material-icons">public</i>
-      <select [ngModel]="blog.license" (change)="blog.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">
+      <select name="license" [ngModel]="blog.license" (change)="blog.license = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select" style="max-width:128px">
           <option *ngFor="let l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
     <div class="m-visibility-info">
       <i class="material-icons">visibility</i>
-      <select [ngModel]="blog.access_id" (change)="blog.access_id = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
+      <select name="access_id" [ngModel]="blog.access_id" (change)="blog.access_id = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
           <option *ngFor="let a of access" [value]="a.value">{{a.text}}</option>
       </select>
     </div>
@@ -40,6 +42,7 @@
         <i class="material-icons"
         [ngClass]="{ 'mdl-color-text--red-500': blog.mature }"
         title="Mature content"
+        i18n-title
         >explicit</i>
         
         <span [ngClass]="{ 'mdl-color-text--red-500': blog.mature }">{{ blog.mature ? 'Mature content' : 'Anyone' }}</span>
@@ -54,7 +57,7 @@
 
   <div class="minds-blog-save">
    <!--<button class="mdl-button mdl-button--raised mdl-button--accent" (click)="blog.status = 'draft'">Save (draft)</button>-->
-   <button type="submit" class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!canSave">Publish</button>
+   <button type="submit" class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!canSave" i18n>Publish</button>
   </div>
 
 </form>

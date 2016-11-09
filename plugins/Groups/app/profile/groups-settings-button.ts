@@ -1,8 +1,7 @@
 import { Component, EventEmitter } from '@angular/core';
-import { CORE_DIRECTIVES, Location } from '@angular/common';
-import { Router, RouteParams, RouterLink, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
-import { Modal } from '../../../components/modal/modal';
 import { GroupsService } from '../groups-service';
 
 @Component({
@@ -12,27 +11,26 @@ import { GroupsService } from '../groups-service';
     <button class="material-icons" (click)="toggleMenu($event)">settings <i *ngIf="group['is:muted']" class="minds-groups-button-badge material-icons">notifications_off</i></button>
 
     <ul class="minds-dropdown-menu" [hidden]="!showMenu" >
-      <li class="mdl-menu__item" [hidden]="group['is:muted']" (click)="mute()">Disable Notifications</li>
-      <li class="mdl-menu__item" [hidden]="!group['is:muted']" (click)="unmute()">Enable Notifications</li>
-      <li class="mdl-menu__item" *ngIf="group['is:owner']" [hidden]="group.deleted" (click)="deletePrompt()">Delete Group</li>
+      <li class="mdl-menu__item" [hidden]="group['is:muted']" (click)="mute()" i18n>Disable Notifications</li>
+      <li class="mdl-menu__item" [hidden]="!group['is:muted']" (click)="unmute()" i18n>Enable Notifications</li>
+      <li class="mdl-menu__item" *ngIf="group['is:owner']" [hidden]="group.deleted" (click)="deletePrompt()" i18n>Delete Group</li>
     </ul>
     <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
     <m-modal [open]="group['is:owner'] && isGoingToBeDeleted">
       <div class="mdl-card__supporting-text">
-        <p>Are you sure you want to delete {{ group.name }}? This action cannot be undone.</p>
+        <p i18n>Are you sure you want to delete {{ group.name }}? This action cannot be undone.</p>
       </div>
       <div class="mdl-card__actions">
         <button (click)="delete()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-          Confirm
+          <!-- i18n -->Confirm<!-- /i18n -->
         </button>
         <button (click)="cancelDelete()" class="mdl-button mdl-js-button mdl-button--colored">
-          Cancel
+          <!-- i18n -->Cancel<!-- /i18n -->
         </button>
       </div>
     </m-modal>
   `,
-  directives: [ CORE_DIRECTIVES, Modal ],
   providers: [ GroupsService ]
 })
 
@@ -92,7 +90,7 @@ export class GroupsSettingsButton {
       this.group.deleted = deleted;
 
       if (deleted) {
-        this.router.navigate([ '/Groups', { 'filter': 'member' } ]);
+        this.router.navigate(['/groups/member']);
       }
     });
 

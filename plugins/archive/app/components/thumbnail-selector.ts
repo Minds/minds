@@ -1,9 +1,6 @@
 import { Component, ElementRef, EventEmitter } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
 
 import { Client } from '../../../services/api';
-import { Material } from '../../../directives/material';
-
 
 @Component({
   selector: 'minds-archive-thumbnail-selector',
@@ -21,9 +18,8 @@ import { Material } from '../../../directives/material';
   <div class="m-scrubber mdl-color--blue-grey-600" (click)="seek($event)">
       <div class="m-scrubber-progress mdl-color--amber-600" [ngStyle]="{'left': (thumbnailSec / element.duration)*100  + '%'}"></div>
   </div>
-  <span class="m-scrubber-tip">Click on this bar to change the thumbnail</span>
-  `,
-  directives: [ CORE_DIRECTIVES, Material ]
+  <span class="m-scrubber-tip" i18n>Click on this bar to change the thumbnail</span>
+  `
 })
 
 export class ThumbnailSelector{

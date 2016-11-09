@@ -1,46 +1,32 @@
-import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Renderer, ViewChild } from '@angular/core';
-import { Router, RouteParams, RouterLink } from "@angular/router-deprecated";
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Renderer, ViewChild, Injector } from '@angular/core';
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { Storage } from '../../../services/storage';
-import { AutoGrow } from '../../../directives/autogrow';
-import { Emoji } from '../../../directives/emoji';
-import { MindsEmoji } from '../../../components/emoji/emoji';
-import { InfiniteScroll } from '../../../directives/infinite-scroll';
-import { Material } from '../../../directives/material';
 import { SocketsService } from '../../../services/sockets';
-import { Tooltip } from '../../../directives/tooltip';
-import { MindsTooltip } from '../../../components/tooltip/tooltip';
-import { ScrollLock } from '../../../directives/scroll-lock';
 
-import { MessengerEncryptionFactory } from '../encryption/service';
-import { MessengerEncryption } from '../encryption/encryption';
+import { MessengerEncryptionService } from '../encryption/service';
 
-import { MessengerScrollDirective } from '../scroll';
-import { MessengerConversationDockpanesFactory } from '../conversation-dockpanes/service';
+import { MessengerConversationDockpanesService } from '../conversation-dockpanes/service';
 import { MessengerSounds } from '../sounds/service';
 
-import { MINDS_PIPES } from '../../../pipes/pipes';
-
 @Component({
+  moduleId: module.id,
   selector: 'minds-messenger-conversation',
   host: {
     '(window:focus)': 'onFocus($event)',
     '(window:blur)': 'onBlur($event)'
   },
-  properties: [ 'conversation' ],
-  templateUrl: 'src/plugins/Messenger/conversation/conversation.html',
-  directives: [ InfiniteScroll, RouterLink, Material, AutoGrow, MessengerEncryption, MessengerScrollDirective, Emoji, MindsEmoji, Tooltip, MindsTooltip, ScrollLock ],
-  pipes: [ MINDS_PIPES ]
+  inputs: [ 'conversation' ],
+  templateUrl: 'conversation.html'
 })
 
 export class MessengerConversation {
   minds: Minds = window.Minds;
   session = SessionFactory.build();
 
-  encryption = MessengerEncryptionFactory.build(); //ideally we want this loaded from bootstrap func.
-  dockpanes = MessengerConversationDockpanesFactory.build();
+  encryption = this.injector.get(MessengerEncryptionService);
+  dockpanes = this.injector.get(MessengerConversationDockpanesService);
   sounds  = new MessengerSounds();
 
   tabId: string;
@@ -77,7 +63,7 @@ export class MessengerConversation {
   unavailable: boolean = false;
   invalid: boolean = false;
 
-  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer) {
+  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer, private injector: Injector) {
     this.buildTabId();
   }
 

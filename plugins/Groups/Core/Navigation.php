@@ -20,7 +20,7 @@ class Navigation
         ->setIcon('add')
         ->setName('Create')
         ->setTitle('Create (Groups)')
-        ->setPath('/Groups-Create')
+        ->setPath('groups/create')
         ->setParams([])
         ->setVisibility(0); //only show for loggedin
 
@@ -30,8 +30,7 @@ class Navigation
         ->setIcon('star')
         ->setName('Featured')
         ->setTitle('Featured (Groups)')
-        ->setPath('/Groups')
-        ->setParams([ 'filter' => 'featured' ]);
+        ->setPath('groups/featured');
 
         $my_link = new Item();
         $my_link
@@ -39,8 +38,7 @@ class Navigation
         ->setIcon('person_pin')
         ->setName('My')
         ->setTitle('My (Groups)')
-        ->setPath('/Groups')
-        ->setParams(['filter' => 'member'])
+        ->setPath('groups/member')
         ->setVisibility(2); //only show for loggedin
 
         $root_link = new Item();
@@ -49,8 +47,7 @@ class Navigation
         ->setIcon('group_work')
         ->setName('Groups')
         ->setTitle('Groups')
-        ->setPath('/Groups')
-        ->setParams([ 'filter' => 'featured' ])
+        ->setPath('groups/featured')
         ->addSubItem($create_link)
         ->addSubItem($featured_link)
         ->addSubItem($my_link);

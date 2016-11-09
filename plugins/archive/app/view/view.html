@@ -5,8 +5,8 @@
 >
   <div class="m-mature-overlay" (click)="entity.mature_visibility = !entity.mature_visibility">
       <span class="m-mature-overlay-note">
-        <i class="material-icons" title="Mature content">explicit</i>
-        <span>Click to confirm your are 18+</span>
+        <i class="material-icons" title="Mature content" i18n-title>explicit</i>
+        <span i18n>Click to confirm your are 18+</span>
       </span>
   </div>
 </minds-archive-theatre>
@@ -14,7 +14,7 @@
 <div class="mdl-spinner mdl-js-spinner is-active" [mdl] [hidden]="!inProgress" style="margin: 16px auto;"></div>
 <div class="m-error-splash" *ngIf="error && !inProgress">
   <h3 class="mdl-color-text--red-300">{{error}}</h3>
-  <span class="mdl-color-text--blue-grey-300">The post may not exist</span>
+  <span class="mdl-color-text--blue-grey-300" i18n>The post may not exist</span>
 </div>
 
 <div class="mdl-grid archive-grid" style="max-width:660px" *ngIf="entity.guid">
@@ -28,12 +28,12 @@
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
       <div class="minds-avatar" [hovercard]="entity.ownerObj.guid">
-        <a [routerLink]="['/Channel', {username: entity.ownerObj.username}]">
+        <a [routerLink]="['/', entity.ownerObj.username]">
           <img src="{{minds.cdn_url}}/icon/{{entity.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>
       </div>
       <div class="minds-body">
-        <a [routerLink]="['/Channel', {username: entity.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
+        <a [routerLink]="['/', entity.ownerObj.username]" class="mdl-color-text--blue-grey-500">{{entity.ownerObj.name}}</a>
         <span>{{ entity.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
@@ -41,7 +41,7 @@
     <!-- Actions block -->
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ngIf="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [routerLink]="['/Archive-Edit', { guid: entity.guid }]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <minds-button-edit [routerLink]="['/archive/edit', entity.guid]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">edit</button>
       </minds-button-edit>
 
@@ -63,27 +63,27 @@
       <div class="m-license-info">
         <i class="material-icons">public</i>
         <span [hidden]="!entity.license">{{entity.license}}</span>
-        <span [hidden]="entity.license">All Rights Reserved</span>
+        <span [hidden]="entity.license" i18n>All Rights Reserved</span>
       </div>
       <div class="m-visibility-info" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <i class="material-icons">visibility</i>
-        <span [hidden]="entity.access_id != 2">Public</span>
-        <span [hidden]="entity.access_id != 0">Unlisted</span>
+        <span [hidden]="entity.access_id != 2" i18n>Public</span>
+        <span [hidden]="entity.access_id != 0" i18n>Unlisted</span>
       </div>
       <div class="m-mature-info" *ngIf="entity.flags && entity.flags.mature">
         <i class="material-icons">explicit</i>
-        <span>Mature content</span>
+        <span i18n>Mature content</span>
       </div>
       <div class="m-play-count" *ngIf="entity['play:count'] || entity['play:count'] === 0">
         <i class="material-icons">ondemand_video</i>
-        <span>{{ entity['play:count'] }} plays</span>
+        <span i18n>{{ entity['play:count'] }} plays</span>
       </div>
 
       <a class="album_backlink mdl-color-text--blue-grey-400"
-        [routerLink]="['/Archive-View', {guid: entity.container_guid}]"
+        [routerLink]="['/archive/view', entity.container_guid]"
         [hidden]="entity.subtype == 'album' || entity.container_guid == entity.owner_guid"
         >
-        <i class="material-icons">photo_album</i>Back to album
+        <i class="material-icons">photo_album</i> <!-- i18n -->Back to album<!-- /i18n -->
       </a>
 
       <minds-button-boost [object]="entity" *ngIf="entity.subtype != 'album'"></minds-button-boost>
@@ -115,13 +115,12 @@
   (closed)="deleteToggle = false"
   (actioned)="delete($event)"
   yesButton="Delete permanently"
+  i18n-yesButton
 >
   <p confirm-message>
-      Are you sure you want to delete this? <br>
-      <br>
-      There's no UNDO!
+      <!-- i18n -->Are you sure you want to delete this?<br><br>There's no UNDO!<!-- /i18n -->
   </p>
   <p confirm-success-message>
-      The media has been deleted.
+      <!-- i18n -->The media has been deleted.<!-- /i18n -->
   </p>
 </m-modal-confirm>

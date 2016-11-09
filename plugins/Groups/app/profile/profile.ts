@@ -1,37 +1,18 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { RouterLink, RouteParams } from "@angular/router-deprecated";
+import { ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { GroupsService } from '../groups-service';
 
 import { MindsTitle } from '../../../services/ux/title';
 import { SessionFactory } from '../../../services/session';
-import { MDL_DIRECTIVES } from '../../../directives/material';
-import { Hovercard } from '../../../directives/hovercard';
-import { CARDS } from '../../../controllers/cards/cards';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { MindsBanner } from '../../../components/banner';
-import { MindsAvatar } from '../../../components/avatar';
-import { TagsInput } from '../../../components/forms/tags-input/tags';
-import { TagsPipe } from '../../../pipes/tags';
-
-import { GroupsJoinButton } from '../groups-join-button';
-import { GroupsSettingsButton } from './groups-settings-button';
-import { GroupsProfileMembers } from './members/members';
-import { GroupsProfileRequests } from './requests/requests';
-import { GroupsProfileFeed } from './feed/feed';
-
-import { ChannelModules } from '../../../controllers/channels/modules/modules';
-
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups-profile',
-  pipes: [ TagsPipe ],
   providers: [ MindsTitle, GroupsService ],
-  templateUrl: 'src/plugins/Groups/profile/profile.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, MDL_DIRECTIVES, BUTTON_COMPONENTS, RouterLink, CARDS, GroupsJoinButton,
-    GroupsProfileMembers, GroupsProfileFeed, GroupsProfileRequests, MindsBanner, MindsAvatar, GroupsSettingsButton, ChannelModules, TagsInput,
-    Hovercard ]
+  templateUrl: 'profile.html'
 })
 
 export class GroupsProfile {
@@ -53,13 +34,34 @@ export class GroupsProfile {
   inProgress : boolean = false;
   moreData : boolean = true;
 
-	constructor(public service: GroupsService, public params: RouteParams, public title: MindsTitle){
-      this.guid = params.params['guid'];
-      if(params.params['filter'])
-        this.filter = params.params['filter'];
-      this.postMeta.container_guid = this.guid;
-      this.load();
-	}
+	constructor(public service: GroupsService, public route: ActivatedRoute, public title: MindsTitle){
+  }
+
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['filter']) {
+        this.filter = params['filter'];
+      }
+
+      if (params['guid']) {
+        let changed = params['guid'] !== this.guid;
+
+        this.guid = params['guid'];
+        this.postMeta.container_guid = this.guid;
+
+        if (changed) {
+          this.group = void 0;
+
+          this.load();
+        }
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
+  }
 
   load(){
     this.service.load(this.guid)

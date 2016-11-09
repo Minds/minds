@@ -1,26 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { Router, ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { Client, Upload } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { LICENSES, ACCESS } from '../../../services/list-options';
 
-import { Material } from '../../../directives/material';
-import { AutoGrow } from '../../../directives/autogrow';
-import { MDL_DIRECTIVES } from '../../../directives/material';
-import { Comments } from '../../../controllers/comments/comments';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { MindsTinymce } from '../../../components/editors/tinymce';
-import { ArchiveTheatre } from '../view/views/theatre';
-import { ArchiveGrid } from '../view/views/grid';
-import { ThumbnailSelector } from '../components/thumbnail-selector';
-
-
 @Component({
+  moduleId: module.id,
   selector: 'minds-archive-edit',
-  templateUrl: 'src/plugins/archive/edit/edit.html',
-  directives: [ MDL_DIRECTIVES, FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, AutoGrow, MindsTinymce, Material, Comments, ArchiveTheatre, ArchiveGrid, ThumbnailSelector  ]
+  templateUrl: 'edit.html'
 })
 
 export class ArchiveEdit {
@@ -41,11 +31,23 @@ export class ArchiveEdit {
   licenses = LICENSES;
   access = ACCESS;
 
-  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams){
-      if(params.params['guid'])
-        this.guid = params.params['guid'];
-      this.minds = window.Minds;
-      this.load();
+  constructor(public client: Client, public upload: Upload, public router: Router, public route: ActivatedRoute){
+  }
+
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.minds = window.Minds;
+    
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['guid']) {
+        this.guid = params['guid'];
+        this.load();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   load(){
@@ -75,7 +77,7 @@ export class ArchiveEdit {
     this.client.post('api/v1/archive/' + this.guid, this.entity)
       .then((response : any) => {
         console.log(response);
-        this.router.navigate(['/Archive-View', {guid: this.guid}]);
+        this.router.navigate(['/archive/view', this.guid]);
       })
       .catch((e) => {
         this.error ="There was an error while trying to update";

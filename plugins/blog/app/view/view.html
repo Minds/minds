@@ -3,8 +3,8 @@
 >
   <div class="m-mature-overlay" (click)="blog.mature_visibility = !blog.mature_visibility">
     <span class="m-mature-overlay-note">
-      <i class="material-icons" title="Mature content">explicit</i>
-      <span>Click to confirm your are 18+</span>
+      <i class="material-icons" title="Mature content" i18n-title>explicit</i>
+      <span i18n>Click to confirm your are 18+</span>
     </span>
   </div>
   <minds-banner-fat [object]="blog"*ngIf="blog.header_bg"></minds-banner-fat>
@@ -24,18 +24,18 @@
     <div class="mdl-cell mdl-cell--5-col minds-blog-ownerblock">
 
       <div class="minds-avatar" [hovercard]="blog.ownerObj.guid">
-        <a [routerLink]="['/Channel', {username: blog.ownerObj.username}]">
+        <a [routerLink]="['/', blog.ownerObj.username]">
           <img src="{{minds.cdn_url}}/icon/{{blog.ownerObj.guid}}/small}}" class="mdl-shadow--2dp"/>
         </a>
       </div>
       <div class="minds-body">
-        <a [routerLink]="['/Channel', {username: blog.ownerObj.username}]" class="mdl-color-text--blue-grey-500">{{blog.ownerObj.name}}</a>
+        <a [routerLink]="['/', blog.ownerObj.username]" class="mdl-color-text--blue-grey-500">{{blog.ownerObj.name}}</a>
         <span *ngIf="blog.time_created">{{ blog.time_created * 1000 | date: 'medium'}}</span>
       </div>
     </div>
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="blog.ownerObj" *ngIf="blog.ownerObj.guid != session.getLoggedInUser().guid" [ngClass]="{'m-button-icon-only': session.isAdmin()}"></minds-button-subscribe>
-      <minds-button-edit [routerLink]="['/Blog-Edit', { guid: blog.guid }]" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit || session.isAdmin()">
+      <minds-button-edit [routerLink]="['/blog/edit', blog.guid]" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || blog.canEdit || session.isAdmin()">
         <button class="material-icons">edit</button>
       </minds-button-edit>
       <minds-button-edit (click)="deleteToggle = true"  *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
@@ -82,16 +82,16 @@
     <div class="m-license-info">
       <i class="material-icons">public</i>
       <span [hidden]="!blog.license">{{blog.license}}</span>
-      <span [hidden]="blog.license">All Rights Reserved</span>
+      <span [hidden]="blog.license" i18n>All Rights Reserved</span>
     </div>
     <div class="m-visibility-info" *ngIf="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
       <i class="material-icons">visibility</i>
-      <span [hidden]="blog.access_id != 2">Public</span>
-      <span [hidden]="blog.access_id != 0">Unlisted</span>
+      <span [hidden]="blog.access_id != 2" i18n>Public</span>
+      <span [hidden]="blog.access_id != 0" i18n>Unlisted</span>
     </div>
     <div class="m-share-buttons mdl-color-text--green-300" style="padding-right:8px" (click)="sharetoggle = true">
       <i class="material-icons" style="cursor:pointer">share</i>
-      <span>SHARE</span>
+      <span i18n>SHARE</span>
     </div>
     <m-modal-share *ngIf="sharetoggle" [open]="true" (closed)="sharetoggle = false" [url]="minds.site_url + 'blog/view/' + blog.guid"></m-modal-share>
     <minds-button-boost [object]="blog" *ngIf="session.isLoggedIn()"></minds-button-boost>
@@ -111,13 +111,12 @@
   (closed)="deleteToggle = false"
   (actioned)="delete($event)"
   yesButton="Delete permanently"
+  i18n-yesButton
 >
   <p confirm-message>
-      Are you sure you want to delete this blog? <br>
-      <br>
-      There's no UNDO!
+      <!-- i18n -->Are you sure you want to delete this blog?<br><br>There's no UNDO!<!-- /i18n -->
   </p>
   <p confirm-success-message>
-      The blog has been deleted.
+      <!-- i18n -->The blog has been deleted.<!-- /i18n -->
   </p>
 </m-modal-confirm>

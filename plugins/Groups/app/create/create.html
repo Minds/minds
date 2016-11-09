@@ -22,7 +22,7 @@
           </div>
           <div class="m-body">
             <h3>@{{invitee.username}}</h3>
-            <p class="m-subtitle">Views: {{invitee.impressions}} | Subscribers: {{invitee.subscribers_count}}</p>
+            <p class="m-subtitle" i18n>Views: {{invitee.impressions}} | Subscribers: {{invitee.subscribers_count}}</p>
           </div>
           <i class="material-icons m-remove-invitee" (click)="removeInvitee(i)">cancel</i>
         </div>
@@ -36,11 +36,11 @@
     <div class="mdl-card mdl-shadow--2dp">
 
       <div class="m-group-info-name mdl-color-text--blue-grey-300">
-        <input type="text" class="h1" [(ngModel)]="group.name" placeholder="Enter a name" />
+        <input type="text" class="h1" name="name" [(ngModel)]="group.name" placeholder="Enter a name" i18n-placeholder />
       </div>
 
       <div class="m-group-info-brief-description mdl-color-text--blue-grey-300">
-        <textarea [(ngModel)]="group.briefdescription" placeholder="Enter a brief description"></textarea>
+        <textarea name="briefdescription" [(ngModel)]="group.briefdescription" placeholder="Enter a brief description" i18n-placeholder></textarea>
       </div>
 
       <div class="m-group-info-tags mdl-color-text--blue-grey-300">
@@ -50,15 +50,15 @@
 
       <div class="m-group-info-membership mdl-color-text--blue-grey-300">
           <i class="material-icons mdl-color-text--blue-grey-300">{{ group.membership == 2 ? 'public' : 'lock' }}</i>
-          <select class="icon-prefix" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
-            <option value="2">Open Group</option>
-            <option value="0">Closed Group</option>
+          <select class="icon-prefix" name="membership" [ngModel]="group.membership" (change)="group.membership = $event.target.value">
+            <option value="2" i18n>Open Group</option>
+            <option value="0" i18n>Closed Group</option>
           </select>
       </div>
 
 
       <div class="m-groups-save">
-       <button class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!group.name">Create</button>
+       <button class="mdl-button mdl-button--raised mdl-button--colored" [disabled]="!group.name" i18n>Create</button>
       </div>
 
     </div>

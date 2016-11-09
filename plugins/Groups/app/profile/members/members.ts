@@ -1,26 +1,16 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { RouterLink, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../../groups-service';
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
-import { Material } from '../../../../directives/material';
-import { InfiniteScroll } from '../../../../directives/infinite-scroll';
-import { UserCard } from '../../../../controllers/cards/cards';
-
-import { GroupsProfileMembersInvite } from './invite/invite';
-import { GroupsCardUserActionsButton } from '../card-user-actions-button';
-
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups-profile-members',
 
   inputs: ['_group : group'],
-  templateUrl: 'src/plugins/Groups/profile/members/members.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, UserCard, InfiniteScroll,
-      GroupsProfileMembersInvite, GroupsCardUserActionsButton ],
+  templateUrl: 'members.html',
   providers: [ GroupsService ]
 })
 

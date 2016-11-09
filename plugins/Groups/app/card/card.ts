@@ -1,21 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from '../groups-service';
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-
-import { GroupsJoinButton } from '../groups-join-button';
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-card-group',
   inputs: ['group'],
   providers: [ GroupsService ],
-  templateUrl: 'src/plugins/Groups/card/card.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, GroupsJoinButton ]
+  templateUrl: 'card.html'
 })
 
 export class GroupsCard {
@@ -23,7 +18,7 @@ export class GroupsCard {
   minds;
   group;
 
-  constructor(public client : Client, public params: RouteParams){
+  constructor(public client : Client){
       this.minds = window.Minds;
   }
 

@@ -1,25 +1,21 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
+import { ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { GroupsService } from './groups-service';
 
 import { Client } from '../../services/api';
 import { MindsTitle } from '../../services/ux/title';
 import { SessionFactory } from '../../services/session';
-import { Material } from '../../directives/material';
-import { InfiniteScroll } from '../../directives/infinite-scroll';
 import { MindsGroupListResponse } from '../../interfaces/responses';
-import { GroupsCreator } from './create/create';
-import { GroupsJoinButton } from './groups-join-button';
-import { GroupsCard } from './card/card';
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-groups',
 
   providers: [ MindsTitle, GroupsService ],
-  templateUrl: 'src/plugins/Groups/groups.html',
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, InfiniteScroll, GroupsJoinButton, GroupsCard ]
+  templateUrl: 'groups.html'
 })
 
 export class Groups {
@@ -33,12 +29,30 @@ export class Groups {
   session = SessionFactory.build();
   _filter : string = "featured";
 
-  constructor(public client : Client, public router: Router, public params: RouteParams, public title: MindsTitle){
-      this._filter = params.params['filter'];
-      this.minds = window.Minds;
-      this.load();
+  constructor(public client : Client, public route: ActivatedRoute, public title: MindsTitle){
+  }
 
-      this.title.setTitle("Groups");
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.title.setTitle("Groups");
+    this.minds = window.Minds;
+
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['filter']) {
+        this._filter = params['filter'];
+
+        this.inProgress = false;
+        this.offset = '';
+        this.moreData = true;
+        this.groups = [];
+        
+        this.load();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   load(refresh: boolean = false) {

@@ -1,10 +1,9 @@
-import { ReflectiveInjector, provide } from '@angular/core';
+import { ReflectiveInjector, Injectable, Inject } from '@angular/core';
 import { Client } from '../../../services/api';
 import { Storage } from '../../../services/storage';
 import { MINDS_PROVIDERS } from '../../../services/providers';
-import { HTTP_PROVIDERS } from '@angular/http';
 
-
+@Injectable()
 export class MessengerEncryptionService{
 
   private on : boolean = false;
@@ -13,12 +12,11 @@ export class MessengerEncryptionService{
   public reKeying : boolean = false;
 
   constructor(public client : Client, public storage : Storage){
-    console.log(client);
   }
 
   isOn() : boolean {
     //if(!this.on){
-    this.on = this.storage.get('encryption-password');
+    this.on = !!this.storage.get('encryption-password');
     //}
     return this.on;
   }
@@ -85,21 +83,7 @@ export class MessengerEncryptionService{
     this.on = false;
   }
 
-}
-
-/**
- * @todo ideally we want this inside the bootstrap
- */
-var injector = ReflectiveInjector.resolveAndCreate([
-	provide(MessengerEncryptionService, {
-    useFactory: (client) => new MessengerEncryptionService(client, new Storage()),
-    deps: [ Client ]
-  }),
-  MINDS_PROVIDERS, HTTP_PROVIDERS
-]);
-
-export class MessengerEncryptionFactory {
-	static build(){
-		return injector.get(MessengerEncryptionService);
-	}
+  static _(client: Client) {
+    return new MessengerEncryptionService(client, new Storage());
+  }
 }

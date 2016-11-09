@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { Router } from '@angular/router-deprecated';
+import { Router } from '@angular/router';
 
-import { MindsVideo, VideoAds } from '../../../../components/video';
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
 import { Material } from '../../../../directives/material';
@@ -39,8 +37,7 @@ import { Material } from '../../../../directives/material';
         keyboard_arrow_right
     </i>
     <ng-content></ng-content>
-  `,
-  directives: [ CORE_DIRECTIVES, MindsVideo, Material, VideoAds ]
+  `
 })
 
 export class ArchiveTheatre {
@@ -62,7 +59,7 @@ export class ArchiveTheatre {
     //go from the top if less than 0
     if(pos <= 0)
       pos = this.object['album_children_guids'].length -1;
-    this.router.navigate(['/Archive-View', {guid: this.object['album_children_guids'][pos] }]);
+    this.router.navigate(['/archive/view', this.object['album_children_guids'][pos]]);
   }
 
   next(){
@@ -76,7 +73,7 @@ export class ArchiveTheatre {
     //reset back to 0 if we are are the end
     if(pos >= this.object['album_children_guids'].length)
       pos = 0;
-    this.router.navigate(['/Archive-View', {guid: this.object['album_children_guids'][pos] }]);
+    this.router.navigate(['/archive/view', this.object['album_children_guids'][pos]]);
   }
 
 }

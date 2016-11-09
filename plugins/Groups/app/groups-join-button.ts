@@ -1,32 +1,25 @@
 import { Component, Inject, EventEmitter } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { RouterLink, Router, RouteParams } from "@angular/router-deprecated";
 
 import { GroupsService } from './groups-service';
-
 import { SessionFactory } from '../../services/session';
-import { Material } from '../../directives/material';
 import { MindsGroupListResponse } from '../../interfaces/responses';
-import { SignupOnActionModal } from '../../components/modal/modal';
-
 
 @Component({
   selector: 'minds-groups-join-button',
 
-  properties: ['_group: group'],
+  inputs: ['_group: group'],
   providers: [ GroupsService ],
   outputs:[ 'membership' ],
   template: `
-    <button class="minds-group-join-button" *ngIf="!group['is:banned'] && !group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()">Join</button>
+    <button class="minds-group-join-button" *ngIf="!group['is:banned'] && !group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()" i18n>Join</button>
     <span *ngIf="group['is:invited'] &amp;&amp; !group['is:member']">
-      <button class="minds-group-join-button" (click)="accept()">Accept</button>
-      <button class="minds-group-join-button" (click)="decline()">Decline</button>
+      <button class="minds-group-join-button" (click)="accept()" i18n>Accept</button>
+      <button class="minds-group-join-button" (click)="decline()" i18n>Decline</button>
     </span>
-    <button class="minds-group-join-button subscribed " *ngIf="group['is:member']" (click)="leave()">Leave</button>
-    <button class="minds-group-join-button" *ngIf="group['is:awaiting']" (click)="cancelRequest()">Cancel request</button>
+    <button class="minds-group-join-button subscribed " *ngIf="group['is:member']" (click)="leave()" i18n>Leave</button>
+    <button class="minds-group-join-button" *ngIf="group['is:awaiting']" (click)="cancelRequest()" i18n>Cancel request</button>
     <m-modal-signup-on-action [open]="showModal" (closed)="showModal = false" action="join a group" *ngIf="!session.isLoggedIn()"></m-modal-signup-on-action>
-  `,
-  directives: [ CORE_DIRECTIVES, Material, RouterLink, SignupOnActionModal ]
+  `
 })
 
 export class GroupsJoinButton {
@@ -38,7 +31,7 @@ export class GroupsJoinButton {
   membership: EventEmitter<any> = new EventEmitter();
 
 
-  constructor(public service: GroupsService, public router: Router){
+  constructor(public service: GroupsService){
     this.minds = window.Minds;
   }
 

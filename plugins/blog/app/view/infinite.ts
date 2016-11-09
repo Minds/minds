@@ -1,29 +1,21 @@
 import { Component, Inject, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-import { GoogleAds } from '../../../components/ads/google-ads';
-import { RevContent } from '../../../components/ads/revcontent';
 import { MindsTitle } from '../../../services/ux/title';
-import { MindsFatBanner } from '../../../components/banner';
-import { Comments } from '../../../controllers/comments/comments';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { BlogView } from './view';
-import { InfiniteScroll } from '../../../directives/infinite-scroll';
-
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'm-blog-view-infinite',
   providers:[ MindsTitle ],
-  templateUrl: 'src/plugins/blog/view/infinite.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, BlogView, InfiniteScroll ]
+  templateUrl: 'infinite.html'
 })
 
 export class BlogViewInfinite {
@@ -39,15 +31,30 @@ export class BlogViewInfinite {
 
   error: string = '';
 
-  constructor(public client: Client, public router: Router, public params: RouteParams, public title: MindsTitle,
+  constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle,
     private applicationRef : ApplicationRef, private cd: ChangeDetectorRef){
-      if(params.params['guid'])
-        this.guid = params.params['guid'];
-      this.minds = window.Minds;
+  }
+
+  paramsSubscription: Subscription;
+  ngOnInit() {
+    this.minds = window.Minds;
+
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['guid']) {
+        this.guid = params['guid'];
+        this.load();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
+    if (this.guid) {
       this.load();
+    }
   }
 
   load(refresh : boolean = false){

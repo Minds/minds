@@ -1,21 +1,16 @@
 import { Component } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
-import { Material } from '../../../../directives/material';
-import { InfiniteScroll } from '../../../../directives/infinite-scroll';
-
 import { AttachmentService } from '../../../../services/attachment';
 
 @Component({
   selector: 'minds-archive-grid',
-  properties: ['_object: object'],
+  inputs: ['_object: object'],
   providers: [ AttachmentService ],
   template: `
     <a *ngFor="let item of items"
-    [routerLink]="['/Archive-View', {guid: item.guid}]"
+    [routerLink]="['/archive/view', item.guid]"
     [ngClass]="{ 'm-mature-thumbnail': attachment.shouldBeBlurred(item) }"
     >
       <img src="/archive/thumbnail/{{item.guid}}/large" />
@@ -29,8 +24,7 @@ import { AttachmentService } from '../../../../services/attachment';
         [inProgress]="inProgress"
         style="width:100%">
     </infinite-scroll>
-  `,
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, Material, InfiniteScroll ]
+  `
 })
 
 export class ArchiveGrid {

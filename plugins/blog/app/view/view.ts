@@ -1,21 +1,9 @@
 import { Component, Inject, ElementRef } from '@angular/core';
-import { CORE_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { Router } from "@angular/router";
 
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { Material } from '../../../directives/material';
-import { Hovercard } from '../../../directives/hovercard';
-import { GoogleAds } from '../../../components/ads/google-ads';
-import { PDAds } from '../../../components/ads/pd-ads';
-import { RevContent } from '../../../components/ads/revcontent';
 import { MindsTitle } from '../../../services/ux/title';
-import { MindsFatBanner } from '../../../components/banner';
-import { Comments } from '../../../controllers/comments/comments';
-import { BUTTON_COMPONENTS } from '../../../components/buttons';
-import { ShareModal, ConfirmModal } from '../../../components/modal/modal';
-import { SocialIcons } from '../../../components/social-icons/social-icons';
-import { InfiniteScroll } from '../../../directives/infinite-scroll';
 import { ScrollService } from '../../../services/ux/scroll';
 import { AnalyticsService } from '../../../services/analytics';
 
@@ -25,15 +13,14 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 import { AttachmentService } from '../../../services/attachment';
 
 @Component({
+  moduleId: module.id,
   selector: 'm-blog-view',
   inputs: [ 'blog', '_index: index' ],
   host: {
     'class': 'm-blog'
   },
   providers:[ MindsTitle, AttachmentService ],
-  templateUrl: 'src/plugins/blog/view/view.html',
-  directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BUTTON_COMPONENTS, Material, Comments, MindsFatBanner,
-    GoogleAds, PDAds, RevContent, ShareModal, SocialIcons, InfiniteScroll, Hovercard, ConfirmModal ]
+  templateUrl: 'view.html'
 })
 
 export class BlogView {
@@ -92,7 +79,7 @@ export class BlogView {
   delete(){
     this.client.delete('api/v1/blog/' + this.blog.guid)
       .then((response : any) => {
-        this.router.navigate(['/Blog', {filter: 'owner'}]);
+        this.router.navigate(['/blog/owner']);
       });
   }
 

@@ -1,25 +1,22 @@
 import { Component, Inject } from '@angular/core';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { Router, ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Rx';
 
 import { MindsTitle } from '../../../services/ux/title';
 import { LICENSES, ACCESS } from '../../../services/list-options';
 import { Client, Upload } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
-import { MDL_DIRECTIVES } from '../../../directives/material';
-import { MindsTinymce } from '../../../components/editors/tinymce';
-import { MindsFatBanner } from '../../../components/banner'
-import { AutoGrow } from '../../../directives/autogrow';
 
 
 @Component({
+  moduleId: module.id,
   selector: 'minds-blog-edit',
   host: {
     'class': 'm-blog'
   },
   providers: [ MindsTitle ],
-  templateUrl: 'src/plugins/blog/edit/edit.html',
-  directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, ROUTER_DIRECTIVES, MindsTinymce, MDL_DIRECTIVES, AutoGrow, MindsFatBanner]
+  templateUrl: 'edit.html'
 })
 
 export class BlogEdit {
@@ -46,18 +43,47 @@ export class BlogEdit {
   licenses = LICENSES;
   access = ACCESS;
 
-  constructor(public client: Client, public upload: Upload, public router: Router, public params: RouteParams, public title: MindsTitle){
+  constructor(public client: Client, public upload: Upload, public router: Router, public route: ActivatedRoute, public title: MindsTitle){
+  }
+
+  paramsSubscription: Subscription;
+  ngOnInit() {
     if(!this.session.isLoggedIn()){
-      router.navigate(['/Login']);
+      this.router.navigate(['/login']);
       return;
     }
 
-    if(params.params['guid'])
-      this.guid = params.params['guid'];
     this.title.setTitle("New Blog");
 
-    if(this.guid != 'new')
-      this.load();
+    this.paramsSubscription = this.route.params.subscribe(params => {
+      if (params['guid']) {
+        this.guid = params['guid'];
+
+        this.blog = {
+          guid: 'new',
+          title: '',
+          description: '',
+          access_id: 2,
+          license: 'all-rights-reserved',
+          fileKey: 'header',
+          mature: 0
+        };
+
+        this.banner = void 0;
+        this.banner_top = 0;
+        this.banner_prompt = false;
+        this.editing = true;
+        this.canSave = true;
+
+        if (this.guid != 'new') {
+          this.load();
+        }
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
   }
 
   load(){
@@ -82,7 +108,7 @@ export class BlogEdit {
     this.check_for_banner().then(() =>{
       this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
         .then((response : any) => {
-          this.router.navigate(['/Blog-View', {guid: response.guid}]);
+          this.router.navigate(['/blog/view', response.guid]);
           this.canSave = true;
         })
         .catch((e) => {
@@ -92,7 +118,7 @@ export class BlogEdit {
     .catch(() => {
       this.client.post('api/v1/blog/' + this.guid, this.blog)
         .then((response : any) => {
-          this.router.navigate(['/Blog-View', {guid: response.guid}]);
+          this.router.navigate(['/blog/view', response.guid]);
           this.canSave = true;
         })
         .catch((e) => {

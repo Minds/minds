@@ -1,7 +1,7 @@
 
 <div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp" [class.m-messenger-dockpane-open]="userListToggle">
   <div class="m-messenger-dockpane-tab mdl-color--blue-grey-700  mdl-color-text--blue-grey-100" (click)="toggle()">
-    <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span>Messenger</span></div>
+    <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span i18n>Messenger</span></div>
     <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()">
       <i class="material-icons"
         (click)="ribbon.open = !ribbon.open"
@@ -15,24 +15,24 @@
     <div class="m-messenger-dockpane-tab-ribbon mdl-color-text--blue-grey-300" #ribbon [hidden]="!ribbon.open">
       <div class="m-messenger-dockpane-tab-icon" (click)="logout(); ribbon.open = false" [hidden]="!encryption.isOn()">
         <i class="material-icons mdl-color-text--blue-grey-100"
-          title="Logout of chat"
+          title="Logout of chat" i18n-title
           >exit_to_app</i>
-          Logout
+          <!-- i18n -->Logout<!-- /i18n -->
       </div>
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.mute(); ribbon.open = false" [hidden]="!sounds.canPlay()">
         <i class="material-icons mdl-color-text--blue-grey-100"
-          title="Disable sounds">notifications</i>
-          Mute
+          title="Disable sounds" i18n-title>notifications</i>
+          <!-- i18n -->Mute<!-- /i18n -->
       </div>
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="sounds.unmute(); ribbon.open = false" [hidden]="sounds.canPlay()">
         <i class="material-icons mdl-color-text--blue-grey-100"
-          title="Enable sounds">notifications_off</i>
-          Unmute
+          title="Enable sounds" i18n-title>notifications_off</i>
+          <!-- i18n -->Unmute<!-- /i18n -->
       </div>
       <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="encryption.reKeying = !encryption.reKeying; ribbon.open = false">
         <i class="material-icons mdl-color-text--blue-grey-100"
-          title="Change your encryption password">vpn_key</i>
-          Re-key
+          title="Change your encryption password" i18n-title>vpn_key</i>
+          <!-- i18n -->Re-key<!-- /i18n -->
       </div>
     </div>
     <minds-messenger-encryption *ngIf="encryption.reKeying"></minds-messenger-encryption>
@@ -57,7 +57,7 @@
 
     <div class="m-messenger-userlist-search">
       <i class="material-icons">search</i>
-      <input type="text" placeholder="Search" #q (keyup)="search(q);">
+      <input type="text" placeholder="Search" i18n-placeholder #q (keyup)="search(q);">
     </div>
 
   </div>
