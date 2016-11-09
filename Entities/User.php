@@ -38,6 +38,26 @@ class User extends \ElggUser
     }
 
     /**
+     * Sets the `language` flag
+     * @param  string $value
+     * @return $this
+     */
+    public function setLanguage($value)
+    {
+        $this->language = $value;
+        return $this;
+    }
+
+    /**
+     * Gets the `language` flag
+     * @return string
+     */
+    public function getLanguage()
+    {
+      return $this->language;
+    }
+
+    /**
      * Sets and encrypts a users email address
      * @param  string $email
      * @return $this
@@ -99,6 +119,25 @@ class User extends \ElggUser
     public function getSocialProfiles()
     {
         return $this->social_profiles ?: [];
+    }
+
+    /**
+     * Sets (overrides) experimental feature flags
+     * @return $this
+     */
+    public function setFeatureFlags(array $feature_flags)
+    {
+        $this->feature_flags = $feature_flags;
+        return $this;
+    }
+
+    /**
+     * Returns all set feature flags
+     * @return array
+     */
+    public function getFeatureFlags()
+    {
+        return $this->feature_flags ?: [];
     }
 
     /**
@@ -258,6 +297,10 @@ class User extends \ElggUser
             $export['social_profiles'] = json_decode($export['social_profiles']);
         }
 
+        if (is_string($export['feature_flags'])) {
+            $export['feature_flags'] = json_decode($export['feature_flags']);
+        }
+
         return $export;
     }
 
@@ -302,7 +345,9 @@ class User extends \ElggUser
             'mature',
             'monetized',
             'signup_method',
-            'social_profiles'
+            'social_profiles',
+            'language',
+            'feature_flags',
         ));
     }
 }

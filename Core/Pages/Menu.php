@@ -22,7 +22,7 @@ class Menu
         });
 
         foreach ($footer as $page) {
-            $front_path = '/P';
+            $front_path = 'p';
             $listed = true;
 
             if ($page->getSubtype() == 'link') {
@@ -34,9 +34,8 @@ class Menu
                 (new Navigation\Item())
                     ->setName($page->getTitle())
                     ->setTitle($page->getTitle())
-                    ->setPath($front_path)
-                    ->setParams([
-                        'page' => $page->getPath(),
+                    ->setPath("{$front_path}/{$page->getPath()}")
+                    ->setExtras([
                         'listed' => $listed
                     ]),
                 "footer"
