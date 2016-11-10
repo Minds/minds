@@ -72,7 +72,8 @@ class start extends Components\Plugin
             'streampage.xyz', 'calendarsport.space', 'fsport.space', 'euro2016.od.ua', 'streambig.xyz', 'sportprediction.xyz', 'streamwork.xyz',
             'r041.donnael.com', '2016.lt.ua', 'vipleague.se', 'liveonline.company', 'liveolympics.space', 'seoandvideomarketing.com.au', 'vipbox.sx',
             'germanypolandlivestream.club', 'sportgoal.xyz', 'ggdbsale.com', 'gorillasteroids.eu', 'watchlivesports.space', 'penaltyshootout.xyz',
-            'streamgroup.xyz', 'streamnew.xyz', 'cottonsport.space', 'gosport.space', 'streambest.xyz', 'penaltyspot.xyz', 'streamthe.xyz'
+            'streamgroup.xyz', 'streamnew.xyz', 'cottonsport.space', 'gosport.space', 'streambest.xyz', 'penaltyspot.xyz', 'streamthe.xyz',
+            'liveevents.name', 'londonblog.work', 'testcollections.com', 'alfagy.com'
         ];
     }
 
