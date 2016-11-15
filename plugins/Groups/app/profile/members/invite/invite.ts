@@ -9,8 +9,7 @@ import { GroupsService } from '../../../groups-service';
   selector: 'minds-groups-profile-members-invite',
   inputs: ['_group : group'],
   outputs: ['invited'],
-  templateUrl: 'invite.html',
-  providers: [ GroupsService ]
+  templateUrl: 'invite.html'
 })
 
 export class GroupsProfileMembersInvite {
@@ -27,6 +26,8 @@ export class GroupsProfileMembersInvite {
   inviteInProgress: boolean = false;
   inviteLastUser: string = '';
   inviteError: string = '';
+
+  destination: any; // @todo: ??
 
   constructor(public client: Client, public service: GroupsService) {
   }

@@ -10,7 +10,6 @@ import { AttachmentService } from '../../../services/attachment';
   selector: 'minds-card-blog',
 
   inputs: ['_blog : object'],
-  providers: [AttachmentService],
   templateUrl: 'card.html'
 })
 

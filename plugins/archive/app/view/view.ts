@@ -11,7 +11,6 @@ import { AttachmentService } from '../../../services/attachment';
 @Component({
   moduleId: module.id,
   selector: 'minds-archive-view',
-  providers: [ AttachmentService ],
   templateUrl: 'view.html'
 })
 

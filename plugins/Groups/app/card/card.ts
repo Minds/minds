@@ -9,7 +9,6 @@ import { SessionFactory } from '../../../services/session';
   moduleId: module.id,
   selector: 'minds-card-group',
   inputs: ['group'],
-  providers: [ GroupsService ],
   templateUrl: 'card.html'
 })
 

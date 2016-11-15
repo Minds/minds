@@ -16,7 +16,7 @@
     </div>
 
     <div class="m-search-inline" [hidden]="destination">
-      <input type="text" name="q" [(ngModel)]="q" (keyup)="search()" placeholder="Search for a channel" i18n-placeholder/>
+      <input type="text" name="q" [(ngModel)]="q" (keyup)="search(q)" placeholder="Search for a channel" i18n-placeholder/>
 
       <div class="m-search-inline-list mdl-shadow--2dp mdl-color--white" [hidden]="users.length == 0 || !searching">
         <div *ngFor="let user of users" (click)="invite(user);" class="m-search-inline-item m-block">

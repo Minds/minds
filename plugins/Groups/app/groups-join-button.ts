@@ -8,7 +8,6 @@ import { MindsGroupListResponse } from '../../interfaces/responses';
   selector: 'minds-groups-join-button',
 
   inputs: ['_group: group'],
-  providers: [ GroupsService ],
   outputs:[ 'membership' ],
   template: `
     <button class="minds-group-join-button" *ngIf="!group['is:banned'] && !group['is:awaiting'] && !group['is:invited'] && !group['is:member']" (click)="join()" i18n>Join</button>

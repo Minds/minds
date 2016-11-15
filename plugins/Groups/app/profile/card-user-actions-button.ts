@@ -33,8 +33,7 @@ import { GroupsService } from '../groups-service';
         </button>
       </div>
   </m-modal>
-  `,
-  providers: [ GroupsService ]
+  `
 })
 
 export class GroupsCardUserActionsButton {

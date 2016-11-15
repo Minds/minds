@@ -19,7 +19,6 @@ import { AttachmentService } from '../../../services/attachment';
   host: {
     'class': 'm-blog'
   },
-  providers:[ MindsTitle, AttachmentService ],
   templateUrl: 'view.html'
 })
 

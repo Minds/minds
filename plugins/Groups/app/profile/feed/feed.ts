@@ -19,7 +19,6 @@ interface MindsGroup {
 @Component({
   moduleId: module.id,
   selector: 'minds-groups-profile-feed',
-  providers: [ GroupsService ],
   inputs: [ '_group: group' ],
   templateUrl: 'feed.html'
 })

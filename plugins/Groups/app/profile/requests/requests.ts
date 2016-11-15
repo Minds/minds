@@ -8,7 +8,6 @@ import { SessionFactory } from '../../../../services/session';
 @Component({
   moduleId: module.id,
   selector: 'minds-groups-profile-requests',
-  providers: [ GroupsService ],
   inputs: ['_group : group'],
   templateUrl: 'requests.html'
 })

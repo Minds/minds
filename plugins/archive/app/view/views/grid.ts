@@ -7,7 +7,6 @@ import { AttachmentService } from '../../../../services/attachment';
 @Component({
   selector: 'minds-archive-grid',
   inputs: ['_object: object'],
-  providers: [ AttachmentService ],
   template: `
     <a *ngFor="let item of items"
     [routerLink]="['/archive/view', item.guid]"

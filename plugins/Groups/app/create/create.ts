@@ -12,7 +12,6 @@ import { SessionFactory } from '../../../services/session';
   host: {
     '(keydown)': 'keyDown($event)'
   },
-  providers: [ MindsTitle, GroupsService ],
   templateUrl: 'create.html'
 })
 

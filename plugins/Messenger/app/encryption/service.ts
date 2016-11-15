@@ -3,7 +3,6 @@ import { Client } from '../../../services/api';
 import { Storage } from '../../../services/storage';
 import { MINDS_PROVIDERS } from '../../../services/providers';
 
-@Injectable()
 export class MessengerEncryptionService{
 
   private on : boolean = false;

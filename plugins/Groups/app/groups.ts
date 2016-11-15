@@ -14,7 +14,6 @@ import { MindsGroupListResponse } from '../../interfaces/responses';
   moduleId: module.id,
   selector: 'minds-groups',
 
-  providers: [ MindsTitle, GroupsService ],
   templateUrl: 'groups.html'
 })
 

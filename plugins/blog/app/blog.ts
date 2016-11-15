@@ -12,7 +12,6 @@ import { MindsBlogListResponse } from '../../interfaces/responses';
 @Component({
   moduleId: module.id,
   selector: 'minds-blog',
-  providers: [MindsTitle ],
   templateUrl: 'list.html'
 })
 

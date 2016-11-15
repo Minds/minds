@@ -14,7 +14,6 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 @Component({
   moduleId: module.id,
   selector: 'm-blog-view-infinite',
-  providers:[ MindsTitle ],
   templateUrl: 'infinite.html'
 })
 

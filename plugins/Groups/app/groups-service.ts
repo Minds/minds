@@ -238,4 +238,7 @@ export class GroupsService {
       });
   }
 
+  static _(client: Client, upload: Upload) {
+    return new GroupsService(client, upload);
+  }
 }

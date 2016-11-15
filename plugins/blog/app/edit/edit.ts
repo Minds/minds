@@ -15,7 +15,6 @@ import { SessionFactory } from '../../../services/session';
   host: {
     'class': 'm-blog'
   },
-  providers: [ MindsTitle ],
   templateUrl: 'edit.html'
 })
 
@@ -39,6 +38,7 @@ export class BlogEdit {
   banner_prompt : boolean = false;
   editing : boolean = true;
   canSave : boolean = true;
+  error: string = '';
 
   licenses = LICENSES;
   access = ACCESS;

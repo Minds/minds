@@ -10,8 +10,7 @@ import { SessionFactory } from '../../../../services/session';
   selector: 'minds-groups-profile-members',
 
   inputs: ['_group : group'],
-  templateUrl: 'members.html',
-  providers: [ GroupsService ]
+  templateUrl: 'members.html'
 })
 
 export class GroupsProfileMembers {

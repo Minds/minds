@@ -96,4 +96,5 @@ export class ThumbnailSelector{
     });
   }
 
+  onClick(e?) { }
 }

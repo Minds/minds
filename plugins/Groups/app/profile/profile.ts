@@ -11,7 +11,6 @@ import { SessionFactory } from '../../../services/session';
 @Component({
   moduleId: module.id,
   selector: 'minds-groups-profile',
-  providers: [ MindsTitle, GroupsService ],
   templateUrl: 'profile.html'
 })
 
