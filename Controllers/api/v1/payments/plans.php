@@ -39,6 +39,14 @@ class plans implements Interfaces\Api
               $stripe = Core\Di\Di::_()->get('StripePayments');
               $entity = Entities\Factory::build($pages[1]);
 
+              if (!$entity) {
+                  return Factory::response([
+                      'status' => 'error',
+                      'message' => 'Post not found'
+                      ]);
+              }
+              $owner = $entity->getOwnerEntity();
+              
               $repo = new Payments\Plans\Repository();
               $plan = $repo->setEntityGuid($entity->owner_guid)
                 ->setUserGuid(Core\Session::getLoggedInUser()->guid)
@@ -51,10 +59,10 @@ class plans implements Interfaces\Api
               } else {
                   $response['subscribed'] = false;
 
-                  $plan = $stripe->getPlan("exclusive", $entity->getMerchant()['id']);
+                  $plan = $stripe->getPlan("exclusive", $owner->getMerchant()['id']);
 
                   if ($plan) {
-                      $response['amount'] = $plan->amount;
+                      $response['amount'] = $plan->amount / 100;
                   } else {
                       $response = [
                         'status' => 'error',

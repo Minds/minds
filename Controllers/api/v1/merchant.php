@@ -204,7 +204,7 @@ class merchant implements Interfaces\Api
                 $merchant = $user->getMerchant();
                 $merchant['exclusive'] = [
                   'enabled' => true,
-                  'amount' => $_POST['amount'] * 100,
+                  'amount' => $_POST['amount'],
                   'intro' => $_POST['intro']
                 ];
 
