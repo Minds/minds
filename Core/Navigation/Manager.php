@@ -67,7 +67,7 @@ class Manager
             ->setIcon('search')
             ->setName('Discovery')
             ->setTitle('Discovery')
-            ->setPath('discovery/trending')
+            ->setPath('discovery/trending/channels')
             ->addSubItem($discovery_trending)
             ->addSubItem($discovery_suggested)
             ->addSubItem($discovery_featured)
