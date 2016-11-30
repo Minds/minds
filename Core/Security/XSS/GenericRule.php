@@ -69,7 +69,7 @@ class GenericRule implements Interfaces\XSSRule
             $this->dirtyString);
 
         $this->cleanString  = $this->cleanAttributes($this->cleanString);
-
+          $this->cleanString = str_replace('javascript:', '', $this->cleanString);
 
           //remove trailing line
           if ($this->cleanString && strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== false && strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === false) {
