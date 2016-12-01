@@ -54,6 +54,14 @@ class XSSSpec extends ObjectBehavior
         $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
     }
 
+    public function it_should_not_allow_bad_url_schemes_from_multiple_keywords()
+    {
+        $dirty = "<iframe src=\"javascriptjavascript::document.loadFromBogusFunction()\"></iframe>";
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<iframe src=\"document.loadFromBogusFunction()\"></iframe>");
+        $dirty = "<iframe src=\"javascriptjavascriptjavascript:::document.loadFromBogusFunction()\"></iframe>";
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<iframe src=\"document.loadFromBogusFunction()\"></iframe>");
+    }
+
     public function it_should_set_an_image_src()
     {
         $dirty = "<img src=\"https://minds.com/fakeimg.png\">";

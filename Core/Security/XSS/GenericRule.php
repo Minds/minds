@@ -68,8 +68,7 @@ class GenericRule implements Interfaces\XSSRule
             [$this, 'cleanSplit'],
             $this->dirtyString);
 
-        $this->cleanString  = $this->cleanAttributes($this->cleanString);
-          $this->cleanString = str_replace('javascript:', '', $this->cleanString);
+            $this->cleanString  = $this->cleanAttributes($this->cleanString);
 
           //remove trailing line
           if ($this->cleanString && strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== false && strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === false) {
@@ -146,7 +145,7 @@ class GenericRule implements Interfaces\XSSRule
                     $safe[$attr] = $element->getAttribute($attr);
                 }
             }
-            
+
             while ($element->attributes->length) {
                 $element->removeAttribute($element->attributes->item(0)->name);
             }
