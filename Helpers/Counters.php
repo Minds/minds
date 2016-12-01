@@ -127,11 +127,12 @@ class Counters
         if ($cached !== false && $cache) {
             return (int) $cached;
         }
-        if (!$client) {
-            $client = Core\Data\Client::build('Cassandra');
-        }
-        $query = new Core\Data\Cassandra\Prepared\Counters();
+
         try {
+            if (!$client) {
+                $client = Core\Data\Client::build('Cassandra');
+            }
+            $query = new Core\Data\Cassandra\Prepared\Counters();
             $result = $client->request($query->get($guid, $metric));
             if (isset($result[0]) && isset($result[0]['count'])) {
                 $count = (int) $result[0]['count'];
