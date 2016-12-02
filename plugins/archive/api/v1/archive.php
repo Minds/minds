@@ -301,6 +301,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
             }
         }
 
+        $entity->hidden = isset($_POST['hidden']) && $_POST['hidden'];
         $entity->access_id = !isset($_POST['access_id']) ? 2 : (int) $_POST['access_id'];
         $entity->save(true);
 
