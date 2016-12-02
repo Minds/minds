@@ -76,16 +76,20 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
         }
 
         $block = $this->di->get('Security\ACL\Block');
-        $blocked = $block->block($pages[0]);
+        $blocked = $block->block($target->guid);
 
         if ($blocked) {
             // Unsubscribe self
-            Core\Session::getLoggedInUser()->unSubscribe($pages[0]);
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'Unsubscribed');
+            if (Core\Session::getLoggedInUser()->isSubscribed($target->guid)) {
+                Core\Session::getLoggedInUser()->unSubscribe($target->guid);
+                Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'Unsubscribed');
+            }
 
             // Unsubscribe target
-            $target->unSubscribe(Core\Session::getLoggedInUserGuid());
-            Helpers\Wallet::createTransaction($pages[0], -1, Core\Session::getLoggedInUserGuid(), 'Unsubscribed');
+            if ($target->isSubscribed(Core\Session::getLoggedInUser()->guid)) {
+                $target->unSubscribe(Core\Session::getLoggedInUserGuid());
+                Helpers\Wallet::createTransaction($pages[0], -1, Core\Session::getLoggedInUserGuid(), 'Unsubscribed');
+            }
         }
 
         return Factory::response(array());
