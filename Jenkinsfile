@@ -1,6 +1,7 @@
 node {
     
     stage 'Checkout'
+        checkout scm
         //Get dependencies
         sh '/var/www/composer.phar install'
   
