@@ -63,10 +63,18 @@ class notifications implements Interfaces\Api
         switch ($action) {
             case 'mute':
                 $response['done'] = $entity_notifications->mute($user);
+
+                if ($entity->entity_guid) {
+                    (new Notification\Entity($entity->entity_guid))->mute($user);
+                }
                 break;
 
             case 'unmute':
                 $response['done'] = $entity_notifications->unmute($user);
+
+                if ($entity->entity_guid) {
+                    (new Notification\Entity($entity->entity_guid))->unmute($user);
+                }
                 break;
         }
 
