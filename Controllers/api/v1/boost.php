@@ -50,6 +50,8 @@ class boost implements Interfaces\Api
     public function get($pages)
     {
         $response = array();
+        $limit = isset($_GET['limit']) && $_GET['limit'] ? (int) $_GET['limit'] : 12;
+        $offset = isset($_GET['offset']) && $_GET['offset'] ? $_GET['offset'] : '';
 
         switch ($pages[0]) {
             case is_numeric($pages[0]):
@@ -86,7 +88,7 @@ class boost implements Interfaces\Api
             break;
             case "p2p":
               $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-              $boosts = $pro->getReviewQueue(100);
+              $boosts = $pro->getReviewQueue($limit, $offset);
               $boost_entities = [];
               //only show 'point boosts and 'created' (not accepted or rejected)
               foreach ($boosts as $i => $boost) {
@@ -104,9 +106,19 @@ class boost implements Interfaces\Api
             case "newsfeed":
             case "content":
               $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
-              $boosts = $pro->getOutbox(isset($_GET['limit']) ? $_GET['limit'] : 12, isset($_GET['offset']) ? $_GET['offset'] : "");
+              $boosts = $pro->getOutbox($limit, $offset);
               $response['boosts'] = Factory::exportable($boosts);
               break;
+        }
+
+        if (isset($response['boosts']) && $response['boosts']) {
+            if ($offset) {
+                array_shift($response['boosts']);
+            }
+
+            if ($response['boosts']) {
+                $response['load-next'] = end($response['boosts'])['guid'];
+            }
         }
 
         return Factory::response($response);
