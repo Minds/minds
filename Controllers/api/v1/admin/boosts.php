@@ -86,7 +86,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         } elseif ($action == 'reject') {
             $success = Core\Boost\Factory::build($type)->reject($boost);
             if ($success) {
-                Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "boost refund");
+                Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
             } else {
                 $response['status'] = 'error';
             }

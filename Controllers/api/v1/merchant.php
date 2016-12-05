@@ -203,12 +203,12 @@ class merchant implements Interfaces\Api
 
                 $merchant = $user->getMerchant();
                 $merchant['exclusive'] = [
-                  'enabled' => true,
+                  'enabled' => !!$_POST['enabled'],
                   'amount' => $_POST['amount'],
                   'intro' => $_POST['intro']
                 ];
 
-                $user->merchant = $merchant;
+                $user->setMerchant($merchant);
                 $user->save();
 
             } catch (\Exception $e) {

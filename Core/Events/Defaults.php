@@ -74,6 +74,9 @@ class Defaults
 
         // Subscription Queue events
         Helpers\Subscriptions::registerEvents();
+
+        // Payments events
+        (new Core\Payments\Events())->register();
     }
 
     public static function _()

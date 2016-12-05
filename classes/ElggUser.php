@@ -708,7 +708,8 @@ class ElggUser extends ElggEntity
 			'language',
 			'icontime',
 			'legacy_guid',
-			'featured_id'
+            'featured_id',
+            'banned'
 		));
 	}
 

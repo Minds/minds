@@ -43,13 +43,40 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->query("SELECT * FROM plans WHERE entity_guid = ?", [
-            $this->entity_guid
+            (string) $this->entity_guid
           ]);
         try {
             $result = $this->db->request($query);
             $guids = [];
             foreach ($result as $row) {
                 $guids[] = $row['guid'];
+            }
+            return $guids;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Return all entities a user is subscribed to
+     */
+    public function getAllSubscriptions($planId = '', array $opts = [])
+    {
+        $opts = array_merge([
+          'limit' => 10,
+          'offset' => ''
+        ], $opts);
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query("SELECT * FROM plans WHERE plan = ? AND user_guid = ? ALLOW FILTERING", [
+            (string) $planId,
+            (string) $this->user_guid
+        ]);
+        try {
+            $result = $this->db->request($query);
+            $guids = [];
+            foreach ($result as $row) {
+                $guids[] = $row['entity_guid'];
             }
             return $guids;
         } catch (\Exception $e) {
@@ -107,8 +134,20 @@ class Repository
         return $this;
     }
 
-    public function cancel($guid, $category)
+    public function cancel($planId)
     {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        $query->query("DELETE FROM plans WHERE entity_guid = ? AND plan = ? AND user_guid = ?", [
+            (string) $this->entity_guid,
+            $planId,
+            (string) $this->user_guid
+        ]);
+
+        try {
+            $result = $this->db->request($query);
+        } catch (\Exception $e) { }
+
         return $this;
     }
 

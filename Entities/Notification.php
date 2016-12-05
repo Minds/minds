@@ -311,6 +311,9 @@ class Notification extends DenormalizedEntity
      */
     public function getFrom()
     {
+        if(!$this->from && $this->notification_view == 'friends'){
+            $this->from = $this->entity;
+        }
         if (Core\Session::isLoggedIn()) {
             $this->from['subscribed'] = Core\Session::getLoggedInUser()->isSubscribed((int) $this->from['guid']);
             $this->from['subscriber'] = Core\Session::getLoggedInUser()->isSubscriber((int) $this->from['guid']);

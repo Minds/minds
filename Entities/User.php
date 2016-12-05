@@ -38,6 +38,26 @@ class User extends \ElggUser
     }
 
     /**
+     * Sets the `language` flag
+     * @param  string $value
+     * @return $this
+     */
+    public function setLanguage($value)
+    {
+        $this->language = $value;
+        return $this;
+    }
+
+    /**
+     * Gets the `language` flag
+     * @return string
+     */
+    public function getLanguage()
+    {
+      return $this->language;
+    }
+
+    /**
      * Sets and encrypts a users email address
      * @param  string $email
      * @return $this
@@ -99,6 +119,25 @@ class User extends \ElggUser
     public function getSocialProfiles()
     {
         return $this->social_profiles ?: [];
+    }
+
+    /**
+     * Sets (overrides) experimental feature flags
+     * @return $this
+     */
+    public function setFeatureFlags(array $feature_flags)
+    {
+        $this->feature_flags = $feature_flags;
+        return $this;
+    }
+
+    /**
+     * Returns all set feature flags
+     * @return array
+     */
+    public function getFeatureFlags()
+    {
+        return $this->feature_flags ?: [];
     }
 
     /**
@@ -224,6 +263,11 @@ class User extends \ElggUser
         return $this->merchant;
     }
 
+    public function setMerchant($merchant){
+        $this->merchant = $merchant;
+        return $this;
+    }
+
     /**
      * Set the secret key for clusters to use
      * @todo - should we use oauth2 instead. should this be stored in its own row rather than in the user object?
@@ -257,9 +301,7 @@ class User extends \ElggUser
             $export['fb'] = json_decode($this->fb, true);
         }
 
-        if ($this->merchant) {
-            $export['merchant'] = json_decode($this->merchant, true);
-        }
+        $export['merchant'] = $this->getMerchant() ?: false;
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
@@ -267,6 +309,10 @@ class User extends \ElggUser
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
+        }
+
+        if (is_string($export['feature_flags'])) {
+            $export['feature_flags'] = json_decode($export['feature_flags']);
         }
 
         return $export;
@@ -313,7 +359,9 @@ class User extends \ElggUser
             'mature',
             'monetized',
             'signup_method',
-            'social_profiles'
+            'social_profiles',
+            'language',
+            'feature_flags',
         ));
     }
 }

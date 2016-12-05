@@ -96,6 +96,12 @@ class settings implements Interfaces\Api
             $user->override_password = true;
         }
 
+        $allowedLanguages = ['en', 'es', 'fr'];
+
+        if (isset($_POST['language']) && in_array($_POST['language'], $allowedLanguages)) {
+            $user->setLanguage($_POST['language']);
+        }
+
         $response = array();
         if (!$user->save()) {
             //update or session

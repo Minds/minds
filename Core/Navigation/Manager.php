@@ -18,7 +18,7 @@ class Manager
             ->setIcon('home')
             ->setName('Newsfeed')
             ->setTitle('Newsfeed')
-            ->setPath('/Newsfeed');
+            ->setPath('newsfeed');
         self::add($newsfeed);
 
         $capture = new Item();
@@ -26,7 +26,7 @@ class Manager
             ->setIcon('file_upload')
             ->setName('Capture')
             ->setTitle('Capture')
-            ->setPath('/Capture');
+            ->setPath('capture');
         self::add($capture);
 
         $discovery_trending = new Item();
@@ -35,11 +35,7 @@ class Manager
             ->setIcon('trending_up')
             ->setName('Trending')
             ->setTitle('Trending (Discovery)')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'trending',
-                'type' => ''
-            ));
+            ->setPath('discovery/trending');
 
         $discovery_suggested = new Item();
         $discovery_suggested
@@ -47,11 +43,7 @@ class Manager
             ->setIcon('call_split')
             ->setName('Suggested')
             ->setTitle('Suggested (Discovery)')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'suggested',
-                'type' => ''
-            ))
+            ->setPath('discovery/suggested')
             ->setVisibility(0); //only show for loggedin
 
         $discovery_featured = new Item();
@@ -60,22 +52,14 @@ class Manager
             ->setIcon('star')
             ->setName('Featured')
             ->setTitle('Featured (Discovery)')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'featured',
-                'type' => ''
-            ));
+            ->setPath('discovery/featured');
         $discovery_my = new Item();
         $discovery_my
             ->setPriority(4)
             ->setIcon('person_pin')
             ->setName('My')
             ->setTitle('My (Discovery)')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'owner',
-                'type' => ''
-                ))
+            ->setPath('discovery/owner')
             ->setVisibility(0); //only show for loggedin
 
         $discovery = new Item();
@@ -83,11 +67,7 @@ class Manager
             ->setIcon('search')
             ->setName('Discovery')
             ->setTitle('Discovery')
-            ->setPath('/Discovery')
-            ->setParams(array(
-                'filter' => 'trending',
-                'type' => 'channels'
-            ))
+            ->setPath('discovery/trending')
             ->addSubItem($discovery_trending)
             ->addSubItem($discovery_suggested)
             ->addSubItem($discovery_featured)
@@ -99,47 +79,36 @@ class Manager
             ->setIcon('settings_input_component')
             ->setName('Admin')
             ->setTitle('Admin')
-            ->setPath('/Admin')
-            ->setParams(array(
-                'filter' => 'analytics'
-            ))
+            ->setPath('admin/analytics')
             ->setVisibility(-1)
             ->addSubItem((new Item())
                 ->setPriority(1)
                 ->setIcon('trending_up')
                 ->setName('Boost')
                 ->setTitle('Boost (Admin)')
-                ->setPath('/Admin')
-                ->setParams(array(
-                    'filter' => 'boosts'
-                )))
+                ->setPath('admin/boosts')
+            )
             ->addSubItem((new Item())
                 ->setPriority(2)
                 ->setIcon('insert_chart')
                 ->setName('Analytics')
                 ->setTitle('Analytics')
-                ->setPath('/Admin')
-                ->setParams(array(
-                    'filter' => 'analytics'
-                )))
+                ->setPath('admin/analytics')
+            )
             ->addSubItem((new Item())
                 ->setPriority(3)
                 ->setIcon('create')
                 ->setName('Pages')
                 ->setTitle('Pages')
-                ->setPath('/Admin')
-                ->setParams(array(
-                    'filter' => 'pages'
-                )))
+                ->setPath('admin/pages')
+            )
             ->addSubItem((new Item())
                 ->setPriority(4)
                 ->setIcon('flag')
                 ->setName('Reports')
                 ->setTitle('Reports')
-                ->setPath('/Admin')
-                ->setParams(array(
-                    'filter' => 'reports'
-                )));
+                ->setPath('admin/reports')
+            );
         self::add($admin);
 
         self::add((new Item())
@@ -147,7 +116,7 @@ class Manager
             ->setIcon('account_balance')
             ->setName('Wallet')
             ->setTitle('Wallet')
-            ->setPath('/Wallet')
+            ->setPath('wallet')
             ->setExtras(array(
                 'counter' => (int) Core\Session::isLoggedIn() ? \Minds\Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) : 0
             )),
@@ -159,7 +128,7 @@ class Manager
             ->setIcon('notifications')
             ->setName('Notifications')
             ->setTitle('Notifications')
-            ->setPath('/Notifications')
+            ->setPath('notifications')
             ->setExtras(array(
                 'counter' => (new Core\Notification\Notifications())->getCount()
             )),
@@ -171,11 +140,7 @@ class Manager
             ->setIcon('trending_up')
             ->setName('Boost Console')
             ->setTitle('Boost Console')
-            ->setPath('/Boosts')
-            ->setParams([
-                'type' => 'peer',
-                'filter' => 'inbox'
-            ]),
+            ->setPath('boosts/peer/inbox'),
             'topbar'
         );
 
@@ -184,11 +149,7 @@ class Manager
             ->setIcon('bug_report')
             ->setName('Bugs')
             ->setTitle('Report bugs')
-            ->setPath('/Groups-Profile')
-            ->setParams([
-              'guid' => '100000000000000681',
-              'filter' => 'activity'
-            ]),
+            ->setPath('groups/profile/100000000000000681/activity'),
             'topbar'
         );
 

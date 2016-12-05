@@ -15,9 +15,13 @@ class Sessions implements \SessionHandlerInterface
 
     private $session;
 
-    public function open($save_path, $name)
+    public function __construct()
     {
         $this->db = new Call('session');
+    }
+
+    public function open($save_path, $name)
+    {
         return true;
     }
 
@@ -64,6 +68,7 @@ class Sessions implements \SessionHandlerInterface
             $cacher->set($session_id, $session_data, $params['lifetime']);
 
             $result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
+            $this->addIndex($session_id, $params['lifetime']);
 
             if ($result !== false) {
                 return true;
@@ -82,6 +87,7 @@ class Sessions implements \SessionHandlerInterface
             $cacher->destroy($session_id);
 
             $this->db->removeRow($session_id);
+            $this->removeIndex($session_id);
 
             return true;
         } catch (Exception $e) {
@@ -92,5 +98,88 @@ class Sessions implements \SessionHandlerInterface
     public function gc($maxlifetime)
     {
         return true;
+    }
+
+    /**
+     * Destroy all of an user's sessions
+     * @param string $guid
+     * @return bool
+     */
+    public function destroyAll($guid)
+    {
+        $result = $this->db->getRow('user:' . $guid, [
+            'limit' => 99999,
+            'reversed' => false
+        ]);
+
+        if (!$result) {
+            return true;
+        }
+
+        foreach ($result as $session_id => $ts) {
+            $this->destroy($session_id);
+        }
+
+        return true;
+    }
+
+    /**
+     * Creates an User<->SessionID index, if not exists
+     * @param string $session_id
+     * @param number $ttl
+     * @return bool
+     */
+    protected function addIndex($session_id, $ttl)
+    {
+        $guid = $this->getUserGuid();
+
+        if (!$guid) {
+            return false;
+        }
+
+        try {
+            $this->db->insert('user:' . $guid, [ $session_id => time() ], $ttl);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Deletes an User<->SessionID index
+     * @param string $session_id
+     * @return bool
+     */
+    protected function removeIndex($session_id)
+    {
+        $guid = $this->getUserGuid();
+
+        if (!$guid) {
+            return false;
+        }
+
+        try {
+            $this->db->removeAttributes('user:' . $guid, [ $session_id ]);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Gets user's GUID from session (if exists)
+     * @return mixed
+     */
+    protected function getUserGuid()
+    {
+        if (isset($_SESSION['user']) && $_SESSION['user']) {
+            return $_SESSION['user']->guid;
+        } elseif (isset($_SESSION['guid']) && $_SESSION['guid']) {
+            return $_SESSION['guid'];
+        }
+
+        return false;
     }
 }

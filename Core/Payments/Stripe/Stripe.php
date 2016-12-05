@@ -193,7 +193,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             'account_number' => $merchant->getAccountNumber(),
             'routing_number' => $merchant->getRoutingNumber(),
             'country' => $merchant->getCountry(),
-            'currency' => 'GBP'
+            'currency' => 'USD'
           ]
         ]);
 
@@ -366,12 +366,19 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $result->id;
     }
 
-    public function getSubscription($subscription_id)
+    public function getSubscription($subscriptionId)
     {
     }
 
     public function cancelSubscription(Subscription $subscription)
     {
+        try {
+            StripeSDK\Subscription::retrieve($subscription->getId(), [
+                'stripe_account' => $subscription->getMerchant()->getId()
+            ])->cancel();
+        } catch (\Exceptions $e) {
+            throw new \Exception($e->getMessage()); // :v
+        }
     }
 
     public function updateSubscription(Subscription $subscription)

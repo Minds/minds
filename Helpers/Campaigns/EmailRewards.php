@@ -35,8 +35,8 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "august-23-2016":
-            $points = 1000;
+          case "november-10-2016":
+            $points = 500;
             break; 
           default:
             return;
@@ -52,7 +52,7 @@ class EmailRewards
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
-            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email click. ($label)");
+            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }

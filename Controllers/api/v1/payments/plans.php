@@ -57,6 +57,7 @@ class plans implements Interfaces\Api
                   $entity->paywall = false;
                   $response['entity'] = $entity->export();
               } else {
+                  $owner = new Entities\User($entity->owner_guid, false);
                   $response['subscribed'] = false;
 
                   $plan = $stripe->getPlan("exclusive", $owner->getMerchant()['id']);
@@ -144,6 +145,48 @@ class plans implements Interfaces\Api
 
     public function delete($pages)
     {
-        return Factory::response([]);
+        $response = [];
+
+        $stripe = Core\Di\Di::_()->get('StripePayments');
+
+        switch ($pages[0]) {
+            case 'exclusive':
+                $entity = new Entities\User($pages[1]);
+                if (!$entity || !$entity->guid) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'User not found'
+                    ]);
+                }
+
+                $merchant = (new Payments\Merchant())
+                    ->setId($entity->getMerchant()['id']);
+
+                $repo = new Payments\Plans\Repository();
+                $repo
+                    ->setEntityGuid($entity->guid)
+                    ->setUserGuid(Core\Session::getLoggedInUser()->guid);
+
+                try {
+                    $plan = $repo->getSubscription('exclusive');
+
+                    $subscription = (new Payments\Subscriptions\Subscription())
+                        ->setMerchant($merchant)
+                        ->setId($plan->getSubscriptionId());
+
+                    $stripe->cancelSubscription($subscription);
+
+                    $repo->cancel('exclusive');
+                } catch (\Exception $e) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
+                break;
+        }
+
+        return Factory::response($response);
     }
 }

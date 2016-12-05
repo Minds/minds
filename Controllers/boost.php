@@ -79,7 +79,7 @@ class boost extends core\page implements Interfaces\page
                     $user_guid = $entity->owner_guid;
                 }
                 //refund the point
-                Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, null, "boost refund");
+                Helpers\Wallet::createTransaction($user_guid, $_POST['impressions'] / $this->rate, null, "Boost Refund");
             }
 
             if (!elgg_is_xhr()) {

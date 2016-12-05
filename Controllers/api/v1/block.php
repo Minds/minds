@@ -81,11 +81,11 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
         if ($blocked) {
             // Unsubscribe self
             Core\Session::getLoggedInUser()->unSubscribe($pages[0]);
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'unsubscribed');
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'Unsubscribed');
 
             // Unsubscribe target
             $target->unSubscribe(Core\Session::getLoggedInUserGuid());
-            Helpers\Wallet::createTransaction($pages[0], -1, Core\Session::getLoggedInUserGuid(), 'unsubscribed');
+            Helpers\Wallet::createTransaction($pages[0], -1, Core\Session::getLoggedInUserGuid(), 'Unsubscribed');
         }
 
         return Factory::response(array());

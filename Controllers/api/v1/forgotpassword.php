@@ -50,7 +50,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           }
           $code = Core\Security\Password::reset($user);
-          $link = elgg_get_site_url() . "forgot-password?username=" . $user->username . "&code=" . $code;
+          $link = elgg_get_site_url() . "forgot-password;username=" . $user->username . ";code=" . $code;
 
           //now send an email
           $mailer = Di::_()->get('Mailer');

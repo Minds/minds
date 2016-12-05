@@ -170,7 +170,7 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity) {
-            $response['activity'] = factory::exportable($activity, array('boosted'));
+            $response['activity'] = factory::exportable($activity, array('boosted'), true);
             $response['load-next'] = (string) end($activity)->guid;
             $response['load-previous'] = $loadPrevious;
         }
@@ -340,6 +340,7 @@ class newsfeed implements Interfaces\Api
                     $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
                     $activity->save();
+                    $activity->setExportContext(true);
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }
 
@@ -437,6 +438,7 @@ class newsfeed implements Interfaces\Api
                         ]);
                     }
 
+                    $activity->setExportContext(true);
                     return Factory::response(array('guid'=>$guid, 'activity'=> $activity->export()));
                 } else {
                     return Factory::response(array('status'=>'failed', 'message'=>'could not save'));

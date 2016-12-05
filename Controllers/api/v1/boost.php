@@ -190,7 +190,7 @@ class boost implements Interfaces\Api
                 if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200) {
                     $transactionId = "free";
                 } else {
-                    $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "boost");
+                    $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "Boost");
                 }
                 $boost->setId((string) $result)
                   ->setTransactionId($transactionId)
@@ -210,7 +210,7 @@ class boost implements Interfaces\Api
             $result = Core\Boost\Factory::build("Channel", [
               'destination'=>isset($_POST['destination']) ? $_POST['destination'] : null
             ])->boost($entity, $impressions);
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "p2p boost");
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
             if ($result) {
                 Core\Events\Dispatcher::trigger('notification', 'boost', [
                   'to'=> [ $pages[2] ],
