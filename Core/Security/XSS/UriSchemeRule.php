@@ -59,8 +59,8 @@ class UriSchemeRule implements Interfaces\XSSRule
         $this->cleanString = $this->dirtyString;
 
         foreach ($this->badSchemes as $scheme) {
-            if (strpos($this->dirtyString, "$scheme:") !== false) {
-                $this->cleanString = $this->dirtyString = str_replace("$scheme:", '', $this->cleanString);
+            if (stripos($this->dirtyString, "$scheme:") !== false) {
+                $this->cleanString = $this->dirtyString = str_ireplace("$scheme:", '', $this->cleanString);
 
                 //run clean agin to prevent issues likes javascriptjavascript::
                 $this->clean();

@@ -54,6 +54,12 @@ class XSSSpec extends ObjectBehavior
         $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
     }
 
+    public function it_should_not_allow_bad_url_schemes_with_case_hacks()
+    {
+        $dirty = "<a href=\"Javascript:alert('HEYHO')\">bad scheme here</a>";
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
+    }
+
     public function it_should_not_allow_bad_url_schemes_from_multiple_keywords()
     {
         $dirty = "<iframe src=\"javascriptjavascript::document.loadFromBogusFunction()\"></iframe>";
