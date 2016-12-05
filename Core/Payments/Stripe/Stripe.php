@@ -168,6 +168,12 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function addMerchant(Merchant $merchant)
     {
 
+        $countryToCurrency = [
+            'US' => 'USD',
+            'GB' => 'GBP'
+        ];
+
+
         $dob = explode('-', $merchant->getDateOfBirth());
         $result = StripeSDK\Account::create([
           'managed' => true,
@@ -193,7 +199,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             'account_number' => $merchant->getAccountNumber(),
             'routing_number' => $merchant->getRoutingNumber(),
             'country' => $merchant->getCountry(),
-            'currency' => 'USD'
+            'currency' => $countryToCurrency[$merchant->getCountry()] ?: 'EUR' //basic support for USD, GBP and EUROS right now
           ]
         ]);
 
