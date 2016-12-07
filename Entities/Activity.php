@@ -195,11 +195,6 @@ class Activity extends Entity
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
         }
 
-        if ($this->paywall) {
-            $export['message'] = null;
-            $export['custom_data'] = null;
-        }
-
         return $export;
     }
 

@@ -46,7 +46,7 @@ class plans implements Interfaces\Api
                       ]);
               }
               $owner = $entity->getOwnerEntity();
-              
+
               $repo = new Payments\Plans\Repository();
               $plan = $repo->setEntityGuid($entity->owner_guid)
                 ->setUserGuid(Core\Session::getLoggedInUser()->guid)

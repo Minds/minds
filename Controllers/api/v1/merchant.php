@@ -12,6 +12,7 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
+use Minds\Entities;
 
 class merchant implements Interfaces\Api
 {
@@ -216,6 +217,19 @@ class merchant implements Interfaces\Api
                 $response['message'] = $e->getMessage();
             }
             break;
+          case "exclusive-preview":
+              $user = Core\Session::getLoggedInUser();
+              if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                  $file = new Entities\File();
+                  $file->owner_guid = $user->guid;
+                  $file->setFilename("paywall-preview.jpg");
+                  $file->open('write');
+                  $file->write(file_get_contents($_FILES['file']['tmp_name']));
+                  $file->close();
+
+                  $response['uploaded'] = true;
+              }
+              break;
           case "charge":
             $sale = (new Payments\Sale)
               ->setId($pages[1]);

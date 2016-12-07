@@ -13,22 +13,21 @@ class Events
     {
         Dispatcher::register('export:extender', 'activity', function($event) {
             $params = $event->getParameters();
+            $activity = $params['entity'];
+            $export = $event->response() ?: [];
             $currentUser = Session::getLoggedInUserGuid();
+
+            if ($activity->hasExportContext() && $activity->isPaywall() && $params['entity']->owner_guid != $currentUser) {
+                $export['message'] = null;
+                $export['custom_data'] = null;
+
+                return $event->setResponse($export);
+            }
 
             if (!$currentUser) {
                 return;
             }
 
-            if ($params['entity']->hasExportContext() && $params['entity']->isPaywall() && $params['entity']->owner_guid == $currentUser)
-            {
-                $export = $event->response() ?: [];
-
-                $params['entity']->setPaywall(false);
-                $export['paywall'] = 0; // @todo: false doesn't work
-                $export['isMonetized'] = true;
-
-                $event->setResponse($export);
-            }
         });
     }
 }
