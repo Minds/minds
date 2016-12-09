@@ -348,6 +348,14 @@ class newsfeed implements Interfaces\Api
 
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
 
+                if (isset($_POST['access_id'])) {
+                    $activity->access_id = $_POST['access_id'];
+                }
+
+                if (isset($_POST['paywall'])) {
+                    $activity->setPayWall($_POST['paywall']);
+                }
+
                 if (isset($_POST['message'])) {
                     $activity->setMessage(rawurldecode($_POST['message']));
                 }
@@ -369,6 +377,15 @@ class newsfeed implements Interfaces\Api
 
                     if ($attachment instanceof \Minds\Interfaces\Flaggable) {
                         $attachment->setFlag('mature', $activity->getMature());
+                    }
+
+                    if ($activity->isPaywall()) {
+                        $attachment->access_id = 0;
+                        $attachment->hidden = true;
+
+                        if (method_exists($attachment, 'setFlag')) {
+                            $attachment->setFlag('paywall', true);
+                        }
                     }
 
                     $attachment->save();
@@ -405,14 +422,6 @@ class newsfeed implements Interfaces\Api
                       "activity:container:$activity->container_guid",
                       "activity:network:$activity->owner_guid"
                     ];
-                }
-
-                if (isset($_POST['access_id'])) {
-                    $activity->access_id = $_POST['access_id'];
-                }
-
-                if (isset($_POST['paywall'])) {
-                    $activity->setPayWall($_POST['paywall']);
                 }
 
                 if ($guid = $activity->save()) {

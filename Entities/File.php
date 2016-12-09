@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Entities;
 
+use Minds\Core;
 use Minds\Interfaces\Flaggable;
 
 /**
@@ -59,5 +60,27 @@ class File extends \ElggFile implements Flaggable
 
         $this->attributes['flags'][$flag] = !!$value;
         return $this;
+    }
+
+    public function save($index = true)
+    {
+        parent::save($index);
+
+        // Allow attachment unpublishing
+        if ($this->guid && $this->hidden && $this->access_id != ACCESS_PUBLIC) {
+            // @todo: migrate to Prepared\Timeline()
+            $db = new Core\Data\Call('entities_by_time');
+            $remove = [
+                "$this->type",
+                "$this->type:$this->subtype",
+                "$this->type:$this->super_subtype",
+                "$this->type:$this->super_subtype:user:$this->owner_guid",
+                "$this->type:$this->subtype:user:$this->owner_guid",
+            ];
+
+            foreach($remove as $index) {
+                $db->removeAttributes($index, array($this->guid), false);
+            }
+        }
     }
 }

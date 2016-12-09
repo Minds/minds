@@ -3,6 +3,7 @@ namespace Minds\Core\Payments;
 
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Session;
+use Minds\Core\Payments;
 
 /**
  * Minds Payments Events
@@ -28,6 +29,27 @@ class Events
                 return;
             }
 
+        });
+
+        Dispatcher::register('acl:read', 'object', function($event) {
+            $params = $event->getParameters();
+            $entity = $params['entity'];
+            $user = $params['user'];
+
+            if (!method_exists($entity, 'getFlag') || !$entity->getFlag('paywall')) {
+                return $event->setResponse(true);
+            }
+
+            if (!$user) {
+                return false;
+            }
+
+            $repo = new Payments\Plans\Repository();
+            $plan = $repo->setEntityGuid($entity->owner_guid)
+                ->setUserGuid($user->guid)
+                ->getSubscription('exclusive');
+
+            $event->setResponse($plan->getStatus() == 'active');
         });
     }
 }
