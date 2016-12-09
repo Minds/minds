@@ -20,6 +20,7 @@ class Events
 
             if ($activity->hasExportContext() && $activity->isPaywall() && $params['entity']->owner_guid != $currentUser) {
                 $export['message'] = null;
+                $export['custom_type'] = null;
                 $export['custom_data'] = null;
 
                 return $event->setResponse($export);
