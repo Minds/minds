@@ -147,6 +147,24 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $sales;
     }
 
+   /**
+     * Get a list of transactions
+     * @param Merchant $merchant - the merchant
+     * @param array $options - limit, offset
+     * @return array
+     */
+    public function getBalance(Merchant $merchant, array $options = array())
+    {
+        $results = StripeSDK\BalanceTransaction::all(
+          [
+            'limit' => $options['limit'] ?: 50
+          ],
+          [
+            'stripe_account' => $merchant->getId()
+          ]); 
+        return $results;
+    }
+
     /**
      * Update a merchants details
      * @param Merchant $merchant
