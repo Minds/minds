@@ -382,7 +382,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             StripeSDK\Subscription::retrieve($subscription->getId(), [
                 'stripe_account' => $subscription->getMerchant()->getId()
             ])->cancel();
-        } catch (\Exceptions $e) {
+        } catch (StripeSDK\Error\InvalidRequest $e) {
+            return false;
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage()); // :v
         }
     }

@@ -50,7 +50,7 @@ class merchant implements Interfaces\Api
                   ];
               }
           } catch (\Exception $e) {
-
+              $response['status'] = 'error';
           }
 
           break;
