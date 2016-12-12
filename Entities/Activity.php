@@ -50,6 +50,12 @@ class Activity extends Entity
 
         $guid = parent::save($index);
 
+        if ($this->isPayWall()) {
+            (new Core\Payments\Plans\PaywallReview())
+              ->setEntityGuid($guid)
+              ->add();
+        }
+
         return $guid;
     }
 
