@@ -113,6 +113,53 @@ class Repository
         return $plan;
     }
 
+    /**
+     * Return all users subscribed to an entity
+     */
+    public function getAllSubscribers($planId = '', array $opts = [])
+    {
+        $opts = array_merge([
+          'limit' => 10,
+          'offset' => ''
+        ], $opts);
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query("SELECT * FROM plans WHERE plan = ? AND entity_guid = ? ALLOW FILTERING", [
+            (string) $planId,
+            (string) $this->entity_guid
+        ]);
+        try {
+            $result = $this->db->request($query);
+            $guids = [];
+            foreach ($result as $row) {
+                $guids[] = $row['user_guid'];
+            }
+            return $guids;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Return all users subscribed to an entity
+     */
+    public function getSubscriberCount($planId = '', array $opts = [])
+    {
+        $opts = array_merge([], $opts);
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query("SELECT count(*) FROM plans WHERE plan = ? AND entity_guid = ? ALLOW FILTERING", [
+            (string) $planId,
+            (string) $this->entity_guid
+        ]);
+        try {
+            $result = $this->db->request($query);
+            return (int) $result[0]['count'];
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
     public function add($plan)
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();

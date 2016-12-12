@@ -61,9 +61,16 @@ class channel implements Interfaces\Api
         $response['channel']['gender'] = $response['channel']['gender'] ?: "";
         $response['channel']['dob'] = $response['channel']['dob'] ?: "";
 
-        $db = new Core\Data\Call('entities_by_time');
-        $feed_count = $db->countRow("activity:user:" . $user->guid);
-        $response['channel']['activity_count'] = $feed_count;
+        if ($user->merchant) {
+            $supporters_count = (new Core\Payments\Plans\Repository)
+              ->setEntityGuid($user->guid)
+              ->getSubscriberCount();
+            $response['channel']['supporters_count'] = $supporters_count;
+        } else {
+            $db = new Core\Data\Call('entities_by_time');
+            $feed_count = $db->countRow("activity:user:" . $user->guid);
+            $response['channel']['activity_count'] = $feed_count;
+        }
 
         $carousels = Core\Entities::get(array('subtype'=>'carousel', 'owner_guid'=>$user->guid));
         if ($carousels) {
@@ -221,7 +228,7 @@ class channel implements Interfaces\Api
 
                         $key = $profile['key'];
                         $value = $profile['value'];
-                        
+
                         if (!in_array($key, $allowedKeys) || !$value || !is_string($value)) {
                             continue;
                         }
