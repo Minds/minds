@@ -49,6 +49,16 @@ class paywall implements Interfaces\Api, Interfaces\ApiAdminPam
      */
     public function post($pages)
     {
+
+        $entity = Entities\Factory::build($pages[0]);
+
+        switch ($pages[1]) {
+            case "demonetize":
+              $entity->paywall = false;
+              $entity->save();
+              break;
+        }
+
         return Factory::response([]);
     }
 

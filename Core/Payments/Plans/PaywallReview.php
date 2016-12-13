@@ -50,7 +50,7 @@ class PaywallReview
         }
     }
 
-    public function add($plan)
+    public function add()
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->query("INSERT INTO entities_by_time
