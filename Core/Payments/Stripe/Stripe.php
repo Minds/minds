@@ -161,7 +161,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           ],
           [
             'stripe_account' => $merchant->getId()
-          ]); 
+          ]);
         return $results;
     }
 
@@ -193,7 +193,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
 
         $dob = explode('-', $merchant->getDateOfBirth());
-        $result = StripeSDK\Account::create([
+        $data = [
           'managed' => true,
           'country' => $merchant->getCountry(),
           'email' => $merchant->getEmail(),
@@ -219,7 +219,14 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             'country' => $merchant->getCountry(),
             'currency' => $countryToCurrency[$merchant->getCountry()] ?: 'EUR' //basic support for USD, GBP and EUROS right now
           ]
-        ]);
+        ];
+
+        if ($merchant->getCountry() == 'US') {
+            $data['legal_entity']['ssn_last_4'] = $merchant->getSSN();
+            $data['legal_entity']['address']['state'] = $merchant->getState();
+        }
+
+        $result = StripeSDK\Account::create($data);
 
         if($result->id){
             $merchant->setGuid($result->id);
