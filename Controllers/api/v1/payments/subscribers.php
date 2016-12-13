@@ -31,7 +31,7 @@ class subscribers implements Interfaces\Api
 
         $guids = $repo
             ->setEntityGuid(Core\Session::getLoggedInUser()->guid)
-            ->getAllSubscribers($pages[0], [
+            ->getAllSubscribers($pages[1], [
                 'offset' => $offset
             ]);
 
