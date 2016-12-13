@@ -132,6 +132,10 @@ class plans implements Interfaces\Api
               $repo = new Payments\Plans\Repository();
               $repo->add($plan);
 
+              $response['subscribed'] = true;
+              $entity->paywall = false;
+              $response['entity'] = $entity->export();
+
               break;
         }
 
