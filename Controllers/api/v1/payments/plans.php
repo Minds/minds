@@ -98,12 +98,12 @@ class plans implements Interfaces\Api
               $customer = (new Payments\Customer())
                 ->setUser(Core\Session::getLoggedInUser());
 
-              if (!$customer->getId()) {
+              if (!$stripe->getCustomer($customer) || !$customer->getId()) {
                   //create the customer on stripe
                   $customer->setPaymentToken($_POST['nonce']);
                   $customer = $stripe->createCustomer($customer);
               }
-
+              
               $merchant = (new Payments\Merchant)
                 ->setId($entity->getMerchant()['id']);
 

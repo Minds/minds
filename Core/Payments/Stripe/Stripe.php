@@ -315,8 +315,14 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     public function getCustomer(Customer $customer)
     {
-        $result = StripeSDK\Customer::retrieve($customer->getId());
+        try {
+            $result = StripeSDK\Customer::retrieve($customer->getId());
+        } catch (\Exception $e) {
+            return false;
+        }
+        
         $customer->setPaymentMethods($result->sources->data);
+
         return $customer;
     }
 
@@ -383,7 +389,8 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             $result = StripeSDK\Subscription::create(
               [
                 'customer' => $customer->id,
-                'plan' => $subscription->getPlanId()
+                'plan' => $subscription->getPlanId(),
+                'application_fee_percent' => 5.00
               ],
               [
                 'stripe_account' => $subscription->getMerchant()->getId()
