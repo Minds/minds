@@ -143,7 +143,7 @@ class Repository
     /**
      * Return all users subscribed to an entity
      */
-    public function getSubscriberCount($planId = '', array $opts = [])
+    public function getSubscriberCount($planId = 'exclusive', array $opts = [])
     {
         $opts = array_merge([], $opts);
 
