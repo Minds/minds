@@ -27,7 +27,7 @@ class paywall implements Interfaces\FS
               $filepath = $f->getFilenameOnFilestore();
 
               if (!file_exists($filepath)) {
-                  $filepath = 'https://edge.minds.com/archive/thumbnail/644141619624292354/xlarge';
+                  $filepath = Core\Di\Di::_()->get('Config')->get('path') . 'front/app/assets/default-paywall.png';
               }
 
               $finfo    = finfo_open(FILEINFO_MIME);
