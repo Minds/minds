@@ -18,7 +18,7 @@ class Events
             $export = $event->response() ?: [];
             $currentUser = Session::getLoggedInUserGuid();
 
-            if ($activity->hasExportContext() && $activity->isPaywall() && $params['entity']->owner_guid != $currentUser) {
+            if ($activity->isPaywall() && $params['entity']->owner_guid != $currentUser) {
                 $export['message'] = null;
                 $export['custom_type'] = null;
                 $export['custom_data'] = null;
@@ -38,7 +38,7 @@ class Events
             $user = $params['user'];
 
             if (!method_exists($entity, 'getFlag') || !$entity->getFlag('paywall')) {
-                return $event->setResponse(true);
+                return;
             }
 
             if (!$user) {
