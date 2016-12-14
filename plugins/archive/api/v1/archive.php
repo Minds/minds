@@ -8,6 +8,7 @@
 namespace minds\plugin\archive\api\v1;
 
 use Minds\Core;
+use Minds\Core\Security;
 use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Core\Events\Dispatcher;
@@ -30,6 +31,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if (is_numeric($pages[0])) {
             $entity = core\Entities::build(new \Minds\Entities\Entity($pages[0]));
+
+            //check to see if we can read the entity
+            if (!Security\ACL::_()->read($entity)) {
+                return Factory::response(['status' => 'error']);
+            }
+
             switch ($entity->subtype) {
                 case "video":
                     Helpers\Counters::increment($pages[0], 'plays');
