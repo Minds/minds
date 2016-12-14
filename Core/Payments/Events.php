@@ -15,6 +15,9 @@ class Events
         Dispatcher::register('export:extender', 'activity', function($event) {
             $params = $event->getParameters();
             $activity = $params['entity'];
+            if($activity->type != 'activity'){
+                return;
+            }
             $export = $event->response() ?: [];
             $currentUser = Session::getLoggedInUserGuid();
 
