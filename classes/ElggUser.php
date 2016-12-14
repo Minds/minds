@@ -177,6 +177,11 @@ class ElggUser extends ElggEntity
         }else{
             //error_log('allowing password save!');
         }
+
+        if(!$this->merchant || !is_array($this->merchant) || $this->merchant['service'] != 'stripe'){
+            unset($array['merchant']); //HACK: only allow updating of merchant if it's an array
+        }
+
         $result = $db->insert($this->guid, $array);
 
 		//now place email and username in index
