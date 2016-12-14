@@ -14,6 +14,7 @@ class Sale
 
     private $amount;
     private $fee;
+    private $capture = false;
     private $merchant;
     private $customerId;
     private $nonce;
@@ -91,6 +92,23 @@ class Sale
             $this->fee = $this->amount * 0.05 + 0.30;
         }
         return $this->fee;
+    }
+
+    public function capture()
+    {
+        $this->capture = true;
+        return $this;
+    }
+
+    public function dontCapture()
+    {
+        $this->capture = false;
+        return $this;
+    }
+
+    public function shouldCapture()
+    {
+        return $this->capture;
     }
 
     public function setMerchant(User $user)

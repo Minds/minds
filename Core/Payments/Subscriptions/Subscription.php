@@ -8,6 +8,8 @@ class Subscription
 {
     private $payment_method;
     private $id;
+    private $customer;
+    private $merchant;
 
     private $balance;
     private $price;
@@ -44,6 +46,28 @@ class Subscription
         $this->id = $id;
 
         return $this;
+    }
+
+    public function setCustomer($customer)
+    {
+        $this->customer = $customer;
+        return $this;
+    }
+
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    public function setMerchant($merchant)
+    {
+        $this->merchant = $merchant;
+        return $this;
+    }
+
+    public function getMerchant()
+    {
+        return $this->merchant;
     }
 
     public function getBalance()

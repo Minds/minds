@@ -7,4 +7,16 @@ namespace Minds\Entities;
  */
 class Entity extends \ElggEntity
 {
+    protected $exportContext = false;
+
+    public function hasExportContext()
+    {
+        return $this->exportContext;
+    }
+
+    public function setExportContext($exportContext)
+    {
+        $this->exportContext = $exportContext;
+        return $this;
+    }
 }

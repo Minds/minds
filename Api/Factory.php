@@ -159,12 +159,16 @@ class Factory
      * @param array $entities - an array of entities
      * @return array - an array of the entities
      */
-    public static function exportable($entities, $exceptions = array())
+    public static function exportable($entities, $exceptions = array(), $exportContext = false)
     {
         if(!$entities){
             return [];
         }
         foreach ($entities as $k => $entity) {
+            if ($exportContext && method_exists($entity, 'setExportContext')) {
+                $entity->setExportContext($exportContext);
+            }
+
             $entities[$k] = $entity->export();
             $entities[$k]['guid'] = (string) $entities[$k]['guid']; //javascript doesn't like long numbers..
             if (isset($entities[$k]['ownerObj']['guid'])) {

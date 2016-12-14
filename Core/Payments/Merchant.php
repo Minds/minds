@@ -8,6 +8,7 @@ use Minds\Entities\User;
 
 class Merchant
 {
+    private $id;
     private $guid;
 
     private $firstName;
@@ -19,16 +20,31 @@ class Merchant
     private $street;
     private $city;
     private $region;
+    private $state;
+    private $country;
     private $postCode;
 
     private $accountNumber;
     private $routingNumber;
     private $destination;
 
+    private $verified = false;
+
     private $status = "processing";
 
     public function __construct()
     {
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getGuid()
@@ -141,6 +157,28 @@ class Merchant
         return $this;
     }
 
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
     public function getPostCode()
     {
         return $this->postCode;
@@ -185,6 +223,17 @@ class Merchant
             throw new \Exception("$destination is not a valid payout method");
         }
         $this->destination = $destination;
+        return $this;
+    }
+
+    public function isVerified()
+    {
+        return (bool) $this->verified;
+    }
+
+    public function markAsVerified()
+    {
+        $this->verified = true;
         return $this;
     }
 

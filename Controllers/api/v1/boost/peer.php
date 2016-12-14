@@ -77,7 +77,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
-        $bid = $_POST['bid'];
+        $bid = intval($_POST['bid']);
         $type = $_POST['type'];
 
         if (!$entity) {
@@ -112,22 +112,6 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        $bid = intval($_POST['bid']);
-        $config = array_merge([
-            'peer' => [
-                'min' => 100,
-                'max' => 5000000,
-            ]
-        ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
-
-        if ($bid < $config['peer']['min'] || $bid > $config['peer']['max']) {
-            return Factory::response([
-                'status' => 'error',
-                'stage' => 'initial',
-                'message' => "You must boost between {$config['peer']['min']} and {$config['peer']['max']} points"
-            ]);
-        }
-
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
           ->setType($_POST['type'])
@@ -142,13 +126,14 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($type == 'pro') {
             $sale = (new Payments\Sale)
             ->setOrderId('boost-' . $boost->getGuid())
-            ->setAmount($boost->getBid())
+            ->setAmount($boost->getBid() * 100) //cents to $
             ->setMerchant($boost->getDestination())
             ->setCustomerId($boost->getOwner()->guid)
             ->setNonce($_POST['nonce']);
 
             try {
-                $transaction_id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $transaction_id = $stripe->setSale($sale);
             } catch (\Exception $e) {
                 return Factory::response([
                     'status' => 'error',
@@ -157,6 +142,21 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ]);
             }
         } else {
+            $config = array_merge([
+                'peer' => [
+                    'min' => 100,
+                    'max' => 5000000,
+                ]
+            ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+
+            if ($bid < $config['peer']['min'] || $bid > $config['peer']['max']) {
+                return Factory::response([
+                    'status' => 'error',
+                    'stage' => 'initial',
+                    'message' => "You must boost between {$config['peer']['min']} and {$config['peer']['max']} points"
+                ]);
+            }
+
             if ((int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) < $boost->getBid()) {
                 return Factory::response([
                     'status' => 'error',
@@ -164,7 +164,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                     'message' => "You don't have enough points"
                 ]);
             }
-            $transactions_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
+            $transaction_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
         }
 
         $boost->setTransactionId($transaction_id)
@@ -221,7 +221,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if ($boost->getType() == "pro") {
             try {
-                Payments\Factory::build('braintree', ['gateway'=>'merchants'])->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $stripe->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
                     'status' => 'error',
@@ -265,7 +266,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $response = [];
 
         $revoked = isset($pages[1]) && $pages[1] == 'revoke';
-    
+
         $pro = Core\Boost\Factory::build('peer', ['destination'=> $revoked ? "requested:" . Core\Session::getLoggedInUser()->guid : Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
@@ -278,7 +279,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if ($boost->getType() == "pro") {
             try {
-                Payments\Factory::build('braintree', ['gateway'=>'merchants'])->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $stripe->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
             } catch (\Exception $e) {
                 return Factory::response([
                   'status' => 'error',

@@ -170,7 +170,7 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity) {
-            $response['activity'] = factory::exportable($activity, array('boosted'));
+            $response['activity'] = factory::exportable($activity, array('boosted'), true);
             $response['load-next'] = (string) end($activity)->guid;
             $response['load-previous'] = $loadPrevious;
         }
@@ -315,6 +315,7 @@ class newsfeed implements Interfaces\Api
                 return Factory::response(array('guid'=>$activity->guid));
                 break;
             default:
+                //essentially an edit
                 if (is_numeric($pages[0])) {
                     $activity = new Entities\Activity($pages[0]);
                     if (!$activity->canEdit()) {
@@ -332,15 +333,28 @@ class newsfeed implements Interfaces\Api
                         $activity->setMature($_POST['mature']);
                     }
 
+                    if (isset($_POST['paywall'])) {
+                        $activity->setPayWall($_POST['paywall']);
+                    }
+
                     $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
                     $activity->save();
+                    $activity->setExportContext(true);
                     return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
                 }
 
                 $activity = new Entities\Activity();
 
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
+
+                if (isset($_POST['access_id'])) {
+                    $activity->access_id = $_POST['access_id'];
+                }
+
+                if (isset($_POST['paywall'])) {
+                    $activity->setPayWall($_POST['paywall']);
+                }
 
                 if (isset($_POST['message'])) {
                     $activity->setMessage(rawurldecode($_POST['message']));
@@ -363,6 +377,15 @@ class newsfeed implements Interfaces\Api
 
                     if ($attachment instanceof \Minds\Interfaces\Flaggable) {
                         $attachment->setFlag('mature', $activity->getMature());
+                    }
+
+                    if ($activity->isPaywall()) {
+                        $attachment->access_id = 0;
+                        $attachment->hidden = true;
+
+                        if (method_exists($attachment, 'setFlag')) {
+                            $attachment->setFlag('paywall', true);
+                        }
                     }
 
                     $attachment->save();
@@ -401,10 +424,6 @@ class newsfeed implements Interfaces\Api
                     ];
                 }
 
-                if (isset($_POST['access_id'])) {
-                    $activity->access_id = $_POST['access_id'];
-                }
-
                 if ($guid = $activity->save()) {
                     Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 10, $guid, 'Post');
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
@@ -428,6 +447,7 @@ class newsfeed implements Interfaces\Api
                         ]);
                     }
 
+                    $activity->setExportContext(true);
                     return Factory::response(array('guid'=>$guid, 'activity'=> $activity->export()));
                 } else {
                     return Factory::response(array('status'=>'failed', 'message'=>'could not save'));

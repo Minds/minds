@@ -12,6 +12,7 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
+use Minds\Entities;
 
 class merchant implements Interfaces\Api
 {
@@ -30,27 +31,92 @@ class merchant implements Interfaces\Api
       switch ($pages[0]) {
         case "sales":
           $merchant = (new Payments\Merchant)
-            ->setGuid(Core\Session::getLoggedInUser()->guid);
-          $sales = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getSales($merchant);
+            ->setId(Core\Session::getLoggedInUser()->getMerchant()['id']);
 
-          foreach ($sales as $sale) {
-              $response['sales'][] = [
-                'id' => $sale->getId(),
-                'status' => $sale->getStatus(),
-                'amount' => $sale->getAmount(),
-                'fee' => $sale->getFee(),
-                'orderId' => $sale->getOrderId(),
-                'customerId' => $sale->getCustomerId()
-              ];
+          $guid = Core\Session::getLoggedInUser()->guid;
+          $stripe = Core\Di\Di::_()->get('StripePayments');
+
+          try{
+              $sales = $stripe->getSales($merchant);
+
+              foreach ($sales as $sale) {
+                  $response['sales'][] = [
+                    'id' => $sale->getId(),
+                    'status' => $sale->getStatus(),
+                    'amount' => $sale->getAmount(),
+                    'fee' => $sale->getFee(),
+                    'orderId' => $sale->getOrderId(),
+                    'customerId' => $sale->getCustomerId()
+                  ];
+              }
+          } catch (\Exception $e) {
+              $response['status'] = 'error';
           }
 
           break;
+        case "export":
+           $merchant = (new Payments\Merchant)
+            ->setId(Core\Session::getLoggedInUser()->getMerchant()['id']);
+
+            $guid = Core\Session::getLoggedInUser()->guid;
+            $stripe = Core\Di\Di::_()->get('StripePayments');
+
+            $out = fopen('php://output', 'w');
+
+            try {
+                $balance = $stripe->getBalance($merchant, ['limit' => 100]);
+
+                fputcsv($out, [ 
+                  'id',
+                  'type',
+                  'status', 
+                  'description', 
+                  'created', 
+                  'amount', 
+                  'currency', 
+                  'available' 
+                ]);
+
+                foreach($balance->data as $record){
+                    // Get the required charge information and assign to variables
+                    $id = $record->id;
+                    $type = $record->type;
+                    $status = $record->status;
+                    $description = $record->description;
+                    $created = gmdate('Y-m-d H:i', $record->created); // Format the time
+                    $amount = $record->amount/100; // Convert amount from cents to dollars
+                    $currency = $record->currency;
+                    $available = gmdate('Y-m-d H:i', $record->available_on);
+
+                    // Create an array of the above charge information
+                    $report = array(
+                                $id,
+                                $type,
+                                $status,
+                                $description,
+                                $created,
+                                $amount,
+                                $currency,
+                                $available
+                      );
+
+
+                    fputcsv($out, $report);
+                }
+            } catch (\Exception $e) {
+            }
+ 
+            fclose($out);
+
+            exit;
+            break;
         case "balance":
           break;
         case "settings":
 
+          $stripe = Core\Di\Di::_()->get('StripePayments');
           try {
-              $merchant = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->getMerchant(Core\Session::getLoggedInUser()->guid);
+              $merchant = $stripe->getMerchant(Core\Session::getLoggedInUser()->getMerchant()['id']);
           } catch (\Exception $e) {
               return Factory::response([
                 'status' => 'error',
@@ -59,9 +125,6 @@ class merchant implements Interfaces\Api
           }
 
           if (!$merchant) {
-              $user = Core\Session::getLoggedInUser();
-              $user->merchant = (int) 0;
-              $user->save();
               return Factory::response([
                 'status' => 'error',
                 'message' => 'Not a merchant account'
@@ -104,25 +167,49 @@ class merchant implements Interfaces\Api
               ->setStreet($_POST['street'])
               ->setCity($_POST['city'])
               ->setRegion($_POST['region'])
+              ->setCountry($_POST['country'])
               ->setPostCode($_POST['postCode'])
               ->setDestination($_POST['venmo'] ? 'email' : 'bank')
               ->setAccountNumber($_POST['accountNumber'])
               ->setRoutingNumber($_POST['routingNumber']);
 
             try {
-                $id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->addMerchant($merchant);
-                $response['id'] = $id;
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $result = $stripe->addMerchant($merchant);
+                $response['id'] = $result->id;
 
                 $user = Core\Session::getLoggedInUser();
-                $user->merchant = true;
-                $user->{"merchant_status"} = 'processing';
+                $user->merchant = [
+                  'service' => 'stripe',
+                  'id' => $result->id
+                ];
+
+                //save public and private keys in lookup
+                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
+                $guid = Core\Session::getLoggedInUser()->guid;
+                $lu->set("{$guid}:stripe", [
+                  'public' => $result->keys['publishable'],
+                  'secret' => $result->keys['secret']
+                ]);
+
                 $user->save();
+
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
             }
 
             break;
+          case "verification":
+
+              try {
+                  $stripe = Core\Di\Di::_()->get('StripePayments');
+                  $stripe->verifyMerchant(Core\Session::getLoggedInUser()->getMerchant()['id'], $_FILES['file']);
+              } catch (\Exception $e) {
+                  $response['status'] = "error";
+                  $response['message'] = $e->getMessage();
+              }
+              break;
           case "update":
             $merchant = (new Payments\Merchant())
               ->setGuid(Core\Session::getLoggedInUser()->guid)
@@ -144,13 +231,61 @@ class merchant implements Interfaces\Api
                 $response['id'] = $id;
 
                 $user = Core\Session::getLoggedInUser();
-                $user->merchant = true;
+                $user->merchant = [
+                  'service' => 'stripe',
+                  'id' => $id
+                ];
                 $user->save();
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
             }
             break;
+          case "exclusive":
+            try {
+                $user = Core\Session::getLoggedInUser();
+                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
+
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+
+                try {
+                  $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
+                } catch(\Exception $e){}
+
+                $stripe->createPlan((object) [
+                  'id' => "exclusive",
+                  'amount' => $_POST['amount'] * 100,
+                  'merchantId' => $user->getMerchant()['id']
+                ]);
+
+                $merchant = $user->getMerchant();
+                $merchant['exclusive'] = [
+                  'enabled' => !!$_POST['enabled'],
+                  'amount' => $_POST['amount'],
+                  'intro' => $_POST['intro']
+                ];
+
+                $user->setMerchant($merchant);
+                $user->save();
+
+            } catch (\Exception $e) {
+                $response['status'] = "error";
+                $response['message'] = $e->getMessage();
+            }
+            break;
+          case "exclusive-preview":
+              $user = Core\Session::getLoggedInUser();
+              if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                  $file = new Entities\File();
+                  $file->owner_guid = $user->guid;
+                  $file->setFilename("paywall-preview.jpg");
+                  $file->open('write');
+                  $file->write(file_get_contents($_FILES['file']['tmp_name']));
+                  $file->close();
+
+                  $response['uploaded'] = true;
+              }
+              break;
           case "charge":
             $sale = (new Payments\Sale)
               ->setId($pages[1]);

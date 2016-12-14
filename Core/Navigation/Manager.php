@@ -108,6 +108,13 @@ class Manager
                 ->setName('Reports')
                 ->setTitle('Reports')
                 ->setPath('admin/reports')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(5)
+                ->setIcon('attach_money')
+                ->setName('Monetization review')
+                ->setTitle('Monetization review')
+                ->setPath('admin/monetization')
             );
         self::add($admin);
 

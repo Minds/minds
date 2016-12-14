@@ -31,5 +31,9 @@ class PaymentsProvider extends Provider
               ]);*/
             return $braintree;
         }, ['useFactory'=>true]);
+        $this->di->bind('StripePayments', function ($di) {
+            $config = $di->get('Config');
+            return new Stripe\Stripe($di->get('Config'));
+        }, ['useFactory'=>true]);
     }
 }
