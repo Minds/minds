@@ -20,6 +20,7 @@ class Merchant
     private $street;
     private $city;
     private $region;
+    private $state;
     private $country;
     private $postCode;
 
@@ -153,6 +154,17 @@ class Merchant
     public function setRegion($region)
     {
         $this->region = $region;
+        return $this;
+    }
+
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
         return $this;
     }
 
