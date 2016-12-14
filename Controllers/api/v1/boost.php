@@ -176,7 +176,7 @@ class boost implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'entity not found']);
         }
 
-        if ($pages[0] == "object" || $pages[0] == "user" || $pages[0] == "suggested") {
+        if ($pages[0] == "object" || $pages[0] == "user" || $pages[0] == "suggested" || $pages[0] == 'group') {
             $pages[0] = "content";
         }
 
