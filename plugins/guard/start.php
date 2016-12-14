@@ -73,7 +73,11 @@ class start extends Components\Plugin
             'r041.donnael.com', '2016.lt.ua', 'vipleague.se', 'liveonline.company', 'liveolympics.space', 'seoandvideomarketing.com.au', 'vipbox.sx',
             'germanypolandlivestream.club', 'sportgoal.xyz', 'ggdbsale.com', 'gorillasteroids.eu', 'watchlivesports.space', 'penaltyshootout.xyz',
             'streamgroup.xyz', 'streamnew.xyz', 'cottonsport.space', 'gosport.space', 'streambest.xyz', 'penaltyspot.xyz', 'streamthe.xyz',
-            'liveevents.name', 'londonblog.work', 'testcollections.com', 'alfagy.com'
+            'liveevents.name', 'londonblog.work', 'testcollections.com', 'alfagy.com', 'teravide1974.full-design.com', 'selfnarhasbllaq1980-blog.logdown.com',
+            'neipononchoi1984.suomiblog.com', 'gemttranlonthe1985.blogzet.com', 'pitchero.com', 'blogolize.com', 'lisbopholsven1974.thezenweb.com',
+            'blogocial.com', 'tinyblogging.com', 'share.pho.to', 'community.vietfun.com', 'ockuderla1985.full-design.com', 'unmosimla1978.total-blog.com',
+            'gemttranlonthe1985.blogzet.com', 'rapptubizboe1978.blogminds.com', 'descduclighgon1973.full-design.com', 'ricphosati1972.full-design.com',
+            'fuddbluslanmaa1975.blogdigy.com', 'smarforcute1976.blogdigy.com'
         ];
     }
 
