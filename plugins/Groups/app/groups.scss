@@ -61,6 +61,10 @@ minds-groups-profile{
       flex-flow: row wrap;
       pointer-events: all;
 
+      @media screen and (max-width: $min-tablet) {
+        order: -1;
+      }
+
       minds-avatar{
         margin:auto;
       }
@@ -72,6 +76,10 @@ minds-groups-profile{
       justify-content: flex-start;
       border: 0;
       pointer-events: all;
+
+      @media screen and (max-width: $min-tablet) {
+        justify-content: center;
+      }
 
       .mdl-tabs__tab.minds-first-tab {
         padding-left: 0;
@@ -202,6 +210,10 @@ minds-groups-profile-members-invite {
 }
 
 .m-group-info {
+
+  @media screen and (max-width: $min-tablet) {
+    order: -1;
+  }
 
   .mdl-card{
     padding:$minds-padding;
