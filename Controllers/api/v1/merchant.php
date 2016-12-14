@@ -66,15 +66,15 @@ class merchant implements Interfaces\Api
             try {
                 $balance = $stripe->getBalance($merchant, ['limit' => 100]);
 
-                fputcsv($out, [ 
+                fputcsv($out, [
                   'id',
                   'type',
-                  'status', 
-                  'description', 
-                  'created', 
-                  'amount', 
-                  'currency', 
-                  'available' 
+                  'status',
+                  'description',
+                  'created',
+                  'amount',
+                  'currency',
+                  'available'
                 ]);
 
                 foreach($balance->data as $record){
@@ -105,7 +105,7 @@ class merchant implements Interfaces\Api
                 }
             } catch (\Exception $e) {
             }
- 
+
             fclose($out);
 
             exit;
@@ -165,6 +165,7 @@ class merchant implements Interfaces\Api
               ->setDateOfBirth($_POST['dob'])
               ->setSSN($_POST['ssn'])
               ->setStreet($_POST['street'])
+              ->setState($_POST['state'])
               ->setCity($_POST['city'])
               ->setRegion($_POST['region'])
               ->setCountry($_POST['country'])
