@@ -129,6 +129,12 @@
 
       </div>
 
+      <!-- Extra actions -->
+      <div class="m-group-boost mdl-color-text--blue-grey-300" *ngIf="session.isLoggedIn() && !editing && group['is:owner']">
+        <i class="material-icons mdl-color-text--blue-grey-300">trending_up</i>
+        <minds-button-boost [object]="group"></minds-button-boost>
+      </div>
+
     </div>
 
 
