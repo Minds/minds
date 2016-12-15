@@ -86,6 +86,11 @@ class start extends Components\Plugin
                 if (!$entity) {
                     forward(elgg_get_site_url() . '_graphics/placeholder.png');
                 }
+
+                if (!Core\Security\ACL::_()->read($entity)) {
+                    forward(elgg_get_site_url() . '_graphics/placeholder.png');
+                }
+
                 $user = $entity->getOwnerEntity(false);
                 if (isset($user->legacy_guid) && $user->legacy_guid) {
                     $user_guid = $user->legacy_guid;

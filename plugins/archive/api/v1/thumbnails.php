@@ -32,6 +32,10 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                 exit;
             }
 
+            if (!Core\Security\ACL::_()->read($entity)) {
+                exit;
+            }
+
             $user = $entity->getOwnerEntity(false);
             if (isset($user->legacy_guid) && $user->legacy_guid) {
                 $user_guid = $user->legacy_guid;
