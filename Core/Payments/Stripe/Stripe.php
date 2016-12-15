@@ -188,7 +188,8 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
         $countryToCurrency = [
             'US' => 'USD',
-            'GB' => 'GBP'
+            'GB' => 'GBP',
+            'CA' => 'CAD'
         ];
 
 
