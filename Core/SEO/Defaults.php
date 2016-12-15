@@ -69,6 +69,9 @@ class Defaults
                 if (!$activity->guid) {
                     return [];
                 }
+                if ($activity->paywall) {
+                    return;
+                }
                 if ($activity->remind_object) {
                     $activity = new Entities\Activity($activity->remind_object);
                 }
