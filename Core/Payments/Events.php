@@ -25,6 +25,10 @@ class Events
                 $export['message'] = null;
                 $export['custom_type'] = null;
                 $export['custom_data'] = null;
+                $export['thumbnail_src'] = null;
+                $export['perma_url'] = null;
+                $export['blurb'] = null;
+                $export['title'] = null;
 
                 return $event->setResponse($export);
             }
