@@ -52,7 +52,7 @@ class plans implements Interfaces\Api
                 ->setUserGuid(Core\Session::getLoggedInUser()->guid)
                 ->getSubscription('exclusive');
 
-              if ($plan->getStatus() == 'active') {
+              if ($plan->getStatus() == 'active' || Core\Session::isAdmin()) {
                   $response['subscribed'] = true;
                   $entity->paywall = false;
                   $response['entity'] = $entity->export();
