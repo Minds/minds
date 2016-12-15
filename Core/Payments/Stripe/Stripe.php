@@ -212,6 +212,10 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
               'year' => $dob[0]
             ]
           ],
+          'tos_acceptance' => [
+            'date' => time(),
+            'ip' => '0.0.0.0'
+          ],
           'external_account' => [
             'object' => 'bank_account',
             'account_number' => $merchant->getAccountNumber(),
@@ -320,7 +324,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         } catch (\Exception $e) {
             return false;
         }
-        
+
         $customer->setPaymentMethods($result->sources->data);
 
         return $customer;
