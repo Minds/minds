@@ -33,6 +33,11 @@ class newsfeed implements Interfaces\Api
         switch ($pages[0]) {
           case 'single':
               $activity = new \Minds\Entities\Activity($pages[1]);
+
+              if (!$activity->guid) {
+                  return Factory::response(['status' => 'error']);
+              }
+
               return Factory::response(array('activity'=>$activity->export()));
               break;
           default:

@@ -86,8 +86,10 @@ abstract class ElggEntity extends ElggData implements
 	protected function loadFromGUID($guid){
 		$db = new Minds\Core\Data\Call('entities');
 		$row = $db->getRow($guid, array('limit'=>400));
-		$row['guid'] = $guid;
-		$this->loadFromArray($row);
+		if ($row) {
+			$row['guid'] = $guid;
+			$this->loadFromArray($row);
+		}
 	}
 
 	protected function loadFromObject($object){
