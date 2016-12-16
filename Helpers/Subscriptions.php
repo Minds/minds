@@ -22,6 +22,10 @@ class Subscriptions
      */
     public static function subscribe($user_guid, $to_guid, $data = array())
     {
+        if (static::isSubscribed($user_guid, $to_guid)) {
+            return false;
+        }
+
         $return = false;
         if (empty($data)) {
             $data = time();
@@ -62,7 +66,9 @@ class Subscriptions
         $cacher->destroy("$user_guid:friendscount");
 
         //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
-        Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));
+        if ($return) {
+            Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));
+        }
         Events\Dispatcher::trigger('notification', 'subscription', array(
                 'to'=>array($to_guid),
                 'entity' => $user_guid,
@@ -82,6 +88,10 @@ class Subscriptions
      */
     public static function unSubscribe($user, $from)
     {
+        if (!static::isSubscribed($user, $from)) {
+            return false;
+        }
+
         $return = false;
 
         $friends = new Core\Data\Call('friends');
@@ -110,6 +120,10 @@ class Subscriptions
 
         $cacher->destroy("$from:friendsofcount");
         $cacher->destroy("$user:friendscount");
+
+        if ($return) {
+            Events\Dispatcher::trigger('unsubscribe', 'all', [ 'user_guid'=>$user, 'from_guid'=>$from]);
+        }
 
         //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;
@@ -194,6 +208,18 @@ class Subscriptions
 
     public static function registerEvents()
     {
+        Events\Dispatcher::register('subscribe', 'all', function (Events\Event $event) {
+            $params = $event->getParameters();
+
+            Wallet::createTransaction($params['to_guid'], 5, $params['user_guid'], 'Subscription');
+        });
+
+        Events\Dispatcher::register('unsubscribe', 'all', function (Events\Event $event) {
+            $params = $event->getParameters();
+
+            Wallet::createTransaction($params['from_guid'], -5, $params['user_guid'], 'Subscription Removed');
+        });
+
         Events\Dispatcher::register('subscription:dispatch', 'all', function(Events\Event $event) {
             $params = $event->getParameters();
 
@@ -237,7 +263,6 @@ class Subscriptions
                     }
 
                     $success = $currentUser->subscribe($target->guid);
-                    Wallet::createTransaction($currentUser->guid, 1, $target->guid, 'Subscribed');
 
                     $results[] = [ 'guid' => $guid, 'done' => true ];
                 } catch (\Exception $e) {

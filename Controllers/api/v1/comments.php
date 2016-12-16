@@ -123,7 +123,7 @@ class comments implements Interfaces\Api
                 }
 
                 if ($parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'Comment');
+                    Helpers\Wallet::createTransaction($parent->owner_guid, 1, $pages[0], 'Comment');
                 }
 
                 Core\Events\Dispatcher::trigger('notification', 'all', array(
@@ -224,8 +224,14 @@ class comments implements Interfaces\Api
     public function delete($pages)
     {
         $comment = new Entities\Comment($pages[0]);
-        if ($comment->canEdit()) {
+        if ($comment && $comment->canEdit()) {
             $comment->delete();
+
+            $parent = new \Minds\Entities\Entity($comment->parent_guid);
+
+            if ($parent && $parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
+                Helpers\Wallet::createTransaction($parent->owner_guid, -1, $comment->parent_guid, 'Comment Removed');
+            }
         }
 
         return Factory::response(array());

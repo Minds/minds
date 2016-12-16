@@ -182,7 +182,6 @@ class suggested implements Interfaces\Api, Interfaces\ApiIgnorePam
             case 'pass':
                 $prepared = new Core\Data\Neo4j\Prepared\Common();
                 Core\Data\Client::build('Neo4j')->request($prepared->createPass((string) Core\Session::getLoggedinUser()->guid, (string) $pages[1]));
-                Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[1], 'Pass');
                 break;
             case 'acted':
                 Helpers\Counters::increment($boost, "boost_swipes", 1);

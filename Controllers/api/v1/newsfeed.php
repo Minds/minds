@@ -317,6 +317,11 @@ class newsfeed implements Interfaces\Api
                                     break;
                             }
                 }
+
+                if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
+                    Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
+                }
+
                 return Factory::response(array('guid'=>$activity->guid));
                 break;
             default:
@@ -430,7 +435,12 @@ class newsfeed implements Interfaces\Api
                 }
 
                 if ($guid = $activity->save()) {
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 10, $guid, 'Post');
+                    if (in_array($activity->custom_type, ['batch', 'video'])) {
+                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $guid, 'Post');
+                    } else {
+                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'Post');
+                    }
+
                     Core\Events\Dispatcher::trigger('social', 'dispatch', array(
                         'entity' => $activity,
                         'services' => array(
@@ -530,6 +540,17 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity->delete()) {
+            if ($activity->remind_object && $activity->remind_object['owner_guid'] != Core\Session::getLoggedinUser()->guid) {
+                Helpers\Wallet::createTransaction($activity->remind_object['owner_guid'], -5, $activity->remind_object['guid'], 'Remind Removed');
+            } elseif (!$activity->remind_object) {
+                if (in_array($activity->custom_type, ['batch', 'video'])) {
+                    Helpers\Wallet::createTransaction($activity->owner_guid, -15, $activity->guid, 'Post Removed');
+                } else {
+                    Helpers\Wallet::createTransaction($activity->owner_guid, -1, $activity->guid, 'Post Removed');
+                }
+                
+            }
+
             return Factory::response(array('message'=>'removed ' . $pages[0]));
         }
 

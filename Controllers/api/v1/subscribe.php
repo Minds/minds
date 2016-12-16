@@ -114,7 +114,6 @@ class subscribe implements Interfaces\Api
 
         $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
         $response = array('status'=>'success');
-        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $pages[0], 'Subscribed');
         if (!$success) {
             $response = array(
                 'status' => 'error'
@@ -133,7 +132,6 @@ class subscribe implements Interfaces\Api
         Factory::isLoggedIn();
         $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
         $response = array('status'=>'success');
-        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $pages[0], 'Unsubscribed');
         if (!$success) {
             $response = array(
                 'status' => 'error'
