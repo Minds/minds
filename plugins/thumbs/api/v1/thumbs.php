@@ -51,25 +51,18 @@ class thumbs implements Interfaces\Api
 
         $guid = $pages[0];
         $direction = $pages[1];
-        $opposite = 'down';
-        if ($direction == 'down') {
-            $opposite = 'up';
-        }
 
         $entity = Entities\Factory::build($guid);
         if ($entity->guid) {
             if (helpers\buttons::hasThumbed($entity, $direction)) {
                 helpers\storage::cancel($direction, $entity);
-                if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && !helpers\buttons::hasThumbed($entity, $opposite)) {
-                    WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, -1, $guid, 'Vote Removed');
-                    WalletHelper::createTransaction($entity->owner_guid, -1, $guid, 'Vote Removed');
+                if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && $direction == 'up') {
+                    WalletHelper::createTransaction($entity->owner_guid, -5, $guid, 'Vote Removed');
                 }
             } else {
                 helpers\storage::insert($direction, $entity);
-                //WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'vote');
-                if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && !helpers\buttons::hasThumbed($entity, $opposite)) {
-                    WalletHelper::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $guid, 'Vote');
-                    WalletHelper::createTransaction($entity->owner_guid, 1, $guid, 'Vote');
+                if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && $direction == 'up') {
+                    WalletHelper::createTransaction($entity->owner_guid, 5, $guid, 'Vote');
                 }
             }
         } else {

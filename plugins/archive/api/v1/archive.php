@@ -326,7 +326,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
               )
           ));
 
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 1, $entity->guid, 'Upload');
+            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $entity->guid, 'Post');
             $response['activity_guid'] = $activity->guid;
         }
 

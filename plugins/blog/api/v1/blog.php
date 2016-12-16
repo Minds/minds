@@ -13,6 +13,7 @@ use minds\plugin\blog\entities;
 use Minds\Entities\User;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Helpers;
 
 class blog implements Interfaces\Api
 {
@@ -155,11 +156,13 @@ class blog implements Interfaces\Api
         Factory::isLoggedIn();
 
         $response = [];
+        $newBlog = false;
 
         if (isset($pages[0]) && is_numeric($pages[0])) {
             $blog = new entities\Blog($pages[0]);
         } else {
             $blog = new entities\Blog();
+            $newBlog = true;
         }
 
         $original_access = $blog->access_id;
@@ -218,6 +221,10 @@ class blog implements Interfaces\Api
               ->save();
         }
 
+        if ($newBlog) {
+            Helpers\Wallet::createTransaction($blog->owner_guid, 15, $blog->guid, 'Blog');
+        }
+
         return Factory::response($response);
     }
 
@@ -251,7 +258,11 @@ class blog implements Interfaces\Api
     public function delete($pages)
     {
         $blog = new entities\Blog($pages[0]);
-        $blog->delete();
+        $deleted = $blog->delete();
+
+        if ($deleted) {
+            Helpers\Wallet::createTransaction($blog->owner_guid, -15, $blog->guid, 'Blog Deleted');
+        }
         return Factory::response(array());
     }
 }
