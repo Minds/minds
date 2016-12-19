@@ -59,10 +59,26 @@ class thumbs implements Interfaces\Api
                 if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && $direction == 'up') {
                     WalletHelper::createTransaction($entity->owner_guid, -5, $guid, 'Vote Removed');
                 }
+                if (
+                    $entity->remind_object && $entity->remind_object['ownerObj']['guid'] &&
+                    $entity->owner_guid != $entity->remind_object['ownerObj']['guid'] &&
+                    $entity->remind_object['ownerObj']['guid'] != Core\Session::getLoggedInUser()->guid &&
+                    $direction == 'up'
+                ) {
+                    WalletHelper::createTransaction($entity->remind_object['ownerObj']['guid'], -5, $guid, 'Vote Removed');
+                }
             } else {
                 helpers\storage::insert($direction, $entity);
                 if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && $direction == 'up') {
                     WalletHelper::createTransaction($entity->owner_guid, 5, $guid, 'Vote');
+                }
+                if (
+                    $entity->remind_object && $entity->remind_object['ownerObj']['guid'] &&
+                    $entity->owner_guid != $entity->remind_object['ownerObj']['guid'] &&
+                    $entity->remind_object['ownerObj']['guid'] != Core\Session::getLoggedInUser()->guid &&
+                    $direction == 'up'
+                ) {
+                    WalletHelper::createTransaction($entity->remind_object['ownerObj']['guid'], 5, $guid, 'Vote');
                 }
             }
         } else {
