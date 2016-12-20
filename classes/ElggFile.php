@@ -358,28 +358,7 @@ class ElggFile extends ElggObject {
 	 */
 	protected function getFilestore() {
 
-		// Short circuit if already set.
-		if ($this->filestore) {
-			return $this->filestore;
-		}
-
-		// need to check if filestore is set because this entity is loaded in save()
-		// before the filestore metadata is saved.
-		if (isset($filestore)) {
-			if (!class_exists($filestore)) {
-				$msg = elgg_echo('ClassNotFoundException:NotFoundNotSavedWithFile',
-					array($filestore, $this->guid));
-				throw new ClassNotFoundException($msg);
-			}
-
-			$this->filestore = new $filestore();
-			$this->filestore->setParameters($parameters);
-			// @todo explain why $parameters will always be set here (PhpStorm complains)
-		}
-
-		if(!$this->filestore){
-			$this->filestore = get_default_filestore();
-		} 
+		$this->filestore = get_default_filestore();
 		
 		return $this->filestore;
 	}

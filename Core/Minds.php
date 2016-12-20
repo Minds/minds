@@ -41,6 +41,7 @@ class Minds extends base
         (new Categories\CategoriesProvider())->register();
         (new ThirdPartyNetworks\ThirdPartyNetworksProvider())->register();
         (new I18n\I18nProvider())->register();
+        (new Storage\StorageProvider())->register();
     }
 
     /**

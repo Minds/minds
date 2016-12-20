@@ -40,9 +40,12 @@ class icon extends core\page implements Interfaces\page
         }
         $data_root = $CONFIG->dataroot;
 
-        $user_path = date('Y/m/d/', $join_date) . $guid;
-        $filename = "$data_root$user_path/profile/{$guid}{$size}.jpg";
-        $contents = @file_get_contents($filename);
+        $file = new \ElggFile();
+        $file->owner_guid = $guid;
+        $file->setFilename("profile/{$guid}{$size}.jpg");
+        $file->open("read");
+
+        $contents = $file->read();
         if (!empty($contents)) {
             header("Content-type: image/jpeg");
             header('Expires: ' . date('r', strtotime("today+6 months")), true);
@@ -63,7 +66,7 @@ class icon extends core\page implements Interfaces\page
         //$prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
         //Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
 
-        $this->forward("/assets/avatars/default-$size.png");
+        //$this->forward("/assets/avatars/default-$size.png");
     }
 
     public function post($pages)

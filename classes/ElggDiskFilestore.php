@@ -69,16 +69,16 @@ class ElggDiskFilestore extends ElggFilestore {
 
 		}
 
-		if (($mode != 'write') && (!file_exists($fullname))) {
-			return false;
-		}
+		//if (($mode != 'write') && (!file_exists($fullname))) {
+		//	return false;
+		//}
 
 		switch ($mode) {
 			case "read" :
-				$mode = "rb";
+				//$mode = "rb";
 				break;
 			case "write" :
-				$mode = "w+b";
+				//$mode = "w+b";
 				break;
 			case "append" :
 				$mode = "a+b";
@@ -88,7 +88,8 @@ class ElggDiskFilestore extends ElggFilestore {
 				throw new InvalidParameterException($msg);
 		}
 
-		return fopen($fullname, $mode);
+		//return fopen($fullname, $mode);
+		return Minds\Core\Di\Di::_()->get('Storage')->open($fullname, $mode);
 
 	}
 
@@ -102,7 +103,8 @@ class ElggDiskFilestore extends ElggFilestore {
 	 */
 	public function write($f, $data) {
 		//error_log('FILE SYSTEM WRITING');
-		return fwrite($f, $data);
+		return $f->write($data);
+		//return fwrite($f, $data);
 	}
 
 	/**
@@ -119,7 +121,9 @@ class ElggDiskFilestore extends ElggFilestore {
 			$this->seek($f, $offset);
 		}
 		//error_log('FILESYSTEM READING');
-		return fread($f, $length);
+
+		return $f->read($length);
+		//return fread($f, $length);
 	}
 
 	/**
@@ -130,7 +134,8 @@ class ElggDiskFilestore extends ElggFilestore {
 	 * @return bool
 	 */
 	public function close($f) {
-		return fclose($f);
+			$f->close();
+		//return fclose($f);
 	}
 
 	/**
