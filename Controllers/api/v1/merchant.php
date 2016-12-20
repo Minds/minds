@@ -193,6 +193,20 @@ class merchant implements Interfaces\Api
                   'secret' => $result->keys['secret']
                 ]);
 
+                //now setup exclusive
+                $stripe->createPlan((object) [
+                  'id' => "exclusive",
+                  'amount' => 10 * 100,
+                  'merchantId' => $result->id
+                ]);
+
+                $merchant = $user->merchant;
+                $merchant['exclusive'] = [
+                  'enabled' => true,
+                  'amount' => 10
+                ];
+                $user->setMerchant($merchant); //because double assoc array doesn't work
+
                 $user->save();
 
             } catch (\Exception $e) {
