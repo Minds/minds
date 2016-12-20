@@ -205,7 +205,8 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             'address' => [
               'line1' => $merchant->getStreet(),
               'city' => $merchant->getCity(),
-              'postal_code' => $merchant->getPostCode()
+              'postal_code' => $merchant->getPostCode(),
+              'state' => 'n/a'
             ],
             'dob' => [
               'day' => $dob[2],
