@@ -34,17 +34,17 @@ class banners implements Interfaces\FS
                 $f = new Entities\File();
                 $f->owner_guid = $entity->guid;
                 $f->setFilename("banners/{$carousels[0]->guid}.jpg");
-                $filepath = $f->getFilenameOnFilestore();
-                if (!file_exists($filepath)) {
-                    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
-                }
+                $f->open('read');
+                //if (!file_exists($filepath)) {
+                //    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+                //}
             }
             break;
           case "group":
             $f = new Entities\File();
             $f->owner_guid = $entity->owner_guid ?: $entity->getOwnerObj()->guid;
             $f->setFilename("group/{$entity->getGuid()}.jpg");
-            $filepath = $f->getFilenameOnFilestore();
+            $f->open('read');
           case "object":
             break;
         }
@@ -54,7 +54,7 @@ class banners implements Interfaces\FS
             $f = new Entities\File();
             $f->owner_guid = $entity->owner_guid;
             $f->setFilename("blog/{$entity->guid}.jpg");
-            $filepath = $f->getFilenameOnFilestore();
+            $f->open('read');
             break;
           case "cms":
             break;
@@ -63,26 +63,30 @@ class banners implements Interfaces\FS
             $f = new Entities\File();
             $f->owner_guid = $entity->owner_guid;
             $f->setFilename("banners/{$entity->guid}.jpg");
-            $filepath = $f->getFilenameOnFilestore();
-            if (!file_exists($filepath)) {
-                $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
-            }
+            $f->open('read');
+            //$filepath = $f->getFilenameOnFilestore();
+            //if (!file_exists($filepath)) {
+            //    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
+            //}
             break;
         }
 
 
-        if (!file_exists($filepath)) {
-            exit;
-        }
+        //if (!file_exists($filepath)) {
+        //    exit;
+        //}
+
+        $content = $f->read();
 
         $finfo    = finfo_open(FILEINFO_MIME);
-        $mimetype = finfo_file($finfo, $filepath);
+        $mimetype = finfo_buffer($finfo, $content);
         finfo_close($finfo);
+
         header('Content-Type: '.$mimetype);
         header('Expires: ' . date('r', time() + 864000));
         header("Pragma: public");
         header("Cache-Control: public");
-        echo file_get_contents($filepath);
+        echo $contents;
         exit;
     }
 }
