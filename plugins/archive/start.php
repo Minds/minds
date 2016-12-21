@@ -98,15 +98,15 @@ class start extends Components\Plugin
                     $user_guid = $user->guid;
                 }
 
-                $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
+                $file = new \ElggFile();
+                $file->owner_guid = $user_guid;
 
-                $data_root = $CONFIG->dataroot;
-                $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+                $filename = "archive/thumbnails/$entity->guid.jpg";
 
                 switch ($entity->subtype) {
                     case 'image':
                         if ($entity->filename) {
-                            $filename = "$data_root$user_path/$entity->filename";
+                            $filename = $entity->filename;
                         }
 
                         if ((isset($page[2])  && $size = $page[2]) && !$entity->gif) {
@@ -114,7 +114,7 @@ class start extends Components\Plugin
                                 $entity->batch_guid = $this->container_guid;
                             }
 
-                            $filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
+                            $filename = "/image/$entity->batch_guid/$entity->guid/$size.jpg";
                         } elseif ($entity->gif) {
                             $filename = str_replace('xlarge.jpg', 'master.jpg', $filename);
                         }
@@ -136,15 +136,17 @@ class start extends Components\Plugin
                         $filename = elgg_get_site_url() . 'mod/archive/graphics/wave.png';
                         break;
                     case 'file':
-                        $filename = $filename = "$data_root$user_path/$entity->filename";
+                        $filename = $entity->filename;
                 }
 
-                if (!file_exists($filename)) {
-                    $user_path = date('Y/m/d/', $user->time_created) . $user->guid;
-                    $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-                }
+                //if (!file_exists($filename)) {
+                //    $user_path = date('Y/m/d/', $user->time_created) . $user->guid;
+                //    $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+                //}
 
-                $contents = @file_get_contents($filename);
+                $file->setFilename($filename);
+                $file->open('read');
+                $contents = $file->read();
 
                 header("Content-type: image/jpeg");
                 header('Expires: ' . date('r', strtotime("today+6 months")), true);

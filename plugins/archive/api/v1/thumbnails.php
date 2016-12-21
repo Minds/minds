@@ -43,16 +43,14 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $user_guid = $user->guid;
             }
 
-            $user_path = date('Y/m/d/', $user->time_created) . $user_guid;
-
-            $data_root = $CONFIG->dataroot;
-            $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-
+            $file = new \ElggFile();
+            $file->owner_guid = $user_guid;
+            $file->setFilename("/archive/thumbnails/$entity->guid.jpg");
 
             switch ($entity->subtype) {
                     case 'image':
                         if ($entity->filename) {
-                            $filename = "$data_root$user_path/$entity->filename";
+                            $file->setFilename($entity->filename);
                         }
 
                         if (isset($page[2])  && $size = $page[2]) {
@@ -60,7 +58,7 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                                 $entity->batch_guid = $this->container_guid;
                             }
 
-                            $filename = "$data_root$user_path/image/$entity->batch_guid/$entity->guid/$size.jpg";
+                            $file->setFilename("/image/$entity->batch_guid/$entity->guid/$size.jpg");
                         }
                         break;
                     case 'album':
@@ -81,20 +79,21 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                         break;
                 }
 
-            if (!file_exists($filename)) {
-                $user_path = date('Y/m/d/', $user->time_created) . $user->guid;
-                $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
-            }
+            //if (!file_exists($filename)) {
+            //    $user_path = date('Y/m/d/', $user->time_created) . $user->guid;
+            //    $filename = "$data_root$user_path/archive/thumbnails/$entity->guid.jpg";
+            //}
 
-            $contents = @file_get_contents($filename);
+            $file->open('read');
+            $contents = $file->read();
 
             header("Content-type: image/jpeg");
             header('Expires: ' . date('r', strtotime("today+6 months")), true);
             header("Pragma: public");
             header("Cache-Control: public");
             header("Content-Length: " . strlen($contents));
-                // this chunking is done for supposedly better performance
-                $split_string = str_split($contents, 1024);
+            // this chunking is done for supposedly better performance
+            $split_string = str_split($contents, 1024);
             foreach ($split_string as $chunk) {
                 echo $chunk;
             }

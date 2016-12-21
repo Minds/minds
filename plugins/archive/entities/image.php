@@ -110,9 +110,12 @@ class image extends Entities\File
         return $result;
     }
 
-    public function createThumbnails($sizes = array('small', 'medium','large', 'xlarge'))
+    public function createThumbnails($sizes = array('small', 'medium','large', 'xlarge'), $filepath = null)
     {
-        $master = $this->getFilenameOnFilestore();
+        if (!$sizes) {
+            $sizes = array('small', 'medium','large', 'xlarge');
+        }
+        $master = $filepath ?: $this->getFilenameOnFilestore();
         foreach ($sizes as $size) {
             switch ($size) {
                 case 'tiny':
@@ -150,7 +153,9 @@ class image extends Entities\File
             //@todo - this might not be the smartest way to do this
             $resized = \get_resized_image_from_existing_file($master, $w, $h, $s, 0, 0, 0, 0, $u);
             $this->setFilename("image/$this->batch_guid/$this->guid/$size.jpg");
-            file_put_contents($this->getFilenameOnFilestore(), $resized);
+            $this->open('write');
+            $this->write($resized);
+            $this->close();
         }
     }
 
