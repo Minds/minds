@@ -34,9 +34,8 @@ class S3 implements ServiceInterface
           'region' => 'us-east-1'
         ]);
 
-        $cloned = clone $this;
-        $cloned->filepath = $path;
-        return $cloned;
+        $this->filepath = $path;
+        return $this;
     }
 
     public function close()
@@ -68,14 +67,23 @@ class S3 implements ServiceInterface
 
         switch ($this->mode) {
             case "read-uri":
-                $url = $this->s3->getObjectUrl("cinemr", $this->filepath, "+15 minutes");
+                $url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
                 return $url;
                 break;
             case "read":
             //    break;
             case "redirect":
             default:
-                $url = $this->s3->getObjectUrl("cinemr", $this->filepath, "+15 minutes");
+                //for now, check if the file exists, and fallback to disk if not!
+                if (!$this->s3->doesObjectExist(Config::_()->aws['bucket'], $this->filepath)) {
+                    $disk = new Disk();
+                    $disk->open($this->filepath, 'read');
+                    $content = $disk->read();
+                    $disk->close();
+                    return $content;
+                }
+
+                $url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
                 header("Location: $url");
                 exit;
         }
