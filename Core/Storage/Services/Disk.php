@@ -19,9 +19,8 @@ class Disk implements ServiceInterface
                 break;
         }
 
-        $cloned = clone $this;
-        $cloned->resource = fopen($path, $mode);
-        return $cloned;
+        $this->resource = fopen($path, $mode);
+        return $this;
     }
 
     public function close()
