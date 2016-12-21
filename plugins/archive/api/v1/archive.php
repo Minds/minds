@@ -31,7 +31,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if (is_numeric($pages[0])) {
             $entity = core\Entities::build(new \Minds\Entities\Entity($pages[0]));
-            
+
             //check to see if we can read the entity
             if (!Security\ACL::_()->read($entity)) {
                 return Factory::response(['status' => 'error']);
@@ -130,22 +130,17 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
 
                 $guid = $image->save();
-                $dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
-                $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0755, true);
-                }
 
-                /**
-                 * PHP PUT is a bit tricky, this should really be in a helper function
-                 * @todo ^^
-                 */
-                $fp = fopen("$dir/master.jpg", "w");
-                fwrite($fp, file_get_contents($_FILES['file']['tmp_name']));
-                fclose($fp);
+                $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
+
+                $file = new \ElggFile(); //only using for legacy reasons
+                $file->setFilename("/image/$image->batch_guid/$image->guid/master.jpg");
+                $file->open('write');
+                $file->write(file_get_contents($_FILES['file']['tmp_name']));
+                $file->close();
 
                 $loc = $image->getFilenameOnFilestore();
-                $image->createThumbnails();
+                $image->createThumbnails(null, $_FILES['file']['tmp_name']);
                 $image->access_id = 0;
                 if (strpos($_FILES['file']['type'], 'gif') !== false) {
                     $image->gif = true;
