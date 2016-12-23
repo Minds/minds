@@ -11,7 +11,7 @@ use Minds\Entities;
 
 class PointsSubscription implements HookInterface
 {
-    private $rate = 0.01;
+    private $rate = 0.001;
 
     public function onCharged($subscription)
     {
