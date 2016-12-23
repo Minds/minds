@@ -56,7 +56,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           'amount' => $sale->getAmount(),
           'capture' => $sale->shouldCapture(),
           'currency' => 'usd',
-          'source' => $sale->getNonce() || $sale->getCustomerId(),
+          'source' => $sale->getNonce() ?: $sale->getCustomerId(),
           'metadata' => [
             'orderId' => $sale->getOrderId(),
             'first_name' => $sale->getCustomerId()
