@@ -47,14 +47,15 @@ class avatars implements Interfaces\FS
                 $f = new Entities\File();
                 $f->owner_guid = $entity->owner_guid;
                 $f->setFilename("groups/{$guid}{$size}.jpg");
-                $filepath = $f->getFilenameOnFilestore();
+                $f->open('read');
                 break;
             case "object":
                 break;
         }
 
-        if (!file_exists($filepath)) {
-            $filepath =  Core\Config::build()->path . "front/public/assets/avatars/default-$size.png";
+        $contents = $file->read();
+        if (empty($contents)) {
+            $contents = file_get_contents(Core\Config::build()->path . "front/public/assets/avatars/default-$size.png");
         }
 
         $finfo    = finfo_open(FILEINFO_MIME);
@@ -65,7 +66,7 @@ class avatars implements Interfaces\FS
         header("Pragma: public");
         header("Cache-Control: public");
         //header("ETag: \"$etag\"");
-        echo file_get_contents($filepath);
+        echo $contents;
         exit;
     }
 }

@@ -24,10 +24,12 @@ class paywall implements Interfaces\FS
               $f = new Entities\File();
               $f->owner_guid = $channel->guid;
               $f->setFilename("paywall-preview.jpg");
-              $filepath = $f->getFilenameOnFilestore();
+              $f->open('read');
 
-              if (!file_exists($filepath)) {
-                  $filepath = Core\Di\Di::_()->get('Config')->get('path') . 'front/app/assets/default-paywall.png';
+              $contents = $f->read();
+
+              if (empty($contents)) {
+                  $contents = file_get_contents(Core\Di\Di::_()->get('Config')->get('path') . 'front/app/assets/default-paywall.png');
               }
 
               $finfo    = finfo_open(FILEINFO_MIME);
@@ -37,7 +39,7 @@ class paywall implements Interfaces\FS
               header('Expires: ' . date('r', time() + 864000));
               header("Pragma: public");
               header("Cache-Control: public");
-              echo file_get_contents($filepath);
+              echo $contents;
               exit;
 
               break;
