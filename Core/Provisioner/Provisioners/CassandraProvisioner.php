@@ -81,7 +81,7 @@ class CassandraProvisioner implements ProvisionerInterface
 
         $client = Data\Client::build('Cassandra', [
             'keyspace' => $options['cassandra-keyspace'],
-            'servers' => [ "{$options['cassandra-server']}:9042" ]
+            'cql_servers' => [ $options['cassandra-server'] ]
         ]);
 
         foreach ($cqlTables as $cqlTableName => $cqlTable) {

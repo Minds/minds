@@ -43,6 +43,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
 
             $this->out('- Loading new configuration:', $this::OUTPUT_INLINE);
             $this->getApp()->loadConfigs();
+            $provisioner->reloadStorage();
             $this->out('OK');
 
             $this->out('- Setting up site:', $this::OUTPUT_INLINE);

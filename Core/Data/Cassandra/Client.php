@@ -16,11 +16,13 @@ class Client implements Interfaces\ClientInterface
 
     public function __construct(array $options = array())
     {
+        $options = array_merge((array) Config::_()->cassandra, $options);
+
         $this->cluster = Driver::cluster()
-           ->withContactPoints(... Config::_()->cassandra->cql_servers)
+           ->withContactPoints(... $options['cql_servers'])
            ->withPort(9042)
            ->build();
-        $this->session = $this->cluster->connect(Config::_()->cassandra->keyspace);
+        $this->session = $this->cluster->connect($options['keyspace']);
     }
 
     public function request(Interfaces\PreparedInterface $request, $silent = false)

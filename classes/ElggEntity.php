@@ -850,7 +850,7 @@ abstract class ElggEntity extends ElggData implements
 			if(is_object($this->ownerObj)){
 				$owner = json_decode(json_encode($this->ownerObj), true);
 			}
-			if(isset($owner['name']) || $owner->name){
+			if(isset($owner['name']) || (is_object($owner) && $owner->name)){
 				return new Minds\Entities\User($owner);
 			}  else {
 				if($this->canEdit()){

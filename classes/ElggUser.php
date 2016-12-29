@@ -214,14 +214,15 @@ class ElggUser extends ElggEntity
 	 */
 	public function enable() {
 
+		// @note: disabled because $recursive doesn't exist
 		//enable all the users objects
-		if($recursive == true){
+		// if($recursive == true){
 			//@todo disable the users objects
-			$objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
-			foreach($objects as $object){
+			// $objects = elgg_get_entities(array('type'=>'object', 'owner_guid'=>$this->guid));
+			// foreach($objects as $object){
 				//$object->enable();
-			}
-		}
+			// }
+		// }
 
 		$db = new Minds\Core\Data\Call('entities_by_time');
 		//Remove from the list of unvalidated user

@@ -86,6 +86,18 @@ class Installer
             throw new ProvisionException('Admin email is invalid');
         }
 
+        if (!isset($this->options['private-key']) || !$this->options['private-key']) {
+            throw new ProvisionException('Private key path was not provided');
+        } elseif (!is_readable($this->options['private-key'])) {
+            throw new ProvisionException('Private key is not readable');
+        }
+
+        if (!isset($this->options['public-key']) || !$this->options['public-key']) {
+            throw new ProvisionException('Public key path was not provided');
+        } elseif (!is_readable($this->options['public-key'])) {
+            throw new ProvisionException('Public key is not readable');
+        }
+
         if (isset($this->options['site-email']) && !filter_var($this->options['site-email'], FILTER_VALIDATE_EMAIL)) {
             throw new ProvisionException('Site email is invalid');
         }
@@ -131,6 +143,10 @@ class Installer
             $this->options['socket-server-uri'] = $this->options['domain'] . ':8010';
         }
 
+        if (!isset($this->options['site-name'])) {
+            $this->options['site-name'] = "Minds";
+        }
+
         if (!isset($this->options['site-email'])) {
             $this->options['site-email'] = $this->options['email'];
         }
@@ -164,6 +180,11 @@ class Installer
         $storage->provision($this->options);
     }
 
+    public function reloadStorage()
+    {
+        Core\Data\Pool::$pools = [];
+    }
+
     public function setupSite($site = null)
     {
         $site = $site ?: new Site();
@@ -172,11 +193,7 @@ class Installer
         $site->access_id = ACCESS_PUBLIC;
         $site->email = $this->options['site-email'];
 
-        $done = $site->save();
-
-        if (!$done) {
-            throw new ProvisionException('Cannot create Site entity');
-        }
+        $site->save();
     }
 
     public function setupFirstAdmin()

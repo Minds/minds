@@ -7,7 +7,7 @@ $CONFIG = Minds\Core\Di\Di::_()->get('Config');
 $CONFIG->cassandra = (object) [
     'keyspace'    => '{{cassandra-keyspace}}',
     'servers'     => [ '{{cassandra-server}}' ],
-    'cql_servers' => [ '{{cassandra-server}}:9042' ]
+    'cql_servers' => [ '{{cassandra-server}}' ]
 ];
 
 /**
@@ -20,7 +20,10 @@ $CONFIG->pluginspath = '{{path}}plugins/';
 $CONFIG->dataroot = '{{dataroot}}';
 $CONFIG->default_site = '{{default-site}}';
 $CONFIG->site_id = '{{default-site}}';
+$CONFIG->site_name = '{{site-name}}';
 $CONFIG->__site_secret__ = '{{site-secret}}';
+// $CONFIG->cdn_url = 'http://{{domain}}/';
+$CONFIG->site_url = 'http://{{domain}}/';
 
 /**
  * Overrides default system cache path from inside data root to custom location.
@@ -85,10 +88,11 @@ $CONFIG->broken_mta = false;
 $CONFIG->min_password_length = 6;
 
 $CONFIG->set('plugins', [
-  'Messager',
+  'Messenger',
   'Groups',
   'blog',
-  'archive'
+  'archive',
+  'thumbs',
 ]);
 
 $CONFIG->set('sockets-jwt-secret', '{{jwt-secret}}');
@@ -131,4 +135,11 @@ $CONFIG->set('boost', [
         'min' => 100,
         'max' => 5000000
     ],
+]);
+
+$CONFIG->set('encryptionKeys', [
+    'email' => [
+        'private' => '{{private-key}}',
+        'public' => '{{public-key}}'
+    ]
 ]);
