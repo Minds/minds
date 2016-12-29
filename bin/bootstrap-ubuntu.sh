@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-php_version="5.6"
+php_version="7.0"
 php_conf="/etc/php/$php_version/fpm/php.ini"
 fpm_conf="/etc/php/$php_version/fpm/pool.d/www.conf"
 cassandra_version="2.2.8"
+cassandra_so="/usr/lib/php/20151012/cassandra.so"
 
 add-apt-repository ppa:ondrej/php
 add-apt-repository ppa:openjdk-r/ppa
@@ -33,21 +34,10 @@ apt-get install -y \
   openjdk-8-jre \
   rabbitmq-server \
   openssl \
-  #php$php_version-zlib \
-  #php$php_version-gd \
-  #php$php_version-intl \
-  #php$php_version-memcached \
-  #php$php_version-sqlite3 \
-  #php$php_version-pgsql \
   php$php_version-xml \
-  #php$php_version-xsl \
   php$php_version-curl \
-  php$php_version-openssl \
-  #php$php_version-iconv \
-  php$php_version-json
-  #php$php_version-phar \
-  #php$php_version-soap \
-  #php$php_version-dom && \
+  php$php_version-json \
+  php$php_version-zip
 
 # Setup nginx configs
 rm -rf /etc/nginx/sites-enabled/default
@@ -84,32 +74,73 @@ sed -i "s/^# broadcast_rpc_address:.*/broadcast_rpc_address: 127.0.0.1/" /etc/ca
 sed -i 's/^start_rpc.*$/start_rpc: true/' /etc/cassandra/cassandra.yaml
 
 # Setup cassandra driver
-apt-get install -y php-pear php5-dev libgmp-dev libpcre3-dev g++ make cmake libssl-dev openssl
-git clone https://github.com/datastax/php-driver.git
-cd php-driver
-git submodule update --init
-cd ext
-wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
-wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
-dpkg -i libuv_1.8.0-1_amd64.deb
-dpkg -i libuv-dev_1.8.0-1_amd64.deb
-./install.sh
-echo "extension=cassandra.so" > /etc/php/5.6/fpm/conf.d/20-cassandra.ini
+apt-get install -y php$php_version-dev libgmp-dev libpcre3-dev g++ make cmake libssl-dev openssl
+if [ ! -f $cassandra_so ]; then
+  git clone https://github.com/datastax/php-driver.git
+  cd php-driver
+  git submodule update --init
+  cd ext
+  wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
+  wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
+  dpkg -i libuv_1.8.0-1_amd64.deb
+  dpkg -i libuv-dev_1.8.0-1_amd64.deb
+  ./install.sh
+fi
+echo "extension=cassandra.so" > /etc/php/$php_version/mods-available/cassandra.ini
+phpenmod cassandra
+
+# Setup Mongo driver
+apt-get install -y mongodb php$php_version-mongodb
+phpenmod mongodb
+
+# Setup Redis driver
+apt-get install -y redis-server php$php_version-redis
+phpenmod redis
 
 # start services
-service php$php_version-fpm restart
 service nginx restart
+service php$php_version-fpm restart
 service cassandra restart
+service mongodb restart
+service redis-server restart
 
+# Install NodeJS
+if ! dpkg --compare-versions `node --version | sed 's/^.//'` ge '6.0'; then
+  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+  sudo apt-get install -y nodejs build-essential
+fi
+npm install -g npm typescript ts-node
+
+# Install Composer
+if [ -f /usr/local/bin/composer ]; then
+  composer self-update
+else
+  wget -O composer-setup.php https://getcomposer.org/installer
+  php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  rm composer-setup.php
+fi
+
+cd /var/www/Minds/engine
+composer install
+cd -
+
+# Additional folders
+mkdir --parents --mode=0777 /tmp/minds-cache/
+mkdir --parents --mode=0777 /data/
 
 if [ -f "/var/www/Minds/engine/settings.php" ]
 then
-	echo "[Success]: Minds is already installed";
+  echo "[Success]: Minds is already installed";
 else
+  echo "Installing Minds...";
   sleep 10s
-  php /var/www/Minds/bin/cli.php install \
+  cd /var/www/Minds
+  php ./bin/regenerateDevKeys.php;
+  php ./bin/cli.php install \
     --domain=dev.minds.io \
-    --username=mark \
-    --password=temp123 \
-    --email=mark@minds.com
+    --username=minds \
+    --password=password \
+    --email=minds@dev.minds.io \
+    --private-key=/var/www/Minds/.dev/minds.pem \
+    --public-key=/var/www/Minds/.dev/minds.pub
 fi

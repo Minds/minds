@@ -17,27 +17,40 @@ Minds is split into multiple components:
 
 - [Engine](https://github.com/Minds/engine) - Backend code & APIs
 - [Front](https://github.com/Minds/front) - Client side Angular2 web app
-- [Sockets](https://github.com/Minds/sockets) - WebSocket server for real-time communication
-- [Docs](https://github.com/Minds/docs) - Documentation of public and private apis (work in progress)
+- [Sockets](https://github.com/Minds/sockets) - WebSocket server for real-time communication (WIP)
+- [Docs](https://github.com/Minds/docs) - Documentation of public and private apis (WIP)
 
 Please also see:
 - [Mobile](https://github.com/Minds/mobile) - WebSocket server for real-time communication
 
 Plugins will eventually be migrated to their own repositories.
 
-## Setup
+## Download and Provisioning
 
-- `npm install -g gulp`
+- Git
+- Vagrant
+
+Clone this repository and run `init.sh` (or `init.bat` if you're on Windows) to clone submodules. Run
+`vagrant up` to create, provision and run the VM.
+
+## Installing and Building Developer version
+
+- NodeJS >= 4
+- NPM >= 3
+- Grunt CLI
+
+On `front` directory:
 - `npm install`
-- `gulp init`
-
-If that fails then try running:
-
-- `gulp install`
-
-## Building
-
 - `gulp build`
+- `gulp build.index`
+
+## Building Prodution version
+- NodeJS >= 4
+- NPM >= 3
+
+On `front` directory:
+- `npm install`
+- `npm run build`
 
 ## Testing
 
