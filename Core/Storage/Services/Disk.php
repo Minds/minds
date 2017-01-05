@@ -35,6 +35,10 @@ class Disk implements ServiceInterface
 
     public function read($length = 0)
     {
+        if(!$this->resource){
+            return false;
+        }
+
         if (!$length) {
             $stat = fstat($this->resource);
             $length = $stat['size'];

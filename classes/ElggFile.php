@@ -235,7 +235,7 @@ class ElggFile extends ElggObject {
 	 *
 	 * @return mixed Data or false
 	 */
-	public function read($length, $offset = 0) {
+	public function read($length = 0, $offset = 0) {
 		$fs = $this->getFilestore();
 
 		return $fs->read($this->handle, $length, $offset);
