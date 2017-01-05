@@ -53,7 +53,7 @@ class avatars implements Interfaces\FS
                 break;
         }
 
-        $contents = $file->read();
+        $contents = $f->read();
         if (empty($contents)) {
             $contents = file_get_contents(Core\Config::build()->path . "front/public/assets/avatars/default-$size.png");
         }
