@@ -17,6 +17,12 @@ class icon extends core\page implements Interfaces\page
     {
         global $CONFIG;
         $guid = $pages[0];
+
+        if (!$guid) {
+            exit;
+        }
+
+
         $cacher = Core\Data\cache\factory::build('apcu');
         //if ($cached = $cacher->get("usericon:$guid")) {
         //    $join_date = $cached;
@@ -66,7 +72,7 @@ class icon extends core\page implements Interfaces\page
         //$prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
         //Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
 
-        //$this->forward("/assets/avatars/default-$size.png");
+        $this->forward("/assets/avatars/default-$size.png");
     }
 
     public function post($pages)
