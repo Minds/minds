@@ -26,6 +26,9 @@ class banners implements Interfaces\FS
             $type = $entity->type;
         }
 
+        $content = "";
+
+
         switch ($type) {
           case "user":
             $size = isset($pages[1]) ? $pages[1] : 'fat';
@@ -35,9 +38,11 @@ class banners implements Interfaces\FS
                 $f->owner_guid = $entity->guid;
                 $f->setFilename("banners/{$carousels[0]->guid}.jpg");
                 $f->open('read');
-                //if (!file_exists($filepath)) {
-                //    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
-                //}
+                $content = $f->read();
+                if (!$content) {
+                    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
+                    $content = file_get_contents($filepath);
+                }
             }
             break;
           case "group":
@@ -76,7 +81,14 @@ class banners implements Interfaces\FS
         //    exit;
         //}
 
-        $content = $f->read();
+        if (!$content) {
+            $content = $f->read();
+        }
+
+        if($_GET['testing']){
+            echo $f->getFilenameOnFilestore();
+            echo $content;exit;
+        }
 
         $finfo    = finfo_open(FILEINFO_MIME);
         $mimetype = finfo_buffer($finfo, $content);
