@@ -27,16 +27,20 @@ class System implements Interfaces\PreparedInterface
      * @parAM array $primary_keys - $key
      * @return $this
      */
-    public function createTable($table, $columns = array(), $primary_keys = array())
+    public function createTable($table, $columns = [], $primary_keys = [], $attributes = [])
     {
         $cql = "CREATE TABLE $table";
-        $s = array();
+        $s = [];
         foreach ($columns as $key => $validator) {
             $s[] = "$key $validator";
         }
         $s[] = " PRIMARY KEY (" . implode(', ', $primary_keys) . ")";
         $cql .= " (" . implode(', ', $s) . ")";
-        
+
+        if ($attributes) {
+            $cql .= ' WITH ' . implode(' AND ', $attributes);
+        }
+
         $this->template = $cql;
         return $this;
     }

@@ -26,39 +26,17 @@ class CassandraProvisioner implements ProvisionerInterface
             ]
         ]);
 
-        // Thrift ColumnFamilies
-
-        $columnFamilies = [
-            'plugin' => ['active' => 'IntegerType'], // TODO: still used?
-            'entities'=> ['type' => 'UTF8Type'],
-            'entities_by_time' => [],
-            'user_index_to_guid' => [],
-            'session' => [],
-            'friends' => [], // TODO: Will replace with relationships?
-            'friendsof' => [], // TODO: Will replace with relationships?
-            'relationships' => [],
-        ];
-
-        $keyspace = $db->describeKeyspace();
-
-        foreach ($columnFamilies as $columnFamily => $indexes) {
-            $exists = false;
-
-            foreach ($keyspace->cf_defs as $keyspaceCfs) {
-                if ($keyspaceCfs->name == $columnFamily) {
-                    $exists = true;
-                    break;
-                }
-            }
-
-            if (!$exists) {
-                $db->createCF($columnFamily, $indexes);
-            }
-        }
-
         // CQL Tables
 
         $cqlTables = [
+            'plugin' => $this->thriftLegacySchema(),
+            'entities' => $this->thriftLegacySchema(),
+            'entities_by_time' => $this->thriftLegacySchema(),
+            'user_index_to_guid' => $this->thriftLegacySchema(),
+            'session' => $this->thriftLegacySchema(),
+            'friends' => $this->thriftLegacySchema(),
+            'friendsof' => $this->thriftLegacySchema(),
+            'relationships' => $this->thriftLegacySchema(),
             'counters' => [
                 'schema' => [
                     'guid' => 'varchar',
@@ -86,7 +64,27 @@ class CassandraProvisioner implements ProvisionerInterface
 
         foreach ($cqlTables as $cqlTableName => $cqlTable) {
             $query = new Data\Cassandra\Prepared\System();
-            $client->request($query->createTable($cqlTableName, $cqlTable['schema'], $cqlTable['primaryKeys']));
+            $client->request($query->createTable(
+                $cqlTableName,
+                $cqlTable['schema'],
+                $cqlTable['primaryKeys'],
+                isset($cqlTable['attributes']) ? $cqlTable['attributes'] : []
+            ));
         }
+    }
+
+    private function thriftLegacySchema()
+    {
+        return [
+            'schema' => [
+                'key' => 'varchar',
+                'column1' => 'varchar',
+                'value' => 'varchar',
+            ],
+            'primaryKeys' => ['key', 'column1'],
+            'attributes' => [
+                'COMPACT STORAGE'
+            ]
+        ];
     }
 }
