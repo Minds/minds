@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Email\Campaigns;
 
+use Minds\Core\Config\Config;
 use Minds\Core\Entities;
 use Minds\Core\Data\Call;
 use Minds\Core\Analytics\Timestamps;
@@ -21,6 +22,7 @@ class Custom
 
     protected $subject = "";
     protected $templateKey = "";
+    protected $campaign = "";
 
     protected $period = 0;
 
@@ -40,6 +42,12 @@ class Custom
     public function setTemplate($template)
     {
         $this->templateKey = $template;
+        return $this;
+    }
+
+    public function setCampaign($campaign)
+    {
+        $this->campaign = $campaign;
         return $this;
     }
 
@@ -69,6 +77,8 @@ class Custom
             $this->template->set('email', $user->getEmail());
             $this->template->set('guid', $user->guid);
             $this->template->set('user', $user);
+            $this->template->set('campaign', $this->campaign);
+            $this->template->set('validator', sha1($this->campaign . $user->guid . Config::_()->get('emails_secret')));
 
             $message = new Message();
             $message->setTo($user)

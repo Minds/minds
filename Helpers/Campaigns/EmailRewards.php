@@ -2,6 +2,7 @@
 namespace Minds\Helpers\Campaigns;
 
 use Minds\Core;
+use Minds\Core\Config\Config;
 use Minds\Helpers;
 use Minds\Entities;
 
@@ -35,9 +36,12 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "december-22-2016":
-            $points = 1000;
-            break; 
+          case "january-12-2017":
+            $validator = $_GET['validator'];
+            if ($validator == sha1($campaign . $user->guid . Config::_()->get('email_reward_secret'))) {
+                $points = 1000;
+            }
+            break;
           default:
             return;
         }
