@@ -34,6 +34,7 @@ apt-get install -y \
   openjdk-8-jre \
   rabbitmq-server \
   openssl \
+  php$php_version-gd \
   php$php_version-xml \
   php$php_version-curl \
   php$php_version-json \
