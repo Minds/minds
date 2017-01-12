@@ -13,7 +13,7 @@ import { GroupsService } from '../groups-service';
     <ul class="minds-dropdown-menu" [hidden]="!showMenu" >
       <li class="mdl-menu__item" [hidden]="group['is:muted']" (click)="mute()" i18n>Disable Notifications</li>
       <li class="mdl-menu__item" [hidden]="!group['is:muted']" (click)="unmute()" i18n>Enable Notifications</li>
-      <li class="mdl-menu__item" *ngIf="group['is:owner']" [hidden]="group.deleted" (click)="deletePrompt()" i18n>Delete Group</li>
+      <li class="mdl-menu__item" *ngIf="group['is:creator']" [hidden]="group.deleted" (click)="deletePrompt()" i18n>Delete Group</li>
     </ul>
     <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
 
