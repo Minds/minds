@@ -2,7 +2,7 @@
 namespace Minds\Helpers\Campaigns;
 
 use Minds\Core;
-use Minds\Core\Config\Config;
+use Minds\Core\Config;
 use Minds\Helpers;
 use Minds\Entities;
 
@@ -38,8 +38,10 @@ class EmailRewards
             break;
           case "january-12-2017":
             $validator = $_GET['validator'];
-            if ($validator == sha1($campaign . $user->guid . Config::_()->get('email_reward_secret'))) {
+            if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 1000;
+            } else {
+                echo "Validator failed"; exit;
             }
             break;
           default:

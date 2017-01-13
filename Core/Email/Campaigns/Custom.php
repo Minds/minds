@@ -4,7 +4,7 @@
  */
 namespace Minds\Core\Email\Campaigns;
 
-use Minds\Core\Config\Config;
+use Minds\Core\Config;
 use Minds\Core\Entities;
 use Minds\Core\Data\Call;
 use Minds\Core\Analytics\Timestamps;
