@@ -12,7 +12,7 @@ class UriSchemeRule implements Interfaces\XSSRule
     private $dirtyString = "";
     private $cleanString = "";
     private $allowedSchemes = [];
-    private $badSchemes = ['javascript'];
+    private $badSchemes = ['javascript', 'data'];
 
     /**
      * Set the dirty string to sanitize
