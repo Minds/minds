@@ -59,7 +59,7 @@ export class BlogView {
         if(!this.visible){
           window.history.pushState(null, this.blog.title, url);
           this.title.setTitle(this.blog.title);
-          AnalyticsService.send('pageview', { 'page' : '/blog/view/' + this.blog.guid});
+          AnalyticsService.send('pageview', { 'page' : '/blog/view/' + this.blog.guid, 'dimension1': this.blog.ownerObj.guid });
         }
         this.visible = true;
       } else {

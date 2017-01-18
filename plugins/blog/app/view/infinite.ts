@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Rx';
 import { Client } from '../../../services/api';
 import { SessionFactory } from '../../../services/session';
 import { MindsTitle } from '../../../services/ux/title';
+import { AnalyticsService } from '../../../services/analytics';
 
 import { MindsBlogResponse } from '../../../interfaces/responses';
 import { MindsBlogEntity } from '../../../interfaces/entities';
@@ -31,7 +32,7 @@ export class BlogViewInfinite {
   error: string = '';
 
   constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle,
-    private applicationRef : ApplicationRef, private cd: ChangeDetectorRef){
+    private applicationRef: ApplicationRef, private cd: ChangeDetectorRef, private analytics: AnalyticsService) {
   }
 
   paramsSubscription: Subscription;
@@ -61,12 +62,14 @@ export class BlogViewInfinite {
       return false;
     }
     this.inProgress = true;
+    this.analytics.preventDefault();
     //console.log('grabbing ' + this.guid);
     this.client.get('api/v1/blog/' + this.guid, {})
       .then((response : MindsBlogResponse) => {
         if(response.blog){
           this.blogs = [response.blog];
           this.title.setTitle(response.blog.title);
+          this.analytics.dispatch({ 'dimension1': response.blog.ownerObj.guid });
         } else if(this.blogs.length == 0){
           this.error = "Sorry, we couldn't load the blog";
         }
