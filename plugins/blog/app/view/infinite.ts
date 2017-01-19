@@ -69,7 +69,7 @@ export class BlogViewInfinite {
         if(response.blog){
           this.blogs = [response.blog];
           this.title.setTitle(response.blog.title);
-          this.analytics.dispatch({ 'dimension1': response.blog.ownerObj.guid });
+          AnalyticsService.send('pageview', { 'page' : '/blog/view/' + response.blog.guid, 'dimension1': response.blog.ownerObj.guid });
         } else if(this.blogs.length == 0){
           this.error = "Sorry, we couldn't load the blog";
         }
