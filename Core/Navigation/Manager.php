@@ -27,7 +27,7 @@ class Manager
             ->setName('Capture')
             ->setTitle('Capture')
             ->setPath('capture');
-        self::add($capture);
+        //self::add($capture);
 
         $discovery_trending = new Item();
         $discovery_trending
