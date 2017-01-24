@@ -152,12 +152,12 @@ class Manager
         );
 
         self::add((new Item())
-            ->setPriority(0)
+            ->setPriority(10)
             ->setIcon('bug_report')
             ->setName('Bugs')
             ->setTitle('Report bugs')
-            ->setPath('groups/profile/100000000000000681/activity'),
-            'topbar'
+            ->setPath('groups/profile/100000000000000681/activity')
+            //'topbar'
         );
 
         Core\Pages\Menu::_()->init();
