@@ -89,7 +89,9 @@ class S3 implements ServiceInterface
                     return $content;
                 }*/
 
-                $url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
+                //$url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
+                $this->filepath = str_replace('//', '/', $this->filepath);
+                $url = Config::_()->aws['cloudfront'] . $this->filepath;
                 header("Location: $url");
                 exit;
         }
