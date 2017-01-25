@@ -53,7 +53,7 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                             $file->setFilename($entity->filename);
                         }
 
-                        if (isset($page[2])  && $size = $page[2]) {
+                        if (isset($pages[2])  && $size = $pages[2]) {
                             if (!isset($entity->batch_guid)) {
                                 $entity->batch_guid = $this->container_guid;
                             }
