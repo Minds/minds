@@ -52,10 +52,12 @@ class Active implements AnalyticsMetric
      */
     public function increment()
     {
-        foreach (Timestamps::get(array('day', 'month')) as $p => $ts) {
-            $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
+        $cacher = Core\Data\cache\factory::build('apcu');
+        if ($cacher->get("{$this->namespace}active:$p:$ts:$this->key") == true) {
+            continue;
         }
-        return true;
+        $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
+        $cacher->set("{$this->namespace}active:$p:$ts:$this->key", time());
     }
 
     /**
