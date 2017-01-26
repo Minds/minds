@@ -77,7 +77,15 @@ class S3 implements ServiceInterface
                 return $url;
                 break;
             case "read":
-            //    break;
+                try{
+                    $result = $this->s3->getObject([
+                        'Bucket' => Config::_()->aws['bucket'],
+                        'Key' => $this->filepath
+                    ]);
+                } catch (\Exception $e){
+                }
+                return $result['Body'];
+                break;
             case "redirect":
             default:
                 //for now, check if the file exists, and fallback to disk if not!
