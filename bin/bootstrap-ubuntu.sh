@@ -25,9 +25,6 @@ apt-get install -y \
   php$php_version-ctype \
   php$php_version-fpm \
   php$php_version-mbstring \
-  php$php_version-mysql \
-  php$php_version-mysqlnd \
-  php$php_version-mysqli \
   php$php_version-mcrypt \
   php$php_version-pdo \
   dsc22 cassandra=$cassandra_version cassandra-tools=$cassandra_version \
