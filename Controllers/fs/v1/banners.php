@@ -39,9 +39,11 @@ class banners implements Interfaces\FS
                 $f->setFilename("banners/{$carousels[0]->guid}.jpg");
                 $f->open('read');
                 $content = $f->read();
+                var_dump($content); exit;
                 if (!$content) {
                     $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
-                    $content = file_get_contents($filepath);
+                    $f = Core\Di\Di::_()->get('Storage')->open($filepath, 'read'); 
+                    $content = $f->read();
                 }
             }
             break;
@@ -69,6 +71,13 @@ class banners implements Interfaces\FS
             $f->owner_guid = $entity->owner_guid;
             $f->setFilename("banners/{$entity->guid}.jpg");
             $f->open('read');
+
+            $content = $f->read();
+            if(!$content){
+                $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
+                $f = Core\Di\Di::_()->get('Storage')->open($filepath, 'read');
+                $content = $f->read();
+            }
             //$filepath = $f->getFilenameOnFilestore();
             //if (!file_exists($filepath)) {
             //    $filepath =  Core\Config::build()->dataroot . 'carousel/' . $entity->guid . $size;
@@ -83,6 +92,9 @@ class banners implements Interfaces\FS
 
         if (!$content) {
             $content = $f->read();
+            if(!$content){
+                exit;
+            }
         }
 
         if($_GET['testing']){
