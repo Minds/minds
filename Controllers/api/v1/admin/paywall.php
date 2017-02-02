@@ -36,9 +36,14 @@ class paywall implements Interfaces\Api, Interfaces\ApiAdminPam
                     'offset' => $offset
                   ]);
 
-                $entities = Core\Entities::get(['guids'=>$guids]);
-                $response['entities'] = Factory::exportable($entities);
-                $response['load-next'] = end($entities)->guid;
+                if ($guids) {
+                    $entities = Core\Entities::get(['guids'=>$guids]);
+                    foreach($entities as $k => $entity){
+                        $entities[$k]->paywall = false;
+                    }
+                    $response['entities'] = Factory::exportable($entities);
+                    $response['load-next'] = (string) end($entities)->guid;
+                } 
             break;
         }
 

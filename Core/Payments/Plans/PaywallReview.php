@@ -35,9 +35,17 @@ class PaywallReview
         ], $opts);
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review' LIMIT ? ORDER BY column1 desc", [
-            (int) $opts['limit']
-          ]);
+
+        if ($opts['offset'] && $opts['offset'] != '') {
+            $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review' AND column1 < ?  ORDER BY column1 desc LIMIT ?", [
+              (string) $opts['offset'], 
+              (int) $opts['limit']
+            ]);
+        } else {
+            $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review'  ORDER BY column1 desc LIMIT ?", [
+              (int) $opts['limit']
+            ]);
+        }
         try {
             $result = $this->db->request($query);
             $guids = [];
@@ -46,6 +54,7 @@ class PaywallReview
             }
             return $guids;
         } catch (\Exception $e) {
+            var_dump($e); exit;
             return [];
         }
     }
