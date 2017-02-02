@@ -38,6 +38,7 @@ class paywall implements Interfaces\Api, Interfaces\ApiAdminPam
 
                 $entities = Core\Entities::get(['guids'=>$guids]);
                 $response['entities'] = Factory::exportable($entities);
+                $response['load-next'] = end($entities)->guid;
             break;
         }
 

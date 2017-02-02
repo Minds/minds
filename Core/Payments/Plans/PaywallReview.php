@@ -35,7 +35,7 @@ class PaywallReview
         ], $opts);
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review' LIMIT ?", [
+        $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review' LIMIT ? ORDER BY column1 desc", [
             (int) $opts['limit']
           ]);
         try {
