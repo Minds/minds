@@ -155,7 +155,7 @@ class channel implements Interfaces\Api
                 $item->save();
 
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $resized = get_resized_image_from_uploaded_file('file', 2000);
+                    $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
                     $file = new Entities\File();
                     $file->owner_guid = $item->owner_guid;
                     $file->setFilename("banners/{$item->guid}.jpg");
@@ -181,7 +181,7 @@ class channel implements Interfaces\Api
               );
 
               if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                  $resized = get_resized_image_from_uploaded_file('file', 2000);
+                  $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
                   $file = new Entities\File();
                   $file->owner_guid = $item->owner_guid;
                   $file->setFilename("banners/{$item->guid}.jpg");

@@ -76,7 +76,7 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
               }
 
               if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                  $resized = get_resized_image_from_uploaded_file('file', 2000);
+                  $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
                   $path = $pages[0];
                   $filepath = $this->config->dataroot . "page_banners/" . $page->getPath() . ".jpg";
                   @mkdir($this->config->dataroot . "page_banners", 0777, true);
