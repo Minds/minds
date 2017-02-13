@@ -68,7 +68,7 @@ class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
 
         $target = new Entities\User($pages[0]);
 
-        if (!$target || !$target->guid) {
+        if (!$target || !$target->guid || $target->isAdmin()) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'Invalid target'
