@@ -184,7 +184,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                           $video->hidden = true;
                       }
 
-                      $guid = $video->save();
+                      $guid = $video->save(true);
                       error_log("[upload][log]:: video saved as ($guid)");
                       break;
               }
@@ -360,25 +360,30 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $image->batch_guid = 0;
                 $image->access_id = 0;
                 $guid = $image->save();
-                $dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
+                //$dir = $image->getFilenameOnFilestore() . "image/$image->batch_guid/$image->guid";
                 $image->filename = "/image/$image->batch_guid/$image->guid/master.jpg";
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0755, true);
-                }
+                //if (!file_exists($dir)) {
+                //    mkdir($dir, 0755, true);
+                //}
 
                 /**
     			 * PHP PUT is a bit tricky, this should really be in a helper function
     			 * @todo ^^
     			 */
-                $fp = fopen("$dir/master.jpg", "w");
+                $fp = fopen("/tmp/{$image->guid}-master.jpg", "w");
                 $req = $this->parsePut();
                 $body = $req['body'];
                 fwrite($fp, $body);
                 fclose($fp);
-
+                
+                $file = new \ElggFile(); //only using for legacy reasons
+                $file->setFilename("/image/$image->batch_guid/$image->guid/master.jpg");
+                $file->open('write');
+                $file->write($body);
+                $file->close();
 
                 $loc = $image->getFilenameOnFilestore();
-                $image->createThumbnails();
+                $image->createThumbnails(null, "/tmp/{$image->guid}-master.jpg");
                 $image->save();
         }
 
