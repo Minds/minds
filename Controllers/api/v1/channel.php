@@ -66,7 +66,9 @@ class channel implements Interfaces\Api
               ->setEntityGuid($user->guid)
               ->getSubscriberCount();
             $response['channel']['supporters_count'] = $supporters_count;
-        } else {
+        }
+
+        if (!$user->merchant || !$supporters_count) {
             $db = new Core\Data\Call('entities_by_time');
             $feed_count = $db->countRow("activity:user:" . $user->guid);
             $response['channel']['activity_count'] = $feed_count;
