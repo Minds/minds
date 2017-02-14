@@ -18,7 +18,7 @@ import { Material } from '../../../../directives/material';
       [hidden]="object.container_guid == object.owner_guid || !object.album_children_guids || object.album_children_guids.length <= 1">
         keyboard_arrow_left
     </i>
-    <div class="minds-archive-stage" *ngIf="object.subtype == 'image'">
+    <div class="minds-archive-stage" [ngClass]="{minds-image-landscape: orientation == 'landscape', minds-image-portrait: orientation == 'portrait'}" *ngIf="object.subtype == 'image'">
       <img src="/archive/thumbnail/{{object.guid}}/xlarge"/>
     </div>
     <div class="minds-archive-stage" *ngIf="object.subtype == 'video'">
@@ -44,6 +44,7 @@ import { Material } from '../../../../directives/material';
 export class ArchiveTheatre {
 
   object: any = {};
+  orientation: string;
   session = SessionFactory.build();
 
   constructor(public client: Client, public router: Router){
@@ -53,6 +54,14 @@ export class ArchiveTheatre {
     if(!value.guid)
       return;
     this.object = value;
+    if(this.object.subtype == 'image'){
+      /*Check image's aspect ratio for landscape or l*/
+      if(this.object.naturalWidth >= this.object.naturalHeight){
+        this.orientation = 'landscape';
+      } else {
+        this.orientation = 'portrait';
+      }
+    }
   }
 
   prev(){
