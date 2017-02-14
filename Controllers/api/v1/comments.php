@@ -103,6 +103,12 @@ class comments implements Interfaces\Api
             if ($parent instanceof Entities\Activity && $parent->remind_object) {
                 $parent = (object) $parent->remind_object;
             }
+            if (!$pages[0] || !$parent) {
+                return Factory::response([
+                  'status' => 'error',
+                  'message' => 'We could not find that post'
+                ]); 
+            }
             if (!$_POST['comment'] && !$_POST['attachment_guid']) {
                 return Factory::response([
                 'status' => 'error',
