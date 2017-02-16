@@ -36,7 +36,7 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "january-12-2017":
+          case "january-31-2017":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 1000;
