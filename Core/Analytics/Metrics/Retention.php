@@ -47,23 +47,44 @@ class Retention implements AnalyticsMetric
         foreach ($intervals as $x) {
             //grab signups from $x days ago
             $startTs = $timestamps[$x+1];
-            $signups = $this->db->getRow("analytics:signup:day:$startTs", ['limit'=>10000]);
-
+            $signups = [];
+            $offset = "";
+            echo "\n Gathering signups \n";
+            while (true) {
+                $data = $this->db->getRow("analytics:signup:day:$startTs", ['limit'=>200, 'offset' => $offset]);
+                if(count($data) <= 1)
+                    break;
+                foreach ($data as $k => $v) {
+                    echo "\r $k";
+                    $signups[$k] = $v;
+                    $offset = $k;
+                }
+            }
+            echo " (done)";
 
             //now get active users from each interval after this date
             $endTs =  $timestamps[$x-$x+1];
             //echo "[$x]:: actives: " . date('d-m-Y', $endTs) . " signups: " . date('d-m-Y', $startTs) . "\n";
-            $actives = $this->db->getRow("analytics:active:day:$endTs", ['limit'=>10000]);
+            $offset = "";
+            echo "\n Gathering actives \n";
+            while (true) {
+                $actives = $this->db->getRow("analytics:active:day:$endTs", ['limit'=>200, 'offset' => $offset]);
+                if(count($actives) <= 1)
+                    break;
 
-            $retained = [];
-            foreach ($signups as $signup => $ts) {
-                if (isset($actives[$signup])) {
-                    $retained[$signup] = time();
+                foreach ($signups as $signup => $ts) {
+                    if (isset($actives[$signup])) {
+                        $this->db->insert("{$this->namespace}:$x:$now", [$signup=>time()]);
+                        echo "\r $x: $signup (active) $offset"; 
+                    } else {
+                        echo "\r $x: $signup (not active) $offset";
+                    }
                 }
+                end($actives);
+                $offset = key($actives);
             }
+            echo "(done)";
 
-            //$this->db->removeRow("{$this->namespace}:$x:$now");
-            $this->db->insert("{$this->namespace}:$x:$now", $retained);
         }
 
         return true;
