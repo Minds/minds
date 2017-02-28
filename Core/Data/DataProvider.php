@@ -62,5 +62,11 @@ class DataProvider extends Provider
         $this->di->bind('PubSub\Redis', function ($di) {
             return new PubSub\Redis\Client();
         }, ['useFactory'=>true]);
+        /**
+         * Prepared statements
+         */
+        $this->di->bind('Prepared\MonetizationLedger', function ($di) {
+            return new Cassandra\Prepared\MonetizationLedger();
+        });
     }
 }

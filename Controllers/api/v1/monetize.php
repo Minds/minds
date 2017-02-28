@@ -65,6 +65,10 @@ class monetize implements Interfaces\Api
             $e->insert($guid, ['monetized' => true]);
         }
 
+        (new Core\Payments\Plans\PaywallReview())
+            ->setEntityGuid($entity->guid)
+            ->add();
+
         return Factory::response(array());
     }
 
@@ -90,6 +94,10 @@ class monetize implements Interfaces\Api
         foreach ($db->getRow("activity:entitylink:$entity->guid") as $guid => $ts) {
             $e->insert($guid, ['monetized' => false]);
         }
+
+        (new Core\Payments\Plans\PaywallReview())
+            ->setEntityGuid($entity->guid)
+            ->remove();
 
         return Factory::response(array());
     }

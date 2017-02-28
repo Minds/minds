@@ -318,6 +318,16 @@ class newsfeed implements Interfaces\Api
                             }
                 }
 
+                $mature_remind =
+                    ($embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false) || 
+                    (isset($embeded->remind_object['mature']) && $embeded->remind_object['mature']);
+
+                $user = Core\Session::getLoggedInUser();
+                if (!$user->getMatureContent() && $mature_remind) {
+                    $user->setMatureContent(true);
+                    $user->save();
+                }
+
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
                 }
@@ -343,6 +353,12 @@ class newsfeed implements Interfaces\Api
                         $activity->setMature($_POST['mature']);
                     }
 
+                    $user = Core\Session::getLoggedInUser();
+                    if (!$user->getMatureContent() && isset($_POST['mature']) && $_POST['mature']) {
+                        $user->setMatureContent(true);
+                        $user->save();
+                    }
+
                     if (isset($_POST['paywall'])) {
                         $activity->setPayWall($_POST['paywall']);
                     }
@@ -357,6 +373,12 @@ class newsfeed implements Interfaces\Api
                 $activity = new Entities\Activity();
 
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
+
+                $user = Core\Session::getLoggedInUser();
+                if (!$user->getMatureContent() && isset($_POST['mature']) && $_POST['mature']) {
+                    $user->setMatureContent(true);
+                    $user->save();
+                }
 
                 if (isset($_POST['access_id'])) {
                     $activity->access_id = $_POST['access_id'];

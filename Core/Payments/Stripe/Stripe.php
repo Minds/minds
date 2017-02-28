@@ -15,6 +15,7 @@ use Minds\Core\Payments\Merchant;
 use Minds\Core\Payments\Customer;
 use Minds\Core\Payments\PaymentMethod;
 use Minds\Core\Payments\Subscriptions\Subscription;
+use Minds\Core\Payments\Transfers\Transfer;
 use Minds\Entities;
 
 use Stripe as StripeSDK;
@@ -429,5 +430,30 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     public function updateSubscription(Subscription $subscription)
     {
+    }
+
+    /* Transfers */
+
+    public function transfer(Transfer $transfer)
+    {
+        try {
+            $result = StripeSDK\Transfer::create([
+                'amount' => $transfer->getAmount(),
+                'currency' => $transfer->getCurrency(),
+                'destination' => $transfer->getDestination(),
+                'metadata' => $transfer->getSource(),
+                'statement_descriptor' => 'MINDS',
+                'source_type' => $this->config['source_type']
+            ]);
+
+            $transfer->setId($result->id);
+        } catch (StripeSDK\Error\InvalidRequest $e) {
+            // var_dump($e);die;
+            return false;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage()); // :v
+        }
+
+        return $transfer;
     }
 }

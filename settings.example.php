@@ -1,6 +1,8 @@
 <?php
 $CONFIG = Minds\Core\Di\Di::_()->get('Config');
 
+$CONFIG->minds_debug = false;
+
 /*
  * Cassandra configuration
  */
@@ -119,6 +121,12 @@ $CONFIG->set('google', [
     'geolocation' => '{{google-api-key}}',
     'translation' => '{{google-api-key}}',
     'push' => '{{google-api-key}}',
+    'analytics' => [
+        'service_account' => [
+            'key_path' => __DIR__ . '/.auth/analytics.json',
+        ],
+        'ads' => '', // get it from https://ga-dev-tools.appspot.com/account-explorer/
+    ]
 ]);
 
 $CONFIG->set('apple', [
@@ -142,4 +150,30 @@ $CONFIG->set('encryptionKeys', [
         'private' => '{{private-key}}',
         'public' => '{{public-key}}'
     ]
+]);
+
+$CONFIG->set('payouts', [
+    'initialDate' => '2016-11-01',
+    'retentionDays' => 40,
+    'minimumAmount' => 100,
+    'userPercentage' => 0.8
+]);
+
+$CONFIG->set('payments', [
+    'stripe' => [
+        'api_key' => '',
+        'transfers' => [
+            'source_type' => 'bank_account'
+        ]
+    ]
+]);
+
+$CONFIG->set('sandbox', [
+    'enabled' => false,
+    'default' => [
+        'guid' => '',
+    ],
+    'merchant' => [
+        'guid' => '',
+    ],
 ]);

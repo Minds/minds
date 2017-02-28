@@ -5,6 +5,7 @@
 namespace Minds\Core\Data\Cassandra;
 
 use Cassandra as Driver;
+use Minds\Core;
 use Minds\Core\Data\Interfaces;
 use Minds\Core\Config;
 
@@ -13,6 +14,7 @@ class Client implements Interfaces\ClientInterface
     private $cluster;
     private $session;
     private $prepared;
+    protected $debug;
 
     public function __construct(array $options = array())
     {
@@ -23,6 +25,8 @@ class Client implements Interfaces\ClientInterface
            ->withPort(9042)
            ->build();
         $this->session = $this->cluster->connect($options['keyspace']);
+
+        $this->debug = (bool) Core\Di\Di::_()->get('Config')->get('minds_debug');
     }
 
     public function request(Interfaces\PreparedInterface $request, $silent = false)
@@ -40,9 +44,14 @@ class Client implements Interfaces\ClientInterface
               return $response = $future->get();
             }
         }catch(\Exception $e){
-          //var_dump($e); exit;
+            if ($this->debug) {
+                error_log('[CQL Error: ' . get_class($e) . '] ' . $e->getMessage());
+                error_log(json_encode($cql));
+            }
             return false;
         }
+
+        return true;
     }
 
     public function batchRequest($requests = array())

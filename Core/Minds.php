@@ -42,6 +42,8 @@ class Minds extends base
         (new ThirdPartyNetworks\ThirdPartyNetworksProvider())->register();
         (new I18n\I18nProvider())->register();
         (new Storage\StorageProvider())->register();
+        (new Monetization\MonetizationProvider())->register();
+        (new Programs\ProgramsProvider())->register();
     }
 
     /**

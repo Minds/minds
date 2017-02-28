@@ -55,6 +55,20 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'primaryKeys' => ['guid', 'field', 'language'],
             ],
+            'monetization_ledger' => [
+                'schema' => [
+                    'guid' => 'varchar',
+                    'type' => 'varchar',
+                    'user_guid' => 'varchar',
+                    'amount' => 'int',
+                    'status' => 'varchar',
+                    'ts' => 'int',
+                    'service_id' => 'varchar',
+                    'start' => 'int',
+                    'end' => 'int',
+                ],
+                'primaryKeys' => [ 'guid' ]
+            ]
         ];
 
         $client = Data\Client::build('Cassandra', [
@@ -68,6 +82,7 @@ class CassandraProvisioner implements ProvisionerInterface
                 $cqlTableName,
                 $cqlTable['schema'],
                 $cqlTable['primaryKeys'],
+                isset($cqlTable['indexes']) ? $cqlTable['indexes'] : [],
                 isset($cqlTable['attributes']) ? $cqlTable['attributes'] : []
             ));
         }

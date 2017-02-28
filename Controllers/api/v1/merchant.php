@@ -29,6 +29,19 @@ class merchant implements Interfaces\Api
       $response = [];
 
       switch ($pages[0]) {
+        case "status":
+            $merchants = Core\Di\Di::_()->get('Monetization\Merchants');
+            $merchants->setUser(Core\Sandbox::user(Core\Session::getLoggedInUser(), 'merchant'));
+
+            $isMerchant = (bool) $merchants->getId();
+            $canBecomeMerchant = !$merchants->isBanned();
+
+            return Factory::response([
+                'isMerchant' => $isMerchant,
+                'canBecomeMerchant' => $canBecomeMerchant,
+            ]);
+            break;
+
         case "sales":
           $merchant = (new Payments\Merchant)
             ->setId(Core\Session::getLoggedInUser()->getMerchant()['id']);

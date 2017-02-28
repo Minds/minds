@@ -60,6 +60,9 @@ class activity implements Interfaces\Api, Interfaces\ApiAdminPam
                     }
                 }
 
+                // @todo: set user flag for mature content when
+                // stateless entity modifications are introduced
+
                 $response = [ 'done' => (bool) $activity->save() ];
                 break;
         }

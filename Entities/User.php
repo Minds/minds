@@ -12,7 +12,11 @@ class User extends \ElggUser
 {
     protected function initializeAttributes() {
         $this->attributes['mature'] = 0;
+        $this->attributes['mature_content'] = 0;
         $this->attributes['social_profiles'] = [];
+        $this->attributes['ban_monetization'] = 'no';
+        $this->attributes['programs'] = [];
+        $this->attributes['monetization_settings'] = [];
 
         parent::initializeAttributes();
     }
@@ -35,6 +39,26 @@ class User extends \ElggUser
     public function getMature()
     {
       return $this->mature;
+    }
+
+    /**
+     * Sets the `mature_content` flag
+     * @param  bool|int $value
+     * @return $this
+     */
+    public function setMatureContent($value)
+    {
+        $this->mature_content = $value ? 1 : 0;
+        return $this;
+    }
+
+    /**
+     * Gets the `mature_content` flag
+     * @return bool|int
+     */
+    public function getMatureContent()
+    {
+      return $this->mature_content;
     }
 
     /**
@@ -138,6 +162,52 @@ class User extends \ElggUser
     public function getFeatureFlags()
     {
         return $this->feature_flags ?: [];
+    }
+
+    /**
+     * Sets (overrides) programs participations
+     * @return array
+     */
+    public function setPrograms(array $programs)
+    {
+        $this->programs = $programs;
+        return $this;
+    }
+
+    /**
+     * Returns all set programs participations
+     * @return array
+     */
+    public function getPrograms()
+    {
+        if (is_string($this->programs)) {
+            return json_decode($this->programs, true) ?: [];
+        }
+
+        return $this->programs ?: [];
+    }
+
+    /**
+     * Sets (overrides) monetization settings
+     * @return array
+     */
+    public function setMonetizationSettings(array $monetization_settings)
+    {
+        $this->monetization_settings = $monetization_settings;
+        return $this;
+    }
+
+    /**
+     * Returns all set monetization settings
+     * @return array
+     */
+    public function getMonetizationSettings()
+    {
+        if (is_string($this->monetization_settings)) {
+            return json_decode($this->monetization_settings, true) ?: [];
+        }
+
+        return $this->monetization_settings ?: [];
     }
 
     /**

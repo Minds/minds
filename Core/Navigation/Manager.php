@@ -115,6 +115,20 @@ class Manager
                 ->setName('Monetization review')
                 ->setTitle('Monetization review')
                 ->setPath('admin/monetization')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(6)
+                ->setIcon('queue')
+                ->setName('Program applications')
+                ->setTitle('Program applications')
+                ->setPath('admin/programs')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(7)
+                ->setIcon('branding_watermark')
+                ->setName('Payouts queue')
+                ->setTitle('Payouts queue')
+                ->setPath('admin/payouts')
             );
         self::add($admin);
 

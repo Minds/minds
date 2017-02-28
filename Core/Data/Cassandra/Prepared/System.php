@@ -27,7 +27,7 @@ class System implements Interfaces\PreparedInterface
      * @parAM array $primary_keys - $key
      * @return $this
      */
-    public function createTable($table, $columns = [], $primary_keys = [], $attributes = [])
+    public function createTable($table, $columns = [], $primary_keys = [], $indexes = [], $attributes = [])
     {
         $cql = "CREATE TABLE $table";
         $s = [];
@@ -41,7 +41,16 @@ class System implements Interfaces\PreparedInterface
             $cql .= ' WITH ' . implode(' AND ', $attributes);
         }
 
+        if ($indexes) {
+            $cql .= ';';
+
+            foreach ($indexes as $index) {
+                $cql .= "CREATE INDEX ON {$table} ({$index});";
+            }
+        }
+
         $this->template = $cql;
+
         return $this;
     }
     

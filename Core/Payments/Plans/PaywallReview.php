@@ -2,6 +2,7 @@
 namespace Minds\Core\Payments\Plans;
 
 use Minds\Core;
+use Minds\Entities;
 use Minds\Core\Di\Di;
 
 class PaywallReview
@@ -34,18 +35,20 @@ class PaywallReview
           'offset' => ''
         ], $opts);
 
-        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $cql = "SELECT * FROM entities_by_time WHERE key = 'paywall:review' ";
+        $vars = [];
 
-        if ($opts['offset'] && $opts['offset'] != '') {
-            $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review' AND column1 < ?  ORDER BY column1 desc LIMIT ?", [
-              (string) $opts['offset'], 
-              (int) $opts['limit']
-            ]);
-        } else {
-            $query->query("SELECT * FROM entities_by_time WHERE key = 'paywall:review'  ORDER BY column1 desc LIMIT ?", [
-              (int) $opts['limit']
-            ]);
+        if ($opts['offset']) {
+            $cql .= " AND column1 < ? ";
+            $vars[] = $opts['offset'];
         }
+        
+        $cql .= " ORDER BY column1 DESC LIMIT ?";
+        $vars[] = (int) $opts['limit'];
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query($cql, $vars);
+
         try {
             $result = $this->db->request($query);
             $guids = [];
@@ -77,4 +80,42 @@ class PaywallReview
         return $this;
     }
 
+    public function remove()
+    {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query("DELETE FROM entities_by_time
+            WHERE key = 'paywall:review' AND column1 = ?",
+            [
+                (string) $this->entity_guid
+            ]
+        );
+        
+        $result = $this->db->request($query);
+        return $this;
+    }
+
+    public function demonetize()
+    {
+        if (!$this->entity_guid) {
+            throw new \Exception('Invalid entity GUID');
+        }
+
+        $entity = Entities\Factory::build($this->entity_guid);
+
+        if (!$entity || !$entity->type) {
+            throw new \Exception('Invalid entity');
+        }
+
+        if ($entity->subtype == 'blog') {
+            $entity->monetized = false;
+            $entity->save();
+        } else {
+            $entity->paywall = false;
+            $entity->save();
+        }
+
+        $this->remove();
+
+        return true;
+    }
 }
