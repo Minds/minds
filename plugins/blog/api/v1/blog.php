@@ -168,7 +168,7 @@ class blog implements Interfaces\Api
         }
 
         $original_access = $blog->access_id;
-        $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature');
+        $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature', 'monetized');
 
         foreach ($allowed as $v) {
             if (isset($_POST[$v])) {
@@ -176,8 +176,30 @@ class blog implements Interfaces\Api
             }
         }
 
-        if (isset($_POST['mature'])) {
-            //$blog->setMature($_POST['mature']);
+        if ($blog->monetized && $blog->mature) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Cannot monetize an explicit blog'
+            ]);
+        }
+
+        if ($blog->monetized && !Core\Session::isAdmin()) {
+            $merchant = Core\Session::getLoggedInUser()->getMerchant();
+
+            if (!$merchant || !isset($merchant['id'])) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'User is not a merchant'
+                ]);
+            }
+        }
+
+        if (isset($_POST['mature']) && $_POST['mature']) {
+            $user = Core\Session::getLoggedInUser();
+            if (!$user->getMatureContent()) {
+                $user->setMatureContent(true);
+                $user->save();
+            }
         }
 
         if (!$blog->canEdit()) {
@@ -204,6 +226,12 @@ class blog implements Interfaces\Api
         }
 
         $response['guid'] = (string) $blog->guid;
+
+        if ($blog->monetized) {
+            (new Core\Payments\Plans\PaywallReview())
+              ->setEntityGuid($blog->guid)
+              ->add();
+        }
 
         $activity_post = false;
         if ((!isset($pages[0]) || $pages[0] == "new") && $blog->access_id == 2) {

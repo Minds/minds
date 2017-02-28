@@ -122,6 +122,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                     $image->setFlag('mature', $mature);
                 }
 
+                $user = Core\Session::getLoggedInUser();
+                if (!$user->getMatureContent() && $mature) {
+                    $user->setMatureContent(true);
+                    $user->save();
+                }
+
                 $image->owner_guid = $owner_guid;
 
                 if ($container_guid && is_numeric($container_guid)) {
@@ -177,6 +183,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                           $video->setFlag('mature', $mature);
                       }
 
+                      $user = Core\Session::getLoggedInUser();
+                      if (!$user->getMatureContent() && $mature) {
+                          $user->setMatureContent(true);
+                          $user->save();
+                      }
+
                       $video->owner_guid = $owner_guid;
 
                       if ($container_guid && is_numeric($container_guid)) {
@@ -204,6 +216,12 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($entity instanceof \Minds\Interfaces\Flaggable) {
             $mature = isset($_POST['mature']) && !!$_POST['mature'];
             $entity->setFlag('mature', $mature);
+
+            $user = Core\Session::getLoggedInUser();
+            if (!$user->getMatureContent() && $mature) {
+                $user->setMatureContent(true);
+                $user->save();
+            }
         }
 
         //need a better check for if this was a mobile post.

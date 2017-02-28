@@ -31,7 +31,8 @@ export class BlogEdit {
     access_id: 2,
     license: 'attribution-sharealike-cc',
     fileKey: 'header',
-    mature: 0
+    mature: 0,
+    monetized: 0,
   };
   banner : any;
   banner_top : number = 0;
@@ -66,7 +67,8 @@ export class BlogEdit {
           access_id: 2,
           license: 'all-rights-reserved',
           fileKey: 'header',
-          mature: 0
+          mature: 0,
+          monetized: 0,
         };
 
         this.banner = void 0;
@@ -150,4 +152,17 @@ export class BlogEdit {
     });
   }
 
+  toggleMonetized() {
+    if (this.blog.mature) {
+      return;
+    }
+
+    this.blog.monetized = this.blog.monetized ? 0 : 1;
+  }
+
+  checkMonetized() {
+    if (this.blog.mature) {
+      this.blog.monetized = 0;
+    }
+  }
 }

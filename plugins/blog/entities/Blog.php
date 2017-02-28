@@ -101,6 +101,7 @@ class Blog extends \ElggObject
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['mature'] = (bool) $export['mature'];
+        $export['monetized'] = (bool) $export['monetized'];
         return $export;
     }
 }

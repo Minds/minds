@@ -38,7 +38,7 @@
       </select>
     </div>
     <div class="m-mature-info">
-      <a class="mdl-color-text--blue-grey-300 m-capture-mature" (click)="blog.mature = blog.mature ? 0 : 1">
+      <a class="mdl-color-text--blue-grey-300 m-capture-mature" (click)="blog.mature = blog.mature ? 0 : 1; checkMonetized()">
         <i class="material-icons"
         [ngClass]="{ 'mdl-color-text--red-500': blog.mature }"
         title="Mature content"
@@ -46,6 +46,16 @@
         >explicit</i>
         
         <span [ngClass]="{ 'mdl-color-text--red-500': blog.mature }">{{ blog.mature ? 'Mature content' : 'Anyone' }}</span>
+      </a>
+    </div>
+    <div class="m-monetization-info" *ngIf="session.getLoggedInUser().merchant?.id">
+      <a class="mdl-color-text--blue-grey-300 m-blog-monetize" (click)="toggleMonetized()">
+        <i class="material-icons"
+        [ngClass]="{ 'mdl-color-text--green-500': blog.monetized }"
+        title="Monetize"
+        >attach_money</i>
+        
+        <span [ngClass]="{ 'mdl-color-text--green-500': blog.monetized }">{{ blog.monetized ? 'Monetized' : '' }}</span>
       </a>
     </div>
   </div>
