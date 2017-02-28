@@ -31,7 +31,11 @@ class S3 implements ServiceInterface
         $this->s3 = S3Client::factory([
           'key' => Config::_()->aws['key'],
           'secret' => Config::_()->aws['secret'],
-          'region' => 'us-east-1'
+          'region' => 'us-east-1',
+          'curl.options' => [
+            CURLOPT_CONNECTTIMEOUT => 1, //if we don't connect in 1 second
+            CURLOPT_TIMEOUT => 120 //if the request takes longer than 2 minutes (120 seconds)
+          ]
         ]);
 
         $this->filepath = $path;
@@ -44,7 +48,7 @@ class S3 implements ServiceInterface
 
     public function write($data)
     {
-
+        
         //TODO: check mime performance here
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($data);
@@ -70,7 +74,6 @@ class S3 implements ServiceInterface
 
     public function read($length = 0)
     {
-
         switch ($this->mode) {
             case "read-uri":
                 $url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
@@ -97,9 +100,9 @@ class S3 implements ServiceInterface
                     return $content;
                 }*/
 
-                //$url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
-                $this->filepath = str_replace('//', '/', $this->filepath);
-                $url = Config::_()->aws['cloudfront'] . $this->filepath;
+                $url = $this->s3->getObjectUrl(Config::_()->aws['bucket'], $this->filepath, "+15 minutes");
+                //$this->filepath = str_replace('//', '/', $this->filepath);
+                //$url = Config::_()->aws['cloudfront'] . $this->filepath;
                 header("Location: $url");
                 exit;
         }
