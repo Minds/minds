@@ -78,7 +78,7 @@ class boost implements Interfaces\Api
 
               $config = array_merge([
                   'network' => [
-                      'min' => 100,
+                      'min' => 200,
                       'max' => 5000,
                   ],
               ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
