@@ -41,6 +41,15 @@ class Manager
         return $this->user;
     }
 
+    public function refreshUser()
+    {
+        if (!$this->user) {
+            return;
+        }
+
+        $this->setUser(new Entities\User($this->user->guid, false));
+    }
+
     public function apply($program, array $data = [])
     {
         if (!$this->user) {

@@ -62,6 +62,12 @@ class ads extends Controller implements Interfaces\Api
             case 'status':
                 $isParticipant = $programs->isParticipant('ads');
 
+                // Avoid cached status fields
+                if (!$isParticipant) {
+                    $programs->refreshUser();
+                    $isParticipant = $programs->isParticipant('ads');
+                }
+
                 return Factory::response([
                     'isMerchant' => $isMerchant,
                     'canBecomeMerchant' => $canBecomeMerchant,

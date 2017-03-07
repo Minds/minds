@@ -31,6 +31,15 @@ class Merchants
         return $this->user;
     }
 
+    public function refreshUser()
+    {
+        if (!$this->user) {
+            return;
+        }
+
+        $this->setUser(new Entities\User($this->user->guid, false));
+    }
+
     public function getId()
     {
         if (!$this->user) {
