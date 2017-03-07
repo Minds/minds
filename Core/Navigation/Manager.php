@@ -129,6 +129,13 @@ class Manager
                 ->setName('Payouts queue')
                 ->setTitle('Payouts queue')
                 ->setPath('admin/payouts')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(8)        
+	        ->setIcon('star')
+                ->setName('Featured')
+                ->setTitle('Featured')
+                ->setPath('admin/featured')
             );
         self::add($admin);
 

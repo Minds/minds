@@ -45,6 +45,15 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'primaryKeys' => ['guid', 'metric'],
             ],
+            'categories' => [
+                'schema' => [
+                    'type' => 'varchar',
+                    'category' => 'varchar',
+                    'filter' => 'varchar',
+                    'guid' => 'varchar',
+                ],
+                'primaryKeys' => ['type', 'category', 'filter', 'guid'],
+            ],
             'translations' => [
                 'schema' => [
                     'guid' => 'varchar',
