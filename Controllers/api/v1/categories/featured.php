@@ -31,6 +31,9 @@ class featured implements Interfaces\Api
         }
 
         switch($pages[0]){
+          case "object":
+              $repository->setType($pages[1]);
+              break;
           case "channel":
           case "channels":
           case "user":
