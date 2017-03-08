@@ -24,8 +24,17 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         $suggestions = (new Documents())->suggestQuery($_GET['q']);
+        $results = $suggestions['suggestion'][0]['options'];
+        $guids = [];
 
-        $response['suggestions'] = $suggestions['suggestion'][0]['options'];
+        foreach ($results as $result) {
+            $guids[] = $result['payload']['guid'];            
+        }
+        
+        $response['suggestions'] = Factory::exportable(Core\Entities::get([
+            'guids' => $guids
+        ]));
+
         return Factory::response($response);
     }
 
