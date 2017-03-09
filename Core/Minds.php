@@ -44,6 +44,7 @@ class Minds extends base
         (new Storage\StorageProvider())->register();
         (new Monetization\MonetizationProvider())->register();
         (new Programs\ProgramsProvider())->register();
+        (new Wire\WireProvider())->register();
     }
 
     /**
