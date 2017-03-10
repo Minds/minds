@@ -27,8 +27,7 @@ class stripe implements Interfaces\Api
 
       switch ($pages[0]) {
         case "token":
-          $gateway = isset($pages[1]) ? $pages[1] : 'default';
-          $response['token'] = Payments\Factory::build('braintree', ['gateway'=>$gateway])->getToken();
+          $response['token'] = Core\Config::_()->get('payments')['stripe']['public_key']
           break;
       }
 
@@ -37,50 +36,7 @@ class stripe implements Interfaces\Api
 
     public function post($pages)
     {
-        $response = array();
-
-        switch ($pages[0]) {
-          case "charge":
-            $amount = $_POST['amount'];
-            $fee = $amount * 0.05 + 0.30; //5% + $.30
-
-            if (!isset($_POST['merchant'])) {
-                $merchant = Core\Session::getLoggedInUser();
-            }
-
-            $sale = (new Payments\Sale())
-              ->setAmount($amount)
-              ->setMerchant($merchant)
-              ->setFee($fee)
-              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
-              ->setNonce($_POST['nonce']);
-
-            try {
-                $result = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
-            } catch (\Exception $e) {
-                $response['status'] = "error";
-                $response['message'] = $e->getMessage();
-            }
-
-            break;
-          case "charge-master":
-            $amount = $_POST['amount'];
-
-            $sale = (new Payments\Sale())
-              ->setAmount($amount)
-              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
-              ->setSettle(true)
-              ->setFee(0)
-              ->setNonce($_POST['nonce']);
-
-            try {
-                $result = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->setSale($sale);
-            } catch (\Exception $e) {
-                $response['status'] = "error";
-                $response['message'] = $e->getMessage();
-            }
-            break;
-        }
+        $response = [];
 
         return Factory::response($response);
     }
