@@ -106,9 +106,16 @@ export class BlogEdit {
   save(){
     if(!this.canSave)
       return;
+
+    const blog = Object.assign({}, this.blog);
+
+    // only allowed props
+    blog.mature = blog.mature ? 1 : 0;
+    blog.monetization = blog.monetization ? 1 : 0;
+
     this.canSave = false;
     this.check_for_banner().then(() =>{
-      this.upload.post('api/v1/blog/' + this.guid, [this.banner], this.blog)
+      this.upload.post('api/v1/blog/' + this.guid, [this.banner], blog)
         .then((response : any) => {
           this.router.navigate(['/blog/view', response.guid]);
           this.canSave = true;
@@ -120,7 +127,10 @@ export class BlogEdit {
     .catch(() => {
       this.client.post('api/v1/blog/' + this.guid, this.blog)
         .then((response : any) => {
-          this.router.navigate(['/blog/view', response.guid]);
+          if (response.guid) {
+            this.router.navigate(['/blog/view', response.guid]);
+          }
+
           this.canSave = true;
         })
         .catch((e) => {
