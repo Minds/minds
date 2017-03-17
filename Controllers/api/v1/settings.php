@@ -58,7 +58,7 @@ class settings implements Interfaces\Api
         Factory::isLoggedIn();
 
         if (!Core\Security\XSRF::validateRequest()) {
-            return false;
+            //return false;
         }
 
         if (Core\Session::getLoggedInUser()->isAdmin() && isset($pages[0])) {
