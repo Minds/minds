@@ -11,7 +11,9 @@ class Factory
     {
         switch (ucfirst($method)) {
           case "Points":
-            return Di::_()->get('Wire\Method\Points');
+              return Di::_()->get('Wire\Method\Points');
+          case "Money":
+               return Di::_()->get('Wire\Method\Money');
           default:
             throw new \Exception("Method not found");
         }

@@ -27,7 +27,7 @@ class stripe implements Interfaces\Api
 
       switch ($pages[0]) {
         case "token":
-          $response['token'] = Core\Config::_()->get('payments')['stripe']['public_key']
+          $response['token'] = Core\Config::_()->get('payments')['stripe']['public_key'];
           break;
       }
 

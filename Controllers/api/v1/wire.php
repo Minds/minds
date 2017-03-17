@@ -65,7 +65,7 @@ class wire implements Interfaces\Api
         try{
             $service->setAmount($amount)
               ->setEntity($entity)
-              ->setPayload($_GET['payload'])
+              ->setPayload((array) $_POST['payload'])
               ->execute();
 
             //save the wire entity
@@ -83,6 +83,7 @@ class wire implements Interfaces\Api
         } catch (\Exception $e) {
             $response['status'] = 'error';
             $respone['message'] = $e->getMessage();
+            var_dump($e); exit;
         }
 
         return Factory::response($response);

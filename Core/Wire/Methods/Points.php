@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Wire\Methods;
 
+use Minds\Core;
 use Minds\Helpers;
 
 class Points implements MethodInterface
@@ -30,6 +31,7 @@ class Points implements MethodInterface
 
     public function execute()
     {
+        Helpers\Wallet::createTransaction(Core\Session::getLoggedInUserGuid(), -$this->amount, $this->entity->guid, "Wire");
         $this->id = Helpers\Wallet::createTransaction($this->entity->owner_guid, $this->amount, $this->entity->guid, "Wire");
     }
 
