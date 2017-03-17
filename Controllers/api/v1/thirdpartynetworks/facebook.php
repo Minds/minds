@@ -290,7 +290,7 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 }
             }
         }
-
+        unlink("/tmp/fb-" . md5($url));
         return time();
     }
 }
