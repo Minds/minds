@@ -39,7 +39,6 @@ class banners implements Interfaces\FS
                 $f->setFilename("banners/{$carousels[0]->guid}.jpg");
                 $f->open('read');
                 $content = $f->read();
-                var_dump($content); exit;
                 if (!$content) {
                     $filepath =  Core\Config::build()->dataroot . 'carousel/' . $carousels[0]->guid . $size;
                     $f = Core\Di\Di::_()->get('Storage')->open($filepath, 'read'); 
