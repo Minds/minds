@@ -53,12 +53,14 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
                             $file->setFilename($entity->filename);
                         }
 
-                        if (isset($pages[2])  && $size = $pages[2]) {
+                        if (isset($pages[2])  && $size = $pages[2] && !$entity->gif) {
                             if (!isset($entity->batch_guid)) {
                                 $entity->batch_guid = $this->container_guid;
                             }
 
                             $file->setFilename("/image/$entity->batch_guid/$entity->guid/$size.jpg");
+                        } elseif ($entity->gif) {
+                            $file->setFilename(str_replace('xlarge.jpg', 'master.jpg', $entity->filename));
                         }
                         break;
                     case 'album':
