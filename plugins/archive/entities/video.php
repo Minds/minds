@@ -141,7 +141,8 @@ class video extends object
           'thumbnail',
                 'cinemr_guid',
                 'license',
-                'monetized'
+                'monetized',
+                'mature'
             ));
     }
 

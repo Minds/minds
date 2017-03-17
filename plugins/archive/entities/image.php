@@ -164,7 +164,8 @@ class image extends Entities\File
         return array_merge(parent::getExportableValues(), array(
         'thumbnail',
                 'cinemr_guid',
-                'license'
+                'license',
+                'mature'
             ));
     }
 
