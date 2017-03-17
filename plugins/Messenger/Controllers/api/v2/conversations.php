@@ -58,7 +58,7 @@ class conversations implements Interfaces\Api
             $blocked = false;
             $unavailable = false;
 
-            if (is_array($response['participants'])) {
+            if (is_array($response['participants']) && false) {
                 foreach ($response['participants'] as $participant) {
                     if (!Security\ACL::_()->interact(Core\Session::getLoggedInUser(), $participant['guid'])) {
                         $blocked = true;
@@ -111,6 +111,7 @@ class conversations implements Interfaces\Api
         if (!$offset || isset($_GET['access_token'])) {
             //return the public keys
             $response['publickeys'] = [];
+            $response['publickeys'][Session::getLoggedInUserGuid()] = $keystore->setUser(Core\Session::getLoggedInUser())->getPublicKey();
             foreach ($conversation->getParticipants() as $participant_guid) {
                 if ($participant_guid == Session::getLoggedInUserGuid()) {
                     continue;
