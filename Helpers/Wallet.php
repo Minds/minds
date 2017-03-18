@@ -3,6 +3,7 @@ namespace Minds\Helpers;
 
 use Minds\Core;
 use Minds\Entities;
+use Minds\Core\Sockets;
 
 /**
  * Helper for Wallet operations
@@ -28,6 +29,13 @@ class Wallet
             ->save();
 
         Counters::increment($user_guid, 'points', $points);
+
+        try {
+            (new Sockets\Events())
+            ->setRoom("live:{$user_guid}")
+            ->emit('pointsTx', (int) $points, (string) $entity_guid, $description);
+        } catch (\Exception $e) { /* TODO: To log or not to log */
+        }
     }
 
     /**
