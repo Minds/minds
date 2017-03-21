@@ -31,6 +31,9 @@ class Points implements MethodInterface
 
     public function execute()
     {
+        if ($this->amount > (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false)) {
+            throw new \Exception('Not enough points');
+        }
         Helpers\Wallet::createTransaction(Core\Session::getLoggedInUserGuid(), -$this->amount, $this->entity->guid, "Wire");
         $this->id = Helpers\Wallet::createTransaction($this->entity->owner_guid, $this->amount, $this->entity->guid, "Wire");
     }
