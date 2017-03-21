@@ -212,7 +212,7 @@ class blog implements Interfaces\Api
         $blog->save();
 
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $resized = get_resized_image_from_uploaded_file('file', 2000);
+            $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
             $file = new \ElggFile();
             $file->owner_guid = $blog->owner_guid;
             $file->setFilename("blog/{$blog->guid}.jpg");
@@ -269,7 +269,7 @@ class blog implements Interfaces\Api
         }
 
         if (is_uploaded_file($_FILES['header']['tmp_name'])) {
-            $resized = get_resized_image_from_uploaded_file('header', 2000);
+            $resized = get_resized_image_from_uploaded_file('header', 2000, 10000);
             $file = new \ElggFile();
             $file->owner_guid = $blog->owner_guid;
             $file->setFilename("blog/{$blog->guid}.jpg");
