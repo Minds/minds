@@ -47,6 +47,19 @@ class entity implements Interfaces\Api
                 if ($entity->type == "object") {
                     $response['entity']['thumbnail_src'] = $entity->getIconUrl();
                     $response['entity']['perma_url'] = $entity->getURL();
+
+                    $db = new Core\Data\Call('entities_by_time');
+                    $cacher = Core\Data\cache\factory::build();
+
+                    $cached = $cacher->get("comments:count:{$entity->guid}");
+                    if ($cached !== false) {
+                        $count = $cached;
+                    } else {
+                        $count = $db->countRow("comments:{$entity->guid}");
+                        $cacher->set("comments:count:{$entity->guid}", $count);
+                    }
+
+                    $response['entity']['comments:count'] = $count;
                 }
             }
         }
