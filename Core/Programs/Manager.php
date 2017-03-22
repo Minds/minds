@@ -72,6 +72,7 @@ class Manager
 
         Core\Events\Dispatcher::trigger('notification', 'program', [
             'to'=> [ $this->user->guid ],
+            'from' => 100000000000000519,
             'notification_view' => 'program_queued',
             'params' => [ 'guid' => $optInRequest->getGuid(), 'program' => $optInRequest->getProgram() ]
         ]);
@@ -101,6 +102,7 @@ class Manager
 
         Core\Events\Dispatcher::trigger('notification', 'program', [
             'to'=> [ $optInRequest->getFrom()['guid'] ],
+            'from' => 100000000000000519,
             'notification_view' => 'program_accepted',
             'params' => [ 'guid' => $optInRequest->getGuid(), 'program' => $optInRequest->getProgram() ]
         ]);
@@ -117,6 +119,7 @@ class Manager
 
         Core\Events\Dispatcher::trigger('notification', 'program', [
             'to'=> [ $optInRequest->getFrom()['guid'] ],
+            'from' => 100000000000000519,
             'notification_view' => 'program_declined',
             'params' => [ 'guid' => $optInRequest->getGuid(), 'program' => $optInRequest->getProgram() ]
         ]);

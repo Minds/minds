@@ -141,6 +141,7 @@ class Payouts
 
         Core\Events\Dispatcher::trigger('notification', 'payout', [
             'to'=> [ $this->user ],
+            'from' => 100000000000000519,
             'notification_view' => 'payout_queued',
             'params' => [ 'guid' => $guid, 'amount' => (float) ($amount / 100) ]
         ]);
@@ -217,6 +218,7 @@ class Payouts
 
             Core\Events\Dispatcher::trigger('notification', 'payout', [
                 'to'=> [ $payout['user_guid'] ],
+                'from' => 100000000000000519,
                 'notification_view' => 'payout_accepted',
                 'params' => [ 'guid' => $guid, 'amount' => (float) ($payout['amount'] / 100) ]
             ]);
@@ -243,6 +245,7 @@ class Payouts
 
             Core\Events\Dispatcher::trigger('notification', 'payout', [
                 'to' => [ $payout['user_guid'] ],
+                'from' => 100000000000000519,
                 'notification_view' => 'payout_declined',
                 'params' => [ 'guid' => $guid, 'amount' => (float) ($payout['amount'] / 100) ]
             ]);
