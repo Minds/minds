@@ -217,6 +217,20 @@ class Documents
       ]);
   }
 
+  public function customQuery($opts = [])
+  {
+
+      if (!$opts || empty($opts)) {
+          return [];
+      }
+
+      try {
+          return $this->client->search($opts);
+      } catch (\Exception $e) {
+          return [];
+      }
+  }
+
   /**
    * Formats a document for storing
    * @param  array $data

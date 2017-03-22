@@ -39,7 +39,7 @@ class Defaults
             $export = $event->response() ?: [];
             $cacher = Core\Data\cache\factory::build();
 
-            if ($params['entity']->type != 'activity') {
+            if ($params['entity']->type != 'activity' || !$params['entity']->showCommentsCount) {
                 return false;
             }
 
