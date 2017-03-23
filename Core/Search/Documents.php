@@ -259,7 +259,7 @@ class Documents
         $body['suggest'] = [
           'input' => array_values($inputs),
           'output' => "@{$body['username']}",
-          'weight' => 1,
+          'weight' => count(array_values($inputs)) == 1 ? 2 : 2,
           'payload' => [
             'guid' => $body['guid'],
             'name' => $body['name'],
