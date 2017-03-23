@@ -27,13 +27,17 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
         $results = $suggestions['suggestion'][0]['options'];
         $guids = [];
 
-        foreach ($results as $result) {
-            $guids[] = $result['payload']['guid'];            
+        if (isset($_GET['access_token'])) {
+            foreach ($results as $result) {
+                $guids[] = $result['payload']['guid'];            
+            }
+            
+            $response['suggestions'] = Factory::exportable(Core\Entities::get([
+                'guids' => $guids
+            ]));
+        } else {
+            $response['suggestions'] = $suggestions['suggestion'][0]['options'];
         }
-        
-        $response['suggestions'] = Factory::exportable(Core\Entities::get([
-            'guids' => $guids
-        ]));
 
         return Factory::response($response);
     }
