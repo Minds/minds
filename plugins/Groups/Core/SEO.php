@@ -19,6 +19,10 @@ class SEO
             $guid = $slugs[0];
             $group = EntitiesFactory::build($guid);
 
+            if (!$group) {
+                return;
+            }
+
             if (!$group->getName()) {
                 return [];
             }
