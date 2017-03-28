@@ -122,6 +122,7 @@ class ads extends Controller implements Interfaces\Api
 
         $programs = Core\Di\Di::_()->get('Programs\Manager');
         $programs->setUser(Core\Sandbox::user($currentUser, 'merchant'));
+        $programs->refreshUser(); //need to latest data here everytime
 
         switch ($pages[0]) {
             case 'settings':
