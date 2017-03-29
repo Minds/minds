@@ -393,7 +393,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $body = $req['body'];
                 fwrite($fp, $body);
                 fclose($fp);
-                
+
                 $file = new \ElggFile(); //only using for legacy reasons
                 $file->setFilename("/image/$image->batch_guid/$image->guid/master.jpg");
                 $file->open('write');
@@ -403,6 +403,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $loc = $image->getFilenameOnFilestore();
                 $image->createThumbnails(null, "/tmp/{$image->guid}-master.jpg");
                 $image->save();
+                unlink("/tmp/{$image->guid}-master.jpg");
         }
 
         return Factory::response(array('guid'=>$guid, "location"=>$loc));
