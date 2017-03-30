@@ -22,30 +22,37 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiIgnorePam
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
         $timestamps = Core\Analytics\Timestamps::span(1, 'day');
 
-        $opts = [
-            'index' => 'minds',
-            'type' => 'activity',
-            'search_type' => 'count',
-            'body' => [
-                'query' => [
-                    'range' => [
-                        'time_created' => [
-                            'gte' => $timestamps[0]
+        $cache = Core\Di\Di::_()->get('Cache');
+        if ($cached = $cache->get('trending:hashtags')) {
+            $result = json_decode($cached, true);
+        } else {
+            $opts = [
+                'index' => 'minds',
+                'type' => 'activity',
+                'search_type' => 'count',
+                'body' => [
+                    'query' => [
+                        'range' => [
+                            'time_created' => [
+                                'gte' => $timestamps[0]
+                             ]
                          ]
-                     ]
-                ],
-                'aggs' => [
-                    'minds' => [
-                        'terms' => [
-                            'field' => "hashtags",
-                            'size' => $limit
+                    ],
+                    'aggs' => [
+                        'minds' => [
+                            'terms' => [
+                                'field' => "hashtags",
+                                'size' => $limit
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ];
+            ];
 
-        $result = (new Documents())->customQuery($opts);
+            $result = (new Documents())->customQuery($opts);
+            $cache->set('trending:hashtags', json_encode($result));
+        }        
+
         if($result){
             $tags = [];
 
