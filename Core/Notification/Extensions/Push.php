@@ -40,13 +40,58 @@ class Push implements Interfaces\NotificationExtensionInterface
             return false;
         }
         error_log($notification['params']['notification_view']);
+
+        $entity = $notification['notification']->getEntity();
+
+        $entity_guid = '';
+        $entity_type = 'object';
+        $child_guid = '';
+        $parent_guid = '';
+
+        if (method_exists($entity, 'getGuid')) {
+            $entity_guid = $entity->getGuid();
+        } elseif (isset($entity->guid)) {
+            $entity_guid = $entity->guid;
+        }
+
+        if (isset($entity->parent_guid)) {
+            $parent_guid = $entity->parent_guid;
+        }
+
+        if (isset($entity->entity_guid)) {
+            $child_guid = $entity->entity_guid;
+        }
+
+        if (method_exists($entity, 'getType')) {
+            $entity_type = $entity->getType();
+        } elseif (isset($entity->type)) {
+            $entity_type = $entity->type;
+        }
+
+        if (method_exists($entity, 'getSubtype') && $entity->getSubtype()) {
+            $entity_type .= ':' . $entity->getSubtype();
+        } elseif (isset($entity->subtype) && $entity->subtype) {
+            $entity_type .= ':' . $entity->subtype;
+        }
+
+        if (!$entity_guid && isset($notification['params']['entity_guid'])) {
+            $entity_guid = $notification['params']['entity_guid'];
+            $child_guid = '';
+            $entity_type = '';
+            $parent_guid = '';
+        }
+
         return QueueClient::build()
             ->setExchange($notification['exchange'])
             ->setQueue($notification['queue'])
             ->send([
                 'user_guid' => $notification['to']->guid,
-                'message' => static::buildNotificationMesage($notification),
+                'entity_guid' => $entity_guid,
+                'child_guid' => $child_guid,
+                'entity_type' => $entity_type,
+                'parent_guid' => $parent_guid,
                 'type' => $notification['params']['notification_view'],
+                'message' => static::buildNotificationMesage($notification),
                 'uri' => $notification['uri']
             ]);
     }
@@ -132,6 +177,11 @@ class Push implements Interfaces\NotificationExtensionInterface
             case 'boost_completed':
                 $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $notification['params']['title']);
                 break;
+
+            case 'group_invite':
+                $message = sprintf('%s invited you to %s', $name, $notification['params']['group']['name']);
+                break;
+
             default:
                 $message = "";
 

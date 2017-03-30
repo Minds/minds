@@ -66,6 +66,19 @@ class Push implements Interfaces\QueueRunner
                            return false;
                        }
 
+                       if (!isset($data['json']) || !$data['json']) {
+                           $data['json'] = [];
+                       }
+
+                       $data['json'] = array_merge([
+                           'user_guid' => (string) $data['user_guid'],
+                           'entity_guid' => (string) $data['entity_guid'],
+                           'child_guid' => (string) $data['child_guid'],
+                           'entity_type' => $data['entity_type'],
+                           'parent_guid' => (string) $data['parent_guid'],
+                           'type' => $data['type'],
+                       ], $data['json']);
+
                        $message = Surge\Messages\Factory::build($user->surge_token)
                           ->setTitle($data['message'])
                           ->setMessage($data['message'])
