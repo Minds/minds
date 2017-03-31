@@ -17,7 +17,13 @@ class Client extends \Elasticsearch\Client
         }
 
         $opts = array_merge([
-          'hosts' => $hosts
+            'hosts' => $hosts,
+            'guzzleOptions' => [
+                'command.request_options' => [
+                    'connect_timeout' => 1, //1 second connect
+                    'timeout' => 2 //2 second download
+                 ]
+             ]
         ], $opts);
 
         parent::__construct($opts);
