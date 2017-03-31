@@ -5,7 +5,9 @@
 namespace Minds\Core\Security\ACL;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
+use Minds\Core\Data\Cassandra;
 
 class Block
 {
@@ -13,19 +15,11 @@ class Block
     private $db;
     private $cacher;
 
-    public function __construct($db = null, $cacher = null)
+    public function __construct($db = null, $cql = null, $cacher = null)
     {
-        if ($db) {
-            $this->db = $db;
-        } else {
-            $this->db = new Core\Data\Call('entities_by_time');
-        }
-
-        if ($cacher) {
-            $this->cacher = $cacher;
-        } else {
-            $this->cacher = Core\Data\cache\factory::build();
-        }
+        $this->db = $db ?: Di::_()->get('Database\Cassandra\Indexes');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->cacher = $cacher ?: Core\Data\cache\factory::build();
     }
 
     public function setDb($db)
@@ -60,11 +54,11 @@ class Block
 
     /**
      * Check if a user is blocked
-     * @param Entities\User $user - check if this user is blocked
+     * @param mixed (Entities\User | array[Entities\User]) $user - check if this user is blocked
      * @param mixed (Entities\User | string) - from this user
      * @return boolean
      */
-    public function isBlocked($user, $from = null)
+    public function isBlocked($users, $from = null)
     {
         if (!$from) {
             $from = Core\Session::getLoggedinUser();
@@ -74,16 +68,41 @@ class Block
             $from = $from->guid;
         }
 
-        if ($user instanceof Entities\User) {
-            $user = $user->guid;
+        $user_guids = [];
+        if (is_array($users)) {
+            foreach ($users as $user) {
+                if ($users instanceof Entities\User) {
+                    $user_guids[] = (string) $user->guid;
+                } else {
+                    $user_guids[] = (string) $user;
+                }
+            }
         }
 
+        if ($users instanceof Entities\User) {
+            $user_guids[] = (string) $users->guid;
+        }
 
         if (is_object($from)) { // Unlikely to be an user, and we cannot block anything that's not an user (yet)
             return false;
         }
 
-        $list = $this->getBlockList($from, 1, $user);
+        $prepared = new Cassandra\Prepared\Custom();
+        $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
+            ->create(... $user_guids);
+        $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
+          [ "acl:blocked:$from", $collection, 1000 ]);
+
+        $list = [];
+        $result = $this->cql->request($prepared);
+        foreach ($result as $item) {
+            $list[] = $item['column1'];
+        }
+
+        if (is_array($users) ){
+            return $list;
+        }
+
         if (isset($list[0]) && $list[0] == $user) {
             return true;
         }
