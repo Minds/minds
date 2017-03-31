@@ -40,6 +40,8 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	protected $volatile = array();
 
+    protected $_context = 'default';
+
 	/**
 	 * Initialize the attributes array.
 	 *
@@ -1378,6 +1380,18 @@ abstract class ElggEntity extends ElggData implements
 		$export = \Minds\Helpers\Export::sanitize($export);
 		return $export;
 	}
+
+    public function context($context = 'default') {
+        $this->_context = $context;
+    }
+
+    public function getContext() {
+        return $this->_context;
+    }
+
+    public function isContext($context) {
+        return $this->getContext() == $context;
+    }
 
 	/*
 	 * IMPORTABLE INTERFACE

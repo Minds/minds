@@ -17,6 +17,7 @@ class User extends \ElggUser
         $this->attributes['ban_monetization'] = 'no';
         $this->attributes['programs'] = [];
         $this->attributes['monetization_settings'] = [];
+        $this->attributes['group_membership'] = [];
 
         parent::initializeAttributes();
     }
@@ -211,6 +212,29 @@ class User extends \ElggUser
     }
 
     /**
+     * Sets (overrides) group membership
+     * @return array
+     */
+    public function setGroupMembership(array $group_membership)
+    {
+        $this->group_membership = $group_membership;
+        return $this;
+    }
+
+    /**
+     * Returns all set group membership
+     * @return array
+     */
+    public function getGroupMembership()
+    {
+        if (is_string($this->group_membership)) {
+            return json_decode($this->group_membership, true) ?: [];
+        }
+
+        return $this->group_membership ?: [];
+    }
+
+    /**
      * Subscribes user to another user
      * @param  mixed  $guid
      * @param  array  $data - metadata
@@ -383,6 +407,10 @@ class User extends \ElggUser
 
         if (is_string($export['feature_flags'])) {
             $export['feature_flags'] = json_decode($export['feature_flags']);
+        }
+
+        if ($this->isContext('search')) {
+            $export['group_membership'] = $this->getGroupMembership();
         }
 
         return $export;

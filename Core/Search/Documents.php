@@ -255,9 +255,15 @@ class Documents
           } elseif (is_numeric($value)) {
               $value = (string) $value;
           } elseif (is_object($value) || is_array($value)) {
-              unset($data[$item]);
-              continue;
-              $value = $this->formatDocumentBody($value->export(), $call);
+              if ($item !== 'group_membership') {
+                unset($data[$item]);
+                continue;
+              }
+              $value = $this->formatDocumentBody(
+                method_exists($value, 'export') ?
+                $value->export() :
+                (array) $value
+              , $call);
           }
 
           $item = str_replace('.', '__', $item);
@@ -325,5 +331,18 @@ class Documents
       }
 
       return implode(' ', $body);
+  }
+
+  public static function escapeQuery($query = '')
+  {
+    $query = (string) $query;
+    $query = str_replace(['<', '>'], '', $query);
+
+    $reservedChars = str_split('\+-=&|><!(){}[]^"~*?:/'); // backslash always first
+    foreach ($reservedChars as $reservedChar) {
+        $query = str_replace($reservedChar, '\\' . $reservedChar, $query);
+    }
+
+    return $query;
   }
 }
