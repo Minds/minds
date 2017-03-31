@@ -16,13 +16,13 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     public function get($pages)
     {
-
+        
         $response = [];
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
         $timestamps = Core\Analytics\Timestamps::span(1, 'day');
 
-        $cache = Core\Di\Di::_()->get('Cache');
+        $cache = Core\Di\Di::_()->get('Cache\Apcu');
         if ($cached = $cache->get('trending:hashtags')) {
             $result = json_decode($cached, true);
         } else {
@@ -50,7 +50,7 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiIgnorePam
             ];
 
             $result = (new Documents())->customQuery($opts);
-            $cache->set('trending:hashtags', json_encode($result));
+            $cache->set('trending:hashtags', json_encode($result), (60*60));
         }        
 
         if($result){
