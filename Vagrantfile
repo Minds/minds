@@ -18,24 +18,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     host = RbConfig::CONFIG['host_os']
     slowNetworkFix = false
 
-    # Give VM 1/4 system memory & access to all cpu cores on the host
+    # Give VM 1/4 system memory & access to all physical cpu cores on the host
     if host =~ /darwin/
-      cpus = `sysctl -n hw.ncpu`.to_i
+      cpus = `sysctl -n hw.physicalcpu`.to_i
       # sysctl returns Bytes and we need to convert to MB
-      mem = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / 4
+      sysmem = `sysctl -n hw.memsize`.to_i / 1024 / 1024
     elsif host =~ /linux|arch/
-      cpus = `nproc`.to_i
+      cpus = `nproc`.to_i # @todo: get physical cpus (for VBox enhanced performance)
       # meminfo shows KB and we need to convert to MB
-      mem = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / 4
+      sysmem = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
     elsif host =~ /mswin|windows|mingw/
-      cpus = `powershell (Get-WmiObject Win32_ComputerSystem).numberoflogicalprocessors`.to_i
-      mem = `powershell (Get-WmiObject Win32_ComputerSystem).totalphysicalmemory`.to_i / 1024 / 1024 / 4
+      cpus = `powershell (Get-WmiObject Win32_ComputerSystem).numberoflogicalprocessors`.to_i # @todo: get physical cpus (for VBox enhanced performance)
+      sysmem = `powershell (Get-WmiObject Win32_ComputerSystem).totalphysicalmemory`.to_i / 1024 / 1024
       slowNetworkFix = true
     else # unknown platform
       cpus = 1
-      mem = 1024
+      sysmem = 1024
       slowNetworkFix = true
     end
+
+    mem = sysmem / 4
+    mem = 2560 if mem < 2560
 
     v.customize ["modifyvm", :id, "--memory", mem]
     v.customize ["modifyvm", :id, "--cpus", cpus]
@@ -52,6 +55,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/trusty64"
   config.vm.network :private_network, ip: "10.54.0.111"
+
+  config.vm.network :forwarded_port, guest: 80, host: 8800
+  config.vm.network :forwarded_port, guest: 8010, host: 8810
 
   config.vm.provision :shell, path: "bin/bootstrap-ubuntu.sh", run: 'always'
 
