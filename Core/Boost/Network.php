@@ -72,7 +72,7 @@ class Network implements BoostHandlerInterface
         $end = "";
         foreach ($queue as $data) {
             $_id = (string) $data['_id'];
-            $guids[$_id] = $data['guid'];
+            $guids[$_id] = (string) $data['guid'];
             $end = $data['guid'];
             //$this->mongo->remove("boost", ['_id' => $_id]);
         }
@@ -80,21 +80,20 @@ class Network implements BoostHandlerInterface
         if (!$guids) {
             return false;
         }
+        
+        $prepared = new Core\Data\Cassandra\Prepared\Custom();
+        $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
+            ->create(... array_values($guids));
+        $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
+          [ "boost:$this->handler", $collection, count($guids) ]);
 
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:$this->handler", [
-          'limit'=>$limit,
-          'offset'=> $end,
-          'reversed'=>true
-        ]);
-
-        $data = array_reverse($data); // oldest to newest
+        $cql = Core\Di\Di::_()->get('Database\Cassandra\Cql');
+        $data = $cql->request($prepared);
 
         $boosts = [];
-        foreach ($data as $guid => $raw_data) {
-            //$raw_data['guid']
+        foreach ($data as $row) {
             $boost = (new Entities\Boost\Network())
-              ->loadFromArray(json_decode($raw_data, true));
+              ->loadFromArray(json_decode($row['value'], true));
             //double check
             if (isset($guids[$boost->getId()])) {
                 $boosts[] = $boost;
