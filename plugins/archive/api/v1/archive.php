@@ -166,8 +166,8 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                       $hours = $timeSplit[0];
                       $mins = $timeSplit[1];
-
-                      if($hours > 1 || $mins >= 40){
+                      
+                      if((int) $hours >= 1 || (int) $mins >= 40){
                           return Factory::response([
                             'status' => 'error',
                             'message' => "Video of $hours(hr),$mins(mins) is too long and must be less than 40 mins."
