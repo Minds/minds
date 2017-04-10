@@ -161,6 +161,7 @@ class Invitations
                 'to' => [ $invitee_guid ],
                 'notification_view' => 'group_invite',
                 'params' => [
+                    'entity_guid' => $this->group->guid,
                     'group' => $this->group->export(),
                     'user' => $this->getActor() ? $this->getActor()->username : 'A user'
                 ]
