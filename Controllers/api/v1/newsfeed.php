@@ -125,7 +125,8 @@ class newsfeed implements Interfaces\Api
 
         if ($pages[0] == 'network' && !get_input('prepend')) { // No boosts when prepending
             try {
-                $limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
+                //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
+                $limit = 2;
                 $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit);
                 foreach ($boosts as $boost) {
                     $boost->boosted = true;
