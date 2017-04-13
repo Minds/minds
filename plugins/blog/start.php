@@ -89,7 +89,7 @@ class start extends Components\Plugin
             ->setIcon('subject')
             ->setName('Blogs')
             ->setTitle('Blogs')
-            ->setPath('blog/featured')
+            ->setPath('blog/trending')
             ->addSubItem($add_link)
             ->addSubItem($featured_link)
             ->addSubItem($trending_link)
