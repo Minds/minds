@@ -80,7 +80,11 @@ class Block
         }
 
         if ($users instanceof Entities\User) {
-            $user_guids[] = (string) $users->guid;
+            $users = (string) $users->guid;
+        }
+
+        if (is_numeric($users)) {
+            $user_guids[] = (string) $users;
         }
 
         if (is_object($from)) { // Unlikely to be an user, and we cannot block anything that's not an user (yet)
@@ -103,7 +107,7 @@ class Block
             return $list;
         }
 
-        if (isset($list[0]) && $list[0] == $user) {
+        if (isset($list[0]) && $list[0] == $users) {
             return true;
         }
 
@@ -159,7 +163,7 @@ class Block
 
         Core\Events\Dispatcher::trigger('acl:unblock', 'all', compact('user', 'from'));
 
-        return $this->db->removeAttributes("acl:blocked:$from", array($user));
+        return $this->db->remove("acl:blocked:$from", array($user));
     }
 
     /**
