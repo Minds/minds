@@ -89,7 +89,7 @@ class banners implements Interfaces\FS
         //    exit;
         //}
 
-        if (!$content) {
+        if (!$content && $f) {
             $content = $f->read();
             if(!$content){
                 exit;
