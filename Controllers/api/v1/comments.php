@@ -129,7 +129,7 @@ class comments implements Interfaces\Api
                 }
 
                 if ($parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                    Helpers\Wallet::createTransaction($parent->owner_guid, 1, $pages[0], 'Comment');
+                    Helpers\Wallet::createTransaction($parent->owner_guid, 5, $pages[0], 'Comment');
                 }
 
                 Core\Events\Dispatcher::trigger('notification', 'all', array(
@@ -236,7 +236,7 @@ class comments implements Interfaces\Api
             $parent = new \Minds\Entities\Entity($comment->parent_guid);
 
             if ($parent && $parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                Helpers\Wallet::createTransaction($parent->owner_guid, -1, $comment->parent_guid, 'Comment Removed');
+                Helpers\Wallet::createTransaction($parent->owner_guid, -5, $comment->parent_guid, 'Comment Removed');
             }
         }
 
