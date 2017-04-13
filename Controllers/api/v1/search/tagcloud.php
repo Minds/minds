@@ -16,7 +16,9 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     public function get($pages)
     {
-        
+
+        return Factory::response([]);
+
         $response = [];
 
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
