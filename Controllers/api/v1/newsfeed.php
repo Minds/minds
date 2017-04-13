@@ -250,6 +250,7 @@ class newsfeed implements Interfaces\Api
                                       ->save();
                                   } else {
                                       $activity->setRemind((new \Minds\Entities\Activity())
+                                        ->setTimeCreated($embeded->time_created)
                                         ->setTitle($embeded->title)
                                         ->setBlurb(strip_tags($embeded->description))
                                         ->setURL($embeded->getURL())
@@ -275,6 +276,7 @@ class newsfeed implements Interfaces\Api
                                     } else {
                                         $activity = new \Minds\Entities\Activity();
                                         $activity->setRemind((new \Minds\Entities\Activity())
+                                          ->setTimeCreated($embeded->time_created)
                                           ->setFromEntity($embeded)
                                           ->setCustom('video', [
                                               'thumbnail_src'=>$embeded->getIconUrl(),
@@ -302,6 +304,7 @@ class newsfeed implements Interfaces\Api
                                         ->save();
                                     } else {
                                         $activity->setRemind((new \Minds\Entities\Activity())
+                                          ->setTimeCreated($embeded->time_created)
                                           ->setCustom('batch', [[
                                               'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
                                               'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,

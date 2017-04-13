@@ -361,6 +361,25 @@ class Activity extends Entity
     }
 
     /**
+     * Sets the timestamp for this activity
+     * @param mixed $value
+     */
+    public function setTimeCreated($value)
+    {
+        $this->time_created = (int) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the timestamp
+     * @return boolean
+     */
+    public function getTimeCreated()
+    {
+        return $this->time_created;
+    }
+
+    /**
      * Sets if there is a paywall or not
      * @param mixed $value
      */
