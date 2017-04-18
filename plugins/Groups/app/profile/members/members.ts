@@ -27,6 +27,8 @@ export class GroupsProfileMembers {
   moreData : boolean = true;
   canInvite: boolean = false;
 
+    q : string = "";
+
 	constructor(public client : Client, public service: GroupsService){
 
 	}
@@ -36,9 +38,26 @@ export class GroupsProfileMembers {
     this.load();
   }
 
-  load(refresh : boolean = false){
+  ngOnDestroy() {
+    if (this.searchDelayTimer) {
+      clearTimeout(this.searchDelayTimer);
+    }
+  }
+
+  private lastQuery;
+  load(refresh: boolean = false, query = null) {
     if(this.inProgress)
       return;
+    
+    if (query !== null && query !== this.lastQuery) {
+      refresh = true;
+      this.lastQuery = query;
+    }
+
+    if (refresh) {
+      this.offset = '';
+      this.moreData = true;
+    }
 
     // TODO: [emi] Send this via API
     this.canInvite = false;
@@ -49,8 +68,16 @@ export class GroupsProfileMembers {
       this.canInvite = true;
     }
 
+    let endpoint = `api/v1/groups/membership/${this.group.guid}`,
+      params: { limit, offset, q?: string } = { limit: 12, offset: this.offset };
+
+    if (this.lastQuery) {
+      endpoint = `${endpoint}/search`;
+      params.q = this.lastQuery;
+    }
+
     this.inProgress = true;
-    this.client.get('api/v1/groups/membership/' + this.group.guid, { limit: 12, offset: this.offset })
+    this.client.get(endpoint, params)
       .then((response : any) => {
 
         if(!response.members){
@@ -64,7 +91,13 @@ export class GroupsProfileMembers {
         } else {
           this.members = this.members.concat(response.members);
         }
-        this.offset = response['load-next'];
+        
+        if (response['load-next']) {
+          this.offset = response['load-next'];
+        } else {
+          this.moreData = false;
+        }
+
         this.inProgress = false;
 
       })
@@ -79,6 +112,17 @@ export class GroupsProfileMembers {
         return;
     }
     this.invitees.push(user);
+  }
+
+  private searchDelayTimer;
+  search(q) {
+    if (this.searchDelayTimer) {
+      clearTimeout(this.searchDelayTimer);
+    }
+
+    this.searchDelayTimer = setTimeout(() => {
+      this.load(true, q);
+    }, 500);
   }
 
 }
