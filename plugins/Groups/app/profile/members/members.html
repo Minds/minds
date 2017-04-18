@@ -16,15 +16,20 @@
   </div>
 </div>
 
-<div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="let member of members">
-    <div class="mdl-card mdl-shadow--2dp">
-        <minds-card-user [object]="member" [ngClass]="{ 'minds-user-ephemeral': !member['is:member'] }">
-          <div buttons>
-            <minds-groups-card-user-actions-button class="m-button" *ngIf="session.isLoggedIn() &amp;&amp; session.getLoggedInUser().guid != member.guid"
-            [group]="group" [user]="member"></minds-groups-card-user-actions-button>
-          </div>
-        </minds-card-user>
-    </div>
+<div class="m-groups-search-member">
+  <input type="text" name="q" [(ngModel)]="q" (keyup)="search(q)" placeholder="Search for a member" />
+</div>
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col minds-groups-member-card" *ngFor="let member of members">
+      <div class="mdl-card mdl-shadow--2dp">
+          <minds-card-user [object]="member" [ngClass]="{ 'minds-user-ephemeral': !member['is:member'] }">
+            <div buttons>
+              <minds-groups-card-user-actions-button class="m-button" *ngIf="session.isLoggedIn() &amp;&amp; session.getLoggedInUser().guid != member.guid"
+                [group]="group" [user]="member"></minds-groups-card-user-actions-button>
+            </div>
+          </minds-card-user>
+      </div>
+  </div>
 </div>
 
 <infinite-scroll

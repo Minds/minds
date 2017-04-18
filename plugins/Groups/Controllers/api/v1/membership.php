@@ -13,6 +13,7 @@ use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User as User;
 use Minds\Plugin\Groups;
+use Minds\Core\Search\Documents;
 
 use Minds\Plugin\Groups\Exceptions\GroupOperationException;
 
@@ -70,6 +71,50 @@ class membership implements Interfaces\Api
 
                 $response['users'] = Factory::exportable($users);
                 $response['load-next'] = end($users)->getGuid();
+                break;
+            case "search":
+                if (!isset($_GET['q']) || !$_GET['q']) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'Missing query'
+                    ]);
+                }
+
+                $query = Documents::escapeQuery((string) $_GET['q']);
+                $query = "({$query})^5 OR (*{$query}*)";
+
+                $opts = [
+                    'limit' => $_GET['limit'] ?: 12,
+                    'type' => 'user',
+                    'flags' => [
+                        "+group_membership:\"{$group->getGuid()}\""
+                    ]
+                ];
+
+                if (isset($_GET['offset']) && $_GET['offset']) {
+                    $opts['offset'] = $_GET['offset'];
+                }
+
+                $guids = (new Documents())->query($_GET['q'], $opts);
+                $response = [];
+
+                if (!$guids) {
+                    return Factory::response([
+                        'members' => [],
+                    ]);
+                }
+
+                if ($guids) {
+                    $members = Core\Entities::get(['guids' => $guids]);
+
+                    $response['members'] = Factory::exportable($members);
+
+                    for ($i = 0; $i < count($response['members']); $i++) {
+                        $response['members'][$i]['is:owner'] = $group->isOwner($response['members'][$i]['guid']);
+                        $response['members'][$i]['is:member'] = true;
+                        $response['members'][$i]['is:awaiting'] = false;
+                    }
+                }
                 break;
             case "members":
             default:

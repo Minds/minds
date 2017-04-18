@@ -180,12 +180,14 @@ class Membership
                 $this->relDB->create('member', $this->group->getGuid());
                 $this->relDB->remove('membership_request', $this->group->getGuid());
 
-                $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
-                $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
+                $this->refreshUserMembership($guid, [ $this->group->getGuid() ], []);
 
                 $count++;
             }
         }
+
+        $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
+        $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
 
         return $count;
     }
@@ -250,6 +252,8 @@ class Membership
 
         // TODO: [emi] Send a notification to target user if was awaiting
 
+        $this->refreshUserMembership($user, [ $this->group->getGuid() ], []);
+
         if ($done) {
             return true;
         }
@@ -282,6 +286,8 @@ class Membership
         $this->cache->destroy("group:{$this->group->getGuid()}:members:count");
         $this->cache->destroy("group:{$this->group->getGuid()}:requests:count");
         $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", false);
+
+        $this->refreshUserMembership($user, [], [ $this->group->getGuid() ]);
 
         if ($done) {
             return true;
@@ -537,6 +543,31 @@ class Membership
         return $done;
     }
 
+    // 
+
+    public function refreshUserMembership($user, array $addGroupGuids = [], array $removeGroupGuids = [])
+    {
+        if (!is_object($user)) {
+            $user = EntitiesFactory::build($user);
+        }
+
+        array_walk($addGroupGuids, function (&$item) {
+            $item = (string) $item;
+        });
+
+        array_walk($removeGroupGuids, function (&$item) {
+            $item = (string) $item;
+        });
+
+        $membership = $user->getGroupMembership();
+        $membership = array_merge($membership, $addGroupGuids); // add
+        $membership = array_diff($membership, $removeGroupGuids); // remove
+
+        $user->context('search');
+        $user->setGroupMembership($membership);
+        $user->save();
+        $user->context('');
+    }
 
     public static function _($group)
     {
