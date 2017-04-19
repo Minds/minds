@@ -182,6 +182,10 @@ class Push implements Interfaces\NotificationExtensionInterface
                 $message = sprintf('%s invited you to %s', $name, $notification['params']['group']['name']);
                 break;
 
+            case 'messenger_invite':
+                $message = sprintf('@%s wants to chat with you!', $notification['params']['username']);
+                break;
+
             default:
                 $message = "";
 

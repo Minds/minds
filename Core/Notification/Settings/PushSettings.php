@@ -29,6 +29,7 @@ class PushSettings
       'boost_rejected' => true,
       'boost_completed' => true,
       'group_invite' => true,
+      'messenger_invite' => true,
     ];
     protected $userGuid;
     protected $toBeSaved = [];
