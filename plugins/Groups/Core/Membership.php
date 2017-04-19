@@ -551,6 +551,10 @@ class Membership
             $user = EntitiesFactory::build($user);
         }
 
+        if (!$user) {
+            return;
+        }
+
         array_walk($addGroupGuids, function (&$item) {
             $item = (string) $item;
         });
@@ -562,10 +566,13 @@ class Membership
         $membership = $user->getGroupMembership();
         $membership = array_merge($membership, $addGroupGuids); // add
         $membership = array_diff($membership, $removeGroupGuids); // remove
-
+        
         $user->context('search');
         $user->setGroupMembership($membership);
         $user->save();
+        Dispatcher::trigger('search:index', 'all', [
+            'entity' => $user
+        ]);
         $user->context('');
     }
 
