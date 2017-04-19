@@ -9,6 +9,7 @@ use Minds\Core\Data\Relationships;
 class Entity
 {
     protected $guid;
+    protected $parent_guid;
     protected $db;
 
     public function __construct($entity, $db = null)
@@ -21,6 +22,10 @@ class Entity
             $this->guid = $entity['guid'];
         } else {
             $this->guid = $entity;
+        }
+
+        if (is_object($entity) && isset($entity->parent_guid) && $entity->parent_guid) {
+            $this->parent_guid = $entity->parent_guid;
         }
 
         $this->db = $db ?: new Relationships();
@@ -36,10 +41,18 @@ class Entity
             return [];
         }
 
-        // TODO: [emi] Ask Mark to modify Data\Relationships or apply DI
         $rows = (new \Minds\Core\Data\Call('relationships'))->getRow("{$this->guid}:entity:muted:inverted");
+
         if (!$rows) {
-            return [];
+            $rows = [];
+        }
+
+        if ($this->parent_guid) {
+            $parentRows = (new \Minds\Core\Data\Call('relationships'))->getRow("{$this->parent_guid}:entity:muted:inverted");
+
+            if ($parentRows) {
+                $rows = array_replace($parentRows, $rows); // array_merge kills the keys
+            }
         }
 
         return array_keys($rows);

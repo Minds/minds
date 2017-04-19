@@ -133,7 +133,7 @@ class Events
             $notification->setDb($db);
 
             $entity = $notification->getEntity();
-            if ($params['to'] && $entity && in_array($entity->type, [ 'activity', 'object' ])) {
+            if ($params['to'] && $entity && in_array($entity->type, [ 'activity', 'object', 'comment' ])) {
                 $muted = array_map([ __CLASS__, 'toString' ], (new Entity($entity))->getMutedUsers());
                 $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
                 $params['to'] = array_diff($params['to'], $muted);
