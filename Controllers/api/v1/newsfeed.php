@@ -367,6 +367,8 @@ class newsfeed implements Interfaces\Api
                         $activity->setPayWall($_POST['paywall']);
                     }
 
+                    $activity->setEdited(true);
+
                     $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
                     $activity->save();

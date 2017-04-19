@@ -26,6 +26,7 @@ class Comment extends Entities\Entity
             'owner_guid'=>elgg_get_logged_in_user_guid(),
             'access_id' => 2,
             'mature' => false,
+            'edited' => false,
         ));
     }
 
@@ -60,6 +61,25 @@ class Comment extends Entities\Entity
     {
         $this->attachment_guid = $guid;
         return $this;
+    }
+
+    /**
+     * Sets if comment has been edited
+     * @param boolean
+     */
+    public function setEdited($value)
+    {
+        $this->edited = $value;
+        return $this;
+    }
+
+    /**
+     * Gets if comment has been edited
+     * @return boolean
+     */
+    public function getEdited()
+    {
+        return (boolean) $this->edited;
     }
 
     /**
@@ -223,6 +243,7 @@ class Comment extends Entities\Entity
             'thumbs:down:count',
             'thumbs:down:user_guids',
             'mature',
+            'edited',
         ));
     }
 

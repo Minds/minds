@@ -95,6 +95,8 @@ class comments implements Interfaces\Api
                 $comment->setMature($_POST['mature']);
             }
 
+            $comment->setEdited(true);
+
             $error = !$comment->save();
             break;
           case is_numeric($pages[0]):

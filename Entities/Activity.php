@@ -25,7 +25,8 @@ class Activity extends Entity
             'owner_guid' => elgg_get_logged_in_user_guid(),
             'access_id' => 2, //private,
             'mature' => false,
-            'paywall' => false
+            'paywall' => false,
+            'edited' => false,
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -158,7 +159,8 @@ class Activity extends Entity
                 'p2p_boosted',
                 'mature',
                 'monetized',
-                'paywall'
+                'paywall',
+                'edited',
             ));
     }
 
@@ -358,6 +360,25 @@ class Activity extends Entity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    /**
+     * Sets if activity has been edited
+     * @param boolean
+     */
+    public function setEdited($value)
+    {
+        $this->edited = $value;
+        return $this;
+    }
+
+    /**
+     * Gets if activity has been edited
+     * @return boolean
+     */
+    public function getEdited()
+    {
+        return (boolean) $this->edited;
     }
 
     /**
