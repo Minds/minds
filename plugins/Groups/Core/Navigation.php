@@ -19,7 +19,7 @@ class Navigation
         ->setPriority(1)
         ->setIcon('add')
         ->setName('Create')
-        ->setTitle('Create (Groups)')
+        ->setTitle('Create')
         ->setPath('groups/create')
         ->setParams([])
         ->setVisibility(0); //only show for loggedin
@@ -29,15 +29,15 @@ class Navigation
         ->setPriority(2)
         ->setIcon('star')
         ->setName('Featured')
-        ->setTitle('Featured (Groups)')
+        ->setTitle('Featured')
         ->setPath('groups/featured');
 
         $my_link = new Item();
         $my_link
         ->setPriority(3)
         ->setIcon('person_pin')
-        ->setName('My')
-        ->setTitle('My (Groups)')
+        ->setName('My Groups')
+        ->setTitle('My Groups')
         ->setPath('groups/member')
         ->setVisibility(2); //only show for loggedin
 

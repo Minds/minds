@@ -57,7 +57,7 @@ class start extends Components\Plugin
             ->setPriority(1)
             ->setIcon('add')
             ->setName('Compose')
-            ->setTitle('Compose (Blogs)')
+            ->setTitle('Compose')
             ->setPath('blog/edit/new')
             ->setVisibility(0); //only show for loggedin
         $featured_link = new Core\Navigation\Item();
@@ -65,21 +65,21 @@ class start extends Components\Plugin
             ->setPriority(2)
             ->setIcon('star')
             ->setName('Featured')
-            ->setTitle('Featured (Blogs)')
+            ->setTitle('Featured')
             ->setPath('blog/featured');
         $trending_link = new Core\Navigation\Item();
         $trending_link
             ->setPriority(3)
             ->setIcon('trending_up')
             ->setName('Trending')
-            ->setTitle('Trending (Blogs)')
+            ->setTitle('Trending')
             ->setPath('blog/trending');
         $my_link = new Core\Navigation\Item();
         $my_link
             ->setPriority(4)
             ->setIcon('person_pin')
-            ->setName('My')
-            ->setTitle('My (Blogs)')
+            ->setName('My Blogs')
+            ->setTitle('My Blogs')
             ->setPath('blog/owner')
             ->setVisibility(0); //only show for loggedin
 
