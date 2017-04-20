@@ -26,17 +26,17 @@ class start extends Components\Plugin
                 return array();
             }
 
-            $description = $blog->description;
+            $description = strip_tags($blog->description);
 
             if (strlen($description) > 140) {
-                $description = substr($description,0,137) . "...";
+                $description = substr($description, 0, 139) . '…';
             }
 
             return $meta = array(
                 'title' => $blog->title,
-                'description' => htmlspecialchars(strip_tags($description)),
+                'description' => $description,
                 'og:title' => $blog->title,
-                'og:description' => htmlspecialchars(strip_tags($description)),
+                'og:description' => $description,
                 'og:url' => str_replace('http://', 'https://', $blog->getPermaUrl()),
                 'og:type' => 'article',
                 'og:image' => $blog->getIconUrl(800),
