@@ -34,7 +34,7 @@ class Manager
             ->setPriority(2)
             ->setIcon('trending_up')
             ->setName('Trending')
-            ->setTitle('Trending (Discovery)')
+            ->setTitle('Trending')
             ->setPath('discovery/trending');
 
         $discovery_suggested = new Item();
@@ -42,7 +42,7 @@ class Manager
             ->setPriority(1)
             ->setIcon('call_split')
             ->setName('Suggested')
-            ->setTitle('Suggested (Discovery)')
+            ->setTitle('Suggested')
             ->setPath('discovery/suggested')
             ->setVisibility(0); //only show for loggedin
 
@@ -51,14 +51,14 @@ class Manager
             ->setPriority(3)
             ->setIcon('star')
             ->setName('Featured')
-            ->setTitle('Featured (Discovery)')
+            ->setTitle('Featured')
             ->setPath('discovery/featured');
         $discovery_my = new Item();
         $discovery_my
             ->setPriority(4)
             ->setIcon('person_pin')
-            ->setName('My')
-            ->setTitle('My (Discovery)')
+            ->setName('My Media')
+            ->setTitle('My Media')
             ->setPath('discovery/owner')
             ->setVisibility(0); //only show for loggedin
 
@@ -174,9 +174,9 @@ class Manager
 
         self::add((new Item())
             ->setPriority(10)
-            ->setIcon('bug_report')
-            ->setName('Bugs')
-            ->setTitle('Report bugs')
+            ->setIcon('help_outline')
+            ->setName('Support')
+            ->setTitle('Help & Support Group')
             ->setPath('groups/profile/100000000000000681/activity')
             //'topbar'
         );
