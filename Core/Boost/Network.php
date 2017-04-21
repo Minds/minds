@@ -163,8 +163,9 @@ class Network implements BoostHandlerInterface
      */
     public function accept($boost, $impressions = 0)
     {
-        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved']);
+        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating()]);
         $boost->setState('approved');
+        $boost->setRating($rating);
         if ($accept) {
             //remove from review
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
@@ -288,7 +289,7 @@ class Network implements BoostHandlerInterface
      * @param  boolean $increment
      * @return array
      */
-    public function getBoosts($limit = 2, $increment = true)
+    public function getBoosts($limit = 2, $increment = true, $rating = 0)
     {
         $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
@@ -296,6 +297,10 @@ class Network implements BoostHandlerInterface
         $opts = [
             'type'=>$this->handler,
             'state'=>'approved',
+            'rating'=>[
+                '$exists' => true, 
+                '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating() 
+             ],
         ];
         if ($mem_log) {
             $opts['_id'] =  [ '$gt' => end($mem_log) ];

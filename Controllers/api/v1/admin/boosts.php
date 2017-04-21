@@ -55,6 +55,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $type = ucfirst($pages[0]);
         $guid = $pages[1];
         $action = $pages[2];
+        $rating = (int) $_POST['rating'];
 
         if (!$guid) {
             return Factory::response(array(
@@ -79,6 +80,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         }
 
         if ($action == 'accept') {
+            $boost->setRating($rating);
             $success = Core\Boost\Factory::build($type)->accept($boost);
             if (!$success) {
                 $response['status'] = 'error';

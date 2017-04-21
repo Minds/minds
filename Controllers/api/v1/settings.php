@@ -37,6 +37,7 @@ class settings implements Interfaces\Api
 
         $response['channel'] = $user->export();
         $response['channel']['email'] = $user->getEmail();
+        $response['channel']['boost_rating'] = $user->getBoostRating();
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 
@@ -73,6 +74,10 @@ class settings implements Interfaces\Api
 
         if (isset($_POST['email']) && $_POST['email']) {
             $user->setEmail($_POST['email']);
+        }
+
+        if (isset($_POST['boost_rating']) && $_POST['boost_rating']) {
+            $user->setBoostRating($_POST['boost_rating']);
         }
 
         if (isset($_POST['mature'])) {

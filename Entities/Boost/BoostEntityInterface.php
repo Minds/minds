@@ -34,4 +34,17 @@ interface BoostEntityInterface
    * @return string
    */
   public function getState();
+
+  /**
+   * Set the rating of the boost
+   * @param string $rating
+   * @return $this
+   */
+  public function setRating($rating);
+
+  /**
+   * Return rating of the boost
+   * @return int
+   */
+  public function getRating();
 }

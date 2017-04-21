@@ -29,7 +29,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     protected $exportableDefaults = [
       'guid', '_id', 'entity', 'bid', 'bidType', 'destination', 'owner', 'state',
-      'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler'
+      'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler',
+      'rating'
     ];
 
     /**
@@ -60,6 +61,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->last_updated = $array['last_updated'];
         $this->transactionId = $array['transactionId'];
         $this->handler = $array['handler'];
+        $this->rating = $array['rating'];
         return $this;
     }
 
@@ -85,7 +87,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
           'time_created' => $this->time_created ?: time(),
           'last_updated' => time(),
           'transactionId' => $this->transactionId,
-          'handler' => $this->handler
+          'handler' => $this->handler,
+          'rating' => $this->rating
         ];
 
         $serialized = json_encode($data);
@@ -185,6 +188,26 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     {
         $this->bid = $bid;
         return $this;
+    }
+
+    /**
+     * Set the boost rating of the boost
+     * @param string $boostRating
+     * @return $this
+     */
+    public function setRating($rating)
+    {
+        $this->rating = (int) $rating;
+        return $this;
+    }
+
+    /**
+     * Return boost rating of the boost
+     * @return int
+     */
+    public function getRating()
+    {
+        return $this->rating;
     }
 
     /**

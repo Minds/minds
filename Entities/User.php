@@ -11,6 +11,7 @@ use Minds\Helpers;
 class User extends \ElggUser
 {
     protected function initializeAttributes() {
+        $this->attributes['boost_rating'] = 2;
         $this->attributes['mature'] = 0;
         $this->attributes['mature_content'] = 0;
         $this->attributes['social_profiles'] = [];
@@ -20,6 +21,26 @@ class User extends \ElggUser
         $this->attributes['group_membership'] = [];
 
         parent::initializeAttributes();
+    }
+
+    /**
+     * Sets the `boost rating` flag
+     * @param  int $value
+     * @return $this
+     */
+    public function setBoostRating($value)
+    {
+        $this->boost_rating = $value;
+        return $this;
+    }
+
+    /**
+     * Gets the `boost rating` flag
+     * @return int
+     */
+    public function getBoostRating()
+    {
+      return $this->boost_rating;
     }
 
     /**
@@ -391,6 +412,7 @@ class User extends \ElggUser
         }
         $export['subscriptions_count'] = $this->getSubscriptionsCount();
         $export['impressions'] = $this->getImpressions();
+        $export['boost_rating'] = $this->getBoostRating();
         if ($this->fb && is_string($this->fb)) {
             $export['fb'] = json_decode($this->fb, true);
         }
