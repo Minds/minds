@@ -4,8 +4,22 @@
 >
   <div class="m-messenger-dockpane-tab mdl-color--blue-grey-700  mdl-color-text--blue-grey-100" (click)="toggle()">
     <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span i18n>Messenger</span></div>
+    <div class="m-messenger-dockpane-tab-actions" (click)="$event.stopPropagation()" *ngIf="encryption.isSetup()">
+      <i class="material-icons"
+        (click)="ribbon.open = !ribbon.open"
+        [ngClass]="{ 'm-status-active': ribbon.open }">
+        settings
+      </i>
+    </div>
   </div>
   <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+    <div class="m-messenger-dockpane-tab-ribbon mdl-color-text--blue-grey-300" #ribbon [hidden]="!ribbon.open">
+      <div class="m-messenger-dockpane-tab-icon mdl-color-text--blue-grey-300" (click)="encryption.reKeying = !encryption.reKeying; ribbon.open = false">
+        <i class="material-icons mdl-color-text--blue-grey-100"
+          title="Change your encryption password" i18n-title>vpn_key</i>
+          <!-- i18n -->Re-key<!-- /i18n -->
+      </div>
+    </div>
     <minds-messenger-encryption></minds-messenger-encryption>
   </div>
 </div>
