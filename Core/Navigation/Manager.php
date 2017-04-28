@@ -136,6 +136,13 @@ class Manager
                 ->setName('Featured')
                 ->setTitle('Featured')
                 ->setPath('admin/featured')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(9)
+                ->setIcon('whatshot')
+                ->setName('Hashtags')
+                ->setTitle('Hashtags')
+                ->setPath('admin/tagcloud')
             );
         self::add($admin);
 
