@@ -90,9 +90,24 @@
         *ngIf="!blocked && invalid">
         <span i18n>Awaiting other party&hellip;</span>
       </div>
+      <div class="m-messenger-conversation-messages-invite mdl-color-text--blue-grey-500"
+        *ngIf="!blocked && invitable">
+        <p>
+          Looks like <b>@{{ invitable[0].username }}</b> isn't using Minds Messenger yet.
+        </p>
+        <p>
+          <button class="mdl-button mdl-button--raised mdl-button--colored"
+            (click)="invite()"
+            [disabled]="invited"
+          >
+            <span *ngIf="!invited">Invite</span>
+            <span *ngIf="invited">Invited</span>
+          </button>
+        </p>
+      </div>
     </div>
 
-    <div class="m-messenger-conversation-composer" *ngIf="!blocked && !unavailable && !invalid && conversation.open && encryption.isOn()">
+    <div class="m-messenger-conversation-composer" *ngIf="!blocked && !unavailable && !invalid && !invitable && conversation.open && encryption.isOn()">
       <textarea placeholder="Send a message..."
       i18n-placeholder
       name="message"

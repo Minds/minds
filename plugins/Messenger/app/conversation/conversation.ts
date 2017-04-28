@@ -63,6 +63,9 @@ export class MessengerConversation {
   unavailable: boolean = false;
   invalid: boolean = false;
 
+  invitable: any[] | null = null;
+  invited: boolean = false;
+
   constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer, private injector: Injector) {
     this.buildTabId();
   }
@@ -132,6 +135,7 @@ export class MessengerConversation {
 
         this.blocked = !!response.blocked;
         this.unavailable = !!response.unavailable;
+        this.invitable = response.invitable || null;
       })
       .catch(() => {
         this.inProgress = false;
@@ -307,6 +311,19 @@ export class MessengerConversation {
         console.error('Error when toggling block on participants', e);
         this.blockingActionInProgress = false;
       });
+  }
+
+  invite() {
+    if (!this.invitable || !this.invitable.length) {
+      return;
+    }
+
+    this.invited = true;
+    this.invitable.forEach(participant => {
+      this.client.put(`api/v2/conversations/invite/${participant.guid}`)
+        .then(() => { })
+        .catch(e => { });
+    });
   }
 
   private hasParticipant(guid: string) {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit } from '@angular/core';
 
 import { SocketsService } from '../../../services/sockets';
 import { Client } from '../../../services/api';
@@ -17,7 +17,7 @@ import { MessengerEncryptionService } from './service';
   templateUrl: 'encryption.html'
 })
 
-export class MessengerEncryption {
+export class MessengerEncryption implements OnInit {
 
   minds: Minds;
   session = SessionFactory.build();
@@ -27,8 +27,14 @@ export class MessengerEncryption {
   inProgress : boolean = false;
   error : string = "";
 
+  username: string = '';
+
   constructor(public client : Client, private injector: Injector){
 
+  }
+
+  ngOnInit() {
+    this.username = `@${this.session.getLoggedInUser().username}` || 'user';
   }
 
   unlock(password){

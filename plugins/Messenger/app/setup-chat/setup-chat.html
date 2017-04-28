@@ -1,0 +1,11 @@
+<div class="m-messenger-userlist m-messenger-dockpane mdl-shadow--4dp"
+  [class.m-messenger-dockpane-open]="open"
+  [@attentionNeeded]="attentionNeededTrigger"
+>
+  <div class="m-messenger-dockpane-tab mdl-color--blue-grey-700  mdl-color-text--blue-grey-100" (click)="toggle()">
+    <div class="m-messenger-dockpane-tab-title"><i class="material-icons">chat_bubble</i><span i18n>Messenger</span></div>
+  </div>
+  <div class="m-messenger-dockpane-container mdl-shadow--2dp">
+    <minds-messenger-encryption></minds-messenger-encryption>
+  </div>
+</div>

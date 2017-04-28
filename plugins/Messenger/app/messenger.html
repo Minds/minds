@@ -3,7 +3,8 @@
     <minds-messenger-conversation-dockpanes>
 
       <minds-messenger-dockpane [style.right]="0">
-        <minds-messenger-userlist></minds-messenger-userlist>
+        <minds-messenger-userlist #userList *ngIf="encryption.isOn()"></minds-messenger-userlist>
+        <minds-messenger-setup-chat #setupChat *ngIf="!encryption.isOn()"></minds-messenger-setup-chat>
       </minds-messenger-dockpane>
 
     </minds-messenger-conversation-dockpanes>

@@ -201,6 +201,10 @@ export class MessengerUserlist {
     this.dockpanes.closeAll();
   }
 
+  openPane() {
+    this.userListToggle = true;
+  }
+
   ngOnDestroy(){
     this.unListen();
   }

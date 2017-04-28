@@ -80,6 +80,16 @@ class conversations implements Interfaces\Api
             $response['unavailable'] = $unavailable;
         }
 
+        // Check if all participants have their public keys set before trying to fetch the conversation
+        $invalidPublicKeyUsers = $this->getInvalidPublicKeyUsers($conversation->getParticipants());
+        if ($invalidPublicKeyUsers) {
+            $response['invitable'] = Factory::exportable($invalidPublicKeyUsers) ?: false;
+            $response['messages'] = [];
+            $response['load-next'] = '';
+            $response['load-previous'] = '';
+            return $response;
+        }
+
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 6;
         $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
         $finish = isset($_GET['finish']) ? $_GET['finish'] : "";
@@ -194,19 +204,7 @@ class conversations implements Interfaces\Api
         if (!$this->hasValidMessages($message)) {
             // Likely, a participant hasn't set their public key
             $origins = $this->getInvalidMessageOrigins($message);
-
-            $username = Session::getLoggedInUser()->username;
-            $notification = "{$username} wants to chat with you! Open messenger, set your password and start chatting right away.";
-
-            foreach ($origins as $origin) {
-                Core\Events\Dispatcher::trigger('notification', 'Messenger', [
-                    'to' => [ $origin ],
-                    'from' => Session::getLoggedInUserGuid(),
-                    'notification_view' => 'custom_message',
-                    'params' => [ 'message' => $notification ],
-                    'message' => $notification
-                ]);
-            }
+            $this->sendInvite($origins);
 
             return Factory::response([
                 'invalid' => true
@@ -259,6 +257,16 @@ class conversations implements Interfaces\Api
         }
 
         switch ($pages[0]) {
+            case 'invite':
+                // Handle 1 invite at a time (for now)
+                if (!$this->getInvalidPublicKeyUsers([ $pages[1] ])) {
+                    // Already setup
+                    break;
+                }
+
+                $this->sendInvite([ $pages[1] ]);
+                break;
+
             case 'call':
                \Minds\Core\Queue\Client::build()->setExchange("mindsqueue")
                                                 ->setQueue("Push")
@@ -383,5 +391,41 @@ class conversations implements Interfaces\Api
         }
 
         return $origins;
+    }
+
+    private function getInvalidPublicKeyUsers(array $users) {
+        $keystore = new Messenger\Core\Keystore();
+        $invalid = [];
+
+        foreach ($users as $user) {
+            $user = !is_object($user) ? Entities\Factory::build($user) : $user;
+
+            if ($keystore->setUser($user)->getPublicKey()) {
+                continue;
+            }
+
+            $invalid[] = $user;
+        }
+
+        return $invalid;
+    }
+
+    private function sendInvite($users) {
+        if (!is_array($users)) {
+            $users = [ $users ];
+        }
+
+        foreach ($users as $user) {
+            if (is_object($user)) {
+                $user = $user->guid;
+            }
+
+            Core\Events\Dispatcher::trigger('notification', 'Messenger', [
+                'to' => [ $user ],
+                'from' => Session::getLoggedInUserGuid(),
+                'notification_view' => 'messenger_invite',
+                'params' => [ 'username' => Session::getLoggedInUser()->username ]
+            ]);
+        }
     }
 }

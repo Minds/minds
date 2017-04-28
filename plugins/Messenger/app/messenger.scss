@@ -291,6 +291,16 @@ minds-messenger{
           padding: 0 $minds-padding;
         }
       }
+
+      .m-messenger-conversation-messages-invite {
+        padding: ($minds-padding * 2) $minds-padding 0;
+
+        p {
+          text-align: center;
+          margin-bottom: $minds-padding * 2;
+          line-height: 1.35;
+        }
+      }
     }
     .m-messenger-conversation-composer{
       position: relative;
@@ -338,6 +348,19 @@ minds-messenger{
       padding: 8px;
       font-weight: bold;
     }
+    .m-messenger-encryption-setup-note {
+      font-size: 11px;
+      line-height: 1.35;
+      margin: 0;
+      padding: $minds-padding;
+    }
+    .m-messenger-encryption-setup-help {
+      color: #455a64;
+      font-size: 11px;
+      line-height: 1.35;
+      margin: 0;
+      padding: $minds-padding;
+    }
     .m-messenger-encryption-rekey{
       p {
         line-height: 11px;
@@ -360,7 +383,6 @@ minds-messenger{
       right: 0 !important;
     }
   }
-
 }
 
 minds-messenger-channel-button{

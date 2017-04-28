@@ -1,10 +1,16 @@
 <div class="m-messenger-encryption-unlock" *ngIf="encryption.isSetup() && !encryption.reKeying">
+  <p class="m-messenger-encryption-setup-help">
+    Hey <b>{{ username }}</b>! Please enter your encrypted chat password to access your conversations. This password might be different than your account password.
+  </p>
   <p [hidden]="!error" class="m-messenger-error mdl-color-text--red">{{error}}</p>
   <input type="password" placeholder="Enter password" i18n-placeholder #password (keydown.enter)="unlock(password)" />
   <button class="mdl-button mdl-button--colored" (click)="unlock(password)" [disabled]="inProgress" i18n>Unlock</button>
 </div>
 
 <div class="m-messenger-encryption-setup" *ngIf="!encryption.isSetup() && !encryption.reKeying">
+  <p class="m-messenger-encryption-setup-help">
+    Hey <b>{{ username }}</b>! It looks like you haven't setup your encrypted chat password yet. We recommend that you use a different password than your account password for added security.
+  </p>
   <p [hidden]="!error" class="m-messenger-error mdl-color-text--red">{{error}}</p>
   <input type="password" placeholder="Enter a password" i18n-placeholder #password1 />
   <input type="password" placeholder="Confirm your password" i18n-placeholder #password2 (keydown.enter)="setup(password1, password2)" />
@@ -12,7 +18,7 @@
 </div>
 
 <div class="m-messenger-encryption-setup m-messenger-encryption-rekey" *ngIf="encryption.reKeying">
-  <p class="mdl-color-text--grey-400">
+  <p class="mdl-color-text--grey-400 m-messenger-encryption-setup-note">
     <!-- i18n -->Changing your encryption password will cause your previous messages to be unreadable.<!-- /i18n -->
     <a class="mdl-color-text--blue-grey-300" (click)="encryption.reKeying = false" i18n>Cancel</a>
   </p>
