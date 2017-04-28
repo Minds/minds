@@ -6,6 +6,7 @@ namespace Minds\Core\Search;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Data\Cassandra\Prepared;
 
 class Tagcloud
 {
@@ -16,12 +17,12 @@ class Tagcloud
     const TIME_CACHE_KEY = 'trending:hashtags:time';
     const HIDDEN_DB_KEY = 'trending:hashtags:hidden';
 
-    protected $db;
+    protected $cql;
     protected $cache;
 
-    public function __construct($db = null, $cache = null)
+    public function __construct($cql = null, $cache = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\Cassandra\Indexes');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->cache = $cache ?: Di::_()->get('Cache\Apcu');
     }
 
@@ -30,10 +31,18 @@ class Tagcloud
         if ($cached = $this->cache->get(static::CACHE_KEY)) {
             $result = json_decode($cached, true);
         } else {
-            $hidden = array_keys($this->fetchHidden(5000)); // @todo: last 5000?
             $tags = $this->fetch(static::LIMIT * 3);
+            $hiddenRows = $this->fetchHidden(10000); // @todo: implement token() pagination loop, right now it's too unreliable
 
-            $result = array_slice(self::fast_array_diff($tags, $hidden), 0, static::LIMIT, false);
+            if ($hiddenRows) {
+                foreach ($hiddenRows as $hiddenRow) {
+                    $index = array_search($hiddenRow['column1'], $tags);
+                    if ($index === false) continue;
+                    unset($tags[$index]);
+                }
+            }
+
+            $result = array_slice($tags, 0, static::LIMIT, false);
 
             $this->cache->set(static::TIME_CACHE_KEY, time(), static::CACHE_DURATION);
             $this->cache->set(static::CACHE_KEY, json_encode($result), static::CACHE_DURATION);
@@ -55,12 +64,41 @@ class Tagcloud
 
     public function hide($tag)
     {
-        return (bool) $this->db->insert(static::HIDDEN_DB_KEY, [ $tag => time() ]);
+        $query = new Prepared\Custom();
+
+        $query->query("INSERT INTO entities_by_time (key, column1, value) VALUES (?, ?, ?)", [
+            static::HIDDEN_DB_KEY,
+            (string) $tag,
+            (string) time(),
+        ]);
+
+        try {
+            $result = $this->cql->request($query);
+        } catch (\Exception $e) {
+            error_log('[Tagcloud::hide] ' . $e->getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     public function unhide($tag)
     {
-        return (bool) $this->db->remove(static::HIDDEN_DB_KEY, [ $tag ]);
+        $query = new Prepared\Custom();
+
+        $query->query("DELETE FROM entities_by_time WHERE key = ? AND column1 = ?", [
+            static::HIDDEN_DB_KEY,
+            (string) $tag,
+        ]);
+
+        try {
+            $result = $this->cql->request($query);
+        } catch (\Exception $e) {
+            error_log('[Tagcloud::unhide] ' . $e->getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     public function rebuild()
@@ -110,9 +148,15 @@ class Tagcloud
         return $tags;
     }
 
-    public function fetchHidden($limit = 5000)
+    public function fetchHidden($limit = 500)
     {
-        return $this->db->get(static::HIDDEN_DB_KEY, [ 'limit' => $limit ]) ?: [];
+        $query = 'SELECT * from entities_by_time WHERE key = ? LIMIT ?';
+        $values = [ static::HIDDEN_DB_KEY, (int) $limit ];
+
+        $prepared = new Prepared\Custom();
+        $prepared->query($query, $values);
+
+        return $this->cql->request($prepared);
     }
 
     // Internal use

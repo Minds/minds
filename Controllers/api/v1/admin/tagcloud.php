@@ -25,10 +25,19 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiAdminPam
     {
         $tagcloud = new Search\Tagcloud();
 
+        $hiddenRows = $tagcloud->fetchHidden(250);
+        $hidden = [];
+
+        if ($hiddenRows) {
+            foreach ($hiddenRows as $row) {
+                $hidden[] = $row['column1'];
+            }
+        }
+
         return Factory::response([
             'tags' => $tagcloud->get(),
             'age' => $tagcloud->getAge(),
-            'hidden' => array_keys($tagcloud->fetchHidden(100)),
+            'hidden' => $hidden,
         ]);
     }
 
