@@ -13,6 +13,7 @@ use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\Notification as NotificationEntity;
 use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 use Minds\Helpers\Counters;
+use Minds\Core\Data\Cassandra\Prepared;
 
 use Minds\Plugin\Groups\Behaviors\Actorable;
 
@@ -23,16 +24,19 @@ class Notifications
     use Actorable;
 
     protected $relDB;
+    protected $indexDB;
+    protected $cql;
     protected $group;
 
     /**
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct($relDb = null, $indexDb = null)
+    public function __construct($relDb = null, $indexDb = null, $cql = null)
     {
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
     }
 
     /**
@@ -169,10 +173,18 @@ class Notifications
         ]);
 
         $guids = array_map([ $this, 'toString' ], $guids);
-        $exclude = array_unique(array_map(
-            [ $this, 'toString' ],
-            array_merge($opts['exclude'], $this->getMutedMembers())
-        ));
+        $exclude = array_unique(array_map([ $this, 'toString' ], $opts['exclude']));
+
+        $mutedRows = $this->getMutedMembers(10000);
+
+        foreach ($mutedRows as $muted) {
+            $muted_guid = $muted['column1'];
+            if (($index = array_search($muted_guid, $guids)) === false) {
+                continue;
+            }
+
+            unset($guids[$index]);
+        }
 
         return array_values(array_diff($guids, $exclude));
     }
@@ -181,19 +193,15 @@ class Notifications
      * Gets the GUIDs of muted members
      * @return array
      */
-    public function getMutedMembers()
+    public function getMutedMembers($limit = 10000)
     {
-        $this->relDB->setGuid($this->group->getGuid());
+        $query = 'SELECT * from relationships WHERE key = ? LIMIT ?';
+        $values = [ "{$this->group->getGuid()}:group:muted:inverted", (int) $limit ];
 
-        $guids = $this->relDB->get('group:muted', [
-            'inverse' => true
-        ]);
+        $prepared = new Prepared\Custom();
+        $prepared->query($query, $values);
 
-        if (!$guids) {
-            return [];
-        }
-
-        return $guids;
+        return $this->cql->request($prepared);
     }
 
     /**
@@ -207,11 +215,20 @@ class Notifications
             return [];
         }
 
-        $muted_guids = $this->getMutedMembers();
+        $mutedRows = $this->getMutedMembers(10000);
         $result = [];
 
         foreach ($users as $user) {
-            $result[$user] = in_array($user, $muted_guids);
+            $result[(string) $user] = false;
+        }
+
+        foreach ($mutedRows as $muted) {
+            $muted_guid = $muted['column1'];
+            if (!isset($result[$muted_guid])) {
+                continue;
+            }
+
+            $result[$muted_guid] = true;
         }
 
         return $result;
