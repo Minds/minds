@@ -1,9 +1,11 @@
 [submodule "engine"]
 	path = engine
-	url = https://github.com/minds/engine-internal.git
+	url = https://github.com/minds/engine.git
 [submodule "front"]
 	path = front
-	url = https://github.com/minds/front-internal.git
-[submodule "sockets"]
-	path = sockets
-	url = https://github.com/minds/sockets.git 
+	url = https://github.com/minds/front.git
+	
+#commented out because https://github.com/minds/sockets.git does not exist
+#[submodule "sockets"]
+#	path = sockets
+#	url = https://github.com/minds/sockets.git 
