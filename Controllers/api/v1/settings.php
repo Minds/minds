@@ -76,8 +76,8 @@ class settings implements Interfaces\Api
             $user->setEmail($_POST['email']);
         }
 
-        if (isset($_POST['boost_rating']) && $_POST['boost_rating']) {
-            $user->setBoostRating($_POST['boost_rating']);
+        if (isset($_POST['boost_rating'])) {
+            $user->setBoostRating((int) $_POST['boost_rating']);
         }
 
         if (isset($_POST['mature'])) {
