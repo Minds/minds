@@ -167,70 +167,62 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     }
 
     /**
-     * Update a merchants details
-     * @param Merchant $merchant
-     * @return string
-     */
-    public function updateMerchant(Merchant $merchant)
-    {
-        $account = StripeSDK\Account::retrieve($merchant->getGuid());
-
-
-        throw new \Exception($result->message);
-    }
-
-    /**
-     * Add a merchant to braintree
+     * Add a merchant to Stripe
      * @param Merchant $merchant
      * @return string - the ID of the merchant
      */
     public function addMerchant(Merchant $merchant)
     {
-
-        $countryToCurrency = [
-            'US' => 'USD',
-            'GB' => 'GBP',
-            'CA' => 'CAD'
-        ];
-
-
         $dob = explode('-', $merchant->getDateOfBirth());
         $data = [
           'managed' => true,
           'country' => $merchant->getCountry(),
-          'email' => $merchant->getEmail(),
           'legal_entity' => [
+            'type' => 'individual',
             'first_name' => $merchant->getFirstName(),
             'last_name' => $merchant->getLastName(),
-            'type' => 'individual',
             'address' => [
-              'line1' => $merchant->getStreet(),
               'city' => $merchant->getCity(),
+              'line1' => $merchant->getStreet(),
               'postal_code' => $merchant->getPostCode(),
-              //'state' => 'n/a'
+              'state' => $merchant->getState(),
             ],
             'dob' => [
               'day' => $dob[2],
               'month' => $dob[1],
               'year' => $dob[0]
-            ]
+            ],
           ],
           'tos_acceptance' => [
             'date' => time(),
-            'ip' => '0.0.0.0'
+            'ip' => '0.0.0.0' // @todo: Should we set the actual IP?
           ],
           'external_account' => [
             'object' => 'bank_account',
             'account_number' => $merchant->getAccountNumber(),
-            'routing_number' => $merchant->getRoutingNumber(),
             'country' => $merchant->getCountry(),
-            'currency' => $countryToCurrency[$merchant->getCountry()] ?: 'EUR' //basic support for USD, GBP and EUROS right now
+            'currency' => $this->getCurrencyFor($merchant->getCountry())
           ]
         ];
 
-        if ($merchant->getCountry() == 'US') {
+        if ($merchant->getGender()) {
+            $data['legal_entity']['gender'] = $merchant->getGender();
+        }
+
+        if ($merchant->getPhoneNumber()) {
+            $data['legal_entity']['phone_number'] = $merchant->getPhoneNumber();
+        }
+
+        if ($merchant->getSSN()) {
             $data['legal_entity']['ssn_last_4'] = $merchant->getSSN();
-            $data['legal_entity']['address']['state'] = $merchant->getState();
+        }
+
+        if ($merchant->getPersonalIdNumber()) {
+            $data['legal_entity']['personal_id_number'] = $merchant->getPersonalIdNumber();
+        }
+
+        if ($merchant->getRoutingNumber()) {
+            $data['external_account']['routing_number'] = $merchant->getRoutingNumber();
         }
 
         $result = StripeSDK\Account::create($data);
@@ -254,20 +246,27 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
             $merchant = (new Merchant())
               ->setStatus('active')
+              ->setCountry($result->country)
               ->setFirstName($result->legal_entity['first_name'])
               ->setLastName($result->legal_entity['last_name'])
-              //->setEmail($result->email)
-              ->setDateOfBirth($result->legal_entity['dob']['year'] . '-' . $result->legal_entity['dob']['month'] . '-' . $result->legal_entity['dob']['day'])
-              //->setSSN($result->individual['ssnLast4'])
+              ->setGender($result->legal_entity['gender'])
+              ->setDateOfBirth($result->legal_entity['dob']['year'] . '-' . str_pad($result->legal_entity['dob']['month'], 2, '0', STR_PAD_LEFT) . '-' . str_pad($result->legal_entity['dob']['day'], 2, '0', STR_PAD_LEFT))
               ->setStreet($result->legal_entity['address']['line1'])
               ->setCity($result->legal_entity['address']['city'])
-              //->setRegion($result->legal_entity['address']['region'])
               ->setPostCode($result->legal_entity['address']['postal_code'])
-              ->setAccountNumber($result->external_accounts->data[0]['last4'])
+              ->setState($result->legal_entity['address']['state'])
+              ->setPhoneNumber($result->legal_entity['phone_number'])
+              ->setSSN($result->legal_entity['ssn_last_4'])
+              ->setPersonalIdNumber($result->legal_entity['personal_id_number'])
+            //   ->setAccountNumber($result->external_accounts->data[0]['last4'])
               ->setRoutingNumber($result->external_accounts->data[0]['routing_number'])
               ->setDestination('bank');
 
             //verifiction check
+            if ($result->legal_entity->verification->status === 'verified') {
+                $merchant->markAsVerified();
+            }
+
             if ($result->verification->disabled_reason == 'fields_needed') {
                 if ($result->verification->fields_needed[0] == 'legal_entity.verification.document') {
                     $merchant->setStatus('awaiting-document');
@@ -278,6 +277,62 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Updates a merchant in Stripe
+     * @return Merchant
+     */
+    public function updateMerchant(Merchant $merchant)
+    {
+        try {
+            $account = StripeSDK\Account::retrieve($merchant->getId());
+
+            if ($account->legal_entity->verification->status !== 'verified') {
+                $account->legal_entity->first_name = $merchant->getFirstName();
+                $account->legal_entity->last_name = $merchant->getLastName();
+
+                $account->legal_entity->address->city = $merchant->getCity();
+                $account->legal_entity->address->line1 = $merchant->getStreet();
+                $account->legal_entity->address->postal_code = $merchant->getPostCode();
+                $account->legal_entity->address->state = $merchant->getState();
+
+                $dob = explode('-', $merchant->getDateOfBirth());
+                $account->legal_entity->dob->day = $dob[2];
+                $account->legal_entity->dob->month = $dob[1];
+                $account->legal_entity->dob->year = $dob[0];
+
+                if ($merchant->getGender()) {
+                    $account->legal_entity->gender = $merchant->getGender();
+                }
+
+                if ($merchant->getPhoneNumber()) {
+                    $account->legal_entity->phone_number = $merchant->getPhoneNumber();
+                }
+            } else {
+                if (!$account->legal_entity->ssn_last_4_provided && $merchant->getSSN()) {
+                    $account->legal_entity->ssn_last_4 = $merchant->getSSN();
+                }
+
+                if (!$account->legal_entity->personal_id_number_provided && $merchant->getPersonalIdNumber()) {
+                    $account->legal_entity->personal_id_number = $merchant->getPersonalIdNumber();
+                }
+            }
+
+            if ($merchant->getAccountNumber()) {
+                $account->external_account->account_number = $merchant->getAccountNumber();
+            }
+
+            if ($merchant->getRoutingNumber()) {
+                $account->external_account->routing_number = $merchant->getRoutingNumber();
+            }
+
+            $account->save();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+
+        return $account->id;
     }
 
     public function verifyMerchant($id, $file)
@@ -455,5 +510,25 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         }
 
         return $transfer;
+    }
+
+    public function getCurrencyFor($country)
+    {
+        $countryToCurrency = [
+            'AU' => 'AUD',
+            'CA' => 'CAD',
+            'GB' => 'GBP',
+            'HK' => 'HKD',
+            'JP' => 'JPY',
+            'SG' => 'SGD',
+            'US' => 'USD',
+            'NZ' => 'NZD',
+        ];
+
+        if (!isset($countryToCurrency[$country])) {
+            return 'EUR';
+        }
+
+        return $countryToCurrency[$country];
     }
 }

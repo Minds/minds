@@ -11,11 +11,13 @@ class Merchant
     private $id;
     private $guid;
 
+    private $gender;
     private $firstName;
     private $lastName;
     private $email;
     private $dob;
     private $ssn;
+    private $personalIdNumber;
 
     private $street;
     private $city;
@@ -23,6 +25,7 @@ class Merchant
     private $state;
     private $country;
     private $postCode;
+    private $phoneNumber;
 
     private $accountNumber;
     private $routingNumber;
@@ -31,6 +34,29 @@ class Merchant
     private $verified = false;
 
     private $status = "processing";
+
+    private $exportable = [
+        'guid',
+        'gender',
+        'firstName',
+        'lastName',
+        'email',
+        'dob',
+        'ssn',
+        'personalIdNumber',
+        'street',
+        'city',
+        'region',
+        'state',
+        'country',
+        'postCode',
+        'phoneNumber',
+        'accountNumber',
+        'routingNumber',
+        'destination',
+        'status',
+        'verified',
+    ];
 
     public function __construct()
     {
@@ -91,6 +117,17 @@ class Merchant
         return "$this->firstName $this->lastName";
     }
 
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+        return $this;
+    }
+
     public function getEmail()
     {
         return $this->email;
@@ -121,6 +158,17 @@ class Merchant
     public function setSSN($ssn)
     {
         $this->ssn = $ssn;
+        return $this;
+    }
+
+    public function getPersonalIdNumber()
+    {
+        return $this->personalIdNumber;
+    }
+
+    public function setPersonalIdNumber($personalIdNumber)
+    {
+        $this->personalIdNumber = $personalIdNumber;
         return $this;
     }
 
@@ -190,6 +238,17 @@ class Merchant
         return $this;
     }
 
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
     public function getAccountNumber()
     {
         return $this->accountNumber;
@@ -246,5 +305,16 @@ class Merchant
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function export()
+    {
+        $export = [];
+
+        foreach ($this->exportable as $field) {
+            $export[$field] = $this->$field;
+        }
+
+        return $export;
     }
 }

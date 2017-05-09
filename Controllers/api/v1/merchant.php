@@ -144,17 +144,7 @@ class merchant implements Interfaces\Api
               ]);
           }
 
-
-          $response['merchant'] = array(
-            'status' => $merchant->getStatus(),
-            'firstName' => $merchant->getFirstName(),
-            'lastName' => $merchant->getLastName(),
-            'email' => $merchant->getEmail(),
-            'ssn' => $merchant->getSSN(),
-            'venmo' => $merchant->getDestination() == 'email',
-            'accountNumber' => $merchant->getAccountNumber(),
-            'routingNumber' => $merchant->getRoutingNumber()
-          );
+          $response['merchant'] = $merchant->export();
 
           break;
         }
@@ -172,18 +162,19 @@ class merchant implements Interfaces\Api
           case "onboard":
             $merchant = (new Payments\Merchant())
               ->setGuid(Core\Session::getLoggedInUser()->guid)
+              ->setDestination('bank')
+              ->setCountry($_POST['country'])
+              ->setSSN($_POST['ssn'] ? str_pad((string) $_POST['ssn'], 4, '0', STR_PAD_LEFT) : '')
+              ->setPersonalIdNumber($_POST['personalIdNumber'])
               ->setFirstName($_POST['firstName'])
               ->setLastName($_POST['lastName'])
-              ->setEmail($_POST['email'])
+              ->setGender($_POST['gender'])
               ->setDateOfBirth($_POST['dob'])
-              ->setSSN($_POST['ssn'])
               ->setStreet($_POST['street'])
-              ->setState($_POST['state'])
               ->setCity($_POST['city'])
-              ->setRegion($_POST['region'])
-              ->setCountry($_POST['country'])
+              ->setState($_POST['state'])
               ->setPostCode($_POST['postCode'])
-              ->setDestination($_POST['venmo'] ? 'email' : 'bank')
+              ->setPhoneNumber($_POST['phoneNumber'])
               ->setAccountNumber($_POST['accountNumber'])
               ->setRoutingNumber($_POST['routingNumber']);
 
@@ -240,30 +231,36 @@ class merchant implements Interfaces\Api
               break;
           case "update":
             $merchant = (new Payments\Merchant())
-              ->setGuid(Core\Session::getLoggedInUser()->guid)
+              ->setId(Core\Session::getLoggedInUser()->getMerchant()['id'])
               ->setFirstName($_POST['firstName'])
               ->setLastName($_POST['lastName'])
-              ->setEmail($_POST['email'])
-              //->setDateOfBirth($_POST['dob'])
-              ->setSSN($_POST['ssn'])
-              //->setStreet($_POST['street'])
-              //->setCity($_POST['city'])
-              //->setRegion($_POST['region'])
-              //->setPostCode($_POST['postCode'])
-              ->setDestination($_POST['venmo'] ? 'email' : 'bank')
-              ->setAccountNumber($_POST['accountNumber'])
-              ->setRoutingNumber($_POST['routingNumber']);
+              ->setGender($_POST['gender'])
+              ->setDateOfBirth($_POST['dob'])
+              ->setStreet($_POST['street'])
+              ->setCity($_POST['city'])
+              ->setState($_POST['state'])
+              ->setPostCode($_POST['postCode'])
+              ->setPhoneNumber($_POST['phoneNumber']);
+
+              if ($_POST['ssn']) {
+                $merchant->setSSN($_POST['ssn'] ? str_pad((string) $_POST['ssn'], 4, '0', STR_PAD_LEFT) : '');
+              }
+
+              if ($_POST['personalIdNumber']) {
+                $merchant->setPersonalIdNumber($_POST['personalIdNumber']);
+              }
+
+              if ($_POST['accountNumber']) {
+                $merchant->setAccountNumber($_POST['accountNumber']);
+              }
+
+              if ($_POST['routingNumber']) {
+                $merchant->setRoutingNumber($_POST['routingNumber']);
+              }
 
             try {
-                $id = Payments\Factory::build('braintree', ['gateway'=>'merchants'])->updateMerchant($merchant);
-                $response['id'] = $id;
-
-                $user = Core\Session::getLoggedInUser();
-                $user->merchant = [
-                  'service' => 'stripe',
-                  'id' => $id
-                ];
-                $user->save();
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $result = $stripe->updateMerchant($merchant);
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
