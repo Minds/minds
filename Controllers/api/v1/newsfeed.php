@@ -124,7 +124,7 @@ class newsfeed implements Interfaces\Api
 
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        if ($pages[0] == 'network' && !get_input('prepend')) { // No boosts when prepending
+        if ($pages[0] == 'network' && !get_input('prepend') && $_GET['offset']) { // No boosts when prepending
             try {
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 2;
@@ -166,6 +166,10 @@ class newsfeed implements Interfaces\Api
                     }
                 }
             } catch (\Exception $e) {
+            }
+
+            if ($_GET['access_token']) {
+                array_unshift($activity, new Entities\Activity('708671440802553867'));
             }
 
             if (isset($_GET['thumb_guids'])) {
