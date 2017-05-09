@@ -46,14 +46,15 @@ class newsfeed implements Interfaces\Api
                     'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
                 );
                 break;
-            case 'network':
+          case 'network':
             $options = array(
                 'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
             );
             break;
           case 'featured':
             $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
-            $guids = $db->getRow('activity:featured', [ 'limit' => 24 ]);
+            $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+            $guids = $db->getRow('activity:featured', [ 'limit' => 24, 'offset' => $offset ]);
             if ($guids) {
                 $options['guids'] = $guids;
             } else {
@@ -178,6 +179,10 @@ class newsfeed implements Interfaces\Api
         if ($activity) {
             $response['activity'] = factory::exportable($activity, array('boosted'), true);
             $response['load-next'] = (string) end($activity)->guid;
+
+            if ($pages[0] == 'featured') {
+                $response['load-next'] = (string) end($activity)->featured_id;
+            }
             $response['load-previous'] = $loadPrevious;
         }
 
