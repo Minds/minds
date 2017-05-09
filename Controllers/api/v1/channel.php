@@ -212,14 +212,16 @@ class channel implements Interfaces\Api
 
                 if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
                     $allowedKeys = [
-                        'minds',
                         'facebook',
-                        'twitter',
-                        'youtube_user',
-                        'youtube_channel',
-                        'soundcloud',
-                        'reddit',
+                        'github',
                         'linkedin',
+                        'minds',
+                        'reddit',
+                        'soundcloud',
+                        'tumblr',
+                        'twitter',
+                        'youtube_channel',
+                        'youtube_user',
                     ];
                     $profiles = [];
 
