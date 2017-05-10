@@ -30,17 +30,19 @@ class group implements Interfaces\Api
         $user = Session::getLoggedInUser();
 
         $response = [];
-        $response['group'] = $group->export();
 
-        $membership = (new Groups\Core\Membership)
-          ->setGroup($group);
+        if ($group) {
+            $response['group'] = $group->export();
 
-        $notifications = (new Groups\Core\Notifications)
-          ->setGroup($group);
+            $membership = (new Groups\Core\Membership)
+              ->setGroup($group);
 
-        $response['group']['members'] = Factory::exportable($membership->getMembers(['limit' => 10]));
-        $response['group']['is:muted'] = $notifications->isMuted($user);
+            $notifications = (new Groups\Core\Notifications)
+              ->setGroup($group);
 
+            $response['group']['members'] = Factory::exportable($membership->getMembers(['limit' => 10]));
+            $response['group']['is:muted'] = $notifications->isMuted($user);
+        }
         return Factory::response($response);
     }
 
