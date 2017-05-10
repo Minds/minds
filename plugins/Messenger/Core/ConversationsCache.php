@@ -60,8 +60,9 @@ class ConversationsCache
                 return $c->getGuid();
             }, $conversations);
             array_unshift($guids, "object:gathering:conversations:{$this->user_guid}");
-            if($guids)
-              call_user_func_array([$this->redis, 'sadd'], $guids);
+            if (is_array($guids)) {
+                call_user_func_array([$this->redis, 'sadd'], $guids);
+            }
         } catch (\Exception $e) {
         }
     }

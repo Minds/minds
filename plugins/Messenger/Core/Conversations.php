@@ -105,6 +105,11 @@ class Conversations
                 continue;
             }
         }
+
+        if (!$return) {
+            return $return;
+        }
+
         usort($return, function ($a, $b) {
             return $b->ts - $a->ts;
         });
@@ -120,6 +125,9 @@ class Conversations
 
     public function filterOnline($conversations)
     {
+        if (!$conversations) {
+            return [];
+        }
         try {
             $config = $this->config->get('redis');
             $this->redis->connect($config['pubsub'] ?: $config['master'] ?: '127.0.0.1');
