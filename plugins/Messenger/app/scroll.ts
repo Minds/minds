@@ -1,5 +1,6 @@
 import { Directive, ElementRef, EventEmitter } from '@angular/core';
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/debounceTime';
 
 @Directive({
   selector: '[minds-messenger-scroll]',

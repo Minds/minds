@@ -86,13 +86,13 @@ export class MessengerConversation {
   }
 
   initialLoad() {
-    this.load({ limit: 10 });
+    this.load({ limit: 8 });
   }
 
   load(opts: any = {}){
 
     opts = (<any>Object).assign({
-        limit: 5,
+        limit: 12,
         offset: '',
         finish: '',
         password: this.encryption.getEncryptionPassword()
@@ -120,9 +120,9 @@ export class MessengerConversation {
           response.messages.shift();
           this.messages = response.messages.concat(this.messages);
           this.offset = response['load-previous'];
-          setTimeout(() => {
-            scrollView.scrollTop = scrollTop + scrollView.scrollHeight - scrollHeight +60;
-          });
+
+          this.cd.detectChanges();
+          scrollView.scrollTop = scrollTop + scrollView.scrollHeight - scrollHeight;
         } else {
           this.messages = response.messages;
           this.offset = response['load-previous'];
