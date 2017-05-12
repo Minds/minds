@@ -17,6 +17,7 @@ class DenormalizedEntity
     protected $rowKey;
     protected $guid;
     protected $exportableDefaults = [];
+    protected $ttl = null;
 
     public function __construct($db = null)
     {
@@ -102,7 +103,7 @@ class DenormalizedEntity
      */
     protected function saveToDb($data)
     {
-        return (bool) $this->db->insert($this->rowKey, [$this->guid => json_encode($data)]);
+        return (bool) $this->db->insert($this->rowKey, [$this->guid => json_encode($data)], $this->ttl);
     }
 
     /**

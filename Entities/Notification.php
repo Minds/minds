@@ -44,6 +44,8 @@ class Notification extends DenormalizedEntity
         'filter',
     ];
 
+    protected $ttl = ((60 * 60) * 24) * 60; // 60 days to live
+
     /**
      * Writes the entity to the database and updates counters
      * @return Notification
