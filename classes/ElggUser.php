@@ -72,7 +72,7 @@ class ElggUser extends ElggEntity
 					$msg = elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid->guid));
 					throw new IOException($msg);
 				}
-			} elseif(is_numeric($guid)){
+			} elseif(is_numeric($guid) && strlen((string) $guid) >= 18){
             	if (!$this->loadFromGUID($guid)) {
 					throw new IOException(elgg_echo('IOException:FailedToLoadGUID', array(get_class(), $guid)));
 				}
