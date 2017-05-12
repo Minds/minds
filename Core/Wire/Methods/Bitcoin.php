@@ -29,6 +29,7 @@ class Money implements MethodInterface
     public function execute()
     {
         //$this->id = Helpers\Wallet::createTransations($this->entity->owner_guid, $this->amount, $this->entity->guid, "Wire");
+        throw new \Exception('Coming soon');
     }
 
     public function getId()

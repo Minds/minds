@@ -40,10 +40,26 @@ class Money implements MethodInterface
 
     public function execute()
     {
+        $merchant = new User($this->entity->owner_guid);
+
+        if (!$merchant->getMerchant()['id']) {
+            $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
+
+            Core\Events\Dispatcher::trigger('notification', 'wire', [
+              'to' => [ $this->entity->owner_guid ],
+              'from' => 100000000000000519,
+              'notification_view' => 'custom_message',
+              'params' => [ 'message' => $message ],
+              'message' => $message,
+            ]);
+
+            throw new \Exception('Sorry, this user cannot receive USD.');
+        }
+
         $sale = new Payments\Sale();
         $sale->setOrderId('wire-' . $this->entity->guid)
              ->setAmount($this->amount * 100) //cents to $
-             ->setMerchant(new User($this->entity->owner_guid))
+             ->setMerchant($merchant)
              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
              ->setNonce($this->nonce)
              ->capture();

@@ -82,8 +82,7 @@ class wire implements Interfaces\Api
 
         } catch (\Exception $e) {
             $response['status'] = 'error';
-            $respone['message'] = $e->getMessage();
-            var_dump($e); exit;
+            $response['message'] = $e->getMessage();
         }
 
         return Factory::response($response);
