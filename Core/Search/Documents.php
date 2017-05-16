@@ -74,7 +74,7 @@ class Documents
     // error_log(print_r($body, 1));
 
     // Document path: index/type/guid
-    $result = $this->client->index($params);
+      $result = $this->client->index($params);
   }
 
   /**
@@ -127,8 +127,6 @@ class Documents
           $query = preg_replace($htRe, '', $query);
       }
 
-      $flags = " !mature:1";
-
       // Setup parameters
       $params = [
         'size' => $opts['limit'],
@@ -140,9 +138,20 @@ class Documents
               'default_operator' => 'AND',
               'minimum_should_match' => '75%',
               'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'tags^12', 'hashtags^12' ],
-            ]
-          ]
-        ]
+             ]
+           ],
+           'filter' => [
+             'bool' => [
+               'must_not' => [
+                 [ 
+                   'term' => [
+                     'mature' => 1
+                   ]
+                 ]
+               ]
+             ]
+           ]
+         ]
       ];
 
       if ($hashtags) {
@@ -166,7 +175,7 @@ class Documents
 
           foreach ($results['hits']['hits'] as $result) {
               $guids[] = $result['_id'];
-          }
+          }    
       } catch (\Exception $e) {
           var_dump($e);
           exit;
