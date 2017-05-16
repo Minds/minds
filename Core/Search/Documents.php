@@ -51,14 +51,16 @@ class Documents
           throw new \Exception('Empty data body');
       }
 
-    // Get hashtags to put them into a field
-    $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
-      $matches = [];
+      if ($data['type'] != 'user') {
+          // Get hashtags to put them into a field
+          $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
+          $matches = [];
 
-      preg_match_all($htRe, $fullTextBody, $matches);
+          preg_match_all($htRe, $fullTextBody, $matches);
 
-      if (isset($matches[2]) && $matches[2]) {
-          $body['hashtags'] = array_unique($matches[2]);
+          if (isset($matches[2]) && $matches[2]) {
+              $body['hashtags'] = array_unique($matches[2]);
+          }
       }
 
       $params = [
