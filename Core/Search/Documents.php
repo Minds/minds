@@ -125,6 +125,8 @@ class Documents
           $query = preg_replace($htRe, '', $query);
       }
 
+      $flags = " !mature:1";
+
       // Setup parameters
       $params = [
         'size' => $opts['limit'],

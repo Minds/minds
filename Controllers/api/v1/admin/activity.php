@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1\admin;
 
 use Minds\Core;
+use Minds\Core\Events\Dispatcher;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -59,6 +60,10 @@ class activity implements Interfaces\Api, Interfaces\ApiAdminPam
                         $attachment->save();
                     }
                 }
+
+                Dispatcher::trigger('search:index', 'all', [
+                  'entity' => $activity
+                ]);
 
                 // @todo: set user flag for mature content when
                 // stateless entity modifications are introduced
