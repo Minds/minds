@@ -98,6 +98,7 @@ class Adsense
         
         $request = new \Google_Service_AnalyticsReporting_ReportRequest();
         $request->setViewId($this->getAnalyticsView());
+        $request->setSamplingLevel(1);
 
         // Set the date range
         $request->setDateRanges($this->buildDateRange($start, $end));
@@ -143,6 +144,9 @@ class Adsense
         // Format result
         $items = [];
         foreach ($rows as $row) {
+            if (!(float) $row->getMetrics()[0]->getValues()[1]) {
+                continue;
+            }
             $items[] = [
                 'url' => $row->getDimensions()[0],
                 'title' => $row->getDimensions()[1],
@@ -150,7 +154,7 @@ class Adsense
                 'revenue' => (float) $row->getMetrics()[0]->getValues()[1]
             ];
         }
-
+        
         $data = [ $items, isset($reports[0]->nextPageToken) ? $reports[0]->nextPageToken : '' ];
         $this->cache->set('getRevenuePerPage', [ $dimension1, $pageToken, $pageSize ], $start, $end, $data);
 

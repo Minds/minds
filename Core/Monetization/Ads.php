@@ -42,13 +42,19 @@ class Ads
     public function getList($start, $end, $offset = '', $count = 50)
     {
         $payouts = Core\Di\Di::_()->get('Monetization\Payouts');
+        list($totalViews, $totalRevenue) = $this->service->getTotalRevenueAndViews($this->user, $start, $end);
 
         list($items, $offset) = $this->service->getRevenuePerPage($this->user, $start, $end, $offset, $count);
         $this->lastOffset = $offset;
 
         $list = [];
+        $accuracyVar = 1;
+        if (count($list) < 50 && array_sum(array_column($items, 'views')) < $totalViews) {
+            $accuracyVar = array_sum(array_map(function($item){ return $item['views']; }, $items)) / $totalViews;
+        }
         foreach ($items as $item) {
-            $revenue = $payouts->calcUserAmount($item['revenue']);
+            $pct = ($item['views'] / ($totalViews * $accuracyVar));
+            $revenue = $payouts->calcUserAmount($totalRevenue * $pct);
 
             $list[] = [
                 'entity' => [ // @todo: read metadata from DB?
@@ -75,15 +81,31 @@ class Ads
     public function getOverview()
     {
         $payouts = Core\Di\Di::_()->get('Monetization\Payouts');
-        $retentionDays = $this->config->get('payouts')['retentionDays'];
+        $balanceDays = $this->config->get('payouts')['retentionDays'];
 
         return [
             'today' => $payouts->calcUserAmount($this->getTotalRevenue(new \DateTime('today'), new \DateTime('today'))),
             'last7' => $payouts->calcUserAmount($this->getTotalRevenue(new \DateTime('7 days ago'), new \DateTime('today'))),
-            'lastRetentionDays' => $retentionDays,
-            'lastRetentionAmount' => $payouts->calcUserAmount($this->getTotalRevenue(new \DateTime($retentionDays . ' days ago'), new \DateTime('today'))),
+            'last28' => $payouts->calcUserAmount($this->getTotalRevenue(new \DateTime('28 days ago'), new \DateTime('today'))),
+            'balanceDays' => $balanceDays,
+            'balance' => $payouts->calcUserAmount($this->getTotalRevenue(new \DateTime($balanceDays . ' days ago'), new \DateTime('today'))),
         ];
     }
+
+    public function getBreakdownList($days, $offset = '', $count = 50)
+    {
+        $start = new \DateTime($days . ' days ago');
+        $end = new \DateTime('today');
+        $list = $this->getList($start, $end, $offset, $count);
+        return [
+            'list' => $list,
+            'dates' => [
+                'start' => $start->getTimestamp(),
+                'end' => $end->getTimestamp(),
+            ],
+        ];
+    }
+
 
     public function getPayoutsList($offset = '', $count = 50)
     {

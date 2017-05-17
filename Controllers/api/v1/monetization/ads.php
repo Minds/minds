@@ -9,6 +9,7 @@ namespace Minds\Controllers\api\v1\monetization;
 
 use Minds\Components\Controller;
 use Minds\Core;
+use Minds\Core\Config;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -32,7 +33,7 @@ class ads extends Controller implements Interfaces\Api
         if (!isset($pages[1]) || !$pages[1]) {
             $user = $currentUser;
         } else {
-            $user = new Entities\User($pages[1]);
+            $user = new Entities\User(strtolower($pages[1]));
 
             if (!$user || !$user->guid) {
                 return Factory::response([ 'status' => 'error' ]);
@@ -92,11 +93,18 @@ class ads extends Controller implements Interfaces\Api
                 break;
 
             case 'list':
+                $period = isset($_GET['period']) ? (int) $_GET['period'] : 28;
                 $offset = isset($_GET['offset']) ? $_GET['offset'] : '';
-                $list = $ads->getPayoutsList($offset, 50);
+
+                if($period >= Config::_()->get('payouts')['retentionDays']) {
+                    $list = $ads->getPayoutsList($offset, 50);
+                } else {
+                    $list = $ads->getBreakdownList($period, $offset, 50);
+                }
+                //$list = $ads->getPayoutsList($offset, 50);
 
                 return Factory::response([
-                    'payouts' => $list,
+                    'breakdown' => $list,
                     'load-next' => $ads->getLastOffset(),
                 ]);
                 break;
