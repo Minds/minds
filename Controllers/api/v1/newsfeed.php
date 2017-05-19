@@ -167,17 +167,17 @@ class newsfeed implements Interfaces\Api
                 }
             } catch (\Exception $e) {
             }
-
-            if ($_GET['access_token']) {
-                array_unshift($activity, new Entities\Activity('708671440802553867'));
-            }
-
+        
             if (isset($_GET['thumb_guids'])) {
                 foreach ($activity as $id => $object) {
                     unset($activity[$id]['thumbs:up:user_guids']);
                     unset($activity[$id]['thumbs:down:user_guid']);
                 }
             }
+        }
+
+        if ($pages[0] == 'network' && $_GET['access_token']) {
+            array_unshift($activity, new Entities\Activity('708671440802553867'));
         }
 
         if ($activity) {
