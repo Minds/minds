@@ -70,11 +70,14 @@ class Signup implements AnalyticsMetric
         $timestamps = Timestamps::span($span, $unit);
         $data = [];
         foreach ($timestamps as $ts) {
-            $data[] = [
-                'timestamp' => $ts,
-                'date' => date('d-m-Y', $ts),
-                'total' => $this->db->countRow("{$this->namespace}:$unit:$ts")
-            ];
+            try {
+                $data[] = [
+                    'timestamp' => $ts,
+                    'date' => date('d-m-Y', $ts),
+                    'total' => $this->db->countRow("{$this->namespace}:$unit:$ts")
+                ];
+            } catch (\Exception $e){
+            }
         }
         return $data;
     }

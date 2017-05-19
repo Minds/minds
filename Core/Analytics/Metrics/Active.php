@@ -72,11 +72,14 @@ class Active implements AnalyticsMetric
         $timestamps = Timestamps::span($span, $unit);
         $data = array();
         foreach ($timestamps as $ts) {
-            $data[] = array(
-                'timestamp' => $ts,
-                'date' => date('d-m-Y', $ts),
-                'total' => $this->db->countRow("{$this->namespace}active:$unit:$ts")
-            );
+            try {
+                $data[] = array(
+                    'timestamp' => $ts,
+                    'date' => date('d-m-Y', $ts),
+                    'total' => $this->db->countRow("{$this->namespace}active:$unit:$ts")
+                );
+            } catch (\Exception $e){
+            }
         }
         return $data;
     }
