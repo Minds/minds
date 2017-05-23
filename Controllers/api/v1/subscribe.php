@@ -31,6 +31,9 @@ class subscribe implements Interfaces\Api
             case 'subscriptions':
                 $db = new \Minds\Core\Data\Call('friends');
                 $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                if (!$subscribers) {
+                    return Factory::response([]);
+                }
                 $users = array();
                 foreach ($subscribers as $guid => $subscriber) {
                     if ($guid == get_input('offset')) {
@@ -51,6 +54,9 @@ class subscribe implements Interfaces\Api
             case 'subscribers':
                 $db = new \Minds\Core\Data\Call('friendsof');
                 $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
+                if (!$subscribers) {
+                    return Factory::response([]);
+                }
                 $users = array();
                 if (get_input('offset') && key($subscribers) != get_input('offset')) {
                     $response['load-previous'] = (string) get_input('offset');
