@@ -21,5 +21,8 @@ class SecurityProvider extends Provider
               Core\Data\cache\factory::build()
             );
         }, ['useFactory'=>true]);
+        $this->di->bind('Security\Captcha', function ($di) {
+            return new Captcha(Di::_()->get('Config'));
+        }, ['useFactory'=>true]);
     }
 }

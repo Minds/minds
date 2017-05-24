@@ -98,6 +98,10 @@ class subscribe implements Interfaces\Api
         if ($pages[0] === 'batch') {
             $guids = $_POST['guids'];
 
+            //temp: captcha tests
+            if (Core\Session::getLoggedInUser()->captcha_failed) {
+                return Factory::response(['status' => 'error']);
+            }
 
             Queue\Client::build()
               ->setQueue('SubscriptionDispatcher')

@@ -61,6 +61,10 @@ class Register
 
         Dispatcher::register('register/complete', 'user', function ($event) {
             $params = $event->getParameters();
+            //temp: if captcha failed
+            if ($params['user']->captcha_failed) {
+                return false;
+            }
             //send welcome email
             try {
                 $template = new Core\Email\Template();

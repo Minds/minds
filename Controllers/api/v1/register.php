@@ -44,14 +44,26 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         try {
+            $captcha = Core\Di\Di::_()->get('Security\Captcha');
+            /*if (!$captcha->validateAnswer($_POST['captcha'])) {
+                throw new \Exception('Captcha failed');
+            }*/
+
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
-            $params = array(
+
+            if (!$captcha->validateAnswer($_POST['captcha'])) {
+                $user->captcha_failed = true;
+                $user->save();
+            }
+
+            $params = [
                 'user' => $user,
                 'password' => $_POST['password'],
                 'friend_guid' => "",
                 'invitecode' => ""
-            );
+            ];
+
             elgg_trigger_plugin_hook('register', 'user', $params, true);
             Core\Events\Dispatcher::trigger('register', 'user', $params);
             Core\Events\Dispatcher::trigger('register/complete', 'user', $params);
