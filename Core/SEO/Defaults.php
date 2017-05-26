@@ -45,6 +45,12 @@ class Defaults
                     return array();
                 }
 
+                if (!$user->enabled) {
+                    header("HTTP/1.0 404 Not Found");
+                    return [
+                        'robots' => 'noindex'
+                    ];
+                }
 
                 return $meta = [
                 'title' => $user->name . ' | ' . $this->config->site_name,
