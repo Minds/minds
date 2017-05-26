@@ -51,7 +51,10 @@ class start extends Components\Plugin
             }
             $entity = CoreEntities\Factory::build($guid);
             if (!$entity) {
-                return array();
+                header("HTTP/1.0 404 Not Found");
+                return [
+                    'robots' => 'noindex'
+                ];
             }
 
             return $meta = array(

@@ -20,11 +20,17 @@ class SEO
             $group = EntitiesFactory::build($guid);
 
             if (!$group) {
-                return;
+                header("HTTP/1.0 404 Not Found");
+                return [
+                    'robots' => 'noindex'
+                ];
             }
 
             if (!$group->getName()) {
-                return [];
+                header("HTTP/1.0 404 Not Found");
+                return [
+                    'robots' => 'noindex'
+                ];
             }
 
             return $meta = [

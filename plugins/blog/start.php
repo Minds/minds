@@ -23,7 +23,10 @@ class start extends Components\Plugin
             }
             $blog = new entities\Blog($guid);
             if (!$blog->title) {
-                return array();
+                header("HTTP/1.0 404 Not Found");
+                return [
+                    'robots' => 'noindex'
+                ];
             }
 
             $description = strip_tags($blog->description);
