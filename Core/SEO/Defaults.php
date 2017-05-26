@@ -67,7 +67,10 @@ class Defaults
             if (isset($slugs[0]) && is_numeric($slugs[0])) {
                 $activity = new Entities\Activity($slugs[0]);
                 if (!$activity->guid) {
-                    return [];
+                    header("HTTP/1.0 404 Not Found");
+                    return [
+                      'robots' => 'noindex'
+                    ];
                 }
                 if ($activity->paywall) {
                     return;
