@@ -98,71 +98,39 @@ class wallet implements Interfaces\Api
                 $usd = $ex_rate * $points;
                 return Factory::response(array('usd'=>$usd));
                 break;
-            case "charge":
-
-                $ex_rate = $this->ex_rate;
-                $points = $_POST['points'];
-                $usd = $ex_rate * $points;
-
-
-                try {
-                    $card = \minds\plugin\payments\services\paypal::factory()->createCard([
-                        'type' => $_POST['type'],
-                        'number' => (int) str_replace(' ', '', $_POST['number']),
-                        'month' => $_POST['month'],
-                        'year' => $_POST['year'],
-                        'sec' => $_POST['sec'],
-                        'name' => $_POST['name'],
-                        'name2' => $_POST['name2']
-                    ]);
-                } catch (\Exception $e) {
-                    return Factory::response(array('status'=>'error'));
-                }
-
-                try {
-                    $response['id'] = \Minds\plugin\payments\start::createPayment("$points purchase", $usd, $card->getID());
-                    if ($response['id']) {
-                        Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
-                    }
-                } catch (\Exception $e) {
-                    $response['status'] = 'error';
-                    $response['message'] = $e->getMessage();
-                }
-
-                break;
-            case "paypal":
-                switch ($pages[1]) {
-                    case "confirm":
-                        $ex_rate = $this->ex_rate;
-                        $points = $_POST['points'];
-                        $usd = $ex_rate * $points;
-
-                        $payment = \Minds\plugin\payments\services\paypal::factory()->capture($_POST['id'], $usd);
-                        if ($payment->getId()) {
-                            //ok, now charge!
-                            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
-                            Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
-                        } else {
-                            $response['status'] = 'error';
-                        }
-
-                    break;
-                }
-                break;
             case "purchase-once":
                 $amount = $_POST['amount'];
                 $points = $_POST['points'];
                 $usd = $this->ex_rate * $points;
 
-                $sale = (new Payments\Sale())
-                  ->setAmount($usd)
-                  ->setCustomerId(Core\Session::getLoggedInUser()->guid)
-                  ->setSettle(true)
-                  ->setFee(0)
-                  ->setNonce($_POST['nonce']);
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $source = $_POST['source'];
+
+                $customer = (new Payments\Customer())
+                  ->setUser(Core\Session::getLoggedInUser());
+
+                if (!$stripe->getCustomer($customer) || !$customer->getId()) {
+                    //create the customer on stripe
+                    $customer->setPaymentToken($_POST['source']);
+                    $customer = $stripe->createCustomer($customer);
+                }
+
+                $sale = new Payments\Sale();
+                $sale->setOrderId('points-' . microtime(true))
+                   ->setAmount($usd * 100) //cents to $
+                   ->setSource($source)
+                   ->setCustomer($customer)
+                   ->setCustomerId(Core\Session::getLoggedInUser()->guid)
+                   ->capture();
+
+                if (Core\Session::getLoggedInUser()->referrer) {
+                    $referrer = new Entities\User(strtolower(Core\Session::getLoggedInUser()->referrer));
+                    $sale->setMerchant($referrer)
+                      ->setFee(0.75); //payout 25% to referrer
+                }
 
                 try {
-                    $result = Payments\Factory::build('braintree', ['gateway'=>'default'])->setSale($sale);
+                    $result = $stripe->setSale($sale);
                     Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
                     Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
                 } catch (\Exception $e) {

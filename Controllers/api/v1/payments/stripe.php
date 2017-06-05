@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1\payments;
 
 use Minds\Core;
+use Minds\Core\Payments\Customer;
 use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -28,6 +29,14 @@ class stripe implements Interfaces\Api
       switch ($pages[0]) {
         case "token":
           $response['token'] = Core\Config::_()->get('payments')['stripe']['public_key'];
+          break;
+        case "cards":
+          $stripe = Core\Di\Di::_()->get('StripePayments');
+
+          $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
+          $cards = $stripe->getCustomer($customer)->getPaymentMethods();
+
+          $response['cards'] = $cards;
           break;
       }
 

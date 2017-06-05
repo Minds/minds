@@ -16,6 +16,7 @@ class Sale
     private $fee;
     private $capture = false;
     private $merchant;
+    private $customer;
     private $customerId;
     private $nonce;
     private $settle = false;
@@ -142,6 +143,28 @@ class Sale
     public function getNonce()
     {
         return $this->nonce;
+    }
+
+    public function setSource($source)
+    {
+        $this->source = $source;
+        return $this;
+    }
+
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    public function setCustomer(Customer $customer)
+    {
+        $this->customer = $customer;
+        return $this;
+    }
+
+    public function getCustomer()
+    {
+        return $this->customer;
     }
 
     public function setCustomerId($customerId)

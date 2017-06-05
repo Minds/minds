@@ -57,18 +57,34 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           'amount' => $sale->getAmount(),
           'capture' => $sale->shouldCapture(),
           'currency' => 'usd',
-          'source' => $sale->getNonce() ?: $sale->getCustomerId(),
+          //'source' => $sale->getNonce() ?: $sale->getCustomer()->getId(),
           'metadata' => [
             'orderId' => $sale->getOrderId(),
             'first_name' => $sale->getCustomerId()
           ],
         ];
-        if ($sale->getFee()) {
-            $opts['application_fee'] = round($sale->getFee());
+
+        $source = $sale->getSource();
+        switch (substr($source, 0, 3)) {
+            case "src":
+              $opts['source'] = $source;
+              break;
+            case "car":
+              $opts['customer'] = $sale->getCustomer()->getId();
+              $opts['card'] = $source;
+              break;
+            case "cus":
+              $opts['customer'] = $source;
+              break;
         }
+
         if ($sale->getMerchant()) {
             $user = new Entities\User($sale->getMerchant()->guid);
             $opts['destination'] = $user->getMerchant()['id'];
+
+            if ($sale->getFee()) {
+                $opts['application_fee'] = round($sale->getFee());
+            }
         }
 
         $result = StripeSDK\Charge::create($opts);
