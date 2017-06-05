@@ -164,6 +164,48 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $sales;
     }
 
+    public function getGrossVolume($merchant)
+    {
+      $results = StripeSDK\BalanceTransaction::all(
+        [
+          'type' => 'charge'
+        ],
+        [
+          'stripe_account' => $merchant->getId()
+        ]);
+
+      $total = [
+        'net' => 0,
+        'gross' => 0
+      ];
+
+      foreach($results->autoPagingIterator() as $balance){
+        $total['net'] += $balance->net / 100;
+        $total['gross'] += $balance->amount / 100;
+      }
+
+      return $total;
+    }
+
+    public function getTotalPayouts($merchant)
+    {
+      $results = StripeSDK\BalanceTransaction::all(
+        [
+          'type' => 'payout'
+        ],
+        [
+          'stripe_account' => $merchant->getId()
+        ]);
+
+      $total = 0;
+
+      foreach($results->autoPagingIterator() as $balance){
+        $total += $balance->amount / 100;
+      }
+
+      return $total * -1;
+    }
+
    /**
      * Get a list of transactions
      * @param Merchant $merchant - the merchant
@@ -181,6 +223,27 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           ]);
         return $results;
     }
+
+    /**
+      * Get a list of transactions
+      * @param Merchant $merchant - the merchant
+      * @param array $options - limit, offset
+      * @return array
+      */
+     public function getTotalBalance(Merchant $merchant, array $options = array())
+     {
+        $results = StripeSDK\Balance::retrieve([
+          'stripe_account' => $merchant->getId()
+        ]);
+
+        $total = 0;
+        foreach ($results->available as $available) {
+            if ($available->currency == 'usd') {
+                $total += $available->amount / 100;
+            }
+        }
+        return $total;
+     }
 
     /**
      * Add a merchant to Stripe
