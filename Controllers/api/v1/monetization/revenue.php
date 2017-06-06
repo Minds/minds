@@ -14,6 +14,7 @@ use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Payments\Merchant;
 
 class revenue extends Controller implements Interfaces\Api
 {
@@ -27,7 +28,7 @@ class revenue extends Controller implements Interfaces\Api
         $user = Core\Session::getLoggedInUser();
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
-        $merchant = $stripe->getMerchant($user->getMerchant()['id']);
+        $merchant = (new Merchant())->setId($user->getMerchant()['id']);
         $volume = $stripe->getGrossVolume($merchant);
         $payouts = $stripe->getTotalPayouts($merchant);
         $balance = $stripe->getTotalBalance($merchant);
