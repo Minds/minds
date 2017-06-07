@@ -6,6 +6,7 @@
 namespace Minds\Core\Payments\Stripe;
 
 use Minds\Core;
+use Minds\Core\Analytics\Timestamps;
 use Minds\Core\Config\Config;
 use Minds\Core\Guid;
 use Minds\Core\Payments\PaymentServiceInterface;
@@ -67,6 +68,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         $source = $sale->getSource();
         switch (substr($source, 0, 3)) {
             case "src":
+              $opts['source'] = $source;
+              break;
+            case "tok":
               $opts['source'] = $source;
               break;
             case "car":
@@ -206,6 +210,133 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
       return $total * -1;
     }
 
+    public function getPayouts(Merchant $merchant, array $options = [])
+    {
+        $options = array_merge([
+            'limit' => 50,
+            'offset' => ''
+        ], $options);
+
+        if ($options['offset']) {
+            $params['starting_after'] = $options['offset'];
+        }
+
+        $transactions = StripeSDK\Payout::all(
+          $options,
+          [
+            'stripe_account' => $merchant->getId()
+          ]);
+
+        $results = [];
+
+        foreach($transactions->autoPagingIterator() as $transaction){
+            $transaction->amount = $transaction->amount;
+            $results[] = $transaction;
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get a list of transactions (filtered)
+     * @param Merchant $merchant - the merchant
+     * @param array $options - limit, offset
+     * @return array
+     */
+    public function getTransactions(Merchant $merchant, array $options = [])
+    {
+        $options = array_merge([
+            'limit' => 50,
+            'offset' => '',
+            'orderIdPrefix' => ''
+        ], $options);
+
+        $hasFilter = (bool) (
+            $options['orderIdPrefix']
+        );
+
+        $params = [
+            'limit' => $hasFilter ? 100 : (int) $options[$limit]
+        ];
+
+        if ($options['offset']) {
+            $params['starting_after'] = $options['offset'];
+        }
+
+        $transactions = StripeSDK\Charge::all($params, [
+            'stripe_account' => $merchant->getId()
+        ]);
+
+        $results = [];
+        foreach ($transactions->autoPagingIterator() as $transaction) {
+            if (
+                $options['orderIdPrefix'] &&
+                strpos("{$options['orderIdPrefix']}-", $transaction->metadata['orderId']) !== 0
+            ) {
+                continue;
+            }
+
+            $results[] = $transaction;
+
+            if (count($results) >= $options['limit']) {
+                break;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get a daily breakdown of transactions
+     * @param Merchant $merchant - the merchant
+     * @param array $options - limit, offset
+     * @return array
+     */
+    public function getDailyBalance(Merchant $merchant, array $options = [])
+    {
+        $options = array_merge([
+            'days' => 1,
+            'orderIdPrefix' => ''
+        ], $options);
+
+        $timestamps = Timestamps::span($options['days'], 'day');
+
+        $results = [];
+
+        foreach ($timestamps as $ts) {
+            $results[date('Y-m-d', $ts)] = [
+                'net' => 0.00,
+                'gross' => 0.00
+            ];
+        }
+
+        $transactions = StripeSDK\BalanceTransaction::all([
+            'created' => [
+                'gte' => reset($timestamps),
+                'lte' => end($timestamps)
+            ],
+            'limit' => 50
+        ], [
+            'stripe_account' => $merchant->getId()
+        ]);
+
+        foreach ($transactions->autoPagingIterator() as $transaction) {
+            if (
+                $options['orderIdPrefix'] &&
+                strpos("{$options['orderIdPrefix']}-", $transaction->metadata['orderId']) !== 0
+            ) {
+                continue;
+            }
+
+            $key = date('Y-m-d', $transaction->created);
+
+            $results[$key]['net'] += $transaction->net / 100;
+            $results[$key]['gross'] += $transaction->amount / 100;
+        }
+
+        return $results;
+    }
+
    /**
      * Get a list of transactions
      * @param Merchant $merchant - the merchant
@@ -275,12 +406,6 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           'tos_acceptance' => [
             'date' => time(),
             'ip' => '0.0.0.0' // @todo: Should we set the actual IP?
-          ],
-          'external_account' => [
-            'object' => 'bank_account',
-            'account_number' => $merchant->getAccountNumber(),
-            'country' => $merchant->getCountry(),
-            'currency' => $this->getCurrencyFor($merchant->getCountry())
           ]
         ];
 
@@ -298,10 +423,6 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
         if ($merchant->getPersonalIdNumber()) {
             $data['legal_entity']['personal_id_number'] = $merchant->getPersonalIdNumber();
-        }
-
-        if ($merchant->getRoutingNumber()) {
-            $data['external_account']['routing_number'] = $merchant->getRoutingNumber();
         }
 
         $result = StripeSDK\Account::create($data);
@@ -324,6 +445,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             $result = StripeSDK\Account::retrieve($id);
 
             $merchant = (new Merchant())
+              ->setId($result->id)
               ->setStatus('active')
               ->setCountry($result->country)
               ->setFirstName($result->legal_entity['first_name'])
@@ -337,7 +459,8 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
               ->setPhoneNumber($result->legal_entity['phone_number'])
               ->setSSN($result->legal_entity['ssn_last_4'])
               ->setPersonalIdNumber($result->legal_entity['personal_id_number'])
-            //   ->setAccountNumber($result->external_accounts->data[0]['last4'])
+              ->setBankAccount($result->external_accounts->data[0])
+              ->setAccountNumber($result->external_accounts->data[0]['last4'])
               ->setRoutingNumber($result->external_accounts->data[0]['routing_number'])
               ->setDestination('bank');
 
@@ -412,6 +535,21 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         }
 
         return $account->id;
+    }
+
+    public function updateMerchantAccount($merchant)
+    {
+        $account = StripeSDK\Account::retrieve($merchant->getId());
+        $account->external_account = [
+          'object' => 'bank_account',
+          'account_number' => $merchant->getAccountNumber(),
+          'routing_number' => $merchant->getRoutingNumber(),
+          'country' => $merchant->getCountry(),
+          'currency' => $this->getCurrencyFor($merchant->getCountry())
+        ];
+        $account->save();
+
+        return $account;
     }
 
     public function verifyMerchant($id, $file)

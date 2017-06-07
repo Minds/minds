@@ -174,9 +174,7 @@ class merchant implements Interfaces\Api
               ->setCity($_POST['city'])
               ->setState($_POST['state'])
               ->setPostCode($_POST['postCode'])
-              ->setPhoneNumber($_POST['phoneNumber'])
-              ->setAccountNumber($_POST['accountNumber'])
-              ->setRoutingNumber($_POST['routingNumber']);
+              ->setPhoneNumber($_POST['phoneNumber']);
 
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');

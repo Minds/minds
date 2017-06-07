@@ -27,6 +27,7 @@ class Merchant
     private $postCode;
     private $phoneNumber;
 
+    private $bankAccount;
     private $accountNumber;
     private $routingNumber;
     private $destination;
@@ -246,6 +247,17 @@ class Merchant
     public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getBankAccount()
+    {
+        return $this->bankAccount;
+    }
+
+    public function setBankAccount($bankAccount)
+    {
+        $this->bankAccount = $bankAccount;
         return $this;
     }
 
