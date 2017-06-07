@@ -29,6 +29,14 @@ class revenue extends Controller implements Interfaces\Api
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
         $merchant = (new Merchant())->setId($user->getMerchant()['id']);
+
+        if (!$merchant->getId()) {
+          return Factory::response([
+            'status' => 'error',
+            'message' => 'User is not a merchant'
+          ]);
+        }
+
         $volume = $stripe->getGrossVolume($merchant);
         $payouts = $stripe->getTotalPayouts($merchant);
         $balance = $stripe->getTotalBalance($merchant);

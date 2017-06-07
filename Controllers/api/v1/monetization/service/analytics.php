@@ -31,8 +31,13 @@ class analytics extends Controller implements Interfaces\Api
         $user = Core\Session::getLoggedInUser();
 
         $stripe = Core\Di\Di::_()->get('StripePayments');
-        $merchant = $stripe->getMerchant($user->getMerchant()['id']);
-        //$merchant = (new Merchant)->setId($user->getMerchant()['id']);
+        $merchant = (new Merchant)->setId($user->getMerchant()['id']);
+        if (!$merchant->getId()) {
+          return Factory::response([
+            'status' => 'error',
+            'message' => 'User is not a merchant'
+          ]);
+        }
 
         switch ($pages[0]) {
             case 'chart':

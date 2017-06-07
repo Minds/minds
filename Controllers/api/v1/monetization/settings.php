@@ -29,6 +29,14 @@ class settings extends Controller implements Interfaces\Api
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
         $merchant = $stripe->getMerchant($user->getMerchant()['id']);
+
+        if (!$merchant->getId()) {
+          return Factory::response([
+            'status' => 'error',
+            'message' => 'User is not a merchant'
+          ]);
+        }
+
         $account = [
           'id' => $merchant->getBankAccount()['id'],
           'bank' => $merchant->getBankAccount()['bank_name'],
@@ -48,6 +56,14 @@ class settings extends Controller implements Interfaces\Api
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
         $merchant = (new Merchant)->setId($user->getMerchant()['id']);
+
+        if (!$merchant->getId()) {
+          return Factory::response([
+            'status' => 'error',
+            'message' => 'User is not a merchant'
+          ]);
+        }
+
         $merchant->setCountry($_POST['country'])
           ->setAccountNumber($_POST['accountNumber'])
           ->setRoutingNumber($_POST['routingNumber']);
