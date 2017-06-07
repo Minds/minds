@@ -63,17 +63,47 @@ class Manager
         $optInRequest = new Entities\OptInRequest();
 
         $optInRequest
-            ->setProgram('ads')
+            ->setProgram($program)
             ->setMessage($data['message'])
             ->setTimeCreated(time())
             ->setFrom($this->user);
-        
+
         $optInRequest->save();
 
         Core\Events\Dispatcher::trigger('notification', 'program', [
             'to'=> [ $this->user->guid ],
             'from' => 100000000000000519,
             'notification_view' => 'program_queued',
+            'params' => [ 'guid' => $optInRequest->getGuid(), 'program' => $optInRequest->getProgram() ]
+        ]);
+
+        return true;
+    }
+
+    public function applyAndAccept($program, array $data = [])
+    {
+        if (!$this->user) {
+            throw new \Exception('No user');
+        }
+
+        $optInRequest = new Entities\OptInRequest();
+
+        $optInRequest
+            ->setProgram($program)
+            ->setTimeCreated(time())
+            ->setFrom($this->user);
+
+        $programs = $this->user->getPrograms();
+        $programs[] = $optInRequest->getProgram();
+        $programs = array_unique($programs);
+
+        $this->user->setPrograms($programs);
+        $this->user->save();
+
+        Core\Events\Dispatcher::trigger('notification', 'program', [
+            'to'=> [ $optInRequest->getFrom()['guid'] ],
+            'from' => 100000000000000519,
+            'notification_view' => 'program_accepted',
             'params' => [ 'guid' => $optInRequest->getGuid(), 'program' => $optInRequest->getProgram() ]
         ]);
 

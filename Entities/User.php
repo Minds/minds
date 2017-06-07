@@ -418,6 +418,7 @@ class User extends \ElggUser
         }
 
         $export['merchant'] = $this->getMerchant() ?: false;
+        $export['programs'] = $this->getPrograms();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
@@ -482,6 +483,7 @@ class User extends \ElggUser
             'social_profiles',
             'language',
             'feature_flags',
+            'programs'
         ));
     }
 }
