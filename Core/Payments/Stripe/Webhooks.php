@@ -18,7 +18,7 @@ class Webhooks
     protected $signature;
     protected $event;
     protected $aliases = [
-      'invoice.created' => 'onInvoicePaymentSuccess'
+      'invoice.payment_succeeded' => 'onInvoicePaymentSuccess'
     ];
     protected $hooks;
 
@@ -93,6 +93,21 @@ class Webhooks
         ]);
         $charge->metadata = (array) $metadata;
         $charge->save();
+
+        //grab the customer
+        $customerObj = \Stripe\Customer::retrieve($invoiceObj->customer, [
+          'stripe_account' => $this->event->account
+        ]);
+        $customer = new Payments\Customer();
+        $customer->setUser(new Entities\User($customerObj->metadata->__toArray()['user_guid']))
+          ->setId($customerObj->id);
+
+        //trigger the hooks
+        $subscription = (new Payments\Subscriptions\Subscription())
+            ->setCustomer($customer)
+            ->setId($chargeId)
+            ->setPrice($charge->amount / 100);
+        $this->hooks->onCharged($subscription);
     }
 
     /**

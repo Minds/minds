@@ -759,6 +759,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
                 $customer = StripeSDK\Customer::create(
                   [
                     'source' => $token->id,
+                    'metadata' => [
+                      'user_guid' =>  $subscription->getCustomer()->getUser()->getGuid()
+                    ]
                   ],
                   [
                     'stripe_account' => $merchant['id']

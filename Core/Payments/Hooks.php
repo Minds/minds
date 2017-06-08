@@ -13,6 +13,7 @@ class Hooks
     public function loadDefaults()
     {
         $this->hooks[] = new Core\Wallet\PointsSubscription;
+        return $this;
     }
 
     public function register($hook)

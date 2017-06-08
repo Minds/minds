@@ -34,7 +34,7 @@ class stripe implements Interfaces\Api, Interfaces\ApiIgnorePam
 
       $stripe = Core\Di\Di::_()->get('StripePayments');
 
-      $hooks = new Payments\Stripe\Webhooks(null, $stripe);
+      $hooks = new Payments\Stripe\Webhooks((new Payments\Hooks())->loadDefaults(), $stripe);
       $hooks->setSignature($_SERVER["HTTP_STRIPE_SIGNATURE"])
         ->setPayload($input);
 
