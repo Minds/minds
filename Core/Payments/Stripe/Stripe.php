@@ -738,8 +738,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             'quantity' => $subscription->getQuantity(),
             'metadata' => [
               'orderId' => $subscription->getPlanId() . '-subscription-' . time()
-            ],
-            'description' => 'charge'
+            ]
         ];
         $extras = [];
 
@@ -784,15 +783,31 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $result->id;
     }
 
-    public function getSubscription($subscriptionId)
+    public function getSubscription(Subscription $subscription)
     {
+      try {
+          $result = StripeSDK\Subscription::retrieve(
+            $subscription->getId(),
+            [
+              'stripe_account' => $subscription->getMerchant()['id']
+            ]);
+
+          $subscription->setPrice(($result->quantity * $result->plan->amount) / 100);
+
+          return $subscription;
+      } catch (StripeSDK\Error\InvalidRequest $e) {
+          return false;
+      }
+      return false;
     }
 
     public function cancelSubscription(Subscription $subscription)
     {
         try {
-            StripeSDK\Subscription::retrieve($subscription->getId(), [
-                'stripe_account' => $subscription->getMerchant()->getId()
+            StripeSDK\Subscription::retrieve(
+              $subscription->getId(),
+              [
+                'stripe_account' => $subscription->getMerchant()['id']
             ])->cancel();
         } catch (StripeSDK\Error\InvalidRequest $e) {
             return false;

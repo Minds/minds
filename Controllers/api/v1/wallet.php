@@ -71,14 +71,21 @@ class wallet implements Interfaces\Api
                 break;
             case "subscription":
                 Factory::isLoggedIn();
-                $db = new Core\Data\Call("user_index_to_guid");
-                $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
-                if (!isset($subscriptionIds[0])) {
-                    return Factory::response([]);
+
+                $repo = new Payments\Plans\Repository();
+                $plan = $repo->setEntityGuid(0)
+                  ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+                  ->getSubscription('points');
+
+                $subscription = (new Payments\Subscriptions\Subscription)
+                  ->setId($plan->getSubscriptionId());
+                if (Core\Session::getLoggedInUser()->referrer){
+                    $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
+                    $subscription->setMerchant($referrer->getMerchant());
                 }
 
-                $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
-                $subscription = $braintree->getSubscription($subscriptionIds[0]);
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $subscription = $stripe->getSubscription($subscription);
                 if ($subscription) {
                     $response['subscription'] = $subscription->export();
                 }
@@ -186,8 +193,21 @@ class wallet implements Interfaces\Api
                         ]);
                     }
 
+                    /**
+                     * Save the subscription to our user subscriptions list
+                     */
+                    $plan = (new Payments\Plans\Plan)
+                      ->setName('points')
+                      ->setEntityGuid(0)
+                      ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+                      ->setSubscriptionId($subscription_id)
+                      ->setStatus('active')
+                      ->setExpires(-1); //indefinite
+                    $repo = new Payments\Plans\Repository();
+                    $repo->add($plan);
+
                     return Factory::response([
-                        'subscriptionId' => $subscription->getId()
+                        'subscriptionId' => $subscription_id
                     ]);
                 } catch (\Exception $e) {
                     return Factory::response([
@@ -213,17 +233,23 @@ class wallet implements Interfaces\Api
     {
         switch ($pages[0]) {
           case "subscription":
-              $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
-              $db = new Core\Data\Call("user_index_to_guid");
-              $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
 
-              $result = $payment_service->cancelSubscription(
-                  (new Payments\Subscriptions\Subscription)
-                  ->setId($subscriptionIds[0])
-              );
-              //if($result->status == "Canceled"){
-                  $db->removeAttributes(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [0]);
-              //}
+              $repo = new Payments\Plans\Repository();
+              $plan = $repo->setEntityGuid(0)
+                ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+                ->getSubscription('points');
+
+              $subscription = (new Payments\Subscriptions\Subscription)
+                ->setId($plan->getSubscriptionId());
+              if (Core\Session::getLoggedInUser()->referrer){
+                  $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
+                  $subscription->setMerchant($referrer->getMerchant());
+              }
+
+              $stripe = Core\Di\Di::_()->get('StripePayments');
+
+              $result = $stripe->cancelSubscription($subscription);
+              $repo->cancel('points');
               break;
         }
         return Factory::response(array());
