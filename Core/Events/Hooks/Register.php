@@ -40,10 +40,12 @@ class Register
             }
 
             //@todo again, maybe in a background task?
-            if (isset($_POST['referrer']) && $_POST['referrer']) {
-                $user = new Entities\User(strtolower(ltrim($_POST['referrer'], '@')));
+            if ($params['referrer']) {
+                $user = new Entities\User(strtolower(ltrim($params['referrer'], '@')));
                 if ($user->guid) {
                     Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
+                    $params['user']->referrer = (string) $user->guid;
+                    $params['user']->save();
                     //create graph connection for future referral trees
                     try {
                         $prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
