@@ -13,14 +13,16 @@ use Minds\Entities;
 
 class Webhooks
 {
+    protected $stripe;
     protected $payload;
     protected $signature;
-    protected $notification;
+    protected $event;
     protected $aliases = [
+      'invoice.created' => 'onInvoicePaymentSuccess'
     ];
     protected $hooks;
 
-    public function __construct($hooks = null)
+    public function __construct($hooks = null, $stripe)
     {
         $this->hooks = $hooks ?: new Payments\Hooks();
     }
@@ -47,112 +49,50 @@ class Webhooks
         return $this;
     }
 
+    public function buildEvent()
+    {
+        $this->event = \Stripe\Webhook::constructEvent($this->payload, $this->signature, 'whsec_0NzTmT5Ts216W7muNCqLLYpuzGEZEJSj');
+        return $this->event;
+    }
+
     /**
       * Run the notification hook
       * @return $this
       */
     public function run()
     {
-        $this->buildNotification();
+        $this->buildEvent();
         $this->routeAlias();
         return $this;
     }
 
-    protected function buildNotification()
-    {
-    }
-
     protected function routeAlias()
     {
-        if (method_exists($this, $this->aliases[$this->notification->kind])) {
-            $method = $this->aliases[$this->notification->kind];
+        if (method_exists($this, $this->aliases[$this->event->type])) {
+            $method = $this->aliases[$this->event->type];
             $this->$method();
         }
     }
 
-    /**
-     * @return void
-     */
-    protected function subMerchantApproved()
+    protected function onInvoicePaymentSuccess()
     {
-        $message = "Congrats, you are now a Minds Merchant";
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
-          'to'=>[$notification->merchantAccount->id],
-          'from' => 100000000000000519,
-          'notification_view' => 'custom_message',
-          'params' => ['message'=>$message],
-          'message'=>$message
+        $invoiceObj = $this->event->data->object;
+        $lines = $invoiceObj->lines->data;
+        $chargeId = $invoiceObj->charge;
+
+        $metadata = [];
+
+        foreach ($lines as $line) {
+            if($line->type == "subscription"){
+                $metadata = $line->metadata->__toArray(false);
+            }
+        }
+
+        $charge = \Stripe\Charge::retrieve($chargeId, [
+          'stripe_account' => $this->event->account
         ]);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subMerchantDeclined()
-    {
-        $reason = $notification->message;
-        $message = "Sorry, we could not approve your Merchant Account: $reason";
-        Core\Events\Dispatcher::trigger('notification', 'elgg/hook/activity', [
-          'to'=>[$notification->merchantAccount->id],
-          'from' => 100000000000000519,
-          'notification_view' => 'custom_message',
-          'params' => ['message'=>$message],
-          'message'=>$message
-        ]);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subscriptionCharged()
-    {
-        $subscription = (new Subscription())
-            ->setId($this->notification->subscription->id)
-            ->setBalance($this->notification->subscription->balance)
-            ->setPrice($this->notification->subscription->price);
-        $this->hooks->onCharged($subscription);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subscriptionActive()
-    {
-        $subscription = (new Subscription())
-            ->setId($this->notification->subscription->id)
-            ->setBalance($this->notification->subscription->balance)
-            ->setPrice($this->notification->subscription->price);
-        $this->hooks->onActive($subscription);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subscriptionExpired()
-    {
-        $subscription = (new Subscription())
-          ->setId($this->notification->subscription->id);
-        $this->hooks->onExpired($subscription);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subscriprionOverdue()
-    {
-        $subscription = (new Subscription())
-          ->setId($this->notification->subscription->id);
-        $this->hooks->onOverdue($subscription);
-    }
-
-    /**
-     * @return void
-     */
-    protected function subscriptionCanceled()
-    {
-        $subscription = (new Subscription())
-          ->setId($this->notification->subscription->id);
-        $this->hooks->onCanceled($subscription);
+        $charge->metadata = (array) $metadata;
+        $charge->save();
     }
 
     /**
