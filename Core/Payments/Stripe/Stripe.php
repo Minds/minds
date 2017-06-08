@@ -82,16 +82,33 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
               break;
         }
 
+        $extra = [];
+
         if ($sale->getMerchant()) {
-            $user = new Entities\User($sale->getMerchant()->guid);
-            $opts['destination'] = $user->getMerchant()['id'];
+            $user = $sale->getMerchant();
+            $extra['stripe_account'] = $user->getMerchant()['id'];
 
             if ($sale->getFee()) {
-                $opts['application_fee'] = round($sale->getFee());
+                $opts['application_fee'] = $sale->getFee() * $sale->getAmount();
+              //  $opts['destination']['amount'] = $sale->getAmount() - ($sale->getFee() * $sale->getAmount());
+            }
+
+            if ($opts['customer']) {
+                //we need to clone the customer
+                $token = StripeSDK\Token::create(
+                  [
+                    'customer' => $opts['customer']
+                  ],
+                  [
+                    'stripe_account' => $user->getMerchant()['id']
+                  ]);
+                $opts['customer'] = null;
+                $opts['card'] = null;
+                $opts['source'] = $token->id;
             }
         }
 
-        $result = StripeSDK\Charge::create($opts);
+        $result = StripeSDK\Charge::create($opts, $extra);
 
         if ($result->status == 'succeeded') {
             return $result->id;
@@ -172,7 +189,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
       $results = StripeSDK\BalanceTransaction::all(
         [
-          'type' => 'charge'
+          //'type' => 'payment'
         ],
         [
           'stripe_account' => $merchant->getId()
@@ -184,6 +201,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
       ];
 
       foreach($results->autoPagingIterator() as $balance){
+        if ($balance->type == 'payout') {
+          continue; //we don't want to show the payouts in our total balance
+        }
         $total['net'] += $balance->net / 100;
         $total['gross'] += $balance->amount / 100;
       }
@@ -256,6 +276,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         );
 
         $params = [
+            'type' => 'charge',
             'limit' => $hasFilter ? 100 : (int) $options[$limit]
         ];
 
@@ -263,12 +284,74 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             $params['starting_after'] = $options['offset'];
         }
 
-        $transactions = StripeSDK\Charge::all($params, [
+        $transactions = StripeSDK\BalanceTransaction::all($params, [
+            'stripe_account' => $merchant->getId()
+        ]);
+        $charges = $this->getCharges($merchant, $options);
+
+        $results = [];
+        foreach ($transactions->autoPagingIterator() as $transaction) {
+            if (
+                $options['orderIdPrefix'] &&
+                strpos("{$options['orderIdPrefix']}-", $transaction->metadata['orderId']) !== 0
+            ) {
+                continue;
+            }
+
+            foreach ($charges as $charge) {
+                if($charge->balance_transaction == $transaction->id){
+                    $transaction->metadata = $charge->metadata;
+                    $transaction->refunded = $charge->refunded;
+                    $transaction->dispute = $charge->dispute;
+                    $transaction->charge = $charge;
+                }
+            }
+
+            $results[] = $transaction;
+
+            if (count($results) >= $options['limit']) {
+                break;
+            }
+        }
+
+        //we now want to grab the balance transaction to get the actual amount
+
+
+        return $results;
+    }
+
+    /**
+     * Get a list of transactions (filtered)
+     * @param Merchant $merchant - the merchant
+     * @param array $options - limit, offset
+     * @return array
+     */
+    public function getCharges(Merchant $merchant, array $options = [])
+    {
+        $options = array_merge([
+            'limit' => 50,
+            'offset' => '',
+            'orderIdPrefix' => ''
+        ], $options);
+
+        $hasFilter = (bool) (
+            $options['orderIdPrefix']
+        );
+
+        $params = [
+            'limit' => $hasFilter ? 100 : (int) $options[$limit]
+        ];
+
+        if ($options['offset']) {
+            $params['starting_after'] = $options['offset'];
+        }
+
+        $charges = StripeSDK\Charge::all($params, [
             'stripe_account' => $merchant->getId()
         ]);
 
         $results = [];
-        foreach ($transactions->autoPagingIterator() as $transaction) {
+        foreach ($charges->autoPagingIterator() as $transaction) {
             if (
                 $options['orderIdPrefix'] &&
                 strpos("{$options['orderIdPrefix']}-", $transaction->metadata['orderId']) !== 0
@@ -313,7 +396,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         $transactions = StripeSDK\BalanceTransaction::all([
             'created' => [
                 'gte' => reset($timestamps),
-                'lte' => end($timestamps)
+                //'lte' => end($timestamps)
             ],
             'limit' => 50
         ], [
@@ -367,13 +450,18 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
           'stripe_account' => $merchant->getId()
         ]);
 
-        $total = 0;
+        $totals = [];
         foreach ($results->available as $available) {
-            if ($available->currency == 'usd') {
-                $total += $available->amount / 100;
+            if ($available->amount) {
+                $total[$available->currency] += $available->amount / 100;
             }
         }
-        return $total;
+        foreach ($results->pending as $pending) {
+            if ($pending->amount) {
+                $totals[$pending->currency] += $pending->amount / 100;
+            }
+        }
+        return $totals;
      }
 
     /**
@@ -644,36 +732,49 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function createSubscription(Subscription $subscription)
     {
 
+        $params = [
+            'customer' => $subscription->getCustomer()->getId(),
+            'plan' => $subscription->getPlanId(),
+            'quantity' => $subscription->getQuantity(),
+            'metadata' => [
+              'orderId' => $subscription->getPlanId() . '-subscription-' . time()
+            ],
+            'description' => 'charge'
+        ];
+        $extras = [];
+
         try {
 
-            //subscriptions need to clone customers
-            $token = StripeSDK\Token::create(
-              [
-                'customer' => $subscription->getCustomer()->getId()
-              ],
-              [
-                'stripe_account' => $subscription->getMerchant()->getId()
-              ]
-            );
+            if ($subscription->getMerchant()) {
+                $merchant = $subscription->getMerchant()->getMerchant(); //@todo clean this up
+                //subscriptions need to clone customers
+                $token = StripeSDK\Token::create(
+                  [
+                    'customer' => $subscription->getCustomer()->getId()
+                  ],
+                  [
+                    'stripe_account' => $merchant['id']
+                  ]
+                );
 
-            $customer = StripeSDK\Customer::create(
-              [
-                'source' => $token->id,
-              ],
-              [
-                'stripe_account' => $subscription->getMerchant()->getId()
-              ]
-            );
+                $customer = StripeSDK\Customer::create(
+                  [
+                    'source' => $token->id,
+                  ],
+                  [
+                    'stripe_account' => $merchant['id']
+                  ]
+                );
+
+                $params['customer'] = $customer->id;
+
+                $params['application_fee_percent'] = $subscription->getFee() * 100;
+                $extras['stripe_account'] = $merchant['id'];
+            }
 
             $result = StripeSDK\Subscription::create(
-              [
-                'customer' => $customer->id,
-                'plan' => $subscription->getPlanId(),
-                'application_fee_percent' => 5.00
-              ],
-              [
-                'stripe_account' => $subscription->getMerchant()->getId()
-              ]
+              $params,
+              $extras
             );
 
         } catch (\Exception $e) {

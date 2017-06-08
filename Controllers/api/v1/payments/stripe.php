@@ -36,7 +36,7 @@ class stripe implements Interfaces\Api
           $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
           $cards = $stripe->getCustomer($customer)->getPaymentMethods();
 
-          $response['cards'] = $cards;
+          $response['cards'] = $cards ?: [];
           break;
       }
 

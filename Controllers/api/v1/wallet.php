@@ -12,6 +12,7 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
+use Minds\Entities;
 
 class wallet implements Interfaces\Api
 {
@@ -113,6 +114,7 @@ class wallet implements Interfaces\Api
                     //create the customer on stripe
                     $customer->setPaymentToken($_POST['source']);
                     $customer = $stripe->createCustomer($customer);
+                    $source = $customer->getId(); //can't use the same token twice
                 }
 
                 $sale = new Payments\Sale();
@@ -123,8 +125,9 @@ class wallet implements Interfaces\Api
                    ->setCustomerId(Core\Session::getLoggedInUser()->guid)
                    ->capture();
 
-                if (Core\Session::getLoggedInUser()->referrer) {
-                    $referrer = new Entities\User(strtolower(Core\Session::getLoggedInUser()->referrer));
+                $user = Core\Session::getLoggedInUser();
+                if ($user->referrer) {
+                    $referrer = new Entities\User($user->referrer);
                     $sale->setMerchant($referrer)
                       ->setFee(0.75); //payout 25% to referrer
                 }
@@ -140,39 +143,48 @@ class wallet implements Interfaces\Api
                 break;
             case "subscription":
                 $points = $_POST['points'];
-                $usd = $this->ex_rate * $points;
 
-                $payment_service = Core\Payments\Factory::build('Braintree', ['gateway'=>'default']);
-                $db = new Core\Data\Call("user_index_to_guid");
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $source = $_POST['source'];
+
+                $customer = (new Payments\Customer())
+                  ->setUser(Core\Session::getLoggedInUser());
+
+                if (!$stripe->getCustomer($customer) || !$customer->getId()) {
+                    //create the customer on stripe
+                    $customer->setPaymentToken($_POST['source']);
+                    $customer = $stripe->createCustomer($customer);
+                }
+
+                $subscription = (new Payments\Subscriptions\Subscription())
+                  ->setPlanId('points')
+                  ->setQuantity($points / 10) //point subscriptions are in blocks of 10. each block costs $0.01
+                  ->setCustomer($customer);
+
+                if (Core\Session::getLoggedInUser()->referrer) {
+                    $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
+                    $subscription->setMerchant($referrer)
+                      ->setFee(0.75); //payout 25% to referrer
+
+                    try{
+                        $stripe->createPlan((object) [
+                          'id' => 'points',
+                          'amount' => 1,
+                          'merchantId' => $referrer->getMerchant()['id']
+                        ]);
+                    } catch(\Exception $e){}
+                }
+
                 try {
-                    $customer = $payment_service->createCustomer(
-                        (new Payments\Customer)
-                        ->setId(Core\Session::getLoggedInUser()->guid)
-                        ->setEmail(Core\Session::getLoggedInUser()->getEmail())
-                    );
 
-                    $payment_method = $payment_service->createPaymentMethod(
-                        (new Payments\PaymentMethod)
-                        ->setCustomer($customer)
-                        ->setPaymentMethodNonce($_POST['nonce'])
-                    );
-
-                    $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
-                    if ($subscriptionIds) {
-                        $payment_service->cancelSubscription(
-                            (new Payments\Subscriptions\Subscription)
-                            ->setId($subscriptionIds[0])
-                        );
+                    try {
+                        $subscription_id = $stripe->createSubscription($subscription);
+                    } catch (\Exception $e) {
+                        return Factory::response([
+                          'status' => 'error',
+                          'message' => $e->getMessage()
+                        ]);
                     }
-                    $subscription = $payment_service->createSubscription(
-                        (new Payments\Subscriptions\Subscription)
-                        ->setPaymentMethod($payment_method)
-                        ->setPlanId(Core\Config::_()->payments['points_plan_id'])
-                        ->setPrice($usd)
-                    );
-
-                    $db->insert(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [$subscription->getId()]);
-                    $db->insert("subscription:" . $subscription->getId(), [Core\Session::getLoggedinUser()->guid]);
 
                     return Factory::response([
                         'subscriptionId' => $subscription->getId()

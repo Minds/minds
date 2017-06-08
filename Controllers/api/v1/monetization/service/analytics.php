@@ -56,7 +56,7 @@ class analytics extends Controller implements Interfaces\Api
                     ];
                 }
 
-                $rows = array_reverse($rows);
+                $rows = $rows;
 
                 return Factory::response([
                     'chart' => [
@@ -97,9 +97,11 @@ class analytics extends Controller implements Interfaces\Api
                         'refunded' => $record->refunded,
                         'dispute' => $record->dispute,
                         'outcome' => $record->outcome,
+                        'currency' => $record->currency,
                         'category' => explode('-', $record->metadata->orderId)[0],
                         'description' => $record->description ?: $record->type,
-                        'amount' => $record->amount / 100
+                        'amount' => $record->net / 100,
+                        'json' => json_encode($record)
                     ];
 
                     if ($type == 'payouts') {

@@ -57,7 +57,8 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'user' => $user,
                 'password' => $_POST['password'],
                 'friend_guid' => "",
-                'invitecode' => ""
+                'invitecode' => "",
+                'referrer' => isset($_POST['referrer']) ? $_POST['referrer'] : ''
             ];
 
             elgg_trigger_plugin_hook('register', 'user', $params, true);

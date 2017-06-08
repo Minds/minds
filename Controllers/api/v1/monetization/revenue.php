@@ -37,13 +37,20 @@ class revenue extends Controller implements Interfaces\Api
           ]);
         }
 
+        $currency = "usd";
         $volume = $stripe->getGrossVolume($merchant);
         $payouts = $stripe->getTotalPayouts($merchant);
-        $balance = $stripe->getTotalBalance($merchant);
+        $balance = 0;
+        $balances = $stripe->getTotalBalance($merchant);
+        foreach($balances as $c => $a){
+            $currency = $c;
+            $balance = $a;
+        }
 
         switch($pages[0]){
             case 'overview':
                 return Factory::response([
+                    'currency' => $currency,
                     'total' => $volume,
                     'payouts' => $payouts,
                     'balance' => $balance

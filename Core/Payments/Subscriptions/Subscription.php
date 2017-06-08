@@ -13,6 +13,8 @@ class Subscription
 
     private $balance;
     private $price;
+    private $fee;
+    private $quantity = 1;
     private $created_at;
     private $next_billing_period_amount;
     private $next_billing_date;
@@ -90,6 +92,28 @@ class Subscription
     public function setPrice($price)
     {
         $this->price = $price;
+        return $this;
+    }
+
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+        return $this;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
         return $this;
     }
 
