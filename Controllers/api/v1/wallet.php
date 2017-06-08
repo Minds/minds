@@ -163,6 +163,9 @@ class wallet implements Interfaces\Api
                     $customer = $stripe->createCustomer($customer);
                 }
 
+                //look for current subscription
+                $this->cancelSubscription();
+
                 $subscription = (new Payments\Subscriptions\Subscription())
                   ->setPlanId('points')
                   ->setQuantity($points / 10) //point subscriptions are in blocks of 10. each block costs $0.01
@@ -233,25 +236,34 @@ class wallet implements Interfaces\Api
     {
         switch ($pages[0]) {
           case "subscription":
-
-              $repo = new Payments\Plans\Repository();
-              $plan = $repo->setEntityGuid(0)
-                ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-                ->getSubscription('points');
-
-              $subscription = (new Payments\Subscriptions\Subscription)
-                ->setId($plan->getSubscriptionId());
-              if (Core\Session::getLoggedInUser()->referrer){
-                  $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
-                  $subscription->setMerchant($referrer->getMerchant());
-              }
-
-              $stripe = Core\Di\Di::_()->get('StripePayments');
-
-              $result = $stripe->cancelSubscription($subscription);
-              $repo->cancel('points');
+              $this->cancelSubscription();
               break;
         }
         return Factory::response(array());
+    }
+
+    private function cancelSubscription(){
+        $repo = new Payments\Plans\Repository();
+        $plan = $repo->setEntityGuid(0)
+          ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+          ->getSubscription('points');
+
+        $subscription = (new Payments\Subscriptions\Subscription)
+          ->setId($plan->getSubscriptionId());
+
+        if (Core\Session::getLoggedInUser()->referrer){
+            $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
+            $subscription->setMerchant($referrer->getMerchant());
+        }
+
+        $stripe = Core\Di\Di::_()->get('StripePayments');
+
+        try{
+            $result = $stripe->cancelSubscription($subscription);
+            $repo->cancel('points');
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

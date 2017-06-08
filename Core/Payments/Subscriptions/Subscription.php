@@ -197,6 +197,7 @@ class Subscription
     public function getExportableValues()
     {
         return [
+            'id',
             'balance',
             'price',
             'created_at',
