@@ -71,7 +71,11 @@ class GenericRule implements Interfaces\XSSRule
             $this->cleanString  = $this->cleanAttributes($this->cleanString);
 
           //remove trailing line
-          if ($this->cleanString && strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== false && strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === false) {
+          if ($this->cleanString && 
+              strlen($this->cleanString) >= 2 && 
+              strpos($this->cleanString, "\n", strlen($this->cleanString)-2) !== false &&
+              strlen($this->dirtyString) >= 2 && 
+              strpos($this->dirtyString, "\n", strlen($this->dirtyString)-2) === false) {
               $this->cleanString = substr($this->cleanString, 0, strlen($this->cleanString)-1);
           }
 
