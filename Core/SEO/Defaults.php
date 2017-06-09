@@ -30,9 +30,9 @@ class Defaults
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => $this->config->site_url . 'assets/logos/medium.png',
-          'og:image:width' => 2000,
-          'og:image:height' => 1000
+          'og:image' => $this->config->site_url . 'assets/share/master.jpg',
+          'og:image:width' => 1024,
+          'og:image:height' => 681
         ]);
 
         /**
@@ -99,6 +99,39 @@ class Defaults
                 if ($activity->custom_type == 'video') {
                     $meta['og:type'] = "video";
                     $meta['og:image'] = $activity->custom_data['thumbnail_src'];
+                }
+
+                return $meta;
+            }
+        });
+
+        /**
+         * Pages
+         */
+        Manager::add('/p', function ($slugs = []) {
+            if (isset($slugs[0])) {
+                try {
+                    $page = (new Entities\Page())
+                        ->loadFromGuid($slugs[0]);
+                } catch (\Exception $e) {
+                    header("HTTP/1.0 404 Not Found");
+                    return [
+                      'robots' => 'noindex'
+                    ];
+                }
+
+                $meta = [
+                  'title' => $page->getTitle(),
+                  'description' => substr(strip_tags($page->getBody()), 0, 140),
+                  'og:title' => $page->getTitle(),
+                  'og:description' => substr(strip_tags($page->getBody()), 0, 140),
+                  'og:url' => $this->config->site_url . 'p/' . $page->getPath()
+                ];
+
+                if ($page->getHeader()) {
+                    $meta['og:image'] = $this->config->site_url . 'fs/v1/pages/' . $page->getPath();
+                    $meta['og:image:width'] = 2000;
+                    $meta['og:image:height'] = 1000;
                 }
 
                 return $meta;
