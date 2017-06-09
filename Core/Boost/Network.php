@@ -297,10 +297,10 @@ class Network implements BoostHandlerInterface
         $opts = [
             'type'=>$this->handler,
             'state'=>'approved',
-            'rating'=>[
-                '$exists' => true, 
-                '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating() 
-             ],
+            //'rating'=>[
+            //    '$exists' => true, 
+            //    '$lte' => $rating != 0 ? $rating : 2 
+            // ],
         ];
         if ($mem_log) {
             $opts['_id'] =  [ '$gt' => end($mem_log) ];
