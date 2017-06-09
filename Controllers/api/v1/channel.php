@@ -222,6 +222,7 @@ class channel implements Interfaces\Api
                         'twitter',
                         'youtube_channel',
                         'youtube_user',
+                        'instagram',
                     ];
                     $profiles = [];
 
