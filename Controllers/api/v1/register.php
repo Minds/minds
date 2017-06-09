@@ -45,17 +45,12 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         try {
             $captcha = Core\Di\Di::_()->get('Security\Captcha');
-            /*if (!$captcha->validateAnswer($_POST['captcha'])) {
+            if (!$captcha->validateAnswer($_POST['captcha']) && isset($_POST['captcha'])) {
                 throw new \Exception('Captcha failed');
-            }*/
+            }
 
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
-
-            if (!$captcha->validateAnswer($_POST['captcha'])) {
-                $user->captcha_failed = true;
-                $user->save();
-            }
 
             $params = [
                 'user' => $user,
