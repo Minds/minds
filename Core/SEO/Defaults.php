@@ -45,7 +45,7 @@ class Defaults
                     return array();
                 }
 
-                if (!$user->enabled) {
+                if (!$user->enabled || $user->banned == 'yes') {
                     header("HTTP/1.0 404 Not Found");
                     return [
                         'robots' => 'noindex'
