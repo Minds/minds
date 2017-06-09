@@ -16,7 +16,7 @@ class NormalizedEntity
     protected $db;
     protected $indexDb;
     protected $guid;
-    private $indexes = [];
+    protected $indexes = [];
     protected $exportableDefaults = [];
 
     public function __construct($db = null, $indexDb = null)
