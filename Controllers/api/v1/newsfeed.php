@@ -176,10 +176,6 @@ class newsfeed implements Interfaces\Api
             }
         }
 
-        if ($pages[0] == 'network' && $_GET['access_token']) {
-            array_unshift($activity, new Entities\Activity('708671440802553867'));
-        }
-
         if ($activity) {
             $response['activity'] = factory::exportable($activity, array('boosted'), true);
             $response['load-next'] = (string) end($activity)->guid;
