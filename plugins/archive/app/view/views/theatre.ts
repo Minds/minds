@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
-import { Material } from '../../../../directives/material';
-
 
 @Component({
   selector: 'minds-archive-theatre',
