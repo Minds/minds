@@ -61,6 +61,7 @@ class Mailer
             $this->mailer->AddAddress($to['email'], $to['name']);
         }
 
+        $this->mailer->MessageID = $message->messageId;
         $this->mailer->Subject = $message->subject;
 
         $this->mailer->IsHTML(true);

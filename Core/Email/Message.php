@@ -10,6 +10,7 @@ class Message
     public $to = array();
     public $subject = "";
     public $html = "";
+    public $messageId = '';
 
     public function __construct()
     {
@@ -61,6 +62,16 @@ class Message
   public function setSubject($subject)
   {
       $this->subject = $subject;
+      return $this;
+  }
+
+  /**
+   * Set Message ID sender data
+   * @return string
+   */
+  public function setMessageId($messageId)
+  {
+      $this->messageId = $messageId ? '<' . $messageId . '@minds.com>' : '';
       return $this;
   }
 

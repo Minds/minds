@@ -88,6 +88,7 @@ class Retention
 
             $message = new Message();
             $message->setTo($user)
+              ->setMessageId(implode('-', [ $user->guid, sha1($user->getEmail()), sha1($template . time()) ]))
               ->setSubject($subject)
               ->setHtml($this->template);
 

@@ -177,3 +177,5 @@ $CONFIG->set('sandbox', [
         'guid' => '',
     ],
 ]);
+
+$CONFIG->set('sns_secret', '{{sns-secret}}');

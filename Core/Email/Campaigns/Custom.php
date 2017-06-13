@@ -73,15 +73,19 @@ class Custom
             }
 
             $queued++;
+
+            $validatorHash = sha1($this->campaign . $user->guid . Config::_()->get('emails_secret'));
+
             $this->template->set('username', $user->username);
             $this->template->set('email', $user->getEmail());
             $this->template->set('guid', $user->guid);
             $this->template->set('user', $user);
             $this->template->set('campaign', $this->campaign);
-            $this->template->set('validator', sha1($this->campaign . $user->guid . Config::_()->get('emails_secret')));
+            $this->template->set('validator', $validatorHash);
 
             $message = new Message();
             $message->setTo($user)
+              ->setMessageId(implode('-', [ $user->guid, sha1($user->getEmail()), $validatorHash ]))
               ->setSubject($this->subject)
               ->setHtml($this->template);
 

@@ -77,6 +77,7 @@ class Register
                   ->set('user', $params['user']);
                 $message = new Core\Email\Message();
                 $message->setTo($params['user'])
+                  ->setMessageId(implode('-', [ $params['user']->guid, sha1($params['user']->getEmail()), sha1('register-' . time()) ]))
                   ->setSubject("Welcome to Minds. Introduce yourself.")
                   ->setHtml($template);
                 $mailer = new Core\Email\Mailer();
