@@ -45,7 +45,7 @@ export class Groups {
         this.moreData = true;
         this.groups = [];
         
-        this.load();
+        this.load(true);
       }
     });
   }
@@ -55,26 +55,40 @@ export class Groups {
   }
 
   load(refresh: boolean = false) {
+    let endpoint, key;
+
+    switch (this._filter) {
+      case 'trending':
+        endpoint = `api/v1/entities/${this._filter}/groups`;
+        key = 'entities';
+        break;
+
+      default:
+        endpoint = `api/v1/groups/${this._filter}`;
+        key = 'groups';
+        break;
+    }
+
     if(this.inProgress)
       return;
     var self = this;
     this.inProgress = true;
-    this.client.get('api/v1/groups/' + this._filter, { limit: 12, offset: this.offset})
+    this.client.get(endpoint, { limit: 12, offset: this.offset})
       .then((response : MindsGroupListResponse) => {
 
-        if(!response.groups || response.groups.length == 0){
+        if(!response[key] || response[key].length == 0){
           this.moreData = false;
           this.inProgress = false;
           return false;
         }
 
         if(refresh){
-          this.groups = response.groups;
+          this.groups = response[key];
         } else {
           if(this.offset)
-            response.groups.shift();
-          for(let group of response.groups)
-            this.groups.push(group);
+            response[key].shift();
+
+          this.groups.push(...response[key]);
         }
 
         this.offset = response['load-next'];

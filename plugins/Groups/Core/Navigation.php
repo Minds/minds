@@ -32,9 +32,17 @@ class Navigation
         ->setTitle('Featured')
         ->setPath('groups/featured');
 
+        $trending_link = new Item();
+        $trending_link
+        ->setPriority(3)
+        ->setIcon('trending_up')
+        ->setName('Trending')
+        ->setTitle('Trending')
+        ->setPath('groups/trending');
+
         $my_link = new Item();
         $my_link
-        ->setPriority(3)
+        ->setPriority(4)
         ->setIcon('person_pin')
         ->setName('My Groups')
         ->setTitle('My Groups')
@@ -50,6 +58,7 @@ class Navigation
         ->setPath('groups/featured')
         ->addSubItem($create_link)
         ->addSubItem($featured_link)
+        ->addSubItem($trending_link)
         ->addSubItem($my_link);
 
         Manager::add($root_link);
