@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1\entities;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -76,20 +77,36 @@ class trending implements Interfaces\Api
             case "users":
             case "user":
                 $key = "user";
+                break;
+            case "blog":
+            case "blogs":
+                $key = "blog";
+                break;
+            case "group":
+            case "groups":
+                $key = "group";
+                break;
+        }
+
+        if (!$key) {
+            return Factory::response([
+                'status' => 'error'
+            ]);
         }
 
         $offset = get_input('offset');
-        if (strlen($offset) < 15) {
+        if ($offset && strlen($offset) < 15) {
             $offset = (new \GUID())->migrate($offset);
         }
 
+        $guids = Di::_()->get('Trending\Repository')->fetch($key, 12, $offset);
 
-        $db = new Core\Data\Call('entities_by_time');
-        $guids = $db->getRow("trending:$key", array( 'limit'=> 12, 'offset' => $offset, 'reversed' => false ));
         if (!$guids) {
-            exit;
-            break;
+            return Factory::response([
+                'entities' => []
+            ]);
         }
+
         ksort($guids);
         $entities = core\Entities::get(array('guids'=>$guids));
         $response['entities'] = Factory::exportable($entities);
@@ -97,17 +114,17 @@ class trending implements Interfaces\Api
 
         return Factory::response($response);
 
-        if (!isset($_GET['load-next']) && isset($_GET['offset'])) {
-            $_GET['load-next'] = $_GET['offset'];
-        }
+        // if (!isset($_GET['load-next']) && isset($_GET['offset'])) {
+        //     $_GET['load-next'] = $_GET['offset'];
+        // }
 
-        if ($entities) {
-            $response['entities'] = factory::exportable($entities);
-            //$response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
-            $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
-        }
+        // if ($entities) {
+        //     $response['entities'] = factory::exportable($entities);
+        //     //$response['load-next'] = isset($_GET['load-next']) ? count($entities) + $_GET['load-next'] : count($entities);
+        //     $response['load-previous'] = isset($_GET['load-previous']) ? $_GET['load-previous'] - count($entities) : 0;
+        // }
 
-        return Factory::response($response);
+        // return Factory::response($response);
     }
 
     public function post($pages)
