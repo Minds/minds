@@ -77,7 +77,10 @@ class start extends Components\Plugin
             'neipononchoi1984.suomiblog.com', 'gemttranlonthe1985.blogzet.com', 'pitchero.com', 'blogolize.com', 'lisbopholsven1974.thezenweb.com',
             'blogocial.com', 'tinyblogging.com', 'share.pho.to', 'community.vietfun.com', 'ockuderla1985.full-design.com', 'unmosimla1978.total-blog.com',
             'gemttranlonthe1985.blogzet.com', 'rapptubizboe1978.blogminds.com', 'descduclighgon1973.full-design.com', 'ricphosati1972.full-design.com',
-            'fuddbluslanmaa1975.blogdigy.com', 'smarforcute1976.blogdigy.com'
+            'fuddbluslanmaa1975.blogdigy.com', 'smarforcute1976.blogdigy.com', 'xn--90aizihgi.xn--p1ai', 'tinyurl.com', 'bit.ly', '123football.space', 'bitly.com',
+            'j.mp', 'livestreaming.one', 'livestreaming.life', 'forbest.pw', 'olizev.tdska2ll.ru', 'tdska2ll.ru', 'tdska1ll.ru', 'tdska3ll.ru', 'tdska4ll.ru', 'ihmail.ru',
+            'tdska5ll.ru', 'tdska6ll.ru', 'll.ru', 'shorl.com', 'scorestream.space', 'bestsplayer.xyz', 'worldwideevents.space', 'worldseries.space', 'best247chemist.net',
+            '9tn.ru', 'futbolkin2013.ru', 'playnowstore.com', 'qr-url.tk', 'watchonlinerugby.net', 'esecuritys.com'
         ];
     }
 
