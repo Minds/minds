@@ -126,7 +126,7 @@ class wallet implements Interfaces\Api
 
                 $sale = new Payments\Sale();
                 $sale->setOrderId('points-' . microtime(true))
-                   ->setAmount($usd * 100) //cents to $
+                   ->setAmount(round($usd * 100)) //cents to $
                    ->setSource($source)
                    ->setCustomer($customer)
                    ->setCustomerId(Core\Session::getLoggedInUser()->guid)
@@ -168,7 +168,7 @@ class wallet implements Interfaces\Api
 
                 $subscription = (new Payments\Subscriptions\Subscription())
                   ->setPlanId('points')
-                  ->setQuantity($points / 10) //point subscriptions are in blocks of 10. each block costs $0.01
+                  ->setQuantity(round($points / 10)) //point subscriptions are in blocks of 10. each block costs $0.01
                   ->setCustomer($customer);
 
                 if (Core\Session::getLoggedInUser()->referrer) {
