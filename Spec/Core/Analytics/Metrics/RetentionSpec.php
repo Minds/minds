@@ -23,8 +23,10 @@ class RetentionSpec extends ObjectBehavior
         $timestamps = Timestamps::span(30, 'day');
 
         //mock the calls that are expected
-        $db->getRow(Argument::containingString(':signup'), ['limit'=>10000])->willReturn(['foo'=>time(), 'bar'=>time(), 'foobar'=>time()]);
-        $db->getRow(Argument::containingString(':active'), ['limit'=>10000])->willReturn(['foo'=>time(), 'bar'=>time(), 'barfoo'=>time()]);
+        $db->getRow(Argument::containingString(':signup'), Argument::type('array'))->willReturn(['foo'=>time(), 'bar'=>time(), 'foobar'=>time()]);
+        $db->getRow(Argument::containingString(':signup'), Argument::type('array'))->willReturn([]); //return empty for offset
+        $db->getRow(Argument::containingString(':active'), Argument::type('array'))->willReturn(['foo'=>time(), 'bar'=>time(), 'barfoo'=>time()]);
+        $db->getRow(Argument::containingString(':active'), Argument::type('array'))->willReturn([]);
 
         $now = Timestamps::span(2, 'day')[0];
         foreach([1,3,7,28] as $x){

@@ -5,6 +5,7 @@
 namespace Minds\Core\Security;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 
 class ACL
 {
@@ -20,7 +21,7 @@ class ACL
      */
     private function init()
     {
-        ACL\Block::_()->listen();
+        Di::_()->get('Security\ACL\Block')->listen();
     }
 
     public function setIgnore($ignore = false)

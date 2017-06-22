@@ -32,7 +32,8 @@ class NetworkSpec extends ObjectBehavior
           'transactionId' => null,
           'handler' => 'newsfeed',
           'time_created' => time(),
-          'last_updated' => time()
+          'last_updated' => time(),
+          'rating' => 0
         ];
     }
 

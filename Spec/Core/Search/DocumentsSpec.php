@@ -42,7 +42,7 @@ class DocumentsSpec extends ObjectBehavior
               'Harding Edward Mark'
             ],
             'output' => "@mark",
-            'weight' => 1,
+            'weight' => 2,
             'payload' => [
               'guid' => 'abc',
               'name' => 'MarkEdward Harding',

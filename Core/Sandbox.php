@@ -2,7 +2,7 @@
 namespace Minds\Core;
 
 use Minds\Core\Di\Di;
-use Minds\Entities;
+use Minds\Entities\User;
 
 class Sandbox
 {
@@ -22,6 +22,6 @@ class Sandbox
         error_log(json_encode($config));
 
         error_log(':: [Sandbox] Sandboxing user ' . $guid);
-        return new Entities\User($guid);
+        return new User($guid);
     }
 }
