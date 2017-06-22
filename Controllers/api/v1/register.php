@@ -44,8 +44,9 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         try {
-            $captcha = Core\Di\Di::_()->get('Security\Captcha');
-            if (!$captcha->validateAnswer($_POST['captcha']) && isset($_POST['captcha'])) {
+            $captcha = Core\Di\Di::_()->get('Security\ReCaptcha');
+            $captcha->setAnswer($_POST['captcha']);
+            if (!$captcha->validate()) {
                 throw new \Exception('Captcha failed');
             }
 
