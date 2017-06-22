@@ -113,9 +113,15 @@ class comments implements Interfaces\Api
             }
             if (!$_POST['comment'] && !$_POST['attachment_guid']) {
                 return Factory::response([
-                'status' => 'error',
-                'message' => 'You must enter a message'
-              ]);
+                  'status' => 'error',
+                  'message' => 'You must enter a message'
+                ]);
+            }
+            if ($parent instanceof Entities\Activity && !$parent->commentsEnabled) {
+                return Factory::response([
+                  'status' => 'error',
+                  'message' => 'Comments are disabled for this post'
+                ]);
             }
 
             $comment = new Entities\Comment();

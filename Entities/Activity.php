@@ -27,6 +27,7 @@ class Activity extends Entity
             'mature' => false,
             'paywall' => false,
             'edited' => false,
+            'comments_enabled' => true,
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -161,6 +162,7 @@ class Activity extends Entity
                 'monetized',
                 'paywall',
                 'edited',
+                'comments_enabled'
             ));
     }
 
@@ -198,6 +200,8 @@ class Activity extends Entity
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
 
         $export['mature'] = (bool) $export['mature'];
+
+        $export['comments_enabled'] = (bool) $export['comments_enabled'];
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
@@ -379,6 +383,27 @@ class Activity extends Entity
     public function getEdited()
     {
         return (boolean) $this->edited;
+    }
+
+    /**
+     * Sets if comments are enabled
+     * @param boolean
+     */
+    public function enableComments() {
+        $this->comments_enabled = true;
+        return $this;
+    }
+    public function disableComments() {
+        $this->comments_enabled = false;
+        return $this;
+    }
+
+    /**
+     * Gets if comments are enabled
+     * @return boolean
+     */
+    public function canComment() {
+        return (bool) $this->comments_enabled;
     }
 
     /**
