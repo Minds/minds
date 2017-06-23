@@ -64,10 +64,20 @@ minds-archive-theatre{
     left: 0;
     bottom: 0;
     right: 0;
-
+    .minds-img-landscape{
+      img{
+        width: 100%;
+        height: auto;
+      }
+    }
+    .minds-img-portrait{
+      img{
+        height: 100%;
+        width: auto;
+      }
+    }
     img{
-      max-width:100%;
-      height:100%;
+      object-fit: contain;
     }
     minds-video{
       background:#000;
