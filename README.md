@@ -44,7 +44,7 @@ On `front` directory:
 - `gulp build`
 - `gulp build.index`
 
-## Building Prodution version
+## Building Production version
 - NodeJS >= 4
 - NPM >= 3
 
