@@ -31,7 +31,7 @@ Plugins will eventually be migrated to their own repositories.
 - Vagrant
 
 Clone this repository and run `init.sh` (or `init.bat` if you're on Windows) to clone submodules. Run
-`vagrant up` to create, provision and run the VM.
+`vagrant up` to create, provision and run the VM (virtualbox required).
 
 ## Installing and Building Developer version
 
