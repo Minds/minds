@@ -41,13 +41,13 @@
     <!-- Actions block -->
     <div class="mdl-cell mdl-cell--7-col m-actions-block">
       <minds-button-subscribe [user]="entity.ownerObj" *ngIf="entity.ownerObj.guid != session.getLoggedInUser().guid"></minds-button-subscribe>
-      <minds-button-edit [routerLink]="['/archive/edit', entity.guid]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <span class="minds-button-edit" [routerLink]="['/archive/edit', entity.guid]" *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">edit</button>
-      </minds-button-edit>
+      </span>
 
-      <minds-button-edit (click)="deleteToggle = true"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
+      <span class="minds-button-edit" (click)="deleteToggle = true"  *ngIf="entity.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()">
         <button class="material-icons">close</button>
-      </minds-button-edit>
+      </span>
 
       <minds-button-feature [object]="entity" *ngIf="session.isAdmin()"></minds-button-feature>
       <minds-button-monetize [object]="entity" *ngIf="session.getLoggedInUser().monetized"></minds-button-monetize>

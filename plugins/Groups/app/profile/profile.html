@@ -46,12 +46,12 @@
     <div class="m-group--action-buttons">
       <minds-groups-join-button [group]="group" (membership)="change_membership($event)" *ngIf="!group['is:creator'] && (!group['is:invited'] || group['is:member'])"></minds-groups-join-button>
 
-      <minds-button-edit (click)="toggleEdit()" [hidden]="editing" *ngIf="group['is:owner']">
+      <span class="minds-button-edit" (click)="toggleEdit()" [hidden]="editing" *ngIf="group['is:owner']">
         <button class="material-icons">mode_edit</button>
-      </minds-button-edit>
-      <minds-button-edit (click)="save()" [hidden]="!editing" *ngIf="group['is:owner']">
+      </span>
+      <span class="minds-button-edit" (click)="save()" [hidden]="!editing" *ngIf="group['is:owner']">
         <button i18n>Save changes</button>
-      </minds-button-edit>
+      </span>
       <minds-groups-settings-button [group]="group" class="m-button"></minds-groups-settings-button>
       <minds-button-feature [object]="group" *ngIf="session.isAdmin()"></minds-button-feature>
 

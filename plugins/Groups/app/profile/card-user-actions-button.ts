@@ -17,7 +17,7 @@ import { GroupsService } from '../groups-service';
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()" i18n>Make Admin</li>
     <li class="mdl-menu__item" *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()" i18n>Remove as Admin</li>
   </ul>
-  <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
+  <div class="minds-bg-overlay" (click)="toggleMenu($event)" [hidden]="!showMenu"></div>
 
   <m-modal [open]="kickPrompt">
       <div class="mdl-card__supporting-text">

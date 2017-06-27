@@ -15,7 +15,7 @@ import { GroupsService } from '../groups-service';
       <li class="mdl-menu__item" [hidden]="!group['is:muted']" (click)="unmute()" i18n>Enable Notifications</li>
       <li class="mdl-menu__item" *ngIf="group['is:creator']" [hidden]="group.deleted" (click)="deletePrompt()" i18n>Delete Group</li>
     </ul>
-    <minds-bg-overlay (click)="toggleMenu($event)" [hidden]="!showMenu"></minds-bg-overlay>
+    <div class="minds-bg-overlay" (click)="toggleMenu($event)" [hidden]="!showMenu"></div>
 
     <m-modal [open]="group['is:owner'] && isGoingToBeDeleted">
       <div class="mdl-card__supporting-text">

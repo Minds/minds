@@ -5,7 +5,7 @@
 <header>
   <minds-banner [editMode]="editing" [done]="editDone" (added)="addBanner($event)"></minds-banner>
   <div class="avatar-wrapper">
-    <minds-avatar [editMode]="editing" [done]="editDone" (added)="addAvatar($event)"></minds-avatar>
+    <minds-avatar [editMode]="editing" (added)="addAvatar($event)"></minds-avatar>
   </div>
 </header>
 
