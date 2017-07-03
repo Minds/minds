@@ -39,6 +39,7 @@ class Installer
             'apple-certificate' => '',
             'site-name' => 'Minds',
             'no-https' => false,
+            'sns-secret' => '',
         ];
 
         usleep(mt_rand(1, 9999));
