@@ -104,13 +104,10 @@ class plans implements Interfaces\Api
                   $customer = $stripe->createCustomer($customer);
               }
               
-              $merchant = (new Payments\Merchant)
-                ->setId($entity->getMerchant()['id']);
-
               try {
                   $subscription = (new Payments\Subscriptions\Subscription())
                     ->setCustomer($customer)
-                    ->setMerchant($merchant)
+                    ->setMerchant($entity)
                     ->setPlanId($pages[2]);
 
                   $subscription_id = $stripe->createSubscription($subscription);

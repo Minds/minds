@@ -129,7 +129,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setAmount($boost->getBid() * 100) //cents to $
             ->setMerchant($boost->getDestination())
             ->setCustomerId($boost->getOwner()->guid)
-            ->setNonce($_POST['nonce']);
+            ->setSource($_POST['nonce']);
 
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
