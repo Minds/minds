@@ -209,6 +209,10 @@ class merchant implements Interfaces\Api
                 ];
                 $user->setMerchant($merchant); //because double assoc array doesn't work
 
+                $programs = Core\Di\Di::_()->get('Programs\Manager');
+                $programs->setUser($user)
+                    ->applyAndAccept('affiliate');
+
                 $user->save();
 
             } catch (\Exception $e) {
