@@ -420,6 +420,7 @@ class User extends \ElggUser
 
         $export['merchant'] = $this->getMerchant() ?: false;
         $export['programs'] = $this->getPrograms();
+        $export['plus'] = $this->getPlus();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
@@ -450,6 +451,15 @@ class User extends \ElggUser
                 ->setMetric('impression')
                 ->setKey($this->guid);
         return $app->total();
+    }
+
+    /**
+     * Get the plus variable
+     * @return int
+     */
+    public function getPlus()
+    {
+        return (bool) $this->plus;
     }
 
     /**
@@ -484,7 +494,8 @@ class User extends \ElggUser
             'social_profiles',
             'language',
             'feature_flags',
-            'programs'
+            'programs',
+            'plus'
         ));
     }
 }

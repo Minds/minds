@@ -99,6 +99,7 @@ class plus implements Interfaces\Api
 
                     $user = Core\Session::getLoggedInUser();
                     $user->plus = true;
+                    $user->save();
 
                     return Factory::response([
                         'subscriptionId' => $subscription_id
