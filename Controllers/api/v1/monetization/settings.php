@@ -98,6 +98,30 @@ class settings extends Controller implements Interfaces\Api
      */
     public function delete($pages)
     {
-        return Factory::response([]);
+        Factory::isLoggedIn();
+
+        $user = Core\Session::getLoggedInUser();
+        $stripe = Core\Di\Di::_()->get('StripePayments');
+
+        $merchant = (new Merchant)->setId($user->getMerchant()['id']);
+        $response = [];
+
+        switch ($pages[0]) {
+            case "account":
+                $success = $stripe->deleteMerchantAccount($merchant);
+                if (!$success) {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Could not delete monetization at this time';
+                    break;
+                }
+
+                $user->setMerchant([]);
+                $user->save();
+
+                Core\Session::regenerate(true, $user);
+
+                break;
+        }
+        return Factory::response($response);
     }
 }

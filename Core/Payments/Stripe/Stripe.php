@@ -640,6 +640,14 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $account;
     }
 
+    public function deleteMerchantAccount($merchant)
+    {
+        $account = StripeSDK\Account::retrieve($merchant->getId());
+        $result = $account->delete();
+
+        return $result->deleted;
+    }
+
     public function verifyMerchant($id, $file)
     {
         $result = StripeSDK\FileUpload::create([
