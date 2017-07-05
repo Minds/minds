@@ -19,6 +19,7 @@ class User extends \ElggUser
         $this->attributes['programs'] = [];
         $this->attributes['monetization_settings'] = [];
         $this->attributes['group_membership'] = [];
+        $this->attributes['plus'] = false;
 
         parent::initializeAttributes();
     }
