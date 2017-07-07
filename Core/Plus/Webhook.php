@@ -15,7 +15,8 @@ class Webhook implements HookInterface
 
     public function onCharged($subscription)
     {
-        WalletHelper::createTransaction($subscription->getCustomer()->getUser()->guid, 10000, null, "Plus Points");
+        $user = $subscription->getCustomer()->getUser();
+        WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
     }
 
     public function onActive($subscription)
@@ -33,5 +34,14 @@ class Webhook implements HookInterface
 
     public function onCanceled($subscription)
     {
+        error_log("[webhook]:: canceled");
+        $user = $subscription->getCustomer()->getUser();
+
+        $plus = new Subscription();
+        $plus->setUser($user);
+        $plus->cancel();
+
+        $user->plus = 0;
+        $user->save();
     }
 }

@@ -16,9 +16,11 @@ class Webhooks
     protected $stripe;
     protected $payload;
     protected $signature;
+    protected $signingKey;
     protected $event;
     protected $aliases = [
-      'invoice.payment_succeeded' => 'onInvoicePaymentSuccess'
+      'invoice.payment_succeeded' => 'onInvoicePaymentSuccess',
+      'customer.subscription.deleted' => 'onCancelled'
     ];
     protected $hooks;
 
@@ -49,9 +51,20 @@ class Webhooks
         return $this;
     }
 
+    /**
+     * Set the request signature
+     * @param string $signature
+     * @return $this
+     */
+    public function setSigningKey($key)
+    {
+        $this->signingKey = $key;
+        return $this;
+    }
+
     public function buildEvent()
     {
-        $this->event = \Stripe\Webhook::constructEvent($this->payload, $this->signature, 'whsec_0NzTmT5Ts216W7muNCqLLYpuzGEZEJSj');
+        $this->event = \Stripe\Webhook::constructEvent($this->payload, $this->signature, $this->signingKey);
         return $this->event;
     }
 
@@ -108,6 +121,26 @@ class Webhooks
             ->setId($chargeId)
             ->setPrice($charge->amount / 100);
         $this->hooks->onCharged($subscription);
+    }
+
+    protected function onCancelled()
+    {
+
+        $subscriptionObj = $this->event->data->object;
+
+        //grab the customer
+        $customerObj = \Stripe\Customer::retrieve($subscriptionObj->customer, [
+          'stripe_account' => $this->event->account
+        ]);
+        $customer = new Payments\Customer();
+        $customer->setUser(new Entities\User($customerObj->metadata->__toArray()['user_guid']))
+          ->setId($customerObj->id);
+
+        $subscription = (new Payments\Subscriptions\Subscription())
+            ->setCustomer($customer)
+            ->setId($subscripionObj->id)
+            ->setPrice($charge->amount / 100);
+        $this->hooks->onCanceled($subscription);
     }
 
     /**
