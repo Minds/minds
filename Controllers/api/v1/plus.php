@@ -118,7 +118,15 @@ class plus implements Interfaces\Api
 
     public function put($pages)
     {
-        return Factory::response(array());
+        $user = Core\Session::getLoggedInUser();
+
+        switch ($pages[0]) {
+            case "boost":
+                $user->disabled_boost = true;
+                $user->save();
+                break;
+        }
+        return Factory::response([]);
     }
 
     public function delete($pages)
@@ -144,6 +152,10 @@ class plus implements Interfaces\Api
                 $plus->cancel();
 
                 $user->plus = false;
+                $user->save();
+                break;
+            case "boost":
+                $user->disabled_boost = false;
                 $user->save();
                 break;
         }

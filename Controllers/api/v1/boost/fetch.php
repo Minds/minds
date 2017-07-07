@@ -26,6 +26,10 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $response = [];
 
+        if (Core\Session::getLoggedinUser()->disabled_boost && Core\Session::getLoggedinUser()->plus) {
+            return Factory::response([]);
+        }
+
         switch ($pages[0]) {
           case 'content':
               $boosts = Core\Boost\Factory::build($pages[0])

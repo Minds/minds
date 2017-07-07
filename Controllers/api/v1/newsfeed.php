@@ -124,7 +124,8 @@ class newsfeed implements Interfaces\Api
 
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        if ($pages[0] == 'network' && !get_input('prepend')) { // No boosts when prepending
+        $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
+        if ($pages[0] == 'network' && !get_input('prepend') && !$disabled) { // No boosts when prepending
             try {
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 1;
@@ -167,7 +168,7 @@ class newsfeed implements Interfaces\Api
                 }
             } catch (\Exception $e) {
             }
-        
+
             if (isset($_GET['thumb_guids'])) {
                 foreach ($activity as $id => $object) {
                     unset($activity[$id]['thumbs:up:user_guids']);
@@ -328,7 +329,7 @@ class newsfeed implements Interfaces\Api
                 }
 
                 $mature_remind =
-                    ($embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false) || 
+                    ($embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false) ||
                     (isset($embeded->remind_object['mature']) && $embeded->remind_object['mature']);
 
                 $user = Core\Session::getLoggedInUser();
@@ -581,7 +582,7 @@ class newsfeed implements Interfaces\Api
                 } else {
                     Helpers\Wallet::createTransaction($activity->owner_guid, -1, $activity->guid, 'Post Removed');
                 }
-                
+
             }
 
             return Factory::response(array('message'=>'removed ' . $pages[0]));
