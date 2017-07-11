@@ -422,7 +422,7 @@ class User extends \ElggUser
         $export['merchant'] = $this->getMerchant() ?: false;
         $export['programs'] = $this->getPrograms();
         $export['plus'] = $this->getPlus();
-        $export['boost'] = (bool) $this->disabled_boost;
+        $export['disabled_boost'] = (bool) $this->disabled_boost;
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
