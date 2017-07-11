@@ -20,6 +20,7 @@ class User extends \ElggUser
         $this->attributes['monetization_settings'] = [];
         $this->attributes['group_membership'] = [];
         $this->attributes['plus'] = 0;
+        $this->attributes['verified'] = 0;
         $this->attributes['disabled_boost'] = 0;
 
         parent::initializeAttributes();
@@ -422,6 +423,7 @@ class User extends \ElggUser
         $export['merchant'] = $this->getMerchant() ?: false;
         $export['programs'] = $this->getPrograms();
         $export['plus'] = $this->getPlus();
+        $export['verified'] = (bool) $this->verified;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
 
         if (isset($export['mature'])) {
@@ -498,6 +500,7 @@ class User extends \ElggUser
             'feature_flags',
             'programs',
             'plus',
+            'verified',
             'disabled_boost'
         ));
     }
