@@ -78,7 +78,7 @@ class plus implements Interfaces\Api
 
                     try{
                         $stripe->createPlan((object) [
-                          'id' => 'points',
+                          'id' => 'plus',
                           'amount' => 5,
                           'merchantId' => $referrer->getMerchant()['id']
                         ]);
