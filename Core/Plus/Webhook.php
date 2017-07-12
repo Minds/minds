@@ -15,8 +15,10 @@ class Webhook implements HookInterface
 
     public function onCharged($subscription)
     {
-        $user = $subscription->getCustomer()->getUser();
-        WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
+        if ($subscription->getPlanId() == 'plus') {
+            $user = $subscription->getCustomer()->getUser();
+            WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
+        }
     }
 
     public function onActive($subscription)

@@ -92,12 +92,14 @@ class Webhooks
         $invoiceObj = $this->event->data->object;
         $lines = $invoiceObj->lines->data;
         $chargeId = $invoiceObj->charge;
+        $planId = "";
 
         $metadata = [];
 
         foreach ($lines as $line) {
             if($line->type == "subscription"){
                 $metadata = $line->metadata->__toArray(false);
+                $planId = $line->plan->id;
             }
         }
 
@@ -119,6 +121,7 @@ class Webhooks
         $subscription = (new Payments\Subscriptions\Subscription())
             ->setCustomer($customer)
             ->setId($chargeId)
+            ->setPlanId($planId)
             ->setPrice($charge->amount / 100);
         $this->hooks->onCharged($subscription);
     }
@@ -139,6 +142,7 @@ class Webhooks
         $subscription = (new Payments\Subscriptions\Subscription())
             ->setCustomer($customer)
             ->setId($subscripionObj->id)
+            ->setPlanId($subscripionObj->plan->id)
             ->setPrice($charge->amount / 100);
         $this->hooks->onCanceled($subscription);
     }
