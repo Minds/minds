@@ -125,7 +125,7 @@ class newsfeed implements Interfaces\Api
      //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
         $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
-        if ($pages[0] == 'network' && !get_input('prepend') && !$disabled) { // No boosts when prepending
+        if ($pages[0] == 'network' && !get_input('prepend') && !$disabledBoost) { // No boosts when prepending
             try {
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 1;
