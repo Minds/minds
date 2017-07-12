@@ -160,6 +160,41 @@ class Defaults
 
             return $meta;
         });
+
+        $marketing = [
+            'affiliates' => [
+                'title' => 'Affiliate Program',
+                'description' => 'Earn 25% of the revenue Minds generates from your referrals'
+            ],
+            'monetization' => [
+                'title' => 'Monetization',
+                'description' => 'Start earning revenue on Minds by monetizing your channel'
+            ],
+            'plus' => [
+                'title' => 'Minds Plus',
+                'description' => 'Opt-out of boosts, earn 1,000 monthly points, access exclusive Minds content, and more'
+            ],
+            'wallet' => [
+                'title' => 'Wallet',
+                'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.'
+            ]
+        ];
+
+        foreach ($marketing as $uri => $page) {
+            Manager::add("/$uri", function ($slugs = []) {
+                $meta = [
+                    'title' => $page['title'],
+                    'description' => $page['description'],
+                    'og:title' => $page['title'],
+                    'og:description' => $page['description'],
+                    'og:url' => $this->config->site_url . $uri,
+                    'og:image' => $this->config->site_url . 'assets/screenshots/register.png',
+                    'og:image:width' => 2000,
+                    'og:image:height' => 1000
+                ];
+                return $meta;
+            });
+        }
     }
 
     public static function _()
