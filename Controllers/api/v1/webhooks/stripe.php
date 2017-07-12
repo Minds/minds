@@ -51,7 +51,7 @@ class stripe implements Interfaces\Api, Interfaces\ApiIgnorePam
 
       // Do something with $event_json
 
-      http_response_code(400); // PHP 5.4 or greater
+      http_response_code(200); // PHP 5.4 or greater
       exit;
 
       /*$gateway = isset($pages[0]) ? $pages[0] : 'default';
