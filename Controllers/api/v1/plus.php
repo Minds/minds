@@ -113,6 +113,9 @@ class plus implements Interfaces\Api
                     $user->plus = true;
                     $user->save();
 
+                    $plusGuid = "730071191229833224";
+                    $user->subscribe($plusGuid);
+
                     return Factory::response([
                         'subscriptionId' => $subscription_id
                     ]);
