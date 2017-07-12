@@ -181,7 +181,7 @@ class Defaults
         ];
 
         foreach ($marketing as $uri => $page) {
-            Manager::add("/$uri", function ($slugs = []) {
+            Manager::add("/$uri", function ($slugs = []) use ($uri, $page) {
                 $meta = [
                     'title' => $page['title'],
                     'description' => $page['description'],
