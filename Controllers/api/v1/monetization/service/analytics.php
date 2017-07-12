@@ -52,7 +52,7 @@ class analytics extends Controller implements Interfaces\Api
                 foreach ($results as $date => $values) {
                     $rows[] = [
                         date('n/d', strtotime($date)),
-                        $values['gross']
+                        $values['net']
                     ];
                 }
 
@@ -73,7 +73,7 @@ class analytics extends Controller implements Interfaces\Api
             case 'list':
                 $type = isset($_GET['type']) ? $_GET['type'] : 'payments';
 
-                if($type == 'payments') {
+                if($type == 'earnings') {
                   $results = $stripe->getTransactions($merchant, [
                       'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 12,
                       'offset' => isset($_GET['offset']) ? $_GET['offset'] : '',
