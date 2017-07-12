@@ -12,7 +12,7 @@
 
 <div class="mdl-grid m-blog-container blogs-grid mdl-color--white mdl-shadow--4dp" style="max-width:660px" *ngIf="blog.guid">
 
-  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="top"></google-ad>
+  <google-ad *ngIf="!session.getLoggedInUser().plus && blog.monetized && index == 0" type="responsive" location="top"></google-ad>
 
   <div class="mdl-grid" style="width:100%">
     <div class="mdl-cell mdl-cell--12-col">
@@ -53,7 +53,7 @@
 
   <div style="width:100%; padding:8px;">
     <!-- START: Google adsense block -->
-    <google-ad *ngIf="blog.monetized && index == 0"></google-ad>
+    <google-ad *ngIf="!session.getLoggedInUser().plus && blog.monetized && index == 0"></google-ad>
     <!-- END: Google adsense block -->
 
     <div class="mdl-cell mdl-cell--12-col minds-blog-body"
@@ -63,12 +63,12 @@
   </div>
 
   <!-- START: Google adsense block -->
-  <google-ad *ngIf="blog.monetized && index == 0" type="responsive" location="bottom"></google-ad>
+  <google-ad *ngIf="!session.getLoggedInUser().plus && blog.monetized && index == 0" type="responsive" location="bottom"></google-ad>
   <!-- END: Google adsense block -->
 
   <div style="width:100%; padding:8px;">
     <!-- START: RevContent block -->
-    <revcontent *ngIf="blog.monetized"></revcontent>
+    <revcontent *ngIf="!session.getLoggedInUser().plus && blog.monetized"></revcontent>
     <!-- END: RevContent block -->
   </div>
 
