@@ -13,6 +13,7 @@ use Minds\Entities\User;
 use Minds\Entities\File as FileEntity;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Plugin\Groups;
+use Minds\Plugin\Groups\Entities\Group as GroupEntity;
 
 use Minds\Plugin\Groups\Exceptions\GroupOperationException;
 
