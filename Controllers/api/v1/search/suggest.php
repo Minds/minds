@@ -5,12 +5,13 @@
  * @version 1
  * @author Emiliano Balbuena
  */
+
 namespace Minds\Controllers\api\v1\search;
 
-use Minds\Core;
-use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core;
 use Minds\Core\Search\Documents;
+use Minds\Interfaces;
 
 class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -18,8 +19,8 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         if (!isset($_GET['q']) || !$_GET['q']) {
             return Factory::response([
-              'status' => 'error',
-              'message' => 'Missing query'
+                'status' => 'error',
+                'message' => 'Missing query'
             ]);
         }
 
@@ -29,12 +30,15 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if (isset($_GET['access_token'])) {
             foreach ($results as $result) {
-                $guids[] = $result['payload']['guid'];            
+                $guids[] = $result['payload']['guid'];
             }
-            
-            $response['suggestions'] = Factory::exportable(Core\Entities::get([
-                'guids' => $guids
-            ]));
+            if ($guids) {
+                $response['suggestions'] = Factory::exportable(Core\Entities::get([
+                    'guids' => $guids
+                ]));
+            } else {
+                $response['suggestions'] = [];
+            }
         } else {
             $response['suggestions'] = $suggestions['suggestion'][0]['options'];
         }
