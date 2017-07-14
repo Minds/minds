@@ -262,6 +262,8 @@ class channel implements Interfaces\Api
                 $db->insert($owner->guid, $update);
                 //update session also
                 Core\Session::regenerate(false, $owner);
+                //sync our change to our other sessions
+                (new Core\Data\Sessions())->syncAll($owner->guid);
        }
 
         return Factory::response($response);

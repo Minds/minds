@@ -120,6 +120,71 @@ class Sessions implements \SessionHandlerInterface
             $this->destroy($session_id);
         }
 
+        $this->db->removeRow('user:' . $guid);
+
+        return true;
+    }
+
+    /**
+     * Sync all of a user's sessions (uses the $_SESSION global)
+     * @param string $guid
+     * @return bool
+     */
+    public function syncAll($guid)
+    {
+        $session_data = session_encode();
+
+        $result = $this->db->getRow('user:' . $guid, [
+            'limit' => 99999,
+            'reversed' => false
+        ]);
+
+        if (!$result) {
+            return true;
+        }
+
+        foreach ($result as $session_id => $ts) {
+            $this->session = null;
+            $this->write($session_id, $session_data);
+        }
+
+        return true;
+    }
+
+    /**
+     * Sync all of a user's sessions (uses the $_SESSION global)
+     * @param string $guid
+     * @return bool
+     */
+    public function syncRemote($guid, $user)
+    {
+        $current_session = $_SESSION;
+
+        $result = $this->db->getRow('user:' . $guid, [
+            'limit' => 99999,
+            'reversed' => false
+        ]);
+
+        if (!$result) {
+            return true;
+        }
+
+        $cacher = cache\factory::build();
+
+        foreach ($result as $session_id => $ts) {
+            $session_data = $this->db->getRow($session_id);
+            //decode session_data to $_SESSION global
+            session_decode($session_data['data']);
+            //update the session
+            $_SESSION['user'] = $user;
+            $this->session = null;
+            $this->write($session_id, session_encode());
+            $cacher->destroy($session_id);
+        }
+
+        //go back to real session
+        $_SESSION = $current_session;
+
         return true;
     }
 

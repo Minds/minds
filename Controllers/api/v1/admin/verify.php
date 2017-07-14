@@ -58,7 +58,7 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
 
         \cache_entity($user);
 
-        //(new Core\Data\Sessions())->destroyAll($user->guid);
+        (new Core\Data\Sessions())->syncRemote($user->guid, $user);
 
         return Factory::response([
             'done' => true

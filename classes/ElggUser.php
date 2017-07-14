@@ -151,9 +151,9 @@ class ElggUser extends ElggEntity
 	 * @return bool
 	 */
 	public function save() {
-		if(!$this->cache){
-		//	return false;
-		}
+			if(!$this->cache){
+					//return false;
+			}
 
         //we do a manual save because we don't want to always update the password
         //@todo find a better less hacky solution
@@ -184,27 +184,29 @@ class ElggUser extends ElggEntity
 
         $result = $db->insert($this->guid, $array);
 
-		//now place email and username in index
-		$data = array($this->guid => time());
+				//now place email and username in index
+				$data = array($this->guid => time());
 
-		$db = new Minds\Core\Data\Call('user_index_to_guid');
-		if(!$db->getRow(strtolower($this->username))){
-			$db->insert(strtolower($this->username), $data);
-			$db->insert(strtolower($this->email), $data);
-		}
+				$db = new Minds\Core\Data\Call('user_index_to_guid');
+				if(!$db->getRow(strtolower($this->username))){
+						$db->insert(strtolower($this->username), $data);
+						$db->insert(strtolower($this->email), $data);
+				}
 
-		//update our session, if it is us logged in
-		if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
+				//update our session, if it is us logged in
+				if(elgg_is_logged_in() && $this->guid == elgg_get_logged_in_user_guid()){
             Minds\Core\Session::regenerate(false);
+						//sync our changes to other sessions
+						(new Minds\Core\Data\Sessions())->syncAll($this->guid);
         }
 
         try{
-            if($new){
+        		if($new){
                 $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
                 Minds\Core\Data\Client::build('Neo4j')->request($prepared->createUser($this));
             }
-        }catch (\Exception $e){}
-		return $this->guid;
+        } catch (\Exception $e) {}
+				return $this->guid;
 	}
 
 	/**
