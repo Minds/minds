@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 
 import { Subscription } from 'rxjs/Rx';
@@ -7,6 +7,8 @@ import { GroupsService } from '../groups-service';
 
 import { MindsTitle } from '../../../services/ux/title';
 import { SessionFactory } from '../../../services/session';
+
+import { GroupsProfileFeed } from './feed/feed';
 
 @Component({
   moduleId: module.id,
@@ -32,6 +34,9 @@ export class GroupsProfile {
   offset : string = "";
   inProgress : boolean = false;
   moreData : boolean = true;
+
+  @ViewChild('feed') private feed: GroupsProfileFeed;
+
 
 	constructor(public service: GroupsService, public route: ActivatedRoute, public title: MindsTitle){
   }
@@ -108,6 +113,10 @@ export class GroupsProfile {
 
   change_membership(membership: any) {
     this.load();
+  }
+
+  canDeactivate(){
+    return this.feed.canDeactivate();
   }
 
 }
