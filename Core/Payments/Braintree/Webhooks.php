@@ -9,6 +9,7 @@ use Minds\Core;
 use Minds\Core\Guid;
 use Minds\Core\Payments;
 use Minds\Entities;
+use Minds\Helpers\Wallet as WalletHelper;
 
 use Braintree_ClientToken;
 use Braintree_Configuration;
@@ -132,7 +133,13 @@ class Webhooks
             ->setId($this->notification->subscription->id)
             ->setBalance($this->notification->subscription->balance)
             ->setPrice($this->notification->subscription->price);
-        $this->hooks->onCharged($subscription);
+
+        $db = new Core\Data\Call('user_index_to_guid');
+        //find the customer
+        $user_guids = $db->getRow("subscription:" . $subscription->getId());
+        $user = Entities\Factory::build($user_guids[0]);
+        WalletHelper::createTransaction($user->guid, ($subscription->getPrice() / $this->rate) * 1.1, null, "Purchase (Recurring)");
+        //$this->hooks->onCharged($subscription);
     }
 
     /**
