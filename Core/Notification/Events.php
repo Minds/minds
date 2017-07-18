@@ -107,8 +107,13 @@ class Events
                     if ($user->guid && !Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $user)) {
                         $to[] = $user->guid;
                     }
-                }
 
+                    //limit of tags notifications: 5
+                    if (count($to) >= 5) {
+                        break;
+                    }
+                }
+                
                 if ($to) {
                     Dispatcher::trigger('notification', 'all', [
                         'to' => $to,
