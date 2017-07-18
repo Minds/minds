@@ -116,6 +116,8 @@ export class GroupsProfile {
   }
 
   canDeactivate(){
+    if(!this.feed)
+      return true;
     return this.feed.canDeactivate();
   }
 
