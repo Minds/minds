@@ -29,7 +29,7 @@
 <div class="mdl-card__supporting-text mdl-color--blue-grey-50 m-action-tabs m-action-tabs-fixed">
 	<minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
 	<minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
-	<minds-button-comment [object]="blog" [routerLink]="['/archive/view', blog.guid]"></minds-button-comment>
+	<minds-button-comment [object]="blog" [routerLink]="['/blog/view', blog.guid]"></minds-button-comment>
 	<minds-button-remind [object]="blog"></minds-button-remind>
 	<minds-button-feature [object]="blog" *ngIf="session.isAdmin()"></minds-button-feature>
 </div>
