@@ -131,8 +131,8 @@ class Manager
                 ->setPath('admin/payouts')
             )
             ->addSubItem((new Item())
-                ->setPriority(8)        
-	        ->setIcon('star')
+                ->setPriority(8)
+	              ->setIcon('star')
                 ->setName('Featured')
                 ->setTitle('Featured')
                 ->setPath('admin/featured')
@@ -143,6 +143,13 @@ class Manager
                 ->setName('Hashtags')
                 ->setTitle('Hashtags')
                 ->setPath('admin/tagcloud')
+            )
+            ->addSubItem((new Item())
+                ->setPriority(10)
+                ->setIcon('verified_user')
+                ->setName('Verfiy')
+                ->setTitle('Verify requests')
+                ->setPath('admin/verify')
             );
         self::add($admin);
 
