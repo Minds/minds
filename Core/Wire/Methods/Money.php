@@ -62,6 +62,7 @@ class Money implements MethodInterface
              ->setMerchant($merchant)
              ->setCustomerId(Core\Session::getLoggedInUser()->guid)
              ->setSource($this->nonce)
+             ->setFee(0)
              ->capture();
         $this->id = $this->stripe->setSale($sale);
         return $this;
