@@ -22,7 +22,29 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
      */
     public function get($pages)
     {
-        return Factory::response([]);
+        /**
+         * This needs its own class.. done for speed atm
+         */
+        $db = new Core\Data\Call('entities_by_time');
+
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 24;
+        $offset = isset($_GET['offset']) ? $_GET['offset'] : '';
+
+        $requests = $db->getRow('verify:requests', [ 'limit' => $limit, 'offset' => $offset ]);
+
+        $response = [];
+        foreach ($requests as $request) {
+            $payload = json_decode($request, true);
+            $user = Entities\Factory::build($payload['guid']);
+            $payload['user'] = $user->export();
+            $response['requests'][] = $payload;
+        }
+
+        if ($response['requests']) {
+            $response['load-next'] = end(array_keys($requests));
+        }
+
+        return Factory::response($response);
     }
 
     /**
@@ -45,6 +67,8 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
             ];
         }
 
+        $db = new Core\Data\Call('entities_by_time');
+
         $user = new Entities\User($pages[0]);
 
         if (!$user || !$user->guid) {
@@ -59,6 +83,8 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
         \cache_entity($user);
 
         (new Core\Data\Sessions())->syncRemote($user->guid, $user);
+
+        $db->removeAttributes('verify:requests', [ $user->guid ]);
 
         return Factory::response([
             'done' => true
@@ -77,6 +103,8 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
             ];
         }
 
+        $db = new Core\Data\Call('entities_by_time');
+
         $user = new Entities\User($pages[0]);
 
         if (!$user || !$user->guid) {
@@ -89,6 +117,8 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
         $user->save();
 
         \cache_entity($user);
+
+        $db->removeAttributes('verify:requests', [ $user->guid ]);
 
         return Factory::response([
             'done' => true
