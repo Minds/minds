@@ -28,7 +28,7 @@
           <option *ngFor="let l of licenses" [value]="l.value">{{l.text}}</option>
       </select>
     </div>
-    <div class="m-visibility-info">
+    <div class="m-visibility-info" *ngIf="!entity.flags.paywall">
       <i class="material-icons">visibility</i>
       <select name="access_id" [ngModel]="entity.access_id" (change)="entity.access_id = $event.target.value" class="mdl-color-text--blue-grey-300 m-form-select">
           <option *ngFor="let a of access" [value]="a.value">{{a.text}}</option>
@@ -41,7 +41,7 @@
         title="Mature content"
         i18n-title
         >explicit</i>
-        
+
         <span [ngClass]="{ 'mdl-color-text--red-500': entity.mature }">{{ entity.mature ? 'Mature content' : 'Anyone' }}</span>
       </a>
     </div>

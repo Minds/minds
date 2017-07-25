@@ -166,7 +166,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                       $hours = $timeSplit[0];
                       $mins = $timeSplit[1];
-                      
+
                       if((int) $hours >= 1 || (int) $mins >= 40){
                           return Factory::response([
                             'status' => 'error',
@@ -321,7 +321,9 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
             }
         }
 
-        $entity->hidden = isset($_POST['hidden']) && $_POST['hidden'];
+        if (isset($_POST['hidden']) && $_POST['hidden']) {
+            $entity->hidden = true;
+        }
         $entity->access_id = !isset($_POST['access_id']) ? 2 : (int) $_POST['access_id'];
         $entity->save(true);
 
@@ -337,7 +339,7 @@ class archive implements Interfaces\Api, Interfaces\ApiIgnorePam
                   'thumbnail_src'=>$entity->getIconUrl(),
                   'perma_url' => $entity->getURL()
               )
-          ));
+            ));
 
             Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $entity->guid, 'Post');
             $response['activity_guid'] = $activity->guid;

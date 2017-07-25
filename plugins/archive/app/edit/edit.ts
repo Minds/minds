@@ -37,7 +37,7 @@ export class ArchiveEdit {
   paramsSubscription: Subscription;
   ngOnInit() {
     this.minds = window.Minds;
-    
+
     this.paramsSubscription = this.route.params.subscribe(params => {
       if (params['guid']) {
         this.guid = params['guid'];
@@ -64,6 +64,7 @@ export class ArchiveEdit {
             response.entity.license = "all-rights-reserved";
 
           response.entity.mature = response.entity.flags && response.entity.flags.mature ? 1 : 0;
+          response.entity.paywall = response.entity.flags && response.entity.flags.paywall ? 1 : 0;
 
           this.entity = response.entity;
         }
