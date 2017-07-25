@@ -52,12 +52,25 @@ class Events
                 return false;
             }
 
+            //Plus hack
+            if ($entity->owner_guid == '730071191229833224') {
+                //Check if a plus subscription exists
+                $repo = new Payments\Plans\Repository();
+                $plan = $repo->setEntityGuid(0)
+                    ->setUserGuid($user->guid)
+                    ->getSubscription('plus');
+
+                if ($plan->getStatus() == 'active') {
+                    return $event->setResponse(true);
+                }
+            }
+
             $repo = new Payments\Plans\Repository();
             $plan = $repo->setEntityGuid($entity->owner_guid)
                 ->setUserGuid($user->guid)
                 ->getSubscription('exclusive');
 
-            $event->setResponse($plan->getStatus() == 'active');
+            return $event->setResponse($plan->getStatus() == 'active');
         });
     }
 }
