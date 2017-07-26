@@ -64,8 +64,15 @@ class plus implements Interfaces\Api
 
                 if (!$stripe->getCustomer($customer) || !$customer->getId()) {
                     //create the customer on stripe
-                    $customer->setPaymentToken($_POST['source']);
-                    $customer = $stripe->createCustomer($customer);
+                    try {
+                        $customer->setPaymentToken($_POST['source']);
+                        $customer = $stripe->createCustomer($customer);
+                    } catch (\Exception $e) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => $e->getMessage()
+                        ]);
+                    }
                 }
 
                 $subscription = (new Payments\Subscriptions\Subscription())
