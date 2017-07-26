@@ -29,7 +29,7 @@ class Thumbnails
 
         $thumbnail = new \ElggFile();
         $thumbnail->owner_guid = $userGuid;
-        $thumbnail->setFilename("/media/thumbnails/$entity->guid.jpg");
+        $thumbnail->setFilename("/archive/thumbnails/$entity->guid.jpg");
 
         switch ($entity->subtype) {
             case 'image':

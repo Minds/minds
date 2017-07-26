@@ -48,7 +48,7 @@ class Video implements AssetsInterface
             $thumb = str_replace(' ', '+', $thumb);
             $data = base64_decode($thumb);
 
-            $filename = "media/thumbnails/{$this->entity->guid}.jpg";
+            $filename = "archive/thumbnails/{$this->entity->guid}.jpg";
 
             $file = new Entities\File();
             $file->owner_guid = $this->entity->owner_guid;
