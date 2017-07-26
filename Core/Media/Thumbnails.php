@@ -58,13 +58,11 @@ class Thumbnails
             case 'video':
                 if (!$entity->thumbnail) {
                     $cinemr = $entity->cinemr();
-                    $thumbnail = $cinemr::factory('media')->get($entity->cinemr_guid . '/thumbnail');
-                    // $thumbnail = $this->config->get('cinemr_url') . $entity->cinemr_guid . '/thumbnail-00001.png';
+                    $thumbnail = $this->config->get('cinemr_url') . $entity->cinemr_guid . '/thumbnail-00001.png';
 
                     break;
                 }
 
-                $thumbnail = false;
                 break;
 
             case 'audio':
