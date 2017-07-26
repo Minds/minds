@@ -52,11 +52,11 @@ class Image extends File
 
         parent::save($index);
 
-        try {
-            $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
-            \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
-        } catch (\Exception $e) {
-        }
+        //try {
+        //    $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
+        //    \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
+        //} catch (\Exception $e) {
+        //}
 
         return $this->guid;
     }
