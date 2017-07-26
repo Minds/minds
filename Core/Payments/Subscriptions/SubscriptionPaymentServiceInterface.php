@@ -16,5 +16,5 @@ interface SubscriptionPaymentServiceInterface
 
     public function createSubscription(Subscription $subscription);
 
-    public function getSubscription(Subscription $subscription);
+    //public function getSubscription(Subscription $subscription);
 }
