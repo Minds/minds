@@ -440,7 +440,7 @@ class newsfeed implements Interfaces\Api
                         }
                     }
 
-                    $attachment->save(true);
+                    $attachment->save();
 
                     switch ($attachment->subtype) {
                         case "image":
