@@ -169,7 +169,7 @@ class Network implements BoostHandlerInterface
      */
     public function accept($boost, $impressions = 0)
     {
-        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'approvedAt' => new BSON\UTCDateTime() ]);
+        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'approvedAt' => new BSON\UTCDateTime(time()) ]);
         $boost->setState('approved');
         if ($accept) {
             //remove from review
