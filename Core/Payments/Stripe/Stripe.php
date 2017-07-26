@@ -8,17 +8,14 @@ namespace Minds\Core\Payments\Stripe;
 use Minds\Core;
 use Minds\Core\Analytics\Timestamps;
 use Minds\Core\Config\Config;
-use Minds\Core\Guid;
-use Minds\Core\Payments\PaymentServiceInterface;
-use Minds\Core\Payments\Subscriptions\SubscriptionPaymentServiceInterface;
-use Minds\Core\Payments\Sale;
-use Minds\Core\Payments\Merchant;
 use Minds\Core\Payments\Customer;
+use Minds\Core\Payments\Merchant;
 use Minds\Core\Payments\PaymentMethod;
+use Minds\Core\Payments\PaymentServiceInterface;
+use Minds\Core\Payments\Sale;
 use Minds\Core\Payments\Subscriptions\Subscription;
+use Minds\Core\Payments\Subscriptions\SubscriptionPaymentServiceInterface;
 use Minds\Core\Payments\Transfers\Transfer;
-use Minds\Entities;
-
 use Stripe as StripeSDK;
 
 class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInterface
@@ -120,37 +117,75 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     /**
      * Charge the sale
      * @param Sale $sale
-     * @return boolean
+     * @return void
      */
     public function chargeSale(Sale $sale)
     {
-        $charge = StripeSDK\Charge::retrieve($sale->getId());
+        $opts = [];
+
+        if ($sale->getMerchant()) {
+          $opts['stripe_account'] = $sale->getMerchant()->getMerchant()['id'];
+        }
+
+        $charge = StripeSDK\Charge::retrieve($sale->getId(), $opts);
         $charge->capture();
-        return true;
+    }
+
+    /**
+     * Void (if non-settled) or refund the sale
+     * @param Sale $sale
+     * @return boolean
+     * @throws \Exception
+     */
+    public function voidOrRefundSale(Sale $sale)
+    {
+        try {
+            $this->voidSale($sale);
+            return true;
+        } catch (\Exception $e) {
+            try {
+                $this->refundSale($sale);
+                return true;
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
     }
 
     /**
      * Void the sale
      * @param Sale $sale
-     * @return boolean
+     * @return void
      */
     public function voidSale(Sale $sale)
     {
+        $opts = [];
+
+        if ($sale->getMerchant()) {
+          $opts['stripe_account'] = $sale->getMerchant()->getMerchant()['id'];
+        }
+
         StripeSDK\Refund::create([
-          "charge" => $sale->getId()
-        ]);
+            "charge" => $sale->getId()
+        ], $opts);
     }
 
     /**
      * Refund the sale
      * @param Sale $sale
-     * @return boolean
+     * @return void
      */
     public function refundSale(Sale $sale)
     {
+        $opts = [];
+
+        if ($sale->getMerchant()) {
+          $opts['stripe_account'] = $sale->getMerchant()->getMerchant()['id'];
+        }
+
         StripeSDK\Refund::create([
-          "charge" => $sale->getId()
-        ]);
+            "charge" => $sale->getId()
+        ], $opts);
     }
 
     /**
@@ -162,25 +197,24 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function getSales(Merchant $merchant, array $options = array())
     {
         $results = StripeSDK\Charge::all(
-          [
-            'limit' => 3
-          ],
-          [
-            'stripe_account' => $merchant->getId()
-          ]);
-
+            [
+                'limit' => 3
+            ],
+            [
+                'stripe_account' => $merchant->getId()
+            ]);
 
         $sales = [];
         foreach ($results->data as $transaction) {
             $sales[] = (new Sale)
-              ->setId($transaction->id)
-              ->setAmount($transaction->amount / 100)
-              ->setStatus($transaction->outcome['seller_message'])
-              ->setMerchant($merchant)
-              ->setOrderId($transaction->metadata['orderId'])
-              ->setCustomerId($transaction->customer['first_name'])
-              ->setCreatedAt($transaction->created)
-              ->setSettledAt($transaction->updated);
+                ->setId($transaction->id)
+                ->setAmount($transaction->amount / 100)
+                ->setStatus($transaction->outcome['seller_message'])
+                ->setMerchant($merchant)
+                ->setOrderId($transaction->metadata['orderId'])
+                ->setCustomerId($transaction->customer['first_name'])
+                ->setCreatedAt($transaction->created)
+                ->setSettledAt($transaction->updated);
         }
         return $sales;
     }
@@ -429,12 +463,12 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function getBalance(Merchant $merchant, array $options = array())
     {
         $results = StripeSDK\BalanceTransaction::all(
-          [
-            'limit' => $options['limit'] ?: 50
-          ],
-          [
-            'stripe_account' => $merchant->getId()
-          ]);
+            [
+                'limit' => $options['limit'] ?: 50
+            ],
+            [
+                'stripe_account' => $merchant->getId()
+            ]);
         return $results;
     }
 
@@ -468,6 +502,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
      * Add a merchant to Stripe
      * @param Merchant $merchant
      * @return string - the ID of the merchant
+     * @throws \Exception error message from failed account creation
      */
     public function addMerchant(Merchant $merchant)
     {
@@ -515,7 +550,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
         $result = StripeSDK\Account::create($data);
 
-        if($result->id){
+        if ($result->id) {
             $merchant->setGuid($result->id);
             return $result;
         }
@@ -525,7 +560,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     /**
      * Return a merchant from an id
+     * @param $id
      * @return Merchant
+     * @throws \Exception
      */
     public function getMerchant($id)
     {
@@ -571,7 +608,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     /**
      * Updates a merchant in Stripe
-     * @return Merchant
+     * @param $merchant
+     * @return string Merchant's id
+     * @throws \Exception
      */
     public function updateMerchant(Merchant $merchant)
     {
@@ -651,10 +690,10 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function verifyMerchant($id, $file)
     {
         $result = StripeSDK\FileUpload::create([
-          'purpose' => "identity_document",
-          'file' => fopen($file['tmp_name'], 'r')
+            'purpose' => "identity_document",
+            'file' => fopen($file['tmp_name'], 'r')
         ],
-        [ 'stripe_account' => $id ]);
+            ['stripe_account' => $id]);
 
         $account = StripeSDK\Account::retrieve($id);
         $account->legal_entity->verification->document = $result->id;
@@ -673,9 +712,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
 
         $opts = [
-          'metadata' => [
-            'user_guid' => $customer->getUser()->getGuid()
-          ]
+            'metadata' => [
+                'user_guid' => $customer->getUser()->getGuid()
+            ]
         ];
 
         if ($customer->getPaymentToken()) {
@@ -705,9 +744,10 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     {
     }
 
-    public function getPlan($id, $merchant){
+    public function getPlan($id, $merchant)
+    {
         try {
-            $result = StripeSDK\Plan::retrieve($id, [ 'stripe_account' => $merchant ]);
+            $result = StripeSDK\Plan::retrieve($id, ['stripe_account' => $merchant]);
         } catch (\Exception $e) {
             return false;
         }
@@ -717,23 +757,23 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function createPlan($plan)
     {
         $result = StripeSDK\Plan::create(
-          [
-            'amount' => $plan->amount,
-            'interval' => 'month',
-            'name' => $plan->id,
-            'currency' => "usd",
-            'id' => $plan->id
-          ],
-          [
-            'stripe_account' => $plan->merchantId
-          ]
+            [
+                'amount' => $plan->amount,
+                'interval' => 'month',
+                'name' => $plan->id,
+                'currency' => "usd",
+                'id' => $plan->id
+            ],
+            [
+                'stripe_account' => $plan->merchantId
+            ]
         );
         return $result;
     }
 
     public function deletePlan($id, $merchant)
     {
-        $plan = StripeSDK\Plan::retrieve($id,[ 'stripe_account' => $merchant ]);
+        $plan = StripeSDK\Plan::retrieve($id, ['stripe_account' => $merchant]);
         $plan->delete();
     }
 

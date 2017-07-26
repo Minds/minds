@@ -22,6 +22,7 @@ class User extends \ElggUser
         $this->attributes['plus'] = 0;
         $this->attributes['verified'] = 0;
         $this->attributes['disabled_boost'] = 0;
+        $this->attributes['categories'] = [];
 
         parent::initializeAttributes();
     }
@@ -425,6 +426,7 @@ class User extends \ElggUser
         $export['plus'] = $this->getPlus();
         $export['verified'] = (bool) $this->verified;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
+        $export['categories'] = $this->getCategories();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
@@ -467,6 +469,29 @@ class User extends \ElggUser
     }
 
     /**
+     * Gets the categories to which the user is subscribed
+     * @return array
+     */
+    public function getCategories()
+    {
+        if (is_string($this->categories)) {
+            return json_decode($this->categories);
+        }
+
+        return $this->categories ?: [];
+    }
+
+    /**
+     * Sets the categories to which the user is subscribed
+     * @param $value
+     */
+    public function setCategories($value)
+    {
+        $this->categories = $value;
+    }
+
+
+    /**
      * Gets the user's icon URL
      * @param  string $size
      * @return string
@@ -501,7 +526,8 @@ class User extends \ElggUser
             'programs',
             'plus',
             'verified',
-            'disabled_boost'
+            'disabled_boost',
+            'categories'
         ));
     }
 }

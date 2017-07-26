@@ -37,6 +37,7 @@ class plus implements Interfaces\Api
     public function post($pages)
     {
         $response = [];
+
         $plus = new Core\Plus\Subscription();
         $plus->setUser(Core\Session::getLoggedInUser());
 
@@ -52,6 +53,7 @@ class plus implements Interfaces\Api
                 $db = new Core\Data\Call('entities_by_time');
                 $db->insert('verify:requests', [ $user->guid => json_encode($request) ]);
                 break;
+
             case "subscription":
 
                 $stripe = Core\Di\Di::_()->get('StripePayments');

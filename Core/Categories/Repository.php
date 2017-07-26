@@ -52,6 +52,16 @@ class Repository
         return $this->categories;
     }
 
+    /**
+     * Empties categories array
+     * @return $this
+     */
+    public function reset()
+    {
+        $this->categories = [];
+        return $this;
+    }
+
     public function get(array $opts = [])
     {
         $opts = array_merge([
@@ -99,7 +109,7 @@ class Repository
         return $this;
     }
 
-    public function remove($guid, $category)
+    public function remove($guid)
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
         if (empty($this->categories)) {

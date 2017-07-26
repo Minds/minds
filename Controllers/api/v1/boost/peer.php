@@ -35,7 +35,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
           case 'outbox':
             $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
             $boosts = $pro->getOutbox($limit, $offset);
-            
+
             if ($boosts && $offset) {
                 array_shift($boosts);
             }
@@ -222,7 +222,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($boost->getType() == "pro") {
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
-                $stripe->chargeSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                $sale = (new Payments\Sale)
+                    ->setId($boost->getTransactionId())
+                    ->setMerchant($boost->getDestination());
+                $stripe->chargeSale($sale);
             } catch (\Exception $e) {
                 return Factory::response([
                     'status' => 'error',
@@ -280,13 +283,16 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($boost->getType() == "pro") {
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
-                $stripe->voidSale((new Payments\Sale)->setId($boost->getTransactionId()));
+                $sale = (new Payments\Sale)
+                    ->setId($boost->getTransactionId())
+                    ->setMerchant($boost->getDestination());
+
+                $stripe->voidSale($sale);
             } catch (\Exception $e) {
                 return Factory::response([
                   'status' => 'error',
                   'message' => $e->getMessage()
                 ]);
-                return false;
             }
         } else {
             $message = "Rejected Peer Boost";

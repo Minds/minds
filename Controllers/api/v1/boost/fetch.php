@@ -6,14 +6,14 @@
  * @author Mark Harding
  *
  */
+
 namespace Minds\Controllers\api\v1\boost;
 
-use Minds\Core;
-use Minds\Helpers;
-use Minds\Entities;
-use Minds\Interfaces;
 use Minds\Api\Factory;
-use Minds\Core\Payments;
+use Minds\Core;
+use Minds\Entities;
+use Minds\Helpers\Counters;
+use Minds\Interfaces;
 
 class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -30,66 +30,79 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
             return Factory::response([]);
         }
 
+        $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 2;
+        $rating = isset($_GET['rating']) ? (int) $_GET['rating'] : 0;
+
         switch ($pages[0]) {
-          case 'content':
-              $boosts = Core\Boost\Factory::build($pages[0])
-                ->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2);
+            case 'content':
+                $boosts = Core\Boost\Factory::build($pages[0])
+                    ->getBoosts(
+                        $limit,
+                        true,
+                        $rating,
+                        [ 'priority' => true ]
+                    );
                 foreach ($boosts as $entity) {
                     $response['boosts'][] = $entity->export();
-                    \Minds\Helpers\Counters::increment($entity->guid, "impression");
-                    \Minds\Helpers\Counters::increment($entity->owner_guid, "impression");
+                    Counters::increment($entity->guid, "impression");
+                    Counters::increment($entity->owner_guid, "impression");
                 }
-              break;
-          case 'newsfeed':
-             $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(isset($_GET['limit']) ? $_GET['limit'] : 2, false, isset($_GET['rating']) ? (int) $_GET['rating'] : 0);
-             foreach ($boosts as $guid => $entity) {
-                 $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string) $guid]);
-             }
-             if (!$boosts) {
-                 $cacher = Core\Data\cache\factory::build('apcu');
-                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
-                 $guids = Core\Data\indexes::fetch('object:image:featured', ['offset'=> $offset, 'limit'=> 12]);
-                 if (!$guids) {
-                     break;
-                 }
-                 $entities = Core\Entities::get(['guids'=>$guids]);
-                 usort($entities, function ($a, $b) {
-                     if ((int)$a->featured_id == (int) $b->featured_id) {
-                         return 0;
-                     }
-                     return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
-                 });
-                 foreach ($entities as $entity) {
-                      $boost = new Entities\Activity();
-                      $boost->guid = $entity->guid;
-                      $boost->owner_guid = $entity->owner_guid;
-                      $boost->{'thumbs:up:user_guids'} = $entity->{'thumbs:up:user_guids'};
-                      $boost->{'thumbs:down:user_guids'} = $entity->{'thumbs:down:user_guids'};
-                      $boost->setTitle($entity->title);
-                      $boost->setFromEntity($entity);
-                      switch ($entity->subtype) {
-                        case "blog":
-                            $boost->setBlurb(strip_tags($entity->description))
-                              ->setURL($entity->getURL())
-                              ->setThumbnail($entity->getIconUrl());
-                            break;
-                        case "image":
-                            $boost->setCustom('batch', [[
-                              'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$entity->guid,
-                              'href'=> $entity->getUrl(),
-                              'mature' => $entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false
-                            ]]);
-                            break;
-                      }
-                      $boost->boosted = true;
-                     $response['boosts'][] = $boost->export();
-                 }
-                 if (count($response['boosts']) < 5) {
-                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", "");
-                 } else {
-                     $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", end($entities)->guid);
-                 }
-             }
+                break;
+            case 'newsfeed':
+                $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(
+                    $limit,
+                    false,
+                    $rating,
+                    [ 'priority' => true ]
+                );
+                foreach ($boosts as $guid => $entity) {
+                    $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string)$guid]);
+                }
+                if (!$boosts) {
+                    $cacher = Core\Data\cache\factory::build('apcu');
+                    $offset = $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
+                    $guids = Core\Data\indexes::fetch('object:image:featured', ['offset' => $offset, 'limit' => 12]);
+                    if (!$guids) {
+                        break;
+                    }
+                    $entities = Core\Entities::get(['guids' => $guids]);
+                    usort($entities, function ($a, $b) {
+                        if ((int)$a->featured_id == (int)$b->featured_id) {
+                            return 0;
+                        }
+                        return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
+                    });
+                    foreach ($entities as $entity) {
+                        $boost = new Entities\Activity();
+                        $boost->guid = $entity->guid;
+                        $boost->owner_guid = $entity->owner_guid;
+                        $boost->{'thumbs:up:user_guids'} = $entity->{'thumbs:up:user_guids'};
+                        $boost->{'thumbs:down:user_guids'} = $entity->{'thumbs:down:user_guids'};
+                        $boost->setTitle($entity->title);
+                        $boost->setFromEntity($entity);
+                        switch ($entity->subtype) {
+                            case "blog":
+                                $boost->setBlurb(strip_tags($entity->description))
+                                    ->setURL($entity->getURL())
+                                    ->setThumbnail($entity->getIconUrl());
+                                break;
+                            case "image":
+                                $boost->setCustom('batch', [[
+                                    'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $entity->guid,
+                                    'href' => $entity->getUrl(),
+                                    'mature' => $entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false
+                                ]]);
+                                break;
+                        }
+                        $boost->boosted = true;
+                        $response['boosts'][] = $boost->export();
+                    }
+                    if (count($response['boosts']) < 5) {
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", "");
+                    } else {
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", end($entities)->guid);
+                    }
+                }
         }
 
         return Factory::response($response);
@@ -109,14 +122,14 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
         $boost = Core\Boost\Factory::build($pages[0])->getBoostEntity($pages[1]);
         if (!$boost) {
             return Factory::response([
-              'status' => 'error',
-              'message' => 'Boost not found'
+                'status' => 'error',
+                'message' => 'Boost not found'
             ]);
         }
-        Helpers\Counters::increment($boost->getEntity()->guid, "impression");
-        Helpers\Counters::increment($boost->getEntity()->owner_guid, "impression");
-        Helpers\Counters::increment((string) $boost->getId(), "boost_impressions", 1);
-        Helpers\Counters::increment(0, "boost_impressions", 1);
+        Counters::increment($boost->getEntity()->guid, "impression");
+        Counters::increment($boost->getEntity()->owner_guid, "impression");
+        Counters::increment((string)$boost->getId(), "boost_impressions", 1);
+        Counters::increment(0, "boost_impressions", 1);
 
         return Factory::response([]);
     }

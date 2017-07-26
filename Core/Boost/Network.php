@@ -7,6 +7,8 @@ use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Helpers;
 
+use MongoDB\BSON;
+
 /**
  * Newsfeed Boost handler
  * @todo Proper DI
@@ -36,9 +38,13 @@ class Network implements BoostHandlerInterface
         $documentId = $this->mongo->insert("boost", [
           'guid' => $boost->getGuid(),
           'owner_guid' => $boost->getOwner()->guid,
-          'impressions' => $boost->getBid(),
+          'impressions' => $boost->getImpressions(),
           'state' => 'review',
-          'type' => $this->handler
+          'type' => $this->handler,
+          'priority' => $boost->getPriorityRate(),
+          'categories' => $boost->getCategories(),
+          'createdAt' => new BSON\UTCDateTime(time()),
+          'approvedAt' => null,
         ]);
 
         if ($documentId) {
@@ -62,7 +68,7 @@ class Network implements BoostHandlerInterface
         }
         $queue = $this->mongo->find("boost", $query, [
             'limit' => $limit,
-            'sort' => [ '_id' => 1 ],
+            'sort' => [ 'priority' => -1, '_id' => 1 ],
         ]);
         if (!$queue) {
             return false;
@@ -80,7 +86,7 @@ class Network implements BoostHandlerInterface
         if (!$guids) {
             return false;
         }
-        
+
         $prepared = new Core\Data\Cassandra\Prepared\Custom();
         $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
             ->create(... array_values($guids));
@@ -163,9 +169,8 @@ class Network implements BoostHandlerInterface
      */
     public function accept($boost, $impressions = 0)
     {
-        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating()]);
+        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'approvedAt' => new BSON\UTCDateTime() ]);
         $boost->setState('approved');
-        $boost->setRating($rating);
         if ($accept) {
             //remove from review
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
@@ -208,6 +213,27 @@ class Network implements BoostHandlerInterface
     }
 
     /**
+     * Revoke a boost
+     * @param  mixed $_id
+     * @return boolean
+     */
+    public function revoke($boost)
+    {
+        $this->mongo->remove("boost", ['_id'=>$boost->getId()]);
+        $boost->setState('revoked')
+          ->save();
+
+        Core\Events\Dispatcher::trigger('notification', 'boost', [
+            'to'=> [ $boost->getOwner()->guid ],
+            'from'=> 100000000000000519,
+            'entity' => $boost->getEntity(),
+            'title' => $boost->getEntity()->title,
+            'notification_view' => 'boost_revoked',
+        ]);
+        return true;
+    }
+
+    /**
      * Return a boost
      * @return array
      */
@@ -220,7 +246,7 @@ class Network implements BoostHandlerInterface
     /**
      * Expire a boost from the queue
      * @param  object $boost
-     * @return null
+     * @return void
      */
     private function expireBoost($boost)
     {
@@ -287,29 +313,103 @@ class Network implements BoostHandlerInterface
      * Gets all boosts
      * @param  integer $limit
      * @param  boolean $increment
+     * @param int $rating
+     * @param array $options
      * @return array
      */
-    public function getBoosts($limit = 2, $increment = true, $rating = 0)
+    public function getBoosts($limit = 2, $increment = true, $rating = 0, array $options = [])
     {
+        $options = array_merge([
+            'priority' => false,
+            'categories' => false
+        ], $options);
+
         $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
 
-        $opts = [
-            'type'=>$this->handler,
-            'state'=>'approved',
-            //'rating'=>[
-            //    '$exists' => true, 
-            //    '$lte' => $rating != 0 ? $rating : 2 
+        $match = [
+            'type' => $this->handler,
+            'state' => 'approved',
+            //'rating' => [
+            //    '$exists' => true,
+            //    '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating()
             // ],
         ];
         if ($mem_log) {
-            $opts['_id'] =  [ '$gt' => end($mem_log) ];
+            $match['_id'] =  [ '$gt' => end($mem_log) ];
         }
 
-        $boosts = $this->mongo->find("boost", $opts, [
-            'limit' => 50,
-            'sort' => [ '_id' => 1 ],
-        ]);
+        $sort = [ '_id' => 1 ];
+
+        if ($options['priority']) {
+            $sort = [ 'priority' => -1, '_id' => 1 ];
+        }
+
+        $mongoLimit = 50;
+
+        // TODO: Settle experimental feature
+        // Enable with $CONFIG->set('allowExperimentalCategories', true); in engine/settings.php
+        $allowExperimentalCategories = Core\Di\Di::_()->get('Config')->get('allowExperimentalCategories');
+
+        if (!$options['categories'] || !$allowExperimentalCategories /* TODO: Settle experimental feature */) {
+            $boosts = $this->mongo->find("boost", $match, [
+                'limit' => $mongoLimit,
+                'sort' => $sort,
+            ]);
+        } else {
+            $pipeline_match = array_merge([
+                'categories' => [
+                    '$exists' => true
+                ]
+            ], $match);
+
+            $pipeline_sort = array_merge([
+                'score' => -1
+            ], $sort);
+
+            $boosts = $this->mongo->aggregate('boost', [
+                [ '$match' => $pipeline_match ],
+                [ '$project' => [
+                    '_document' => '$$ROOT',
+                    'score' => [
+                        '$let' => [
+                            'vars' => [
+                                'matchSize' => [
+                                    '$size' => [
+                                        '$setIntersection' => [
+                                            '$categories',
+                                            $options['categories']
+                                        ] // $setIntersection
+                                    ] // $size
+                                ] // matchSize
+                            ], // vars
+                            'in' => [
+                                '$add' => [
+                                    '$$matchSize',
+                                    [
+                                        '$cond' => [
+                                            [
+                                                '$eq' => [
+                                                    '$$matchSize',
+                                                    [
+                                                        '$size' => '$categories'
+                                                    ]
+                                                ]
+                                            ],
+                                            '$$matchSize',
+                                            0
+                                        ] // $cond
+                                    ]
+                                ] // $add
+                            ] // in
+                        ] // $let
+                    ] // score
+                ] ], // $project
+                [ '$sort' => $pipeline_sort ],
+                [ '$limit' => $mongoLimit ]
+            ]);
+        }
+
         if (!$boosts) {
             return null;
         }
@@ -319,6 +419,11 @@ class Network implements BoostHandlerInterface
             if (count($return) >= $limit) {
                 break;
             }
+
+            if (isset($data['_document'])) {
+                $data = $data['_document'];
+            }
+
             if (in_array((string) $data['_id'], $mem_log)) {
                 continue; // already seen
             }
@@ -372,5 +477,69 @@ class Network implements BoostHandlerInterface
         $return = $this->patchThumbs($return);
         $return = $this->filterBlocked($return);
         return $return;
+    }
+
+    // Analytics
+
+    public function getBacklogCount()
+    {
+        return (int) $this->mongo->count('boost', [
+            'state' => 'approved',
+            'type' => $this->handler
+        ]);
+    }
+
+    public function getPriorityBacklogCount()
+    {
+        return (int) $this->mongo->count('boost', [
+            'state' => 'approved',
+            'type' => $this->handler,
+            'priority' => [
+                '$exists' => true,
+                '$gt' => 0
+            ],
+        ]);
+    }
+
+    public function getBacklogImpressionsSum()
+    {
+        $result = $this->mongo->aggregate('boost', [
+            [ '$match' => [
+                'state' => 'approved',
+                'type' => $this->handler
+            ] ],
+            [ '$group' => [
+                '_id' => null,
+                'total' => [ '$sum' => '$impressions' ]
+            ] ]
+        ]);
+
+        return reset($result)->total ?: 0;
+    }
+
+    public function getAvgApprovalTime()
+    {
+        $result = $this->mongo->aggregate('boost', [
+            [ '$match' => [
+                'state' => 'approved',
+                'type' => $this->handler,
+                'createdAt' => [ '$ne' => null ],
+                'approvedAt' => [ '$ne' => null ]
+            ] ],
+            [ '$project' => [
+                'diff' => [
+                    '$subtract' => [ '$approvedAt', '$createdAt' ]
+                ]
+            ] ],
+            [ '$group' => [
+                '_id' => null,
+                'count' => [ '$sum' => 1 ],
+                'diffSum' => [ '$sum' => '$diff' ]
+            ] ]
+        ]);
+
+        $totals = reset($result);
+
+        return ($totals->diffSum ?: 0) / ($totals->count ?: 1);
     }
 }

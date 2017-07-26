@@ -6,13 +6,16 @@
  * @author Mark Harding
  *
  */
+
 namespace Minds\Controllers\api\v1;
 
-use Minds\Core;
-use Minds\Helpers;
-use Minds\Entities;
-use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core;
+use Minds\Core\Di\Di;
+use Minds\Entities;
+use Minds\Helpers;
+use Minds\Helpers\Counters;
+use Minds\Interfaces;
 
 class boost implements Interfaces\Api
 {
@@ -50,7 +53,7 @@ class boost implements Interfaces\Api
     public function get($pages)
     {
         $response = array();
-        $limit = isset($_GET['limit']) && $_GET['limit'] ? (int) $_GET['limit'] : 12;
+        $limit = isset($_GET['limit']) && $_GET['limit'] ? (int)$_GET['limit'] : 12;
         $offset = isset($_GET['offset']) && $_GET['offset'] ? $_GET['offset'] : '';
 
         switch ($pages[0]) {
@@ -64,51 +67,55 @@ class boost implements Interfaces\Api
                     return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
                 }
                 $response['points'] = reset($guids);*/
-                $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+                $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
                 $boost = $pro->getBoostEntity($pages[0]);
                 if ($boost->getState() != 'created') {
-                    return Factory::response(['status'=>'error', 'message'=>'entity not in boost queue']);
+                    return Factory::response(['status' => 'error', 'message' => 'entity not in boost queue']);
                 }
                 $response['entity'] = $boost->getEntity()->export();
                 $response['points'] = $boost->getBid();
-            break;
+                break;
             case "rates":
-              $response['balance'] = (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
-              $response['rate'] = $this->rate;
+                $response['balance'] = (int)Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
+                $response['hasPaymentMethod'] = false;
+                $response['rate'] = $this->rate;
 
-              $config = array_merge([
-                  'network' => [
-                      'min' => 200,
-                      'max' => 5000,
-                  ],
-              ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+                $config = array_merge([
+                    'network' => [
+                        'min' => 200,
+                        'max' => 5000,
+                    ],
+                ], (array)Core\Di\Di::_()->get('Config')->get('boost'));
 
-              $response['cap'] = $config['network']['max'];
-              $response['min'] = $config['network']['min'];
-            break;
+                $response['cap'] = $config['network']['max'];
+                $response['min'] = $config['network']['min'];
+                $response['priority'] = $this->getQueuePriorityRate();
+                $response['usd'] = $this->getUSDRate();
+                $response['minUsd'] = $this->getMinUSDCharge();
+                break;
             case "p2p":
-              $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-              $boosts = $pro->getReviewQueue($limit, $offset);
-              $boost_entities = [];
-              //only show 'point boosts and 'created' (not accepted or rejected)
-              foreach ($boosts as $i => $boost) {
-                  if ($boost->getType() != 'points' || $boost->getState() != 'created') {
-                      unset($boosts[$i]);
-                      continue;
-                  }
-                  $boost_entities[$i] = $boost->getEntity();
-                  $boost_entities[$i]->guid = $boost->getGuid();
-                  $boost_entities[$i]->points = $boost->getBid();
-              }
+                $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
+                $boosts = $pro->getReviewQueue($limit, $offset);
+                $boost_entities = [];
+                //only show 'point boosts and 'created' (not accepted or rejected)
+                foreach ($boosts as $i => $boost) {
+                    if ($boost->getType() != 'points' || $boost->getState() != 'created') {
+                        unset($boosts[$i]);
+                        continue;
+                    }
+                    $boost_entities[$i] = $boost->getEntity();
+                    $boost_entities[$i]->guid = $boost->getGuid();
+                    $boost_entities[$i]->points = $boost->getBid();
+                }
 
-              $response['boosts'] = factory::exportable($boost_entities, array('points'));
-              break;
+                $response['boosts'] = factory::exportable($boost_entities, array('points'));
+                break;
             case "newsfeed":
             case "content":
-              $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
-              $boosts = $pro->getOutbox($limit, $offset);
-              $response['boosts'] = Factory::exportable($boosts);
-              break;
+                $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
+                $boosts = $pro->getOutbox($limit, $offset);
+                $response['boosts'] = Factory::exportable($boosts);
+                break;
         }
 
         if (isset($response['boosts']) && $response['boosts']) {
@@ -161,7 +168,7 @@ class boost implements Interfaces\Api
                 'min' => 100,
                 'max' => 5000,
             ],
-        ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
+        ], (array)Core\Di\Di::_()->get('Config')->get('boost'));
 
         if ($impressions < $config['network']['min'] || $impressions > $config['network']['max']) {
             return Factory::response([
@@ -185,59 +192,110 @@ class boost implements Interfaces\Api
         }
 
         switch (ucfirst($pages[0])) {
-          case "Newsfeed":
-          case "Content":
+            case "Newsfeed":
+            case "Content":
+                $priority = false;
+                $priorityRate = 0;
+                if (isset($_POST['priority']) && $_POST['priority']) {
+                    $priority = true;
+                    $priorityRate = $this->getQueuePriorityRate();
 
-            $points = ($impressions / $this->rate);
-
-            $boost = (new Entities\Boost\Network())
-              ->setEntity($entity)
-              ->setBid($points)
-              ->setOwner(Core\Session::getLoggedInUser())
-              ->setState('created')
-              ->setHandler(lcfirst($pages[0]));
-
-            $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost);
-            if ($result) {
-                if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200) {
-                    $transactionId = "free";
-                } else {
-                    $transactionId = Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 0 - $points, $boost->getGuid(), "Boost");
+//                    if ($priorityRate != (float)$_POST['priorityContract']) {
+//                        return Factory::response([
+//                            'status' => 'error',
+//                            'message' => 'Priority rate has been updated. Please, try again.'
+//                        ]);
+//                    }
                 }
-                $boost->setId((string) $result)
-                  ->setTransactionId($transactionId)
-                  ->save();
-                Core\Events\Dispatcher::trigger('notification', 'boost', [
-                  'to'=> [ Core\Session::getLoggedinUser()->guid ],
-                  'entity' => $pages[1],
-                  'notification_view' => 'boost_submitted',
-                  'params' => [ 'impressions' => $impressions ],
-                  'impressions' => $impressions
-                ]);
-            } else {
+                $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
+                $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : 'points';
+                $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
+
+                $amount = $impressions / $this->rate;
+                if ($priority) {
+                    $amount *= $priorityRate + 1;
+                }
+
+                if ($bidType === 'usd') {
+                    $amount = round($amount / $this->getUSDRate(), 2) * 100;
+
+                    if (($amount / 100) < $this->getMinUSDCharge()) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => 'You must sped at least $' . $this->getMinUSDCharge()
+                        ]);
+                    }
+                } else {
+                    $amount = ceil($amount);
+                }
+                // TODO: Add BTC
+
+                $validCategories = array_keys(Di::_()->get('Config')->get('categories') ?: []);
+                if (!is_array($categories)) {
+                    $categories = [ $categories ];
+                }
+
+                foreach ($categories as $category) {
+                    if (!in_array($category, $validCategories)) {
+                        return Factory::response([
+                           'status' => 'error',
+                           'message' => 'Invalid category ID: ' . $category
+                       ]);
+                    }
+                }
+
+                $boost = (new Entities\Boost\Network())
+                    ->setEntity($entity)
+                    ->setBid($amount)
+                    ->setBidType($bidType)
+                    ->setImpressions($impressions)
+                    ->setOwner(Core\Session::getLoggedInUser())
+                    ->setState('created')
+                    ->setHandler(lcfirst($pages[0]))
+                    ->setPriorityRate($priorityRate)
+                    ->setCategories($categories);
+
+                $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);
+                if ($result) {
+                    if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200 && !$priority) {
+                        $transactionId = "free";
+                    } else {
+                        $transactionId = Di::_()->get('Boost\Payment')->pay($boost, $paymentMethod);
+                    }
+                    $boost->setId((string)$result)
+                        ->setTransactionId($transactionId)
+                        ->save();
+                    Core\Events\Dispatcher::trigger('notification', 'boost', [
+                        'to' => [Core\Session::getLoggedinUser()->guid],
+                        'entity' => $pages[1],
+                        'notification_view' => 'boost_submitted',
+                        'params' => ['impressions' => $impressions, 'priority' => $priority],
+                        'impressions' => $impressions
+                    ]);
+                } else {
+                    $response['status'] = 'error';
+                }
+                break;
+            case "Channel": //this is a polyfill for the new boost PRO
+                $result = Core\Boost\Factory::build("Channel", [
+                    'destination' => isset($_POST['destination']) ? $_POST['destination'] : null
+                ])->boost($entity, $impressions);
+                Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
+                if ($result) {
+                    Core\Events\Dispatcher::trigger('notification', 'boost', [
+                        'to' => [$pages[2]],
+                        'entity' => $pages[1],
+                        'notification_view' => 'boost_gift',
+                        'params' => ['impressions' => $impressions],
+                        'impressions' => $impressions
+                    ]);
+                } else {
+                    $response['status'] = 'error';
+                }
+                break;
+            default:
                 $response['status'] = 'error';
-            }
-            break;
-          case "Channel": //this is a polyfill for the new boost PRO
-            $result = Core\Boost\Factory::build("Channel", [
-              'destination'=>isset($_POST['destination']) ? $_POST['destination'] : null
-            ])->boost($entity, $impressions);
-            Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
-            if ($result) {
-                Core\Events\Dispatcher::trigger('notification', 'boost', [
-                  'to'=> [ $pages[2] ],
-                  'entity' => $pages[1],
-                  'notification_view' => 'boost_gift',
-                  'params' => [ 'impressions'=>$impressions ],
-                  'impressions' => $impressions
-                ]);
-            } else {
-                $response['status'] = 'error';
-            }
-            break;
-          default:
-              $response['status'] = 'error';
-              $response['message'] = "boost handler not found";
+                $response['message'] = "boost handler not found";
         }
 
         return Factory::response($response);
@@ -252,7 +310,7 @@ class boost implements Interfaces\Api
         Factory::isLoggedIn();
 
         $response = [];
-        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
+        $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
         $boost = $pro->getBoostEntity($pages[0]);
 
         //double check status before issuing points
@@ -265,7 +323,7 @@ class boost implements Interfaces\Api
 
         //now add to the newsfeed
         $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
-        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+        Counters::increment($boost->getEntity()->guid, 'remind');
 
         $activity = new Entities\Activity();
         $activity->p2p_boosted = true;
@@ -276,11 +334,11 @@ class boost implements Interfaces\Api
         }
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to'=>array($boost->getOwner()->guid),
+            'to' => array($boost->getOwner()->guid),
             'entity' => $boost->getEntity(),
             'title' => $boost->getEntity()->title,
             'notification_view' => 'boost_peer_accepted',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+            'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType()]
         ]);
 
         $pro->accept($pages[0]);
@@ -304,47 +362,75 @@ class boost implements Interfaces\Api
     }
 
     /**
-     * Called when a boost is rejected (assume channels only right now)
+     * Called when a network boost is revoked
+     * @param array $pages
      */
     public function delete($pages)
     {
         Factory::isLoggedIn();
 
         $response = [];
-        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-        $boost = $pro->getBoostEntity($pages[0]);
 
-        //double check status before issuing points
-        if ($boost->getState() != 'created') {
+        $type = $pages[0];
+        $guid = $pages[1];
+        $action = $pages[2];
+
+        if (!$guid) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+                'message' => 'We couldn\'t find that boost'
             ]);
         }
 
-        Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Rejected Peer Boost");
+        if (!$action) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => "You must provide an action: revoke"
+            ]);
+        }
 
-        Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to'=>array($boost->getOwner()->guid),
-            'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
-            'notification_view' => 'boost_peer_rejected',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
-        ]);
+        $boost = Core\Boost\Factory::build($type)->getBoostEntity($guid);
+        if (!$boost) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Boost not found'
+            ]);
+        }
 
-        $pro->reject($pages[0]);
-        $response['status'] = 'success';
+        if ($boost->getOwner()->guid != Core\Session::getLoggedInUserGuid()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You cannot revoke that boost'
+            ]);
+        }
+
+        if ($action == 'revoke') {
+            $success = Core\Boost\Factory::build($type)->revoke($boost);
+
+            if ($success) {
+                Di::_()->get('Boost\Payment')->refund($boost);
+            } else {
+                $response['status'] = 'error';
+            }
+        }
 
         return Factory::response($response);
+    }
 
-        /*$ctrl = Core\Boost\Factory::build('Channel', array('destination'=>Core\Session::getLoggedinUser()->guid));
-        $guids = $ctrl->getReviewQueue(1, $pages[0]);
-        if (!$guids) {
-            return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
-        }
-        $points = reset($guids);
-        $entity = new \Minds\Entities\Activity($pages[0]);
-        Helpers\Wallet::createTransaction($entity->owner_guid, $points, $pages[0], "boost refund");
-        $ctrl->reject($pages[0]);*/
+    protected function getQueuePriorityRate()
+    {
+        // @todo: Calculate based on boost queue
+        return 1;
+    }
+
+    protected function getUSDRate()
+    {
+        $config = (array)Core\Di\Di::_()->get('Config')->get('boost');
+
+        return isset($config['usd']) ? $config['usd'] : 1000;
+    }
+
+    protected function getMinUSDCharge() {
+        return 1.00;
     }
 }

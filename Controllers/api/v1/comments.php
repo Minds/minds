@@ -193,8 +193,8 @@ class comments implements Interfaces\Api
                 switch ($attachment->subtype) {
                   case "image":
                     $comment->setCustom('batch', [[
-                      'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
-                      'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid,
+                      'src'=>elgg_get_site_url() . 'fs/v1/thumbnail/'.$attachment->guid,
+                      'href'=>elgg_get_site_url() . 'media/'.$attachment->container_guid.'/'.$attachment->guid,
                       'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
                     ]]);
                     break;

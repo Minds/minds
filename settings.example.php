@@ -93,8 +93,9 @@ $CONFIG->set('plugins', [
   'Messenger',
   'Groups',
   'blog',
-  'archive',
   'thumbs',
+  'oauth2',
+  'guard',
 ]);
 
 $CONFIG->set('sockets-jwt-secret', '{{jwt-secret}}');

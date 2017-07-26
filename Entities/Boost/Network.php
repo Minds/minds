@@ -1,12 +1,11 @@
 <?php
+
 namespace Minds\Entities\Boost;
 
 use Minds\Core;
-use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Entities\Entity;
 use Minds\Entities\User;
-use Minds\Helpers;
 
 /**
  * Network Boost Entity
@@ -19,6 +18,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     protected $_id; //specific to mongo related
     protected $entity;
     protected $bid;
+    protected $impressions;
     protected $owner;
     protected $state = 'created';
     protected $time_created;
@@ -26,11 +26,14 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     protected $transactionId;
     protected $handler = 'newsfeed';
     protected $bidType = 'points';
+    protected $priorityRate = 0;
+    protected $rating;
+    protected $categories = [];
 
     protected $exportableDefaults = [
-      'guid', '_id', 'entity', 'bid', 'bidType', 'destination', 'owner', 'state',
-      'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler',
-      'rating'
+        'guid', '_id', 'entity', 'bid', 'bidType', 'destination', 'owner', 'state',
+        'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler',
+        'rating', 'impressions', 'categories'
     ];
 
     /**
@@ -55,6 +58,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->entity = Entities\Factory::build($array['entity']);
         $this->bid = $array['bid'];
         $this->bidType = $array['bidType'];
+        $this->impressions = $array['impressions'];
         $this->owner = Entities\Factory::build($array['owner']);
         $this->state = $array['state'];
         $this->time_created = $array['time_created'];
@@ -62,6 +66,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->transactionId = $array['transactionId'];
         $this->handler = $array['handler'];
         $this->rating = $array['rating'];
+        $this->priorityRate = (float)$array['priorityRate'];
+        $this->categories = $array['categories'];
         return $this;
     }
 
@@ -77,23 +83,26 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         }
 
         $data = [
-          'guid' => $this->guid,
-          '_id' => $this->_id,
-          'entity' => $this->entity->export(),
-          'bid' => $this->bid,
-          'bidType' => $this->bidType,
-          'owner' => $this->owner->export(),
-          'state' => $this->state,
-          'time_created' => $this->time_created ?: time(),
-          'last_updated' => time(),
-          'transactionId' => $this->transactionId,
-          'handler' => $this->handler,
-          'rating' => $this->rating
+            'guid' => $this->guid,
+            '_id' => $this->_id,
+            'entity' => $this->entity->export(),
+            'bid' => $this->bid,
+            'impressions' => $this->impressions,
+            'bidType' => $this->bidType,
+            'owner' => $this->owner->export(),
+            'state' => $this->state,
+            'time_created' => $this->time_created ?: time(),
+            'last_updated' => time(),
+            'transactionId' => $this->transactionId,
+            'handler' => $this->handler,
+            'priorityRate' => $this->priorityRate,
+            'rating' => $this->rating,
+            'categories' => $this->categories
         ];
 
         $serialized = json_encode($data);
-        $this->db->insert("boost:$this->handler", [ $this->guid => $serialized ]);
-        $this->db->insert("boost:$this->handler:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
+        $this->db->insert("boost:$this->handler", [$this->guid => $serialized]);
+        $this->db->insert("boost:$this->handler:requested:{$this->owner->guid}", [$this->guid => $serialized]);
         return $this;
     }
 
@@ -152,7 +161,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     /**
      * Set the owner
-     * @param Entity $owner
+     * @param User $owner
      * @return $this
      */
     public function setOwner(User $owner)
@@ -172,7 +181,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     /**
      * Return the bid
-     * @return int
+     * @return float
      */
     public function getBid()
     {
@@ -191,13 +200,33 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     }
 
     /**
+     * Return the bidded impressions
+     * @return list
+     */
+    public function getImpressions()
+    {
+        return $this->impressions;
+    }
+
+    /**
+     * Set the bidded impressions amount
+     * @param $impressions
+     * @return $this
+     */
+    public function setImpressions($impressions)
+    {
+        $this->impressions = $impressions;
+        return $this;
+    }
+
+    /**
      * Set the boost rating of the boost
-     * @param string $boostRating
+     * @param string $rating
      * @return $this
      */
     public function setRating($rating)
     {
-        $this->rating = (int) $rating;
+        $this->rating = (int)$rating;
         return $this;
     }
 
@@ -230,6 +259,50 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         return $this->state;
     }
 
+    /**
+     * Set the priority rate
+     * @param $priorityRate
+     * @return $this
+     */
+    public function setPriorityRate($priorityRate)
+    {
+        $this->priorityRate = (float)$priorityRate;
+        return $this;
+    }
+
+    /**
+     * Get the priority rate
+     * @return float
+     */
+    public function getPriorityRate()
+    {
+        return $this->priorityRate;
+    }
+
+    /**
+     * Set the categories for this boost
+     * @param $categories
+     * @return $this
+     */
+    public function setCategories(array $categories)
+    {
+        $this->categories = $categories;
+        return $this;
+    }
+
+    /**
+     * Get the categories for this boost
+     * @return float
+     */
+    public function getCategories()
+    {
+        if (is_string($this->categories)) {
+            return json_decode($this->categories, true) ?: [];
+        }
+
+        return $this->categories ?: [];
+    }
+
     public function getTransactionId()
     {
         return $this->transactionId;
@@ -252,6 +325,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     /**
      * Set the boost type
+     * @param $type
+     * @return $this
      */
     public function setBidType($type)
     {
@@ -261,6 +336,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     /**
      * Set the boost handler (eg. Newsfeed, Content)
+     * @param $handler
+     * @return $this
      */
     public function setHandler($handler)
     {
@@ -278,12 +355,13 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
 
     /**
      * Exports the boost onto an array
+     * @param array $keys
      * @return array
      */
     public function export(array $keys = [])
     {
         $export = parent::export();
-        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity' => $this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);
         return $export;
     }

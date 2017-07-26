@@ -26,7 +26,7 @@ class Minds extends base
     public function initProviders()
     {
         (new Config\ConfigProvider())->register();
-        //(new Core\Boost\BoostProvider())->register();
+        (new Boost\BoostProvider())->register();
         (new Plugins\PluginsProvider())->register();
         (new Data\DataProvider())->register();
         (new Email\EmailProvider())->register();
@@ -46,6 +46,7 @@ class Minds extends base
         (new Programs\ProgramsProvider())->register();
         (new Wire\WireProvider())->register();
         (new Trending\TrendingProvider())->register();
+        (new Media\MediaProvider())->register();
     }
 
     /**

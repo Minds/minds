@@ -89,7 +89,8 @@ class Documents
         'limit' => 12,
         'type' => null,
         'offset' => '',
-        'flags' => [ ]
+        'flags' => [ ],
+        'mature' => false
       ], $opts);
 
       $query = preg_replace('/[^A-Za-z0-9_\-#"]/', ' ', $query);
@@ -139,17 +140,6 @@ class Documents
               'minimum_should_match' => '75%',
               'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'tags^12', 'hashtags^12' ],
              ]
-           ],
-           'filter' => [
-             'bool' => [
-               'must_not' => [
-                 [ 
-                   'term' => [
-                     'mature' => 1
-                   ]
-                 ]
-               ]
-             ]
            ]
          ]
       ];
@@ -166,6 +156,20 @@ class Documents
 
       if ($opts['offset']) {
           $params['from'] = $opts['offset'];
+      }
+
+      if (!$opts['mature']) {
+        $params['body']['filter'] = [
+            'bool' => [
+            'must_not' => [
+                [ 
+                'term' => [
+                    'mature' => 1
+                ]
+                ]
+            ]
+            ]
+        ];
       }
 
       $guids = [];

@@ -6,13 +6,13 @@
  * @author Mark Harding
  *
  */
+
 namespace Minds\Controllers\api\v1\admin;
 
-use Minds\Core;
-use Minds\Helpers;
-use Minds\Entities;
-use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core;
+use Minds\Core\Di\Di;
+use Minds\Interfaces;
 
 class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
 {
@@ -30,16 +30,16 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $type = isset($pages[0]) ? $pages[0] : 'newsfeed';
         $boosts = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
         $newsfeed_count = Core\Boost\Factory::build("Newsfeed")->getReviewQueueCount();
-        $suggested_count = Core\Boost\Factory::build("Suggested")->getReviewQueueCount();
+        $content_count = Core\Boost\Factory::build("Content")->getReviewQueueCount();
 
         if ($boosts) {
             $response['boosts'] = Factory::exportable($boosts, ['boost_impressions', 'boost_id']);
-            $response['count'] = $type == "newsfeed" ? $newsfeed_count : $suggested_count;
+            $response['count'] = $type == "newsfeed" ? $newsfeed_count : $content_count;
             $response['load-next'] = $_id;
         }
 
         $response['newsfeed_count'] = (int) $newsfeed_count;
-        $response['suggested_count'] = (int) $suggested_count;
+        $response['content_count'] = (int) $content_count;
 
         return Factory::response($response);
     }
@@ -55,19 +55,19 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $type = ucfirst($pages[0]);
         $guid = $pages[1];
         $action = $pages[2];
-        $rating = (int) $_POST['rating'];
+        $rating = (int)$_POST['rating'];
 
         if (!$guid) {
             return Factory::response(array(
-              'status' => 'error',
-              'message' => "We couldn't find that boost"
+                'status' => 'error',
+                'message' => "We couldn't find that boost"
             ));
         }
 
         if (!$action) {
             return Factory::response(array(
-              'status' => 'error',
-              'message' => "You must provide an action: accept or reject"
+                'status' => 'error',
+                'message' => "You must provide an action: accept or reject"
             ));
         }
 
@@ -82,13 +82,15 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         if ($action == 'accept') {
             $boost->setRating($rating);
             $success = Core\Boost\Factory::build($type)->accept($boost);
-            if (!$success) {
+            if ($success) {
+                Di::_()->get('Boost\Payment')->charge($boost);
+            } else {
                 $response['status'] = 'error';
             }
         } elseif ($action == 'reject') {
             $success = Core\Boost\Factory::build($type)->reject($boost);
             if ($success) {
-                Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
+                Di::_()->get('Boost\Payment')->refund($boost);
             } else {
                 $response['status'] = 'error';
             }

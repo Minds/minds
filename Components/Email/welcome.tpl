@@ -41,7 +41,7 @@
   <tbody>
     <tr>
       <td style="text-align:center">
-        <a href="https://www.minds.com/archive/view/440854538476326912">
+        <a href="https://www.minds.com/media/440854538476326912">
           <img src="<?php echo Minds\Core\Config::_()->site_url; ?>assets/mobile-video.png" align="center" width="600px" height="378px"/>
         </a>
       </td>

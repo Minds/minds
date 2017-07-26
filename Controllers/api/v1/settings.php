@@ -7,10 +7,12 @@
  */
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Config;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Api\Factory;
 
 class settings implements Interfaces\Api
 {
@@ -38,6 +40,7 @@ class settings implements Interfaces\Api
         $response['channel'] = $user->export();
         $response['channel']['email'] = $user->getEmail();
         $response['channel']['boost_rating'] = $user->getBoostRating();
+        $response['channel']['categories'] = $user->getCategories();
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 
@@ -107,6 +110,22 @@ class settings implements Interfaces\Api
             $user->setLanguage($_POST['language']);
         }
 
+        $allowedCategories = array_keys(Config::_()->get('categories'));
+        $repository = Di::_()->get('Categories\Repository');
+        $removedCategories = [];
+        $newCategories = [];
+
+        if (isset($_POST['categories'])) {
+            $categories = $_POST['categories'];
+            foreach ($categories as $category) {
+                if (in_array($category, $allowedCategories)) {
+                    $newCategories[] = $category;
+                }
+            }
+            $removedCategories = array_diff($user->getCategories(), $newCategories);
+            $user->setCategories($newCategories);
+        }
+
         $response = array();
         if (!$user->save()) {
             //update or session
@@ -115,6 +134,18 @@ class settings implements Interfaces\Api
             }
 
             $response['status'] = 'error';
+        }
+
+        // if the user was saved correctly, also update categories table
+        if (isset($_POST['categories'])) {
+            $repository->setFilter('opt-in')
+                ->setCategories($removedCategories)
+                ->setType('user')
+                ->remove($user->guid);
+
+            $repository->reset()
+                ->setCategories($newCategories)
+                ->add($user->guid);
         }
 
         return Factory::response($response);

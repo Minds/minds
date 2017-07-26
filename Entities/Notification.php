@@ -387,6 +387,7 @@ class Notification extends DenormalizedEntity
             case 'boost_submitted_p2p':
             case 'boost_request':
             case 'boost_rejected':
+            case 'boost_revoked':
             case 'boost_accepted':
             case 'boost_completed':
             case 'boost_peer_request':

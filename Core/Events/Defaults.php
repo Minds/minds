@@ -77,6 +77,9 @@ class Defaults
 
         // Payments events
         (new Core\Payments\Events())->register();
+
+        // Media events
+        (new Core\Media\Events())->register();
     }
 
     public static function _()

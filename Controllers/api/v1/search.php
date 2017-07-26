@@ -66,6 +66,10 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
             $opts['offset'] = $_GET['offset'];
         }
 
+        if (isset($_GET['mature']) && $_GET['mature']) {
+            $opts['mature'] = true;
+        }
+
         $guids = (new Documents())->query($_GET['q'], $opts);
         $response = [];
 

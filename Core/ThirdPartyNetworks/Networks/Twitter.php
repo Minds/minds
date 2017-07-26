@@ -135,7 +135,7 @@ class Twitter implements NetworkInterface
         $url = $this->config->get('site_url');
 
         if ($entity->custom_type == 'video') {
-            $url .= 'archive/view/' . $entity->guid;
+            $url .= 'media/' . $entity->guid;
         } else {
             $url .= 'newsfeed/' . $entity->guid;
         }

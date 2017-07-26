@@ -5,12 +5,12 @@
  * @version 1
  * @author Mark Harding
  */
+
 namespace Minds\Controllers\api\v1;
 
-use Minds\Core;
-use Minds\Entities;
-use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Config;
+use Minds\Interfaces;
 
 class categories implements Interfaces\Api
 {
@@ -22,7 +22,7 @@ class categories implements Interfaces\Api
     public function get($pages)
     {
         $response = [
-          'categories' => Core\Config\Config::_()->get('categories')
+            'categories' => Config::_()->get('categories')
         ];
         return Factory::response($response);
     }

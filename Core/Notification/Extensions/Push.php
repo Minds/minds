@@ -174,6 +174,10 @@ class Push implements Interfaces\NotificationExtensionInterface
                 $message = sprintf('Your boost request for %s was rejected', $notification['params']['title']);
                 break;
 
+            case 'boost_revoked':
+                $message = sprintf('You revoked the boost request for %s', $notification['params']['title']);
+                break;
+
             case 'boost_completed':
                 $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $notification['params']['title']);
                 break;

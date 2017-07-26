@@ -188,6 +188,26 @@ class Client implements Interfaces\ClientInterface
     }
 
     /**
+     * Executes an aggregation pipeline
+     * @param string $table
+     * @param array $pipeline
+     * @return array of result
+     */
+    public function aggregate($table, array $pipeline)
+    {
+        if (!$this->mongodb) {
+            error_log("MongoDB Count: No connection");
+            return false;
+        }
+
+        $pipeline = $this->parseQueryObjectIds($pipeline);
+
+        return $this->mongodb
+            ->selectCollection($this->db_name, $table)
+            ->aggregate($pipeline);
+    }
+
+    /**
      * Extracts the timestamp of a document from its time_created or _id fields
      * @param mixed $document
      * @return int

@@ -18,6 +18,9 @@ class Defaults
     {
         $this->config = $config;
         $this->init();
+
+        /* Trigger SEO providers */
+        (new Core\Media\SEO())->setup();
     }
 
     public function init()

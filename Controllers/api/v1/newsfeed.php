@@ -5,14 +5,18 @@
  * @version 1
  * @author Mark Harding
  */
+
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Security;
-use Minds\Helpers;
 use Minds\Entities;
+use Minds\Entities\Activity;
+use Minds\Helpers;
+use Minds\Helpers\Counters;
 use Minds\Interfaces;
-use Minds\Api\Factory;
+use Minds\Interfaces\Flaggable;
 
 class newsfeed implements Interfaces\Api
 {
@@ -31,41 +35,41 @@ class newsfeed implements Interfaces\Api
         }
 
         switch ($pages[0]) {
-          case 'single':
-              $activity = new \Minds\Entities\Activity($pages[1]);
+            case 'single':
+                $activity = new Activity($pages[1]);
 
-              if (!$activity->guid) {
-                  return Factory::response(['status' => 'error']);
-              }
+                if (!$activity->guid) {
+                    return Factory::response(['status' => 'error']);
+                }
 
-              return Factory::response(array('activity'=>$activity->export()));
-              break;
-          default:
-          case 'personal':
+                return Factory::response(array('activity' => $activity->export()));
+                break;
+            default:
+            case 'personal':
                 $options = array(
                     'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
                 );
                 break;
-          case 'network':
-            $options = array(
-                'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
-            );
-            break;
-          case 'featured':
-            $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
-            $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
-            $guids = $db->getRow('activity:featured', [ 'limit' => 24, 'offset' => $offset ]);
-            if ($guids) {
-                $options['guids'] = $guids;
-            } else {
-                return Factory::response([]);
-            }
-            break;
-          case 'container':
-            $options = array(
-              'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
-            );
-            break;
+            case 'network':
+                $options = array(
+                    'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
+                );
+                break;
+            case 'featured':
+                $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
+                $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+                $guids = $db->getRow('activity:featured', ['limit' => 24, 'offset' => $offset]);
+                if ($guids) {
+                    $options['guids'] = $guids;
+                } else {
+                    return Factory::response([]);
+                }
+                break;
+            case 'container':
+                $options = array(
+                    'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
+                );
+                break;
         }
 
         if (get_input('count')) {
@@ -102,7 +106,7 @@ class newsfeed implements Interfaces\Api
 
             return Factory::response([
                 'count' => count($guids),
-                'load-previous' => (string) end(array_values($guids)) ?: $offset
+                'load-previous' => (string)end(array_values($guids)) ?: $offset
             ]);
         }
 
@@ -114,48 +118,52 @@ class newsfeed implements Interfaces\Api
         $activity = Core\Entities::get(array_merge(array(
             'type' => 'activity',
             'limit' => get_input('limit', 5),
-            'offset'=> get_input('offset', '')
+            'offset' => get_input('offset', '')
         ), $options));
         if (get_input('offset') && !get_input('prepend')) { // don't shift if we're prepending to newsfeed
             array_shift($activity);
         }
 
-        $loadPrevious = (string) current($activity)->guid;
+        $loadPrevious = (string)current($activity)->guid;
 
-     //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
+        //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
         $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
         if ($pages[0] == 'network' && !get_input('prepend') && !$disabledBoost) { // No boosts when prepending
             try {
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 1;
-                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit);
+
+                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit, false, 0, [
+                    'priority' => !get_input('offset', '')
+                ]);
+
                 foreach ($boosts as $boost) {
                     $boost->boosted = true;
                     array_unshift($activity, $boost);
                     //if (get_input('offset')) {
-                      //bug: sometimes views weren't being calculated on scroll down
-                      \Minds\Helpers\Counters::increment($boost->guid, "impression");
-                    \Minds\Helpers\Counters::increment($boost->owner_guid, "impression");
+                    //bug: sometimes views weren't being calculated on scroll down
+                    Counters::increment($boost->guid, "impression");
+                    Counters::increment($boost->owner_guid, "impression");
                     //}
                 }
                 if (!$boosts) {
                     $cacher = Core\Data\cache\factory::build('apcu');
-                    $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
-                    $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset'=> $offset, 'limit'=> $limit]);
+                    $offset = $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-blog-boost-offset") ?: "";
+                    $guids = Core\Data\indexes::fetch('object:blog:featured', ['offset' => $offset, 'limit' => $limit]);
                     if ($guids) {
-                        $blogs = Core\Entities::get(['guids'=>$guids]);
+                        $blogs = Core\Entities::get(['guids' => $guids]);
                         foreach ($blogs as $blog) {
-                            $boost = new Entities\Activity();
+                            $boost = new Activity();
                             $boost->guid = $blog->guid;
                             $boost->owner_guid = $blog->owner_guid;
                             $boost->{'thumbs:up:user_guids'} = $blog->{'thumbs:up:user_guids'};
                             $boost->{'thumbs:down:user_guids'} = $blog->{'thumbs:down:user_guids'};
                             $boost->setTitle($blog->title)
-                                  ->setBlurb(strip_tags($blog->description))
-                                  ->setURL($blog->getURL())
-                                  ->setThumbnail($blog->getIconUrl())
-                                  ->setFromEntity($blog);
+                                ->setBlurb(strip_tags($blog->description))
+                                ->setURL($blog->getURL())
+                                ->setThumbnail($blog->getIconUrl())
+                                ->setFromEntity($blog);
                             $boost->boosted = true;
                             array_unshift($activity, $boost);
                         }
@@ -205,10 +213,10 @@ class newsfeed implements Interfaces\Api
                     return false;
                 }
 
-                \Minds\Helpers\Counters::increment($embeded->guid, 'remind');
+                Counters::increment($embeded->guid, 'remind');
 
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                    Core\Events\Dispatcher::trigger('notification', 'remind', array('to'=>array($embeded->owner_guid), 'notification_view'=>'remind', 'title'=>$embeded->title, 'entity'=>$embeded));
+                    Core\Events\Dispatcher::trigger('notification', 'remind', array('to' => array($embeded->owner_guid), 'notification_view' => 'remind', 'title' => $embeded->title, 'entity' => $embeded));
                 }
 
                 $message = '';
@@ -227,7 +235,7 @@ class newsfeed implements Interfaces\Api
                     }
                 }*/
 
-                $activity = new Entities\Activity();
+                $activity = new Activity();
                 switch ($embeded->type) {
                     case 'activity':
                         if ($message) {
@@ -236,27 +244,27 @@ class newsfeed implements Interfaces\Api
 
                         if ($embeded->remind_object) {
                             $activity->setRemind($embeded->remind_object)->save();
-                            \Minds\Helpers\Counters::increment($embeded->remind_object['guid'], 'remind');
+                            Counters::increment($embeded->remind_object['guid'], 'remind');
                         } else {
                             $activity->setRemind($embeded->export())->save();
                         }
-                     break;
-                     default:
-                         /**
-                           * The following are actually treated as embeded posts.
-                           */
-                           switch ($embeded->subtype) {
-                               case 'blog':
-                                  if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                                      $activity->setTitle($embeded->title)
-                                      ->setBlurb(strip_tags($embeded->description))
-                                      ->setURL($embeded->getURL())
-                                      ->setThumbnail($embeded->getIconUrl())
-                                      ->setFromEntity($embeded)
-                                      ->setMessage($message)
-                                      ->save();
-                                  } else {
-                                      $activity->setRemind((new \Minds\Entities\Activity())
+                        break;
+                    default:
+                        /**
+                         * The following are actually treated as embeded posts.
+                         */
+                        switch ($embeded->subtype) {
+                            case 'blog':
+                                if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
+                                    $activity->setTitle($embeded->title)
+                                        ->setBlurb(strip_tags($embeded->description))
+                                        ->setURL($embeded->getURL())
+                                        ->setThumbnail($embeded->getIconUrl())
+                                        ->setFromEntity($embeded)
+                                        ->setMessage($message)
+                                        ->save();
+                                } else {
+                                    $activity->setRemind((new Activity())
                                         ->setTimeCreated($embeded->time_created)
                                         ->setTitle($embeded->title)
                                         ->setBlurb(strip_tags($embeded->description))
@@ -264,72 +272,72 @@ class newsfeed implements Interfaces\Api
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setFromEntity($embeded)
                                         ->export())
-                                      ->setMessage($message)
-                                      ->save();
-                                  }
-                                  break;
-                                case 'video':
-                                    if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                                        $activity->setFromEntity($embeded)
-                                          ->setCustom('video', [
-                                              'thumbnail_src'=>$embeded->getIconUrl(),
-                                              'guid'=>$embeded->guid,
-                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
-                                            ])
-                                          ->setTitle($embeded->title)
-                                          ->setBlurb($embeded->description)
-                                          ->setMessage($message)
-                                          ->save();
-                                    } else {
-                                        $activity = new \Minds\Entities\Activity();
-                                        $activity->setRemind((new \Minds\Entities\Activity())
-                                          ->setTimeCreated($embeded->time_created)
-                                          ->setFromEntity($embeded)
-                                          ->setCustom('video', [
-                                              'thumbnail_src'=>$embeded->getIconUrl(),
-                                              'guid'=>$embeded->guid,
-                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
-                                            ])
-                                          ->setTitle($embeded->title)
-                                          ->setBlurb($embeded->description)
-                                          ->export())
                                         ->setMessage($message)
                                         ->save();
-                                    }
-                                    break;
-                                case 'image':
-                                    if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                                        $activity->setCustom('batch', [[
-                                          'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
-                                          'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,
-                                          'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
-                                        ]])
+                                }
+                                break;
+                            case 'video':
+                                if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
+                                    $activity->setFromEntity($embeded)
+                                        ->setCustom('video', [
+                                            'thumbnail_src' => $embeded->getIconUrl(),
+                                            'guid' => $embeded->guid,
+                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                        ])
+                                        ->setTitle($embeded->title)
+                                        ->setBlurb($embeded->description)
+                                        ->setMessage($message)
+                                        ->save();
+                                } else {
+                                    $activity = new Activity();
+                                    $activity->setRemind((new Activity())
+                                        ->setTimeCreated($embeded->time_created)
+                                        ->setFromEntity($embeded)
+                                        ->setCustom('video', [
+                                            'thumbnail_src' => $embeded->getIconUrl(),
+                                            'guid' => $embeded->guid,
+                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                        ])
+                                        ->setTitle($embeded->title)
+                                        ->setBlurb($embeded->description)
+                                        ->export())
+                                        ->setMessage($message)
+                                        ->save();
+                                }
+                                break;
+                            case 'image':
+                                if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
+                                    $activity->setCustom('batch', [[
+                                        'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
+                                        'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
+                                        'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                    ]])
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
                                         ->setBlurb($embeded->description)
                                         ->setMessage($message)
                                         ->save();
-                                    } else {
-                                        $activity->setRemind((new \Minds\Entities\Activity())
-                                          ->setTimeCreated($embeded->time_created)
-                                          ->setCustom('batch', [[
-                                              'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$embeded->guid,
-                                              'href'=>elgg_get_site_url() . 'archive/view/'.$embeded->container_guid.'/'.$embeded->guid,
-                                              'mature'=>$embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false
-                                             ]])
-                                          ->setFromEntity($embeded)
-                                          ->setTitle($embeded->title)
-                                          ->setBlurb($embeded->description)
-                                          ->export())
+                                } else {
+                                    $activity->setRemind((new Activity())
+                                        ->setTimeCreated($embeded->time_created)
+                                        ->setCustom('batch', [[
+                                            'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
+                                            'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
+                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                        ]])
+                                        ->setFromEntity($embeded)
+                                        ->setTitle($embeded->title)
+                                        ->setBlurb($embeded->description)
+                                        ->export())
                                         ->setMessage($message)
                                         ->save();
-                                    }
-                                    break;
-                            }
+                                }
+                                break;
+                        }
                 }
 
                 $mature_remind =
-                    ($embeded instanceof \Minds\Interfaces\Flaggable ? $embeded->getFlag('mature') : false) ||
+                    ($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false) ||
                     (isset($embeded->remind_object['mature']) && $embeded->remind_object['mature']);
 
                 $user = Core\Session::getLoggedInUser();
@@ -342,14 +350,14 @@ class newsfeed implements Interfaces\Api
                     Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
                 }
 
-                return Factory::response(array('guid'=>$activity->guid));
+                return Factory::response(array('guid' => $activity->guid));
                 break;
             default:
                 //essentially an edit
                 if (is_numeric($pages[0])) {
-                    $activity = new Entities\Activity($pages[0]);
+                    $activity = new Activity($pages[0]);
                     if (!$activity->canEdit()) {
-                        return Factory::response(array('status'=>'error', 'message'=>'Post not editable'));
+                        return Factory::response(array('status' => 'error', 'message' => 'Post not editable'));
                     }
 
                     $allowed = array('message', 'title');
@@ -375,14 +383,14 @@ class newsfeed implements Interfaces\Api
 
                     $activity->setEdited(true);
 
-                    $activity->indexes = [ "activity:$activity->owner_guid:edits" ]; //don't re-index on edit
+                    $activity->indexes = ["activity:$activity->owner_guid:edits"]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
                     $activity->save();
                     $activity->setExportContext(true);
-                    return Factory::response(array('guid'=>$activity->guid, 'activity'=> $activity->export(), 'edited'=>true));
+                    return Factory::response(array('guid' => $activity->guid, 'activity' => $activity->export(), 'edited' => true));
                 }
 
-                $activity = new Entities\Activity();
+                $activity = new Activity();
 
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
 
@@ -419,7 +427,7 @@ class newsfeed implements Interfaces\Api
                     $attachment->title = $activity->message;
                     $attachment->access_id = 2;
 
-                    if ($attachment instanceof \Minds\Interfaces\Flaggable) {
+                    if ($attachment instanceof Flaggable) {
                         $attachment->setFlag('mature', $activity->getMature());
                     }
 
@@ -435,23 +443,23 @@ class newsfeed implements Interfaces\Api
                     $attachment->save();
 
                     switch ($attachment->subtype) {
-                      case "image":
-                        $activity->setCustom('batch', [[
-                          'src'=>elgg_get_site_url() . 'archive/thumbnail/'.$attachment->guid,
-                          'href'=>elgg_get_site_url() . 'archive/view/'.$attachment->container_guid.'/'.$attachment->guid,
-                          'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
-                        ]])
-                        ->setFromEntity($attachment)
-                        ->setTitle($attachment->message);
-                        break;
-                      case "video":
-                        $activity->setFromEntity($attachment)
-                            ->setCustom('video', array(
-                            'thumbnail_src'=>$attachment->getIconUrl(),
-                            'guid'=>$attachment->guid,
-                            'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false))
-                            ->setTitle($attachment->message);
-                        break;
+                        case "image":
+                            $activity->setCustom('batch', [[
+                                'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $attachment->guid,
+                                'href' => elgg_get_site_url() . 'media/' . $attachment->container_guid . '/' . $attachment->guid,
+                                'mature' => $attachment instanceof Flaggable ? $attachment->getFlag('mature') : false
+                            ]])
+                                ->setFromEntity($attachment)
+                                ->setTitle($attachment->message);
+                            break;
+                        case "video":
+                            $activity->setFromEntity($attachment)
+                                ->setCustom('video', array(
+                                    'thumbnail_src' => $attachment->getIconUrl(),
+                                    'guid' => $attachment->guid,
+                                    'mature' => $attachment instanceof Flaggable ? $attachment->getFlag('mature') : false))
+                                ->setTitle($attachment->message);
+                            break;
                     }
                 }
 
@@ -463,8 +471,8 @@ class newsfeed implements Interfaces\Api
                         $activity->containerObj = $container->export();
                     }
                     $activity->indexes = [
-                      "activity:container:$activity->container_guid",
-                      "activity:network:$activity->owner_guid"
+                        "activity:container:$activity->container_guid",
+                        "activity:network:$activity->owner_guid"
                     ];
                 }
 
@@ -483,8 +491,8 @@ class newsfeed implements Interfaces\Api
                         ),
                         'data' => array(
                             'message' => rawurldecode($_POST['message']),
-                            'perma_url'=> isset($_POST['url']) ? \elgg_normalize_url(rawurldecode($_POST['url'])) : \elgg_normalize_url($activity->getURL()),
-                            'thumbnail_src' =>  isset($_POST['thumbnail']) ? rawurldecode($_POST['thumbnail']) : null,
+                            'perma_url' => isset($_POST['url']) ? \elgg_normalize_url(rawurldecode($_POST['url'])) : \elgg_normalize_url($activity->getURL()),
+                            'thumbnail_src' => isset($_POST['thumbnail']) ? rawurldecode($_POST['thumbnail']) : null,
                             'description' => isset($_POST['description']) ? rawurldecode($_POST['description']) : null
                         )
                     ));
@@ -497,47 +505,47 @@ class newsfeed implements Interfaces\Api
                     }
 
                     $activity->setExportContext(true);
-                    return Factory::response(array('guid'=>$guid, 'activity'=> $activity->export()));
+                    return Factory::response(array('guid' => $guid, 'activity' => $activity->export()));
                 } else {
-                    return Factory::response(array('status'=>'failed', 'message'=>'could not save'));
+                    return Factory::response(array('status' => 'failed', 'message' => 'could not save'));
                 }
         }
     }
 
     public function put($pages)
     {
-        $activity = new Entities\Activity($pages[0]);
+        $activity = new Activity($pages[0]);
         if (!$activity->guid) {
-            return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
+            return Factory::response(array('status' => 'error', 'message' => 'could not find activity post'));
         }
 
         switch ($pages[1]) {
-          case 'view':
-            try {
-                Core\Analytics\App::_()
-                  ->setMetric('impression')
-                  ->setKey($activity->guid)
-                  ->increment();
-
-                if ($activity->remind_object) {
+            case 'view':
+                try {
                     Core\Analytics\App::_()
-                      ->setMetric('impression')
-                      ->setKey($activity->remind_object['guid'])
-                      ->increment();
+                        ->setMetric('impression')
+                        ->setKey($activity->guid)
+                        ->increment();
 
-                    Core\Analytics\App::_()
-                      ->setMetric('impression')
-                      ->setKey($activity->remind_object['owner_guid'])
-                      ->increment();
+                    if ($activity->remind_object) {
+                        Core\Analytics\App::_()
+                            ->setMetric('impression')
+                            ->setKey($activity->remind_object['guid'])
+                            ->increment();
+
+                        Core\Analytics\App::_()
+                            ->setMetric('impression')
+                            ->setKey($activity->remind_object['owner_guid'])
+                            ->increment();
+                    }
+
+                    Core\Analytics\User::_()
+                        ->setMetric('impression')
+                        ->setKey($activity->owner_guid)
+                        ->increment();
+                } catch (\Exception $e) {
                 }
-
-                Core\Analytics\User::_()
-                  ->setMetric('impression')
-                  ->setKey($activity->owner_guid)
-                  ->increment();
-            } catch (\Exception $e) {
-            }
-            break;
+                break;
         }
 
         return Factory::response(array());
@@ -545,14 +553,14 @@ class newsfeed implements Interfaces\Api
 
     public function delete($pages)
     {
-        $activity = new Entities\Activity($pages[0]);
+        $activity = new Activity($pages[0]);
 
         if (!$activity->guid) {
-            return Factory::response(array('status'=>'error', 'message'=>'could not find activity post'));
+            return Factory::response(array('status' => 'error', 'message' => 'could not find activity post'));
         }
 
         if (!$activity->canEdit()) {
-            return Factory::response(array('status'=>'error', 'message'=>'you don\'t have permission'));
+            return Factory::response(array('status' => 'error', 'message' => 'you don\'t have permission'));
         }
 
         $owner = $activity->getOwnerEntity();
@@ -585,9 +593,9 @@ class newsfeed implements Interfaces\Api
 
             }
 
-            return Factory::response(array('message'=>'removed ' . $pages[0]));
+            return Factory::response(array('message' => 'removed ' . $pages[0]));
         }
 
-        return Factory::response(array('status'=>'error', 'message'=>'could not delete'));
+        return Factory::response(array('status' => 'error', 'message' => 'could not delete'));
     }
 }
