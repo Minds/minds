@@ -94,7 +94,7 @@ class trending implements Interfaces\Api
             ]);
         }
 
-        $offset = get_input('offset');
+        $offset = get_input('offset', 0);
         if ($offset && strlen($offset) < 15) {
             $offset = (new \GUID())->migrate($offset);
         }
@@ -110,7 +110,11 @@ class trending implements Interfaces\Api
         ksort($guids);
         $entities = core\Entities::get(array('guids'=>$guids));
         $response['entities'] = Factory::exportable($entities);
-        $response['load-next'] = (string) end(array_keys($guids));
+        $response['load-next'] = (string) ($offset + end(array_keys($guids)) + 1); 
+
+        if ($key == 'group') {
+            $response['load-next'] = (string) ($offset + end(array_keys($guids)) +1); 
+        }
 
         return Factory::response($response);
 
