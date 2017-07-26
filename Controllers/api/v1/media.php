@@ -228,7 +228,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
         $entity->setAssets($assets->upload($media, $data));
 
         // Save initial entity
-        $success = $entity->save();
+        $success = $entity->save(true);
 
         if (!$success) {
             throw new \Exception('Error saving media entity');
