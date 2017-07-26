@@ -26,7 +26,7 @@ class Impression implements AnalyticsMetric
      */
     public function setNamespace($namesapce)
     {
-        $this->namespace = $namespace . ":";
+        //$this->namespace = $namespace . ":";
     }
 
     /**
