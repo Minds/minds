@@ -7,12 +7,12 @@
 namespace Minds\Entities;
 
 use Minds\Core;
-use Minds\Core\Media\Services\Factory;
+use Minds\Core\Media\Services\Factory as ServiceFactory;
 use cinemr;
 use Minds\Helpers;
 
 
-class video extends Object
+class Video extends Object
 {
     private $cinemr;
 
@@ -69,7 +69,7 @@ class video extends Object
     {
         $this->generateGuid();
 
-        $aws = Factory::build('AWS');
+        $aws = ServiceFactory::build('AWS');
         $aws->setKey($this->getGuid())
           ->saveToFilestore($filepath)
           ->transcode();
