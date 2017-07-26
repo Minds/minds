@@ -4,7 +4,7 @@ import { GroupsService } from '../../groups-service';
 
 import { Client } from '../../../../services/api';
 import { SessionFactory } from '../../../../services/session';
-import { Poster } from "../../../../controllers/newsfeed/poster/poster";
+import { Poster } from "../../../../modules/legacy/controllers/newsfeed/poster/poster";
 
 interface MindsGroupResponse{
   group : MindsGroup
@@ -134,5 +134,5 @@ export class GroupsProfileFeed {
     }
     return true;
   }
-  
+
 }
