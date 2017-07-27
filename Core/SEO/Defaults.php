@@ -167,19 +167,23 @@ class Defaults
         $marketing = [
             'affiliates' => [
                 'title' => 'Affiliate Program',
-                'description' => 'Earn 25% of the revenue Minds generates from your referrals'
+                'description' => 'Earn 25% of the revenue Minds generates from your referrals',
+                'image' => 'assets/photos/balloon.jpg'
             ],
             'monetization' => [
                 'title' => 'Monetization',
-                'description' => 'Start earning revenue on Minds by monetizing your channel'
+                'description' => 'Start earning revenue on Minds by monetizing your channel',
+                'image' => 'assets/photos/sunset.jpg'
             ],
             'plus' => [
                 'title' => 'Minds Plus',
-                'description' => 'Opt-out of boosts, earn 1,000 monthly points, access exclusive Minds content, and more'
+                'description' => 'Opt-out of boosts, earn 1,000 monthly points, access exclusive Minds content, and more',
+                'image' => 'assets/photos/fractal.jpg'
             ],
             'wallet' => [
                 'title' => 'Wallet',
-                'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.'
+                'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.',
+                'image' => 'assets/screenshots/register.png'
             ]
         ];
 
@@ -191,7 +195,7 @@ class Defaults
                     'og:title' => $page['title'],
                     'og:description' => $page['description'],
                     'og:url' => $this->config->site_url . $uri,
-                    'og:image' => $this->config->site_url . 'assets/screenshots/register.png',
+                    'og:image' => $this->config->site_url . $page['image'],
                     'og:image:width' => 2000,
                     'og:image:height' => 1000
                 ];
