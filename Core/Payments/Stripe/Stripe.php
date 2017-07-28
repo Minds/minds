@@ -790,6 +790,10 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         ];
         $extras = [];
 
+        if ($coupon = $subscription->getCoupon()) {
+            $params['coupon'] = $coupon;
+        }
+
         try {
 
             if ($subscription->getMerchant()) {

@@ -21,6 +21,7 @@ class Subscription
     private $plan_id;
     private $trial_period;
     private $addOns;
+    private $coupon;
 
     public function __construct()
     {
@@ -175,6 +176,17 @@ class Subscription
         $this->trial_period = $trial_period;
 
         return $this;
+    }
+
+    public function setCoupon($coupon)
+    {
+        $this->coupon = $coupon;
+        return $this;
+    }
+
+    public function getCoupon()
+    {
+        return $this->coupon;
     }
 
     public function getAddOns()

@@ -185,6 +185,10 @@ class wallet implements Interfaces\Api
                   ->setQuantity(round($points / 10)) //point subscriptions are in blocks of 10. each block costs $0.01
                   ->setCustomer($customer);
 
+                if (isset($_POST['coupon'])) {
+                    $subscription->setCoupon($_POST['coupon']);
+                }
+
                 if (Core\Session::getLoggedInUser()->referrer) {
                     $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
                     $subscription->setMerchant($referrer)
