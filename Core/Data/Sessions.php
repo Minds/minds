@@ -132,6 +132,7 @@ class Sessions implements \SessionHandlerInterface
      */
     public function syncAll($guid)
     {
+        return true; //disable due to messenger conflicts
         $session_data = session_encode();
 
         $result = $this->db->getRow('user:' . $guid, [
