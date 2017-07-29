@@ -26,7 +26,7 @@ class PointsSubscription implements HookInterface
         error_log("[webhook]:: got onCharge");*/
 
         if ($subscription->getPlanId() == 'points') {
-            WalletHelper::createTransaction($subscription->getCustomer()->getUser()->guid, ($subscription->getPrice() / $this->rate) * 1.1, null, "Purchase (Recurring)");
+            WalletHelper::createTransaction($subscription->getCustomer()->getUser()->guid, ($subscription->getPrice() * 1000) * 1.1, null, "Purchase (Recurring)");
         }
     }
 

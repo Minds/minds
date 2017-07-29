@@ -93,6 +93,8 @@ class Webhooks
         $lines = $invoiceObj->lines->data;
         $chargeId = $invoiceObj->charge;
         $planId = "";
+        $amount = 0;
+        $quantity = 1;
 
         $metadata = [];
 
@@ -100,6 +102,8 @@ class Webhooks
             if($line->type == "subscription"){
                 $metadata = $line->metadata->__toArray(false);
                 $planId = $line->plan->id;
+                $amount = $line->amount;
+                $quantity = $line->quantity;
             }
         }
 
@@ -122,7 +126,8 @@ class Webhooks
             ->setCustomer($customer)
             ->setId($chargeId)
             ->setPlanId($planId)
-            ->setPrice($charge->amount / 100);
+            ->setPrice($amount / 100)
+            ->setQuantity($amount);
         $this->hooks->onCharged($subscription);
     }
 
