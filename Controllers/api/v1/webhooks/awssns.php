@@ -81,7 +81,7 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
 
             if (strrpos($messageId, $prefix) === strlen($messageId) - strlen($prefix)) {
                 $id = explode('-', explode('@', $messageId)[0]);
-                
+
                 if (count($id) === 3) {
                     $guid = $id[0];
                     $emailHash = $id[1];
@@ -103,6 +103,7 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         if (sha1($user->getEmail()) == $emailHash) {
             $user->disabled_emails = true;
+            $user->bounced = true;
             $user->save();
             error_log('[AWS-SES] Disabled emails for ' . $guid);
             return Factory::response([]);
