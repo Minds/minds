@@ -105,6 +105,7 @@ class analytics extends Controller implements Interfaces\Api
                     ];
 
                     if ($type == 'payouts') {
+                      $transactions[$i]['amount'] = $record->amount / 100;
                       $transactions[$i]['account'] = [
                         'bank' => $record->bank_account->bank_name,
                         'last4' => $record->bank_account->last4

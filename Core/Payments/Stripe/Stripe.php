@@ -492,7 +492,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         }
         foreach ($results->pending as $pending) {
             if ($pending->amount) {
-                $totals[$pending->currency] += $pending->amount / 100;
+                //$totals[$pending->currency] += $pending->amount / 100;
             }
         }
         return $totals;
