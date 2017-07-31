@@ -80,7 +80,11 @@ class start extends Components\Plugin
             'fuddbluslanmaa1975.blogdigy.com', 'smarforcute1976.blogdigy.com', 'xn--90aizihgi.xn--p1ai', 'tinyurl.com', 'bit.ly', '123football.space', 'bitly.com',
             'j.mp', 'livestreaming.one', 'livestreaming.life', 'forbest.pw', 'olizev.tdska2ll.ru', 'tdska2ll.ru', 'tdska1ll.ru', 'tdska3ll.ru', 'tdska4ll.ru', 'ihmail.ru',
             'tdska5ll.ru', 'tdska6ll.ru', 'll.ru', 'shorl.com', 'scorestream.space', 'bestsplayer.xyz', 'worldwideevents.space', 'worldseries.space', 'best247chemist.net',
-            '9tn.ru', 'futbolkin2013.ru', 'playnowstore.com', 'qr-url.tk', 'watchonlinerugby.net', 'esecuritys.com'
+            '9tn.ru', 'futbolkin2013.ru', 'playnowstore.com', 'qr-url.tk', 'watchonlinerugby.net', 'esecuritys.com', 'rufile.no-ip.ca', 'imzonline.com', 'femeedia.com',
+            'mediomatic.com', 'savemoneyeasily.com', 'option1pro.com', 'perron07.nl', 'movieonrails.com', 'topmoviestoday.com', 'playnowstore.com', 'g-files.biz',
+            'dawnloadonline.com', 'thedirsite.com', 'siteslocate.com', 'mydrugdir.com', 'find24hs.com', 'veeble.org', 'movieonrails.com', 'bestmoviehd.net', 'putmovies.info',
+            'awarefinance.com', 'shurll.com', 'acceptsearch.com', 'signforcover.com', 'raisengine.com', 'rocketcarrental.com', 'godsearchs.com', 'listenhanced.com', 'find24hs.com',
+            'findinform.com', 'sitesworlds.com', 'rocketcarrental.com', 'thedirsite.com'
         ];
     }
 
@@ -100,13 +104,18 @@ class start extends Components\Plugin
     public function createHook($hook, $type, $params, $return = null)
     {
         $object = $params;
-        if ($this->strposa($object->description, $this->prohbitedDomains())) {
+        if ($this->strposa($object->description, $this->prohbitedDomains()) || $this->strposa($object->briefdescription, $this->prohbitedDomains())) {
             \register_error('Sorry, your post contains a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
             if (PHP_SAPI != 'cli') {
                 forward(REFERRER);
             }
             return false;
         }
+
+        if ($type == 'group' &&  $this->strposa($object->getBriefDescription(), $this->prohbitedDomains())) {
+            return false;
+        }
+
 
         return true;
     }
