@@ -261,6 +261,20 @@ class wallet implements Interfaces\Api
     }
 
     private function cancelSubscription(){
+
+        //check braintree first, as there are still some legacy customers
+        $db = new Core\Data\Call("user_index_to_guid");
+        $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+
+        if (isset($subscriptionIds[0])) {
+            $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
+            $braintree->cancelSubscription((new Payments\Subscriptions\Subscription)
+                  ->setId($subscriptionIds[0]));
+            $db->removeAttributes(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [0]);
+            return Factory::response([]);
+        }
+
+
         $repo = new Payments\Plans\Repository();
         $plan = $repo->setEntityGuid(0)
           ->setUserGuid(Core\Session::getLoggedInUser()->guid)
