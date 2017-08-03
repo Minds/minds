@@ -59,7 +59,9 @@ class Points implements MethodInterface
 
     public function create()
     {
-        $user = $this->entity->getOwnerEntity();
+        $user = $this->entity->type == 'user' ?
+            $this->entity :
+            $this->entity->getOwnerEntity();
 
         if ($this->recurring) {
             //persist on points subscription table
@@ -110,13 +112,17 @@ class Points implements MethodInterface
 
     private function doTransaction(User $user)
     {
+        $ownerGuid = $this->entity->type == 'user' ?
+            $this->entity->guid :
+            $this->entity->owner_guid;
+
         $name = $this->recurring ? 'Wire (Recurring)' : 'Wire';
         if ($this->amount > (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false)) {
             throw new \Exception('Not enough points');
         }
         Helpers\Wallet::createTransaction(Core\Session::getLoggedInUserGuid(), -$this->amount, $this->entity->guid,
             $name);
-        $this->id = Helpers\Wallet::createTransaction($this->entity->owner_guid, $this->amount, $this->entity->guid,
+        $this->id = Helpers\Wallet::createTransaction($ownerGuid, $this->amount, $this->entity->guid,
             $name);
 
         $this->saveWire($user);

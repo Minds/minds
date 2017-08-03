@@ -6,13 +6,14 @@
 
 namespace Minds\Controllers\api\v1\wire;
 
+use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Payments;
 use Minds\Entities;
 use Minds\Entities\User;
 
-class subscription
+class subscription implements Interfaces\Api
 {
     public function get($pages)
     {

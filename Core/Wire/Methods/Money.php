@@ -57,7 +57,9 @@ class Money implements MethodInterface
 
     public function create()
     {
-        $user = $this->entity->getOwnerEntity();
+        $user = $this->entity->type == 'user' ?
+            $this->entity :
+            $this->entity->getOwnerEntity();
 
         if ($this->recurring) {
             return $this->createSubscription($user);
