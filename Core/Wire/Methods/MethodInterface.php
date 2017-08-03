@@ -11,6 +11,13 @@ interface MethodInterface
 
     public function setPayload($payload = []);
 
-    public function execute();
+    /**
+     * @return mixed
+     */
+    public function create();
 
+    /**
+     * @return mixed
+     */
+    public function refund();
 }

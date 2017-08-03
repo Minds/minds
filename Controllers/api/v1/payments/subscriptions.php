@@ -7,11 +7,10 @@
  */
 namespace Minds\Controllers\api\v1\payments;
 
-use Minds\Core;
-use Minds\Helpers;
-use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core;
 use Minds\Core\Payments;
+use Minds\Interfaces;
 
 class subscriptions implements Interfaces\Api
 {
@@ -19,19 +18,24 @@ class subscriptions implements Interfaces\Api
      * Returns user subscriptions
      * @param array $pages
      *
-     * API:: /v1/payments/subscriptions/:plan
+     * API:: /v1/payments/subscriptions
      */
     public function get($pages)
     {
-        if (!isset($pages[0])) {
+        if (!isset($_GET['plansIds'])) {
             return Factory::response([]);
         }
+        $plansIds = $_GET['plansIds'];
+        if (!is_array($plansIds)) {
+            $plansIds = explode(',', $plansIds);
+        }
+
         $offset = isset($_GET['offset']) ? $_GET['offset'] : '';
         $repo = new Payments\Plans\Repository();
 
         $guids = $repo
             ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-            ->getAllSubscriptions($pages[0], [
+            ->getAllSubscriptions($plansIds, [
                 'offset' => $offset 
             ]);
 
@@ -42,9 +46,12 @@ class subscriptions implements Interfaces\Api
         $response = [];
 
         if ($guids) {
-            $subscriptions = Core\Entities::get([ 'guids' => $guids ]);
-            
-            $response['subscriptions'] = Factory::exportable($subscriptions);
+            foreach($guids as $guid) {
+                $entity = Core\Entities::get([ 'guids' => [$guid[0]] ])[0]->export();
+                $subscriptions[] = [$entity, $guid[1]];
+            }
+
+            $response['subscriptions'] = $subscriptions;
 
             if ($subscriptions) {
                 $response['load-next'] = (string) end($subscriptions)->guid;

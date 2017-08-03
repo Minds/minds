@@ -10,7 +10,6 @@ use Minds\Entities\DenormalizedEntity;
  */
 class Wire extends NormalizedEntity
 {
-
     protected $type = 'wire';
     protected $guid;
     protected $entity;
@@ -19,6 +18,11 @@ class Wire extends NormalizedEntity
     protected $time_created;
     protected $method;
     protected $transaction_id;
+    protected $recurring = false;
+    protected $active = true;
+    protected $amount;
+    protected $access_id;
+    protected $owner_guid;
 
     protected $indexes = [];
 
@@ -27,9 +31,13 @@ class Wire extends NormalizedEntity
         'guid',
         'entity',
         'from',
+        'to',
         'time_created',
         'method',
-        'transaction_id'
+        'transaction_id',
+        'recurring',
+        'active',
+        'amount'
     ];
 
     /**
@@ -55,9 +63,13 @@ class Wire extends NormalizedEntity
             'guid' => $this->guid,
             'entity' => $this->entity ? $this->entity->export() : null,
             'from' => $this->from ? $this->from->export() : null,
+            'to' => $this->to ? $this->to->export() : null,
             'time_created' => $this->time_created,
             'method' => $this->method,
-            'transaction_id' => $this->transaction_id ?: ''
+            'transaction_id' => $this->transaction_id ?: '',
+            'recurring' => $this->recurring,
+            'active' => $this->active,
+            'amount' => $this->amount
         ];
 
         $saved = $this->saveToDb($data);
@@ -225,6 +237,7 @@ class Wire extends NormalizedEntity
     /**
      * Gets `method`
      * @param string $method
+     * @return $this
      */
     public function setMethod($method)
     {
@@ -232,4 +245,94 @@ class Wire extends NormalizedEntity
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isRecurring(): bool
+    {
+        return $this->recurring;
+    }
+
+    /**
+     * @param bool $recurring
+     * @return $this
+     */
+    public function setRecurring(bool $recurring)
+    {
+        $this->recurring = $recurring;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     * @return $this
+     */
+    public function setActive(bool $active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Gets `amount`
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Sets `amount`
+     * @param string $method
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    /**
+     * Gets `access_id`
+     * @return mixed
+     */
+    public function getAccessId()
+    {
+        return $this->access_id;
+    }
+
+    /**
+     * Sets `access_id`
+     * @param mixed $access_id
+     */
+    public function setAccessId($access_id)
+    {
+        $this->access_id = $access_id;
+    }
+
+    /**
+     * Gets `owner_id`
+     * @return mixed
+     */
+    public function getOwnerGuid()
+    {
+        return $this->owner_guid;
+    }
+
+    /**
+     * Sets `owner_id`
+     * @param mixed $owner_id
+     */
+    public function setOwnerGuid($owner_guid)
+    {
+        $this->owner_guid = $owner_guid;
+    }
 }

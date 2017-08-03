@@ -2,7 +2,7 @@
 
 namespace Minds\Core\Wire\Methods;
 
-class Money implements MethodInterface
+class Bitcoin implements MethodInterface
 {
 
     private $amount;

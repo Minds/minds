@@ -6,14 +6,17 @@
  * @author Mark Harding
  *
  */
+
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Entities\User;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Wire\Methods;
+use Minds\Core\Payments;
 
 class wire implements Interfaces\Api
 {
@@ -51,6 +54,11 @@ class wire implements Interfaces\Api
 
         $amount = $_POST['amount'];
         $method = $_POST['method'];
+        if ($method == 'usd') {
+            $method = 'money';
+        }
+
+        $recurring = isset($_POST['recurring']) ? $_POST['recurring'] : false;
 
         if (!$amount) {
             return Factory::response(['status' => 'error', 'message' => 'you must send an amount']);
@@ -62,24 +70,23 @@ class wire implements Interfaces\Api
 
         $service = Methods\Factory::build($method);
 
-        try{
+        try {
             $service->setAmount($amount)
-              ->setEntity($entity)
-              ->setPayload((array) $_POST['payload'])
-              ->execute();
+                ->setEntity($entity)
+                ->setPayload((array) $_POST['payload'])
+                ->setRecurring($recurring);
+            $result = $service->create();
 
-            //save the wire entity
-            //trying to reduce data size, receiever can get this info from notifications
-            /*$wire = new Entities\Wire();
-            $wire->setEntity($this->entity)
-              ->setTo($this->entity->ownerObj)
-              ->setFrom(Core\Session::getLoggedInUser())
-              ->setMethod('points')
-              ->setTransactionId($service->getId())
-              ->save();*/
+            if (isset($result['subscriptionId'])) {
+                $response['subscriptionId'] = $result['subscriptionId'];
+            }
 
             //now send notification
 
+        } catch (Methods\NotMonetizedException $e) {
+            $this->sendMonetizeNotification();
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
         } catch (\Exception $e) {
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
@@ -98,5 +105,18 @@ class wire implements Interfaces\Api
      */
     public function delete($pages)
     {
+    }
+
+
+    private function sendMonetizeNotification()
+    {
+        $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
+        Core\Events\Dispatcher::trigger('notification', 'wire', [
+            'to' => [$this->entity->owner_guid],
+            'from' => 100000000000000519,
+            'notification_view' => 'custom_message',
+            'params' => ['message' => $message],
+            'message' => $message,
+        ]);
     }
 }

@@ -14,6 +14,7 @@ class Plan
     private $user_guid;
     private $expires = -1;
     private $subscription_id;
+    private $amount;
 
     /**
     * Set the name of the plan
@@ -133,6 +134,24 @@ class Plan
     public function getSubscriptionId()
     {
         return $this->subscription_id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param integer $amount
+     * @return $this
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+        return $this;
     }
 
 }

@@ -60,32 +60,35 @@ class Repository
     /**
      * Return all entities a user is subscribed to
      */
-    public function getAllSubscriptions($planId = '', array $opts = [])
+    public function getAllSubscriptions($plansIds = [''], array $opts = [])
     {
         $opts = array_merge([
-          'limit' => 10,
-          'offset' => ''
+            'limit' => 10,
+            'offset' => ''
         ], $opts);
 
+        $results = [];
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM plans WHERE plan = ? AND user_guid = ? ALLOW FILTERING", [
-            (string) $planId,
+        $query->query("SELECT * FROM plans WHERE plan IN ? AND user_guid = ? ALLOW FILTERING", [
+            \Cassandra\Type::collection(\Cassandra\Type::text())->create(... $plansIds),
             (string) $this->user_guid
         ]);
         try {
             $result = $this->db->request($query);
-            $guids = [];
             foreach ($result as $row) {
-                $guids[] = $row['entity_guid'];
+                $results[] = [$row['entity_guid'], $row['plan']];
             }
-            return $guids;
         } catch (\Exception $e) {
             return [];
         }
+
+        return $results;
     }
 
     /**
      * Return a subscription to an entity
+     * @return Plan
      */
     public function getSubscription($planId)
     {
@@ -104,6 +107,7 @@ class Repository
               ->setUserGuid($result[0]['user_guid'])
               ->setStatus($result[0]['status'])
               ->setExpires($result[0]['expires'])
+              ->setAmount($result[0]['amount'])
               ->setSubscriptionId($result[0]['subscription_id']);
 
         } catch (\Exception $e) {

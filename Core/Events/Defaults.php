@@ -80,6 +80,9 @@ class Defaults
 
         // Media events
         (new Core\Media\Events())->register();
+
+        // Wire Events
+        (new Core\Wire\Events())->register();
     }
 
     public static function _()
