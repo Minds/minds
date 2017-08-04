@@ -29,6 +29,15 @@ class start extends Components\Plugin
                 ];
             }
 
+            if (!Core\Session::isLoggedIn() && !isset($_GET['lite'])) {
+
+                $blog->description = (new Core\Security\XSS())->clean($blog->description);
+
+                $lite = new Lite\View();
+                $lite->setBlog($blog);
+                return die($lite->render());
+            }
+
             $description = strip_tags($blog->description);
 
             if (strlen($description) > 140) {

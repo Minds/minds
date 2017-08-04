@@ -1,0 +1,64 @@
+.m-lite--header{
+  margin: auto;
+  padding: 16px;
+  background: #FFF;
+  max-width: 990px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  //border-bottom: 1px solid #EDEDEA;
+
+  .m-lite--logo{
+    flex: 1;
+    img{
+      height: 50px;
+    }
+  }
+
+  button{
+    float:right;
+  }
+}
+
+.m-lite--body{
+  margin: auto;
+  //padding: 16px;
+  background: #FFF;
+  max-width: 990px;
+
+  minds-banner-fat{
+    position: absolute;
+    top: 82px;
+    left: 0;
+    z-index: -1;
+  }
+}
+
+
+.m-blog-lite--full-link{
+  padding:16px;
+  font-family: 'Lato';
+  border-radius: 3px;
+
+  a{
+    text-decoration: none;
+  }
+}
+
+.m-blog-lite{
+  margin-top: 30vh;
+  padding:16px;
+
+  h1{
+    font-weight:500;
+  }
+
+  p {
+    font-size: 16px;
+    font-family: ''
+  }
+
+  .m-blog-lite--body{
+    padding-top:24px;
+  }
+}
