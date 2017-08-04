@@ -1,3 +1,5 @@
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
 <minds-banner-fat>
   <div class="minds-banner">
     <img class="minds-banner-img" src="/fs/v1/banners/<?= $vars['blog']->guid ?>/0/1501848604">
@@ -6,12 +8,27 @@
 
 <div class="m-blog-lite mdl-card mdl-shadow--4dp">
 
+  <?php if ($vars['blog']->monetized) { ?>
+  <google-ad style="display:block; width:calc(100% + 32px); margin:-16px -16px 16px">
+    <ins
+      class="adsbygoogle"
+      style="display:block; width:100%;"
+      data-ad-client="ca-pub-9303771378013875"
+      data-ad-slot="7588308825"
+      data-ad-format="auto"
+      ></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </google-ad>
+  <?php } ?>
+
   <div class="m-blog-lite--full-link mdl-color--blue-grey-200">
     <a href="<?= $vars['blog']->getUrl() ?>?lite=false" class="mdl-color-text--white">
       You are viewing the Lite verion of Minds Blogs. Click here to see the full view.
     </a>
   </div>
-
+    
   <div class="m-blog-lite--header">
     <h1><?= $vars['blog']->title ?></h1>
 
@@ -30,8 +47,24 @@
     </div>
   </div>
 
-  <div class="m-blog-lite--body minds-blog-body">
-    <?= $vars['blog']->description ?>
+  <div class="m-blog-lite--body">
+     <?php if ($vars['blog']->monetized) { ?>
+     <google-ad class="m-ad-block m-ad-block-google square m-ad-block-default">
+      <ins
+        class="adsbygoogle"
+        style="display:block; width:100%;"
+        data-ad-client="ca-pub-9303771378013875"
+        data-ad-slot="7588308825"
+        data-ad-format="auto"
+      ></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </google-ad>
+    <?php } ?> 
+    <div class="minds-blog-body">
+      <?= $vars['blog']->description ?>
+    </div>
   </div>
 
 </div>
