@@ -1,6 +1,6 @@
 <minds-banner-fat>
   <div class="minds-banner">
-    <img class="minds-banner-img" src="/fs/v1/banners/740154114259816467/0/1501848604">
+    <img class="minds-banner-img" src="/fs/v1/banners/<?= $vars['blog']->guid ?>/0/1501848604">
   </div>
 </minds-banner-fat>
 
