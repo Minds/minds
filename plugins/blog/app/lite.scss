@@ -23,7 +23,6 @@
 .m-lite--body{
   margin: auto;
   //padding: 16px;
-  background: #FFF;
   max-width: 990px;
 
   minds-banner-fat{
@@ -31,6 +30,7 @@
     top: 82px;
     left: 0;
     z-index: -1;
+    width: 100%;
   }
 }
 
@@ -48,6 +48,8 @@
 .m-blog-lite{
   margin-top: 30vh;
   padding:16px;
+  margin: 30vh auto 0;
+  max-width: 660px;
 
   h1{
     font-weight:500;
@@ -55,7 +57,7 @@
 
   p {
     font-size: 16px;
-    font-family: ''
+    font-family: 'Lato' !important;
   }
 
   img{
