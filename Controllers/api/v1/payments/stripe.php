@@ -72,11 +72,13 @@ class stripe implements Interfaces\Api
         $response = [];
 
         switch ($pages[0]) {
-          case "cards":
+          case "card":
             $stripe = Core\Di\Di::_()->get('StripePayments');
 
             $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
-            $cards = $stripe->removeSavedCard($cardId);
+            if (!$stripe->removeCardFromCustomer($customer, $pages[1])) {
+                $response['status'] = 'error';
+            }
             break;
         }
 
