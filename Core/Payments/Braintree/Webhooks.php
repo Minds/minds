@@ -138,7 +138,7 @@ class Webhooks
         //find the customer
         $user_guids = $db->getRow("subscription:" . $subscription->getId());
         $user = Entities\Factory::build($user_guids[0]);
-        WalletHelper::createTransaction($user->guid, ($subscription->getPrice() / 1000) * 1.1, null, "Purchase (Recurring)");
+        WalletHelper::createTransaction($user->guid, ($subscription->getPrice() * 1000) * 1.1, null, "Purchase (Recurring)");
         //$this->hooks->onCharged($subscription);
     }
 
