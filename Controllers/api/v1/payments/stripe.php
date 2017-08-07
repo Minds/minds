@@ -24,7 +24,7 @@ class stripe implements Interfaces\Api
    */
   public function get($pages)
   {
-      $response = array();
+      $response = [];
 
       switch ($pages[0]) {
         case "token":
@@ -52,11 +52,34 @@ class stripe implements Interfaces\Api
 
     public function put($pages)
     {
-        return Factory::response(array());
+        $response = [];
+
+        switch ($pages[0]) {
+          case "card":
+            $stripe = Core\Di\Di::_()->get('StripePayments');
+
+            $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
+            if (!$stripe->addCardToCustomer($customer, $pages[1])) {
+                $response['status'] = 'error';
+            }
+            break;
+        }
+        return Factory::response($response);
     }
 
     public function delete($pages)
     {
-        return Factory::response(array());
+        $response = [];
+
+        switch ($pages[0]) {
+          case "cards":
+            $stripe = Core\Di\Di::_()->get('StripePayments');
+
+            $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
+            $cards = $stripe->removeSavedCard($cardId);
+            break;
+        }
+
+        return Factory::response($response);
     }
 }

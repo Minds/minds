@@ -740,6 +740,20 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $customer;
     }
 
+    public function addCardToCustomer(Customer $customer, $token)
+    {
+      try {
+          $customer = StripeSDK\Customer::retrieve($customer->getId());
+          $customer->sources->create([
+            'source' => $token
+          ]);
+      } catch (\Exception $e) {
+          return false;
+      }
+
+      return $customer;
+    }
+
     public function createPaymentMethod(PaymentMethod $payment_method)
     {
     }
