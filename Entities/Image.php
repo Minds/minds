@@ -187,6 +187,7 @@ class Image extends File
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
+        $export['mature'] = $this->getFlag('mature');
         return $export;
     }
 
