@@ -22,7 +22,15 @@ class rewards implements Interfaces\Api
      */
     public function get($pages)
     {
-        $user = $pages[0] ? new User($pages[0]) : Core\Session::getLoggedinUser();
+        if ($pages[1] === 'entity') {
+            $entity = Entities\Factory::build($pages[0]);
+
+            if ($entity) {
+                $user = $entity->type == 'user' ? $entity : $entity->getOwnerEntity();
+            }
+        } else {
+            $user = $pages[0] ? new User($pages[0]) : Core\Session::getLoggedinUser();
+        }
 
         if (!$user || !$user->guid) {
             return Factory::response([
@@ -33,6 +41,7 @@ class rewards implements Interfaces\Api
 
         $response = [];
 
+        $response['username'] = $user->username;
         $response['wire_rewards'] = $user->getWireRewards() ?: null;
 
         if (is_string($response['wire_rewards'])) {
