@@ -74,6 +74,8 @@ class entities implements Interfaces\Api
         switch ($pages[0]) {
             case "all":
                 $type="user";
+                if (!Core\Session::isAdmin()) 
+                    exit;
                 break;
             case "container":
                 $owner = $pages[2];
