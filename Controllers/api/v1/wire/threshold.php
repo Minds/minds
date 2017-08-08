@@ -44,7 +44,7 @@ class threshold implements Interfaces\Api
                 $activity->getOwnerGUID(), 'points', (new \DateTime('midnight'))->modify("-30 days"));
         } else {
             $amount = $repository->getSumBySenderForReceiver(Session::getLoggedInUser()->guid,
-                $activity->getOwnerGUID(), 'usd', (new \DateTime('midnight'))->modify("-30 days"));
+                $activity->getOwnerGUID(), 'money', (new \DateTime('midnight'))->modify("-30 days"));
         }
 
         // if the user wires amounts to the threshold or more
