@@ -217,9 +217,9 @@ class Money implements MethodInterface
             ->setRecurring($this->recurring)
             ->setFrom(Core\Session::getLoggedInUser())
             ->setTo($merchant)
-            ->setTimeCreated(date('Y-m-d H:i:s'))
+            ->setTimeCreated(time())
             ->setEntity($this->entity)
-            ->setMethod('usd');
+            ->setMethod('money');
         $wire->save();
 
         $repo = Di::_()->get('Wire\Repository');

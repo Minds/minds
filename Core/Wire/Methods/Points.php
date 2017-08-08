@@ -5,6 +5,7 @@ namespace Minds\Core\Wire\Methods;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Core\Wire\Counter;
 use Minds\Entities;
 use Minds\Entities\User;
 use Minds\Helpers;
@@ -132,13 +133,12 @@ class Points implements MethodInterface
 
     private function saveWire($user)
     {
-        $timeCreated = date('Y-m-d H:i:s');
         $wire = (new Entities\Wire)
             ->setAmount($this->amount)
             ->setRecurring($this->recurring)
             ->setFrom(Core\Session::getLoggedInUser())
             ->setTo($user)
-            ->setTimeCreated($timeCreated)
+            ->setTimeCreated(time())
             ->setEntity($this->entity)
             ->setMethod('points');
         $wire->save();

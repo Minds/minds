@@ -21,7 +21,7 @@ class Counter
 
         if (($cached = $cache->get(static::getIndexName($user_guid, null, $method, $timestamp, false,
                 false))) !== false) {
-            return $cached;
+            //return $cached;
         }
 
         $sum = $repository->getSumByReceiver($user_guid, $method);
@@ -42,10 +42,13 @@ class Counter
             return $cached;
         }
 
-        $sum = $repository->getSumBySender($user_guid, $method);
-
-        $cache->set(static::getIndexName($user_guid, null, $method, $timestamp, false, true), $sum,
-            $timestamp ? static::CACHE_DURATION : false);
+        try {
+            $sum = $repository->getSumBySender($user_guid, $method);
+            $cache->set(static::getIndexName($user_guid, null, $method, $timestamp, false, true), $sum,
+                $timestamp ? static::CACHE_DURATION : false);
+        } catch(\Exception $e) {
+            $sum = 0;
+        }
 
         return $sum;
     }
@@ -77,10 +80,13 @@ class Counter
             return $cached;
         }
 
-        $sum = $repository->getSumByEntity($entity_guid, $method, $timestamp);
-
-        $cache->set(static::getIndexName($entity_guid, null, $method, $timestamp, true), $sum,
-            $timestamp ? static::CACHE_DURATION : false);
+        try {
+            $sum = $repository->getSumByEntity($entity_guid, $method);
+            $cache->set(static::getIndexName($entity_guid, null, $method, $timestamp, true), $sum,
+                $timestamp ? static::CACHE_DURATION : false);
+        } catch (\Exception $e) {
+            $sum = 0;
+        }
 
         return $sum;
     }

@@ -39,9 +39,9 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) FROM wire
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
           WHERE sender_guid=?
-          AND method=? 
+          AND method=?
           AND timestamp >= ? ALLOW FILTERING", [
             new \Cassandra\Varint($sender_guid),
             $method,
@@ -50,8 +50,10 @@ class Repository
 
         try {
             $result = $this->db->request($query);
-            return $result[0]['system.sum(amount)']->value();
-
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
         } catch (\Exception $e) {
             return -1;
         }
@@ -74,11 +76,11 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) FROM wire
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
           WHERE sender_guid=?
-          receiver_guid=?
-          AND method=? 
-          AND timestamp >= ? ALLOW FILTERING", [
+          AND receiver_guid=?
+          AND method=?
+          AND timestamp >= ?", [
             new \Cassandra\Varint($sender_guid),
             new \Cassandra\Varint($receiver_guid),
             $method,
@@ -87,8 +89,10 @@ class Repository
 
         try {
             $result = $this->db->request($query);
-            return $result[0]['system.sum(amount)']->value();
-
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
         } catch (\Exception $e) {
             return -1;
         }
@@ -110,10 +114,10 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) FROM wire
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire
           WHERE receiver_guid=?
           AND method=?
-          AND timestamp >= ? ALLOW FILTERING", [
+          AND timestamp >= ?", [
             new \Cassandra\Varint($receiver_guid),
             $method,
             new \Cassandra\Timestamp($timestamp)
@@ -121,8 +125,10 @@ class Repository
 
         try {
             $result = $this->db->request($query);
-            return $result[0]['system.sum(amount)']->value();
-
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
         } catch (\Exception $e) {
             return -1;
         }
@@ -134,7 +140,7 @@ class Repository
      * @param $timestamp
      * @return int
      */
-    public function getSumByEntity($entity_guid, $method, $timestamp = null)
+    public function getSumByEntity($entity_guid, $method)
     {
         // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
         if (!$timestamp) {
@@ -143,19 +149,19 @@ class Repository
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) FROM wire
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_entity
           WHERE entity_guid=?
-          AND method=? 
-          AND timestamp >= ? ALLOW FILTERING", [
+          AND method=?", [
             new \Cassandra\Varint($entity_guid),
-            $method,
-            new \Cassandra\Timestamp($timestamp)
+            $method
         ]);
 
         try {
             $result = $this->db->request($query);
-            return $result[0]['system.sum(amount)']->value();
-
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
         } catch (\Exception $e) {
             return -1;
         }
