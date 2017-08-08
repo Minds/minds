@@ -3,11 +3,17 @@
 namespace Minds\Controllers\api\v1\wire;
 
 use Minds\Api\Factory;
+use Minds\Core\Di\Di;
+use Minds\Core\Session;
 use Minds\Entities;
 use Minds\Interfaces;
 
 class threshold implements Interfaces\Api
 {
+    /**
+     * Checks if the amount of wires the logged user has sent to the activity owner passes the threshold, in which case
+     * it unlocks/removes the paywall from the activity
+     */
     public function get($pages)
     {
         $response = [];
@@ -22,12 +28,18 @@ class threshold implements Interfaces\Api
         }
 
         $threshold = $activity->getWireThreshold();
-        $totals = $activity->getWireTotals();
-
-        $amount = $threshold->type == 'points' ? $totals->points : $totals->usd;
+        $amount = 0;
+        $repository = Di::_()->get('Wire\Repository');
+        if ($threshold['type'] == 'points') {
+            $amount = $repository->getSumBySenderForReceiver(Session::getLoggedInUser()->guid,
+                $activity->getOwnerGUID(), 'points', (new \DateTime('midnight'))->modify("-30 days"));
+        } else {
+            $amount = $repository->getSumBySenderForReceiver(Session::getLoggedInUser()->guid,
+                $activity->getOwnerGUID(), 'usd', (new \DateTime('midnight'))->modify("-30 days"));
+        }
 
         // if the user wires amounts to the threshold or more
-        if ($amount - $threshold->amount <= 0) {
+        if ($amount - $threshold['min'] >= 0) {
             $activity->paywall = false;
             $response['activity'] = $activity->export();
         }
@@ -47,8 +59,6 @@ class threshold implements Interfaces\Api
 
     public function delete($pages)
     {
-        $this->cancelSubscription();
-
         return Factory::response([]);
     }
 }
