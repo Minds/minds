@@ -28,6 +28,15 @@ class threshold implements Interfaces\Api
         }
 
         $threshold = $activity->getWireThreshold();
+
+        //make sure legacy posts can work
+        if (!$threshold && $activity->isPaywall()) {
+            $threshold = [
+              'type' => 'money',
+              'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount']
+            ];
+        }
+
         $amount = 0;
         $repository = Di::_()->get('Wire\Repository');
         if ($threshold['type'] == 'points') {
