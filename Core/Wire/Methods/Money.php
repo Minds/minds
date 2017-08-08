@@ -5,6 +5,7 @@ namespace Minds\Core\Wire\Methods;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Core\Wire\Counter;
 use Minds\Entities;
 use Minds\Entities\User;
 
@@ -18,12 +19,14 @@ class Money implements MethodInterface
     private $timestamp;
     private $manager;
     private $repository;
+    private $cache;
 
-    public function __construct($stripe = null, $manager = null, $repository = null)
+    public function __construct($stripe = null, $manager = null, $repository = null, $cache = null)
     {
         $this->stripe = $stripe ?: Di::_()->get('StripePayments');
         $this->manager = $manager ?: Core\Di\Di::_()->get('Wire\Manager');
         $this->repository = $repository ?: Core\Di\Di::_()->get('Wire\Repository');
+        $this->cache = $cache ?: Core\Di\Di::_()->get('Cache');
     }
 
     public function setAmount($amount)
@@ -221,5 +224,9 @@ class Money implements MethodInterface
 
         $repo = Di::_()->get('Wire\Repository');
         $repo->add($wire);
+
+        $this->cache->destroy(Counter::getIndexName($merchant->getGUID(), 'usd',null, false, false));
+        $this->cache->destroy(Counter::getIndexName($this->entity->guid, 'usd',null, true));
+        $this->cache->destroy(Counter::getIndexName(Core\Session::getLoggedInUser()->getGUID(), 'usd',null, false, true));
     }
 }

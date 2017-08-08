@@ -17,11 +17,13 @@ class Points implements MethodInterface
     private $timestamp;
     private $manager;
     private $repository;
+    private $cache;
 
-    public function __construct($manager = null, $repository = null)
+    public function __construct($manager = null, $repository = null, $cache = null)
     {
         $this->manager = $manager ?: Core\Di\Di::_()->get('Wire\Manager');
         $this->repository = $manager ?: Core\Di\Di::_()->get('Wire\Repository');
+        $this->cache = $cache ?: Core\Di\Di::_()->get('Cache');
     }
 
     public function setAmount($amount)
@@ -144,5 +146,9 @@ class Points implements MethodInterface
         $repo = Di::_()->get('Wire\Repository');
 
         $repo->add($wire);
+
+        $this->cache->destroy(Counter::getIndexName($user->getGUID(), 'points',null, false, false));
+        $this->cache->destroy(Counter::getIndexName($this->entity->guid, 'points',null, true));
+        $this->cache->destroy(Counter::getIndexName(Core\Session::getLoggedInUser()->getGUID(), 'points',null, false, true));
     }
 }

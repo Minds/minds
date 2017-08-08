@@ -476,6 +476,11 @@ class newsfeed implements Interfaces\Api
                     ];
                 }
 
+                if(isset($_POST['wire_threshold']) && $_POST['wire_threshold']) {
+                    $activity->setWireThreshold($_POST['wire_threshold']);
+                    $activity->setPaywall(true);
+                }
+
                 if ($guid = $activity->save()) {
                     if (in_array($activity->custom_type, ['batch', 'video'])) {
                         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $guid, 'Post');

@@ -28,6 +28,7 @@ class Activity extends Entity
             'paywall' => false,
             'edited' => false,
             'comments_enabled' => true,
+            'wire_threshold' => null
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -162,7 +163,9 @@ class Activity extends Entity
                 'monetized',
                 'paywall',
                 'edited',
-                'comments_enabled'
+                'comments_enabled',
+                'wire_totals',
+                'wire_threshold'
             ));
     }
 
@@ -202,6 +205,8 @@ class Activity extends Entity
         $export['mature'] = (bool) $export['mature'];
 
         $export['comments_enabled'] = (bool) $export['comments_enabled'];
+        $export['wire_totals'] = $this->getWireTotals();
+        $export['wire_threshold'] = $this->getWireThreshold();
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
@@ -467,5 +472,36 @@ class Activity extends Entity
         }
 
         return \Minds\Helpers\Counters::get($this, 'remind');
+    }
+
+    /**
+     * Returns the sum of every wire that's been made to this entity
+     */
+    public function getWireTotals() {
+        $totals = [];
+        $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'points');
+        $totals['usd'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'usd');
+        // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'bitcoin');
+        return $totals;
+    }
+
+    /**
+     * Gets wire threshold
+     * @return mixed
+     */
+    public function getWireThreshold()
+    {
+        return $this->wire_threshold;
+    }
+
+    /**
+     * Sets wire threshold
+     * @param $wire_threshold
+     * @return $this
+     */
+    public function setWireThreshold($wire_threshold)
+    {
+        $this->wire_threshold = $wire_threshold;
+        return $this;
     }
 }
