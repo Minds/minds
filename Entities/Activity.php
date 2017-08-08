@@ -200,8 +200,6 @@ class Activity extends Entity
         }
         $export['thumbs:up:user_guids'] = $export['thumbs:up:user_guids'] ? (array) array_values($export['thumbs:up:user_guids']) : [];
 
-        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
-
         $export['mature'] = (bool) $export['mature'];
 
         $export['comments_enabled'] = (bool) $export['comments_enabled'];
@@ -211,6 +209,9 @@ class Activity extends Entity
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
         }
+
+        $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
+
 
         return $export;
     }

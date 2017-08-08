@@ -6,13 +6,12 @@
 
 namespace Minds\Core\Wire;
 
-
 use Minds\Core;
+use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities;
 use Minds\Entities\User;
 use Minds\Helpers;
-
 
 class Events
 {
@@ -41,6 +40,27 @@ class Events
                 }
             }
 
+        });
+
+        /**
+         * Legcacy compatability for exclusive content
+         */
+        Dispatcher::register('export:extender', 'activity', function($event) {
+            $params = $event->getParameters();
+            $activity = $params['entity'];
+            if($activity->type != 'activity'){
+                return;
+            }
+            $export = $event->response() ?: [];
+            $currentUser = Session::getLoggedInUserGuid();
+
+            if ($activity->isPaywall() && !$activity->getWireThreshold()) {
+                $export['wire_threshold'] = [
+                  'type' => 'money',
+                  'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount']
+                ];
+                return $event->setResponse($export);
+            }
         });
     }
 
