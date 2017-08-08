@@ -22,7 +22,7 @@ class Wire extends NormalizedEntity
     protected $active = true;
     protected $amount;
     protected $access_id;
-    protected $owner_guid;
+    public $owner_guid;
 
     protected $indexes = [];
 
@@ -248,7 +248,7 @@ class Wire extends NormalizedEntity
     /**
      * @return bool
      */
-    public function isRecurring(): bool
+    public function isRecurring()    
     {
         return $this->recurring;
     }
@@ -266,7 +266,7 @@ class Wire extends NormalizedEntity
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive()
     {
         return $this->active;
     }
