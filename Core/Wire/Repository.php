@@ -256,7 +256,7 @@ class Repository
             $result = $this->db->request($query);
             $guids = [];
             foreach ($result as $row) {
-                $guids[] = $row['wire_guid'];
+                $guids[] = (int) $row['wire_guid'];
             }
             if (!$guids) {
                 return false;
