@@ -10,7 +10,7 @@ class Custom implements Interfaces\PreparedInterface
 {
     private $template;
     private $values;
-    private $opts;
+    private $opts = [];
 
     public function build()
     {
