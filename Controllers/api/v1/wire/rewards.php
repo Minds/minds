@@ -50,6 +50,21 @@ class rewards implements Interfaces\Api
 
         $response['merchant'] = $user->getMerchant() ?: false;
 
+        // Sums
+        $repository = Core\Di\Di::_()->get('Wire\Repository');
+
+        $from = Core\Session::getLoggedInUser()->guid;
+        $timeRange = (new \DateTime('midnight'))->modify("-30 days");
+
+        $response['sums'] = [
+            'points' => $repository->getSumBySenderForReceiver($from, $user->guid, 'points', $timeRange),
+            'money' => 0
+        ];
+
+        if ($user->getMerchant()) {
+            $response['sums']['money'] = $repository->getSumBySenderForReceiver($from, $user->guid, 'money', $timeRange);
+        }
+
         return Factory::response($response);
     }
 
