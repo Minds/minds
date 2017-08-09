@@ -24,6 +24,7 @@ class sums implements Interfaces\Api
     public function get($pages)
     {
         $response = [];
+        $repo = Di::_()->get('Wire\Repository');
 
         switch ($pages[0]) {
             case "receiver":
@@ -33,7 +34,6 @@ class sums implements Interfaces\Api
                 $thirtyDaysAgoTS = (new \DateTime('midnight'))->modify("-30 days");
 
                 if (isset($_GET['advanced'])) {
-                    $repo = Di::_()->get('Wire\Repository');
                     $ags = $repo->getAggregatesForReceiver($guid, $method, $thirtyDaysAgo);
                     $response = [
                         'sum' => $ags['sum'],
@@ -42,6 +42,19 @@ class sums implements Interfaces\Api
                     ];
                 } else {
                     $response['sum'] = Wire\Counter::getSumByReceiver($guid, $method, $thirtyDaysAgoTS);
+                }
+                break;
+            case "sender":
+                $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
+                $method = isset($pages[2]) ? $pages[2] : 'points';
+                $receiver_guid = isset($pages[3]) ? $pages[3] : false;
+                $response['method'] = $method;
+                $thirtyDaysAgoTS = (new \DateTime('midnight'))->modify("-30 days");
+
+                if ($receiver_guid) {
+                    $response['sum'] = $repo->getSumBySenderForReceiver($guid, $receiver_guid, $method, $thirtyDaysAgoTs);
+                } else {
+                    $response['sum'] = $repo->getSumBySender($guid, $method, $thirtyDaysAgoTs);
                 }
                 break;
         }
