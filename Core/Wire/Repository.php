@@ -241,13 +241,13 @@ class Repository
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->setOpts($opts);
         if ($method) {
-            $query->query("SELECT * FROM wire where method=? receiver_guid=? ALLOW FILTERING",
+            $query->query("SELECT * FROM wire where method=? and receiver_guid=? ORDER BY method DESC, timestamp DESC",
             [
                 $method,
                 new \Cassandra\Varint($receiver_guid)
             ]);
         } else {
-            $query->query("SELECT * FROM wire where receiver_guid=? ALLOW FILTERING",
+            $query->query("SELECT * FROM wire where receiver_guid=? ORDER BY method DESC, timestamp DESC",
             [
                 new \Cassandra\Varint($receiver_guid)
             ]);
