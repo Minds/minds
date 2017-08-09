@@ -105,7 +105,7 @@ class Repository
      * @param $timestamp
      * @return int
      */
-    public function getSumByReceiver($receiver_guid, $method, $timestamp)
+    public function getSumByReceiver($receiver_guid, $method, $timestamp = null)
     {
         // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
         if (!$timestamp) {
@@ -186,11 +186,6 @@ class Repository
      */
     public function getSumByEntity($entity_guid, $method)
     {
-        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp =  '2000-01-01';
-        }
-
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
         $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_entity
@@ -300,7 +295,9 @@ class Repository
 
         try {
             $result = $this->db->request($query);
+            return true;
         } catch (\Exception $e) {
+            return false;
         }
     }
 }
