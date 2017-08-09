@@ -12,4 +12,9 @@ interface PreparedInterface
      * @return array
      */
     public function build();
+
+    /**
+     * Return options for the query
+     */
+    public function getOpts();
 }

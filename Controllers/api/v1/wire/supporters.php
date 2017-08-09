@@ -27,9 +27,13 @@ class supporters implements Interfaces\Api
         $receiver_guid = isset($pages[0]) ? $pages[0] : Core\Session::getLoggedInUser()->guid;
 
         $repo = Di::_()->get('Wire\Repository');
-        $wires = $repo->getWiresByReceiver($receiver_guid);
+        $result = $repo->getWiresByReceiver($receiver_guid, null, [
+              'page_size' => 12,
+              'paging_state_token' => base64_decode($_GET['offset'])
+          ]);
 
-        $response['wires'] = Factory::exportable($wires);
+        $response['wires'] = Factory::exportable($result['wires']);
+        $response['load-next'] = $result['token'];
 
         return Factory::response($response);
     }

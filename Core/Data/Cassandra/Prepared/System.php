@@ -10,7 +10,7 @@ class System implements Interfaces\PreparedInterface
 {
     private $template;
     private $values = array();
-    
+
     public function build()
     {
         return array(
@@ -18,7 +18,7 @@ class System implements Interfaces\PreparedInterface
             'values'=>$this->values
             );
     }
-    
+
     /**
      * Create a table
      *
@@ -53,7 +53,7 @@ class System implements Interfaces\PreparedInterface
 
         return $this;
     }
-    
+
     /**
      * Alter a table, add a column
      *
@@ -65,8 +65,13 @@ class System implements Interfaces\PreparedInterface
     public function alterTableAddColumn($table, $column_name, $column_type)
     {
         $template = "ALTER TABLE $table ADD $column_name $column_type";
-        
+
         $this->template = $template;
         return $this;
+    }
+
+    public function getOpts()
+    {
+        return [];
     }
 }

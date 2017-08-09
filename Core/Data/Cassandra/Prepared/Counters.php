@@ -46,4 +46,9 @@ class Counters implements Interfaces\PreparedInterface
         $this->values = $values;
         return $this;
     }
+
+    public function getOpts()
+    {
+        return [];
+    }
 }

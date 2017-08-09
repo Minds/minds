@@ -241,9 +241,10 @@ class Repository
         }
     }
 
-    public function getWiresByReceiver($receiver_guid, $method = null)
+    public function getWiresByReceiver($receiver_guid, $method = null, $opts = [])
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->setOpts($opts);
         if ($method) {
             $query->query("SELECT * FROM wire where method=? receiver_guid=? ALLOW FILTERING",
             [
@@ -265,7 +266,10 @@ class Repository
             if (!$guids) {
                 return false;
             }
-            return Core\Entities::get([ 'guids' => $guids ]);
+            return [
+              'wires' => Core\Entities::get([ 'guids' => $guids ]),
+              'token' => base64_encode($result->pagingStateToken())
+            ];
         } catch (\Exception $e) {
             return [];
         }

@@ -79,4 +79,9 @@ class MonetizationLedger implements Interfaces\PreparedInterface
             'values' => $this->values
         ];
     }
+
+    public function getOpts()
+    {
+        return [];
+    }
 }
