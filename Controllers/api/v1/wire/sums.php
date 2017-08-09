@@ -11,6 +11,7 @@ namespace Minds\Controllers\api\v1\wire;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Wire;
 use Minds\Entities;
 use Minds\Entities\User;
@@ -26,11 +27,22 @@ class sums implements Interfaces\Api
 
         switch ($pages[0]) {
             case "receiver":
-                $guid = $pages[1];
+                $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
                 $method = isset($pages[2]) ? $pages[2] : 'points';
                 $response['method'] = $method;
                 $thirtyDaysAgoTS = (new \DateTime('midnight'))->modify("-30 days");
-                $response['sum'] = Wire\Counter::getSumByReceiver($guid, $method, $thirtyDaysAgoTS);
+
+                if (isset($_GET['advanced'])) {
+                    $repo = Di::_()->get('Wire\Repository');
+                    $ags = $repo->getAggregatesForReceiver($guid, $method, $thirtyDaysAgo);
+                    $response = [
+                        'sum' => $ags['sum'],
+                        'count' => $ags['count'],
+                        'avg' => $ags['avg']
+                    ];
+                } else {
+                    $response['sum'] = Wire\Counter::getSumByReceiver($guid, $method, $thirtyDaysAgoTS);
+                }
                 break;
         }
 

@@ -135,6 +135,50 @@ class Repository
     }
 
     /**
+     * Returns aggregates for a receiver
+     * @param $receiver_guid
+     * @param $method
+     * @param $timestamp
+     * @return int
+     */
+    public function getAggregatesForReceiver($receiver_guid, $method, $timestamp)
+    {
+        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
+        if (!$timestamp) {
+            $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
+        }
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        $query->query("SELECT
+          SUM(amount) as sum,
+          COUNT(*) as count,
+          AVG(amount) as avg
+          FROM wire
+          WHERE receiver_guid=?
+          AND method=?
+          AND timestamp >= ?", [
+            new \Cassandra\Varint($receiver_guid),
+            $method,
+            new \Cassandra\Timestamp($timestamp)
+        ]);
+
+        try {
+            $result = $this->db->request($query);
+            if (!$result) {
+                return 0;
+            }
+            return [
+              'sum' => $result[0]['sum']->value(),
+              'count' => $result[0]['count']->value(),
+              'avg' => $result[0]['avg']->value()
+            ];
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+    /**
      * @param $entity_guid
      * @param $method
      * @param $timestamp
