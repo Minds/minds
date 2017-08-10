@@ -57,7 +57,7 @@ class subscriptions implements Interfaces\Api
 
 
             if ($entity_guid = $plan->getEntityGuid()) {
-                $entity = Core\Entities::build($entity_guid);
+                $entity = Entities\Factory::build($entity_guid);
                 if ($entity) {
                     $s['entity'] = $entity->export();
                 }
