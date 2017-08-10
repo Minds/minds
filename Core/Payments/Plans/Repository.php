@@ -242,7 +242,7 @@ class Repository
 
         $query->query("DELETE FROM plans WHERE entity_guid = ? AND plan = ? AND user_guid = ?", [
             (string) $plan->getEntityGuid(),
-            $plan->getName(),
+            (string) $plan->getName(),
             (string) $plan->getUserGuid()
         ]);
 
