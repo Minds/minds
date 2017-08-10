@@ -670,10 +670,14 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         $account->external_account = [
           'object' => 'bank_account',
           'account_number' => $merchant->getAccountNumber(),
-          'routing_number' => $merchant->getRoutingNumber(),
           'country' => $merchant->getCountry(),
           'currency' => $this->getCurrencyFor($merchant->getCountry())
         ];
+
+        if ($merchant->getRoutingNumber()) {
+            $account->external_account['routing_number'] = $merchant->getRoutingNumber();
+        }
+
         $account->save();
 
         return $account;
