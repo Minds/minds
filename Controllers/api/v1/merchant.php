@@ -269,31 +269,16 @@ class merchant implements Interfaces\Api
             }
             break;
           case "exclusive":
-            try {
-                $user = Core\Session::getLoggedInUser();
+            $user = Core\Session::getLoggedInUser();
 
-                // Try to delete legacy exclusive plan, if exists
-                // @polyfill
-                try {
-                    if ($user->getMerchant()['id']) {
-                        $stripe = Core\Di\Di::_()->get('StripePayments');
-                        $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
-                    }
-                } catch(\Exception $e){}
-                // @polyfill/
+            $merchant = $user->getMerchant() ?: [];
+            $merchant['exclusive'] = [
+                'background' => (int) $_POST['background'],
+                'intro' => $_POST['intro'] ?: ''
+            ];
 
-                $merchant = $user->getMerchant();
-                $merchant['exclusive'] = [
-                    'background' => (int) $_POST['background'],
-                    'intro' => $_POST['intro'] ?: ''
-                ];
-
-                $user->setMerchant($merchant);
-                $user->save();
-            } catch (\Exception $e) {
-                $response['status'] = "error";
-                $response['message'] = $e->getMessage();
-            }
+            $user->setMerchant($merchant);
+            $user->save();
             break;
           case "exclusive-preview":
               $user = Core\Session::getLoggedInUser();
