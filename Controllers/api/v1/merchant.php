@@ -271,30 +271,25 @@ class merchant implements Interfaces\Api
           case "exclusive":
             try {
                 $user = Core\Session::getLoggedInUser();
-                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
 
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-
+                // Try to delete legacy exclusive plan, if exists
+                // @polyfill
                 try {
-                  $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
+                    if ($user->getMerchant()['id']) {
+                        $stripe = Core\Di\Di::_()->get('StripePayments');
+                        $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
+                    }
                 } catch(\Exception $e){}
-
-                $stripe->createPlan((object) [
-                  'id' => "exclusive",
-                  'amount' => $_POST['amount'] * 100,
-                  'merchantId' => $user->getMerchant()['id']
-                ]);
+                // @polyfill/
 
                 $merchant = $user->getMerchant();
                 $merchant['exclusive'] = [
-                  'enabled' => !!$_POST['enabled'],
-                  'amount' => $_POST['amount'],
-                  'intro' => $_POST['intro']
+                    'background' => (int) $_POST['background'],
+                    'intro' => $_POST['intro'] ?: ''
                 ];
 
                 $user->setMerchant($merchant);
                 $user->save();
-
             } catch (\Exception $e) {
                 $response['status'] = "error";
                 $response['message'] = $e->getMessage();
