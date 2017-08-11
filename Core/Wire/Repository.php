@@ -270,6 +270,44 @@ class Repository
         }
     }
 
+    public function getWiresBySender($sender_guid, $method = null, $opts = [])
+    {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->setOpts($opts);
+        // if ($method) {
+        //     $query->query("SELECT * FROM minds.wire_by_sender where method=? and sender_guid=? ORDER BY method DESC, timestamp DESC",
+        //     [
+        //         $method,
+        //         new \Cassandra\Varint($sender_guid)
+        //     ]);
+        // } else {
+        //     $query->query("SELECT * FROM minds.wire_by_sender where sender_guid=? ORDER BY method DESC, timestamp DESC",
+        //     [
+        //         new \Cassandra\Varint($sender_guid)
+        //     ]);
+        // }
+        $query->query("SELECT * FROM minds.wire_by_sender where sender_guid=?",
+        [
+            new \Cassandra\Varint($sender_guid)
+        ]);
+        try {
+            $result = $this->db->request($query);
+            $guids = [];
+            foreach ($result as $row) {
+                $guids[] = (int) $row['wire_guid'];
+            }
+            if (!$guids) {
+                return false;
+            }
+            return [
+              'wires' => Core\Entities::get([ 'guids' => $guids ]),
+              'token' => base64_encode($result->pagingStateToken())
+            ];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
     /**
      * when adding a new wire, if it's recurring then it should check for a pre-existing recurring wire for that user
      * and cancel it before creating the new one

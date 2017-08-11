@@ -24,13 +24,33 @@ class supporters implements Interfaces\Api
     public function get($pages)
     {
         $response = [];
-        $receiver_guid = isset($pages[0]) ? $pages[0] : Core\Session::getLoggedInUser()->guid;
+        $actor_guid = isset($pages[0]) ? $pages[0] : Core\Session::getLoggedInUser()->guid;
 
         $repo = Di::_()->get('Wire\Repository');
-        $result = $repo->getWiresByReceiver($receiver_guid, null, [
-              'page_size' => 12,
-              'paging_state_token' => base64_decode($_GET['offset'])
-          ]);
+
+        $type = isset($_GET['type']) ? $_GET['type'] : 'received';
+
+        switch ($type) {
+            case 'sent':
+                $result = $repo->getWiresBySender($actor_guid, null, [
+                    'page_size' => 12,
+                    'paging_state_token' => base64_decode($_GET['offset'])
+                ]);
+                break;
+
+            case 'received':
+                $result = $repo->getWiresByReceiver($actor_guid, null, [
+                    'page_size' => 12,
+                    'paging_state_token' => base64_decode($_GET['offset'])
+                ]);
+                break;
+
+            default:
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Unknown type'
+            ]);
+        }
 
         $response['wires'] = Factory::exportable($result['wires']);
         $response['load-next'] = $result['token'];
