@@ -25,7 +25,6 @@ class PushSettings
       'remind' => true,
       'boost_gift' => true,
       'boost_request' => true,
-      'boost_accepted' => true,
       'boost_rejected' => true,
       'boost_revoked' => true,
       'boost_completed' => true,
