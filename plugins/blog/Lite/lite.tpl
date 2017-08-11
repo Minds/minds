@@ -33,6 +33,9 @@
         <img src="https://www.minds.com/assets/logos/medium-production.png" alt="Minds"/>
       </a>
 
+      <a href="https://www.minds.com/login" style="text-decoration:none; padding-right:8px">
+        <button class="mdl-button mdl-button--raised mdl-color--blue-grey-600 mdl-color-text--white">Signup</button>
+      </a>
       <a href="https://www.minds.com/login" style="text-decoration:none;">
         <button class="mdl-button mdl-button--raised mdl-color--blue-grey-600 mdl-color-text--white">Login</button>
       </a>

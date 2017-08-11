@@ -23,12 +23,6 @@
   </google-ad>
   <?php } ?>
 
-  <div class="m-blog-lite--full-link mdl-color--blue-grey-200">
-    <a href="<?= $vars['blog']->getUrl() ?>?lite=false" class="mdl-color-text--white">
-      You are viewing the Lite verion of Minds Blogs. Click here to see the full view.
-    </a>
-  </div>
-    
   <div class="m-blog-lite--header">
     <h1><?= $vars['blog']->title ?></h1>
 
@@ -65,6 +59,12 @@
     <div class="minds-blog-body">
       <?= $vars['blog']->description ?>
     </div>
+  </div>
+
+  <div class="m-blog-lite--full-link mdl-color--blue-grey-200" style="margin: 16px 0">
+    <a href="<?= $vars['blog']->getUrl() ?>?lite=false" class="mdl-color-text--white">
+      You are viewing the Lite verion of Minds Blogs. Click here to see the full view.  
+    </a>
   </div>
 
 </div>
