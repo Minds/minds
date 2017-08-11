@@ -25,7 +25,7 @@ class Defaults
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
             $export = $event->response() ?: [];
-            if ($params['entity']->ownerObj && is_array($params['entity']->ownerObj)) {
+            if ($params['entity']->fullExport && $params['entity']->ownerObj && is_array($params['entity']->ownerObj)) {
                 $export['ownerObj'] = Entities\Factory::build($params['entity']->ownerObj)->export();
                 //$export['ownerObj'] = \Minds\Helpers\Export::sanitize($params['entity']->ownerObj);
               //  $export['ownerObj']['guid'] = (string) $params['entity']->ownerObj['guid'];

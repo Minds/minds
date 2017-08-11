@@ -65,6 +65,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                     /* No break */
                 default:
+                    $entity->fullExport = true;
                     $response['entity'] = $entity->export();
 
                     if (method_exists($entity, 'getAlbumChildrenGuids')) {
