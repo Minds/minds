@@ -236,20 +236,40 @@ class Repository
         }
     }
 
-    public function getWiresByReceiver($receiver_guid, $method = null, $opts = [])
+    public function getWiresByReceiver($receiver_guid, $method = null, $timeframe = [], $opts = [])
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->setOpts($opts);
+
+        $timeframe = array_merge([
+          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
+          'end' => time()
+        ], $timeframe);
+
         if ($method) {
-            $query->query("SELECT * FROM wire where method=? and receiver_guid=? ORDER BY method DESC, timestamp DESC",
+            $query->query("SELECT * FROM wire
+              WHERE receiver_guid=?
+              AND method=?
+              AND timestamp>=?
+              AND timestamp<=?
+              ORDER BY method DESC, timestamp DESC",
             [
+                new \Cassandra\Varint($receiver_guid),
                 $method,
-                new \Cassandra\Varint($receiver_guid)
+                new \Cassandra\Timestamp($timeframe['start']),
+                new \Cassandra\Timestamp($timeframe['end'])
             ]);
         } else {
-            $query->query("SELECT * FROM wire where receiver_guid=? ORDER BY method DESC, timestamp DESC",
+            $query->query("SELECT * FROM wire
+              WHERE receiver_guid=?
+              AND timestamp>=?
+              AND timestamp<=?
+              ORDER BY method DESC, timestamp DESC
+              ALLOW FILTERING",
             [
-                new \Cassandra\Varint($receiver_guid)
+                new \Cassandra\Varint($receiver_guid),
+                new \Cassandra\Timestamp($timeframe['start']),
+                new \Cassandra\Timestamp($timeframe['end'])
             ]);
         }
         try {
@@ -270,26 +290,41 @@ class Repository
         }
     }
 
-    public function getWiresBySender($sender_guid, $method = null, $opts = [])
+    public function getWiresBySender($sender_guid, $method = null, $timeframe = [], $opts = [])
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
         $query->setOpts($opts);
-        // if ($method) {
-        //     $query->query("SELECT * FROM minds.wire_by_sender where method=? and sender_guid=? ORDER BY method DESC, timestamp DESC",
-        //     [
-        //         $method,
-        //         new \Cassandra\Varint($sender_guid)
-        //     ]);
-        // } else {
-        //     $query->query("SELECT * FROM minds.wire_by_sender where sender_guid=? ORDER BY method DESC, timestamp DESC",
-        //     [
-        //         new \Cassandra\Varint($sender_guid)
-        //     ]);
-        // }
-        $query->query("SELECT * FROM minds.wire_by_sender where sender_guid=?",
-        [
-            new \Cassandra\Varint($sender_guid)
-        ]);
+
+        $timeframe = array_merge([
+          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
+          'end' => time()
+        ], $timeframe);
+
+        if ($method) {
+             $query->query("SELECT * FROM wire_by_sender
+               WHERE sender_guid=?
+               AND method=?
+               AND timestamp>=?
+               AND timestamp<=?
+               ALLOW FILTERING",
+             [
+                 new \Cassandra\Varint($sender_guid),
+                 $method,
+                 new \Cassandra\Timestamp($timeframe['start']),
+                 new \Cassandra\Timestamp($timeframe['end'])
+             ]);
+         } else {
+             $query->query("SELECT * FROM wire_by_sender
+               WHERE sender_guid=?
+               AND timestamp>=?
+               AND timestamp<=?
+               ALLOW FILTERING",
+             [
+                 new \Cassandra\Varint($sender_guid),
+                 new \Cassandra\Timestamp($timeframe['start']),
+                 new \Cassandra\Timestamp($timeframe['end'])
+             ]);
+        }
         try {
             $result = $this->db->request($query);
             $guids = [];

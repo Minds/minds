@@ -30,17 +30,22 @@ class supporters implements Interfaces\Api
 
         $type = isset($_GET['type']) ? $_GET['type'] : 'received';
 
+        $timeframe = [
+          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
+          'end' => time()
+        ];
+
         switch ($type) {
             case 'sent':
-                $result = $repo->getWiresBySender($actor_guid, null, [
-                    'page_size' => 12,
+                $result = $repo->getWiresBySender($actor_guid, 'money', $timeframe, [
+                    'page_size' => 1000,
                     'paging_state_token' => base64_decode($_GET['offset'])
                 ]);
                 break;
 
             case 'received':
-                $result = $repo->getWiresByReceiver($actor_guid, null, [
-                    'page_size' => 12,
+                $result = $repo->getWiresByReceiver($actor_guid, 'money', $timeframe, [
+                    'page_size' => 1000,
                     'paging_state_token' => base64_decode($_GET['offset'])
                 ]);
                 break;
