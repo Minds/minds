@@ -4,6 +4,7 @@ namespace Minds\Core\Wire\Methods;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Wire\Counter;
 use Minds\Entities;
@@ -224,6 +225,20 @@ class Money implements MethodInterface
 
         $repo = Di::_()->get('Wire\Repository');
         $repo->add($wire);
+
+        // send email to receiver
+        $description = 'Wire';
+
+        if ($this->recurring) {
+            $description .= ' Subscription';
+        }
+
+        Dispatcher::trigger('wire-payment-email', 'object', [
+            'charged' => false,
+            'amount' => $this->amount,
+            'description' => $description,
+            'user' => $merchant->getUser(),
+        ]);
 
         $this->cache->destroy(Counter::getIndexName($merchant->getGUID(), 'usd',null, false, false));
         $this->cache->destroy(Counter::getIndexName($this->entity->guid, 'usd',null, true));

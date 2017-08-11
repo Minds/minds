@@ -8,8 +8,9 @@ namespace Minds\Core\Wire;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Entities;
-use Minds\Core\Payments\HookInterface;
+use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
+use Minds\Core\Payments\HookInterface;
 use Minds\Entities\Wire;
 
 class Webhook implements HookInterface
@@ -68,5 +69,17 @@ class Webhook implements HookInterface
         $plus->cancel();
 
         // TODO get wire entity and mark it as inactive
+    }
+
+    public function onPayoutPaid($payout, $customer, $account)
+    {
+        $accountString = $account->bank_name . ' ' . '****' . $account->last4 . ' / ' . $account->routing_number;
+
+        Dispatcher::trigger('wire-payment-email', 'object', [
+            'charged' => true,
+            'dateOfDispatch' => time(),
+            'bankAccount' => $accountString,
+            'user' => $customer->getUser(),
+        ]);
     }
 }

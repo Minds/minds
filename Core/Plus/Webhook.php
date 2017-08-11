@@ -43,4 +43,8 @@ class Webhook implements HookInterface
         $user->plus = 0;
         $user->save();
     }
+
+    public function onPayoutPaid($payout, $customer, $account)
+    {
+    }
 }
