@@ -383,12 +383,10 @@ class Notification extends DenormalizedEntity
             case 'tag':
                 return 'tags';
             case 'boost_gift':
-            case 'boost_submitted':
             case 'boost_submitted_p2p':
             case 'boost_request':
             case 'boost_rejected':
             case 'boost_revoked':
-            case 'boost_accepted':
             case 'boost_completed':
             case 'boost_peer_request':
             case 'boost_peer_accepted':
