@@ -123,6 +123,7 @@ class blog implements Interfaces\Api
             if (!$blog->title && !$blog->description) {
                 break;
             }
+            $blog->fullExport = true;
             $response['blog'] = $blog->export();
             //provide correct subscribe info for userobj (renormalize)
             $owner = new user($blog->ownerObj);
