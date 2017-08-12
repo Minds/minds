@@ -176,6 +176,16 @@ class Network implements BoostHandlerInterface
             //$db->removeAttributes("boost:newsfeed:review", array($guid));
             //clear the counter for boost_impressions
             //Helpers\Counters::clear($guid, "boost_impressions");
+
+            Core\Events\Dispatcher::trigger('notification', 'boost', [
+                'to'=> [ $boost->getOwner()->guid ],
+                'entity' => $boost->getEntity(),
+                'from'=> 100000000000000519,
+                'title' => $boost->getEntity()->title,
+                'notification_view' => 'boost_accepted',
+                'params' => ['impressions' => $boost->getBid()],
+                'impressions' => $boost->getBid()
+              ]);
             $boost->save();
         }
         return $accept;
@@ -316,6 +326,7 @@ class Network implements BoostHandlerInterface
 
         $cacher = Core\Data\cache\factory::build('apcu');
         $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
+
         $match = [
             'type' => $this->handler,
             'state' => 'approved',

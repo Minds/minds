@@ -166,6 +166,10 @@ class Push implements Interfaces\NotificationExtensionInterface
                 $message = sprintf('%s has requested a boost of %d points', $name, $notification['params']['points']);
                 break;
 
+            case 'boost_accepted':
+                $message = sprintf('%d views for %s were accepted', $notification['params']['impressions'], $notification['params']['title']);
+                break;
+
             case 'boost_rejected':
                 $message = sprintf('Your boost request for %s was rejected', $notification['params']['title']);
                 break;
