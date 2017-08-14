@@ -5,31 +5,26 @@
 namespace Minds\Core\Search;
 
 use Minds\Core\Config;
+use Elasticsearch\ClientBuilder;
 
-class Client extends \Elasticsearch\Client
+class Client
 {
-    public function __construct(array $opts = [])
+    
+    private static $client;
+
+    public static function build()
     {
-        $hosts = Config::_()->elasticsearch_server ?: 'localhost';
+        if (!self::$client) {
+            $hosts = Config::_()->elasticsearch_server ?: 'localhost';
 
-        if (!is_array($hosts)) {
-            $hosts = [ $hosts ];
+            if (!is_array($hosts)) {
+                $hosts = [ $hosts ];
+            }
+        
+            self::$client = ClientBuilder::create()
+               ->setHosts($hosts)
+               ->build();
         }
-
-        $opts = array_merge([
-            'hosts' => $hosts,
-            'client' => [
-                'timeout' => 2,
-                'connect_timeout' => 1, //1 second connect
-            ],
-            'guzzleOptions' => [
-                'command.request_options' => [
-                    'connect_timeout' => 1, //1 second connect
-                    'timeout' => 2 //2 second download
-                 ]
-             ]
-        ], $opts);
-
-        parent::__construct($opts);
+        return self::$client;
     }
 }

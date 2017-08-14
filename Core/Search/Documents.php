@@ -13,7 +13,7 @@ class Documents
 
     public function __construct($client = null, $index = null)
     {
-        $this->client = $client ?: new Client();
+        $this->client = $client ?: Client::build();
         $this->index = $index ?: Config::_()->cassandra->keyspace;
     }
 
@@ -68,6 +68,11 @@ class Documents
         'index' => $this->index,
         'type' => $data['type'],
         'id' => $data['guid'],
+        'client' => [
+            'timeout' => 2,
+            'connect_timeout' => 1,
+            'future' => 'lazy'
+        ] 
       ];
 
     // error_log("indexing for search: {$this->index}/{$data['type']}/{$data['guid']}");
