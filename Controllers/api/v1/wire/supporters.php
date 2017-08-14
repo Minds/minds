@@ -29,9 +29,10 @@ class supporters implements Interfaces\Api
         $repo = Di::_()->get('Wire\Repository');
 
         $type = isset($_GET['type']) ? $_GET['type'] : 'received';
+        $start = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
 
         $timeframe = [
-          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
+          'start' => $start,
           'end' => time()
         ];
 
