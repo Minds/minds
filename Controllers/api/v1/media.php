@@ -194,7 +194,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         // @note: Sometimes images are uploaded as videos. Polyfill:
         $mimeIsImage = strpos($media['type'], 'image/') !== false;
-        $mimeIsVideo = strpos($media['type'], 'video/') !== false;
+        $mimeIsVideo = strpos($media['type'], 'video/') !== false;        
 
         if ($clientType == 'video') {
             $detectIsImage = @is_array(getimagesize($media['file']));
@@ -203,6 +203,13 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
             if (($detectIsImage && !$isWebApp) || $mimeIsImage) {
                 $clientType = 'image';
             }
+            //mobile is crazy and thinks we are all jpegs!
+            try {
+                $checkIsVideo = new \Minds\Core\Media\Assets\Video();
+                if ($checkIsVideo->validate($media)) {
+                    $clientType = 'video';
+                }
+            } catch (\Exception $e){}
         } elseif ($mimeIsImage) {
             $clientType = 'image';
         } elseif ($mimeIsVideo) {
