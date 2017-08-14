@@ -18,6 +18,10 @@ class Client extends \Elasticsearch\Client
 
         $opts = array_merge([
             'hosts' => $hosts,
+            'client' => [
+                'timeout' => 2,
+                'connect_timeout' => 1, //1 second connect
+            ],
             'guzzleOptions' => [
                 'command.request_options' => [
                     'connect_timeout' => 1, //1 second connect

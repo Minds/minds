@@ -29,7 +29,7 @@ class Events
 
     // Hooking for core entities
     Dispatcher::register('create', 'all', [ $this, 'hook' ]);
-        Dispatcher::register('update', 'all', [ $this, 'hook' ]);
+//        Dispatcher::register('update', 'all', [ $this, 'hook' ]);
     }
 
     public function hook($hook, $type, $entity, array $params = [])
