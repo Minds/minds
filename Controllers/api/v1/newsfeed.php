@@ -377,8 +377,16 @@ class newsfeed implements Interfaces\Api
                         $user->save();
                     }
 
-                    if (isset($_POST['paywall'])) {
-                        $activity->setPayWall($_POST['paywall']);
+                    if(isset($_POST['wire_threshold'])) {
+                        if (is_array($_POST['wire_threshold']) && ($_POST['wire_threshold']['min'] <= 0 || !$_POST['wire_threshold']['type'])) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'message' => 'Invalid Wire threshold'
+                            ]);
+                        }
+    
+                        $activity->setWireThreshold($_POST['wire_threshold']);
+                        $activity->setPaywall(!!$_POST['wire_threshold']);
                     }
 
                     $activity->setEdited(true);
@@ -477,6 +485,13 @@ class newsfeed implements Interfaces\Api
                 }
 
                 if(isset($_POST['wire_threshold']) && $_POST['wire_threshold']) {
+                    if (is_array($_POST['wire_threshold']) && ($_POST['wire_threshold']['min'] <= 0 || !$_POST['wire_threshold']['type'])) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => 'Invalid Wire threshold'
+                        ]);
+                    }
+
                     $activity->setWireThreshold($_POST['wire_threshold']);
                     $activity->setPaywall(true);
                 }
