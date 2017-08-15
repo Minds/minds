@@ -21,7 +21,7 @@ class Wire extends NormalizedEntity
     protected $recurring = false;
     protected $active = true;
     protected $amount;
-    protected $access_id;
+    public $access_id = 2;
     public $owner_guid;
 
     protected $indexes = [];
