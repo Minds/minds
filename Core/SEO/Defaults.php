@@ -184,6 +184,11 @@ class Defaults
                 'title' => 'Wallet',
                 'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.',
                 'image' => 'assets/screenshots/register.png'
+            ],
+            'wire' => [
+                'title' => 'Wire',
+                'description' => 'Exchange points, dollars and Bitcoin directly with other channels on Minds',
+                'image' => 'assets/screenshots/blown-bulb.jpg'
             ]
         ];
 
