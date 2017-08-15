@@ -9,14 +9,11 @@
 
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Factory;
 use Minds\Core;
-use Minds\Entities\User;
-use Minds\Helpers;
+use Minds\Core\Wire\Methods;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Api\Factory;
-use Minds\Core\Wire\Methods;
-use Minds\Core\Payments;
 
 class wire implements Interfaces\Api
 {
@@ -70,12 +67,27 @@ class wire implements Interfaces\Api
 
         $service = Methods\Factory::build($method);
 
+
+
         try {
             $service->setAmount($amount)
                 ->setEntity($entity)
                 ->setPayload((array) $_POST['payload'])
                 ->setRecurring($recurring);
             $result = $service->create();
+
+            $amountString = null;
+            if ($method == 'money') {
+                $amountString = '$' . $amount;
+            } else if ($method == 'points') {
+                $currency = $amount > 1 ? ' points' : ' point';
+                $amountString = $amount . $currency;
+            } else {
+                $currency = $amount > 1 ? ' bitcoins' : ' bitcoin';
+                $amountString = $amount . $currency;
+            }
+
+            $this->sendNotifications($amountString,  Core\Session::getLoggedinUser(), $entity, $method, $recurring);
 
             if (isset($result['subscriptionId'])) {
                 $response['subscriptionId'] = $result['subscriptionId'];
@@ -84,7 +96,14 @@ class wire implements Interfaces\Api
             //now send notification
 
         } catch (Methods\NotMonetizedException $e) {
-            $this->sendMonetizeNotification();
+            $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
+
+            Core\Queue\Client::build()->setQueue("WireNotification")
+                ->send(array(
+                    "entity" => $entity,
+                    "notMonetizedException" => true
+                ));
+
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
         } catch (\Exception $e) {
@@ -107,16 +126,15 @@ class wire implements Interfaces\Api
     {
     }
 
-
-    private function sendMonetizeNotification()
+    private function sendNotifications($amount, $sender, $entity, $method, $subscribed = false)
     {
-        $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
-        Core\Events\Dispatcher::trigger('notification', 'wire', [
-            'to' => [$this->entity->owner_guid],
-            'from' => 100000000000000519,
-            'notification_view' => 'custom_message',
-            'params' => ['message' => $message],
-            'message' => $message,
-        ]);
+        Core\Queue\Client::build()->setQueue("WireNotification")
+            ->send(array(
+                "amount" => $amount,
+                "sender" => $sender,
+                "entity" => $entity,
+                "method" => $method,
+                "subscribed" => $subscribed
+            ));
     }
 }
