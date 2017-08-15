@@ -237,7 +237,7 @@ class Money implements MethodInterface
             'charged' => false,
             'amount' => $this->amount,
             'description' => $description,
-            'user' => $merchant->getUser(),
+            'user' => $merchant,
         ]);
 
         $this->cache->destroy(Counter::getIndexName($merchant->getGUID(), 'usd',null, false, false));
