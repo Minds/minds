@@ -86,7 +86,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             $extra['stripe_account'] = $user->getMerchant()['id'];
 
             if ($sale->getFee()) {
-                $opts['application_fee'] = $sale->getFee() * $sale->getAmount();
+                $opts['application_fee'] = $sale->getAmount() * $sale->getFee();
               //  $opts['destination']['amount'] = $sale->getAmount() - ($sale->getFee() * $sale->getAmount());
             }
 

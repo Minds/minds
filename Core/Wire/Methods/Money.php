@@ -99,21 +99,21 @@ class Money implements MethodInterface
         $this->cancelSubscription($user);
 
         $plan = $stripe->getPlan('wire', $user->getMerchant()['id']);
+        $wireNominal = 100; //wire subscriptions are all $1
 
-        if ($plan) {
-            $stripe->deletePlan($plan->id, $user->getMerchant()['id']);
+        if (!$plan) {
+            $stripe->createPlan((object) [
+                'id' => 'wire',
+                'amount' => $wireNominal,
+                'merchantId' => $user->getMerchant()['id']
+            ]);
         }
-
-        $stripe->createPlan((object) [
-            'id' => 'wire',
-            'amount' => $this->amount * 100,
-            'merchantId' => $user->getMerchant()['id']
-        ]);
 
         $subscription = (new Payments\Subscriptions\Subscription())
             ->setPlanId('wire')
-            ->setQuantity(1)
+            ->setQuantity($this->amount)
             ->setCustomer($customer)
+            ->setFee($this->calculateFee($this->amount * $wireNominal))
             ->setMerchant($user);
 
         $subscription_id = $stripe->createSubscription($subscription);
@@ -127,6 +127,7 @@ class Money implements MethodInterface
             ->setUserGuid(Core\Session::getLoggedInUser()->guid)
             ->setSubscriptionId($subscription_id)
             ->setStatus('active')
+            ->setAmount($this->amount * $wireNominal)
             ->setExpires(-1); //indefinite
         $repo = new Payments\Plans\Repository();
         $repo->add($plan);
@@ -160,7 +161,7 @@ class Money implements MethodInterface
             ->setMerchant($user)
             ->setCustomer($customer)
             ->setSource($this->nonce)
-            ->setFee(0)
+            ->setFee($this->calculateFee($this->amount * 100))
             ->capture();
         $this->id = $this->stripe->setSale($sale);
 
@@ -210,6 +211,20 @@ class Money implements MethodInterface
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Calculate the processing fee
+     * @param int $gross - the gross amount
+     * @return int
+     */
+    private function calculateFee($gross)
+    {
+        $stripe = ($gross * 0.029) + 30;
+        $net = $gross - $stripe;
+        $fee = $net * 0.04;
+        $pct = $fee / $gross;
+        return round($pct, 2);
     }
 
     private function saveWire($merchant)
