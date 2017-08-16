@@ -131,8 +131,8 @@ class wire implements Interfaces\Api
         Core\Queue\Client::build()->setQueue("WireNotification")
             ->send(array(
                 "amount" => $amount,
-                "sender" => $sender,
-                "entity" => $entity,
+                "sender" => serialize($sender),
+                "entity" => serialize($entity),
                 "method" => $method,
                 "subscribed" => $subscribed
             ));
