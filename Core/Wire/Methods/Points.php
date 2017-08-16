@@ -147,8 +147,8 @@ class Points implements MethodInterface
 
         $repo->add($wire);
 
-        $this->cache->destroy(Counter::getIndexName($user->getGUID(), 'points',null, false, false));
-        $this->cache->destroy(Counter::getIndexName($this->entity->guid, 'points',null, true));
-        $this->cache->destroy(Counter::getIndexName(Core\Session::getLoggedInUser()->getGUID(), 'points',null, false, true));
+        $this->cache->destroy("counter:wire:sums:" . $user->getGUID() . ":*");
+        $this->cache->destroy("counter:wire:sums:" . $this->entity->guid . ":*");
+        $this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . ":*");
     }
 }
