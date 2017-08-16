@@ -76,18 +76,7 @@ class wire implements Interfaces\Api
                 ->setRecurring($recurring);
             $result = $service->create();
 
-            $amountString = null;
-            if ($method == 'money') {
-                $amountString = '$' . $amount;
-            } else if ($method == 'points') {
-                $currency = $amount > 1 ? ' points' : ' point';
-                $amountString = $amount . $currency;
-            } else {
-                $currency = $amount > 1 ? ' bitcoins' : ' bitcoin';
-                $amountString = $amount . $currency;
-            }
-
-            $this->sendNotifications($amountString,  Core\Session::getLoggedinUser(), $entity, $method, $recurring);
+            $this->sendNotifications($amount,  Core\Session::getLoggedinUser(), $entity, $method, $recurring);
 
             if (isset($result['subscriptionId'])) {
                 $response['subscriptionId'] = $result['subscriptionId'];
