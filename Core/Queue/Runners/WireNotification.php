@@ -20,7 +20,6 @@ class WireNotification implements Interfaces\QueueRunner
 
                 $data = $data->getData();
                 $entity = unserialize($data['entity']);
-                error_log(print_r($entity, true));
                 $receiverUser = $entity->type === 'user' ? $entity : $entity->getOwnerEntity();
 
                 if (isset($data['notMonetizedException']) && $data['notMonetizedException']) {
@@ -52,19 +51,19 @@ class WireNotification implements Interfaces\QueueRunner
                     ]);
 
                     //send notification to sender
-                    Dispatcher::trigger('notification', 'wire', [
+                    /*Dispatcher::trigger('notification', 'wire', [
                         'to' => [$senderUser->getGUID()],
                         'from' => $receiverUser,
                         'notification_view' => 'wire_happened',
                         'params' => [
-                            'amount' => $receiverUser,
+                            'amount' => $amount,
                             'from_guid' => $receiverUser->getGUID(),
                             'from_username' => $receiverUser->username,
                             'to_guid' => $senderUser->getGUID(),
                             'to_username' => $senderUser->username,
                             'subscribed' => $data['subscribed']
                         ]
-                    ]);
+                        ]);*/
                 }
 
                 echo "Succesfully dispatched wire notifications\n\n";
