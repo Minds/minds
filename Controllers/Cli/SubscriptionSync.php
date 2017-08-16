@@ -44,7 +44,7 @@ class SubscriptionSync extends Cli\Controller implements Interfaces\CliControlle
 
             $opts = [];
             if ($plan['entity_guid']) {
-                $entity = Core\Entities::build($plan['entity_guid']);
+                $entity = Entities\Factory::build($plan['entity_guid']);
                 if ($entity->type != 'user') {
                   $entity = $entity->getOwnerEntity();
                 }
@@ -54,7 +54,7 @@ class SubscriptionSync extends Cli\Controller implements Interfaces\CliControlle
             }
 
             try {
-                $result = Stripe\Subscription::retrieve($plan['subscription_id']);
+                $result = Stripe\Subscription::retrieve($plan['subscription_id'], $opts);
                 $amount = ($result->quantity * $result->plan->amount) / 100;
 
                 $insert = new Core\Data\Cassandra\Prepared\Custom();
@@ -67,9 +67,29 @@ class SubscriptionSync extends Cli\Controller implements Interfaces\CliControlle
                 ]);
                 $this->db->request($insert);
 
+                if ($plan['plan'] == 'exclusive') {
+                    $query = new Core\Data\Cassandra\Prepared\Custom();
+                    $query->query("INSERT INTO wire
+                      (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, amount, recurring, status)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        [
+                            new \Cassandra\Varint($plan['entity_guid']),
+                            new \Cassandra\Varint($plan['user_guid']),
+                            'money',
+                            new \Cassandra\Timestamp($result->created),
+                            new \Cassandra\Varint($plan['entity_guid']),
+                            new \Cassandra\Varint($plan['user_guid']),
+                            new \Cassandra\Decimal($amount),
+                            true,
+                            'success'
+                        ]);
+
+                    $this->db->request($query);
+                }
+
                 $this->out("{$plan['subscription_id']} synced with $amount");
             } catch (\Exception $e) {
-                echo $e->getMessage();
+                echo $e->getMessage() ."\n";
             }
 
         }
