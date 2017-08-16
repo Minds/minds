@@ -23,6 +23,7 @@ class User extends \ElggUser
         $this->attributes['verified'] = 0;
         $this->attributes['disabled_boost'] = 0;
         $this->attributes['categories'] = [];
+        $this->attributes['wire_rewards'] = '';
 
         parent::initializeAttributes();
     }
@@ -169,6 +170,25 @@ class User extends \ElggUser
     public function getSocialProfiles()
     {
         return $this->social_profiles ?: [];
+    }
+
+    /**
+     * Sets (overrides) wire rewards information
+     * @return $this
+     */
+    public function setWireRewards(array $wire_rewards)
+    {
+        $this->wire_rewards = $wire_rewards ?: '';
+        return $this;
+    }
+
+    /**
+     * Returns all set wire rewards
+     * @return array
+     */
+    public function getWireRewards()
+    {
+        return $this->wire_rewards ?: '';
     }
 
     /**
@@ -436,6 +456,10 @@ class User extends \ElggUser
             $export['social_profiles'] = json_decode($export['social_profiles']);
         }
 
+        if (is_string($export['wire_rewards'])) {
+            $export['wire_rewards'] = json_decode($export['wire_rewards']);
+        }
+
         if (is_string($export['feature_flags'])) {
             $export['feature_flags'] = json_decode($export['feature_flags']);
         }
@@ -527,7 +551,8 @@ class User extends \ElggUser
             'plus',
             'verified',
             'disabled_boost',
-            'categories'
+            'categories',
+            'wire_rewards',
         ));
     }
 }

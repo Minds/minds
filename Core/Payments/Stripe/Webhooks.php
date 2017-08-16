@@ -20,7 +20,8 @@ class Webhooks
     protected $event;
     protected $aliases = [
       'invoice.payment_succeeded' => 'onInvoicePaymentSuccess',
-      'customer.subscription.deleted' => 'onCancelled'
+      'customer.subscription.deleted' => 'onCancelled',
+      'payout.paid' => 'onPayoutPaid'
     ];
     protected $hooks;
 
@@ -150,6 +151,24 @@ class Webhooks
             ->setPlanId($subscripionObj->plan->id)
             ->setPrice($charge->amount / 100);
         $this->hooks->onCanceled($subscription);
+    }
+
+    protected function onPayoutPaid()
+    {
+        $payoutObj = $this->event->data->object;
+
+        //grab the customer
+        $bankAccount = \Stripe\BankAccount::retrieve($payoutObj->destination, [
+            'stripe_account' => $this->event->account
+        ]);
+        $customerObj = \Stripe\Customer::retrieve($bankAccount->customer, [
+            'stripe_account' => $this->event->account
+        ]);
+        $customer = new Payments\Customer();
+        $customer->setUser(new Entities\User($customerObj->metadata->__toArray()['user_guid']))
+            ->setId($customerObj->id);
+
+        $this->hooks->onPayoutPaid($payoutObj, $customer, $bankAccount);
     }
 
     /**

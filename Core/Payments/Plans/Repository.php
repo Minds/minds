@@ -60,32 +60,50 @@ class Repository
     /**
      * Return all entities a user is subscribed to
      */
-    public function getAllSubscriptions($planId = '', array $opts = [])
+    public function getAllSubscriptions($plansIds = [''], array $opts = [])
     {
         $opts = array_merge([
-          'limit' => 10,
-          'offset' => ''
+            'limit' => 10,
+            'offset' => ''
         ], $opts);
 
+        $results = [];
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM plans WHERE plan = ? AND user_guid = ? ALLOW FILTERING", [
-            (string) $planId,
-            (string) $this->user_guid
-        ]);
+
+        if ($planIds) {
+            $query->query("SELECT * FROM plans_by_user_guid WHERE plan IN ? AND user_guid = ? ", [
+                \Cassandra\Type::collection(\Cassandra\Type::text())->create(... $plansIds),
+                (string) $this->user_guid
+            ]);
+        } else {
+            $query->query("SELECT * FROM plans_by_user_guid WHERE user_guid = ?", [
+                (string) $this->user_guid
+            ]);
+        }
+
         try {
             $result = $this->db->request($query);
-            $guids = [];
             foreach ($result as $row) {
-                $guids[] = $row['entity_guid'];
+                $results[] = $plan = new Plan();
+                $plan->setEntityGuid($row['entity_guid'])
+                  ->setName($row['plan'])
+                  ->setUserGuid($row['user_guid'])
+                  ->setStatus($row['status'])
+                  ->setExpires($row['expires'])
+                  ->setAmount($row['amount'])
+                  ->setSubscriptionId($row['subscription_id']);
             }
-            return $guids;
         } catch (\Exception $e) {
             return [];
         }
+
+        return $results;
     }
 
     /**
      * Return a subscription to an entity
+     * @return Plan
      */
     public function getSubscription($planId)
     {
@@ -104,6 +122,35 @@ class Repository
               ->setUserGuid($result[0]['user_guid'])
               ->setStatus($result[0]['status'])
               ->setExpires($result[0]['expires'])
+              ->setAmount($result[0]['amount'])
+              ->setSubscriptionId($result[0]['subscription_id']);
+
+        } catch (\Exception $e) {
+
+        }
+
+        return $plan;
+    }
+
+    /**
+     * Return a subscription to an entity
+     * @return Plan
+     */
+    public function getSubscriptionById($id)
+    {
+        $plan = new Plan();
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $query->query("SELECT * FROM plans_by_subscription_id WHERE subscription_id = ?", [
+            (string) $id
+          ]);
+        try {
+            $result = $this->db->request($query);
+            $plan->setEntityGuid($result[0]['entity_guid'])
+              ->setName($result[0]['plan'])
+              ->setUserGuid($result[0]['user_guid'])
+              ->setStatus($result[0]['status'])
+              ->setExpires($result[0]['expires'])
+              ->setAmount($result[0]['amount'])
               ->setSubscriptionId($result[0]['subscription_id']);
 
         } catch (\Exception $e) {
@@ -181,14 +228,22 @@ class Repository
         return $this;
     }
 
-    public function cancel($planId)
+    public function cancel($plan)
     {
+
+        if (is_string($plan)) {
+            $plan = new Plan();
+            $plan->setName($plan)
+              ->setEntityGuid($this->entity_guid)
+              ->setUserGuid($this->user_guid);
+        }
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
         $query->query("DELETE FROM plans WHERE entity_guid = ? AND plan = ? AND user_guid = ?", [
-            (string) $this->entity_guid,
-            $planId,
-            (string) $this->user_guid
+            (string) $plan->getEntityGuid(),
+            (string) $plan->getName(),
+            (string) $plan->getUserGuid()
         ]);
 
         try {

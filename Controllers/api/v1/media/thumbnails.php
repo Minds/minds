@@ -29,6 +29,8 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
             exit;
         }
 
+        Core\Security\ACL::$ignore = true;
+
         $size = isset($pages[1]) ? $pages[1] : null;
         $thumbnail = Di::_()->get('Media\Thumbnails')->get($pages[0], $size);
 

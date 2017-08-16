@@ -269,36 +269,16 @@ class merchant implements Interfaces\Api
             }
             break;
           case "exclusive":
-            try {
-                $user = Core\Session::getLoggedInUser();
-                $lu = Core\Di\Di::_()->get('Database\Cassandra\Lookup');
+            $user = Core\Session::getLoggedInUser();
 
-                $stripe = Core\Di\Di::_()->get('StripePayments');
+            $merchant = $user->getMerchant() ?: [];
+            $merchant['exclusive'] = [
+                'background' => (int) $_POST['background'],
+                'intro' => $_POST['intro'] ?: ''
+            ];
 
-                try {
-                  $stripe->deletePlan("exclusive", $user->getMerchant()['id']);
-                } catch(\Exception $e){}
-
-                $stripe->createPlan((object) [
-                  'id' => "exclusive",
-                  'amount' => $_POST['amount'] * 100,
-                  'merchantId' => $user->getMerchant()['id']
-                ]);
-
-                $merchant = $user->getMerchant();
-                $merchant['exclusive'] = [
-                  'enabled' => !!$_POST['enabled'],
-                  'amount' => $_POST['amount'],
-                  'intro' => $_POST['intro']
-                ];
-
-                $user->setMerchant($merchant);
-                $user->save();
-
-            } catch (\Exception $e) {
-                $response['status'] = "error";
-                $response['message'] = $e->getMessage();
-            }
+            $user->setMerchant($merchant);
+            $user->save();
             break;
           case "exclusive-preview":
               $user = Core\Session::getLoggedInUser();

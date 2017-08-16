@@ -86,7 +86,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
             $extra['stripe_account'] = $user->getMerchant()['id'];
 
             if ($sale->getFee()) {
-                $opts['application_fee'] = $sale->getFee() * $sale->getAmount();
+                $opts['application_fee'] = $sale->getAmount() * $sale->getFee();
               //  $opts['destination']['amount'] = $sale->getAmount() - ($sale->getFee() * $sale->getAmount());
             }
 
@@ -740,6 +740,32 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         }
 
         $customer->setPaymentMethods($result->sources->data);
+
+        return $customer;
+    }
+
+    public function addCardToCustomer(Customer $customer, $token)
+    {
+      try {
+          $customer = StripeSDK\Customer::retrieve($customer->getId());
+          $customer->sources->create([
+            'source' => $token
+          ]);
+      } catch (\Exception $e) {
+          return false;
+      }
+
+      return $customer;
+    }
+
+    public function removeCardFromCustomer(Customer $customer, $token)
+    {
+        try {
+            $customer = StripeSDK\Customer::retrieve($customer->getId());
+            $customer->sources->retrieve($token)->delete();
+        } catch (\Exception $e) {
+            return false;
+        }
 
         return $customer;
     }

@@ -437,4 +437,10 @@ class Common implements Interfaces\PreparedInterface
         );
         return $this;
     }
+
+    public function getOpts()
+    {
+        return [];
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace Minds\Core\Wire\Methods;
 
-class Money implements MethodInterface
+class Bitcoin implements MethodInterface
 {
 
     private $amount;
@@ -28,6 +28,7 @@ class Money implements MethodInterface
 
     public function execute()
     {
+        // TODO: get correct owner_guid depending if entity is user or not
         //$this->id = Helpers\Wallet::createTransations($this->entity->owner_guid, $this->amount, $this->entity->guid, "Wire");
         throw new \Exception('Coming soon');
     }

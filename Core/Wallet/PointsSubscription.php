@@ -46,4 +46,8 @@ class PointsSubscription implements HookInterface
     public function onCanceled($subscription)
     {
     }
+
+    public function onPayoutPaid($payout, $customer, $account)
+    {
+    }
 }

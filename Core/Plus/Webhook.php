@@ -4,11 +4,8 @@
  */
 namespace Minds\Core\Plus;
 
-use Minds\Core;
-use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;
 use Minds\Helpers\Wallet as WalletHelper;
-use Minds\Entities;
 
 class Webhook implements HookInterface
 {
@@ -45,5 +42,9 @@ class Webhook implements HookInterface
 
         $user->plus = 0;
         $user->save();
+    }
+
+    public function onPayoutPaid($payout, $customer, $account)
+    {
     }
 }
