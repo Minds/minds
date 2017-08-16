@@ -19,7 +19,8 @@ class WireNotification implements Interfaces\QueueRunner
                 echo "Received a wire notification request \n";
 
                 $data = $data->getData();
-                $entity = $data['entity'];
+                $entity = unserialize($data['entity']);
+                error_log(print_r($entity, true));
                 $receiverUser = $entity->type === 'user' ? $entity : $entity->getOwnerEntity();
 
                 if (isset($data['notMonetizedException']) && $data['notMonetizedException']) {
@@ -33,7 +34,7 @@ class WireNotification implements Interfaces\QueueRunner
                     ]);
                 } else {
                     $amount = $this->getAmountString($data['amount'], $data['currency']);
-                    $senderUser = $data['sender'];
+                    $senderUser = unserialize($data['sender']);
 
                     //send notification to receiver
                     Dispatcher::trigger('notification', 'wire', [
