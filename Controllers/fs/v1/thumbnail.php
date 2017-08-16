@@ -17,6 +17,7 @@ class thumbnail extends Core\page implements Interfaces\page
             exit;
         }
 
+        Core\Security\ACL::$ignore = true;
         $size = isset($pages[1]) ? $pages[1] : null;
         $thumbnail = Di::_()->get('Media\Thumbnails')->get($pages[0], $size);
 
