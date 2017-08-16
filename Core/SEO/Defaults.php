@@ -188,7 +188,7 @@ class Defaults
             'wire' => [
                 'title' => 'Wire',
                 'description' => 'Exchange points, dollars and Bitcoin directly with other channels on Minds',
-                'image' => 'assets/screenshots/blown-bulb.jpg'
+                'image' => 'assets/photos/blown-bulb.jpg'
             ]
         ];
 
