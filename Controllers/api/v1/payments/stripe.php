@@ -33,8 +33,14 @@ class stripe implements Interfaces\Api
         case "cards":
           $stripe = Core\Di\Di::_()->get('StripePayments');
 
-          $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
-          $cards = $stripe->getCustomer($customer)->getPaymentMethods();
+          try {
+              $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
+              $customerObj = $stripe->getCustomer($customer);
+              if ($customerObj) {
+                  $cards = $customerObj->getPaymentMethods();
+              }
+          } catch (\Exception $e) {
+          }
 
           $response['cards'] = $cards ?: [];
           break;
