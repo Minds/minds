@@ -43,8 +43,10 @@ class threshold implements Interfaces\Api
 
             if ($entity->type == 'activity') {
                 $response['activity'] = $entity->export();
+                $response['activity']['paywall_unlocked'] = true;
             } else {
                 $response['entity'] = $entity->export();
+                $response['entity']['paywall_unlocked'] = true;
             }
         }
 
