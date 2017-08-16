@@ -63,6 +63,10 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
                         ];
                     }
 
+                    if (method_exists($entity, 'getWireThreshold')) {
+                        $response['paywalled'] = $entity->getFlag('paywall') && $entity->getWireThreshold();
+                    }
+
                     /* No break */
                 default:
                     $entity->fullExport = true;
@@ -71,7 +75,12 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
                     if (method_exists($entity, 'getAlbumChildrenGuids')) {
                         $response['entity']['album_children_guids'] = $entity->getAlbumChildrenGuids();
                     }
-            }
+
+                    if (method_exists($entity, 'getWireThreshold')) {
+                        $response['entity']['paywalled'] = $entity->getFlag('paywall') && $entity->getWireThreshold();
+                    }
+                }
+
         }
 
         return Factory::response($response);

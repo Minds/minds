@@ -19,6 +19,7 @@ class File extends \ElggFile implements Flaggable
         parent::initializeAttributes();
 
         $this->attributes['flags'] = [];
+        $this->attributes['wire_threshold'] = 0;
     }
 
     /**
@@ -28,7 +29,8 @@ class File extends \ElggFile implements Flaggable
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), [
-            'flags'
+            'flags',
+            'wire_threshold'
         ]);
     }
 
@@ -82,5 +84,40 @@ class File extends \ElggFile implements Flaggable
                 $db->removeAttributes($index, array($this->guid), false);
             }
         }
+    }
+
+    /**
+     * Returns the sum of every wire that's been made to this entity
+     */
+     public function getWireTotals() {
+        $totals = [];
+        $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'points');
+        $totals['money'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'money');
+        // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'bitcoin');
+        return $totals;
+    }
+
+    /**
+     * Gets wire threshold
+     * @return mixed
+     */
+    public function getWireThreshold()
+    {
+        if (is_string($this->wire_threshold)) {
+            return json_decode($this->wire_threshold, true);
+        }
+
+        return $this->wire_threshold;
+    }
+
+    /**
+     * Sets wire threshold
+     * @param $wire_threshold
+     * @return $this
+     */
+    public function setWireThreshold($wire_threshold)
+    {
+        $this->wire_threshold = $wire_threshold;
+        return $this;
     }
 }

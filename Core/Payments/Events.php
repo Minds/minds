@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Payments;
 
+use Minds\Core\Di\Di;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
@@ -64,6 +65,14 @@ class Events
                 if ($plan->getStatus() == 'active') {
                     return $event->setResponse(true);
                 }
+            }
+
+            try {
+                $isAllowed = Di::_()->get('Wire\Thresholds')->isAllowed($user, $entity);
+            } catch (\Exception $e) { }
+
+            if ($isAllowed) {
+                return $event->setResponse(true);
             }
 
             $repo = new Payments\Plans\Repository();

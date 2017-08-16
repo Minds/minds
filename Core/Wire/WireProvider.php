@@ -30,6 +30,10 @@ class WireProvider extends Provider
             return new Counter;
         }, ['useFactory'=>true]);
 
+        $this->di->bind('Wire\Thresholds', function ($di) {
+            return new Thresholds();
+        }, ['useFactory'=>true]);
+
         $this->di->bind('Wire\Method\Points', function ($di) {
             return new Methods\Points();
         }, ['useFactory'=>false]);

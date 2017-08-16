@@ -11,8 +11,8 @@ use Minds\Interfaces;
 class threshold implements Interfaces\Api
 {
     /**
-     * Checks if the amount of wires the logged user has sent to the activity owner passes the threshold, in which case
-     * it unlocks/removes the paywall from the activity
+     * Checks if the amount of wires the logged user has sent to the entity owner passes the threshold, in which case
+     * it unlocks/removes the paywall from the entity
      */
     public function get($pages)
     {
@@ -21,36 +21,31 @@ class threshold implements Interfaces\Api
             return Factory::response($response);
         }
 
-        $activity = new Entities\Activity($pages[0]);
+        // $entity = new Entities\Activity($pages[0]);
+        $entity = Entities\Factory::build($pages[0]);
 
-        if (!$activity) {
-            return Factory::response(['status' => 'error', 'message' => 'Activity couldn\'t be found']);
+        if (!$entity) {
+            return Factory::response(['status' => 'error', 'message' => 'Entity couldn\'t be found']);
         }
 
-        $threshold = $activity->getWireThreshold();
-
-        //make sure legacy posts can work
-        if (!$threshold && $activity->isPaywall()) {
-            $threshold = [
-              'type' => 'money',
-              'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount']
-            ];
-        }
-
-        $amount = 0;
-        $repository = Di::_()->get('Wire\Repository');
-        if ($threshold['type'] == 'points') {
-            $amount = $repository->getSumBySenderForReceiver(Session::getLoggedInUser()->guid,
-                $activity->getOwnerGUID(), 'points', (new \DateTime('midnight'))->modify("-30 days"));
-        } else {
-            $amount = $repository->getSumBySenderForReceiver(Session::getLoggedInUser()->guid,
-                $activity->getOwnerGUID(), 'money', (new \DateTime('midnight'))->modify("-30 days"));
+        try {
+            $isAllowed = Di::_()->get('Wire\Thresholds')->isAllowed(Session::getLoggedInUser(), $entity);
+        } catch (\Exception $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
 
         // if the user wires amounts to the threshold or more
-        if ($amount - $threshold['min'] >= 0) {
-            $activity->paywall = false;
-            $response['activity'] = $activity->export();
+        if ($isAllowed) {
+            $entity->paywall = false;
+
+            if ($entity->type == 'activity') {
+                $response['activity'] = $entity->export();
+            } else {
+                $response['entity'] = $entity->export();
+            }
         }
 
         return Factory::response($response);
