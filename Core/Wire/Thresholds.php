@@ -3,6 +3,7 @@ namespace Minds\Core\Wire;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Payments;
 
 class Thresholds
 {
@@ -37,6 +38,25 @@ class Thresholds
             $amount = $repository->getSumBySenderForReceiver($user, $entity->getOwnerGUID(), 'money', (new \DateTime('midnight'))->modify("-30 days"));
         }
 
-        return $amount - $threshold['min'] >= 0;
+        $allowed = $amount - $threshold['min'] >= 0;
+
+        if ($allowed) {
+            return true;
+        }
+
+        //Plus hack
+        if ($entity->owner_guid == '730071191229833224') {
+            //Check if a plus subscription exists
+            $repo = new Payments\Plans\Repository();
+            $plan = $repo->setEntityGuid(0)
+                ->setUserGuid($user)
+                ->getSubscription('plus');
+
+            if ($plan->getStatus() == 'active') {
+                return true; 
+            }
+        }
+
+        return false; 
     }
 }
