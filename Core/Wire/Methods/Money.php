@@ -151,6 +151,7 @@ class Money implements MethodInterface
             //create the customer on stripe
             $customer->setPaymentToken($this->nonce);
             $customer = $stripe->createCustomer($customer);
+            $this->nonce = $customer->getId();
         }
 
         $sale = new Payments\Sale();
