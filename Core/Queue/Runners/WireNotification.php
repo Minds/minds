@@ -32,7 +32,7 @@ class WireNotification implements Interfaces\QueueRunner
                         'message' => $message,
                     ]);
                 } else {
-                    $amount = $this->getAmountString($data['amount'], $data['currency']);
+                    $amount = $this->getAmountString($data['amount'], $data['method']);
                     $senderUser = unserialize($data['sender']);
 
                     //send notification to receiver
@@ -51,19 +51,19 @@ class WireNotification implements Interfaces\QueueRunner
                     ]);
 
                     //send notification to sender
-                    /*Dispatcher::trigger('notification', 'wire', [
+                    Dispatcher::trigger('notification', 'wire', [
                         'to' => [$senderUser->getGUID()],
                         'from' => $receiverUser,
                         'notification_view' => 'wire_happened',
                         'params' => [
                             'amount' => $amount,
-                            'from_guid' => $receiverUser->getGUID(),
-                            'from_username' => $receiverUser->username,
+                            'from_guid' => $senderUser->getGUID(),
+                            'from_username' => $senderUser->username,
                             'to_guid' => $senderUser->getGUID(),
                             'to_username' => $senderUser->username,
                             'subscribed' => $data['subscribed']
                         ]
-                        ]);*/
+                        ]);
                 }
 
                 echo "Succesfully dispatched wire notifications\n\n";
@@ -82,7 +82,6 @@ class WireNotification implements Interfaces\QueueRunner
             $currency = $amount > 1 ? ' bitcoins' : ' bitcoin';
             $amountString = $amount . $currency;
         }
-
         return $amountString;
     }
 
