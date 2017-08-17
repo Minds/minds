@@ -213,6 +213,13 @@ class merchant implements Interfaces\Api
                 $programs->setUser($user)
                     ->applyAndAccept('affiliate');
 
+                Core\Events\Dispatcher::trigger('notification', 'program', [
+                    'to'=> [ $user->guid ],
+                    'from' => 100000000000000519,
+                    'notification_view' => 'program_accepted',
+                    'params' => [  'program' => 'monetization' ]
+                ]);
+
                 $user->save();
 
             } catch (\Exception $e) {
