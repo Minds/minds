@@ -22,6 +22,7 @@ class threshold implements Interfaces\Api
         }
 
         // $entity = new Entities\Activity($pages[0]);
+        $user = Session::getLoggedInUser();
         $entity = Entities\Factory::build($pages[0]);
 
         if (!$entity) {
@@ -29,7 +30,7 @@ class threshold implements Interfaces\Api
         }
 
         try {
-            $isAllowed = Di::_()->get('Wire\Thresholds')->isAllowed(Session::getLoggedInUser(), $entity);
+            $isAllowed = $user->isAdmin() || Di::_()->get('Wire\Thresholds')->isAllowed($user, $entity);
         } catch (\Exception $e) {
             return Factory::response([
                 'status' => 'error',
