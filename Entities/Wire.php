@@ -257,7 +257,7 @@ class Wire extends NormalizedEntity
      * @param bool $recurring
      * @return $this
      */
-    public function setRecurring(bool $recurring)
+    public function setRecurring($recurring)
     {
         $this->recurring = $recurring;
         return $this;
@@ -334,5 +334,6 @@ class Wire extends NormalizedEntity
     public function setOwnerGuid($owner_guid)
     {
         $this->owner_guid = $owner_guid;
+        return $this;
     }
 }
