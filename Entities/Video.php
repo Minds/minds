@@ -207,7 +207,8 @@ class Video extends Object
             'license',
             'hidden',
             'access_id',
-            'container_guid'
+            'container_guid',
+            'mature'
         ];
 
         foreach ($allowed as $field) {
