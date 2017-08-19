@@ -479,10 +479,16 @@ class Activity extends Entity
      * Returns the sum of every wire that's been made to this entity
      */
     public function getWireTotals() {
+        $guid = $this->guid;
+
+        if ($this->remind_object) {
+            $guid = $this->remind_object['guid'];
+        }
+
         $totals = [];
-        $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'points');
-        $totals['money'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'money');
-        // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'bitcoin');
+        $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'points');
+        $totals['money'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'money');
+        // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'bitcoin');
         return $totals;
     }
 
