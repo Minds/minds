@@ -746,16 +746,11 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
     public function addCardToCustomer(Customer $customer, $token)
     {
-      try {
-          $customer = StripeSDK\Customer::retrieve($customer->getId());
-          $customer->sources->create([
-            'source' => $token
-          ]);
-      } catch (\Exception $e) {
-          return false;
-      }
-
-      return $customer;
+        $customer = StripeSDK\Customer::retrieve($customer->getId());
+        $customer->sources->create([
+          'source' => $token
+        ]);
+        return $customer;
     }
 
     public function removeCardFromCustomer(Customer $customer, $token)
