@@ -727,7 +727,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
 
         $result = StripeSDK\Customer::create($opts);
 
-        $customer->setId($result->id);
+        $customer->setId($result->id, true);
         return $customer;
     }
 

@@ -53,10 +53,10 @@ class Customer
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id, $save = false)
     {
         $this->id = $id;
-        if ($this->user) {
+        if ($this->user && $save) {
             $this->lu->set("{$this->user->guid}:payments", [
               'customer_id' => $id
             ]);
