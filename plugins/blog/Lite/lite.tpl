@@ -7,7 +7,7 @@
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700'>
     <script src="//storage.googleapis.com/code.getmdl.io/1.1.2/material.min.js"></script>
     <!-- inject:css -->
-    <link rel="stylesheet" href="/stylesheets/main.css?v=1500394555111">
+    <link rel="stylesheet" href="/stylesheets/main.css?v=1500394555112">
 
     <?php
       foreach($vars['meta'] as $name => $content){

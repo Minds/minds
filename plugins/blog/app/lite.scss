@@ -68,3 +68,14 @@
     padding-top:24px;
   }
 }
+.m-ad-block-mobile {
+    display: none;
+}
+@media screen and (max-width:$max-mobile){
+  .m-ad-block-square {
+    display:none !important;
+  }
+  .m-ad-block-mobile {
+    display:block;
+  }
+}

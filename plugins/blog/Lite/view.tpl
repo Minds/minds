@@ -43,7 +43,7 @@
 
   <div class="m-blog-lite--body">
      <?php if ($vars['blog']->monetized) { ?>
-     <google-ad class="m-ad-block m-ad-block-google square m-ad-block-default">
+     <google-ad class="m-ad-block m-ad-block-google square m-ad-block-default m-ad-block-square">
       <ins
         class="adsbygoogle"
         style="display:block; width:100%;"
@@ -59,6 +59,32 @@
     <div class="minds-blog-body">
       <?= $vars['blog']->description ?>
     </div>
+    <?php if ($vars['blog']->monetized) { ?>
+      <google-ad style="display:block; width:calc(100% + 32px); margin:-16px -16px 16px" class="m-ad-block-mobile">
+        <ins
+          class="adsbygoogle"
+          style="display:block; width:100%;"
+          data-ad-client="ca-pub-9303771378013875"
+          data-ad-slot="7588308825"
+          data-ad-format="auto"
+          ></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </google-ad>
+      <div id="rcjsload_7c87b6"></div>
+        <script type="text/javascript">
+        (function() {
+        var rcel = document.createElement("script");
+        rcel.id = 'rc_' + Math.floor(Math.random() * 1000);
+        rcel.type = 'text/javascript';
+        rcel.src = "http://trends.revcontent.com/serve.js.php?w=11364&t="+rcel.id+"&c="+(new Date()).getTime()+"&width="+(window.outerWidth || document.documentElement.clientWidth);
+        rcel.async = true;
+        var rcds = document.getElementById("rcjsload_7c87b6"); rcds.appendChild(rcel);
+        })();
+        </script>
+    <?php } ?>
+
   </div>
 
   <div class="m-blog-lite--full-link mdl-color--blue-grey-200" style="margin: 16px 0">
