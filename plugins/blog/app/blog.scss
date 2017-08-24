@@ -40,6 +40,9 @@
 
   .m-blog-container{
     position:relative;
+    h1.m-blog--title {
+      font-weight:400;
+    }
     img{
         max-width:100%;
         height:auto;
