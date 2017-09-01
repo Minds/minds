@@ -199,7 +199,13 @@ class group implements Interfaces\Api
             return Factory::response([]);
         }
 
-        if (!Session::isAdmin() && !$group->isCreator($user)) {
+        $canDelete = Session::isAdmin();
+
+        if (!$canDelete && $group->isCreator($user)) {
+            $canDelete = $group->getMembersCount() <= 1;
+        }
+
+        if (!$canDelete) {
             return Factory::response([
                 'error' => 'You cannot delete this group'
             ]);
