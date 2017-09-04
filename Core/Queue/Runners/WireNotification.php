@@ -37,14 +37,14 @@ class WireNotification implements Interfaces\QueueRunner
 
                     //send notification to receiver
                     Dispatcher::trigger('notification', 'wire', [
-                        'to' => [$receiverUser->getGUID()],
-                        'from' => $senderUser,
+                        'to' => [$receiverUser->guid],
+                        'from' => $senderUser->guid,
                         'notification_view' => 'wire_happened',
                         'params' => [
                             'amount' => $amount,
-                            'from_guid' => $senderUser->getGUID(),
+                            'from_guid' => $senderUser->guid,
                             'from_username' => $senderUser->username,
-                            'to_guid' => $receiverUser->getGUID(),
+                            'to_guid' => $receiverUser->guid,
                             'to_username' => $receiverUser->username,
                             'subscribed' => $data['subscribed']
                         ]
@@ -52,18 +52,18 @@ class WireNotification implements Interfaces\QueueRunner
 
                     //send notification to sender
                     Dispatcher::trigger('notification', 'wire', [
-                        'to' => [$senderUser->getGUID()],
-                        'from' => $receiverUser,
+                        'to' => [ $senderUser->guid ],
+                        'from' => $receiverUser->guid,
                         'notification_view' => 'wire_happened',
                         'params' => [
                             'amount' => $amount,
-                            'from_guid' => $senderUser->getGUID(),
+                            'from_guid' => $senderUser->guid,
                             'from_username' => $senderUser->username,
-                            'to_guid' => $senderUser->getGUID(),
-                            'to_username' => $senderUser->username,
+                            'to_guid' => $receiverUser->guid,
+                            'to_username' => $receiverUser->username,
                             'subscribed' => $data['subscribed']
                         ]
-                        ]);
+                    ]);
                 }
 
                 echo "Succesfully dispatched wire notifications\n\n";
