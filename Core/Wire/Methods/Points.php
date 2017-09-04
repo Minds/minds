@@ -84,6 +84,18 @@ class Points implements MethodInterface
         // cancel subscription first
         $this->cancelSubscription();
 
+        // $plan = (new Payments\Plans\Plan)
+        //     ->setName('wire')
+        //     ->setEntityGuid($this->entity->guid)
+        //     ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+        //     ->setSubscriptionId('MINDS_POINTS')
+        //     ->setStatus('active')
+        //     ->setAmount($this->amount)
+        //     ->setExpires(-1); //indefinite
+
+        // $repo = new Payments\Plans\Repository();
+        // $repo->add($plan);
+
         $this->doTransaction($user);
     }
 
@@ -91,8 +103,8 @@ class Points implements MethodInterface
         $repo = new Payments\Plans\Repository();
         $repo->setEntityGuid($this->entity->guid)
             ->setUserGuid(Core\Session::getLoggedInUser()->guid);
-        $repo->getSubscription(('wire'))
-            ->cancel('wire');
+
+        $repo->cancel('wire');
 
         $wires = $this->manager->get([
             'user_guid' => Core\Session::getLoggedInUser()->guid,
