@@ -10,6 +10,7 @@ require_once(dirname(dirname(__FILE__)) . "/engine/start.php");
 error_reporting(E_ALL);
 
 use Minds\Core;
+use Minds\Entities;
 
 echo "Collecting trending users:: \n";
 
@@ -42,14 +43,22 @@ foreach($subtypes as $subtype){
 
     $g = new GUID(); 
     $guids = array();
-    foreach ($rows['object'] as $i => $object) {
-        $i = $g->migrate($i);
-        $guids[$i] = $object['guid'];
+    $i = -1;
+    foreach ($rows['object'] as $object) {
+        $entity = Entities\Factory::build($object['guid']);
+        $owner = Entities\Factory::build($entity->owner_guid);
+        if($entity && $entity->getFlag('mature'))
+            continue;
+        if($owner && $owner->getMatureContent())
+            continue;
+        $key = $g->migrate($i++);
+        $guids[$key] = $object['guid'];
     }
 
     echo count($guids);
 
     $db = new Core\Data\Call('entities_by_time');
+    $db->removeRow('trending:' . $subtype);
     $db->insert('trending:' . $subtype, $guids);
 
     echo "[complete] \n";
