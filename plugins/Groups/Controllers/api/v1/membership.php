@@ -210,6 +210,14 @@ class membership implements Interfaces\Api
         $membership = (new Groups\Core\Membership)->setGroup($group);
         $invitations = (new Groups\Core\Invitations)->setGroup($group)->setActor($user);
 
+        if (Core\Security\ACL\Block::_()->isBlocked($user, $group->owner_guid)) {
+            return Factory::response([
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => "You are not allowed to join this group"
+            ]);
+        }
+
         if (isset($pages[1])) {
             //Admin approval
             try {
