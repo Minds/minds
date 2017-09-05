@@ -186,13 +186,31 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity) {
-            $response['activity'] = factory::exportable($activity, array('boosted'), true);
             $response['load-next'] = (string) end($activity)->guid;
-
             if ($pages[0] == 'featured') {
                 $response['load-next'] = (string) end($activity)->featured_id;
             }
             $response['load-previous'] = $loadPrevious;
+
+            if (
+                isset($_GET['access_token']) &&
+                isset($_GET['platform']) &&
+                $_GET['platform'] == 'ios'
+            ) {
+                $activity = array_filter($activity, function ($activity) {
+                    if ($activity->paywall) {
+                        return false;
+                    }
+
+                    if ($activity->remind_object && $activity->remind_object['paywall']) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            }
+
+            $response['activity'] = factory::exportable($activity, array('boosted'), true);
         }
 
         return Factory::response($response);
