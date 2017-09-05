@@ -47,6 +47,11 @@ class subscribe implements Interfaces\Api
 
                     $users[] = new \Minds\Entities\User(json_decode($subscriber, true));
                 }
+
+                $users = array_values(array_filter($users, function ($user) {
+                    return $user->enabled != 'no';
+                }));
+                
                 $response['users'] = factory::exportable($users);
                 $response['load-next'] = (string) end($users)->guid;
                 $response['load-previous'] = (string) key($users)->guid;
@@ -72,8 +77,13 @@ class subscribe implements Interfaces\Api
                             continue;
                         }
 
+                        //var_dump(print_r($users,true));die();
                         $users[] = new \Minds\Entities\User(json_decode($subscriber, true));
                     }
+
+                    $users = array_values(array_filter($users, function ($user) {
+                        return $user->enabled != 'no';
+                    }));
 
                     $response['users'] = factory::exportable($users);
                     $response['load-next'] = (string) end($users)->guid;
