@@ -77,16 +77,16 @@ sed -i 's/^start_rpc.*$/start_rpc: true/' /etc/cassandra/cassandra.yaml
 # Setup cassandra driver
 apt-get install -y php$php_version-dev libgmp-dev libpcre3-dev g++ make cmake libssl-dev openssl
 if [ ! -f $cassandra_so ]; then
-  git clone https://github.com/datastax/php-driver.git
-  cd php-driver
-  git submodule update --init
-  cd ext
-  wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
-  wget http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
+  wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv_1.8.0-1_amd64.deb
+  wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/14.04/dependencies/libuv/v1.8.0/libuv-dev_1.8.0-1_amd64.deb
+  wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/14.04/cassandra/v2.4.2/cassandra-cpp-driver_2.4.2-1_amd64.deb
+  wget -nv http://downloads.datastax.com/cpp-driver/ubuntu/14.04/cassandra/v2.4.2/cassandra-cpp-driver-dev_2.4.2-1_amd64.deb
   dpkg -i libuv_1.8.0-1_amd64.deb
   dpkg -i libuv-dev_1.8.0-1_amd64.deb
-  ./install.sh
+  dpkg -i cassandra-cpp-driver_2.4.2-1_amd64.deb
+  dpkg -i cassandra-cpp-driver-dev_2.4.2-1_amd64.deb
 fi
+pecl install cassandra-1.2.2
 echo "extension=cassandra.so" > /etc/php/$php_version/mods-available/cassandra.ini
 phpenmod cassandra
 
