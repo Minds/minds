@@ -44,7 +44,11 @@
                 <tr>
                   <td>
                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=retention-<?= $vars['period'] ?>">
+                      <?php if($object->subtype == "blog"){ ?>
                       <img src="<?= $object->getIconUrl(400) ?>" width="600px" alt="<?php echo $object->title ?>">
+                      <?php } else { ?>
+                      <img src="<?= $object->getIconUrl('xlarge') ?>" width="600px" alt="<?php echo $object->title ?>">
+                      <?php } ?>
                     </a>
                   </td>
                 </tr>
