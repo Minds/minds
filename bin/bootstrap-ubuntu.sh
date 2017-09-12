@@ -3,13 +3,13 @@
 php_version="7.0"
 php_conf="/etc/php/$php_version/fpm/php.ini"
 fpm_conf="/etc/php/$php_version/fpm/pool.d/www.conf"
-cassandra_version="2.2.8"
+cassandra_version="3.0.9"
 cassandra_so="/usr/lib/php/20151012/cassandra.so"
 
-add-apt-repository ppa:ondrej/php
-add-apt-repository ppa:openjdk-r/ppa
+add-apt-repository -y ppa:ondrej/php
+add-apt-repository -y ppa:openjdk-r/ppa
 echo "deb http://debian.datastax.com/community stable main" > /etc/apt/sources.list.d/cassandra.sources.list
-curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+curl -sS -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 
 apt-get update
 apt-get install -y \
@@ -25,12 +25,9 @@ apt-get install -y \
   php$php_version-ctype \
   php$php_version-fpm \
   php$php_version-mbstring \
-  php$php_version-mysql \
-  php$php_version-mysqlnd \
-  php$php_version-mysqli \
   php$php_version-mcrypt \
   php$php_version-pdo \
-  dsc22 cassandra=$cassandra_version cassandra-tools=$cassandra_version \
+  cassandra=$cassandra_version cassandra-tools=$cassandra_version \
   openjdk-8-jre \
   rabbitmq-server \
   openssl \
@@ -116,7 +113,7 @@ npm install -g npm typescript ts-node
 if [ -f /usr/local/bin/composer ]; then
   composer self-update
 else
-  wget -O composer-setup.php https://getcomposer.org/installer
+  wget -nv -O composer-setup.php https://getcomposer.org/installer
   php composer-setup.php --install-dir=/usr/local/bin --filename=composer
   rm composer-setup.php
 fi
@@ -129,15 +126,24 @@ cd -
 mkdir --parents --mode=0777 /tmp/minds-cache/
 mkdir --parents --mode=0777 /data/
 
-if [ -f "/var/www/Minds/engine/settings.php" ]
-then
-  echo "[Success]: Minds is already installed";
-else
-  echo "Installing Minds...";
-  sleep 10s
-  cd /var/www/Minds
-  php ./bin/regenerateDevKeys.php;
+cd /var/www/Minds
+
+if [ -f "/var/www/Minds/engine/settings.php" ]; then
+  echo "Provisioning Minds…"
+
   php ./bin/cli.php install \
+    --use-existing-settings \
+    --graceful-storage-provision \
+    --username=minds \
+    --password=password \
+    --email=minds@dev.minds.io
+else
+  echo "Installing Minds…"
+
+  php ./bin/regenerateDevKeys.php;
+
+  php ./bin/cli.php install \
+    --graceful-storage-provision \
     --domain=dev.minds.io \
     --username=minds \
     --password=password \
