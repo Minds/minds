@@ -60,7 +60,7 @@
       <?= $vars['blog']->description ?>
     </div>
     <?php if ($vars['blog']->monetized) { ?>
-      <google-ad style="display:block; width:calc(100% + 32px); margin:-16px -16px 16px" class="m-ad-block-mobile">
+      <google-ad style="display:block; width:calc(100% + 32px);" class="m-ad-block-mobile">
         <ins
           class="adsbygoogle"
           style="display:block; width:100%;"
