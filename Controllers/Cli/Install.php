@@ -6,6 +6,7 @@ use Minds\Core;
 use Minds\Cli;
 use Minds\Interfaces;
 use Minds\Exceptions;
+use Minds\Exceptions\ProvisionException;
 
 class Install extends Cli\Controller implements Interfaces\CliControllerInterface
 {
@@ -18,12 +19,10 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
     {
         $this->out('TBD');
     }
-    
+
     public function exec()
     {
         try {
-            $this->out('Installing Minds...', $this::OUTPUT_PRE);
-
             $provisioner = new Core\Provisioner\Installer();
             $provisioner
                 ->setApp($this->getApp())
@@ -33,26 +32,50 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
             $provisioner->checkOptions();
             $this->out('OK');
 
-            $this->out('- Building configuration file:', $this::OUTPUT_INLINE);
-            $provisioner->buildConfig();
-            $this->out('OK');
+            if ($this->getOpt('use-existing-settings')) {
+                $this->out('- Fetching settings:', $this::OUTPUT_INLINE);
+                $provisioner->checkSettingsFile();
+                $this->getApp()->loadConfigs();
+                $this->out('OK');
+            } else {
+                $this->out('- Building configuration file:', $this::OUTPUT_INLINE);
+                $provisioner->buildConfig();
+                $this->out('OK');
 
-            $this->out('- Setting up data storage:', $this::OUTPUT_INLINE);
-            $provisioner->setupStorage();
-            $this->out('OK');
+                $this->out('- Loading new configuration:', $this::OUTPUT_INLINE);
+                $this->getApp()->loadConfigs();
+                $this->out('OK');
+            }
 
-            $this->out('- Loading new configuration:', $this::OUTPUT_INLINE);
-            $this->getApp()->loadConfigs();
-            $provisioner->reloadStorage();
-            $this->out('OK');
+            $newStorage = false;
 
-            $this->out('- Setting up site:', $this::OUTPUT_INLINE);
-            $provisioner->setupSite();
-            $this->out('OK');
+            try {
+                $this->out('- Setting up data storage (ignore errors, if any):', $this::OUTPUT_INLINE);
+                $provisioner->setupStorage();
+                $this->out('OK');
 
-            $this->out('- Setting up administrative user:', $this::OUTPUT_INLINE);
-            $provisioner->setupFirstAdmin();
-            $this->out('OK');
+                $this->out('- Emptying Cassandra pool:', $this::OUTPUT_INLINE);
+                $provisioner->reloadStorage();
+                $this->out('OK');
+
+                $newStorage = true;
+            } catch (ProvisionException $e) {
+                if ($this->getOpt('graceful-storage-provision')) {
+                    $this->out('ALREADY SETUP');
+                } else {
+                    throw $e;
+                }
+            }
+
+            if ($newStorage) {
+                $this->out('- Setting up site:', $this::OUTPUT_INLINE);
+                $provisioner->setupSite();
+                $this->out('OK');
+
+                $this->out('- Setting up administrative user (ignore warnings, if any):', $this::OUTPUT_INLINE);
+                $provisioner->setupFirstAdmin();
+                $this->out('OK');
+            }
 
             $this->out(['Done!', 'Open your browser and go to ' . $provisioner->getSiteUrl()], $this::OUTPUT_PRE);
         } catch (Exceptions\ProvisionException $e) {

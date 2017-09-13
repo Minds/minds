@@ -408,7 +408,7 @@ class Activity extends Entity
      * Gets if comments are enabled
      * @return boolean
      */
-    public function canComment() {
+    public function canComment($user_guid = 0 /* ignored */) {
         return (bool) $this->comments_enabled;
     }
 

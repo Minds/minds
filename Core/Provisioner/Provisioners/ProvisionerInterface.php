@@ -5,5 +5,5 @@ use Minds\Core\Provisioner\Tasks\TaskInterface;
 
 interface ProvisionerInterface
 {
-    public function provision(array $options = []);
+    public function provision();
 }

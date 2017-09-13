@@ -2,10 +2,12 @@
 namespace Minds\Core\Provisioner;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities\Site;
 use Minds\Entities\User;
 use Minds\Entities\Activity;
 use Minds\Exceptions\ProvisionException;
+use Minds\Helpers;
 use \ElggSite;
 
 class Installer
@@ -63,12 +65,6 @@ class Installer
 
     public function checkOptions()
     {
-        if (!isset($this->options['domain']) || !$this->options['domain']) {
-            throw new ProvisionException('Domain name was not provided');
-        } elseif (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['domain'])) {
-            throw new ProvisionException('Domain name is invalid');
-        }
-
         if (!isset($this->options['username']) || !$this->options['username']) {
             throw new ProvisionException('Admin username was not provided');
         } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $this->options['username'])) {
@@ -85,6 +81,17 @@ class Installer
             throw new ProvisionException('Admin email was not provided');
         } elseif (!filter_var($this->options['email'], FILTER_VALIDATE_EMAIL)) {
             throw new ProvisionException('Admin email is invalid');
+        }
+
+        if (isset($this->options['use-existing-settings']) && $this->options['use-existing-settings']) {
+            // Finish checking if we're using the existing settings file
+            return;
+        }
+
+        if (!isset($this->options['domain']) || !$this->options['domain']) {
+            throw new ProvisionException('Domain name was not provided');
+        } elseif (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['domain'])) {
+            throw new ProvisionException('Domain name is invalid');
         }
 
         if (!isset($this->options['private-key']) || !$this->options['private-key']) {
@@ -174,11 +181,19 @@ class Installer
         file_put_contents($target, $result);
     }
 
+    public function checkSettingsFile()
+    {
+        $target = $this->app->root . DIRECTORY_SEPARATOR . 'settings.php';
+
+        if (!is_file($target)) {
+            throw new ProvisionException('Minds settings file is missing');
+        }
+    }
+
     public function setupStorage(Provisioners\ProvisionerInterface $storage = null)
     {
-        // TODO: DI?
         $storage = $storage ?: new Provisioners\CassandraProvisioner();
-        $storage->provision($this->options);
+        $storage->provision();
     }
 
     public function reloadStorage()
@@ -188,11 +203,13 @@ class Installer
 
     public function setupSite($site = null)
     {
+        $config = Di::_()->get('Config');
+
         $site = $site ?: new Site();
-        $site->name = $this->options['site-name'];
+        $site->name = $config->get('site_name');
         $site->url = $this->getSiteUrl();
         $site->access_id = ACCESS_PUBLIC;
-        $site->email = $this->options['site-email'];
+        $site->email = isset($this->options['site-email']) && $this->options['site-email'] ? $this->options['site-email'] : $this->options['email'];
 
         $site->save();
     }
@@ -220,6 +237,8 @@ class Installer
             throw new ProvisionException('Cannot grant privileges to new User entity');
         }
 
+        Helpers\Wallet::createTransaction($user->guid, 750000000, $user->guid, 'Installed Minds');
+
         $activity = new Activity();
         $activity->owner_guid = $guid;
         $activity->setMessage('Hello Minds!');
@@ -228,14 +247,18 @@ class Installer
         if (!$activitySaved) {
             throw new ProvisionException('Cannot create first Activity entity');
         }
-
-        // TODO: Maybe grant 1M points to admin?
     }
 
     public function getSiteUrl()
     {
-        $siteUrl = $this->options['no-https'] ? 'http' : 'https';
-        $siteUrl .= '://' . $this->options['domain'] . '/';
+        $config = Di::_()->get('Config');
+
+        if ($config->get('site_url')) {
+            $siteUrl = $config->get('site_url');
+        } else {
+            $siteUrl = $this->options['no-https'] ? 'http' : 'https';
+            $siteUrl .= '://' . $this->options['domain'] . '/';
+        }
 
         return $siteUrl;
     }

@@ -16,6 +16,8 @@ class InstallerSpec extends ObjectBehavior
     }
 
     function let(Minds $minds) {
+        global $CONFIG;
+
         $this->setApp($minds);
 
         $this->setOptions([
@@ -26,7 +28,13 @@ class InstallerSpec extends ObjectBehavior
             'email' => 'phpspec@minds.io',
             'site-name' => 'PHPSpec Minds',
             'site-email' => 'phpspec@minds.io',
+            'cassandra-server' => '127.0.0.1',
+            'elasticsearch-server' => 'http://localhost',
+            'public-key' => __FILE__,
+            'private-key' => __FILE__
         ]);
+
+        $CONFIG->site_name = 'PHPSpec Minds';
     }
 
     function it_should_check_options_valid()
