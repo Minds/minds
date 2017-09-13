@@ -41,6 +41,7 @@ class settings implements Interfaces\Api
         $response['channel']['email'] = $user->getEmail();
         $response['channel']['boost_rating'] = $user->getBoostRating();
         $response['channel']['categories'] = $user->getCategories();
+        $response['channel']['disabled_emails'] = $user->disabled_emails;
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 
@@ -89,6 +90,10 @@ class settings implements Interfaces\Api
 
         if (isset($_POST['monetized']) && $_POST['monetized']) {
             $user->monetized = $_POST['monetized'];
+        }
+
+        if (isset($_POST['disabled_emails'])) {
+            $user->disabled_emails = (bool) $_POST['disabled_emails'];
         }
 
         if (isset($_POST['password']) && $_POST['password']) {
