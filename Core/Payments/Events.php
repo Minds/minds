@@ -23,7 +23,9 @@ class Events
             $export = $event->response() ?: [];
             $currentUser = Session::getLoggedInUserGuid();
 
-            if ($activity->isPaywall() && $params['entity']->owner_guid != $currentUser) {
+            $dirty = false;
+
+            if ($activity->isPaywall() && $activity->owner_guid != $currentUser) {
                 $export['message'] = null;
                 $export['custom_type'] = null;
                 $export['custom_data'] = null;
@@ -32,6 +34,27 @@ class Events
                 $export['blurb'] = null;
                 $export['title'] = null;
 
+                $dirty = true;
+            }
+
+            if (
+                $activity->remind_object &&
+                (int) $activity->remind_object['paywall'] &&
+                $activity->remind_object['owner_guid'] != $currentUser
+            ) {
+                $export['remind_object'] = $activity->remind_object;
+                $export['remind_object']['message'] = null;
+                $export['remind_object']['custom_type'] = null;
+                $export['remind_object']['custom_data'] = null;
+                $export['remind_object']['thumbnail_src'] = null;
+                $export['remind_object']['perma_url'] = null;
+                $export['remind_object']['blurb'] = null;
+                $export['remind_object']['title'] = null;
+
+                $dirty = true;
+            }
+
+            if ($dirty) {
                 return $event->setResponse($export);
             }
 
