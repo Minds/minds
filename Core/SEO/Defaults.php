@@ -164,6 +164,21 @@ class Defaults
             return $meta;
         });
 
+        Manager::add('/login', function ($slugs = []) {
+            $meta = [
+                'title' => 'Login',
+                'description' => $this->config->site_description,
+                'og:title' => 'Login',
+                'og:description' => $this->config->site_description,
+                'og:url' => $this->config->site_url . 'login',
+                'og:image' => $this->config->site_url . 'assets/screenshots/login.png',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000
+            ];
+
+            return $meta;
+        });
+
         $marketing = [
             'affiliates' => [
                 'title' => 'Affiliate Program',
