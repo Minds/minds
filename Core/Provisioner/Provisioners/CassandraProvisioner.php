@@ -60,6 +60,18 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'primaryKeys' => ['guid', 'metric'],
             ],
+            'notifications' => [
+                'schema' => [
+                    'owner_guid' => 'varint',
+                    'guid' => 'varint',
+                    'data' => 'text',
+                    'type' => 'text',
+                ],
+                'primaryKeys' => ['owner_guid', 'guid'],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (guid DESC)'
+                ]
+            ],
             'categories' => [
                 'schema' => [
                     'type' => 'varchar',

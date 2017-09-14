@@ -47,6 +47,7 @@ class Minds extends base
         (new Wire\WireProvider())->register();
         (new Trending\TrendingProvider())->register();
         (new Media\MediaProvider())->register();
+        (new Notification\NotificationProvider())->register();
     }
 
     /**

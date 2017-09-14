@@ -8,7 +8,6 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
 use Minds\Core\Notification\Extensions\Push;
 use Minds\Entities\Factory as EntitiesFactory;
-use Minds\Core\Notification\Factory as NotificationFactory;
 
 class PushSettings
 {

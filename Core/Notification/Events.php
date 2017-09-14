@@ -134,9 +134,6 @@ class Events
                 return;
             }
 
-            $db = new Data\Call('entities_by_time');
-            $notification->setDb($db);
-
             $entity = $notification->getEntity();
             if ($params['to'] && $entity && in_array($entity->type, [ 'activity', 'object', 'comment' ])) {
                 $muted = array_map([ __CLASS__, 'toString' ], (new Entity($entity))->getMutedUsers());
@@ -149,7 +146,7 @@ class Events
                 $from_user = Entities\Factory::build($from_user);
             }
 
-            $manager = new Notifications();
+            $counters = new Counters();
 
             foreach ($params['to'] as $to_user) {
                 if (is_numeric($to_user) || is_string($to_user)) {
@@ -180,7 +177,7 @@ class Events
                     'params' => $params
                 ]);
 
-                $manager->setUser($to_user)
+                $counters->setUser($to_user)
                   ->increaseCounter($to_user);
 
                 try {

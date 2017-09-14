@@ -172,7 +172,7 @@ class Manager
             ->setTitle('Notifications')
             ->setPath('notifications')
             ->setExtras(array(
-                'counter' => (new Core\Notification\Notifications())->getCount()
+                'counter' => (new Core\Notification\Counters())->getCount()
             )),
             'topbar'
         );

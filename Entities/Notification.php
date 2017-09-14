@@ -2,6 +2,7 @@
 namespace Minds\Entities;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Core\Queue\Client as QueueClient;
@@ -45,6 +46,11 @@ class Notification extends DenormalizedEntity
     ];
 
     protected $ttl = ((60 * 60) * 24) * 60; // 60 days to live
+
+    public function __construct($db = null)
+    {
+        $this->db = null; // Don't instance any DB
+    }
 
     /**
      * Writes the entity to the database and updates counters
@@ -90,16 +96,42 @@ class Notification extends DenormalizedEntity
             $to = $this->to['guid'];
         }
 
-        $this->rowKey = 'notifications:' . $to;
         $this->saveToDb($data);
 
-        if ($filter = $this->getFilter()) { //kind of ugly..
-            $this->rowKey = 'notifications:' . $to . ':' . $filter;
-            $this->saveToDb($data);
-            $this->rowKey = 'notifications:' . $to;
-        }
-
         return $this;
+    }
+
+    /**
+     * Load entity data from a GUID
+     * @param  $guid
+     * @throws \Exception
+     */
+    public function loadFromGuid($guid)
+    {
+        throw new \Exception('Use Notification\Repository::getEntity()');
+    }
+
+    /**
+     * Save the denormalized entity to the database
+     * @param  array $data
+     * @return bool
+     */
+    protected function saveToDb($data)
+    {
+        return Di::_()->get('Notification\Repository')
+            ->setOwner($this->to)
+            ->store($data);
+    }
+
+    /**
+     * Delete the denormalized entity
+     * @return bool
+     */
+    public function delete()
+    {
+        return (bool) Di::_()->get('Notification\Repository')
+            ->setOwner($this->to)
+            ->delete($this->guid);
     }
 
     /**
@@ -409,5 +441,25 @@ class Notification extends DenormalizedEntity
     {
         $this->filter = $filter;
         return $this;
+    }
+
+    /**
+     * Export the entity onto an array
+     * @param  array $keys
+     * @return array
+     */
+    public function export(array $keys = [])
+    {
+        $export = parent::export($keys);
+
+        $export['ownerObj'] = $export['owner'];
+        $export['fromObj'] = $export['from'];
+        $export['from_guid'] = (string) $export['from']['guid'];
+
+        if ($export['entity']) {
+            $export['entityObj'] = $export['entity'];
+        }
+
+        return $export;
     }
 }
