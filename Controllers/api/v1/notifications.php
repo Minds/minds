@@ -94,6 +94,19 @@ class notifications implements Interfaces\Api
                     'offset' => $offset
                 ]);
 
+                // @polyfill: start
+                if (!$filter && !$offset && count($notifications < 2)) {
+                    (new Notification\Polyfills\Migration())
+                        ->setOwner(Core\Session::getLoggedInUserGuid())
+                        ->migrate();
+
+                    $notifications = $repository->getAll($filter, [
+                        'limit' => $limit,
+                        'offset' => $offset
+                    ]);
+                }
+                // /@polyfill
+
                 if (!$notifications) {
                     return Factory::response([]);
                 }

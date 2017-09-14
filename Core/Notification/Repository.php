@@ -125,7 +125,7 @@ class Repository
         return $notification;
     }
 
-    public function store($data)
+    public function store($data, $age = 0)
     {
         if (!$data['guid']) {
             return false;
@@ -135,13 +135,19 @@ class Repository
             throw new \Exception('Should call to setOwner() first');
         }
 
+        $ttl = static::NOTIFICATION_TTL - $age;
+
+        if ($ttl < 0) {
+            return;
+        }
+
         $template = "INSERT INTO notifications (owner_guid, guid, type, data) VALUES (?, ?, ?, ?) USING TTL ?";
         $values = [
             new Cassandra\Varint($this->owner),
             new Cassandra\Varint($data['guid']),
             $data['filter'] ?: 'other',
             json_encode($data),
-            static::NOTIFICATION_TTL
+            $ttl
         ];
 
         $query = new Prepared\Custom();
