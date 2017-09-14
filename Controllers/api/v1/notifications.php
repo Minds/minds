@@ -95,7 +95,7 @@ class notifications implements Interfaces\Api
                 ]);
 
                 // @polyfill: start
-                if (!$filter && !$offset && count($notifications < 2)) {
+                if (!$filter && !$offset && count($notifications < 12)) {
                     (new Notification\Polyfills\Migration())
                         ->setOwner(Core\Session::getLoggedInUserGuid())
                         ->migrate();
