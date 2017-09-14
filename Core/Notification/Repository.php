@@ -112,11 +112,9 @@ class Repository
         try {
             $result = $this->db->request($query);
 
-            $row = $result[0];
-
-            if ($row) {
+            if (isset($result[0]) && $result[0]) {
                 $notification = new Entities\Notification();
-                $notification->loadFromArray($row['data']);
+                $notification->loadFromArray($result[0]['data']);
             }
         } catch (\Exception $e) {
             // TODO: Log or warning
@@ -127,7 +125,7 @@ class Repository
 
     public function store($data, $age = 0)
     {
-        if (!$data['guid']) {
+        if (!isset($data['guid']) || !$data['guid']) {
             return false;
         }
 
@@ -138,14 +136,14 @@ class Repository
         $ttl = static::NOTIFICATION_TTL - $age;
 
         if ($ttl < 0) {
-            return;
+            return false;
         }
 
         $template = "INSERT INTO notifications (owner_guid, guid, type, data) VALUES (?, ?, ?, ?) USING TTL ?";
         $values = [
             new Cassandra\Varint($this->owner),
             new Cassandra\Varint($data['guid']),
-            $data['filter'] ?: 'other',
+            isset($data['filter']) && $data['filter'] ? $data['filter'] : 'other',
             json_encode($data),
             $ttl
         ];
