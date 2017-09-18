@@ -28,5 +28,9 @@ class MediaProvider extends Provider
         $this->di->bind('Media\Thumbnails', function ($di) {
             return new Thumbnails($di->get('Config'));
         }, [ 'useFactory' => true ]);
+
+        $this->di->bind('Media\Recommended', function ($di) {
+            return new Recommended();
+        }, [ 'useFactory' => true ]);
     }
 }
