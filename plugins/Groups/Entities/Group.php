@@ -32,6 +32,7 @@ class Group extends NormalizedEntity
     protected $featured_id;
     protected $tags = '';
     protected $owner_guids = [];
+    protected $boost_rejection_reason = -1;
 
     protected $exportableDefaults = [
         'guid',
@@ -45,6 +46,7 @@ class Group extends NormalizedEntity
         'featured',
         'featured_id',
         'tags',
+        'boost_rejection_reason',
     ];
 
     /**
@@ -80,6 +82,7 @@ class Group extends NormalizedEntity
             'featured_id' => $this->featured_id,
             'tags' => $this->tags,
             'owner_guids' => $this->owner_guids,
+            'boost_rejection_reason' => $this->boost_rejection_reason,
         ]);
 
         if (!$saved) {
@@ -454,6 +457,17 @@ class Group extends NormalizedEntity
         return Membership::_($this)->getRequestsCount();
     }
 
+    public function setBoostRejectionReason($reason)
+    {
+        $this->boost_rejection_reason = (int) $reason;
+        return $this;
+    }
+
+    public function getBoostRejectionReason()
+    {
+        return $this->boost_rejection_reason;
+    }
+
     /**
      * Public facing properties export
      * @param  array  $keys
@@ -470,6 +484,7 @@ class Group extends NormalizedEntity
         //$export['requests:count'] = $this->getRequestsCount();
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
+        $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
 
         $userIsAdmin = Core\Session::isAdmin();
 

@@ -15,6 +15,7 @@ class Blog extends \ElggObject
 
         $this->attributes['subtype'] = "blog";
         $this->attributes['mature'] = false;
+        $this->attributes['boost_rejection_reason'] = -1;
     }
 
     /**
@@ -33,6 +34,7 @@ class Blog extends \ElggObject
             'header_top',
             'monetized',
             'mature',
+            'boost_rejection_reason',
         ));
     }
 
@@ -84,6 +86,17 @@ class Blog extends \ElggObject
         return (bool) $this->mature;
     }
 
+    public function setBoostRejectionReason($reason)
+    {
+        $this->boost_rejection_reason = (int) $reason;
+        return $this;
+    }
+
+    public function getBoostRejectionReason()
+    {
+        return (int) $this->boost_rejection_reason;
+    }
+
     /**
      * Return the url for this entity
      */
@@ -101,6 +114,7 @@ class Blog extends \ElggObject
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['mature'] = (bool) $export['mature'];
+        $export['boost_rejection_reason'] = $this->getBoostRejectionReason();
         $export['monetized'] = (bool) $export['monetized'];
         return $export;
     }
