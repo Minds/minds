@@ -55,17 +55,7 @@ class Repository
             $allowFiltering = true;
         }
 
-        if ($options['offset']) {
-            // @note: Using <= because order is DESC, and offset duplication is handled by frontend
-            $template .= " AND guid <= ?";
-            $values[] = new Cassandra\Varint($options['offset']);
-            $allowFiltering = true;
-        }
-
-        if ($options['limit']) {
-            $template .= " LIMIT ?";
-            $values[] = (int) $options['limit'];
-        }
+        $template .= " ORDER BY guid DESC";
 
         if ($allowFiltering) {
             $template .= " ALLOW FILTERING";
@@ -73,6 +63,10 @@ class Repository
 
         $query = new Prepared\Custom();
         $query->query($template, $values);
+        $query->setOpts([
+            'page_size' => $options['limit'],
+            'paging_state_token' => base64_decode($options['offset'])
+            ]);
 
         $notifications = [];
 
@@ -88,7 +82,10 @@ class Repository
             // TODO: Log or warning
         }
 
-        return $notifications;
+        return [
+          'notifications' => $notifications,
+          'token' => base64_encode($result->pagingStateToken())
+        ];
     }
 
     public function getEntity($guid)

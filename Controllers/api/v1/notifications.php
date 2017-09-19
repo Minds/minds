@@ -75,7 +75,9 @@ class notifications implements Interfaces\Api
             default:
                 Factory::isLoggedIn();
 
-                $counters->resetCounter();
+                if (!$offset) {
+                    $counters->resetCounter();
+                }
 
                 $limit = (int) static::getQueryValue('limit') ?: 12;
                 $offset = (string) static::getQueryValue('offset') ?: '';
@@ -95,7 +97,7 @@ class notifications implements Interfaces\Api
                 ]);
 
                 // @polyfill: start
-                if (!$filter && !$offset && count($notifications < 12)) {
+                if (!$filter && !$offset && count($notifications['notifications']) < 12) {
                     (new Notification\Polyfills\Migration())
                         ->setOwner(Core\Session::getLoggedInUserGuid())
                         ->migrate();
@@ -111,8 +113,8 @@ class notifications implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications));
-                $response['load-next'] = (string) end($notifications)->getGuid();
+                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications['notifications']));
+                $response['load-next'] = (string) $notifications['token'];
                 //$response['load-previous'] = (string) key($notifications)->getGuid();
 
                 break;
