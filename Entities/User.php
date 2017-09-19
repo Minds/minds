@@ -10,6 +10,9 @@ use Minds\Helpers;
  */
 class User extends \ElggUser
 {
+
+    public $fullExport = true;
+
     protected function initializeAttributes() {
         $this->attributes['boost_rating'] = 2;
         $this->attributes['mature'] = 0;
@@ -427,15 +430,18 @@ class User extends \ElggUser
     {
         $export = parent::export();
         $export['guid'] = (string) $this->guid;
-        if (Core\Session::isLoggedIn()) {
-            $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
-            $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
+
+        if ($this->fullExport) {
+            if (Core\Session::isLoggedIn()) {
+                $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
+                $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
+            }
+            if ($this->username != "minds") {
+                $export['subscribers_count'] = $this->getSubscribersCount();
+            }
+            $export['subscriptions_count'] = $this->getSubscriptionsCount();
+            $export['impressions'] = $this->getImpressions();
         }
-        if ($this->username != "minds") {
-            $export['subscribers_count'] = $this->getSubscribersCount();
-        }
-        $export['subscriptions_count'] = $this->getSubscriptionsCount();
-        $export['impressions'] = $this->getImpressions();
         $export['boost_rating'] = $this->getBoostRating();
         if ($this->fb && is_string($this->fb)) {
             $export['fb'] = json_decode($this->fb, true);

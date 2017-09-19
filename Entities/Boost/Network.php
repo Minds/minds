@@ -360,6 +360,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
      */
     public function export(array $keys = [])
     {
+        $this->owner->fullExport = false; //don't grab counts etc
         $export = parent::export();
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity' => $this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);
