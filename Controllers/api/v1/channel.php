@@ -126,14 +126,15 @@ class channel implements Interfaces\Api
                     }
                 }
 
-                // reset crop coordinates
-                $owner->x1 = 0;
-                $owner->x2 = 0;
-                $owner->y1 = 0;
-                $owner->y2 = 0;
+                $db = new Core\Data\Call('entities');
+                $db->insert($owner->guid, [
+                    'x1' => 0,
+                    'x2' => 0,
+                    'y1' => 0,
+                    'y2' => 0,
+                    'icontime' => time()
+                ]);
 
-                $owner->icontime = time();
-                $owner->save();
                 break;
             case "banner":
                 //remove all older banners
