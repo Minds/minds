@@ -78,7 +78,7 @@
         var rcel = document.createElement("script");
         rcel.id = 'rc_' + Math.floor(Math.random() * 1000);
         rcel.type = 'text/javascript';
-        rcel.src = "http://trends.revcontent.com/serve.js.php?w=11364&t="+rcel.id+"&c="+(new Date()).getTime()+"&width="+(window.outerWidth || document.documentElement.clientWidth);
+        rcel.src = "https://trends.revcontent.com/serve.js.php?w=11364&t="+rcel.id+"&c="+(new Date()).getTime()+"&width="+(window.outerWidth || document.documentElement.clientWidth);
         rcel.async = true;
         var rcds = document.getElementById("rcjsload_7c87b6"); rcds.appendChild(rcel);
         })();
