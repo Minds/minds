@@ -131,7 +131,8 @@ class Notifications
                     continue;
                 }
 
-                $this->notifications->store($notification);
+                $this->notifications->setOwner($recipient);
+                $this->notifications->store($notification->export());
 
                 echo " (dispatched) \r";
             }
