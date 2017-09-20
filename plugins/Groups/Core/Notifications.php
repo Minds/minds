@@ -32,11 +32,12 @@ class Notifications
      * Constructor
      * @param GroupEntity $group
      */
-    public function __construct($relDb = null, $indexDb = null, $cql = null)
+    public function __construct($relDb = null, $indexDb = null, $cql = null, $notifications = null)
     {
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->notifications = $notifications ?: Di::_()->get('Notification\Repository');
     }
 
     /**
@@ -130,12 +131,8 @@ class Notifications
                     continue;
                 }
 
-                $this->indexDb->set('notifications:' . $recipient, [
-                    $notification->getGuid() => $serialized
-                ]);
-                $this->indexDb->set('notifications:' . $recipient . ':groups', [
-                    $notification->getGuid() => $serialized
-                ]);
+                $this->notifications->store($notification);
+
                 echo " (dispatched) \r";
             }
 
