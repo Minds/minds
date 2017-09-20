@@ -89,7 +89,7 @@
 
   <div class="m-blog-lite--full-link mdl-color--blue-grey-200" style="margin: 16px 0">
     <a href="<?= $vars['blog']->getUrl() ?>?lite=false" class="mdl-color-text--white">
-      You are viewing the Lite verion of Minds Blogs. Click here to see the full view.  
+      You are viewing the Lite version of Minds Blogs. Click here to see the full view.
     </a>
   </div>
 
