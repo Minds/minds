@@ -22,6 +22,7 @@ class Video extends Object
 
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "video";
+        $this->attributes['boost_rejection_reason'] = -1;
     }
 
 
@@ -135,12 +136,13 @@ class Video extends Object
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
-          'thumbnail',
-                'cinemr_guid',
-                'license',
-                'monetized',
-                'mature'
-            ));
+            'thumbnail',
+            'cinemr_guid',
+            'license',
+            'monetized',
+            'mature',
+            'boost_rejection_reason'
+        ));
     }
 
     public function getAlbumChildrenGuids()
@@ -169,6 +171,7 @@ class Video extends Object
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = (new Core\Security\XSS())->clean($this->description); //videos need to be able to export html.. sanitize soon!
+        $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         return $export;
     }
 
@@ -196,6 +199,7 @@ class Video extends Object
             'description' => null,
             'license' => null,
             'mature' => null,
+            'boost_rejection_reason' => null,
             'hidden' => null,
             'access_id' => null,
             'container_guid' => null
@@ -208,7 +212,8 @@ class Video extends Object
             'hidden',
             'access_id',
             'container_guid',
-            'mature'
+            'mature',
+            'boost_rejection_reason'
         ];
 
         foreach ($allowed as $field) {
@@ -223,7 +228,7 @@ class Video extends Object
                 continue;
             }
 
-            $this->$field = $data[$field];
+            $this->$field = $data[$field] ?: -1;
         }
 
         return $this;
@@ -258,5 +263,16 @@ class Video extends Object
                 'mature' => $this->getFlag('mature')
             ]
         ];
+    }
+
+    public function setBoostRejectionReason($reason)
+    {
+        $this->boost_rejection_reason = (int) $reason;
+        return $this;
+    }
+
+    public function getBoostRejectionReason()
+    {
+        return $this->boost_rejection_reason;
     }
 }

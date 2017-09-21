@@ -265,13 +265,13 @@ class boost implements Interfaces\Api
                     $boost->setId((string)$result)
                         ->setTransactionId($transactionId)
                         ->save();
-                    Core\Events\Dispatcher::trigger('notification', 'boost', [
+/*                    Core\Events\Dispatcher::trigger('notification', 'boost', [
                         'to' => [Core\Session::getLoggedinUser()->guid],
                         'entity' => $pages[1],
                         'notification_view' => 'boost_submitted',
                         'params' => ['impressions' => $impressions, 'priority' => $priority],
                         'impressions' => $impressions
-                    ]);
+                    ]);*/
                 } else {
                     $response['status'] = 'error';
                 }

@@ -28,12 +28,14 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     protected $bidType = 'points';
     protected $priorityRate = 0;
     protected $rating;
+    protected $quality = 75;
     protected $categories = [];
+    protected $rejection_reason = -1;
 
     protected $exportableDefaults = [
         'guid', '_id', 'entity', 'bid', 'bidType', 'destination', 'owner', 'state',
         'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler',
-        'rating', 'impressions', 'categories'
+        'rating', 'quality', 'impressions', 'categories', 'rejection_reason'
     ];
 
     /**
@@ -66,8 +68,10 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->transactionId = $array['transactionId'];
         $this->handler = $array['handler'];
         $this->rating = $array['rating'];
+        $this->quality = $array['quality'];
         $this->priorityRate = (float)$array['priorityRate'];
         $this->categories = $array['categories'];
+        $this->rejection_reason = $array['rejection_reason'];
         return $this;
     }
 
@@ -97,7 +101,9 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
             'handler' => $this->handler,
             'priorityRate' => $this->priorityRate,
             'rating' => $this->rating,
-            'categories' => $this->categories
+            'quality'=> $this->getQuality(),
+            'categories' => $this->categories,
+            'rejection_reason'=> $this->getRejectionReason()
         ];
 
         $serialized = json_encode($data);
@@ -239,6 +245,17 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         return $this->rating;
     }
 
+    public function setQuality($quality)
+    {
+        $this->quality = (int) $quality;
+        return $this;
+    }
+
+    public function getQuality()
+    {
+        return $this->quality;
+    }
+
     /**
      * Set the state of the boost
      * @param string $state
@@ -301,6 +318,15 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         }
 
         return $this->categories ?: [];
+    }
+
+    public function setRejectionReason($value = 0) {
+        $this->rejection_reason = (int) $value;
+        return $this;
+    }
+
+    public function getRejectionReason() {
+        return $this->rejection_reason;
     }
 
     public function getTransactionId()

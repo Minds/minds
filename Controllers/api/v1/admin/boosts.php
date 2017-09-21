@@ -56,6 +56,9 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $guid = $pages[1];
         $action = $pages[2];
         $rating = (int)$_POST['rating'];
+        $quality = (int)$_POST['quality'];
+        $reason = $_POST['reason'];
+        $mature = isset($_POST['mature']) ? $_POST['mature'] : 0;
 
         if (!$guid) {
             return Factory::response(array(
@@ -79,8 +82,16 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             ]);
         }
 
+        $entity = $boost->getEntity();
+        // explicit
+        if($reason == 1 || $mature) {
+            $dirty = $this->enableMatureFlag($entity);
+        }
+
         if ($action == 'accept') {
             $boost->setRating($rating);
+            $boost->setQuality($quality);
+
             $success = Core\Boost\Factory::build($type)->accept($boost);
             if ($success) {
                 Di::_()->get('Boost\Payment')->charge($boost);
@@ -88,6 +99,10 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
                 $response['status'] = 'error';
             }
         } elseif ($action == 'reject') {
+            $boost->setRejectionReason($reason);
+
+            $dirty = $this->enableBoostRejectionReasonFlag($entity, $reason) || $dirty;
+
             $success = Core\Boost\Factory::build($type)->reject($boost);
             if ($success) {
                 Di::_()->get('Boost\Payment')->refund($boost);
@@ -96,7 +111,73 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             }
         }
 
+        if ($dirty) {
+            $entity->save();
+        }
+
         return Factory::response($response);
+    }
+
+    protected function enableBoostRejectionReasonFlag($entity = null, $reason = -1)
+    {
+        if (!$entity || !is_object($entity)) {
+            return false;
+        }
+
+        $dirty = false;
+
+        // Main boost rejection reason flag
+        if (method_exists($entity, 'setBoostRejectionReason')) {
+            $entity->setBoostRejectionReason($reason);
+            $dirty = true;
+        } elseif (property_exists($entity, 'boost_rejection_reason')) {
+            $entity->boost_rejection_reason = true;
+            $dirty = true;
+        }
+
+        return $dirty;
+    }
+
+    /**
+     * Enabled the maturity flag for an entity
+     * @param  mixed $entity
+     * @return boolean
+     */
+    protected function enableMatureFlag($entity = null)
+    {
+        if (!$entity || !is_object($entity)) {
+            return false;
+        }
+
+        $dirty = false;
+
+        // Main mature flag
+        if (method_exists($entity, 'setMature')) {
+            $entity->setMature(true);
+            $dirty = true;
+        } elseif (method_exists($entity, 'setFlag')) {
+            $entity->setFlag('mature', true);
+            $dirty = true;
+        } elseif (property_exists($entity, 'mature')) {
+            $entity->mature = true;
+            $dirty = true;
+        }
+
+        // Custom Data
+        if (method_exists($entity, 'setCustom') && $report['object']['custom_data'] && is_array($report['object']['custom_data'])) {
+            $custom_data = $report['object']['custom_data'];
+
+            if (isset($custom_data[0])) {
+                $custom_data[0]['mature'] = true;
+            } else {
+                $custom_data['mature'] = true;
+            }
+
+            $entity->setCustom($report['object']['custom_type'], $custom_data);
+            $dirty = true;
+        }
+
+        return $dirty;
     }
 
     /**

@@ -25,13 +25,27 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
         $response = [];
+        $user = Core\Session::getLoggedinUser();
 
-        if (Core\Session::getLoggedinUser()->disabled_boost && Core\Session::getLoggedinUser()->plus) {
+        if ($user->disabled_boost && $user->plus) {
             return Factory::response([]);
         }
 
         $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 2;
-        $rating = isset($_GET['rating']) ? (int) $_GET['rating'] : 0;
+        $rating = isset($_GET['rating']) ? (int) $_GET['rating'] : 1;
+        $platform = isset($_GET['platform']) ? $_GET['platform'] : 'other';
+        $quality = 0;
+
+        // options specific to newly created users (<=1 hour) and iOS users
+        if (time() - $user->getTimeCreated() <= 3600) {
+            $rating = 1; // they can only see safe content
+            $quality = 75;
+        }
+
+        if ($platform === 'ios') {
+            $rating = 1; // they can only see safe content
+            $quality = 90;
+        }
 
         switch ($pages[0]) {
             case 'content':
@@ -40,6 +54,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                         $limit,
                         true,
                         $rating,
+                        $quality,
                         [ 'priority' => true ]
                     );
                 foreach ($boosts as $entity) {
@@ -53,6 +68,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                     $limit,
                     false,
                     $rating,
+                    $quality,
                     [ 'priority' => true ]
                 );
                 foreach ($boosts as $guid => $entity) {

@@ -36,15 +36,17 @@ class Network implements BoostHandlerInterface
     {
 
         $documentId = $this->mongo->insert("boost", [
-          'guid' => $boost->getGuid(),
-          'owner_guid' => $boost->getOwner()->guid,
-          'impressions' => $boost->getImpressions(),
-          'state' => 'review',
-          'type' => $this->handler,
-          'priority' => $boost->getPriorityRate(),
-          'categories' => $boost->getCategories(),
-          'createdAt' => new BSON\UTCDateTime(time() * 1000),
-          'approvedAt' => null,
+            'guid' => $boost->getGuid(),
+            'owner_guid' => $boost->getOwner()->guid,
+            'impressions' => $boost->getImpressions(),
+            'state' => 'review',
+            'type' => $this->handler,
+            'priority' => $boost->getPriorityRate(),
+            'categories' => $boost->getCategories(),
+            'createdAt' => new BSON\UTCDateTime(time() * 1000),
+            'approvedAt' => null,
+            'rating' => $boost->getRating(),
+            'quality' => $boost->getQuality()
         ]);
 
         if ($documentId) {
@@ -169,7 +171,7 @@ class Network implements BoostHandlerInterface
      */
     public function accept($boost, $impressions = 0)
     {
-        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'approvedAt' => new BSON\UTCDateTime(time() * 1000) ]);
+        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'quality'=> $boost->getQuality(), 'approvedAt' => new BSON\UTCDateTime(time() * 1000) ]);
         $boost->setState('approved');
         if ($accept) {
             //remove from review
@@ -177,7 +179,7 @@ class Network implements BoostHandlerInterface
             //clear the counter for boost_impressions
             //Helpers\Counters::clear($guid, "boost_impressions");
 
-            Core\Events\Dispatcher::trigger('notification', 'boost', [
+            /*Core\Events\Dispatcher::trigger('notification', 'boost', [
                 'to'=> [ $boost->getOwner()->guid ],
                 'entity' => $boost->getEntity(),
                 'from'=> 100000000000000519,
@@ -185,7 +187,7 @@ class Network implements BoostHandlerInterface
                 'notification_view' => 'boost_accepted',
                 'params' => ['impressions' => $boost->getBid()],
                 'impressions' => $boost->getBid()
-              ]);
+              ]);*/
             $boost->save();
         }
         return $accept;
@@ -207,6 +209,7 @@ class Network implements BoostHandlerInterface
             'from'=> 100000000000000519,
             'entity' => $boost->getEntity(),
             'title' => $boost->getEntity()->title,
+            'params' => ['reason' => $boost->getRejectionReason()],
             'notification_view' => 'boost_rejected',
         ]);
         return true;//need to double check somehow..
@@ -317,7 +320,7 @@ class Network implements BoostHandlerInterface
      * @param array $options
      * @return array
      */
-    public function getBoosts($limit = 2, $increment = true, $rating = 0, array $options = [])
+    public function getBoosts($limit = 2, $increment = true, $rating = 0, $quality, array $options = [])
     {
         $options = array_merge([
             'priority' => false,
@@ -330,10 +333,14 @@ class Network implements BoostHandlerInterface
         $match = [
             'type' => $this->handler,
             'state' => 'approved',
-            //'rating' => [
-            //    '$exists' => true,
-            //    '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating()
-            // ],
+            'rating' => [
+                '$exists' => true,
+                '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating()
+             ],
+            'quality' => [
+                '$exists' => true,
+                '$gte' => $quality
+            ]
         ];
         if ($mem_log) {
             $match['_id'] =  [ '$gt' => end($mem_log) ];

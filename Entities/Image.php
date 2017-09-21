@@ -15,6 +15,7 @@ class Image extends File
 
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "image";
+        $this->attributes['boost_rejection_reason'] = -1;
     }
 
     public function getUrl()
@@ -162,7 +163,8 @@ class Image extends File
         'thumbnail',
                 'cinemr_guid',
                 'license',
-                'mature'
+                'mature',
+                'boost_rejection_reason'
             ));
     }
 
@@ -188,6 +190,7 @@ class Image extends File
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         $export['mature'] = $this->mature ?: $this->getFlag('mature');
+        $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         return $export;
     }
 
@@ -215,6 +218,7 @@ class Image extends File
             'description' => null,
             'license' => null,
             'mature' => null,
+            'boost_rejection_reason' => null,
             'hidden' => null,
             'batch_guid' => null,
             'access_id' => null,
@@ -229,7 +233,8 @@ class Image extends File
             'batch_guid',
             'access_id',
             'container_guid',
-            'mature'
+            'mature',
+            'boost_rejection_reason'
         ];
 
         foreach ($allowed as $field) {
@@ -287,5 +292,16 @@ class Image extends File
                 'mature' => $this->getFlag('mature')
             ]]
         ];
+    }
+
+    public function setBoostRejectionReason($reason)
+    {
+        $this->boost_rejection_reason = (int) $reason;
+        return $this;
+    }
+
+    public function getBoostRejectionReason()
+    {
+        return $this->boost_rejection_reason;
     }
 }

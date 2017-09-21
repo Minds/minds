@@ -28,7 +28,8 @@ class Activity extends Entity
             'paywall' => false,
             'edited' => false,
             'comments_enabled' => true,
-            'wire_threshold' => null
+            'wire_threshold' => null,
+            'boost_rejection_reason' => -1
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -165,7 +166,8 @@ class Activity extends Entity
                 'edited',
                 'comments_enabled',
                 'wire_totals',
-                'wire_threshold'
+                'wire_threshold',
+                'boost_rejection_reason'
             ));
     }
 
@@ -205,6 +207,7 @@ class Activity extends Entity
         $export['comments_enabled'] = (bool) $export['comments_enabled'];
         $export['wire_totals'] = $this->getWireTotals();
         $export['wire_threshold'] = $this->getWireThreshold();
+        $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
@@ -509,6 +512,17 @@ class Activity extends Entity
     public function setWireThreshold($wire_threshold)
     {
         $this->wire_threshold = $wire_threshold;
+        return $this;
+    }
+
+    public function getBoostRejectionReason()
+    {
+        return $this->boost_rejection_reason;
+    }
+
+    public function setBoostRejectionReason($reason)
+    {
+        $this->boost_rejection = (int) $reason;
         return $this;
     }
 }
