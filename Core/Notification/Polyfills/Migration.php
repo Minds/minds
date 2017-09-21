@@ -7,6 +7,7 @@ use Minds\Core\Di\Di;
 class Migration
 {
     protected $owner;
+    protected $filter = "";
 
     public function setOwner($guid)
     {
@@ -18,6 +19,12 @@ class Migration
 
         $this->owner = $guid;
 
+        return $this;
+    }
+
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
         return $this;
     }
 
@@ -35,8 +42,10 @@ class Migration
         $repository = Di::_()->get('Notification\Repository');
         $repository->setOwner($this->owner);
 
+        $filter = $this->filter ? ":$this->filter" : "";
+
         $db = new Core\Data\Call('entities_by_time');
-        $rows = $db->getRow("notifications:{$this->owner}", [
+        $rows = $db->getRow("notifications:{$this->owner}$filter", [
             'reversed' => true,
             'limit' => $quantity
         ]);

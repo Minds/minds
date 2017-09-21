@@ -97,9 +97,10 @@ class notifications implements Interfaces\Api
                 ]);
 
                 // @polyfill: start
-                if (!$filter && !$offset && count($notifications['notifications']) < 12) {
+                if (!$offset && count($notifications['notifications']) < 12) {
                     (new Notification\Polyfills\Migration())
                         ->setOwner(Core\Session::getLoggedInUserGuid())
+                        ->setFilter($filter)
                         ->migrate();
 
                     $notifications = $repository->getAll($filter, [
