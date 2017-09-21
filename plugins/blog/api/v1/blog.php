@@ -120,7 +120,7 @@ class blog implements Interfaces\Api
                 $guid = (new \GUID())->migrate($guid);
             }
             $blog = new entities\Blog($guid);
-            if (!$blog->title && !$blog->description) {
+            if (!$blog->title && !$blog->description || Helpers\Flags::shouldFail($blog)) {
                 break;
             }
             $blog->fullExport = true;

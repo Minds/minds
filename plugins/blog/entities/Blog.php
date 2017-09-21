@@ -6,6 +6,8 @@ use Minds\Helpers;
 
 class Blog extends \ElggObject
 {
+    protected $dirtyIndexes = false;
+
     /**
      * Set subtype to blog.
      */
@@ -16,6 +18,8 @@ class Blog extends \ElggObject
         $this->attributes['subtype'] = "blog";
         $this->attributes['mature'] = false;
         $this->attributes['boost_rejection_reason'] = -1;
+        $this->attributes['spam'] = false;
+        $this->attributes['deleted'] = false;
     }
 
     /**
@@ -98,11 +102,73 @@ class Blog extends \ElggObject
     }
 
     /**
+     * Sets the spam flag for this blog
+     * @param mixed $value
+     */
+    public function setSpam($value)
+    {
+        $this->spam = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the spam flag
+     * @return boolean
+     */
+    public function getSpam()
+    {
+        return (bool) $this->spam;
+    }
+
+    /**
+     * Sets the deleted flag for this blog
+     * @param mixed $value
+     */
+    public function setDeleted($value)
+    {
+        $this->deleted = (bool) $value;
+        $this->dirtyIndexes = true;
+        return $this;
+    }
+
+    /**
+     * Gets the deleted flag
+     * @return boolean
+     */
+    public function getDeleted()
+    {
+        return (bool) $this->deleted;
+    }
+
+    /**
      * Return the url for this entity
      */
     public function getUrl()
     {
         return elgg_get_site_url() . 'blog/view/' . $this->guid;
+    }
+
+    public function save($index = true)
+    {
+        if ($this->getDeleted()) {
+            $index = false;
+
+            if ($this->dirtyIndexes) {
+                $indexes = $this->getIndexKeys(true);
+
+                $db = new Core\Data\Call('entities_by_time');
+                foreach ($indexes as $idx) {
+                    $db->removeAttributes($idx, [$this->guid]);
+                }
+            }
+        } else {
+            if ($this->dirtyIndexes) {
+                // Re-add to indexes, force as true
+                $index = true;
+            }
+        }
+
+        return parent::save($index);
     }
 
     public function export()
@@ -116,6 +182,12 @@ class Blog extends \ElggObject
         $export['mature'] = (bool) $export['mature'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason();
         $export['monetized'] = (bool) $export['monetized'];
+
+        if (Helpers\Flags::shouldDiscloseStatus($this)) {
+            $export['spam'] = $this->getSpam();
+            $export['deleted'] = $this->getDeleted();
+        }
+
         return $export;
     }
 }

@@ -8,6 +8,7 @@ namespace minds\plugin\blog;
 use Minds\Components;
 use Minds\Core;
 use Minds\Api;
+use Minds\Helpers;
 
 class start extends Components\Plugin
 {
@@ -22,7 +23,7 @@ class start extends Components\Plugin
                 $guid = (new \GUID())->migrate($guid);
             }
             $blog = new entities\Blog($guid);
-            if (!$blog->title) {
+            if (!$blog->title || Helpers\Flags::shouldFail($blog)) {
                 header("HTTP/1.0 404 Not Found");
                 return [
                     'robots' => 'noindex'
