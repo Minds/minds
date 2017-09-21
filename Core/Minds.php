@@ -48,6 +48,7 @@ class Minds extends base
         (new Trending\TrendingProvider())->register();
         (new Media\MediaProvider())->register();
         (new Notification\NotificationProvider())->register();
+        (new Reports\ReportsProvider())->register();
     }
 
     /**

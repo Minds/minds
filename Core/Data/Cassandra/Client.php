@@ -8,6 +8,7 @@ use Cassandra as Driver;
 use Minds\Core;
 use Minds\Core\Data\Interfaces;
 use Minds\Core\Config;
+use Minds\Core\Events\Dispatcher;
 
 class Client implements Interfaces\ClientInterface
 {

@@ -190,6 +190,15 @@ class Image extends File
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         $export['mature'] = $this->mature ?: $this->getFlag('mature');
+
+        if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
+            unset($export['flags']['spam']);
+        }
+
+        if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['deleted'])) {
+            unset($export['flags']['deleted']);
+        }
+
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         return $export;
     }

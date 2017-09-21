@@ -38,7 +38,7 @@ class newsfeed implements Interfaces\Api
             case 'single':
                 $activity = new Activity($pages[1]);
 
-                if (!$activity->guid) {
+                if (!$activity->guid || Helpers\Flags::shouldFail($activity)) {
                     return Factory::response(['status' => 'error']);
                 }
 

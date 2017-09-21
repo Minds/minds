@@ -14,6 +14,7 @@ use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Events\Dispatcher;
 
 class ban implements Interfaces\Api, Interfaces\ApiAdminPam
 {
@@ -61,6 +62,8 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
         \cache_entity($user);
 
         (new Core\Data\Sessions())->destroyAll($user->guid);
+
+        Dispatcher::trigger('ban', 'user', $user);
 
         return Factory::response([
             'done' => true

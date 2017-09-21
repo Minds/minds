@@ -3,6 +3,7 @@ namespace Minds\Core\Media;
 
 use Minds\Core;
 use Minds\Entities;
+use Minds\Helpers;
 
 class SEO
 {
@@ -20,7 +21,7 @@ class SEO
         }
 
         $entity = Entities\Factory::build($guid);
-        if (!$entity) {
+        if (!$entity || Helpers\Flags::shouldFail($entity)) {
             header("HTTP/1.0 404 Not Found");
             return [
                 'robots' => 'noindex'

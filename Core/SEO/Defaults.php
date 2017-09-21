@@ -6,8 +6,8 @@
 namespace Minds\Core\SEO;
 
 use Minds\Core;
-
 use Minds\Entities;
+use Minds\Helpers;
 
 class Defaults
 {
@@ -48,7 +48,7 @@ class Defaults
                     return array();
                 }
 
-                if (!$user->enabled || $user->banned == 'yes') {
+                if (!$user->enabled || $user->banned == 'yes' || Helpers\Flags::shouldFail($user)) {
                     header("HTTP/1.0 404 Not Found");
                     return [
                         'robots' => 'noindex'
@@ -75,7 +75,7 @@ class Defaults
         Manager::add('/newsfeed', function ($slugs = []) {
             if (isset($slugs[0]) && is_numeric($slugs[0])) {
                 $activity = new Entities\Activity($slugs[0]);
-                if (!$activity->guid) {
+                if (!$activity->guid || Helpers\Flags::shouldFail($activity)) {
                     header("HTTP/1.0 404 Not Found");
                     return [
                       'robots' => 'noindex'

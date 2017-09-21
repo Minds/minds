@@ -3,122 +3,57 @@ namespace Minds\Entities;
 
 use Minds\Core;
 use Minds\Entities;
-use Minds\Entities\DenormalizedEntity;
 
-/**
- * Report Entity (Entities reported by users)
- */
 class Report extends DenormalizedEntity
 {
-    protected $rowKey = 'reports';
+    protected $db;
 
-    protected $type = 'report';
     protected $guid;
-    protected $entity;
-    protected $from;
-    protected $subject;
+    protected $entity_guid;
     protected $time_created;
+    protected $reporter_guid;
+    protected $owner_guid;
     protected $state;
-    protected $action;
-    protected $read_only = false;
-
-    private $valid_states = [
-        'review', 'archive', 'history'
-    ];
-    protected $dirty_state = false;
+    protected $action = '';
+    protected $reason = 0;
+    protected $reason_note = '';
+    protected $appeal_note = '';
 
     protected $exportableDefaults = [
-        'type',
         'guid',
-        'entity',
-        'from',
-        'subject',
+        'entity_guid',
         'time_created',
+        'reporter_guid',
+        'owner_guid',
         'state',
         'action',
-        'read_only',
+        'reason',
+        'reason_note',
+        'appeal_note',
     ];
 
-    /**
-     * Saves the entity
-     * @return mixed|bool
-     */
-    public function save()
+    public function __construct($db = null)
     {
-        if (!$this->entity) {
-            throw new \Exception('Missing report entity');
-        }
-
-        if (!$this->state) {
-            throw new \Exception('Missing report state');
-        }
-
-        if (!$this->getGuid()) {
-            $this->guid = Core\Guid::build();
-        }
-
-        $data = [
-            'type' => $this->type,
-            'guid' => $this->guid,
-            'entity' => $this->entity ? $this->entity->export() : null,
-            'from' => $this->from ? $this->from->export() : null,
-            'subject' => $this->subject,
-            'time_created' => $this->time_created,
-            'state' => $this->state,
-            'action' => $this->action,
-            'read_only' => (bool) $this->read_only
-        ];
-
-        return $this->saveToDb($data);
+        $this->db = null;
     }
 
-    /**
-     * Writes an array of data to DB
-     * @param  array $data
-     * @return mixed|bool
-     */
+    public function loadFromGuid($guid)
+    {
+        throw new \Exception('Use Reports\Repository::getRow()');
+    }
+
     public function saveToDb($data)
     {
-        if ($this->dirty_state) {
-            $states = $this->valid_states;
-
-            foreach ($states as $state) {
-                if ($state == $data['state']) {
-                    continue;
-                }
-
-                $this->db->removeAttributes($this->rowKey . ':' . $state, [ $data['guid'] ]);
-            }
-        }
-
-        $this->db->insert($this->rowKey . ':' . $data['state'], [ $this->guid => json_encode($data) ]);
-
-        return parent::saveToDb($data);
+        throw new \Exception('Use Reports\Repository');
     }
 
-    /**
-     * Gets `type`
-     * @return string
-     */
-    public function getType()
+    public function delete()
     {
-        return $this->type;
+        throw new \Exception('Use Reports\Repository::delete()');
     }
 
     /**
-     * Sets `type`
-     * @param  string $type
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * Gets `guid`
-     * @return int|string
+     * @return mixed
      */
     public function getGuid()
     {
@@ -126,87 +61,40 @@ class Report extends DenormalizedEntity
     }
 
     /**
-     * Sets `guid`
-     * @param  int|string $guid
-     * @return $this
+     * @param mixed $guid
      */
     public function setGuid($guid)
     {
+        if (is_object($guid) && method_exists($guid, 'value')) {
+            $guid = $guid->value();
+        }
+
         $this->guid = $guid;
-        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getEntityGuid()
+    {
+        return $this->entity_guid;
     }
 
     /**
-     * Gets `entity` (the reported entity)
-     * @return Entity
+     * @param mixed $entity_guid
      */
-    public function getEntity()
+    public function setEntityGuid($entity_guid)
     {
-        return $this->entity;
-    }
-
-    /**
-     * Sets `entity` (the reported entity)
-     * @param  mixed $entity
-     * @return $this
-     */
-    public function setEntity($entity)
-    {
-        if (!is_object($entity)) {
-            $entity = Entities\Factory::build($entity);
+        if (is_object($entity_guid) && method_exists($entity_guid, 'value')) {
+            $entity_guid = $entity_guid->value();
         }
 
-        $this->entity = $entity;
-        return $this;
+        $this->entity_guid = $entity_guid;
     }
 
     /**
-     * Gets `from` (reporting user)
-     * @return User
-     */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * Sets `from` (reporting user)
-     * @param  mixed $from
-     * @return $this
-     */
-    public function setFrom($from)
-    {
-        if (!is_object($from)) {
-            $from = Entities\Factory::build($from);
-        }
-
-        $this->from = $from;
-        return $this;
-    }
-
-    /**
-     * Gets `subject`
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * Sets `subject`
-     * @param  string $subject
-     * @return $this
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-        return $this;
-    }
-
-    /**
-     * Gets `time_created`
-     * @return int
+     * @return mixed
      */
     public function getTimeCreated()
     {
@@ -214,18 +102,59 @@ class Report extends DenormalizedEntity
     }
 
     /**
-     * Sets `time_created`
-     * @param int $time_created
+     * @param mixed $time_created
      */
     public function setTimeCreated($time_created)
     {
-        $this->time_created = $time_created;
-        return $this;
+        if (is_object($time_created) && method_exists($time_created, 'time')) {
+            $time_created = $time_created->time();
+        }
+
+        $this->time_created = (int) $time_created;
     }
 
     /**
-     * Gets `state`
-     * @return string
+     * @return mixed
+     */
+    public function getReporterGuid()
+    {
+        return $this->reporter_guid;
+    }
+
+    /**
+     * @param mixed $reporter_guid
+     */
+    public function setReporterGuid($reporter_guid)
+    {
+        if (is_object($reporter_guid) && method_exists($reporter_guid, 'value')) {
+            $reporter_guid = $reporter_guid->value();
+        }
+
+        $this->reporter_guid = $reporter_guid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerGuid()
+    {
+        return $this->owner_guid;
+    }
+
+    /**
+     * @param mixed $owner_guid
+     */
+    public function setOwnerGuid($owner_guid)
+    {
+        if (is_object($owner_guid) && method_exists($owner_guid, 'value')) {
+            $owner_guid = $owner_guid->value();
+        }
+
+        $this->owner_guid = $owner_guid;
+    }
+
+    /**
+     * @return mixed
      */
     public function getState()
     {
@@ -233,26 +162,15 @@ class Report extends DenormalizedEntity
     }
 
     /**
-     * Gets `state`
-     * @param string $state
+     * @param mixed $state
      */
     public function setState($state)
     {
-        if (!in_array($state, $this->valid_states)) {
-            throw new \UnexpectedValueException('Invalid state');
-        }
-
-        if ($this->state != $state) {
-            $this->dirty_state = true;
-        }
-
-        $this->state = $state;
-        return $this;
+        $this->state = $state ?: '';
     }
 
     /**
-     * Gets `action`
-     * @return string
+     * @return mixed
      */
     public function getAction()
     {
@@ -260,33 +178,109 @@ class Report extends DenormalizedEntity
     }
 
     /**
-     * Sets `action`
-     * @param  string $action
-     * @return $this
+     * @param mixed $action
      */
     public function setAction($action)
     {
-        $this->action = $action;
-        return $this;
+        $this->action = $action ?: '';
     }
 
     /**
-     * Gets `read_only` flag
-     * @return bool
+     * @return mixed
      */
-    public function getReadOnly()
+    public function getReason()
     {
-        return $this->read_only;
+        return $this->reason;
     }
 
     /**
-     * Sets `read_only` flag
-     * @param bool  $read_only
-     * @return $this
+     * @param mixed $reason
      */
-    public function setReadOnly($read_only)
+    public function setReason($reason)
     {
-        $this->read_only = (bool) $read_only;
-        return $this;
+        $this->reason = $reason ?: '';
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReasonNote()
+    {
+        return $this->reason_note;
+    }
+
+    /**
+     * @param mixed $reason_note
+     */
+    public function setReasonNote($reason_note)
+    {
+        $this->reason_note = $reason_note ?: '';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppealNote()
+    {
+        return $this->appeal_note;
+    }
+
+    /**
+     * @param mixed $appeal_note
+     */
+    public function setAppealNote($appeal_note)
+    {
+        $this->appeal_note = $appeal_note ?: '';
+    }
+
+    public function export(array $keys = [])
+    {
+        $export = parent::export($keys);
+
+        $remove = [];
+
+        if (!Core\Session::isAdmin()) {
+            $remove = [
+                'state',
+                'reporter_guid',
+                'reason_note',
+            ];
+
+            $currentUser = Core\Session::getLoggedInUserGuid();
+
+            if ($export['owner_guid'] != $currentUser) {
+                $remove = array_merge($remove, [
+                    'appeal_note',
+                    'action',
+                ]);
+            }
+        }
+
+        foreach ($remove as $key) {
+            unset($export[$key]);
+        }
+
+        if (isset($export['entity_guid']) && $export['entity_guid']) {
+            $entity = Entities\Factory::build($export['entity_guid']);
+
+            $export['entityObj'] = $entity ? $entity->export() : null;
+
+            if (isset($export['entityObj']['ownerObj'])) {
+                $export['ownerObj'] = $export['entityObj']['ownerObj'];
+            } elseif (isset($export['entityObj']['owner_guid'])) {
+                $owner = Entities\Factory::build($export['entityObj']['owner_guid']);
+
+                $export['ownerObj'] = $owner ? $owner->export() : null;
+            }
+        }
+
+        if (isset($export['reporter_guid']) && $export['reporter_guid']) {
+            $reporter = Entities\Factory::build($export['reporter_guid']);
+
+            $export['reporterObj'] = $reporter ? $reporter->export() : null;
+        }
+
+        return $export;
+    }
+
 }

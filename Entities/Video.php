@@ -171,7 +171,16 @@ class Video extends Object
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = (new Core\Security\XSS())->clean($this->description); //videos need to be able to export html.. sanitize soon!
-        $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
+
+        if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
+            unset($export['flags']['spam']);
+        }
+
+        if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['deleted'])) {
+            unset($export['flags']['deleted']);
+        }
+
+	$export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         return $export;
     }
 

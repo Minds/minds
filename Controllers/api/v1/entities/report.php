@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1\entities;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -25,15 +26,18 @@ class report implements Interfaces\Api
             return Factory::response([]);
         }
 
-        $entity = Entities\Factory::build($pages[0]);
-        $user = Core\Session::getLoggedInUser();
-        $subject = $_POST['subject'];
+        $reason = isset($_POST['subject']) && $_POST['subject'] ? $_POST['subject'] : null;
+        $reason_note = isset($_POST['note']) && $_POST['note'] ? $_POST['note'] : null;
 
-        if (!$entity || !$subject || !$user) {
+        if (!$pages[0] || !$reason) {
             return Factory::response([]);
         }
 
-        $done = (new Core\Reports())->insert($entity, $user, $subject);
+        /** @var Core\Reports\Repository $repository */
+        $repository = Di::_()->get('Reports\Repository');
+
+        $done = $repository->create($pages[0], Core\Session::getLoggedinUser(),
+            $reason, $reason_note);
 
         return Factory::response([
             'done' => $done

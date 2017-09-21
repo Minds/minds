@@ -150,6 +150,23 @@ class CassandraProvisioner implements ProvisionerInterface
                     [ 'alias' => 'wire_entity_guid_idx', 'expr' => 'entity_guid' ],
                     [ 'alias' => 'wire_sender_guid_idx', 'expr' => 'sender_guid' ]
                 ]
+            ],
+            'reports' => [
+                'schema' => [
+                    'guid' => 'varint',
+                    'entity_guid' => 'varint',
+                    'time_created' => 'timestamp',
+                    'reporter_guid' => 'varint',
+                    'owner_guid' => 'varint',
+                    'state' => 'text',
+                    'action' => 'text',
+                    'reason' => 'text',
+                    'reason_note' => 'text',
+                    'appeal_note' => 'text',
+                ],
+                'primaryKeys' => [
+                    'guid'
+                ]
             ]
         ];
 
@@ -259,6 +276,40 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (plan ASC, entity_guid ASC, status ASC)'
+                ]
+            ],
+            'reports_by_owner' => [
+                'from' => 'reports',
+                'select' => [
+                    '*',
+                ],
+                'conditions' => [
+                    'owner_guid IS NOT NULL',
+                    'guid IS NOT NULL',
+                ],
+                'primaryKeys' => [
+                    'owner_guid',
+                    'guid',
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (guid DESC)'
+                ]
+            ],
+            'reports_by_state' => [
+                'from' => 'reports',
+                'select' => [
+                    '*',
+                ],
+                'conditions' => [
+                    'state IS NOT NULL',
+                    'guid IS NOT NULL',
+                ],
+                'primaryKeys' => [
+                    'state',
+                    'guid',
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (guid ASC)'
                 ]
             ],
         ];

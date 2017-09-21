@@ -13,6 +13,8 @@ class Activity extends Entity
 {
     public $indexes = null;
 
+    protected $dirtyIndexes = false;
+
     /**
      * Initialize entity attributes
      * @return null
@@ -25,6 +27,8 @@ class Activity extends Entity
             'owner_guid' => elgg_get_logged_in_user_guid(),
             'access_id' => 2, //private,
             'mature' => false,
+            'spam' => false,
+            'deleted' => false,
             'paywall' => false,
             'edited' => false,
             'comments_enabled' => true,
@@ -52,6 +56,31 @@ class Activity extends Entity
             $this->ownerObj = $owner->export();
         }
 
+        if ($this->getDeleted()) {
+            $index = false;
+
+            if ($this->dirtyIndexes) {
+                $indexes = $this->getIndexKeys(true);
+
+                $db = new Core\Data\Call('entities_by_time');
+                foreach ($indexes as $idx) {
+                    $db->removeAttributes($idx, [$this->guid]);
+                }
+
+                Queue\Client::build()->setQueue("FeedCleanup")
+                    ->send([
+                        "guid" => $this->guid,
+                        "owner_guid" => $this->owner_guid,
+                        "type" => "activity"
+                    ]);
+            }
+        } else {
+            if ($this->dirtyIndexes) {
+                // Re-add to indexes, force as true
+                $index = true;
+            }
+        }
+
         $guid = parent::save($index);
 
         if ($this->isPayWall()) {
@@ -74,10 +103,10 @@ class Activity extends Entity
         }
 
         $indexes = $this->getIndexKeys(true);
-        $db = new \Minds\Core\Data\Call('entities');
+        $db = new Core\Data\Call('entities');
         $res = $db->removeRow($this->guid);
 
-        $db = new \Minds\Core\Data\Call('entities_by_time');
+        $db = new Core\Data\Call('entities_by_time');
         foreach ($indexes as $index) {
             $db->removeAttributes($index, array($this->guid));
         }
@@ -211,6 +240,11 @@ class Activity extends Entity
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
+        }
+
+        if (Helpers\Flags::shouldDiscloseStatus($this)) {
+            $export['spam'] = (bool) $this->getSpam();
+            $export['deleted'] = (bool) $this->getDeleted();
         }
 
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'activity', array('entity'=>$this), array()));
@@ -373,6 +407,45 @@ class Activity extends Entity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    /**
+     * Sets the spam flag for this activity
+     * @param mixed $value
+     */
+    public function setSpam($value)
+    {
+        $this->spam = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the spam flag
+     * @return boolean
+     */
+    public function getSpam()
+    {
+        return (bool) $this->spam;
+    }
+
+    /**
+     * Sets the deleted flag for this activity
+     * @param mixed $value
+     */
+    public function setDeleted($value)
+    {
+        $this->deleted = (bool) $value;
+        $this->dirtyIndexes = true;
+        return $this;
+    }
+
+    /**
+     * Gets the spam flag
+     * @return boolean
+     */
+    public function getDeleted()
+    {
+        return (bool) $this->deleted;
     }
 
     /**

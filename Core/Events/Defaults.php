@@ -83,6 +83,9 @@ class Defaults
 
         // Wire Events
         (new Core\Wire\Events())->register();
+
+        // Report Events
+        (new Core\Reports\Events())->register();
     }
 
     public static function _()

@@ -9,6 +9,7 @@
 namespace Minds\Controllers\api\v1\admin;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -27,15 +28,18 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
         $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
         $state = isset($pages[0]) ? $pages[0] : null;
 
-        $reports = (new Core\Reports())->getQueue($limit, $offset, $state);
+        /** @var Core\Reports\Repository $repository */
+        $repository = Di::_()->get('Reports\Repository');
 
-        if ($reports) {
-            for ($i = 0; $i < count($reports); $i++) {
-                $reports[$i]['guid'] = (string) $reports[$i]['guid'];
-            }
+        $reports = $repository->getAll([
+            'state' => $state,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
 
-            $response['reports'] = $reports;
-            $response['load-next'] = end($reports)['guid'];
+        if ($reports && $reports['data']) {
+            $response['reports'] = Factory::exportable($reports['data']);
+            $response['load-next'] = $reports['next'];
         }
 
         return Factory::response($response);
@@ -52,18 +56,27 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
             return Factory::response($response);
         }
 
+        /** @var Core\Reports\Actions $actions */
+        $actions = Di::_()->get('Reports\Actions');
+
         $guid = $pages[0];
         $action = $pages[1];
 
         switch ($action) {
             case 'archive':
-                $response['done'] = (new Core\Reports())->archive($guid);
+                $response['done'] = $actions->archive($guid);
                 break;
             case 'explicit':
-                $response['done'] = (new Core\Reports())->explicit($guid);
+                $response['done'] = $actions->markAsExplicit($guid);
+                break;
+            case 'spam':
+                $response['done'] = $actions->markAsSpam($guid);
+                break;
+            case 'spam':
+                $response['done'] = (new Core\Reports())->spam($guid);
                 break;
             case 'delete':
-                $response['done'] = (new Core\Reports())->delete($guid);
+                $response['done'] = $actions->delete($guid);
                 break;
         }
 

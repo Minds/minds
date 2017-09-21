@@ -33,7 +33,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
             Security\ACL::$ignore = true;
             $entity = Di::_()->get('Media\Repository')->getEntity($pages[0]);
 
-            if (!$entity) {
+            if (!$entity || Helpers\Flags::shouldFail($entity)) {
                 return Factory::response(['status' => 'error']);
             }
 

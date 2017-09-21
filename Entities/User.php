@@ -17,6 +17,8 @@ class User extends \ElggUser
         $this->attributes['boost_rating'] = 2;
         $this->attributes['mature'] = 0;
         $this->attributes['mature_content'] = 0;
+        $this->attributes['spam'] = 0;
+        $this->attributes['deleted'] = 0;
         $this->attributes['social_profiles'] = [];
         $this->attributes['ban_monetization'] = 'no';
         $this->attributes['programs'] = [];
@@ -89,6 +91,54 @@ class User extends \ElggUser
     public function getMatureContent()
     {
       return $this->mature_content;
+    }
+
+    /**
+     * Sets the `spam` flag
+     * @param  bool|int $value
+     * @return $this
+     */
+    public function setSpam($value)
+    {
+        $this->spam = $value ? 1 : 0;
+        return $this;
+    }
+
+    /**
+     * Gets the `spam` flag
+     * @return bool|int
+     */
+    public function getSpam()
+    {
+        if (is_string($this->spam)) {
+            return json_decode($this->spam);
+        }
+
+        return $this->spam;
+    }
+
+    /**
+     * Sets the `deleted` flag
+     * @param  bool|int $value
+     * @return $this
+     */
+    public function setDeleted($value)
+    {
+        $this->deleted = $value ? 1 : 0;
+        return $this;
+    }
+
+    /**
+     * Gets the `deleted` flag
+     * @return bool|int
+     */
+    public function getDeleted()
+    {
+        if (is_string($this->deleted)) {
+            return json_decode($this->deleted);
+        }
+
+        return $this->deleted;
     }
 
     /**
@@ -472,6 +522,11 @@ class User extends \ElggUser
 
         if ($this->isContext('search')) {
             $export['group_membership'] = $this->getGroupMembership();
+        }
+
+        if (Helpers\Flags::shouldDiscloseStatus($this)) {
+            $export['spam'] = $this->getSpam();
+            $export['deleted'] = $this->getDeleted();
         }
 
         return $export;

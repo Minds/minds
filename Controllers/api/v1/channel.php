@@ -33,7 +33,7 @@ class channel implements Interfaces\Api
         }
 
         $user = new Entities\User($pages[0]);
-        if (!$user->username) {
+        if (!$user->username || Helpers\Flags::shouldFail($user)) {
             return Factory::response(array('status'=>'error', 'message'=>'The user could not be found'));
         }
 

@@ -10,6 +10,8 @@ use Minds\Core;
  */
 class Object extends \ElggObject implements Flaggable
 {
+    protected $dirtyIndexes;
+
     /**
      * Initialize entity attributes
      * @return null
@@ -61,11 +63,33 @@ class Object extends \ElggObject implements Flaggable
         }
 
         $this->attributes['flags'][$flag] = !!$value;
+
+        if ($flag == 'deleted') {
+            $this->dirtyIndexes = true;
+        }
+
         return $this;
     }
 
     public function save($index = true)
     {
+        if ($this->getFlag('deleted')) {
+            $index = false;
+
+            if ($this->dirtyIndexes) {
+                $db = new Core\Data\Call('entities_by_time');
+
+                foreach($this->getIndexKeys(true) as $idx) {
+                    $db->removeAttributes($idx, [$this->guid], false);
+                }
+            }
+        } else {
+            if ($this->dirtyIndexes) {
+                // Re-add to indexes, force as true
+                $index = true;
+            }
+        }
+
         parent::save($index);
 
         // Allow attachment unpublishing

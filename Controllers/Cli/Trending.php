@@ -46,6 +46,13 @@ class Trending extends Cli\Controller implements Interfaces\CliControllerInterfa
 
         $guids = array_slice($guids, 0, static::$limit);
 
+        $guids = array_values(array_filter($guids, function ($guid) {
+            $entity = Entities\Factory::build($guid);
+            return $entity &&
+                (!method_exists($entity, 'getSpam') || !$entity->getSpam()) &&
+                (!method_exists($entity, 'getDeleted') || !$entity->getDeleted());
+        }));
+
         Di::_()->get('Trending\Repository')->store('blog', $guids);
 
         $this->out('Collected ' . count($guids) . ' blogs');
