@@ -37,12 +37,12 @@ class InstallerSpec extends ObjectBehavior
         $CONFIG->site_name = 'PHPSpec Minds';
     }
 
-    //function it_should_check_options_valid()
-    //{
-        //$this
-        //    ->shouldNotThrow('Minds\\Exceptions\\ProvisionException')
-        //    ->duringCheckOptions();
-    //}
+    function it_should_check_options_valid()
+    {
+        $this
+            ->shouldNotThrow('Minds\\Exceptions\\ProvisionException')
+            ->duringCheckOptions();
+    }
 
     function it_should_check_options_invalid_domain()
     {
@@ -79,7 +79,7 @@ class InstallerSpec extends ObjectBehavior
         $this
             ->shouldThrow('Minds\\Exceptions\\ProvisionException')
             ->duringCheckOptions();
-
+        
         $this->setOptions([
             'domain' => 'phpspec.minds.io',
             'username' => 'foo.bar$',

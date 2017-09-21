@@ -55,25 +55,20 @@ class AdsSpec extends ObjectBehavior
                 [ 'url' => '/blog/view/1', 'title' => 'Blog 1', 'views' => 100, 'revenue' => 1.50 ],
                 [ 'url' => '/blog/view/2', 'title' => 'Blog 2', 'views' => 50, 'revenue' => 1.00 ],
             ], '']);
-        $service->getTotalRevenueAndViews(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'))
-            ->shouldBeCalled()
-            ->willReturn([100, 10]);
-
+        
         $payouts->calcUserAmount(Argument::cetera())->will(function ($args, $payouts) {
             return $args[0] * 0.5;
         });
 
-        $rpm = ((10*0.5) / 100) * 1000; //this is really messy
-
         $this->setUser(10);
-        $this->getList(new \DateTime('2017-01-01'), new \DateTime('2017-02-01'))->shouldReturn([
+        $this->getList(new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)->shouldReturn([
             [
                 'entity' => [ 'guid' => '1', 'title' => 'Blog 1' ],
-                'views' => 100, 'revenue' => (100/1000) * $rpm, 'rpm' => $rpm
+                'views' => 100, 'revenue' => 0.75, 'rpm' => 7.5,
             ],
             [
                 'entity' => [ 'guid' => '2', 'title' => 'Blog 2' ],
-                'views' => 50, 'revenue' => (50/1000) * $rpm, 'rpm' => $rpm
+                'views' => 50, 'revenue' => 0.50, 'rpm' => 10.0,
             ],
         ]);
     }
@@ -91,14 +86,10 @@ class AdsSpec extends ObjectBehavior
         $service->getRevenuePerPage(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)
             ->shouldBeCalled()
             ->willReturn([[], '2']);
-
-        $service->getTotalRevenueAndViews(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'))
-            ->shouldBeCalled()
-            ->willReturn([1000, 20.23]);
-
+        
         $this->setUser(10);
         $this->getList(new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50);
-
+        
         $this->getLastOffset()->shouldReturn('2');
     }
 }

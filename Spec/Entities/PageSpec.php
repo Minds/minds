@@ -62,7 +62,7 @@ class PageSpec extends ObjectBehavior
 
     public function it_should_should_save(Call $db)
     {
-        $db->insert(Argument::type('string'), Argument::any(), null)->willReturn($this->getGuid());
+        $db->insert(Argument::type('string'), Argument::any())->willReturn($this->getGuid());
         $this->save()->shouldReturn($this);
     }
 

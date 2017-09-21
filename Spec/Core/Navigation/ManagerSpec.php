@@ -21,6 +21,6 @@ class ManagerSpec extends ObjectBehavior
     public function it_should_export_items_for_a_container(Item $item)
     {
         $this::add($item, "phpspec");
-        //$this::export("phpspec")->shouldHaveKey("phpspec");
+        $this::export("phpspec")->shouldHaveKey("phpspec");
     }
 }

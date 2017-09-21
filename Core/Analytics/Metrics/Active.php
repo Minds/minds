@@ -54,7 +54,7 @@ class Active implements AnalyticsMetric
     {
         $cacher = Core\Data\cache\factory::build('apcu');
         if ($cacher->get("{$this->namespace}active:$p:$ts:$this->key") == true) {
-           return; 
+            continue;
         }
         $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
         $cacher->set("{$this->namespace}active:$p:$ts:$this->key", time());

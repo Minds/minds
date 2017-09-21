@@ -14,14 +14,12 @@ class Block
     private static $_;
     private $db;
     private $cacher;
-    private $cqlType;
 
-    public function __construct($db = null, $cql = null, $cacher = null, $cqlTypes = null)
+    public function __construct($db = null, $cql = null, $cacher = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Indexes');
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->cacher = $cacher ?: Core\Data\cache\factory::build();
-        $this->cqlTypes = $cqlTypes ?: new \Cassandra\Type;
     }
 
     public function setDb($db)
@@ -94,7 +92,7 @@ class Block
         }
 
         $prepared = new Cassandra\Prepared\Custom();
-        $collection = $this->cqlTypes::collection($this->cqlTypes::text())
+        $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
             ->create(... $user_guids);
         $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
           [ "acl:blocked:$from", $collection, 1000 ]);
