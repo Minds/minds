@@ -237,7 +237,7 @@ class Video extends Object
                 continue;
             }
 
-            $this->$field = $data[$field] ?: -1;
+            $this->$field = $data[$field];
         }
 
         return $this;
