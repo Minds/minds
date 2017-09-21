@@ -14,7 +14,7 @@ class User extends \ElggUser
     public $fullExport = true;
 
     protected function initializeAttributes() {
-        $this->attributes['boost_rating'] = 2;
+        $this->attributes['boost_rating'] = 1;
         $this->attributes['mature'] = 0;
         $this->attributes['mature_content'] = 0;
         $this->attributes['spam'] = 0;

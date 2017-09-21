@@ -370,9 +370,9 @@ class Network implements BoostHandlerInterface
                 ]
             ], $match);
 
-            $pipeline_sort = array_merge([
-                'score' => -1
-            ], $sort);
+            //$pipeline_sort = array_merge([
+            //    'score' => -1
+            //], $sort);
 
             $boosts = $this->mongo->aggregate('boost', [
                 [ '$match' => $pipeline_match ],
