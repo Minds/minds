@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -19,39 +19,39 @@ export class Blog {
 
   minds;
 
-  offset : string = "";
-  moreData : boolean = true;
-  inProgress : boolean = false;
-  blogs : Array<any> = [];
+  offset: string = '';
+  moreData: boolean = true;
+  inProgress: boolean = false;
+  blogs: Array<any> = [];
   session = SessionFactory.build();
-  _filter : string = "featured";
-  _filter2 : string = "";
+  _filter: string = 'featured';
+  _filter2: string = '';
+  paramsSubscription: Subscription;
 
-  constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle){
+  constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle) {
   }
 
-  paramsSubscription: Subscription;
   ngOnInit() {
-    this.title.setTitle("Blogs");
+    this.title.setTitle('Blogs');
     this.minds = window.Minds;
 
     this.paramsSubscription = this.route.params.subscribe(params => {
       this._filter = params['filter'];
-    
-      switch(this._filter){
-        case "trending":
-          this.title.setTitle("Trending Blogs");
+
+      switch (this._filter) {
+        case 'trending':
+          this.title.setTitle('Trending Blogs');
           break;
-        case "featured":
-          this.title.setTitle("Featured Blogs");
+        case 'featured':
+          this.title.setTitle('Featured Blogs');
           break;
-        case "all":
+        case 'all':
           break;
-        case "owner":
+        case 'owner':
           break;
         default:
           this._filter2 = this._filter;
-          this._filter = "owner";
+          this._filter = 'owner';
       }
 
       this.inProgress = false;
@@ -67,33 +67,33 @@ export class Blog {
     this.paramsSubscription.unsubscribe();
   }
 
-  load(refresh : boolean = false){
-    if(this.inProgress)
+  load(refresh: boolean = false) {
+    if (this.inProgress)
       return false;
     var self = this;
     this.inProgress = true;
     this.client.get('api/v1/blog/' + this._filter + '/' + this._filter2, { limit: 12, offset: this.offset })
-      .then((response : MindsBlogListResponse) => {
+      .then((response: MindsBlogListResponse) => {
 
-        if(!response.blogs){
+        if (!response.blogs) {
           self.moreData = false;
           self.inProgress = false;
           return false;
         }
 
-        if(refresh){
+        if (refresh) {
           self.blogs = response.blogs;
         } else {
-          if(self.offset)
+          if (self.offset)
             response.blogs.shift();
-          for(let blog of response.blogs)
+          for (let blog of response.blogs)
             self.blogs.push(blog);
         }
 
         self.offset = response['load-next'];
         self.inProgress = false;
       })
-      .catch((e)=>{
+      .catch((e) => {
         self.inProgress = false;
       });
   }

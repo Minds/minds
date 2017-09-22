@@ -17,23 +17,26 @@ export class GroupsProfileMembers {
 
   minds = window.Minds;
 
-  group : any;
+  group: any;
   session = SessionFactory.build();
 
-  invitees : any = [];
-  members : Array<any> = [];
-  offset : string = "";
-  inProgress : boolean = false;
-  moreData : boolean = true;
+  invitees: any = [];
+  members: Array<any> = [];
+  offset: string = '';
+  inProgress: boolean = false;
+  moreData: boolean = true;
   canInvite: boolean = false;
 
-    q : string = "";
+  q: string = '';
 
-	constructor(public client : Client, public service: GroupsService){
+  private lastQuery;
+  private searchDelayTimer;
 
-	}
+  constructor(public client: Client, public service: GroupsService) {
 
-  set _group(value : any){
+  }
+
+  set _group(value: any) {
     this.group = value;
     this.load();
   }
@@ -44,11 +47,10 @@ export class GroupsProfileMembers {
     }
   }
 
-  private lastQuery;
   load(refresh: boolean = false, query = null) {
-    if(this.inProgress)
+    if (this.inProgress)
       return;
-    
+
     if (query !== null && query !== this.lastQuery) {
       refresh = true;
       this.lastQuery = query;
@@ -62,9 +64,9 @@ export class GroupsProfileMembers {
     // TODO: [emi] Send this via API
     this.canInvite = false;
 
-    if (this.group.membership == 0 && this.group['is:owner']) {
+    if (this.group.membership === 0 && this.group['is:owner']) {
       this.canInvite = true;
-    } else if (this.group.membership == 2 && this.group['is:member']) {
+    } else if (this.group.membership === 2 && this.group['is:member']) {
       this.canInvite = true;
     }
 
@@ -78,20 +80,20 @@ export class GroupsProfileMembers {
 
     this.inProgress = true;
     this.client.get(endpoint, params)
-      .then((response : any) => {
+      .then((response: any) => {
 
-        if(!response.members){
+        if (!response.members) {
           this.moreData = false;
           this.inProgress = false;
           return false;
         }
 
-        if(refresh){
+        if (refresh) {
           this.members = response.members;
         } else {
           this.members = this.members.concat(response.members);
         }
-        
+
         if (response['load-next']) {
           this.offset = response['load-next'];
         } else {
@@ -101,20 +103,19 @@ export class GroupsProfileMembers {
         this.inProgress = false;
 
       })
-      .catch((e)=>{
+      .catch((e) => {
         this.inProgress = false;
       });
   }
 
-  invite(user : any){
-    for(let i of this.invitees){
-      if(i.guid == user.guid)
+  invite(user: any) {
+    for (let i of this.invitees) {
+      if (i.guid === user.guid)
         return;
     }
     this.invitees.push(user);
   }
 
-  private searchDelayTimer;
   search(q) {
     if (this.searchDelayTimer) {
       clearTimeout(this.searchDelayTimer);

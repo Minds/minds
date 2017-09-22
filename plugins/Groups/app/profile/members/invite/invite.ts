@@ -16,12 +16,12 @@ export class GroupsProfileMembersInvite {
 
   minds = window.Minds;
 
-  group : any;
-  invited : EventEmitter<any> = new EventEmitter();
+  group: any;
+  invited: EventEmitter<any> = new EventEmitter();
 
-  users : Array<any> = [];
-  searching : boolean = false;
-  q : string = "";
+  users: Array<any> = [];
+  searching: boolean = false;
+  q: string = '';
 
   inviteInProgress: boolean = false;
   inviteLastUser: string = '';
@@ -29,24 +29,26 @@ export class GroupsProfileMembersInvite {
 
   destination: any; // @todo: ??
 
+  timeout;
+
   constructor(public client: Client, public service: GroupsService) {
   }
 
-  set _group(value : any){
+  set _group(value: any) {
     this.group = value;
   }
 
   invite(user) {
 
-    if(!user.subscriber){
+    if (!user.subscriber) {
       return alert('You can only invite users who are subscribed to you');
     }
 
     this.invited.next(user);
 
-    this.q = "";
+    this.q = '';
     this.users = [];
-    if(!this.group){
+    if (!this.group) {
       return;
     }
     this.inviteInProgress = true;
@@ -63,37 +65,36 @@ export class GroupsProfileMembersInvite {
       });
   }
 
-  timeout;
   search(q) {
-    if(this.timeout)
+    if (this.timeout)
       clearTimeout(this.timeout);
 
     this.searching = true;
-    if (this.q.charAt(0) != '@') {
+    if (this.q.charAt(0) !== '@') {
       this.q = '@' + this.q;
     }
 
     var query = this.q;
-    if (query.charAt(0) == '@') {
+    if (query.charAt(0) === '@') {
       query = query.substr(1);
     }
 
     this.timeout = setTimeout(() => {
       this.client.get('api/v1/search', {
-          q: query,
-          type: 'user',
-          view: 'json',
-          limit: 5
-        })
-        .then((success : any)=> {
-          if (success.entities){
+        q: query,
+        type: 'user',
+        view: 'json',
+        limit: 5
+      })
+        .then((success: any) => {
+          if (success.entities) {
             this.users = success.entities;
           }
         })
-        .catch((error)=>{
+        .catch((error) => {
           console.log(error);
         });
     }, 600);
-  };
+  }
 
 }

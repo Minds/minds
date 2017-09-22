@@ -17,8 +17,8 @@ export class GroupsCard {
   minds;
   group;
 
-  constructor(public client : Client){
-      this.minds = window.Minds;
+  constructor(public client: Client) {
+    this.minds = window.Minds;
   }
 
 }

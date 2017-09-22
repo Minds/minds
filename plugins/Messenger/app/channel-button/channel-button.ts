@@ -10,7 +10,7 @@ import { MessengerConversationDockpanesService } from '../conversation-dockpanes
   moduleId: module.id,
   selector: 'minds-messenger-channel-button',
   templateUrl: 'channel-button.html',
-  inputs: [ 'user' ]
+  inputs: ['user']
 })
 
 export class MessengerChannelButton {
@@ -18,29 +18,29 @@ export class MessengerChannelButton {
   minds: Minds = window.Minds;
   session = SessionFactory.build();
 
-  user : any;
+  user: any;
 
   dockpanes = this.injector.get(MessengerConversationDockpanesService);
 
-  constructor(public client : Client, private injector: Injector){
+  constructor(public client: Client, private injector: Injector) {
   }
 
-  chat(){
+  chat() {
     let conversation = this.buildConversation();
     console.log(conversation);
     this.dockpanes.open(conversation);
   }
 
-  private buildConversation(){
+  private buildConversation() {
     return {
       guid: this.permutate(),
-      participants: [ this.user ],
+      participants: [this.user],
       open: true
     };
   }
 
-  private permutate(){
-    let participants = [ this.user.guid, this.session.getLoggedInUser().guid ];
+  private permutate() {
+    let participants = [this.user.guid, this.session.getLoggedInUser().guid];
     participants.sort((a, b) => a < b ? -1 : 1);
     return participants.join(':');
   }

@@ -24,12 +24,12 @@ export class MessengerUserlist {
   sounds = new MessengerSounds();
 
   dockpanes = this.injector.get(MessengerConversationDockpanesService);
-  conversations : Array<any> = [];
-  offset : string =  "";
+  conversations: Array<any> = [];
+  offset: string = '';
 
-  setup : boolean = false;
-  hasMoreData : boolean =  true;
-  inProgress : boolean = false;
+  setup: boolean = false;
+  hasMoreData: boolean = true;
+  inProgress: boolean = false;
   cb: number = Date.now();
 
   minds: Minds = window.Minds;
@@ -39,14 +39,16 @@ export class MessengerUserlist {
     touchConversation: null
   };
 
-  userListToggle : boolean = false;
+  userListToggle: boolean = false;
 
-  constructor(public client: Client, public sockets: SocketsService, private injector: Injector){
+  search_timeout;
+
+  constructor(public client: Client, public sockets: SocketsService, private injector: Injector) {
   }
 
-  ngOnInit(){
-    if(this.session.isLoggedIn()){
-      if(this.userListToggle)
+  ngOnInit() {
+    if (this.session.isLoggedIn()) {
+      if (this.userListToggle)
         this.load({ refresh: true });
       this.listen();
       this.autoRefresh();
@@ -61,25 +63,25 @@ export class MessengerUserlist {
       refresh: false
     }, opts);
 
-    if(this.inProgress && !opts.refresh)
+    if (this.inProgress && !opts.refresh)
       return false;
 
     this.inProgress = true;
 
-    if(opts.refresh){
-      this.offset = "";
+    if (opts.refresh) {
+      this.offset = '';
       this.cb = Date.now();
     }
 
     this.client.get('api/v2/conversations', opts)
-      .then((response : any) => {
+      .then((response: any) => {
         if (!response.conversations) {
           this.hasMoreData = false;
           this.inProgress = false;
           return false;
         }
 
-        if(opts.refresh){
+        if (opts.refresh) {
           this.conversations = response.conversations;
         } else {
           this.conversations = this.conversations.concat(response.conversations);
@@ -89,14 +91,13 @@ export class MessengerUserlist {
         this.inProgress = false;
       })
       .catch((error) => {
-        console.log("got error" + error);
+        console.log('got error' + error);
         this.inProgress = false;
       });
   }
 
-  search_timeout;
-  search(q : string | HTMLInputElement){
-    if(this.search_timeout)
+  search(q: string | HTMLInputElement) {
+    if (this.search_timeout)
       clearTimeout(this.search_timeout);
 
     this.conversations = [];
@@ -105,7 +106,7 @@ export class MessengerUserlist {
       q = (<HTMLInputElement>q).value;
     }
 
-    if(!q){
+    if (!q) {
       return this.load({ refresh: true });
     }
 
@@ -113,10 +114,10 @@ export class MessengerUserlist {
 
       this.inProgress = true;
       this.client.get('api/v2/conversations/search', {
-          q,
-          limit: 24
-        })
-        .then((response : any) => {
+        q,
+        limit: 24
+      })
+        .then((response: any) => {
           if (!response.conversations) {
             this.hasMoreData = false;
             this.inProgress = false;
@@ -129,30 +130,30 @@ export class MessengerUserlist {
           this.inProgress = false;
         })
         .catch((error) => {
-          console.log("got error" + error);
+          console.log('got error' + error);
           this.inProgress = false;
         });
     }, 300);
   }
 
-  openConversation(conversation){
+  openConversation(conversation) {
     conversation.open = true;
     this.dockpanes.open(conversation);
   }
 
-  listen(){
+  listen() {
     this.socketSubscriptions.touchConversation = this.sockets.subscribe('touchConversation', (guid) => {
 
-      for(var i in this.dockpanes.conversations) {
-        if(this.dockpanes.conversations[i].guid == guid) {
+      for (var i in this.dockpanes.conversations) {
+        if (this.dockpanes.conversations[i].guid === guid) {
           this.dockpanes.conversations[i].unread = true;
           return;
         }
       }
 
       this.client.get(`api/v2/conversations/${guid}`, {
-          password: this.encryption.getEncryptionPassword()
-        })
+        password: this.encryption.getEncryptionPassword()
+      })
         .then((response) => {
           this.openConversation(response);
         });
@@ -168,25 +169,25 @@ export class MessengerUserlist {
     }
   }
 
-  toggle(){
-    this.userListToggle = !this.userListToggle
-    if(this.userListToggle)
+  toggle() {
+    this.userListToggle = !this.userListToggle;
+    if (this.userListToggle)
       this.load({ refresh: true });
   }
 
-  autoRefresh(){
+  autoRefresh() {
     setInterval(() => {
-      if(!this.userListToggle)
+      if (!this.userListToggle)
         return;
       this.client.get('api/v2/conversations', { limit: 12 })
-        .then((response : any) => {
+        .then((response: any) => {
           if (!response.conversations) {
             return false;
           }
 
-          for(let j = 0; j < response.conversations.length; j++){
-            for(let i = 0; i < this.conversations.length; i++){
-              if(this.conversations[i].guid == response.conversations[j].guid){
+          for (let j = 0; j < response.conversations.length; j++) {
+            for (let i = 0; i < this.conversations.length; i++) {
+              if (this.conversations[i].guid === response.conversations[j].guid) {
                 this.conversations[i] = response.conversations[j];
               }
             }
@@ -196,7 +197,7 @@ export class MessengerUserlist {
     }, 30000); // refresh 30 seconds
   }
 
-  logout(){
+  logout() {
     this.encryption.logout();
     this.dockpanes.closeAll();
   }
@@ -205,7 +206,7 @@ export class MessengerUserlist {
     this.userListToggle = true;
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.unListen();
   }
 

@@ -13,7 +13,7 @@ import { MessengerEncryptionService } from './service';
   host: {
     'class': 'm-messenger-encryption'
   },
-  outputs: [ 'on' ],
+  outputs: ['on'],
   templateUrl: 'encryption.html'
 })
 
@@ -21,15 +21,15 @@ export class MessengerEncryption implements OnInit {
 
   minds: Minds;
   session = SessionFactory.build();
-  on : EventEmitter<any> = new EventEmitter(true);
+  on: EventEmitter<any> = new EventEmitter(true);
 
   encryption = this.injector.get(MessengerEncryptionService);
-  inProgress : boolean = false;
-  error : string = "";
+  inProgress: boolean = false;
+  error: string = '';
 
   username: string = '';
 
-  constructor(public client : Client, private injector: Injector){
+  constructor(public client: Client, private injector: Injector) {
 
   }
 
@@ -37,47 +37,47 @@ export class MessengerEncryption implements OnInit {
     this.username = `@${this.session.getLoggedInUser().username}` || 'user';
   }
 
-  unlock(password){
+  unlock(password) {
     this.inProgress = true;
-    this.error = "";
+    this.error = '';
     this.encryption.unlock(password.value)
       .then(() => {
         this.on.next(true);
         this.inProgress = false;
       })
       .catch(() => {
-        this.error = "Wrong password. Please try again."
+        this.error = 'Wrong password. Please try again.';
         this.inProgress = false;
       });
     password.value = '';
   }
 
-  setup(password, password2){
-    if(password.value != password2.value){
-      this.error = "Your passwords must match";
+  setup(password, password2) {
+    if (password.value !== password2.value) {
+      this.error = 'Your passwords must match';
       return;
     }
     this.inProgress = true;
-    this.error = "";
+    this.error = '';
     this.encryption.doSetup(password.value)
       .then(() => {
         this.on.next(true);
         this.inProgress = false;
       })
       .catch(() => {
-        this.error = "Sorry, there was a problem.";
+        this.error = 'Sorry, there was a problem.';
         this.inProgress = false;
       });
     password.value = '';
     password2.value = '';
   }
 
-  rekey(password, password2){
-    if(password.value != password2.value){
-      this.error = "Your passwords must match";
+  rekey(password, password2) {
+    if (password.value !== password2.value) {
+      this.error = 'Your passwords must match';
       return;
     }
-    this.error = "";
+    this.error = '';
     this.inProgress = true;
     this.encryption.rekey(password.value)
       .then(() => {
@@ -85,7 +85,7 @@ export class MessengerEncryption implements OnInit {
         this.inProgress = false;
       })
       .catch(() => {
-        this.error = "Sorry, there was a problem";
+        this.error = 'Sorry, there was a problem';
         this.inProgress = false;
       });
     password.value = '';

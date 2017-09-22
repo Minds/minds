@@ -8,7 +8,10 @@ import { GroupsService } from '../groups-service';
   selector: 'minds-groups-settings-button',
   inputs: ['group'],
   template: `
-    <button class="material-icons" (click)="toggleMenu($event)">settings <i *ngIf="group['is:muted']" class="minds-groups-button-badge material-icons">notifications_off</i></button>
+    <button class="material-icons" (click)="toggleMenu($event)">
+      settings
+      <i *ngIf="group['is:muted']" class="minds-groups-button-badge material-icons">notifications_off</i>
+    </button>
 
     <ul class="minds-dropdown-menu" [hidden]="!showMenu" >
       <li class="mdl-menu__item" [hidden]="group['is:muted']" (click)="mute()" i18n>Disable Notifications</li>
@@ -46,24 +49,24 @@ export class GroupsSettingsButton {
   constructor(public service: GroupsService, public router: Router) {
   }
 
-  mute(){
+  mute() {
     this.group['is:muted'] = true;
 
     this.service.muteNotifications(this.group)
-    .then((isMuted: boolean) => {
-      this.group['is:muted'] = isMuted;
-    });
+      .then((isMuted: boolean) => {
+        this.group['is:muted'] = isMuted;
+      });
 
     this.showMenu = false;
   }
 
-  unmute(){
+  unmute() {
     this.group['is:muted'] = true;
 
     this.service.unmuteNotifications(this.group)
-    .then((isMuted: boolean) => {
-      this.group['is:muted'] = isMuted;
-    });
+      .then((isMuted: boolean) => {
+        this.group['is:muted'] = isMuted;
+      });
 
     this.showMenu = false;
   }
@@ -76,7 +79,7 @@ export class GroupsSettingsButton {
     this.isGoingToBeDeleted = false;
   }
 
-  delete(){
+  delete() {
 
     if (!this.isGoingToBeDeleted) {
       return;
@@ -85,30 +88,27 @@ export class GroupsSettingsButton {
     this.group.deleted = true;
 
     this.service.deleteGroup(this.group)
-    .then((deleted) => {
-      this.group.deleted = deleted;
+      .then((deleted) => {
+        this.group.deleted = deleted;
 
-      if (deleted) {
-        this.router.navigate(['/groups/member']);
-      }
-    });
+        if (deleted) {
+          this.router.navigate(['/groups/member']);
+        }
+      });
 
     this.showMenu = false;
     this.isGoingToBeDeleted = false;
   }
 
-  toggleMenu(e){
+  toggleMenu(e) {
     e.stopPropagation();
-    if(this.showMenu){
+    if (this.showMenu) {
       this.showMenu = false;
 
       return;
     }
     this.showMenu = true;
     // TODO: [emi] Maybe refresh state?
-  }
-
-  ngOnDestroy(){
   }
 
 }

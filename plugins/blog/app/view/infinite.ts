@@ -1,5 +1,5 @@
 import { Component, Inject, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -21,21 +21,22 @@ import { MindsBlogEntity } from '../../../interfaces/entities';
 export class BlogViewInfinite {
 
   minds;
-  guid : string;
-  blogs : Array<Object> = [];
+  guid: string;
+  blogs: Array<Object> = [];
   session = SessionFactory.build();
-  sharetoggle : boolean = false;
+  sharetoggle: boolean = false;
 
-  inProgress : boolean = false;
-  moreData : boolean = true;
+  inProgress: boolean = false;
+  moreData: boolean = true;
 
   error: string = '';
+
+  paramsSubscription: Subscription;
 
   constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle,
     private applicationRef: ApplicationRef, private cd: ChangeDetectorRef, private analytics: AnalyticsService) {
   }
 
-  paramsSubscription: Subscription;
   ngOnInit() {
     this.minds = window.Minds;
 
@@ -51,27 +52,27 @@ export class BlogViewInfinite {
     this.paramsSubscription.unsubscribe();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     if (this.guid) {
       this.load();
     }
   }
 
-  load(refresh : boolean = false){
-    if(this.inProgress){
+  load(refresh: boolean = false) {
+    if (this.inProgress) {
       return false;
     }
     this.inProgress = true;
     this.analytics.preventDefault();
     //console.log('grabbing ' + this.guid);
     this.client.get('api/v1/blog/' + this.guid, {})
-      .then((response : MindsBlogResponse) => {
-        if(response.blog){
+      .then((response: MindsBlogResponse) => {
+        if (response.blog) {
           this.blogs = [response.blog];
           this.title.setTitle(response.blog.title);
-          AnalyticsService.send('pageview', { 'page' : '/blog/view/' + response.blog.guid, 'dimension1': response.blog.ownerObj.guid });
-        } else if(this.blogs.length == 0){
-          this.error = "Sorry, we couldn't load the blog";
+          AnalyticsService.send('pageview', { 'page': '/blog/view/' + response.blog.guid, 'dimension1': response.blog.ownerObj.guid });
+        } else if (this.blogs.length === 0) {
+          this.error = 'Sorry, we couldn\'t load the blog';
         }
         //hack: ios rerun on low memory
         this.cd.markForCheck();
@@ -79,22 +80,22 @@ export class BlogViewInfinite {
         this.inProgress = false;
       })
       .catch((e) => {
-        if(this.blogs.length == 0){
-            this.error = "Sorry, there was a problem loading the blog";
+        if (this.blogs.length === 0) {
+          this.error = 'Sorry, there was a problem loading the blog';
         }
         this.inProgress = false;
       });
   }
 
-  loadNextBlog(){
-    if(this.inProgress){
+  loadNextBlog() {
+    if (this.inProgress) {
       return false;
     }
     this.inProgress = true;
 
     this.client.get('api/v1/blog/next/' + this.guid)
-      .then((response : any) => {
-        if(!response.blog){
+      .then((response: any) => {
+        if (!response.blog) {
           this.inProgress = false;
           this.moreData = false;
           return false;

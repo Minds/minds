@@ -17,7 +17,7 @@ export class MessengerConversationDockpanes {
 
   dockpanes = this.injector.get(MessengerConversationDockpanesService);
   conversations: Array<any> = this.dockpanes.conversations;
-  
+
   constructor(private injector: Injector) {
 
   }

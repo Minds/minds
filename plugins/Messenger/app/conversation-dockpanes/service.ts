@@ -1,11 +1,15 @@
 import { ReflectiveInjector } from '@angular/core';
 import { Storage } from '../../../services/storage';
 
-export class MessengerConversationDockpanesService{
+export class MessengerConversationDockpanesService {
 
-  conversations : Array<any> = [];
+  conversations: Array<any> = [];
 
-  constructor(public storage : Storage){
+  static _() {
+    return new MessengerConversationDockpanesService(new Storage());
+  }
+
+  constructor(public storage: Storage) {
     this.loadFromCache();
 
     setInterval(() => {
@@ -13,11 +17,11 @@ export class MessengerConversationDockpanesService{
     }, 1000);
   }
 
-  open(conversation){
+  open(conversation) {
     conversation.open = true;
     conversation.unread = false;
-    for(let i = 0; i < this.conversations.length; i++){
-      if(this.conversations[i].guid == conversation.guid){
+    for (let i = 0; i < this.conversations.length; i++) {
+      if (this.conversations[i].guid === conversation.guid) {
         this.conversations[i] = conversation;
         return;
       }
@@ -26,28 +30,28 @@ export class MessengerConversationDockpanesService{
     this.saveToCache();
   }
 
-  close(conversation, saveToCache: boolean = true){
-    for(let i = 0; i < this.conversations.length; i++){
-      if(this.conversations[i].guid == conversation.guid){
+  close(conversation, saveToCache: boolean = true) {
+    for (let i = 0; i < this.conversations.length; i++) {
+      if (this.conversations[i].guid === conversation.guid) {
         this.conversations.splice(i, 1);
       }
     }
-    
+
     if (saveToCache) {
       this.saveToCache();
     }
   }
 
-  toggle(conversation){
-    for(let i = 0; i < this.conversations.length; i++){
-      if(this.conversations[i].guid == conversation.guid){
+  toggle(conversation) {
+    for (let i = 0; i < this.conversations.length; i++) {
+      if (this.conversations[i].guid === conversation.guid) {
         this.conversations[i].open = !this.conversations[i].open;
       }
     }
     this.saveToCache();
   }
 
-  closeAll(){
+  closeAll() {
     this.conversations.splice(0, this.conversations.length);
     this.saveToCache();
   }
@@ -77,22 +81,18 @@ export class MessengerConversationDockpanesService{
     }
   }
 
-  private loadFromCache(){
+  private loadFromCache() {
     let conversations = JSON.parse(this.storage.get('messenger-dockpanes'));
-    if(conversations)
+    if (conversations)
       this.conversations = conversations;
   }
 
-  private saveToCache(){
+  private saveToCache() {
     let conversations = this.conversations;
-    for(let i = 0; i < conversations.length; i++){
+    for (let i = 0; i < conversations.length; i++) {
       delete conversations[i].messages;
     }
     this.storage.set('messenger-dockpanes', JSON.stringify(conversations));
-  }
-
-  static _() {
-    return new MessengerConversationDockpanesService(new Storage());
   }
 
 }

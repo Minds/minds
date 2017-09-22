@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule as NgCommonModule } from '@angular/common';
-import { RouterModule, Routes } from "@angular/router";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule, Routes } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CommonModule } from "../../common/common.module";
-import { LegacyModule } from "../../modules/legacy/legacy.module";
-import { ChannelModule } from "../../modules/channel/channel.module";
-import { ModalsModule } from "../../modules/modals/modals.module";
+import { CommonModule } from '../../common/common.module';
+import { LegacyModule } from '../../modules/legacy/legacy.module';
+import { ChannelModule } from '../../modules/channel/channel.module';
+import { ModalsModule } from '../../modules/modals/modals.module';
 
 import { Groups, GroupsProfile, GroupsCreator } from './groups';
 import { GroupsJoinButton } from './groups-join-button';
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'groups/profile/:guid', component: GroupsProfile },
   { path: 'groups/create', component: GroupsCreator },
   { path: 'groups/:filter', component: Groups },
-]
+];
 
 @NgModule({
   imports: [

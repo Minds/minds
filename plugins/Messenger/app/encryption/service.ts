@@ -3,27 +3,31 @@ import { Client } from '../../../services/api';
 import { Storage } from '../../../services/storage';
 import { MINDS_PROVIDERS } from '../../../services/providers';
 
-export class MessengerEncryptionService{
+export class MessengerEncryptionService {
 
-  private on : boolean = false;
-  private setup : boolean = false;
+  public reKeying: boolean = false;
 
-  public reKeying : boolean = false;
+  private on: boolean = false;
+  private setup: boolean = false;
 
-  constructor(public client : Client, public storage : Storage){
+  static _(client: Client) {
+    return new MessengerEncryptionService(client, new Storage());
   }
 
-  isOn() : boolean {
+  constructor(public client: Client, public storage: Storage) {
+  }
+
+  isOn(): boolean {
     //if(!this.on){
     this.on = !!this.storage.get('encryption-password');
     //}
     return this.on;
   }
 
-  unlock(password : string){
+  unlock(password: string) {
     return new Promise((resolve, reject) => {
-      this.client.post('api/v2/keys/unlock', {password: password})
-        .then((response : any) => {
+      this.client.post('api/v2/keys/unlock', { password: password })
+        .then((response: any) => {
           this.storage.set('encryption-password', response.password);
           this.on = true;
           resolve();
@@ -34,7 +38,7 @@ export class MessengerEncryptionService{
     });
   }
 
-  isSetup() : boolean {
+  isSetup(): boolean {
     //TODO: this won't work on nativescript, so move away from window var.
     //if(!this.setup){
     this.setup = window.Minds.user.chat;
@@ -42,10 +46,10 @@ export class MessengerEncryptionService{
     return this.setup;
   }
 
-  doSetup(password : string) : Promise<any> {
+  doSetup(password: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.client.post('api/v2/keys/setup', {password: password, download: false})
-        .then((response : any) => {
+      this.client.post('api/v2/keys/setup', { password: password, download: false })
+        .then((response: any) => {
           this.storage.set('encryption-password', response.password);
           this.setup = true;
           this.on = true;
@@ -54,13 +58,13 @@ export class MessengerEncryptionService{
         .catch(() => {
           reject();
         });
-      });
+    });
   }
 
-  rekey(password : string){
+  rekey(password: string) {
     return new Promise((resolve, reject) => {
-      this.client.post('api/v2/keys/setup', {password: password, download: false})
-        .then((response : any) => {
+      this.client.post('api/v2/keys/setup', { password: password, download: false })
+        .then((response: any) => {
           this.storage.set('encryption-password', response.password);
           this.setup = true;
           this.on = true;
@@ -70,19 +74,16 @@ export class MessengerEncryptionService{
         .catch(() => {
           reject();
         });
-      });
+    });
   }
 
-  getEncryptionPassword() : string {
+  getEncryptionPassword(): string {
     return this.storage.get('encryption-password');
   }
 
-  logout(){
+  logout() {
     this.storage.destroy('encryption-password');
     this.on = false;
   }
 
-  static _(client: Client) {
-    return new MessengerEncryptionService(client, new Storage());
-  }
 }

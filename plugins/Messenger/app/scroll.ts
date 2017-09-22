@@ -4,46 +4,46 @@ import 'rxjs/add/operator/debounceTime';
 
 @Directive({
   selector: '[minds-messenger-scroll]',
-  inputs: [ 'emitter', 'moreData' ],
-  outputs: [ 'previous', 'next' ]
+  inputs: ['emitter', 'moreData'],
+  outputs: ['previous', 'next']
 })
 
-export class MessengerScrollDirective{
+export class MessengerScrollDirective {
 
   previous = new EventEmitter();
   next = new EventEmitter();
   scroll: Observable<any>;
   element;
-  moreData : boolean = true;
+  moreData: boolean = true;
 
-  constructor(public _element: ElementRef){
+  constructor(public _element: ElementRef) {
     this.element = _element.nativeElement;
     this.scroll = Observable.fromEvent(this.element, 'scroll');
   }
 
-  set emitter(emitter : any){
+  set emitter(emitter: any) {
     emitter.subscribe({
       next: () => {
         setTimeout(() => {
           this._element.nativeElement.scrollTop = this._element.nativeElement.scrollHeight;
         });
       }
-    })
+    });
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.scroll
       .debounceTime(100)
       .subscribe(() => {
 
-        if(!this.moreData)
+        if (!this.moreData)
           return;
 
-        if(this.element.scrollTop <= 12){
+        if (this.element.scrollTop <= 12) {
           this.previous.next(true);
         }
 
-        if(this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 12){
+        if (this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 12) {
           this.next.next(true);
         }
 

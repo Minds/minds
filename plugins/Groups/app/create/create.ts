@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 import { GroupsService } from '../groups-service';
 
@@ -20,41 +20,41 @@ export class GroupsCreator {
   minds = window.Minds;
 
   session = SessionFactory.build();
-  banner : any = false;
-  avatar : any = false;
-  group : any = {
+  banner: any = false;
+  avatar: any = false;
+  group: any = {
     name: '',
     description: '',
     membership: 2,
     tags: '',
     invitees: ''
   };
-  invitees : Array<any> = [];
-  editing : boolean = true;
-  editDone : boolean = false;
-  inProgress : boolean = false;
+  invitees: Array<any> = [];
+  editing: boolean = true;
+  editDone: boolean = false;
+  inProgress: boolean = false;
 
-  constructor(public service: GroupsService, public router: Router, public title: MindsTitle){
-    this.title.setTitle("Create Group");
+  constructor(public service: GroupsService, public router: Router, public title: MindsTitle) {
+    this.title.setTitle('Create Group');
   }
 
-  addBanner(banner : any){
+  addBanner(banner: any) {
     this.banner = banner.file;
     this.group.banner_position = banner.top;
   }
 
-  addAvatar(avatar : any){
+  addAvatar(avatar: any) {
     this.avatar = avatar;
   }
 
-  membershipChange(value){
+  membershipChange(value) {
     this.group.membership = value;
   }
 
 
-  invite(user : any){
-    for(let i of this.invitees){
-      if(i.guid == user.guid)
+  invite(user: any) {
+    for (let i of this.invitees) {
+      if (i.guid === user.guid)
         return;
     }
     this.invitees.push(user);
@@ -64,16 +64,16 @@ export class GroupsCreator {
     this.invitees.splice(i, 1);
   }
 
-  keyDown(e){
-    if(e.keyCode == 13){
+  keyDown(e) {
+    if (e.keyCode === 13) {
       e.preventDefault();
       return false;
     }
   }
 
-  save(e){
+  save(e) {
 
-    if(!this.group.name){
+    if (!this.group.name) {
       return;
     }
 
@@ -86,24 +86,24 @@ export class GroupsCreator {
     });
 
     this.service.save(this.group)
-    .then((guid: any) => {
+      .then((guid: any) => {
 
-      this.service.upload({
+        this.service.upload({
           guid,
           banner_position: this.group.banner_position
         }, {
-          banner: this.banner,
-          avatar: this.avatar
-        })
-        .then(() => {
-          this.router.navigate(['/groups/profile', guid]);
-        });
+            banner: this.banner,
+            avatar: this.avatar
+          })
+          .then(() => {
+            this.router.navigate(['/groups/profile', guid]);
+          });
 
-    })
-    .catch(e => {
-      this.editing = true;
-      this.inProgress = false;
-    });
+      })
+      .catch(e => {
+        this.editing = true;
+        this.inProgress = false;
+      });
   }
 
 }

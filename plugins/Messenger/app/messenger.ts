@@ -33,8 +33,11 @@ export class Messenger {
   @ViewChild('userList') userList: MessengerUserlist;
   @ViewChild('setupChat') setupChat: MessengerSetupChat;
 
-  constructor(public client: Client, public sockets: SocketsService, private injector: Injector){
-  }
+  constructor(
+    public client: Client,
+    public sockets: SocketsService,
+    private injector: Injector
+  ) { }
 
   ngAfterViewInit() {
     // @todo: get rid of this ugly global window hack
@@ -44,7 +47,9 @@ export class Messenger {
   }
 
   ngOnDestroy() {
-    (<any>window).openMessengerWindow = function () { };
+    (<any>window).openMessengerWindow = function () {
+      return;
+    };
   }
 
   open(guid: any = null /* for future use */) {

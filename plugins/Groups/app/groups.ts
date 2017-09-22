@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -21,19 +21,19 @@ export class Groups {
 
   minds;
 
-  moreData : boolean = true;
-  inProgress : boolean = false;
-  offset : string = "";
-  groups : Array<any> = [];
+  moreData: boolean = true;
+  inProgress: boolean = false;
+  offset: string = '';
+  groups: Array<any> = [];
   session = SessionFactory.build();
-  _filter : string = "featured";
+  _filter: string = 'featured';
+  paramsSubscription: Subscription;
 
-  constructor(public client : Client, public route: ActivatedRoute, public title: MindsTitle){
+  constructor(public client: Client, public route: ActivatedRoute, public title: MindsTitle) {
   }
 
-  paramsSubscription: Subscription;
   ngOnInit() {
-    this.title.setTitle("Groups");
+    this.title.setTitle('Groups');
     this.minds = window.Minds;
 
     this.paramsSubscription = this.route.params.subscribe(params => {
@@ -44,7 +44,7 @@ export class Groups {
         this.offset = '';
         this.moreData = true;
         this.groups = [];
-        
+
         this.load(true);
       }
     });
@@ -69,23 +69,23 @@ export class Groups {
         break;
     }
 
-    if(this.inProgress)
+    if (this.inProgress)
       return;
     var self = this;
     this.inProgress = true;
-    this.client.get(endpoint, { limit: 12, offset: this.offset})
-      .then((response : MindsGroupListResponse) => {
+    this.client.get(endpoint, { limit: 12, offset: this.offset })
+      .then((response: MindsGroupListResponse) => {
 
-        if(!response[key] || response[key].length == 0){
+        if (!response[key] || response[key].length === 0) {
           this.moreData = false;
           this.inProgress = false;
           return false;
         }
 
-        if(refresh){
+        if (refresh) {
           this.groups = response[key];
         } else {
-          if(this.offset)
+          if (this.offset)
             response[key].shift();
 
           this.groups.push(...response[key]);
@@ -94,7 +94,7 @@ export class Groups {
         this.offset = response['load-next'];
         this.inProgress = false;
       })
-      .catch((e)=>{
+      .catch((e) => {
         this.inProgress = false;
       });
   }

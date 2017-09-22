@@ -8,9 +8,9 @@ import { Client } from '../../services/api';
   `
 })
 
-export class {{plugin.name}} {
+export class {{plugin.name; }} {
 
-  constructor(private client : Client){
+  constructor(private client : Client); {
 
   }
 

@@ -8,20 +8,24 @@ export class GroupsService {
   private infiniteInProgress: boolean = false;
   private infiniteOffset: any;
 
-  constructor(@Inject(Client) public clientService: Client, @Inject(Upload) public uploadService: Upload) {
+  static _(client: Client, upload: Upload) {
+    return new GroupsService(client, upload);
+  }
+
+  constructor( @Inject(Client) public clientService: Client, @Inject(Upload) public uploadService: Upload) {
   }
 
   // Group
 
   load(guid: string) {
     return this.clientService.get(`${this.base}group/${guid}`)
-    .then((response: any) => {
-      if (response.group) {
-        return response.group;
-      }
+      .then((response: any) => {
+        if (response.group) {
+          return response.group;
+        }
 
-      throw 'E_LOADING';
-    });
+        throw 'E_LOADING';
+      });
   }
 
   save(group: any) {
@@ -32,13 +36,13 @@ export class GroupsService {
     }
 
     return this.clientService.post(endpoint, group)
-    .then((response: any) => {
-      if (response.guid) {
-        return response.guid;
-      }
+      .then((response: any) => {
+        if (response.guid) {
+          return response.guid;
+        }
 
-      throw 'E_SAVING';
-    });
+        throw 'E_SAVING';
+      });
   }
 
   upload(group: any, files: any) {
@@ -48,8 +52,8 @@ export class GroupsService {
       uploads.push(this.uploadService.post(`${this.base}group/${group.guid}/banner`, [
         files.banner
       ], {
-        banner_position: group.banner_position
-      }));
+          banner_position: group.banner_position
+        }));
     }
 
     if (files.avatar) {
@@ -63,12 +67,12 @@ export class GroupsService {
 
   deleteGroup(group: any) {
     return this.clientService.delete(`${this.base}group/${group.guid}`)
-    .then((response : any) => {
-      return !!response.done;
-    })
-    .catch((e) => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch((e) => {
+        return false;
+      });
   }
 
   // Membership
@@ -81,13 +85,13 @@ export class GroupsService {
     }
 
     return this.clientService.put(endpoint)
-    .then((response: any) => {
-      if (response.done) {
-        return true;
-      }
+      .then((response: any) => {
+        if (response.done) {
+          return true;
+        }
 
-      throw response.error ? response.error : 'Internal error';
-    });
+        throw response.error ? response.error : 'Internal error';
+      });
   }
 
   leave(group: any, target: string = null) {
@@ -98,13 +102,13 @@ export class GroupsService {
     }
 
     return this.clientService.delete(endpoint)
-    .then((response: any) => {
-      if (response.done) {
-        return true;
-      }
+      .then((response: any) => {
+        if (response.done) {
+          return true;
+        }
 
-      throw response.error ? response.error : 'Internal error';
-    });
+        throw response.error ? response.error : 'Internal error';
+      });
   }
 
   acceptRequest(group: any, target: string) {
@@ -119,66 +123,66 @@ export class GroupsService {
 
   kick(group: any, user: string) {
     return this.clientService.post(`${this.base}membership/${group.guid}/kick`, { user })
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   ban(group: any, user: string) {
     return this.clientService.post(`${this.base}membership/${group.guid}/ban`, { user })
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   cancelRequest(group: any) {
     return this.clientService.post(`${this.base}membership/${group.guid}/cancel`)
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   // Notifications
 
   muteNotifications(group: any) {
     return this.clientService.post(`${this.base}notifications/${group.guid}/mute`)
-    .then((response: any) => {
-      return !!response['is:muted'];
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response['is:muted'];
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   unmuteNotifications(group: any) {
     return this.clientService.post(`${this.base}notifications/${group.guid}/unmute`)
-    .then((response: any) => {
-      return !!response['is:muted'];
-    })
-    .catch(e => {
-      return true;
-    });
+      .then((response: any) => {
+        return !!response['is:muted'];
+      })
+      .catch(e => {
+        return true;
+      });
   }
 
   // Management
 
   grantOwnership(group: any, user: string) {
     return this.clientService.put(`${this.base}management/${group.guid}/${user}`)
-    .then((response: any) => {
-      return !!response.done;
-    })
-    .catch(e => {
-      return false;
-    });
+      .then((response: any) => {
+        return !!response.done;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 
   revokeOwnership(group: any, user: string) {
@@ -204,7 +208,7 @@ export class GroupsService {
       });
   }
 
-  invite(group: any, invitee : any) {
+  invite(group: any, invitee: any) {
     return this.clientService.put(`${this.base}invitations/${group.guid}`, { guid: invitee.guid })
       .then((response: any) => {
         if (response.done) {
@@ -238,7 +242,4 @@ export class GroupsService {
       });
   }
 
-  static _(client: Client, upload: Upload) {
-    return new GroupsService(client, upload);
-  }
 }

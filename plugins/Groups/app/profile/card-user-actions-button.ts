@@ -11,11 +11,29 @@ import { GroupsService } from '../groups-service';
   </button>
 
   <ul class="minds-dropdown-menu" [hidden]="!showMenu">
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="removePrompt()" i18n>Remove from Group</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited" (click)="reInvite()" i18n>Re-invite to Group</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited"><span class="minds-menu-info-item" i18n>Invited</span></li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']" (click)="grantOwnership()" i18n>Make Admin</li>
-    <li class="mdl-menu__item" *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']" (click)="revokeOwnership()" i18n>Remove as Admin</li>
+    <li class="mdl-menu__item"
+      *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']"
+      (click)="removePrompt()" i18n>
+      Remove from Group
+    </li>
+    <li class="mdl-menu__item"
+      *ngIf="group['is:owner'] && !user['is:member'] && !wasReInvited"
+      (click)="reInvite()" i18n>
+      Re-invite to Group
+    </li>
+    <li class="mdl-menu__item" *ngIf="group['is:owner'] && wasReInvited">
+      <span class="minds-menu-info-item" i18n>Invited</span>
+    </li>
+    <li class="mdl-menu__item"
+      *ngIf="group['is:owner'] && !user['is:owner'] && user['is:member']"
+      (click)="grantOwnership()" i18n>
+      Make Admin
+    </li>
+    <li class="mdl-menu__item"
+      *ngIf="group['is:owner'] && user['is:owner'] && user['is:member']"
+      (click)="revokeOwnership()" i18n>
+      Remove as Admin
+    </li>
   </ul>
   <div class="minds-bg-overlay" (click)="toggleMenu($event)" [hidden]="!showMenu"></div>
 
@@ -57,9 +75,9 @@ export class GroupsCardUserActionsButton {
   constructor(public service: GroupsService) {
   }
 
-  toggleMenu(e){
+  toggleMenu(e) {
     e.stopPropagation();
-    if(this.showMenu){
+    if (this.showMenu) {
       this.showMenu = false;
 
       return;
@@ -103,12 +121,12 @@ export class GroupsCardUserActionsButton {
 
   reInvite() {
     this.service.invite(this.group, this.user.username)
-    .then(() => {
-      this.wasReInvited = true;
-    })
-    .catch(e => {
-      this.wasReInvited = false;
-    });
+      .then(() => {
+        this.wasReInvited = true;
+      })
+      .catch(e => {
+        this.wasReInvited = false;
+      });
 
     this.showMenu = false;
   }
@@ -117,9 +135,9 @@ export class GroupsCardUserActionsButton {
     this.user['is:owner'] = true;
 
     this.service.grantOwnership({ guid: this.group.guid }, this.user.guid)
-    .then((isOwner: boolean) => {
-      this.user['is:owner'] = isOwner;
-    });
+      .then((isOwner: boolean) => {
+        this.user['is:owner'] = isOwner;
+      });
 
     this.showMenu = false;
   }
@@ -128,9 +146,9 @@ export class GroupsCardUserActionsButton {
     this.user['is:owner'] = false;
 
     this.service.revokeOwnership({ guid: this.group.guid }, this.user.guid)
-    .then((isOwner: boolean) => {
-      this.user['is:owner'] = isOwner;
-    });
+      .then((isOwner: boolean) => {
+        this.user['is:owner'] = isOwner;
+      });
 
     this.showMenu = false;
   }
@@ -139,9 +157,6 @@ export class GroupsCardUserActionsButton {
     if (typeof this.group[counter] !== 'undefined') {
       this.group[counter] = parseInt(this.group[counter], 10) + val;
     }
-  }
-
-  ngOnDestroy(){
   }
 
 }

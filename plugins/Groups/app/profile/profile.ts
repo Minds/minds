@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Rx';
 
@@ -19,29 +19,28 @@ import { GroupsProfileFeed } from './feed/feed';
 export class GroupsProfile {
 
   guid;
-  filter = "activity";
+  filter = 'activity';
   group;
-  postMeta : any = {
+  postMeta: any = {
     message: '',
     container_guid: 0
   };
-  editing : boolean = false;
+  editing: boolean = false;
   editDone: boolean = false;
   session = SessionFactory.build();
   minds = window.Minds;
 
-  activity : Array<any> = [];
-  offset : string = "";
-  inProgress : boolean = false;
-  moreData : boolean = true;
+  activity: Array<any> = [];
+  offset: string = '';
+  inProgress: boolean = false;
+  moreData: boolean = true;
+  paramsSubscription: Subscription;
 
   @ViewChild('feed') private feed: GroupsProfileFeed;
 
-
-	constructor(public service: GroupsService, public route: ActivatedRoute, public title: MindsTitle){
+  constructor(public service: GroupsService, public route: ActivatedRoute, public title: MindsTitle) {
   }
 
-  paramsSubscription: Subscription;
   ngOnInit() {
     this.paramsSubscription = this.route.params.subscribe(params => {
       if (params['filter']) {
@@ -67,15 +66,15 @@ export class GroupsProfile {
     this.paramsSubscription.unsubscribe();
   }
 
-  load(){
+  load() {
     this.service.load(this.guid)
-    .then((group) => {
-      this.group = group;
-      this.title.setTitle(this.group.name);
-    });
+      .then((group) => {
+        this.group = group;
+        this.title.setTitle(this.group.name);
+      });
   }
 
-  save(){
+  save() {
     this.service.save({
       guid: this.group.guid,
       name: this.group.name,
@@ -88,7 +87,7 @@ export class GroupsProfile {
     this.editDone = true;
   }
 
-  toggleEdit(){
+  toggleEdit() {
     this.editing = !this.editing;
 
     if (this.editing) {
@@ -96,7 +95,7 @@ export class GroupsProfile {
     }
   }
 
-  add_banner(file : any){
+  add_banner(file: any) {
     this.service.upload({
       guid: this.group.guid,
       banner_position: file.top
@@ -105,7 +104,7 @@ export class GroupsProfile {
     this.group.banner = true;
   }
 
-  upload_avatar(file : any){
+  upload_avatar(file: any) {
     this.service.upload({
       guid: this.group.guid
     }, { avatar: file });
@@ -115,8 +114,8 @@ export class GroupsProfile {
     this.load();
   }
 
-  canDeactivate(){
-    if(!this.feed)
+  canDeactivate() {
+    if (!this.feed)
       return true;
     return this.feed.canDeactivate();
   }

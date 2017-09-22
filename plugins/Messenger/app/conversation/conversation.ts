@@ -17,7 +17,7 @@ import { MessengerSounds } from '../sounds/service';
     '(window:focus)': 'onFocus($event)',
     '(window:blur)': 'onBlur($event)'
   },
-  inputs: [ 'conversation' ],
+  inputs: ['conversation'],
   templateUrl: 'conversation.html'
 })
 
@@ -27,23 +27,23 @@ export class MessengerConversation {
 
   encryption = this.injector.get(MessengerEncryptionService);
   dockpanes = this.injector.get(MessengerConversationDockpanesService);
-  sounds  = new MessengerSounds();
+  sounds = new MessengerSounds();
 
   tabId: string;
 
-  guid : string;
+  guid: string;
   conversation;
-  participants : Array<any> = [];
-  messages : Array<any> = [];
-  offset : string = "";
-  open : boolean = false;
-  inProgress : boolean = false;
-  live : boolean = true;
+  participants: Array<any> = [];
+  messages: Array<any> = [];
+  offset: string = '';
+  open: boolean = false;
+  inProgress: boolean = false;
+  live: boolean = true;
 
-  scrollEmitter : EventEmitter<any> = new EventEmitter();
+  scrollEmitter: EventEmitter<any> = new EventEmitter();
 
-  message : string = "";
-  showMessages : boolean = true; //TODO: find a better way to work out if encryption has been set
+  message: string = '';
+  showMessages: boolean = true; //TODO: find a better way to work out if encryption has been set
   blockingActionInProgress: boolean = false;
 
   chatNotice: string = '';
@@ -55,9 +55,9 @@ export class MessengerConversation {
     disconnect: null,
     block: null,
     unblock: null
-  }
+  };
 
-  focused : boolean = true;
+  focused: boolean = true;
 
   blocked: boolean = false;
   unavailable: boolean = false;
@@ -66,22 +66,28 @@ export class MessengerConversation {
   invitable: any[] | null = null;
   invited: boolean = false;
 
-  constructor(public client: Client, public sockets: SocketsService, public cd: ChangeDetectorRef, private renderer: Renderer, private injector: Injector) {
+  constructor(
+    public client: Client,
+    public sockets: SocketsService,
+    public cd: ChangeDetectorRef,
+    private renderer: Renderer,
+    private injector: Injector
+  ) {
     this.buildTabId();
   }
 
-  ngOnInit(){
-    if(this.conversation.messages){
+  ngOnInit() {
+    if (this.conversation.messages) {
       this.messages = this.conversation.messages;
-    } else if(this.encryption.isOn() && this.conversation.open) {
+    } else if (this.encryption.isOn() && this.conversation.open) {
       this.initialLoad();
-    } else if(!this.encryption.isOn()) {
+    } else if (!this.encryption.isOn()) {
       this.showMessages = false;
     }
     this.listen();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.unListen();
   }
 
@@ -89,32 +95,32 @@ export class MessengerConversation {
     this.load({ limit: 8 });
   }
 
-  load(opts: any = {}){
+  load(opts: any = {}) {
 
     opts = (<any>Object).assign({
-        limit: 12,
-        offset: '',
-        finish: '',
-        password: this.encryption.getEncryptionPassword()
-      }, opts);
+      limit: 12,
+      offset: '',
+      finish: '',
+      password: this.encryption.getEncryptionPassword()
+    }, opts);
 
     let scrollView = opts.container;
     delete opts.container;
 
-    if(!opts.finish)
+    if (!opts.finish)
       this.inProgress = true;
 
     this.client.get('api/v2/conversations/' + this.conversation.guid, opts)
-      .then((response : any) => {
+      .then((response: any) => {
         this.inProgress = false;
-        if(!response.messages){
+        if (!response.messages) {
           return false;
         }
 
         if (opts.finish) {
           this.messages = this.messages.concat(response.messages);
           this.scrollEmitter.next(true);
-        } else if(opts.offset){
+        } else if (opts.offset) {
           let scrollTop = scrollView.scrollTop;
           let scrollHeight = scrollView.scrollHeight;
           response.messages.shift();
@@ -129,7 +135,7 @@ export class MessengerConversation {
           this.scrollEmitter.next(true);
         }
 
-        if(this.conversation.open){
+        if (this.conversation.open) {
           this.conversation.unread = false;
         }
 
@@ -148,13 +154,13 @@ export class MessengerConversation {
       this.sockets.join(this.conversation.socketRoomName);
 
       this.socketSubscriptions.pushConversationMessage = this.sockets.subscribe('pushConversationMessage', (guid, message) => {
-        if (guid != this.conversation.guid)
+        if (guid !== this.conversation.guid)
           return;
 
         let fromSelf = false;
 
-        if (this.session.getLoggedInUser().guid == message.ownerObj.guid) {
-          if (this.tabId == message.tabId) {
+        if (this.session.getLoggedInUser().guid === message.ownerObj.guid) {
+          if (this.tabId === message.tabId) {
             return;
           }
 
@@ -166,15 +172,15 @@ export class MessengerConversation {
         if (!fromSelf) {
           this.invalid = false;
 
-          if(!this.focused && document.title.indexOf('\u2022') == -1)
-            document.title = "\u2022 " + document.title;
+          if (!this.focused && document.title.indexOf('\u2022') === -1)
+            document.title = '\u2022 ' + document.title;
 
           this.sounds.play('new');
         }
       });
 
       this.socketSubscriptions.clearConversation = this.sockets.subscribe('clearConversation', (guid, actor) => {
-        if (guid != this.conversation.guid)
+        if (guid !== this.conversation.guid)
           return;
 
         this.messages = [];
@@ -220,7 +226,7 @@ export class MessengerConversation {
     }
   }
 
-  send(e){
+  send(e) {
     e.preventDefault();
 
     if (this.blocked || !this.message) {
@@ -235,10 +241,10 @@ export class MessengerConversation {
     }), currentIndex = newLength - 1;
 
     this.client.post('api/v2/conversations/' + this.conversation.guid, {
-        message: this.message,
-        encrypt: true,
-        tabId: this.tabId
-      })
+      message: this.message,
+      encrypt: true,
+      tabId: this.tabId
+    })
       .then((response: any) => {
         if (response.message) {
           this.messages[currentIndex] = response.message;
@@ -248,10 +254,10 @@ export class MessengerConversation {
           this.invalid = true;
         }
 
-        setTimeout(() => this.scrollEmitter.next(true), 50)
+        setTimeout(() => this.scrollEmitter.next(true), 50);
       })
       .catch(e => {
-        console.error('Error while reading conversation', e)
+        console.error('Error while reading conversation', e);
       });
 
     this.message = '';
@@ -320,10 +326,23 @@ export class MessengerConversation {
 
     this.invited = true;
     this.invitable.forEach(participant => {
-      this.client.put(`api/v2/conversations/invite/${participant.guid}`)
-        .then(() => { })
-        .catch(e => { });
+      this.client.put(`api/v2/conversations/invite/${participant.guid}`);
     });
+  }
+
+  onFocus(e) {
+    this.focused = true;
+    if (document.title.indexOf('\u2022') === 0) {
+      document.title = document.title.substr(1);
+    }
+  }
+
+  onBlur(e) {
+    this.focused = false;
+  }
+
+  buildTabId() {
+    this.tabId = (Math.random() + 1).toString(36).substring(7);
   }
 
   private hasParticipant(guid: string) {
@@ -334,7 +353,7 @@ export class MessengerConversation {
     let has = false;
 
     this.conversation.participants.forEach((participant: any) => {
-      if (participant.guid == guid) {
+      if (participant.guid === guid) {
         has = true;
       }
     });
@@ -342,18 +361,4 @@ export class MessengerConversation {
     return has;
   }
 
-  onFocus(e){
-    this.focused = true;
-    if(document.title.indexOf('\u2022') == 0){
-      document.title = document.title.substr(1);
-    }
-  }
-
-  onBlur(e){
-    this.focused = false;
-  }
-
-  buildTabId() {
-    this.tabId = (Math.random() + 1).toString(36).substring(7);
-  }
 }
