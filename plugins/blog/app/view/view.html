@@ -56,6 +56,7 @@
       <minds-button-remind [object]="blog"></minds-button-remind>
       <minds-button-thumbs-up [object]="blog"></minds-button-thumbs-up>
       <minds-button-thumbs-down [object]="blog"></minds-button-thumbs-down>
+      <m-post-menu [entity]="blog" [canDelete]="blog.ownerObj.guid == session.getLoggedInUser().guid || session.isAdmin()" [options]="menuOptions" (optionSelected)="menuOptionSelected($event)"></m-post-menu>
     </div>
 
   </div>

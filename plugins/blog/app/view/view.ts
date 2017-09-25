@@ -41,6 +41,9 @@ export class BlogView {
 
   scroll_listener;
 
+  menuOptions: Array<string> = ['edit', 'mute', 'feature', 'delete', 'report'];
+
+
   constructor(
     public client: Client,
     public router: Router,
@@ -52,6 +55,7 @@ export class BlogView {
     this.minds = window.Minds;
     this.element = _element.nativeElement;
   }
+
 
   ngOnInit() {
     this.isVisible();
@@ -92,6 +96,17 @@ export class BlogView {
   ngOnDestroy() {
     if (this.scroll_listener)
       this.scroll.unListen(this.scroll_listener);
+  }
+
+  menuOptionSelected(option: string) {
+    switch (option) {
+      case 'edit':
+        this.router.navigate(['/blog/edit', this.blog.guid]);
+        break;
+      case 'delete':
+        this.delete();
+        break;
+    }
   }
 
 }

@@ -7,6 +7,8 @@ import { CommonModule } from '../../common/common.module';
 import { ModalsModule } from '../../modules/modals/modals.module';
 import { AdsModule } from '../../modules/ads/ads.module';
 import { LegacyModule } from '../../modules/legacy/legacy.module';
+import { PostMenuModule } from '../../common/components/post-menu/post-menu.module';
+
 
 import { Blog, BlogViewInfinite, BlogEdit } from './blog';
 import { BlogCard } from './card/card';
@@ -29,6 +31,7 @@ const routes: Routes = [
     ModalsModule,
     AdsModule,
     LegacyModule,
+    PostMenuModule
   ],
   declarations: [
     BlogView,
