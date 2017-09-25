@@ -133,9 +133,16 @@ class wallet implements Interfaces\Api
 
                 if (!$stripe->getCustomer($customer) || !$customer->getId()) {
                     //create the customer on stripe
-                    $customer->setPaymentToken($_POST['source']);
-                    $customer = $stripe->createCustomer($customer);
-                    $source = $customer->getId(); //can't use the same token twice
+                    try {
+                        $customer->setPaymentToken($_POST['source']);
+                        $customer = $stripe->createCustomer($customer);
+                        $source = $customer->getId(); //can't use the same token twice
+                    } catch (\Exception $e) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => $e->getMessage()
+                          ]);
+                    }
                 }
 
                 $sale = new Payments\Sale();
