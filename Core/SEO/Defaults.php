@@ -204,6 +204,11 @@ class Defaults
                 'title' => 'Wire',
                 'description' => 'Exchange points, dollars and Bitcoin directly with other channels on Minds',
                 'image' => 'assets/photos/blown-bulb.jpg'
+            ],
+            'boost' => [
+                'title' => 'Boost',
+                'description' => 'Boost your channel or content to gain more views and reach new audiences',
+                'image' => 'assets/photos/rocket.jpg'
             ]
         ];
 
