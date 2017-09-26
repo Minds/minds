@@ -116,7 +116,6 @@ class Tagcloud
         $opts = [
             'index' => 'minds',
             'type' => 'activity',
-            'search_type' => 'count',
             'body' => [
                 'query' => [
                     'range' => [
@@ -138,7 +137,6 @@ class Tagcloud
 
         $result = (new Documents())->customQuery($opts);
         $tags = [];
-
         if ($result) {
             foreach ($result['aggregations']['minds']['buckets'] as $tag) {
                 $tags[] = $tag['key'];
