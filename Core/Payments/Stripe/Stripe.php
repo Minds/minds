@@ -117,18 +117,23 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     /**
      * Charge the sale
      * @param Sale $sale
-     * @return void
+     * @return bool
      */
     public function chargeSale(Sale $sale)
     {
-        $opts = [];
+        try {
+            $opts = [];
 
-        if ($sale->getMerchant()) {
-          $opts['stripe_account'] = $sale->getMerchant()->getMerchant()['id'];
+            if ($sale->getMerchant()) {
+                $opts['stripe_account'] = $sale->getMerchant()->getMerchant()['id'];
+            }
+
+            $charge = StripeSDK\Charge::retrieve($sale->getId(), $opts);
+            $charge->capture();
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
-
-        $charge = StripeSDK\Charge::retrieve($sale->getId(), $opts);
-        $charge->capture();
     }
 
     /**

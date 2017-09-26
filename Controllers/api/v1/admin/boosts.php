@@ -92,9 +92,10 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             $boost->setRating($rating);
             $boost->setQuality($quality);
 
-            $success = Core\Boost\Factory::build($type)->accept($boost);
+            $success = Di::_()->get('Boost\Payment')->charge($boost);
+
             if ($success) {
-                Di::_()->get('Boost\Payment')->charge($boost);
+                Core\Boost\Factory::build($type)->accept($boost);
             } else {
                 $response['status'] = 'error';
             }

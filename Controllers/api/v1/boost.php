@@ -222,7 +222,7 @@ class boost implements Interfaces\Api
                     if (($amount / 100) < $this->getMinUSDCharge()) {
                         return Factory::response([
                             'status' => 'error',
-                            'message' => 'You must sped at least $' . $this->getMinUSDCharge()
+                            'message' => 'You must spend at least $' . $this->getMinUSDCharge()
                         ]);
                     }
                 } else {

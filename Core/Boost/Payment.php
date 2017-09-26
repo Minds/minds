@@ -5,6 +5,7 @@ namespace Minds\Core\Boost;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Entities\User;
 use Minds\Helpers\Wallet;
 
 class Payment
@@ -43,7 +44,7 @@ class Payment
                 ->setSettle(false);
 
             if ($boost->getOwner()->referrer) {
-                $referrer = new Entities\User($boost->getOwner()->referrer);
+                $referrer = new User($boost->getOwner()->referrer);
                 $sale->setMerchant($referrer)
                   ->setFee(0.75); //payout 25% to referrer
             }
@@ -63,7 +64,7 @@ class Payment
                 ->setId($boost->getTransactionId());
 
             if ($boost->getOwner()->referrer) {
-                $referrer = new Entities\User($boost->getOwner()->referrer);
+                $referrer = new User($boost->getOwner()->referrer);
                 $sale->setMerchant($referrer);
             }
 
@@ -82,7 +83,7 @@ class Payment
                 ->setId($boost->getTransactionId());
 
             if ($boost->getOwner()->referrer) {
-                $referrer = new Entities\User($boost->getOwner()->referrer);
+                $referrer = new User($boost->getOwner()->referrer);
                 $sale->setMerchant($referrer);
             }
 
