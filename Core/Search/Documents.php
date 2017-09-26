@@ -31,7 +31,7 @@ class Documents
               $data = (array) $data;
           }
       }
-
+      
       if (!is_array($data)) {
           throw new \Exception('Invalid data');
       }
@@ -71,7 +71,7 @@ class Documents
         'client' => [
             'timeout' => 2,
             'connect_timeout' => 1,
-            'future' => 'lazy'
+            //'future' => 'lazy'
         ] 
       ];
 
@@ -163,7 +163,7 @@ class Documents
           $params['from'] = $opts['offset'];
       }
 
-      if (!$opts['mature']) {
+      /*if (!$opts['mature']) {
         $params['body']['filter'] = [
             'bool' => [
             'must_not' => [
@@ -175,7 +175,7 @@ class Documents
             ]
             ]
         ];
-      }
+      }*/
 
       $guids = [];
 
@@ -198,18 +198,19 @@ class Documents
       $params = [
         'index' => $this->index,
         'body' => [
-          'suggestion' => [
+          'suggest' => [
             'text' => $query,
-            'completion' => [
-              'field' => 'suggest',
-             // 'fuzzy' => [ 'fuzziness' => 2 ]
+            'autocomplete' => [
+              'completion' => [
+                'field' => 'suggest'
+              ]
             ]
           ]
         ]
       ];
 
       try {
-          $suggestions = $this->client->suggest($params);
+          $suggestions = $this->client->search($params);
           return $suggestions;
       } catch (\Exception $e) {
         echo 2;
@@ -228,10 +229,7 @@ class Documents
           'user' => [
             'properties' => [
               'suggest' => [
-                'type' => 'completion',
-                'analyzer' => 'simple',
-                'search_analyzer' => 'simple',
-                'payloads' => true
+                'type' => 'completion'
               ]
             ]
           ]
@@ -290,30 +288,26 @@ class Documents
 
           $item = str_replace('.', '__', $item);
 
-          $body[$item] = $value;
+          if ($value) {
+              $body[$item] = $value;
+          }
       }
 
-      if($body['type'] == 'user'){
-        $inputs = [ $body['username'], $body['name'] ];
-        //split out the name based on CamelCase
-        $nameParts = preg_split('/([\s])?(?=[A-Z])/', $body['name'], -1, PREG_SPLIT_NO_EMPTY);
-        $inputs = array_unique(array_merge($inputs, $this->permutateInputs($nameParts)));
-        $body['suggest'] = [
-          'input' => array_values($inputs),
-          'output' => "@{$body['username']}",
-          'weight' => count(array_values($inputs)) == 1 ? 2 : 2,
-          'payload' => [
-            'guid' => $body['guid'],
-            'name' => $body['name'],
-            'username' => $body['username']
-          ]
-        ];
-        if($body['featured_id']){
-            $body['suggest']['weight'] += 50;
-        }
-        if($body['admin']){
-            $body['suggest']['weight'] += 100;
-        }
+      if($body['type'] == 'user' && ($body['username'] || $body['name'])){
+          $inputs = [ $body['username'], $body['name'] ];
+          //split out the name based on CamelCase
+          $nameParts = preg_split('/([\s])?(?=[A-Z])/', $body['name'], -1, PREG_SPLIT_NO_EMPTY);
+          $inputs = array_unique(array_merge($inputs, $this->permutateInputs($nameParts)));
+          $body['suggest'] = [
+            'input' => array_values($inputs),
+            'weight' => count(array_values($inputs)) == 1 ? 2 : 2
+          ];
+          if($body['featured_id']){
+              $body['suggest']['weight'] += 50;
+          }
+          if($body['admin']){
+              $body['suggest']['weight'] += 100;
+          }
       }
 
       return $body;

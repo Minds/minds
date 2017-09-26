@@ -25,7 +25,7 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         $suggestions = (new Documents())->suggestQuery($_GET['q']);
-        $results = $suggestions['suggestion'][0]['options'];
+        $results = $suggestions['suggest']['autocomplete'][0]['options'];
         $guids = [];
 
         if (isset($_GET['access_token'])) {
@@ -40,7 +40,10 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $response['suggestions'] = [];
             }
         } else {
-            $response['suggestions'] = $suggestions['suggestion'][0]['options'];
+            foreach ($results as $k => $result) {
+                $results[$k]['payload'] = $result['_source'];
+            }
+            $response['suggestions'] = $results;
         }
 
         return Factory::response($response);
