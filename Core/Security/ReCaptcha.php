@@ -19,6 +19,10 @@ class ReCaptcha
 
     public function validate()
     {
+        if (!isset($this->config->google['recaptcha']['secret_key']) || !$this->config->google['recaptcha']['secret_key']) {
+            return true;
+        }
+
         $data = [
             'secret' => $this->config->google['recaptcha']['secret_key'],
             'response' => $this->answer
