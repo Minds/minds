@@ -27,6 +27,48 @@ class sums implements Interfaces\Api
         $repo = Di::_()->get('Wire\Repository');
 
         switch ($pages[0]) {
+            case 'overview':
+                $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
+                $timestamp = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
+                $merchant = isset($_GET['merchant']) ? (bool) $_GET['merchant'] : (bool) (new User($guid))->getMerchant();
+
+                $isSelf = Core\Session::getLoggedInUser()->guid == $guid;
+                $cache = Di::_()->get('Cache');
+                $cacheKey = "wire:sums:overview:{$guid}";
+
+                if (!$isSelf && ($cached = $cache->get($cacheKey))) {
+                    return Factory::response($cached);
+                }
+
+                $points = $repo->getAggregatesForReceiver($guid, 'points', $timestamp);
+
+                $response = [
+                    'count' => $points['count'],
+
+                    'points' => $points['sum'],
+                    'points_count' => $points['count'],
+                    'points_avg' => $points['avg'],
+
+                    'money' => 0,
+                    'money_count' => 0,
+                    'money_avg' => 0,
+                ];
+
+                if ($merchant) {
+                    $money = $repo->getAggregatesForReceiver($guid, 'money', $timestamp);
+
+                    $response['count'] += $money['count'];
+
+                    $response = array_merge($response, [
+                        'money' => $money['sum'],
+                        'money_count' => $money['count'],
+                        'money_avg' => $money['avg'],
+                    ]);
+                }
+
+                $cache->set($cacheKey, $response, 6 * 60 * 60 /* 6 hours cache */);
+
+                break;
             case "receiver":
                 $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
                 $method = isset($pages[2]) ? $pages[2] : 'points';
