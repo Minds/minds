@@ -18,7 +18,8 @@ class Webhook implements HookInterface
 
     public function onCharged($subscription)
     {
-        if ($subscription->getPlanId() == 'wire') {
+        $planId = $subscription->getPlanId();
+        if ($planId == 'wire' || $planId == 'exclusive') {
             $user = $subscription->getCustomer()->getUser();
             $stripe = Di::_()->get('StripePayments');
             $stripePlan = $stripe->getPlan('wire', $user->getMerchant()['id']);
@@ -26,7 +27,7 @@ class Webhook implements HookInterface
             $planRepo = new Payments\Plans\Repository();
             $plan = $planRepo->setEntityGuid(0)
                 ->setUserGuid($user->guid)
-                ->getSubscription('wire');
+                ->getSubscription($planId);
 
             $repo = Di::_()->get('Wire\Repository');
             $entity = Entities::get($plan->getEntityGuid())[0];
