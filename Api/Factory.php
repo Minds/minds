@@ -90,7 +90,11 @@ class Factory
             header('Content-type: application/json');
             header("Access-Control-Allow-Origin: *");
             header('HTTP/1.1 401 Unauthorized', true, 401);
-            echo json_encode(array('error'=>'Sorry, you are not authenticated', 'code'=>401));
+            echo json_encode([
+                'error' => 'Sorry, you are not authenticated', 
+                'code' => 401,
+                'loggedin' => false
+                ]);
             exit;
         }
     }
