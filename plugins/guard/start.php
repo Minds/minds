@@ -84,7 +84,9 @@ class start extends Components\Plugin
             'mediomatic.com', 'savemoneyeasily.com', 'option1pro.com', 'perron07.nl', 'movieonrails.com', 'topmoviestoday.com', 'playnowstore.com', 'g-files.biz',
             'dawnloadonline.com', 'thedirsite.com', 'siteslocate.com', 'mydrugdir.com', 'find24hs.com', 'veeble.org', 'movieonrails.com', 'bestmoviehd.net', 'putmovies.info',
             'awarefinance.com', 'shurll.com', 'acceptsearch.com', 'signforcover.com', 'raisengine.com', 'rocketcarrental.com', 'godsearchs.com', 'listenhanced.com', 'find24hs.com',
-            'findinform.com', 'sitesworlds.com', 'rocketcarrental.com', 'thedirsite.com'
+            'findinform.com', 'sitesworlds.com', 'rocketcarrental.com', 'thedirsite.com', 'getboook.com', 'pokerarena88.com', 'aquamelia.com', 'beautyskintalks.com', 'getmooovie.com',
+            'getdriversss.com', 'getsoooft.com', 'getgamesss.com', 'abrts.pro', 'leadbit.biz', 'efght.pro', 'qyresearcheurope.com', 'plusfreemaxfr.com', 'getappmac.com', 'getharlemhealthy.org',
+            'goo.gl', 'getmooovie.com', 'marketreportscenter.com', 'getsooft.com'
         ];
     }
 
@@ -105,7 +107,7 @@ class start extends Components\Plugin
     {
         $object = $params;
         if ($this->strposa($object->description, $this->prohbitedDomains()) || $this->strposa($object->briefdescription, $this->prohbitedDomains())) {
-            \register_error('Sorry, your post contains a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
+            throw new Exception('Sorry, your post contains a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
             if (PHP_SAPI != 'cli') {
                 forward(REFERRER);
             }
