@@ -595,7 +595,7 @@ class Activity extends Entity
 
     public function setBoostRejectionReason($reason)
     {
-        $this->boost_rejection = (int) $reason;
+        $this->boost_rejection_reason = (int) $reason;
         return $this;
     }
 }
