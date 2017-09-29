@@ -2,7 +2,7 @@
   <tbody>
     <tr>
       <td>
-        <b>Hello @<?php echo $vars['user']->username?></b>
+        <b>Hello @<?php echo $vars['user']->username ?></b>
       </td>
     </tr>
     <tr>
@@ -10,7 +10,18 @@
     </tr>
     <tr>
       <td>
-        You have been banned from Minds. Please reply this mail to appeal.
+        You have been banned from Minds due to the following reason:
+        <ul>
+          <li>
+            <?php echo $vars['reason'] ?>
+          </li>
+        </ul>
+        Please reply this email to appeal.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Minds.
       </td>
     </tr>
   </tbody>

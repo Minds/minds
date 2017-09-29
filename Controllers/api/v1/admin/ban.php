@@ -54,7 +54,11 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
             ];
         }
 
-        $user->ban_reason = 'admin';
+        $reason = isset($_POST['subject']) && $_POST['subject'] ? $_POST['subject'] : null;
+        $reason_note = isset($_POST['note']) && $_POST['note'] ? $_POST['note'] : null;
+
+        $user->ban_reason = $reason->value == 11 ? $reason_note : $reason->label;
+
         $user->banned = 'yes';
         $user->code = '';
         $user->save();
