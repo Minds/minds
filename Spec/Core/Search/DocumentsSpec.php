@@ -28,8 +28,6 @@ class DocumentsSpec extends ObjectBehavior
           'type' => 'user',
           'username' => 'mark',
           'name' => 'MarkEdward Harding',
-          'featured_id' => null,
-          'admin' => null,
           'suggest' => [
             'input' => [
               'mark',
@@ -41,13 +39,7 @@ class DocumentsSpec extends ObjectBehavior
               'Harding Mark Edward',
               'Harding Edward Mark'
             ],
-            'output' => "@mark",
-            'weight' => 1,
-            'payload' => [
-              'guid' => 'abc',
-              'name' => 'MarkEdward Harding',
-              'username' => 'mark'
-            ]
+            'weight' => 2
           ]
         ]);
     }

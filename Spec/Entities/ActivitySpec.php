@@ -17,7 +17,6 @@ class ActivitySpec extends ObjectBehavior
     public function it_has_wire_totals(Repository $repository)
     {
         $repository->getSumByEntity(Argument::any(), Argument::any())
-            ->shouldBeCalled()
             ->willReturn(10);
 
         Di::_()->bind('Wire\Repository', function ($di) use ($repository) {
@@ -28,7 +27,7 @@ class ActivitySpec extends ObjectBehavior
         $this->guid = '123';
         $this->getWireTotals()->shouldBeLike([
             'points' => 10,
-            'usd' => 10
+            'money' => 10
         ]);
     }
 }

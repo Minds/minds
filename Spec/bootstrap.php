@@ -32,3 +32,88 @@ $CONFIG->payments = [
       'private_key' => 'random_private'
     ],
   ]];
+
+class Mock 
+{
+
+    private $a;
+
+    public function __construct($a = null)
+    {
+        $this->a = $a;
+    }
+
+    public static function collection()
+    {
+        return new Mock();
+    }
+
+
+    public function request()
+    {
+
+    }
+
+    public function create()
+    {
+      
+    }
+
+    public function withContactPoints()
+    {
+        return $this;
+    }
+
+    public function withPort()
+    {
+        return $this;
+    }
+
+    public static function text()
+    {
+      
+    }
+
+    public function value()
+    {
+        return (string) $this->a;
+    }
+
+    public static function cluster()
+    {
+        return new Mock();
+    }
+
+    public static function build()
+    {
+        return new Mock();
+    }
+
+    public static function connect()
+    {
+        return new Mock();
+    }
+
+    public static function prepare()
+    {
+        return new Mock();
+    }
+
+    public static function executeAsync()
+    {
+        return new Mock();
+    }
+
+    public static function get()
+    {
+
+    }
+
+}
+
+class_alias('Mock', 'Cassandra');
+class_alias('Mock', 'Cassandra\ExecutionOptions');
+class_alias('Mock', 'Cassandra\Varint');
+class_alias('Mock', 'Cassandra\Timestamp');
+class_alias('Mock', 'Cassandra\Type');
+class_alias('Mock', 'Cassandra\Decimal');

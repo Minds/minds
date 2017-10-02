@@ -49,6 +49,10 @@ class AdsSpec extends ObjectBehavior
             return $payouts->getWrappedObject();
         });
 
+        $service->getTotalRevenueAndViews(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'))
+            ->shouldBeCalled()
+            ->willReturn([10,10]);
+
         $service->getRevenuePerPage(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)
             ->shouldBeCalled()
             ->willReturn([[
@@ -61,14 +65,14 @@ class AdsSpec extends ObjectBehavior
         });
 
         $this->setUser(10);
-        $this->getList(new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)->shouldReturn([
+        $this->getList(new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)->shouldBeLike([
             [
                 'entity' => [ 'guid' => '1', 'title' => 'Blog 1' ],
-                'views' => 100, 'revenue' => 0.75, 'rpm' => 7.5,
+                'views' => 100, 'revenue' => 50, 'rpm' => 500.0,
             ],
             [
                 'entity' => [ 'guid' => '2', 'title' => 'Blog 2' ],
-                'views' => 50, 'revenue' => 0.50, 'rpm' => 10.0,
+                'views' => 50, 'revenue' => 25, 'rpm' => 500.0,
             ],
         ]);
     }
@@ -82,6 +86,10 @@ class AdsSpec extends ObjectBehavior
         Di::_()->bind('Monetization\Payouts', function($di) use ($payouts) {
             return $payouts;
         });
+
+        $service->getTotalRevenueAndViews(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'))
+            ->shouldBeCalled()
+            ->willReturn([10,10]);
 
         $service->getRevenuePerPage(10, new \DateTime('2017-01-01'), new \DateTime('2017-02-01'), '', 50)
             ->shouldBeCalled()

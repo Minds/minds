@@ -130,7 +130,7 @@ class Counters
 
         try {
             if (!$client) {
-                $client = Core\Data\Client::build('Cassandra');
+                $client = Core\Di\Di::_()->get('Database\Cassandra\Cql');
             }
             $query = new Core\Data\Cassandra\Prepared\Counters();
             $result = $client->request($query->get($guid, $metric));

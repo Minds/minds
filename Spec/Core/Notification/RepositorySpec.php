@@ -10,6 +10,7 @@ use PhpSpec\Exception\Example\FailureException;
 use Minds\Core\Data\Cassandra;
 use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
+use Spec\Minds\Mocks\Cassandra\Rows;
 
 class RepositorySpec extends ObjectBehavior
 {
@@ -18,7 +19,6 @@ class RepositorySpec extends ObjectBehavior
     function let(Cassandra\Client $client)
     {
         $this->beConstructedWith($client);
-
         $this->_client = $client;
     }
 
@@ -42,30 +42,30 @@ class RepositorySpec extends ObjectBehavior
     {
         $this->_client->request(Argument::type(Prepared\Custom::class))
             ->shouldBeCalled()
-            ->willReturn([]);
+            ->willReturn(new Rows([], ''));
 
         $this
             ->setOwner(1000)
             ->getAll()
-            ->shouldReturn([]);
+            ->shouldReturn(['notifications' => [], 'token' => '']);
     }
 
     function it_should_get_a_list_of_notifications()
     {
         $this->_client->request(Argument::type(Prepared\Custom::class))
             ->shouldBeCalled()
-            ->willReturn([
-                [ 'data' => [ ] ],
-                [ 'data' => [ ] ],
-                [ 'data' => [ ] ],
-                [ 'data' => [ ] ],
-                [ 'data' => [ ] ],
-            ]);
+            ->willReturn(
+                new Rows([
+                    [ 'data' => [ ] ],
+                    [ 'data' => [ ] ],
+                    [ 'data' => [ ] ],
+                    [ 'data' => [ ] ],
+                    [ 'data' => [ ] ],
+                ], ''));
 
-        $this
-            ->setOwner(1000)
-            ->getAll(null, [ 'limit' => 5 ])
-            ->shouldBeAnArrayOf(5, Entities\Notification::class);
+        $result = $this->setOwner(1000)
+            ->getAll(null, ['limit' => 5]);
+        $result['notifications']->shouldBeAnArrayOf(5, Entities\Notification::class);
     }
 
     function it_should_not_get_a_list_of_notifications_if_theres_no_owner()

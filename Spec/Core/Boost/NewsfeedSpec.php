@@ -36,6 +36,11 @@ class NewsfeedSpec extends ObjectBehavior
         $boost->getGuid()->willReturn('foo');
         $boost->getBid()->willReturn(10);
         $boost->getOwner()->willReturn($user);
+        $boost->getRating()->willReturn(1);
+        $boost->getQuality()->willReturn(75);
+        $boost->getImpressions()->willReturn(100);
+        $boost->getPriorityRate()->willReturn(0);
+        $boost->getCategories()->willReturn(['art', 'music']);
         $this->boost($boost)->shouldBeString();
     }
 }

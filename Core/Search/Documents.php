@@ -302,10 +302,10 @@ class Documents
             'input' => array_values($inputs),
             'weight' => count(array_values($inputs)) == 1 ? 2 : 2
           ];
-          if($body['featured_id']){
+          if (isset($body['featured_id']) && $body['featured_id']) {
               $body['suggest']['weight'] += 50;
           }
-          if($body['admin']){
+          if (isset($body['admin']) && $body['admin']) {
               $body['suggest']['weight'] += 100;
           }
       }

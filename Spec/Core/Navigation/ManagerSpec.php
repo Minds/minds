@@ -5,9 +5,12 @@ namespace Spec\Minds\Core\Navigation;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Minds\Core\Navigation\Item;
+use Minds\Core\Di\Di;
+use Minds\Core\Data\Cassandra\Client as CassandraClient;
 
 class ManagerSpec extends ObjectBehavior
 {
+
     public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Core\Navigation\Manager');

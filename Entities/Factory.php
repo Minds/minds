@@ -45,7 +45,7 @@ class Factory
             return false;
         }
 
-        $entity = Core\Entities::build((object) $row);
+        $entity = Core\Di\Di::_()->get('Entities')->build((object) $row);
 
         if ($options['cache'] && $canBeCached && $entity) {
             self::$entitiesCache[$value] = $entity;

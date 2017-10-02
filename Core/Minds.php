@@ -25,6 +25,7 @@ class Minds extends base
      */
     public function initProviders()
     {
+        (new \Minds\Entities\EntitiesProvider())->register();
         (new Config\ConfigProvider())->register();
         (new Boost\BoostProvider())->register();
         (new Plugins\PluginsProvider())->register();
