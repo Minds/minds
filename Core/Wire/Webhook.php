@@ -65,9 +65,9 @@ class Webhook implements HookInterface
         error_log("[webhook]:: canceled");
         $user = $subscription->getCustomer()->getUser();
 
-        $plus = new Subscription();
-        $plus->setUser($user);
-        $plus->cancel();
+        //$plus = new Subscription();
+        //$plus->setUser($user);
+        //$plus->cancel();
 
         // TODO get wire entity and mark it as inactive
     }
