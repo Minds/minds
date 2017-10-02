@@ -304,7 +304,7 @@ class Network implements BoostHandlerInterface
      * @param array $options
      * @return array
      */
-    public function getBoosts($limit = 2, $increment = true, $rating = 0, $quality, array $options = [])
+    public function getBoosts($limit = 2, $increment = true, $rating = 0, $quality = 0, array $options = [])
     {
         $options = array_merge([
             'priority' => false,
@@ -318,13 +318,12 @@ class Network implements BoostHandlerInterface
             'type' => $this->handler,
             'state' => 'approved',
             'rating' => [
-                '$exists' => true,
-                '$lte' => $rating != 0 ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating()
+                //'$exists' => true,
+                '$lte' => $rating ? $rating : (int) Core\Session::getLoggedinUser()->getBoostRating()
              ],
-            'quality' => [
-                '$exists' => true,
-                '$gte' => $quality
-            ]
+             'quality' => [
+               '$gte' => $quality
+              ]
         ];
         if ($mem_log) {
             $match['_id'] =  [ '$gt' => end($mem_log) ];
@@ -458,11 +457,10 @@ class Network implements BoostHandlerInterface
                 $return[$data['guid']] = $boost->getEntity();
             }
         }
-        if (empty($return) && !empty($mem_log)) {
+        if (empty($return) && $mem_log) {
             $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler");
-            $this->tries++;
-            if ($this->tries > 2) {
-                return $this->getBoosts($limit, $increment);
+            if ($this->tries++ > 4) {
+                return $this->getBoosts($limit, $increment, $rating, $quality, $options);
             }
         }
         $return = $this->patchThumbs($return);
