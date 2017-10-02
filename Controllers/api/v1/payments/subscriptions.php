@@ -103,7 +103,7 @@ class subscriptions implements Interfaces\Api
             }
 
             $stripe = Core\Di\Di::_()->get('StripePayments');
-            $subscription = $stripe->getSubscription($subscription);
+            $subscription = $stripe->cancelSubscription($subscription);
         } else {
             $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
             $subscription = $braintree->cancelSubscription($subscription);
