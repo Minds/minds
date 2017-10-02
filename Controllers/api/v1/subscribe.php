@@ -49,7 +49,7 @@ class subscribe implements Interfaces\Api
                 }
 
                 $users = array_values(array_filter($users, function ($user) {
-                    return $user->enabled != 'no';
+                    return ($user->enabled != 'no' && $user->banned != 'yes');
                 }));
                 
                 $response['users'] = factory::exportable($users);
@@ -82,7 +82,7 @@ class subscribe implements Interfaces\Api
                     }
 
                     $users = array_values(array_filter($users, function ($user) {
-                        return $user->enabled != 'no';
+                        return ($user->enabled != 'no' && $user->banned != 'yes');
                     }));
 
                     $response['users'] = factory::exportable($users);
