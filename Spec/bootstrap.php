@@ -74,6 +74,11 @@ class Mock
       
     }
 
+    public static function varint()
+    {
+
+    }
+
     public function value()
     {
         return (string) $this->a;

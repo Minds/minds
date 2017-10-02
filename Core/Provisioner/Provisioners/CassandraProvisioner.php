@@ -167,6 +167,24 @@ class CassandraProvisioner implements ProvisionerInterface
                 'primaryKeys' => [
                     'guid'
                 ]
+            ],
+            'boosts' => [
+                'schema' => [
+                    'type' => 'text',
+                    'guid' => 'varint',
+                    'owner_guid' => 'varint',
+                    'destination_guid' => 'varint',
+                    'mongo_id' => 'text',
+                    'state' => 'text',
+                    'data' => 'text',
+                ],
+                'primaryKeys' => [
+                    'type',
+                    'guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (type ASC, guid ASC)'
+                ],
             ]
         ];
 
@@ -310,6 +328,57 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (guid ASC)'
+                ]
+            ],
+            'boosts_by_owner' => [
+                'from' => 'boosts',
+                'select' => [
+                    '*',
+                ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'owner_guid IS NOT NULL',
+                    'guid IS NOT NULL',
+                ],
+                'primaryKeys' => [
+                    'type', 'owner_guid', 'guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (owner_guid ASC, guid DESC)'
+                ]
+            ],
+            'boosts_by_destination' => [
+                'from' => 'boosts',
+                'select' => [
+                    '*',
+                ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'destination_guid IS NOT NULL',
+                    'guid IS NOT NULL',
+                ],
+                'primaryKeys' => [
+                    'type', 'destination_guid', 'guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (destination_guid ASC, guid DESC)'
+                ]
+            ],
+            'boosts_by_mongo_id' => [
+                'from' => 'boosts',
+                'select' => [
+                    '*',
+                ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'mongo_id IS NOT NULL',
+                    'guid IS NOT NULL',
+                ],
+                'primaryKeys' => [
+                    'type', 'mongo_id', 'guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (mongo_id ASC, guid ASC)'
                 ]
             ],
         ];

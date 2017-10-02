@@ -2,7 +2,7 @@
 namespace Minds\Entities\Boost;
 
 use Minds\Core;
-use Minds\Core\Data;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Entities\Entity;
 use Minds\Entities\User;
@@ -13,8 +13,6 @@ use Minds\Helpers;
  */
 class Peer implements BoostEntityInterface
 {
-    private $db;
-
     public $guid;
     private $entity;
     private $bid;
@@ -30,11 +28,7 @@ class Peer implements BoostEntityInterface
 
     public function __construct($db = null)
     {
-        if ($db) {
-            $this->db = $db;
-        } else {
-            $this->db = new Data\Call('entities_by_time');
-        }
+        $this->db = null;
     }
 
   /**
@@ -54,6 +48,8 @@ class Peer implements BoostEntityInterface
    */
   public function loadFromArray($array)
   {
+      $array = is_array($array) ? $array : json_decode($array, true);
+
       $this->guid = $array['guid'];
       $this->_type = $array['type'];
       $this->entity = Entities\Factory::build($array['entity']);
@@ -95,9 +91,9 @@ class Peer implements BoostEntityInterface
         'postToFacebook' => $this->postToFacebook
       ];
 
-      $serialized = json_encode($data);
-      $this->db->insert("boost:peer:{$this->destination->guid}", [ $this->guid => $serialized ]);
-      $this->db->insert("boost:peer:requested:{$this->owner->guid}", [ $this->guid => $serialized ]);
+      /** @var Core\Boost\Repository $repository */
+      $repository = Di::_()->get('Boost\Repository');
+      $repository->upsert('peer', $data);
       return $this;
   }
 

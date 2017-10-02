@@ -2,6 +2,7 @@
 namespace Minds\Core\Boost;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Interfaces;
 use Minds\Entities;
@@ -22,9 +23,9 @@ class Peer implements Interfaces\BoostHandlerInterface
         }
     }
 
-   /**
+    /**
      * Boost an entity. Not used.
-     * @param  object/int $entity - the entity to boost
+     * @param int|object $entity
      * @param  int $points
      * @return null
      */
@@ -41,19 +42,15 @@ class Peer implements Interfaces\BoostHandlerInterface
      */
     public function getReviewQueue($limit, $offset = "")
     {
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:peer:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll('peer', [
+            'destination_guid' => $this->guid,
+            'limit' => $limit,
+            'offset' => $offset,
+            'order' => 'ASC'
+        ]);
 
-        if (!$data) {
-            return [];
-        }
-
-        $boosts = [];
-        foreach ((array) $data as $guid => $raw_data) {
-            //$raw_data['guid']
-          $boosts[] = (new Entities\Boost\Peer())
-            ->loadFromArray(json_decode($raw_data, true));
-        }
         return $boosts;
     }
 
@@ -65,42 +62,35 @@ class Peer implements Interfaces\BoostHandlerInterface
      */
     public function getOutbox($limit, $offset = "")
     {
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:peer:requested:$this->guid", ['limit'=>$limit, 'offset'=>$offset, 'reversed'=>true]);
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll('peer', [
+            'owner_guid' => Core\Session::getLoggedinUser()->guid,
+            'limit' => $limit,
+            'offset' => $offset,
+            'order' => 'DESC'
+        ]);
 
-        $boosts = [];
-        foreach ($data as $guid => $raw_data) {
-            //$raw_data['guid']
-        $boosts[] = (new Entities\Boost\Peer())
-          ->loadFromArray(json_decode($raw_data, true));
-        }
         return $boosts;
     }
 
     /**
      * Gets a single boost entity
-     * @param  mixed  $_id
+     * @param  mixed  $guid
      * @return object
      */
-    public function getBoostEntity($_id)
+    public function getBoostEntity($guid)
     {
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:peer:$this->guid", ['limit'=>1, 'offset'=>$_id]);
-        if (key($data) != $_id) {
-            return false;
-        }
-
-        $boost = (new Entities\Boost\Peer($db))
-            ->loadFromArray(json_decode($data[$_id], true));
-
-        return $boost;
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        return $repository->getEntity('peer', $guid);
     }
 
     /**
      * Accept a boost and do a remind
-     * @param  object|int $entity
-     * @param  int        $impressions
-     * @return boolean
+     * @param int|object $boost
+     * @param  int $impressions
+     * @return bool
      */
     public function accept($boost, $impressions = 0)
     {
@@ -116,8 +106,8 @@ class Peer implements Interfaces\BoostHandlerInterface
 
     /**
      * Reject a boost
-     * @param  object|int $entity
-     * @return boolean
+     * @param int|object $boost
+     * @return bool
      */
     public function reject($boost)
     {
@@ -133,7 +123,7 @@ class Peer implements Interfaces\BoostHandlerInterface
 
     /**
      * Revoke a boost
-     * @param  object|int $entity
+     * @param int|object $boost
      * @return boolean
      */
     public function revoke($boost)
@@ -150,6 +140,7 @@ class Peer implements Interfaces\BoostHandlerInterface
 
     /**
      * Return a boost. Not used.
+     * @deprecated
      * @return array
      */
     public function getBoost($offset = "")

@@ -16,6 +16,10 @@ class BoostProvider extends Provider
      */
     public function register()
     {
+        $this->di->bind('Boost\Repository', function ($di) {
+            return new Repository();
+        }, [ 'useFactory' => true ]);
+
         $this->di->bind('Boost\Network', function ($di) {
             return new Network([], Client::build('MongoDB'), new Data\Call('entities_by_time'));
         }, ['useFactory' => true]);

@@ -33,9 +33,9 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $content_count = Core\Boost\Factory::build("Content")->getReviewQueueCount();
 
         if ($boosts) {
-            $response['boosts'] = Factory::exportable($boosts, ['boost_impressions', 'boost_id']);
+            $response['boosts'] = Factory::exportable($boosts['data'], ['boost_impressions', 'boost_id']);
             $response['count'] = $type == "newsfeed" ? $newsfeed_count : $content_count;
-            $response['load-next'] = $_id;
+            $response['load-next'] = $boosts['next'];
         }
 
         $response['newsfeed_count'] = (int) $newsfeed_count;

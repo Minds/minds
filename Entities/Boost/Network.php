@@ -3,6 +3,7 @@
 namespace Minds\Entities\Boost;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Entities\Entity;
 use Minds\Entities\User;
@@ -38,6 +39,11 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         'rating', 'quality', 'impressions', 'categories', 'rejection_reason'
     ];
 
+    public function __construct($db = null)
+    {
+        $this->db = null;
+    }
+
     /**
      * Loads from the database using a GUID
      * @param  $guid
@@ -55,6 +61,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
      */
     public function loadFromArray($array)
     {
+        $array = is_array($array) ? $array : json_decode($array, true);
+
         $this->guid = $array['guid'];
         $this->_id = $array['_id'];
         $this->entity = Entities\Factory::build($array['entity']);
@@ -106,9 +114,9 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
             'rejection_reason'=> $this->getRejectionReason()
         ];
 
-        $serialized = json_encode($data);
-        $this->db->insert("boost:$this->handler", [$this->guid => $serialized]);
-        $this->db->insert("boost:$this->handler:requested:{$this->owner->guid}", [$this->guid => $serialized]);
+        /** @var Core\Boost\Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        $repository->upsert($this->handler, $data);
         return $this;
     }
 

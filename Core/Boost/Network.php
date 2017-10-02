@@ -3,6 +3,7 @@ namespace Minds\Core\Boost;
 
 use Minds\Interfaces\BoostHandlerInterface;
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Entities;
 use Minds\Helpers;
@@ -17,13 +18,11 @@ class Network implements BoostHandlerInterface
 {
     protected $handler = 'newsfeed';
     protected $mongo;
-    protected $db;
 
 
     public function __construct($options = [], Data\Interfaces\ClientInterface $mongo = null, Data\Call $db = null)
     {
         $this->mongo = $mongo ?: Data\Client::build('MongoDB');
-        $this->db = $db ?: new Data\Call('entities_by_time');
     }
 
     /**
@@ -86,28 +85,22 @@ class Network implements BoostHandlerInterface
         }
 
         if (!$guids) {
-            return false;
+            return [
+                'data' => [],
+                'next' => ''
+            ];
         }
 
-        $prepared = new Core\Data\Cassandra\Prepared\Custom();
-        $collection = \Cassandra\Type::collection(\Cassandra\Type::text())
-            ->create(... array_values($guids));
-        $prepared->query("SELECT * from entities_by_time WHERE key= ? AND column1 IN ? LIMIT ?",
-          [ "boost:$this->handler", $collection, count($guids) ]);
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll($this->handler, [
+            'guids' => $guids
+        ]);
 
-        $cql = Core\Di\Di::_()->get('Database\Cassandra\Cql');
-        $data = $cql->request($prepared);
-
-        $boosts = [];
-        foreach ($data as $row) {
-            $boost = (new Entities\Boost\Network())
-              ->loadFromArray(json_decode($row['value'], true));
-            //double check
-            if (isset($guids[$boost->getId()])) {
-                $boosts[] = $boost;
-            }
-        }
-        return $boosts;
+        return [
+            'data' => $boosts['data'],
+            'next' => $end
+        ];
     }
 
     /**
@@ -129,19 +122,15 @@ class Network implements BoostHandlerInterface
      */
     public function getOutbox($limit, $offset = "")
     {
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:$this->handler:requested:" . Core\Session::getLoggedinUser()->guid, [
-          'limit'=>$limit,
-          'offset'=>$offset,
-          'reversed'=>true
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll($this->handler, [
+            'owner_guid' => Core\Session::getLoggedinUser()->guid,
+            'limit' => $limit,
+            'offset' => $offset,
+            'order' => 'DESC'
         ]);
 
-        $boosts = [];
-        foreach ($data as $guid => $raw_data) {
-            //$raw_data['guid']
-            $boosts[] = (new Entities\Boost\Network())
-              ->loadFromArray(json_decode($raw_data, true));
-        }
         return $boosts;
     }
 
@@ -152,15 +141,9 @@ class Network implements BoostHandlerInterface
      */
     public function getBoostEntity($guid)
     {
-        $db = new Data\Call('entities_by_time');
-        $data = $db->getRow("boost:$this->handler", ['limit'=>1, 'offset'=>$guid]);
-        if (key($data) != $guid) {
-            return false;
-        }
-
-        $boost = (new Entities\Boost\Network($db))
-          ->loadFromArray(json_decode($data[$guid], true));
-        return $boost;
+        /** @var Repository $repository */
+        $repository = Di::_()->get('Boost\Repository');
+        return $repository->getEntity($this->handler, $guid);
     }
 
     /**
@@ -284,7 +267,8 @@ class Network implements BoostHandlerInterface
         foreach ($boosts as $boost) {
             $keys[] = "thumbs:up:entity:$boost->guid";
         }
-        $thumbs = $this->db->getRows($keys, ['offset'=> Core\Session::getLoggedInUserGuid()]);
+        $db = new Data\Call('entities_by_time');
+        $thumbs = $db->getRows($keys, ['offset'=> Core\Session::getLoggedInUserGuid()]);
         foreach ($boosts as $k => $boost) {
             $key = "thumbs:up:entity:$boost->guid";
             if (isset($thumbs[$key])) {

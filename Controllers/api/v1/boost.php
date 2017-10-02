@@ -98,7 +98,7 @@ class boost implements Interfaces\Api
                 $boosts = $pro->getReviewQueue($limit, $offset);
                 $boost_entities = [];
                 //only show 'point boosts and 'created' (not accepted or rejected)
-                foreach ($boosts as $i => $boost) {
+                foreach ($boosts['data'] as $i => $boost) {
                     if ($boost->getType() != 'points' || $boost->getState() != 'created') {
                         unset($boosts[$i]);
                         continue;
@@ -109,21 +109,19 @@ class boost implements Interfaces\Api
                 }
 
                 $response['boosts'] = factory::exportable($boost_entities, array('points'));
+                $response['load-next'] = $boosts['next'];
                 break;
             case "newsfeed":
             case "content":
                 $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
                 $boosts = $pro->getOutbox($limit, $offset);
-                $response['boosts'] = Factory::exportable($boosts);
+                $response['boosts'] = Factory::exportable($boosts['data']);
+                $response['load-next'] = $boosts['next'];
                 break;
         }
 
         if (isset($response['boosts']) && $response['boosts']) {
-            if ($offset) {
-                array_shift($response['boosts']);
-            }
-
-            if ($response['boosts']) {
+            if ($response['boosts'] && !isset($response['load-next'])) {
                 $response['load-next'] = end($response['boosts'])['guid'];
             }
         }

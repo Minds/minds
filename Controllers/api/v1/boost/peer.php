@@ -36,14 +36,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
             $boosts = $pro->getOutbox($limit, $offset);
 
-            if ($boosts && $offset) {
-                array_shift($boosts);
-            }
-
-            $response['boosts'] = Factory::exportable($boosts);
+            $response['boosts'] = Factory::exportable($boosts['data']);
 
             if ($boosts) {
-                $response['load-next'] = (string) end($boosts)->getGuid();
+                $response['load-next'] = $boosts['next'];
             }
             break;
           case 'inbox':
@@ -51,14 +47,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
             $boosts = $pro->getReviewQueue(isset($_GET['limit']) ? $_GET['limit'] : 12, isset($_GET['offset']) ? $_GET['offset'] : "");
 
-            if ($boosts && $offset) {
-                array_shift($boosts);
-            }
-
-            $response['boosts'] = Factory::exportable($boosts);
+            $response['boosts'] = Factory::exportable($boosts['data']);
 
             if ($boosts) {
-                $response['load-next'] = (string) end($boosts)->getGuid();
+                $response['load-next'] = (string) $boosts['next'];
             }
         }
 
