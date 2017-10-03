@@ -54,10 +54,10 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
             ];
         }
 
-        $reason = isset($_POST['subject']) && $_POST['subject'] ? $_POST['subject'] : null;
-        $reason_note = isset($_POST['note']) && $_POST['note'] ? $_POST['note'] : null;
+        $json = file_get_contents("php://input");
+        $data = json_decode($json, true);
 
-        $user->ban_reason = $reason->value == 11 ? $reason_note : $reason->label;
+        $user->ban_reason = $data['note'] ?: $data['subject']['label'];
 
         $user->banned = 'yes';
         $user->code = '';
