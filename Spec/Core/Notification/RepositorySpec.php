@@ -159,7 +159,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $ttl = $this->getWrappedObject()::NOTIFICATION_TTL - 1;
+        //$ttl = $this->getWrappedObject()::NOTIFICATION_TTL - 1;
 
         $this
             ->setOwner(1000)
@@ -172,7 +172,7 @@ class RepositorySpec extends ObjectBehavior
         $this->_client->request(Argument::type(Prepared\Custom::class))
             ->shouldNotBeCalled();
 
-        $ttl = $this->getWrappedObject()::NOTIFICATION_TTL + 1;
+        $ttl = \Minds\Core\Notification\Repository::NOTIFICATION_TTL + 1;
 
         $this
             ->setOwner(1000)

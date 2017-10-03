@@ -275,7 +275,7 @@ class Wire extends NormalizedEntity
      * @param bool $active
      * @return $this
      */
-    public function setActive(bool $active)
+    public function setActive($active)
     {
         $this->active = $active;
         return $this;

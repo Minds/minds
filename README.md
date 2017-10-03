@@ -1,6 +1,8 @@
 Minds Engine
 ==========
 
+[![Build Status](http://drone.minds.io/api/badges/Minds/engine-internal/status.svg)](http://drone.minds.io/Minds/engine-internal)
+
 Backend system for Minds. Please run inside of [the minds repo](https://github.com/minds/minds).
 
 ### Building

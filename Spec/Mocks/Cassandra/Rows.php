@@ -13,11 +13,11 @@ class Rows implements \IteratorAggregate {
 
     public function getIterator()
     {
-        return (function () {
+        return call_user_func(function () {
             while(list($key, $val) = each($this->_items)) {
                 yield $key => $val;
             }
-        })();
+        });
     }
 
     function pagingStateToken()
