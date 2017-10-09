@@ -87,7 +87,7 @@ class Network implements BoostHandlerInterface
         if (!$guids) {
             return [
                 'data' => [],
-                'next' => ''
+                'next' => $offset
             ];
         }
 
@@ -99,7 +99,7 @@ class Network implements BoostHandlerInterface
 
         return [
             'data' => $boosts['data'],
-            'next' => $end
+            'next' => $_id
         ];
     }
 
