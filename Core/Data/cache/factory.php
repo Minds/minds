@@ -14,7 +14,7 @@ class factory
      * Build the cacher
      * @param $cacher - the cacher to use
      * @throws EXCEPTION
-     * @return cacher object
+     * @return abstractCacher
      */
     public static function build($cacher = null)
     {

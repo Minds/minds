@@ -28,9 +28,15 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
         $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
         $type = isset($pages[0]) ? $pages[0] : 'newsfeed';
-        $boosts = Core\Boost\Factory::build(ucfirst($type))->getReviewQueue($limit, $offset);
-        $newsfeed_count = Core\Boost\Factory::build("Newsfeed")->getReviewQueueCount();
-        $content_count = Core\Boost\Factory::build("Content")->getReviewQueueCount();
+
+        /** @var Core\Boost\Network\Review $review */
+        $review = Di::_()->get('Boost\Network\Review');
+        $review->setType($type);
+        $boosts = $review->getReviewQueue($limit, $offset);
+        $review->setType('newsfeed');
+        $newsfeed_count = $review->getReviewQueueCount();
+        $review->setType('content');
+        $content_count = $review->getReviewQueueCount();
 
         if ($boosts) {
             $response['boosts'] = Factory::exportable($boosts['data'], ['boost_impressions', 'boost_id']);
@@ -45,14 +51,14 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
     }
 
     /**
-     * Approve a boost
+     * Approve or reject a boost
      * @param array $pages
      */
     public function post($pages)
     {
         $response = array();
 
-        $type = ucfirst($pages[0]);
+        $type = strtolower($pages[0]);
         $guid = $pages[1];
         $action = $pages[2];
         $rating = (int)$_POST['rating'];
@@ -74,7 +80,10 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             ));
         }
 
-        $boost = Core\Boost\Factory::build($type)->getBoostEntity($guid);
+        /** @var Core\Boost\Network\Review $review */
+        $review = Di::_()->get('Boost\Network\Review');
+        $review->setType($type);
+        $boost = $review->getBoostEntity($guid);
         if (!$boost) {
             return Factory::response([
                 'status' => 'error',
@@ -83,6 +92,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         }
 
         $entity = $boost->getEntity();
+        $dirty = false;
         // explicit
         if($reason == 1 || $mature) {
             $dirty = $this->enableMatureFlag($entity);
@@ -91,24 +101,22 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         if ($action == 'accept') {
             $boost->setRating($rating);
             $boost->setQuality($quality);
+            $review->setBoost($boost);
 
-            $success = Di::_()->get('Boost\Payment')->charge($boost);
-
-            if ($success) {
-                Core\Boost\Factory::build($type)->accept($boost);
-            } else {
+            try {
+                $review->accept();
+            } catch (\Exception $e) {
                 $response['status'] = 'error';
+                $response['message'] = $e->getMessage();
             }
+
         } elseif ($action == 'reject') {
-            $boost->setRejectionReason($reason);
-
-            $dirty = $this->enableBoostRejectionReasonFlag($entity, $reason) || $dirty;
-
-            $success = Core\Boost\Factory::build($type)->reject($boost);
-            if ($success) {
-                Di::_()->get('Boost\Payment')->refund($boost);
-            } else {
+            $review->setBoost($boost);
+            try {
+                $review->reject($reason);
+            } catch(\Exception $e) {
                 $response['status'] = 'error';
+                $response['message'] = $e->getMessage();
             }
         }
 
@@ -117,26 +125,6 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         }
 
         return Factory::response($response);
-    }
-
-    protected function enableBoostRejectionReasonFlag($entity = null, $reason = -1)
-    {
-        if (!$entity || !is_object($entity)) {
-            return false;
-        }
-
-        $dirty = false;
-
-        // Main boost rejection reason flag
-        if (method_exists($entity, 'setBoostRejectionReason')) {
-            $entity->setBoostRejectionReason($reason);
-            $dirty = true;
-        } elseif (property_exists($entity, 'boost_rejection_reason')) {
-            $entity->boost_rejection_reason = true;
-            $dirty = true;
-        }
-
-        return $dirty;
     }
 
     /**

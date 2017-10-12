@@ -76,9 +76,9 @@ class Counter
         $cache = Di::_()->get('Cache');
         $repository = Di::_()->get('Wire\Repository');
 
-        if (($cached = $cache->get(static::getIndexName($entity_guid, null, $method, $timestamp, true))) !== false) {
+        /*if (($cached = $cache->get(static::getIndexName($entity_guid, null, $method, $timestamp, true))) !== false) {
             return $cached;
-        }
+        }*/
 
         try {
             $sum = $repository->getSumByEntity($entity_guid, $method);

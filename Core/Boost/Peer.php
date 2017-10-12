@@ -34,46 +34,6 @@ class Peer implements Interfaces\BoostHandlerInterface
         return null;
     }
 
-     /**
-     * Return all peer boosts
-     * @param  int    $limit
-     * @param  string $offset
-     * @return array
-     */
-    public function getReviewQueue($limit, $offset = "")
-    {
-        /** @var Repository $repository */
-        $repository = Di::_()->get('Boost\Repository');
-        $boosts = $repository->getAll('peer', [
-            'destination_guid' => $this->guid,
-            'limit' => $limit,
-            'offset' => $offset,
-            'order' => 'ASC'
-        ]);
-
-        return $boosts;
-    }
-
-    /**
-     * Get our own submitted Boosts
-     * @param  int    $limit
-     * @param  string $offset
-     * @return array
-     */
-    public function getOutbox($limit, $offset = "")
-    {
-        /** @var Repository $repository */
-        $repository = Di::_()->get('Boost\Repository');
-        $boosts = $repository->getAll('peer', [
-            'owner_guid' => Core\Session::getLoggedinUser()->guid,
-            'limit' => $limit,
-            'offset' => $offset,
-            'order' => 'DESC'
-        ]);
-
-        return $boosts;
-    }
-
     /**
      * Gets a single boost entity
      * @param  mixed  $guid
@@ -87,58 +47,6 @@ class Peer implements Interfaces\BoostHandlerInterface
     }
 
     /**
-     * Accept a boost and do a remind
-     * @param int|object $boost
-     * @param  int $impressions
-     * @return bool
-     */
-    public function accept($boost, $impressions = 0)
-    {
-        if (!$boost instanceof Entities\Boost\Peer) {
-            $boost = $this->getBoostEntity($boost);
-        }
-
-        $boost->setState('accepted')
-            ->save();
-
-        return true;
-    }
-
-    /**
-     * Reject a boost
-     * @param int|object $boost
-     * @return bool
-     */
-    public function reject($boost)
-    {
-        if (!$boost instanceof Entities\Boost\Peer) {
-            $boost = $this->getBoostEntity($boost);
-        }
-
-        $boost->setState('rejected')
-        ->save();
-
-        return true;
-    }
-
-    /**
-     * Revoke a boost
-     * @param int|object $boost
-     * @return boolean
-     */
-    public function revoke($boost)
-    {
-        if (!$boost instanceof Entities\Boost\Peer) {
-            $boost = $this->getBoostEntity($boost);
-        }
-
-        $boost->setState('revoked')
-        ->save();
-
-        return true;
-    }
-
-    /**
      * Return a boost. Not used.
      * @deprecated
      * @return array
@@ -149,5 +57,11 @@ class Peer implements Interfaces\BoostHandlerInterface
        ///
        //// THIS DOES NOT APPLY BECAUSE IT'S PRE-AGREED
        ///
+    }
+
+
+    public function accept($entity, $impressions)
+    {
+        return false;
     }
 }

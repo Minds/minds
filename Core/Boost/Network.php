@@ -28,7 +28,7 @@ class Network implements BoostHandlerInterface
     /**
      * Boost an entity
      * @param  object/int $entity - the entity to boost
-     * @param  int        $impressions
+     * @param  int $impressions
      * @return boolean
      */
     public function boost($boost, $impressions = 0)
@@ -55,68 +55,73 @@ class Network implements BoostHandlerInterface
         return $boost->getGuid();
     }
 
-     /**
-     * Return boosts for review
-     * @param  int    $limit
-     * @param  string $offset
-     * @return array
-     */
-    public function getReviewQueue($limit, $offset = "")
+    public function accept($entity, $impressions)
     {
-        $query = [ 'state'=>'review', 'type'=> $this->handler ];
-        if ($offset) {
-            $query['_id'] = [ '$gt' => $offset ];
-        }
-        $queue = $this->mongo->find("boost", $query, [
-            'limit' => $limit,
-            'sort' => [ 'priority' => -1, '_id' => 1 ],
-        ]);
-        if (!$queue) {
-            return false;
-        }
-
-        $guids = [];
-        $end = "";
-        foreach ($queue as $data) {
-            $_id = (string) $data['_id'];
-            $guids[$_id] = (string) $data['guid'];
-            $end = $data['guid'];
-            //$this->mongo->remove("boost", ['_id' => $_id]);
-        }
-
-        if (!$guids) {
-            return [
-                'data' => [],
-                'next' => $offset
-            ];
-        }
-
-        /** @var Repository $repository */
-        $repository = Di::_()->get('Boost\Repository');
-        $boosts = $repository->getAll($this->handler, [
-            'guids' => $guids
-        ]);
-
-        return [
-            'data' => $boosts['data'],
-            'next' => $_id
-        ];
+        return false;
     }
 
-    /**
-     * Return the review count
-     * @return int
-     */
-    public function getReviewQueueCount()
-    {
-        $query = ['state' => 'review', 'type' => $this->handler];
-        $count = $this->mongo->count("boost", $query);
-        return $count;
-    }
+//     /**
+//     * Return boosts for review
+//     * @param  int    $limit
+//     * @param  string $offset
+//     * @return array
+//     */
+//    public function getReviewQueue($limit, $offset = "")
+//    {
+//        $query = [ 'state'=>'review', 'type'=> $this->handler ];
+//        if ($offset) {
+//            $query['_id'] = [ '$gt' => $offset ];
+//        }
+//        $queue = $this->mongo->find("boost", $query, [
+//            'limit' => $limit,
+//            'sort' => [ 'priority' => -1, '_id' => 1 ],
+//        ]);
+//        if (!$queue) {
+//            return false;
+//        }
+//
+//        $guids = [];
+//        $end = "";
+//        foreach ($queue as $data) {
+//            $_id = (string) $data['_id'];
+//            $guids[$_id] = (string) $data['guid'];
+//            $end = $data['guid'];
+//            //$this->mongo->remove("boost", ['_id' => $_id]);
+//        }
+//
+//        if (!$guids) {
+//            return [
+//                'data' => [],
+//                'next' => ''
+//            ];
+//        }
+//
+//        /** @var Repository $repository */
+//        $repository = Di::_()->get('Boost\Repository');
+//        $boosts = $repository->getAll($this->handler, [
+//            'guids' => $guids
+//        ]);
+//
+//        return [
+//            'data' => $boosts['data'],
+//            'next' => $end
+//        ];
+//    }
+//
+//    /**
+//     * Return the review count
+//     * @return int
+//     */
+//    public function getReviewQueueCount()
+//    {
+//        $query = ['state' => 'review', 'type' => $this->handler];
+//        $count = $this->mongo->count("boost", $query);
+//        return $count;
+//    }
 
     /**
      * Get our own submitted Boosts
-     * @param  int    $limit
+     * @param  int $limit
      * @param  string $offset
      * @return array
      */
@@ -144,79 +149,6 @@ class Network implements BoostHandlerInterface
         /** @var Repository $repository */
         $repository = Di::_()->get('Boost\Repository');
         return $repository->getEntity($this->handler, $guid);
-    }
-
-    /**
-     * Accept a boost
-     * @param  mixed $_id
-     * @param  int   $impressions Optional. Defaults to 0.
-     * @return boolean
-     */
-    public function accept($boost, $impressions = 0)
-    {
-        $accept = $this->mongo->update("boost", ['_id' => $boost->getId()], ['state'=>'approved', 'rating'=>$boost->getRating(), 'quality'=> $boost->getQuality(), 'approvedAt' => new BSON\UTCDateTime(time() * 1000) ]);
-        $boost->setState('approved');
-        if ($accept) {
-            //remove from review
-            //$db->removeAttributes("boost:newsfeed:review", array($guid));
-            //clear the counter for boost_impressions
-            //Helpers\Counters::clear($guid, "boost_impressions");
-
-            /*Core\Events\Dispatcher::trigger('notification', 'boost', [
-                'to'=> [ $boost->getOwner()->guid ],
-                'entity' => $boost->getEntity(),
-                'from'=> 100000000000000519,
-                'title' => $boost->getEntity()->title,
-                'notification_view' => 'boost_accepted',
-                'params' => ['impressions' => $boost->getBid()],
-                'impressions' => $boost->getBid()
-              ]);*/
-            $boost->save();
-        }
-        return $accept;
-    }
-
-    /**
-     * Reject a boost
-     * @param  mixed $_id
-     * @return boolean
-     */
-    public function reject($boost)
-    {
-        $this->mongo->remove("boost", ['_id'=>$boost->getId()]);
-        $boost->setState('rejected')
-          ->save();
-
-        Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to'=> [ $boost->getOwner()->guid ],
-            'from'=> 100000000000000519,
-            'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
-            'params' => ['reason' => $boost->getRejectionReason()],
-            'notification_view' => 'boost_rejected',
-        ]);
-        return true;//need to double check somehow..
-    }
-
-    /**
-     * Revoke a boost
-     * @param  mixed $_id
-     * @return boolean
-     */
-    public function revoke($boost)
-    {
-        $this->mongo->remove("boost", ['_id'=>$boost->getId()]);
-        $boost->setState('revoked')
-          ->save();
-
-        Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to'=> [ $boost->getOwner()->guid ],
-            'from'=> 100000000000000519,
-            'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
-            'notification_view' => 'boost_revoked',
-        ]);
-        return true;
     }
 
     /**
@@ -308,11 +240,13 @@ class Network implements BoostHandlerInterface
     {
         $options = array_merge([
             'priority' => false,
-            'categories' => false
+            'categories' => false,
+            'offset' => null,
+            'skip_cache' => false
         ], $options);
 
         $cacher = Core\Data\cache\factory::build('apcu');
-        $mem_log =  $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
+        $mem_log = $cacher->get(Core\Session::getLoggedinUser()->guid . ":seenboosts:$this->handler") ?: [];
 
         $match = [
             'type' => $this->handler,
@@ -325,8 +259,16 @@ class Network implements BoostHandlerInterface
                '$gte' => $quality
               ]
         ];
-        if ($mem_log) {
-            $match['_id'] =  [ '$gt' => end($mem_log) ];
+        if ($options['offset']) {
+            $offset = $this->getBoostEntity($options['offset'])->getId();
+            $match = array_merge([
+                '_id' => [
+                    '$gt' => $offset
+                ]
+            ], $match);
+        }
+        if ($options['skip_cache'] == true && $mem_log) {
+            $match['_id'] = ['$gt' => end($mem_log)];
         }
 
         $sort = [ '_id' => 1 ];

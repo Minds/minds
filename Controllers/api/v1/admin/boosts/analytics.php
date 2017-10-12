@@ -8,6 +8,7 @@
  */
 namespace Minds\Controllers\api\v1\admin\boosts;
 
+use Minds\Controllers\api\v1\newsfeed\preview;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Helpers;
@@ -24,30 +25,30 @@ class analytics implements Interfaces\Api, Interfaces\ApiAdminPam
     {
         $response = [];
 
-        if (!isset($pages[0]) || !$pages[0]) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'Specify a boost handler type'
-            ]);
-        }
+        $type = isset($pages[0]) ? $pages[0] : 'newsfeed';
 
-        $handler = Core\Boost\Factory::build($pages[0]);
+        /** @var Core\Boost\Network\Review $review */
+        $review = Di::_()->get('Boost\Network\Review');
+        $review->setType($type);
+        /** @var Core\Boost\Network\Metrics $metrics */
+        $metrics = Di::_()->get('Boost\Network\Metrics');
+        $metrics->setType($type);
         $cache = Di::_()->get('Cache');
 
-        $cacheKey = "admin:boosts:analytics:{$pages[0]}";
+        $cacheKey = "admin:boosts:analytics:{$type}";
 
         if ($cached = $cache->get($cacheKey)) {
             return Factory::response($cached);
         }
 
-        $reviewQueue = $handler->getReviewQueueCount();
+        $reviewQueue = $review->getReviewQueueCount();
 
-        $backlog = $handler->getBacklogCount();
-        $priorityBacklog = $handler->getPriorityBacklogCount();
+        $backlog = $metrics->getBacklogCount();
+        $priorityBacklog = $metrics->getPriorityBacklogCount();
 
-        $impressions = $handler->getBacklogImpressionsSum();
+        $impressions = $metrics->getBacklogImpressionsSum();
 
-        $avgApprovalTime = $handler->getAvgApprovalTime();
+        $avgApprovalTime = $metrics->getAvgApprovalTime();
         $avgImpressions = round($impressions / ($backlog ?: 1));
 
         $timestamp = time();

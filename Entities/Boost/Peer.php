@@ -25,6 +25,7 @@ class Peer implements BoostEntityInterface
     private $_type = 'pro';
     private $scheduledTs;
     private $postToFacebook = false;
+    private $handler = 'peer';
 
     public function __construct($db = null)
     {
@@ -281,6 +282,11 @@ class Peer implements BoostEntityInterface
             $this->postToFacebook = true;
         }
         return $this;
+    }
+
+    public function getHandler()
+    {
+        return $this->handler;
     }
 
     /**

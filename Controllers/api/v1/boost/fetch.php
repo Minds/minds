@@ -47,34 +47,32 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
             $quality = 90;
         }
 
+        /** @var Core\Boost\Network\Iterator $iterator */
+        $iterator = Core\Di\Di::_()->get('Boost\Network\Iterator');
+        $iterator->setLimit($limit)
+            ->setRating($rating)
+            ->setQuality($quality)
+            ->setOffset($_GET['offset'])
+            ->setType($pages[0])
+            ->setPriority(true);
+
         switch ($pages[0]) {
             case 'content':
-                $boosts = Core\Boost\Factory::build($pages[0])
-                    ->getBoosts(
-                        $limit,
-                        true,
-                        $rating,
-                        $quality,
-                        [ 'priority' => true ]
-                    );
-                foreach ($boosts as $entity) {
+                $iterator->setIncrement(true);
+
+                foreach ($iterator as $entity) {
                     $response['boosts'][] = $entity->export();
                     Counters::increment($entity->guid, "impression");
                     Counters::increment($entity->owner_guid, "impression");
                 }
+                $response['load-next'] = $iterator->getOffset();
                 break;
             case 'newsfeed':
-                $boosts = Core\Boost\Factory::build($pages[0])->getBoosts(
-                    $limit,
-                    false,
-                    $rating,
-                    $quality,
-                    [ 'priority' => true ]
-                );
-                foreach ($boosts as $guid => $entity) {
+                foreach ($iterator as $guid => $entity) {
                     $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string)$guid]);
                 }
-                if (!$boosts) {
+                $response['load-next'] = $iterator->getOffset();
+                if (!$iterator->list) {
                     $cacher = Core\Data\cache\factory::build('apcu');
                     $offset = $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
                     $guids = Core\Data\indexes::fetch('object:image:featured', ['offset' => $offset, 'limit' => 12]);

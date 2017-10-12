@@ -139,11 +139,17 @@ class newsfeed implements Interfaces\Api
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 2;
 
-                $boosts = Core\Boost\Factory::build("Newsfeed")->getBoosts($limit, false, 0, 0, [
-                    'priority' => !get_input('offset', '')
-                ]);
+                /** @var Core\Boost\Network\Iterator $iterator */
+                $iterator = Core\Di\Di::_()->get('Boost\Network\Iterator');
+                $iterator->setPriority(!get_input('offset', ''))
+                    ->setType('newsfeed')
+                    ->setLimit($limit)
+                    ->setRating(0)
+                    ->setQuality(0)
+                    ->setIncrement(false);
 
-                foreach ($boosts as $boost) {
+
+                foreach ($iterator as $boost) {
                     $boost->boosted = true;
                     array_unshift($activity, $boost);
                     //if (get_input('offset')) {

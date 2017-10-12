@@ -11,7 +11,7 @@ class Counters
 {
     /**
      * Increment a metric count
-     * @param  Entity|number $entity
+     * @param  Entity|number|string $entity
      * @param  string        $metric
      * @param  int           $value  - Value to increment. Defaults to 1.
      * @param  Data\Client   $client - Database. Defaults to Cassandra.
@@ -109,7 +109,7 @@ class Counters
 
     /**
      * Returns the count for a single metric on an entity
-     * @param  Entity|number  $entity
+     * @param  Entity|number|string  $entity
      * @param  string         $metric
      * @param  boolean        $cache  - use a cache for result?
      * @param  Data\Client    $client - Database. Defaults to Cassandra.

@@ -17,6 +17,8 @@ class Factory
      */
     public static function build($handler, $options = array(), $db = null)
     {
+        if($handler == 'newsfeed')
+            $handler = 'network';
         $handler = ucfirst($handler);
         $handler = "Minds\\Core\\Boost\\$handler";
         if (class_exists($handler)) {

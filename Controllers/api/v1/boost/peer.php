@@ -30,28 +30,30 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $response = [];
         $limit = isset($_GET['limit']) && $_GET['limit'] ? (int) $_GET['limit'] : 12;
         $offset = isset($_GET['offset']) && $_GET['offset'] ? $_GET['offset'] : '';
+        /** @var Core\Boost\Peer\Review $review */
+        $review = Core\Di\Di::_()->get('Boost\Peer\Review');
 
         switch ($pages[0]) {
-          case 'outbox':
-            $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-            $boosts = $pro->getOutbox($limit, $offset);
+            case 'outbox':
+                $boosts = $review->getOutbox(Core\Session::getLoggedinUser()->guid, $limit, $offset);
 
-            $response['boosts'] = Factory::exportable($boosts['data']);
+                $response['boosts'] = Factory::exportable($boosts['data']);
 
-            if ($boosts) {
-                $response['load-next'] = $boosts['next'];
-            }
-            break;
-          case 'inbox':
-          default:
-            $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-            $boosts = $pro->getReviewQueue(isset($_GET['limit']) ? $_GET['limit'] : 12, isset($_GET['offset']) ? $_GET['offset'] : "");
+                if ($boosts) {
+                    $response['load-next'] = $boosts['next'];
+                }
+                break;
+            case 'inbox':
+            default:
+                $review->setType(Core\Session::getLoggedinUser()->guid);
+                $boosts = $review->getReviewQueue(isset($_GET['limit']) ? $_GET['limit'] : 12,
+                    isset($_GET['offset']) ? $_GET['offset'] : "");
 
-            $response['boosts'] = Factory::exportable($boosts['data']);
+                $response['boosts'] = Factory::exportable($boosts['data']);
 
-            if ($boosts) {
-                $response['load-next'] = (string) $boosts['next'];
-            }
+                if ($boosts) {
+                    $response['load-next'] = (string) $boosts['next'];
+                }
         }
 
         return Factory::response($response);
@@ -183,8 +185,9 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         Factory::isLoggedIn();
 
         $response = [];
-        $pro = Core\Boost\Factory::build('peer', ['destination'=>Core\Session::getLoggedInUser()->guid]);
-        $boost = $pro->getBoostEntity($pages[0]);
+        /** @var Core\Boost\Peer\Review $review */
+        $review = Core\Di\Di::_()->get('Boost\Peer\Review');
+        $boost = $review->getBoostEntity($pages[0]);
 
         if ($boost->getState() != 'created') {
             return Factory::response([
@@ -247,7 +250,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             $facebook->post($embeded);
         }
 
-        $pro->accept($pages[0]);
+        $review->setBoost($boost);
+        try {
+            $review->accept();
+        } catch (\Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
+        }
         $response['status'] = 'success';
         return Factory::response($response);
     }
@@ -262,8 +271,10 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $revoked = isset($pages[1]) && $pages[1] == 'revoke';
 
-        $pro = Core\Boost\Factory::build('peer', ['destination'=> $revoked ? "requested:" . Core\Session::getLoggedInUser()->guid : Core\Session::getLoggedInUser()->guid]);
-        $boost = $pro->getBoostEntity($pages[0]);
+        /** @var Core\Boost\Peer\Review $review */
+        $review = Core\Di\Di::_()->get('Boost\Peer\Review');
+        $boost = $review->getBoostEntity($pages[0]);
+        $review->setBoost($boost);
 
         if ($boost->getState() != 'created') {
             return Factory::response([
@@ -294,17 +305,22 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $message);
         }
 
-        if ($revoked) {
-            $pro->revoke($pages[0]);
-        } else {
-            Core\Events\Dispatcher::trigger('notification', 'boost', [
-                'to'=>array($boost->getOwner()->guid),
-                'entity' => $boost->getEntity(),
-                'title' => $boost->getEntity()->title,
-                'notification_view' => 'boost_peer_rejected',
-                'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
-            ]);
-            $pro->reject($pages[0]);
+        try {
+            if ($revoked) {
+                $review->revoke();
+            } else {
+                Core\Events\Dispatcher::trigger('notification', 'boost', [
+                    'to' => array($boost->getOwner()->guid),
+                    'entity' => $boost->getEntity(),
+                    'title' => $boost->getEntity()->title,
+                    'notification_view' => 'boost_peer_rejected',
+                    'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType()]
+                ]);
+                $review->reject();
+            }
+        } catch (\Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
         }
 
         $response['status'] = 'success';

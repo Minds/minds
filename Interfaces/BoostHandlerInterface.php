@@ -15,13 +15,6 @@ interface BoostHandlerInterface
     public function boost($entity, $impressions);
 
 
-    /**
-     * Return boosts for review
-     * @param int    $limit
-     * @param string $offset
-     * @return array
-     */
-    public function getReviewQueue($limit, $offset = "");
 
     /**
      * Accept a boost

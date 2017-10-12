@@ -67,8 +67,10 @@ class boost implements Interfaces\Api
                     return Factory::response(array('status'=>'error', 'message'=>'entity not in boost queue'));
                 }
                 $response['points'] = reset($guids);*/
-                $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
-                $boost = $pro->getBoostEntity($pages[0]);
+//                $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
+                /** @var Core\Boost\Peer\Review $review */
+                $review = Di::_()->get('Boost\Peer\Review');
+                $boost = $review->getBoostEntity($pages[0]);
                 if ($boost->getState() != 'created') {
                     return Factory::response(['status' => 'error', 'message' => 'entity not in boost queue']);
                 }
@@ -94,8 +96,10 @@ class boost implements Interfaces\Api
                 $response['minUsd'] = $this->getMinUSDCharge();
                 break;
             case "p2p":
-                $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
-                $boosts = $pro->getReviewQueue($limit, $offset);
+                /** @var Core\Boost\Peer\Review $review */
+                $review = Di::_()->get('Boost\Peer\Review');
+                $review->setType(Core\Session::getLoggedInUser()->guid);
+                $boosts = $review->getReviewQueue($limit, $offset);
                 $boost_entities = [];
                 //only show 'point boosts and 'created' (not accepted or rejected)
                 foreach ($boosts['data'] as $i => $boost) {
@@ -113,8 +117,10 @@ class boost implements Interfaces\Api
                 break;
             case "newsfeed":
             case "content":
-                $pro = Core\Boost\Factory::build(ucfirst($pages[0]));
-                $boosts = $pro->getOutbox($limit, $offset);
+                /** @var Core\Boost\Network\Review $review */
+                $review = Di::_()->get('Boost\Network\Review');
+                $review->setType($pages[0]);
+                $boosts = $review->getOutbox(Core\Session::getLoggedinUser()->guid, $limit, $offset);
                 $response['boosts'] = Factory::exportable($boosts['data']);
                 $response['load-next'] = $boosts['next'];
                 break;
@@ -300,7 +306,7 @@ class boost implements Interfaces\Api
     }
 
     /**
-     * Called when a boost is to be accepted (assume channels only right now
+     * Called when a boost is to be accepted (assume channels only right now)
      * @param array $pages
      */
     public function put($pages)
@@ -308,8 +314,10 @@ class boost implements Interfaces\Api
         Factory::isLoggedIn();
 
         $response = [];
-        $pro = Core\Boost\Factory::build('peer', ['destination' => Core\Session::getLoggedInUser()->guid]);
-        $boost = $pro->getBoostEntity($pages[0]);
+        /** @var Core\Boost\Peer\Review $review */
+        $review = Di::_()->get('Boost\Peer\Review');
+        $boost = $review->getBoostEntity($pages[0]);
+        $review->setBoost($boost);
 
         //double check status before issuing points
         if ($boost->getState() != 'created') {
@@ -339,7 +347,7 @@ class boost implements Interfaces\Api
             'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType()]
         ]);
 
-        $pro->accept($pages[0]);
+        $review->accept();
 
         Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
 
@@ -387,7 +395,10 @@ class boost implements Interfaces\Api
             ]);
         }
 
-        $boost = Core\Boost\Factory::build($type)->getBoostEntity($guid);
+        /** @var Core\Boost\Network\Review|Core\Boost\Peer\Review $review */
+        $review = $type == 'peer' ? Di::_()->get('Boost\Peer\Review') : Di::_()->get('Boost\Network\Review');
+        $review->setType($type);
+        $boost = $review->getBoostEntity($guid);
         if (!$boost) {
             return Factory::response([
                 'status' => 'error',
@@ -403,11 +414,10 @@ class boost implements Interfaces\Api
         }
 
         if ($action == 'revoke') {
-            $success = Core\Boost\Factory::build($type)->revoke($boost);
-
-            if ($success) {
-                Di::_()->get('Boost\Payment')->refund($boost);
-            } else {
+            $review->setBoost($boost);
+            try {
+                $review->revoke();
+            } catch (\Exception $e) {
                 $response['status'] = 'error';
             }
         }
