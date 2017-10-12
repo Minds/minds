@@ -4,16 +4,19 @@
  */
 namespace Minds\Core\Search;
 
+use Minds\Core;
 use Minds\Core\Config;
-use Minds\Core\Search\Client;
+use Minds\Core\Di\Di;
+use Minds\Core\Data\ElasticSearch\Prepared;
 
 class Documents
 {
+    /** @var Core\Data\ElasticSearch\Client $client */
     protected $client;
 
     public function __construct($client = null, $index = null)
     {
-        $this->client = $client ?: Client::build();
+        $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
         $this->index = $index ?: Config::_()->cassandra->keyspace;
     }
 
@@ -79,7 +82,10 @@ class Documents
     // error_log(print_r($body, 1));
 
     // Document path: index/type/guid
-      $result = $this->client->index($params);
+      $prepared = new Prepared\Index();
+      $prepared->query($params);
+
+      return $this->client->request($prepared);
   }
 
   /**
@@ -180,7 +186,10 @@ class Documents
       $guids = [];
 
       try {
-          $results = $this->client->search($params);
+          $prepared = new Prepared\Search();
+          $prepared->query($params);
+
+          $results = $this->client->request($prepared);
 
           foreach ($results['hits']['hits'] as $result) {
               $guids[] = $result['_id'];
@@ -210,7 +219,10 @@ class Documents
       ];
 
       try {
-          $suggestions = $this->client->search($params);
+          $prepared = new Prepared\Search();
+          $prepared->query($params);
+
+          $suggestions = $this->client->request($prepared);
           return $suggestions;
       } catch (\Exception $e) {
         echo 2;
@@ -222,7 +234,7 @@ class Documents
 
   public function setupSuggestedMappings()
   {
-      $this->client->indices()->putMapping([
+      $this->client->getClient()->indices()->putMapping([
         'index' => $this->index,
         'type' => 'user',
         'body' => [
@@ -245,7 +257,10 @@ class Documents
       }
 
       try {
-          return $this->client->search($opts);
+          $prepared = new Prepared\Search();
+          $prepared->query($opts);
+
+          return $this->client->request($prepared);
       } catch (\Exception $e) {
           return [];
       }
@@ -332,7 +347,7 @@ class Documents
   /**
    * Gets the full text format for a set of data
    * @param  array $data
-   * @return array
+   * @return string
    */
   public function getFullTextBody(array $data = [])
   {
