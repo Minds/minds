@@ -50,6 +50,7 @@ class Minds extends base
         (new Media\MediaProvider())->register();
         (new Notification\NotificationProvider())->register();
         (new Reports\ReportsProvider())->register();
+        (new Groups\GroupsProvider())->register();
     }
 
     /**

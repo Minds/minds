@@ -21,6 +21,7 @@ class Defaults
 
         /* Trigger SEO providers */
         (new Core\Media\SEO())->setup();
+        (new Core\Groups\SEO())->setup();
     }
 
     public function init()

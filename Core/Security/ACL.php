@@ -5,6 +5,7 @@
 namespace Minds\Core\Security;
 
 use Minds\Core;
+use Minds\Entities;
 
 class ACL
 {
@@ -31,7 +32,8 @@ class ACL
     /**
      * Checks access read rights to entity
      * @param Entity $entity
-     * @param (optional) $user
+     * @param $user optional
+     * @param $strict optional. skips public access checks
      * @return boolean
      */
     public function read($entity, $user = null)
@@ -52,12 +54,16 @@ class ACL
             }
         }
 
-      /**
-       * Does the user ownn the entity, or is it the container?
-       */
-      if ($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid) {
-          return true;
-      }
+        /**
+         * Does the user ownn the entity, or is it the container?
+         */
+        if ($entity->owner_guid && ($entity->owner_guid == $user->guid)) {
+            return true;
+        }
+
+        if ($entity->container_guid && ($entity->container_guid == $user->guid)) {
+            return true;
+        }
 
       /**
        * Is the entity open for loggedin users?
@@ -69,7 +75,7 @@ class ACL
       /**
        * Is this user an admin?
        */
-      if ($user->isAdmin()) {
+      if ($user && $user->isAdmin()) {
           return true;
       }
 
@@ -91,7 +97,7 @@ class ACL
     /**
      * Checks access read rights to entity
      * @param Entity $entity
-     * @param (optional) $user
+     * @param $user (optional)
      * @return boolean
      */
     public function write($entity, $user = null)
@@ -127,6 +133,27 @@ class ACL
          */
         if (Core\Events\Dispatcher::trigger('acl:write', $entity->type, array('entity'=>$entity, 'user'=>$user), false) === true) {
             return true;
+        }
+
+        /**
+         * Allow plugins to check if we own the container
+         */
+        if ($entity->container_guid && $entity->container_guid != $entity->owner_guid && $entity->container_guid != $entity->guid) {
+            if (isset($entity->containerObj) && $entity->containerObj) {
+                $container = is_array($entity->containerObj) ? (object)$entity->containerObj : $entity->containerObj;
+            } else {
+                $container = Entities\Factory::build($entity->container_guid);
+            }
+
+            $check = Core\Events\Dispatcher::trigger('acl:write:container', $container->type, [
+                'entity' => $entity,
+                'user' => $user,
+                'container' => $container
+            ], false);
+
+            if ($check === true) {
+                return true;
+            }
         }
 
         return false;

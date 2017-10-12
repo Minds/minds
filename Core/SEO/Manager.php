@@ -14,7 +14,7 @@ class Manager
   /**
    * Add a callback to provide metadata
    * @param string $route
-   * @param function $callback
+   * @param callable $callback
    */
   public static function add($route, $callback)
   {

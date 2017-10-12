@@ -198,6 +198,21 @@ class notifications implements Interfaces\Api
                $notifications[$key]['notification_view'] = 'custom_message';
                $notifications[$key]['params']['message'] = "@{$data['params']['username']} wants to chat with you!";
             }
+
+            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_add') {
+               $notifications[$key]['notification_view'] = 'custom_message';
+               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} is awaiting approval from group administrators.";
+            }
+
+            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_approve') {
+               $notifications[$key]['notification_view'] = 'custom_message';
+               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} was approved.";
+            }
+
+            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_reject') {
+               $notifications[$key]['notification_view'] = 'custom_message';
+               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} was rejected.";
+            }
         }
 
         return $notifications;

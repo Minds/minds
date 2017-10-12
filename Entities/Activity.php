@@ -33,7 +33,8 @@ class Activity extends Entity
             'edited' => false,
             'comments_enabled' => true,
             'wire_threshold' => null,
-            'boost_rejection_reason' => -1
+            'boost_rejection_reason' => -1,
+            'pending' => false,
         //	'node' => elgg_get_site_url()
         ));
     }
@@ -151,7 +152,9 @@ class Activity extends Entity
         /**
          * @todo make it only post to a group if we are in a group
          */
-        array_push($indexes, "$this->type:container:$this->container_guid");
+        if (!$this->getPending()) {
+            array_push($indexes, "$this->type:container:$this->container_guid");
+        }
 
         /**
          * Make a link from entity to this activity post
@@ -196,7 +199,8 @@ class Activity extends Entity
                 'comments_enabled',
                 'wire_totals',
                 'wire_threshold',
-                'boost_rejection_reason'
+                'boost_rejection_reason',
+                'pending',
             ));
     }
 
@@ -407,6 +411,26 @@ class Activity extends Entity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    /**
+     * Sets the pending (container queue) flag for this activity
+     * @param mixed $value
+     * @return $this
+     */
+    public function setPending($value)
+    {
+        $this->pending = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the pending (container queue) flag
+     * @return boolean
+     */
+    public function getPending()
+    {
+        return (bool) $this->pending;
     }
 
     /**

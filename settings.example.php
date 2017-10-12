@@ -91,7 +91,6 @@ $CONFIG->min_password_length = 6;
 
 $CONFIG->set('plugins', [
   'Messenger',
-  'Groups',
   'blog',
   'thumbs',
   'oauth2',

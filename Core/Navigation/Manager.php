@@ -223,6 +223,10 @@ class Manager
     public static function export($container = null)
     {
         self::defaults();
+
+        /* Initialize modules  */
+        (new Core\Groups\Navigation())->setup();
+
         $containers = array();
 
         foreach (self::$containers as $id => $container) {

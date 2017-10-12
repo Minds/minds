@@ -29,6 +29,14 @@ class comments implements Interfaces\Api
         $response = array();
         $guid = $pages[0];
 
+        $parent = Entities\Factory::build($guid);
+        if ($parent && !Core\Security\ACL::_()->read($parent, null)) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You cannot participate in this thread'
+            ]);
+        }
+
         $indexes = new Data\indexes('comments');
         $limit = \get_input('limit', 3);
         $guids = $indexes->get($guid, array('limit'=>$limit, 'offset'=>\get_input('offset', ''), 'reversed'=>\get_input('reversed', false)));
@@ -136,16 +144,18 @@ class comments implements Interfaces\Api
                     unset($subscribers[$comment->owner_guid]);
                 }
 
-                if ($parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
+                if (($parent->type != 'group') && ($parent->owner_guid != Core\Session::getLoggedinUser()->guid)) {
                     Helpers\Wallet::createTransaction($parent->owner_guid, 5, $pages[0], 'Comment');
                 }
 
-                Core\Events\Dispatcher::trigger('notification', 'all', array(
-                    'to' => $subscribers,
-                    'entity'=>$pages[0],
-                    'description'=>$comment->description,
-                    'notification_view'=>'comment'
-                ));
+                if ($parent->type != 'group') {
+                    Core\Events\Dispatcher::trigger('notification', 'all', array(
+                        'to' => $subscribers,
+                        'entity'=>$pages[0],
+                        'description'=>$comment->description,
+                        'notification_view'=>'comment'
+                    ));
+                } // TODO: Group chat notifications? (might be heavy)
 
                 // Defer emitting after processing attachments
                 $emitToSocket = true;
@@ -243,7 +253,7 @@ class comments implements Interfaces\Api
 
             $parent = new \Minds\Entities\Entity($comment->parent_guid);
 
-            if ($parent && $parent->owner_guid != Core\Session::getLoggedinUser()->guid) {
+            if ($parent && ($parent->type != 'group') && ($parent->owner_guid != Core\Session::getLoggedinUser()->guid)) {
                 Helpers\Wallet::createTransaction($parent->owner_guid, -5, $comment->parent_guid, 'Comment Removed');
             }
         }

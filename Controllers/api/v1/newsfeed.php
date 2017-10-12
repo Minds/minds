@@ -490,6 +490,11 @@ class newsfeed implements Interfaces\Api
                         "activity:container:$activity->container_guid",
                         "activity:network:$activity->owner_guid"
                     ];
+
+                    Core\Events\Dispatcher::trigger('activity:container:prepare', $container->type, [
+                        'container' => $container,
+                        'activity' => $activity,
+                    ]);
                 }
 
                 if ($guid = $activity->save()) {

@@ -67,6 +67,13 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
                         $response['paywalled'] = $entity->getFlag('paywall') && $entity->getWireThreshold();
                     }
 
+                    if (method_exists($entity, 'canEdit')) {
+                        $ignore = Security\ACL::$ignore;
+                        Security\ACL::$ignore = false;
+                        $response['canEdit'] = $entity->canEdit();
+                        Security\ACL::$ignore = $ignore;
+                    }
+
                     /* No break */
                 default:
                     $entity->fullExport = true;
@@ -78,6 +85,13 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                     if (method_exists($entity, 'getWireThreshold')) {
                         $response['entity']['paywalled'] = $entity->getFlag('paywall') && $entity->getWireThreshold();
+                    }
+
+                    if (method_exists($entity, 'canEdit')) {
+                        $ignore = Security\ACL::$ignore;
+                        Security\ACL::$ignore = false;
+                        $response['entity']['canEdit'] = $entity->canEdit();
+                        Security\ACL::$ignore = $ignore;
                     }
                 }
 
@@ -186,7 +200,14 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function delete($pages)
     {
-        Di::_()->get('Media\Repository')->delete($pages[0]);
+        $deleted = Di::_()->get('Media\Repository')->delete($pages[0]);
+
+        if (!$deleted) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You don\'t have permission to delete this media'
+            ]);
+        }
 
         return Factory::response([]);
     }

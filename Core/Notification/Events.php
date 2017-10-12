@@ -141,6 +141,17 @@ class Events
                 $params['to'] = array_diff($params['to'], $muted);
             }
 
+            if ($entity->parent_guid) {
+                $parent = Entities\Factory::build($entity->parent_guid, [ 'cache' => false ]);
+
+                if ($parent && method_exists($parent, 'export')) {
+                    $notification->setParams(array_merge(
+                        $notification->getParams() ?: [],
+                        [ 'parent' => $parent->export() ]
+                    ));
+                }
+            }
+
             $from_user = $notification->getFrom();
             if (is_numeric($from_user) || is_string($from_user)) {
                 $from_user = Entities\Factory::build($from_user);

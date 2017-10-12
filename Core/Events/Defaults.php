@@ -37,14 +37,15 @@ class Defaults
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
             $export = $event->response() ?: [];
-            $cacher = Core\Data\cache\factory::build();
 
-            if ($params['entity']->type != 'activity') {
+            if ($params['entity']->type != 'activity' && $params['entity']->type != 'group') {
                 return false;
             }
 
+            $cacher = Core\Data\cache\factory::build();
             $db = new Core\Data\Call('entities_by_time');
-            if ($params['entity']->entity_guid) {
+
+            if (($params['entity']->type == 'activity') && $params['entity']->entity_guid) {
                 $guid = $params['entity']->entity_guid;
             } else {
                 $guid = $params['entity']->guid;
@@ -59,6 +60,7 @@ class Defaults
             }
 
             $export['comments:count'] = $count;
+
             $event->setResponse($export);
         });
 
@@ -86,6 +88,9 @@ class Defaults
 
         // Report Events
         (new Core\Reports\Events())->register();
+
+        // Group Events
+        (new Core\Groups\Events())->register();
     }
 
     public static function _()
