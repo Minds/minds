@@ -57,6 +57,11 @@ class subscribe implements Interfaces\Api
                 $response['load-previous'] = (string) key($users)->guid;
                 break;
             case 'subscribers':
+
+                if ($pages[1] == "100000000000000519") {
+                    break;
+                }
+
                 $db = new \Minds\Core\Data\Call('friendsof');
                 $subscribers= $db->getRow($pages[1], array('limit'=>get_input('limit', 12), 'offset'=>get_input('offset', '')));
                 if (!$subscribers) {
