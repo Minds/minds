@@ -140,7 +140,7 @@ class ACL
          */
         if ($entity->container_guid && $entity->container_guid != $entity->owner_guid && $entity->container_guid != $entity->guid) {
             if (isset($entity->containerObj) && $entity->containerObj) {
-                $container = is_array($entity->containerObj) ? (object)$entity->containerObj : $entity->containerObj;
+                $container = Core\Entities::build($entity->containerObj);
             } else {
                 $container = Entities\Factory::build($entity->container_guid);
             }

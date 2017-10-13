@@ -29,14 +29,6 @@ class comments implements Interfaces\Api
         $response = array();
         $guid = $pages[0];
 
-        $parent = Entities\Factory::build($guid);
-        if ($parent && !Core\Security\ACL::_()->read($parent, null)) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'You cannot participate in this thread'
-            ]);
-        }
-
         $indexes = new Data\indexes('comments');
         $limit = \get_input('limit', 3);
         $guids = $indexes->get($guid, array('limit'=>$limit, 'offset'=>\get_input('offset', ''), 'reversed'=>\get_input('reversed', false)));
