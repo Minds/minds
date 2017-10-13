@@ -133,6 +133,9 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function put($pages)
     {
+        $expire = Core\Di\Di::_()->get('Boost\Network\Expire');
+        $metrics = Core\Di\Di::_()->get('Boost\Network\Metrics');
+
         $boost = Core\Boost\Factory::build($pages[0])->getBoostEntity($pages[1]);
         if (!$boost) {
             return Factory::response([
@@ -140,10 +143,16 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'message' => 'Boost not found'
             ]);
         }
+
+        $count = $metrics->incrementViews($boost);
+
+        if ($count > $boost->getImpressions()) {
+            $expire->setBoost($boost);
+            $expire->expire();
+        }
+
         Counters::increment($boost->getEntity()->guid, "impression");
         Counters::increment($boost->getEntity()->owner_guid, "impression");
-        Counters::increment((string)$boost->getId(), "boost_impressions", 1);
-        Counters::increment(0, "boost_impressions", 1);
 
         return Factory::response([]);
     }
