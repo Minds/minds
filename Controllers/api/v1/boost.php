@@ -416,7 +416,13 @@ class boost implements Interfaces\Api
         if ($action == 'revoke') {
             $review->setBoost($boost);
             try {
-                $review->revoke();
+                $success = $review->revoke();
+
+                if ($success) {
+                    Di::_()->get('Boost\Payment')->refund($boost);
+                } else {
+                    $response['status'] = 'error';
+                }
             } catch (\Exception $e) {
                 $response['status'] = 'error';
             }
