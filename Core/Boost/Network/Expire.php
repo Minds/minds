@@ -39,7 +39,7 @@ class Expire
 //        return false;
 
 
-        if ($this->boost->getState() == 'comleted') {
+        if ($this->boost->getState() == 'completed') {
             return true; //already completed
         }
 
