@@ -66,6 +66,11 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $reason = $_POST['reason'];
         $mature = isset($_POST['mature']) ? $_POST['mature'] : 0;
 
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+            ->setProduct('boost');
+
         if (!$guid) {
             return Factory::response(array(
                 'status' => 'error',
@@ -105,6 +110,10 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
 
             try {
                 $review->accept();
+
+                $event->setAction('accept')
+                  ->setEntity($boost->export())
+                  ->push();
             } catch (\Exception $e) {
                 $response['status'] = 'error';
                 $response['message'] = $e->getMessage();
@@ -114,6 +123,10 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             $review->setBoost($boost);
             try {
                 $review->reject($reason);
+
+                $event->setAction('reject')
+                    ->setEntity($boost->export())
+                    ->push();
             } catch(\Exception $e) {
                 $response['status'] = 'error';
                 $response['message'] = $e->getMessage();
