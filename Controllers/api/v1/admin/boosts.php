@@ -118,6 +118,8 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
                 $review->accept();
 
                 $event->setAction('accept')
+                    ->setBoostRating($rating)
+                    ->setBoostQuality($quality)
                     ->push();
             } catch (\Exception $e) {
                 $response['status'] = 'error';
@@ -130,6 +132,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
                 $review->reject($reason);
 
                 $event->setAction('reject')
+                    ->setBoostRejectReason($reason)
                     ->push();
             } catch(\Exception $e) {
                 $response['status'] = 'error';
