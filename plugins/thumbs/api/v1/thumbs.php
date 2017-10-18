@@ -53,6 +53,16 @@ class thumbs implements Interfaces\Api
         $direction = $pages[1];
 
         $entity = Entities\Factory::build($guid);
+
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setProduct('platform')
+            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+            ->setEntityGuid((string) $entity->guid)
+            ->setEntityType($entity->type)
+            ->setEntitySubtype((string) $entity->subtype)
+            ->setEntityOwnerGuid($entity->owner_guid);
+
         if ($entity->guid) {
             if (helpers\buttons::hasThumbed($entity, $direction)) {
                 helpers\storage::cancel($direction, $entity);
@@ -67,6 +77,7 @@ class thumbs implements Interfaces\Api
                 ) {
                     WalletHelper::createTransaction($entity->remind_object['ownerObj']['guid'], -5, $guid, 'Vote Removed');
                 }
+                $event->setAction("vote:$direction:cancel");
             } else {
                 helpers\storage::insert($direction, $entity);
                 if ($entity->owner_guid != Core\Session::getLoggedinUser()->guid && $direction == 'up') {
@@ -80,11 +91,14 @@ class thumbs implements Interfaces\Api
                 ) {
                     WalletHelper::createTransaction($entity->remind_object['ownerObj']['guid'], 5, $guid, 'Vote');
                 }
+                $event->setAction("vote:$direction");
             }
         } else {
             error_log("Entity $guid not found");
             return Factory::response(array('status'=>'error', 'message'=>'entity not found'));
         }
+
+        $event->push();
 
         return Factory::response(array());
     }
