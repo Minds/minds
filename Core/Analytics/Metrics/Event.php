@@ -29,7 +29,7 @@ class Event
 
     public function push()
     {
-        $this->data['@timestamp'] = (int) microtime(true);
+        $this->data['@timestamp'] = (int) microtime(true) * 1000;
 
         $prepared = new Core\Data\ElasticSearch\Prepared\Index();
         $prepared->query([
