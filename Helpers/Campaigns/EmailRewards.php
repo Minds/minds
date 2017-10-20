@@ -26,6 +26,8 @@ class EmailRewards
 
         $user = new Entities\User($user_guid);
 
+        $wire = false;
+
         $cacher = Core\Data\cache\factory::build('apcu');
         $label = $campaign;
         switch ($campaign) {
@@ -36,7 +38,7 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "january-31-2017":
+          case "october-21-wire":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 1000;
@@ -58,7 +60,15 @@ class EmailRewards
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
-            Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
+            if ($wire) {
+                $service = Methods\Factory::build('points');                
+                $service->setAmount($points)
+                    ->setEntity($user)
+                    ->setFrom(new Entities\User('730071191229833224'))
+                    ->create();
+            } else {
+                Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
+            }
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }

@@ -14,6 +14,7 @@ class Points implements MethodInterface
 {
     private $amount;
     private $entity;
+    private $from;
     private $recurring; // monthly
     private $timestamp;
     private $manager;
@@ -36,6 +37,12 @@ class Points implements MethodInterface
     public function setEntity($entity)
     {
         $this->entity = $entity;
+        return $this;
+    }
+
+    public function setFrom($from)
+    {
+        $this->from = $from;
         return $this;
     }
 
@@ -148,7 +155,7 @@ class Points implements MethodInterface
         $wire = (new Entities\Wire)
             ->setAmount($this->amount)
             ->setRecurring($this->recurring)
-            ->setFrom(Core\Session::getLoggedInUser())
+            ->setFrom($this->from ?: Core\Session::getLoggedInUser())
             ->setTo($user)
             ->setTimeCreated(time())
             ->setEntity($this->entity)
