@@ -38,10 +38,11 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "october-21-wire":
+          case "october-21-17-wire":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 1000;
+                $wire = true;
             } else {
                 echo "Validator failed"; exit;
             }
@@ -51,17 +52,17 @@ class EmailRewards
         }
 
         if ($cacher->get("rewarded:email:$campaign:$user_guid") == true) {
-            return;
+       //     return;
         }
 
         $db = new Core\Data\Call('entities_by_time');
         $ts = Helpers\Analytics::buildTS("day", time());
-        $row = $db->getRow("analytics:rewarded:email:$campaign", ['offset'=> $user_guid, 'limit'=>1]);
+     //   $row = $db->getRow("analytics:rewarded:email:$campaign", ['offset'=> $user_guid, 'limit'=>1]);
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
             if ($wire) {
-                $service = Methods\Factory::build('points');                
+                $service = Core\Wire\Methods\Factory::build('points');                
                 $service->setAmount($points)
                     ->setEntity($user)
                     ->setFrom(new Entities\User('730071191229833224'))
