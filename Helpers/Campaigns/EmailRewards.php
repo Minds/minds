@@ -52,12 +52,12 @@ class EmailRewards
         }
 
         if ($cacher->get("rewarded:email:$campaign:$user_guid") == true) {
-       //     return;
+            return;
         }
 
         $db = new Core\Data\Call('entities_by_time');
         $ts = Helpers\Analytics::buildTS("day", time());
-     //   $row = $db->getRow("analytics:rewarded:email:$campaign", ['offset'=> $user_guid, 'limit'=>1]);
+        $row = $db->getRow("analytics:rewarded:email:$campaign", ['offset'=> $user_guid, 'limit'=>1]);
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
