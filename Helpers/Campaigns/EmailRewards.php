@@ -38,11 +38,24 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "october-21-17-wire":
+          case "october-31":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
-                $points = 1000;
+                $points = 1031;
                 $wire = true;
+
+                if ($_GET['selected'] == 'trick') {
+                    Core\Security\ACL::$ignore = true;
+                    $embeded = new Entities\Activity('771850251358183424');
+                    $activity = new Entities\Activity();
+                    $activity->setMessage("#IGotTricked");
+                    $activity->setRemind($embeded->export());
+                    $activity->setOwner($user);
+                    $activity->save();
+                    Helpers\Counters::increment($embeded->guid, 'remind');
+                    Core\Security\ACL::$ignore = false;
+                    return;
+                }
             } else {
                 echo "Validator failed"; exit;
             }
@@ -62,11 +75,20 @@ class EmailRewards
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
             if ($wire) {
+                $plus = new Entities\User('730071191229833224');
                 $service = Core\Wire\Methods\Factory::build('points');                
                 $service->setAmount($points)
                     ->setEntity($user)
-                    ->setFrom(new Entities\User('730071191229833224'))
+                    ->setFrom($plus)
                     ->create();
+                Core\Queue\Client::build()->setQueue("WireNotification")
+                  ->send(array(
+                    "amount" => $points,
+                    "sender" => serialize($plus),
+                    "entity" => serialize($user),
+                    "method" => 'points',
+                    "subscribed" => false 
+                   ));
             } else {
                 Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
             }
