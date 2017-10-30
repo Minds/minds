@@ -141,6 +141,11 @@ class Feeds
             throw new \Exception('Activity doesn\'t belong to this group');
         }
 
+        $activity->indexes = [
+            "activity:container:$activity->container_guid",
+            "activity:network:$activity->owner_guid"
+        ];
+
         $activity->setPending(false);
         $activity->save(true);
 
