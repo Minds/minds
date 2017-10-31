@@ -55,7 +55,7 @@ class Feeds
         }
 
         foreach ($this->indexDb->getRow("activity:entitylink:{$this->entity->guid}") as $guid => $ts) {
-            $this->entityDb->insert($guid, [ 'title' => $this->entity->title ]);
+            $this->entityDb->insert($guid, [ 'message' => $this->entity->title ]);
         }
 
         return true;
