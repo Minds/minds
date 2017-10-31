@@ -473,13 +473,9 @@ class Group extends NormalizedEntity
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $owner = $this->getOwnerObj();
+        $owner_guid = $this->getOwnerObj() ? $this->getOwnerObj()->guid : $this->owner_guid;
 
-        if (!$owner) {
-            return false;
-        }
-
-        return $user_guid == $owner->guid;
+        return $user_guid == $owner_guid;
     }
 
     /**
