@@ -58,6 +58,39 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function post($pages)
     {
+        $event = new Core\Analytics\Metrics\Event();
+        if (!isset($_POST['type'])) {
+            return Factory::response(['status' => 'error', 'message' => 'type not set']);
+        }
+        if (!isset($_POST['fields'])) {
+            return Factory::response(['status' => 'error', 'message' => 'fields not set']);
+        }
+        if (!isset($_POST['entityGuid'])) {
+            return Factory::response(['status' => 'error', 'message' => 'entityGuid not set']);
+        }
+        $type = $_POST['type'];
+        $fields = $_POST['fields'];
+        $entity_guid = (string) $_POST['entityGuid'];
+
+        $entity = Entities\Factory::build($entity_guid);
+
+        if (!$entity) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'entity with guid ' . $entity_guid . ' does not set'
+            ]);
+        }
+
+        $event->setType($type)
+            ->setFields($fields)
+            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+            ->setEntityGuid((string) $entity->getGUID())
+            ->setEntityType($entity->type)
+            ->setEntitySubType($entity->subtype)
+            ->setEntityOwnerGuid($entity->getOwnerEntity()->getGUID())
+            ->push();
+
+        return Factory::response([]);
     }
 
     /**

@@ -64,6 +64,32 @@ class Events
 
         });
 
+        Dispatcher::register('export:extender', 'blog', function($event) {
+            $params = $event->getParameters();
+            $blog = $params['entity'];
+            if($blog->subtype != 'blog'){
+                return;
+            }
+            $export = $event->response() ?: [];
+            $currentUser = Session::getLoggedInUserGuid();
+
+            $dirty = false;
+
+            if ($blog->isPaywall() && $blog->owner_guid != $currentUser) {
+                $export['description'] = null;
+                $dirty = true;
+            }
+
+            if ($dirty) {
+                return $event->setResponse($export);
+            }
+
+            if (!$currentUser) {
+                return;
+            }
+
+        });
+
         Dispatcher::register('acl:read', 'object', function($event) {
             $params = $event->getParameters();
             $entity = $params['entity'];

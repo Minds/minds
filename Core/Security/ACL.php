@@ -31,7 +31,7 @@ class ACL
 
     /**
      * Checks access read rights to entity
-     * @param Entity $entity
+     * @param Entities\Entity $entity
      * @param $user optional
      * @param $strict optional. skips public access checks
      * @return boolean

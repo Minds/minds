@@ -48,10 +48,10 @@ class XSS
     public function setAllowed($allowed = [])
     {
         $this->allowed = array_merge($allowed, [
-          '<a>', '<b>', '<i>', '<em>', '<strong>', '<ul>', '<ol>', '<li>', '<p>', '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', '<h6>', '<blockquote>', //tag names
+          '<figure>', '<div>', '<a>', '<b>', '<i>', '<em>', '<strong>', '<ul>', '<ol>', '<li>', '<p>', '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', '<h6>', '<blockquote>', '<br>', //tag names
           '<sub>', '<sup>', '<span>', //more tag names
           '<img>', '<video>', '<iframe>', //tag names
-          'a=href', '*=src', '*=width', '*=height', '*=style',//attibute names
+          'a=href', '*=src', '*=width', '*=height', '*=scrolling', '*=style', '*=class',//attibute names
           '::http', '::https', '::*', //scheme protocols
         ]);
 

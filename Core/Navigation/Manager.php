@@ -229,6 +229,9 @@ class Manager
 
         $containers = array();
 
+        /* Initialize modules */
+        (new \Minds\Core\Blogs\Navigation())->setup();
+
         foreach (self::$containers as $id => $container) {
             $containers[$id] = $container->export();
         }

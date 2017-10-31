@@ -91,6 +91,9 @@ class Defaults
 
         // Group Events
         (new Core\Groups\Events())->register();
+
+        // Blog events
+        (new Core\Blogs\Events())->register();
     }
 
     public static function _()
