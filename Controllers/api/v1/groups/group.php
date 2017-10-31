@@ -271,7 +271,7 @@ class group implements Interfaces\Api
         }
 
         $group->setIconTime(time());
-        $group->save([ 'skipSearchIndexing' => true ]);
+        $group->save();
 
         return $group;
     }
@@ -297,7 +297,7 @@ class group implements Interfaces\Api
           ->setBanner(time())
           ->setBannerPosition($banner_position);
 
-        $group->save([ 'skipSearchIndexing' => true ]);
+        $group->save();
 
         return $group;
     }

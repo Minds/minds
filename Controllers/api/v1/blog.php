@@ -186,7 +186,9 @@ class blog implements Interfaces\Api
         }
         $blog->last_save = time();
 
-        $blog->setPaywall(isset($_POST['wire_threshold']));
+        if (isset($_POST['wire_threshold']) && $_POST['wire_threshold'] != 'null') {
+            $blog->setPaywall();
+        }
 
         if ($blog->monetized && $blog->mature) {
             return Factory::response([

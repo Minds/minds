@@ -8,6 +8,7 @@ use Minds\Core;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Entities;
 
 class Documents
 {
@@ -17,79 +18,12 @@ class Documents
     public function __construct($client = null, $index = null)
     {
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
-        $this->index = $index ?: Config::_()->cassandra->keyspace;
+        $this->index = $index ?: Config::_()->elasticsearch['index'];
     }
 
   /**
-   * Creates or updates a document
-   * @param  mixed   $data
-   * @return boolean
-   */
-  public function index($data = null)
-  {
-      if (is_object($data)) {
-          if (method_exists($data, 'export')) {
-              $data = $data->export();
-          } else {
-              $data = (array) $data;
-          }
-      }
-      
-      if (!is_array($data)) {
-          throw new \Exception('Invalid data');
-      }
-
-      if (!isset($data['type']) || !$data['type']) {
-          throw new \Exception('Missing data type');
-      }
-
-      if (!isset($data['guid']) || !$data['guid']) {
-          throw new \Exception('Missing data guid');
-      }
-
-      $body = $this->formatDocumentBody($data);
-      $fullTextBody = $this->getFullTextBody($data);
-
-      if (!$body) {
-          throw new \Exception('Empty data body');
-      }
-
-      if ($data['type'] != 'user') {
-          // Get hashtags to put them into a field
-          $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
-          $matches = [];
-
-          preg_match_all($htRe, $fullTextBody, $matches);
-
-          if (isset($matches[2]) && $matches[2]) {
-              $body['hashtags'] = array_unique($matches[2]);
-          }
-      }
-
-      $params = [
-        'body' => $body,
-        'index' => $this->index,
-        'type' => $data['type'],
-        'id' => $data['guid'],
-        'client' => [
-            'timeout' => 2,
-            'connect_timeout' => 1,
-            //'future' => 'lazy'
-        ] 
-      ];
-
-    // error_log("indexing for search: {$this->index}/{$data['type']}/{$data['guid']}");
-    // error_log(print_r($body, 1));
-
-    // Document path: index/type/guid
-      $prepared = new Prepared\Index();
-      $prepared->query($params);
-
-      return $this->client->request($prepared);
-  }
-
-  /**
    * Get GUIDs that match the provided query
+   * @deprecated
    * @param  string $query
    * @param  array  $opts
    * @return array
@@ -101,10 +35,11 @@ class Documents
         'type' => null,
         'offset' => '',
         'flags' => [ ],
-        'mature' => false
+        'mature' => false,
+        'container' => ''
       ], $opts);
 
-      $query = preg_replace('/[^A-Za-z0-9_\-#"]/', ' ', $query);
+      $query = preg_replace('/[^A-Za-z0-9_\-#"+]/', ' ', $query);
       $flags = '';
 
       // Passed flags (type, subtype, ~, etc.)
@@ -133,11 +68,27 @@ class Documents
           $hashtags = true;
 
           foreach ($matches[2] as $match) {
-              $flags .= " +hashtags:\"{$match}\"";
+              $flags .= " +tags:\"{$match}\"";
           }
 
           $query = preg_replace($htRe, '', $query);
       }
+
+      $hasContainer = false;
+      if ($opts['container']) {
+          $container = Entities\Factory::build($opts['container']);
+
+          if (Core\Security\ACL::_()->read($container)) {
+              $flags .= " +container_guid:\"{$container->guid}\"";
+              $hasContainer = true;
+          }
+      }
+
+      if (!$hasContainer) {
+          $flags .= " +public:true";
+      }
+
+      $flags .= " +mature:" . ($opts['mature'] ? 'true' : 'false');
 
       // Setup parameters
       $params = [
@@ -149,7 +100,7 @@ class Documents
               'query' => $query . $flags,
               'default_operator' => 'AND',
               'minimum_should_match' => '75%',
-              'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'tags^12', 'hashtags^12' ],
+              'fields' => [ '_all', 'name^6', 'title^8', 'username^8', 'tags^12' ],
              ]
            ]
          ]
@@ -168,20 +119,6 @@ class Documents
       if ($opts['offset']) {
           $params['from'] = $opts['offset'];
       }
-
-      /*if (!$opts['mature']) {
-        $params['body']['filter'] = [
-            'bool' => [
-            'must_not' => [
-                [ 
-                'term' => [
-                    'mature' => 1
-                ]
-                ]
-            ]
-            ]
-        ];
-      }*/
 
       $guids = [];
 
@@ -232,23 +169,6 @@ class Documents
 
   }
 
-  public function setupSuggestedMappings()
-  {
-      $this->client->getClient()->indices()->putMapping([
-        'index' => $this->index,
-        'type' => 'user',
-        'body' => [
-          'user' => [
-            'properties' => [
-              'suggest' => [
-                'type' => 'completion'
-              ]
-            ]
-          ]
-        ]
-      ]);
-  }
-
   public function customQuery($opts = [])
   {
 
@@ -264,104 +184,6 @@ class Documents
       } catch (\Exception $e) {
           return [];
       }
-  }
-
-  /**
-   * Formats a document for storing
-   * @param  array $data
-   * @return array
-   */
-  public function formatDocumentBody(array $data = [], $call = 0)
-  {
-      $body = [];
-
-      if ($call++ >= 10) {
-          // Do no index 10 levels deep
-          return null;
-      }
-
-      if (isset($data['ownerObj'])) {
-          unset($data['ownerObj']);
-      }
-
-      foreach ($data as $item => $value) {
-          if (is_bool($value)) {
-              continue;
-          } elseif (is_numeric($value)) {
-              $value = (string) $value;
-          } elseif (is_object($value) || is_array($value)) {
-              if ($item !== 'group_membership') {
-                unset($data[$item]);
-                continue;
-              }
-              $value = $this->formatDocumentBody(
-                method_exists($value, 'export') ?
-                $value->export() :
-                (array) $value
-              , $call);
-          }
-
-          $item = str_replace('.', '__', $item);
-
-          if ($value) {
-              $body[$item] = $value;
-          }
-      }
-
-      if($body['type'] == 'user' && ($body['username'] || $body['name'])){
-          $inputs = [ $body['username'], $body['name'] ];
-          //split out the name based on CamelCase
-          $nameParts = preg_split('/([\s])?(?=[A-Z])/', $body['name'], -1, PREG_SPLIT_NO_EMPTY);
-          $inputs = array_unique(array_merge($inputs, $this->permutateInputs($nameParts)));
-          $body['suggest'] = [
-            'input' => array_values($inputs),
-            'weight' => count(array_values($inputs)) == 1 ? 2 : 2
-          ];
-          if (isset($body['featured_id']) && $body['featured_id']) {
-              $body['suggest']['weight'] += 50;
-          }
-          if (isset($body['admin']) && $body['admin']) {
-              $body['suggest']['weight'] += 100;
-          }
-      }
-
-      return $body;
-  }
-
-  protected function permutateInputs($inputs, $calls = 0)
-  {
-      if (count($inputs) <= 1 || count($inputs) >= 4 || $calls > 5) {
-          return $inputs;
-      }
-
-      $result = [];
-      foreach ($inputs as $key => $item) {
-          foreach ($this->permutateInputs(array_diff_key($inputs, [$key => $item]), $calls++) as $p) {
-              $result[] = "$item $p";
-          }
-      }
-
-      return $result;
-  }
-
-  /**
-   * Gets the full text format for a set of data
-   * @param  array $data
-   * @return string
-   */
-  public function getFullTextBody(array $data = [])
-  {
-      $body = [];
-
-      foreach ($data as $item => $value) {
-          if (!is_string($value)) {
-              continue;
-          }
-
-          $body[] = $value;
-      }
-
-      return implode(' ', $body);
   }
 
   public static function escapeQuery($query = '')

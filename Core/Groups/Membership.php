@@ -567,7 +567,7 @@ class Membership
         $membership = array_diff($membership, $removeGroupGuids); // remove
         
         $user->context('search');
-        $user->setGroupMembership($membership);
+        $user->setGroupMembership(array_values($membership));
         $user->save();
         Dispatcher::trigger('search:index', 'all', [
             'entity' => $user

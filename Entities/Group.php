@@ -56,9 +56,6 @@ class Group extends NormalizedEntity
      */
     public function save(array $opts = [])
     {
-        $opts = array_merge([
-            'skipSearchIndexing' => false
-        ], $opts);
         $creation = false;
 
         if (!$this->guid) {
@@ -93,14 +90,7 @@ class Group extends NormalizedEntity
         }
 
         $this->saveToIndex();
-        // TODO: Is this necessary?
         \elgg_trigger_event($creation ? 'create' : 'update', $this->type, $this);
-
-        if (!$opts['skipSearchIndexing']) {
-            Dispatcher::trigger('search:index', 'all', [
-                'entity' => $this
-            ]);
-        }
 
         return $this;
     }
@@ -162,6 +152,35 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Compatibility isset
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        switch ($name) {
+            case 'guid':
+            case 'type':
+            case 'container_guid':
+            case 'owner_guid':
+            case 'access_id':
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns `type`
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Sets `ownerObj`
      * @param Entity $ownerObj
      * @return Group
@@ -190,12 +209,30 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Gets `name`
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Gets `brief_description`
      * @return mixed
      */
     public function getBriefDescription()
     {
         return $this->brief_description;
+    }
+
+    /**
+     * Gets `tags`
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags ?: [];
     }
 
     /**

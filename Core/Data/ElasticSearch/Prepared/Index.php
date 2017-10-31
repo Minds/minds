@@ -19,7 +19,12 @@ class Index implements PreparedMethodInterface
      */
     public function query(array $params)
     {
-        $this->_query = $params;
+        $this->_query = array_merge([
+            'client' => [
+                'timeout' => 2,
+                'connect_timeout' => 1
+            ]
+        ], $params);
     }
 
     /**

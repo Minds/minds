@@ -57,7 +57,7 @@ class EventSpec extends ObjectBehavior
 
         $this->setType('action');
         $this->push()->shouldBe(true);
-        $this->getData()->shouldHaveKeyWithValue('@timestamp', (int) microtime(true));
+        $this->getData()->shouldHaveKey('@timestamp');
     }
 
 }

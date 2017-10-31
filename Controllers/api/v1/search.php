@@ -26,41 +26,44 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
         $opts = [
           'limit' => $_GET['limit'] ?: 12
         ];
-        $flags = [];
+        $returnKey = 'all';
 
         if (isset($_GET['type']) && $_GET['type']) {
-            $opts['type'] = $_GET['type'];
+            $returnKey = $_GET['type'];
         } elseif (isset($pages[0]) && $pages[0]) {
-            $opts['type'] = $pages[0];
+            $returnKey = $pages[0];
         }
 
-        switch ($opts['type']) {
-          case "activities":
-            $opts['type'] = 'activity';
-            break;
-          case "channels":
-            $opts['type'] = 'user';
-            //$flags[] = "~";
-            $_GET['q'] = "({$_GET['q']})^5 OR (*{$_GET['q']}*)";
-            break;
-          case "videos":
-            $opts['type'] = 'object';
-            $flags[] = '+subtype:"video"';
-            break;
-          case "images":
-            $opts['type'] = 'object';
-            $flags[] = '+subtype:"image"';
-            break;
-          case "blogs":
-            $opts['type'] = 'object';
-            $flags[] = '+subtype:"blog"';
-            break;
-          case "groups":
-            $opts['type'] = 'group';
-            break;
+        switch ($returnKey) {
+            case "activities":
+                $returnKey = 'activity';
+                $opts['type'] = 'activity';
+                break;
+            case "channels":
+                $returnKey = 'user';
+                $opts['type'] = 'user';
+                break;
+            case "videos":
+                $returnKey = 'object';
+                $opts['type'] = 'object:video';
+                break;
+            case "images":
+                $returnKey = 'object';
+                $opts['type'] = 'object:image';
+                break;
+            case "blogs":
+                $returnKey = 'object';
+                $opts['type'] = 'object:blog';
+                break;
+            case "groups":
+                $returnKey = 'group';
+                $opts['type'] = 'group';
+                break;
         }
 
-        $opts['flags'] = $flags;
+        if (isset($_GET['container'])) {
+            $opts['container'] = $_GET['container'];
+        }
 
         if (isset($_GET['offset']) && $_GET['offset']) {
             $opts['offset'] = $_GET['offset'];
@@ -79,11 +82,10 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
           ]));
 
             if (isset($_GET['access_token'])) {
-                $response[$opts['type'] ?: 'all'][] = $response['entities'];
+                $response[$returnKey ?: 'all'][] = $response['entities'];
             }
 
-          // TODO: Check this logic
-          $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'] + 1;
+          $response['load-next'] = (int) $_GET['offset'] + $_GET['limit'];
         }
 
         return Factory::response($response);

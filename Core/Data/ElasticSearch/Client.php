@@ -24,11 +24,7 @@ class Client implements Interfaces\ClientInterface
      */
     public function __construct(array $options = [])
     {
-        $hosts = Di::_()->get('Config')->elasticsearch_server ?: 'localhost';
-
-        if (!is_array($hosts)) {
-            $hosts = [ $hosts ];
-        }
+        $hosts = Di::_()->get('Config')->elasticsearch['hosts'];
 
         $this->elasticsearch = Elasticsearch\ClientBuilder::create()
             ->setHosts($hosts)

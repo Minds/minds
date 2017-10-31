@@ -31,7 +31,7 @@ class Minds extends base
         (new Plugins\PluginsProvider())->register();
         (new Data\DataProvider())->register();
         (new Email\EmailProvider())->register();
-        //(new Core\Events\EventsProvider())->register();
+        (new Events\EventsProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
         (new Pages\PagesProvider())->register();
         (new Payments\PaymentsProvider())->register();
@@ -51,6 +51,7 @@ class Minds extends base
         (new Notification\NotificationProvider())->register();
         (new Reports\ReportsProvider())->register();
         (new Groups\GroupsProvider())->register();
+        (new Search\SearchProvider())->register();
     }
 
     /**

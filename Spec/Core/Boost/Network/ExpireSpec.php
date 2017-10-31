@@ -30,6 +30,7 @@ class ExpireSpec extends ObjectBehavior
         $entity->title = 'title';
         $boost->getEntity()->willReturn($entity);
 
+        $boost->getState()->willReturn('approved');
         $boost->getBid()->willReturn('1000');
 
         $boost->setState(Argument::containingString('completed'))->willReturn($boost);

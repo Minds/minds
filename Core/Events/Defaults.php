@@ -68,7 +68,9 @@ class Defaults
         Core\Notification\Events::registerEvents();
 
         // Search events
-        (new Core\Search\Events())->init();
+        (new Core\Search\Events())->register();
+
+        //
         (new Core\Events\Hooks\Register())->init();
 
         // Third-Party Networks events
