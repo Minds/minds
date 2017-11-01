@@ -138,6 +138,7 @@ class newsfeed implements Interfaces\Api
         //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
         $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
+        $disabledBoost = true;
 
         if (get_input('platform') == 'ios') {
             $disabledBoost = true;
@@ -406,7 +407,7 @@ class newsfeed implements Interfaces\Api
 
             default:
                 //essentially an edit
-                if (isset($pages[1])) {
+                if (is_numeric($pages[0])) {
                     $activity = new Activity($pages[0]);
                     if (!$activity->canEdit()) {
                         return Factory::response(array('status' => 'error', 'message' => 'Post not editable'));
