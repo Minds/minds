@@ -8,6 +8,7 @@
 namespace Minds\Plugin\Messenger\Controllers\api\v2;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Helpers;
 use Minds\Plugin\Messenger;
@@ -36,22 +37,30 @@ class search implements Interfaces\Api
             ]);
         }
 
-        $params = [
-          'limit' => isset($_GET['limit']) ? $_GET['limit'] : 24,
-          'type' => 'user'
-        ];
+        $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 24;
 
-        $_GET['q'] = "({$_GET['q']})^5 OR (*{$_GET['q']}*)";
+        /** @var Core\Search\Search $search */
+        $search = Di::_()->get('Search\Search');
 
-        $guids = (new Core\Search\Documents())->query($_GET['q'], $params);
+        $entities = $search->suggest('user', $_GET['q'], $limit);
         $response = [];
 
-        if ($guids) {
+        if ($entities) {
+            $guids = [];
+            foreach ($entities as $entity) {
+                $guids[] = $entity['guid'];
+            }
+
             $users = Core\Entities::get([
               'guids' => $guids
             ]);
+
             $conversations = [];
             foreach ($users as $user) {
+                if ($user->guid == Core\Session::getLoggedInUserGuid()) {
+                    continue;
+                }
+
                 $conversations[] = (new Messenger\Entities\Conversation())
                                       ->setParticipant($user->guid)
                                       ->setParticipant(Core\Session::getLoggedInUserGuid());
