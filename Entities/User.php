@@ -29,6 +29,7 @@ class User extends \ElggUser
         $this->attributes['disabled_boost'] = 0;
         $this->attributes['categories'] = [];
         $this->attributes['wire_rewards'] = '';
+        $this->attributes['pinned_posts'] = [];
 
         parent::initializeAttributes();
     }
@@ -242,6 +243,65 @@ class User extends \ElggUser
     public function getWireRewards()
     {
         return $this->wire_rewards ?: '';
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function addPinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if (!$pinned) {
+            $pinned = [];
+        } else if (count($pinned) > 2) {
+            return;
+        }
+
+        if (array_search($guid, $pinned) === false) {
+            $pinned[] = (string)$guid;
+            $this->setPinnedPosts($pinned);
+        }
+    }
+
+    /**
+     * @param string $guid
+     * @return bool
+     */
+    public function removePinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if ($pinned && count($pinned) > 0) {
+            $index = array_search((string)$guid, $pinned);
+            if (is_numeric($index)) {
+                array_splice($pinned, $index, 1);
+                $this->pinned_posts = $pinned;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Sets the channel's pinned posts
+     * @param array $pinned
+     * @return $this
+     */
+    public function setPinnedPosts($pinned) {
+        if (count($pinned) > 3) {
+            $pinned = array_slice($pinned, 0, 3);
+        }
+        $this->pinned_posts = $pinned;
+        return $this;
+    }
+
+    /**
+     * Gets the channel's pinned posts
+     * @return array
+     */
+    public function getPinnedPosts() {
+        if(is_string($this->pinned_posts)) {
+            return json_decode($this->pinned_posts);
+        }
+        return $this->pinned_posts;
     }
 
     /**
@@ -503,6 +563,7 @@ class User extends \ElggUser
         $export['verified'] = (bool) $this->verified;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
         $export['categories'] = $this->getCategories();
+        $export['pinned_posts'] = $this->getPinnedPosts();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
@@ -614,6 +675,7 @@ class User extends \ElggUser
             'disabled_boost',
             'categories',
             'wire_rewards',
+            'pinned_posts'
         ));
     }
 }

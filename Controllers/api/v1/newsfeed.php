@@ -34,6 +34,7 @@ class newsfeed implements Interfaces\Api
             $pages[0] = 'network';
         }
 
+        $pinned_guids = null;
         switch ($pages[0]) {
             case 'single':
                 $activity = new Activity($pages[1]);
@@ -49,6 +50,14 @@ class newsfeed implements Interfaces\Api
                 $options = array(
                     'owner_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
                 );
+                if (isset($_GET['pinned']) && count($_GET['pinned']) > 0) {
+                    $pinned_guids = [];
+                    $p = explode(',', $_GET['pinned']);
+                    foreach($p as $guid) {
+                        $pinned_guids[] = (string)$guid;
+                    }
+                }
+
                 break;
             case 'network':
                 $options = array(
@@ -192,6 +201,18 @@ class newsfeed implements Interfaces\Api
 
                     return true;
                 });
+            }
+
+            if ($pinned_guids) {
+                $response['pinned'] = [];
+                $entities = Core\Entities::get(['guids' => $pinned_guids]);
+                foreach ($entities as $entity) {
+                    $exported = $entity->export();
+                    $exported['pinned'] = true;
+                    $response['pinned'][] = $exported;
+
+                }
+//                $response['pinned'] = Factory::Exportable();
             }
 
             $response['activity'] = factory::exportable($activity, array('boosted'), true);
@@ -354,9 +375,38 @@ class newsfeed implements Interfaces\Api
 
                 return Factory::response(array('guid' => $activity->guid));
                 break;
+            case 'pin':
+                if (isset($pages[1])) {
+                    /** @var Activity $activity */
+                    $activity = Entities\Factory::build($pages[1]);
+                    $user = Core\Session::getLoggedinUser();
+                    $user->addPinned($activity->guid);
+                    $user->save();
+
+                    Core\Session::regenerate(false);
+                    //sync our changes to other sessions
+                    (new Core\Data\Sessions())->syncAll($user->guid);
+                    return Factory::response([]);
+                }
+                break;
+            case 'unpin':
+                if (isset($pages[1])) {
+                    /** @var Activity $activity */
+                    $activity = Entities\Factory::build($pages[1]);
+                    $user = Core\Session::getLoggedinUser();
+                    $user->removePinned($activity->guid);
+                    $user->save();
+
+                    Core\Session::regenerate(false);
+                    //sync our changes to other sessions
+                    (new Core\Data\Sessions())->syncAll($user->guid);
+                    return Factory::response([]);
+                }
+                break;
+
             default:
                 //essentially an edit
-                if (is_numeric($pages[0])) {
+                if (isset($pages[1])) {
                     $activity = new Activity($pages[0]);
                     if (!$activity->canEdit()) {
                         return Factory::response(array('status' => 'error', 'message' => 'Post not editable'));

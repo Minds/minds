@@ -34,8 +34,8 @@ class Activity extends Entity
             'comments_enabled' => true,
             'wire_threshold' => null,
             'boost_rejection_reason' => -1,
-            'pending' => false,
-        //	'node' => elgg_get_site_url()
+            'pending' => false
+            //	'node' => elgg_get_site_url()
         ));
     }
 
@@ -200,7 +200,7 @@ class Activity extends Entity
                 'wire_totals',
                 'wire_threshold',
                 'boost_rejection_reason',
-                'pending',
+                'pending'
             ));
     }
 
