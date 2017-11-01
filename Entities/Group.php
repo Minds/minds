@@ -32,6 +32,7 @@ class Group extends NormalizedEntity
     protected $tags = '';
     protected $owner_guids = [];
     protected $boost_rejection_reason = -1;
+    protected $indexes = [ 'group' ];
 
     protected $exportableDefaults = [
         'guid',
