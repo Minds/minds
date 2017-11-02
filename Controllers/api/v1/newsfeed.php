@@ -430,7 +430,7 @@ class newsfeed implements Interfaces\Api
                         $user->save();
                     }
 
-                    if(isset($_POST['wire_threshold'])) {
+                    if (isset($_POST['wire_threshold'])) {
                         if (is_array($_POST['wire_threshold']) && ($_POST['wire_threshold']['min'] <= 0 || !$_POST['wire_threshold']['type'])) {
                             return Factory::response([
                                 'status' => 'error',
@@ -440,6 +440,11 @@ class newsfeed implements Interfaces\Api
 
                         $activity->setWireThreshold($_POST['wire_threshold']);
                         $activity->setPaywall(!!$_POST['wire_threshold']);
+                    }
+
+                    if (isset($_POST['paywall']) && !$_POST['paywall']) {
+                        $activity->setWireThreshold(null);
+                        $activity->setPaywall(false);
                     }
 
                     $activity->setEdited(true);
