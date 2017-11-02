@@ -27,15 +27,23 @@ class Webhook implements HookInterface
             $planRepo = new Payments\Plans\Repository();
             $plan = $planRepo->setEntityGuid(0)
                 ->setUserGuid($user->guid)
-                ->getSubscription($planId);
+                ->getSubscriptionById($subscription->getId());
 
             $repo = Di::_()->get('Wire\Repository');
             $entity = Entities::get($plan->getEntityGuid())[0];
 
+            $to = "";
+
+            if ($entity instanceof Entities\User) {
+                $to = $entity->guid;
+            } else {
+                $to = $entity->ownerObj->guid;
+            }
+
             $wire = new Wire();
             $wire->setMethod('usd')
                 ->setEntity($entity)
-                ->setTo($entity->ownerObj->guid)
+                ->setTo($to)
                 ->setFrom($user->guid)
                 ->setTimeCreated(time())
                 ->setAmount($stripePlan->amount)

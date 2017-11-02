@@ -93,6 +93,7 @@ class Webhooks
         $invoiceObj = $this->event->data->object;
         $lines = $invoiceObj->lines->data;
         $chargeId = $invoiceObj->charge;
+        $subscriptionId = "";
         $planId = "";
         $amount = 0;
         $quantity = 1;
@@ -102,6 +103,7 @@ class Webhooks
         foreach ($lines as $line) {
             if($line->type == "subscription"){
                 $metadata = $line->metadata->__toArray(false);
+                $subscriptionId = $line->id;
                 $planId = $line->plan->id;
                 $amount = $line->amount;
                 $quantity = $line->quantity;
@@ -125,7 +127,7 @@ class Webhooks
         //trigger the hooks
         $subscription = (new Payments\Subscriptions\Subscription())
             ->setCustomer($customer)
-            ->setId($chargeId)
+            ->setId($subscriptionId)
             ->setPlanId($planId)
             ->setPrice($amount / 100)
             ->setQuantity($amount);
