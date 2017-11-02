@@ -52,6 +52,7 @@ class Minds extends base
         (new Reports\ReportsProvider())->register();
         (new Groups\GroupsProvider())->register();
         (new Search\SearchProvider())->register();
+        (new Features\FeaturesProvider())->register();
     }
 
     /**
