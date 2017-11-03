@@ -154,6 +154,18 @@ class comments implements Interfaces\Api
 
                 \elgg_trigger_event('comment:create', 'comment', $data);
 
+                $event = new Core\Analytics\Metrics\Event();
+                $event->setType('action')
+                    ->setAction('comment')
+                    ->setProduct('platform')
+                    ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+                    ->setEntityGuid((string) $parent->guid)
+                    ->setEntityType($parent->type)
+                    ->setEntitySubtype((string) $parent->subtype)
+                    ->setEntityOwnerGuid((string) $parent->owner_guid)
+                    ->setCommentGuid((string) $comment->guid)
+                    ->push();
+
                 $indexes = new data\indexes();
                 $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
                 $comment->ownerObj = Core\Session::getLoggedinUser()->export();
