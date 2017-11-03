@@ -13,10 +13,10 @@ class GroupMappingSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Search\Mappings\GroupMapping');
     }
 
-    function it_should_map_a_group(
-        Group $group
-    )
-    {
+    //function it_should_map_a_group(
+    //    Group $group
+    //)
+    //{
         // TODO: Find the way to mock __call('getOwnerObj')
-    }
+    //}
 }

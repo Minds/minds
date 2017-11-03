@@ -66,7 +66,7 @@ class FactorySpec extends ObjectBehavior
             ->shouldBeAnInstanceOf(Mappings\GroupMapping::class);
     }
 
-    function it_should_build_an_object_blog_mapping(Plugin\blog\entities\Blog $blog)
+    function it_should_build_an_object_blog_mapping(Entities\Blog $blog)
     {
         $blog->get('guid')
             ->shouldBeCalled()

@@ -235,6 +235,7 @@ class FeedsSpec extends ObjectBehavior
         $group->getGuid()->willReturn(1000);
         $activity->get('guid')->willReturn(5000);
         $activity->get('container_guid')->willReturn(1000);
+        $activity->get('owner_guid')->willReturn(10000);
 
         $activity->setPending(false)
             ->shouldBeCalled();
@@ -379,9 +380,11 @@ class FeedsSpec extends ObjectBehavior
 
         $activity_1->get('guid')->willReturn(5001);
         $activity_1->get('container_guid')->willReturn(1000);
+        $activity_1->get('owner_guid')->willReturn(10000);
 
         $activity_2->get('guid')->willReturn(5002);
         $activity_2->get('container_guid')->willReturn(1000);
+        $activity_2->get('owner_guid')->willReturn(10000);
 
         $this->_adminQueue->getAll($group)
             ->shouldBeCalled()

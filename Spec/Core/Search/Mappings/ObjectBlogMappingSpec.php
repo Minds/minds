@@ -2,7 +2,7 @@
 
 namespace Spec\Minds\Core\Search\Mappings;
 
-use Minds\plugin\blog\entities\Blog;
+use Minds\Entities\Blog;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
