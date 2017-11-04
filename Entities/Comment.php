@@ -186,6 +186,17 @@ class Comment extends Entities\Entity
     }
 
     /**
+     * Remove from index
+     * @return bool
+     */
+    public function removeFromIndexes()
+    {
+        @$indexes = new Data\indexes('comments');
+        @$indexes->remove($this->parent_guid, [ $this->guid ]);
+        return true;
+    }
+
+    /**
      * Checks if the comment is editable (writable) by the current user
      * @return bool
      */
