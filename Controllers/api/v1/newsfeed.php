@@ -358,7 +358,18 @@ class newsfeed implements Interfaces\Api
                                 }
                                 break;
                         }
-                }
+                }   
+
+                $event = new Core\Analytics\Metrics\Event();
+                $event->setType('action')
+                    ->setAction('remind')
+                    ->setProduct('platform')
+                    ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+                    ->setEntityGuid((string) $embeded->guid)
+                    ->setEntityType($embeded->type)
+                    ->setEntitySubtype((string) $embeded->subtype)
+                    ->setEntityOwnerGuid((string) $embeded->ownerObj['guid'])
+                    ->push();
 
                 $mature_remind =
                     ($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false) ||
