@@ -1,5 +1,6 @@
 <?php
 namespace Minds\Core\Queue;
+use Minds\Core\Di\Di;
 
 /**
  * Messaging queue
@@ -7,32 +8,28 @@ namespace Minds\Core\Queue;
 
 class Client
 {
-    private static $clients = array();
-
     /**
      * Build the client
+     * @param string $client
+     * @return mixed
+     * @throws \Exception
      */
-     public static function build($client = "RabbitMQ", $options = array())
+     public static function build($client = '')
      {
-         if (substr($client, 0, 1) != "\\") {
-             $client = "\\Minds\\Core\\Queue\\$client\\Client";
-         }
+        $alias = 'Queue';
 
-        //@todo be able to cache with different $options variables
-        if (isset(self::$clients[$client])) {
-            return self::$clients[$client];
+        if ($client) {
+            $alias = "Queue\\{$client}";
         }
 
-         if (class_exists($client)) {
-             $class = new $client($options);
-             if ($class instanceof Interfaces\QueueClient) {
-                 self::$clients[$client] = $class;
-                 return $class;
-             }
+        $instance = Di::_()->get($alias);
 
-             throw new \Exception("Queue factory is not of Interface QueueClient");
-         } else {
-             throw new \Exception("Factory not found");
-         }
+        if (!$instance) {
+            throw new \Exception("DI binding not found: {$alias}");
+        } elseif (!($instance instanceof Interfaces\QueueClient)) {
+            throw new \Exception("DI binding is not of Interface QueueClient: {$alias}");
+        }
+
+        return $instance;
      }
 }
