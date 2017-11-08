@@ -118,8 +118,10 @@ class Activity extends Entity
                             ->send(array(
                                 "guid" => $this->guid,
                                 "owner_guid" => $this->owner_guid,
-                                                                "type" => "activity"
-                                ));
+                                "type" => "activity"
+                            ));
+
+        Core\Events\Dispatcher::trigger('delete', 'activity', [ 'entities' => $this ]);
 
         return true;
     }

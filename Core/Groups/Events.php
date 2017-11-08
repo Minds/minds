@@ -53,6 +53,20 @@ class Events
             $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
         });
 
+        Dispatcher::register('delete', 'activity', function ($e) {
+            $params = $e->getParameters();
+            $activity = $params['entity'];
+            $group = $activity->getContainerEntity();
+
+            if (!($group instanceof GroupEntity)) {
+                return;
+            }
+
+            /** @var Groups\AdminQueue $adminQueue */
+            $adminQueue = Di::_()->get('Groups\AdminQueue');
+            $adminQueue->delete($group, $activity);
+        });
+
         Dispatcher::register('acl:read', 'group', function ($e) {
             $params = $e->getParameters();
             $group = $params['entity'];
