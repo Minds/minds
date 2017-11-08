@@ -26,7 +26,6 @@ class Blog extends \ElggObject
         $this->attributes['categories'] = [];
         $this->attributes['published'] = false;
         $this->attributes['last_save'] = null;
-        $this->attributes['last_save'] = null;
         $this->attributes['draft_access_id'] = 0;
     }
 
@@ -256,7 +255,12 @@ class Blog extends \ElggObject
         $export['categories'] = $this->getCategories();
         $export['wire_threshold'] = $this->getWireThreshold();
         $export['paywall'] = $this->isPaywall();
-        $export['published'] = (bool) $export['published'];
+
+        if ($export['published'] != "") {
+            $export['published'] = (bool) $export['published'];
+        } else {
+            $export['published'] = true;
+        }
 
         if (Helpers\Flags::shouldDiscloseStatus($this)) {
             $export['spam'] = $this->getSpam();
