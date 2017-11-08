@@ -67,8 +67,10 @@ class SEO
         }
 
         $url = $blog->getPermaURL();
+        $ssl = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
 
-        if (Helpers\Http::isSSL()) {
+        if ($ssl) {
             $url = str_replace('http://', 'https://', $url);
         }
 
