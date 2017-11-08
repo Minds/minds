@@ -27,6 +27,7 @@ class Blog extends \ElggObject
         $this->attributes['published'] = false;
         $this->attributes['last_save'] = null;
         $this->attributes['draft_access_id'] = 0;
+        $this->attributes['slug'] = '';
     }
 
     /**
@@ -51,6 +52,8 @@ class Blog extends \ElggObject
             'published',
             'last_save',
             'draft_access_id',
+            'slug',
+            'perma_url',
         ));
     }
 
@@ -209,10 +212,19 @@ class Blog extends \ElggObject
 
     /**
      * Return the url for this entity
+     * @param bool $routeOnly
+     * @return string
      */
-    public function getUrl()
+    public function getUrl($routeOnly = false)
     {
-        return elgg_get_site_url() . 'blog/view/' . $this->guid;
+        $siteUrl = $routeOnly ? '' : elgg_get_site_url();
+        $owner = $this->getOwnerEntity();
+
+        if ($this->slug && $owner && $owner->username) {
+            return "{$siteUrl}{$owner->username}/blog/{$this->slug}-{$this->guid}";
+        }
+
+        return "{$siteUrl}blog/view/{$this->guid}";
     }
 
     public function save($index = true)
@@ -233,6 +245,11 @@ class Blog extends \ElggObject
                 // Re-add to indexes, force as true
                 $index = true;
             }
+        }
+
+        if ($this->title) {
+            $this->slug = Helpers\Text::slug($this->title);
+            $this->perma_url = $this->getUrl();
         }
 
         return parent::save($index);
@@ -261,6 +278,8 @@ class Blog extends \ElggObject
         } else {
             $export['published'] = true;
         }
+
+        $export['route'] = $this->getUrl(true);
 
         if (Helpers\Flags::shouldDiscloseStatus($this)) {
             $export['spam'] = $this->getSpam();

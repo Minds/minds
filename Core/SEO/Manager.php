@@ -4,6 +4,8 @@
  */
 namespace Minds\Core\SEO;
 
+use Minds\Core\Events\Dispatcher;
+
 class Manager
 {
     public static $routes = array();
@@ -46,6 +48,16 @@ class Manager
       $meta = [];
 
       while ($route) {
+          $event = Dispatcher::trigger('seo:route', $route, [
+              'route' => $route,
+              'slugs' => array_reverse($slugs)
+          ], false);
+
+          if ($event !== false) {
+              $meta = $event;
+              break;
+          }
+
           if (isset(self::$routes[$route])) {
               $meta = call_user_func_array(self::$routes[$route], array(array_reverse($slugs))) ?: [];
               break;

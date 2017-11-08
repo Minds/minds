@@ -240,6 +240,8 @@ class blog implements Interfaces\Api
         }
 
         $response['guid'] = (string) $blog->guid;
+        $response['slug'] = $blog->slug;
+        $response['route'] = $blog->getUrl(true);
 
         if ($blog->monetized) {
             (new Core\Payments\Plans\PaywallReview())
