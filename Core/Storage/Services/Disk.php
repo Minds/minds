@@ -7,6 +7,7 @@ class Disk implements ServiceInterface
 
     private $filepath;
     public $resource; //filepointer
+    protected $redirect = false;
 
     public function open($path, $mode)
     {
@@ -16,6 +17,10 @@ class Disk implements ServiceInterface
                 break;
             case "read":
                 $mode = "rb";
+                break;
+            case "redirect":
+                $mode = "rb";
+                $this->redirect = true;
                 break;
         }
 
@@ -42,6 +47,12 @@ class Disk implements ServiceInterface
         if (!$length) {
             $stat = fstat($this->resource);
             $length = $stat['size'];
+        }
+
+        if ($this->redirect) {
+            rewind($this->resource);
+            fpassthru($this->resource);
+            exit;
         }
 
         return fread($this->resource, $length);
