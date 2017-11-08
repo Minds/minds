@@ -47,7 +47,7 @@ class Navigation
         ->setName('My Groups')
         ->setTitle('My Groups')
         ->setPath('groups/member')
-        ->setVisibility(2); //only show for loggedin
+        ->setVisibility(0); //only show for loggedin
 
         $root_link = new Item();
         $root_link
