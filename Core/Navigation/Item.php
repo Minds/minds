@@ -214,6 +214,17 @@ class Item
     public function export()
     {
         $subitems = array();
+
+        @usort($this->subItems, function ($a, $b) {
+            if ($a->getPriority() > $b->getPriority()) {
+                return 1;
+            } elseif ($a->getPriority() < $b->getPriority()) {
+                return -1;
+            }
+
+            return 0;
+        });
+
         foreach ($this->subItems as $subitem) {
             $subitems[] = $subitem->export();
         }

@@ -30,8 +30,11 @@ class Container
         @usort($this->items, function ($a, $b) {
             if ($a->getPriority() > $b->getPriority()) {
                 return 1;
+            } elseif ($a->getPriority() < $b->getPriority()) {
+                return -1;
             }
-            return -1;
+
+            return 0;
         });
 
         foreach ($this->items as $item) {
