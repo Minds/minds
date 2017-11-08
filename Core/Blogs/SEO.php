@@ -72,11 +72,14 @@ class SEO
             $url = str_replace('http://', 'https://', $url);
         }
 
+        $custom_meta = $blog->getCustomMeta();
+
         return $meta = array(
-            'title' => $blog->title,
-            'description' => $description,
-            'og:title' => $blog->title,
-            'og:description' => $description,
+            'title' => $custom_meta['title'] ?: $blog->title,
+            'description' => $custom_meta['description'] ?: $description,
+            'author' => $custom_meta['author'] ?: '@' . $blog->getOwnerEntity()->username,
+            'og:title' => $custom_meta['title'] ?: $blog->title,
+            'og:description' => $custom_meta['description'] ?: $description,
             'og:url' => $url,
             'og:type' => 'article',
             'og:image' => $blog->getIconUrl(800),

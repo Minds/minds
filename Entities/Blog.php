@@ -28,6 +28,7 @@ class Blog extends \ElggObject
         $this->attributes['last_save'] = null;
         $this->attributes['draft_access_id'] = 0;
         $this->attributes['slug'] = '';
+        $this->attributes['custom_meta'] = [];
     }
 
     /**
@@ -202,6 +203,37 @@ class Blog extends \ElggObject
     }
 
     /**
+     * @return array
+     */
+    public function getCustomMeta() {
+        $custom_meta = $this->custom_meta ? $this->custom_meta : [];
+
+        if (is_string($this->custom_meta)) {
+            $custom_meta = json_decode($this->custom_meta, true);
+        }
+
+        return array_merge([
+            'title' => '',
+            'description' => '',
+            'author' => '',
+        ], $custom_meta);
+    }
+
+    /**
+     * @param array $custom_meta
+     * @return $this
+     */
+    public function setCustomMeta(array $custom_meta) {
+        $this->custom_meta = filter_var_array($custom_meta, [
+            'title' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'description' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'author' => FILTER_SANITIZE_SPECIAL_CHARS
+        ]);
+
+        return $this;
+    }
+
+    /**
      * Checks if there is a paywall for this post
      * @return boolean
      */
@@ -285,6 +317,8 @@ class Blog extends \ElggObject
             $export['spam'] = $this->getSpam();
             $export['deleted'] = $this->getDeleted();
         }
+
+        $export['custom_meta'] = $this->getCustomMeta();
 
         $export = array_merge($export, Dispatcher::trigger('export:extender', 'blog', ['entity'=>$this], []));
 

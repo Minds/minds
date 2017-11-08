@@ -179,6 +179,10 @@ class blog implements Interfaces\Api
             }
         }
 
+        if (isset($_POST['custom_meta']) && is_array($_POST['custom_meta'])) {
+            $blog->setCustomMeta($_POST['custom_meta']);
+        }
+
         //draft
         if (!$_POST['published']) {
             $blog->access_id = 0;
