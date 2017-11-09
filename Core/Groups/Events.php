@@ -35,7 +35,7 @@ class Events
             if ($group instanceof GroupEntity) {
                 $membership = Membership::_($group);
 
-                $e->setResponse($group->getAccessId() == 2 || $membership->isMember($user->guid));
+                $e->setResponse($group->isPublic() || $membership->isMember($user->guid));
             }
         });
 
@@ -56,6 +56,11 @@ class Events
         Dispatcher::register('delete', 'activity', function ($e) {
             $params = $e->getParameters();
             $activity = $params['entity'];
+
+            if ($activity) {
+                return;
+            }
+
             $group = $activity->getContainerEntity();
 
             if (!($group instanceof GroupEntity)) {
@@ -72,7 +77,7 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
-            $e->setResponse($group->getAccessId() == 2 || $group->isMember($user->guid));
+            $e->setResponse($group->isPublic() || $group->isMember($user->guid));
         });
 
         Dispatcher::register('acl:write', 'group', function ($e) {
