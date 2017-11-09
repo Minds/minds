@@ -21,15 +21,6 @@ class Register
             $minds = new Entities\User('minds');
             $params['user']->subscribe($minds->guid);
 
-            Helpers\Wallet::createTransaction($guid, 1000, $guid, "Welcome");
-            Core\Events\Dispatcher::trigger('notification', 'welcome', array(
-                'to'=>array($guid),
-                'from' => 100000000000000519,
-                'notification_view' => 'welcome_points',
-                'params' => array('points'=>1000),
-                'points' => 1000
-                ));
-
             //@todo maybe put this in background process
             foreach (array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type) {
                 Core\Events\Dispatcher::trigger('notification', 'welcome', array(
