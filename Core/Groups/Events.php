@@ -57,7 +57,7 @@ class Events
             $params = $e->getParameters();
             $activity = $params['entity'];
 
-            if ($activity) {
+            if (!$activity) {
                 return;
             }
 
