@@ -10,7 +10,7 @@ namespace Minds\Helpers;
 
 class Text
 {
-    public static function slug($text)
+    public static function slug($text, $charLimit = 0)
     {
         if (!$text) {
             return '';
@@ -30,6 +30,11 @@ class Text
 
         // remove duplicate -
         $text = preg_replace('~-+~', '-', $text);
+
+        // apply character limit (if any) and trim
+        if ($charLimit > 0) {
+            $text = trim(substr($text, 0, $charLimit), '-');
+        }
 
         // lowercase
         $text = strtolower($text);

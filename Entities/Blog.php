@@ -8,6 +8,7 @@ use Minds\Helpers;
 class Blog extends \ElggObject
 {
     protected $dirtyIndexes = false;
+    protected $dirtySlug;
 
     /**
      * Set subtype to blog.
@@ -234,6 +235,29 @@ class Blog extends \ElggObject
     }
 
     /**
+     * @return string
+     */
+    public function getSlug() {
+        return $this->slug ?: '';
+    }
+
+    /**
+     * @param string $text
+     * @return $this
+     */
+    public function setSlug($text) {
+        $oldSlug = $this->getSlug();
+
+        $this->slug = Helpers\Text::slug($text, 60);
+
+        if ($this->slug !== $oldSlug) {
+            $this->dirtySlug = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Checks if there is a paywall for this post
      * @return boolean
      */
@@ -279,8 +303,15 @@ class Blog extends \ElggObject
             }
         }
 
-        if ($this->title) {
-            $this->slug = Helpers\Text::slug($this->title);
+        $published = $this->published || ($this->published === '');
+
+        if (!$this->perma_url || !$published) {
+            if ($this->title && !$this->slug) {
+                $this->setSlug($this->title);
+            }
+        }
+
+        if ($this->dirtySlug) {
             $this->perma_url = $this->getUrl();
         }
 
