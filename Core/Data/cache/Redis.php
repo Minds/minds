@@ -5,6 +5,7 @@
  */
 namespace Minds\Core\Data\cache;
 
+use Minds\Core\Di\Di;
 use Redis as RedisServer;
 
 class Redis extends abstractCacher
@@ -16,17 +17,11 @@ class Redis extends abstractCacher
 
     private $local = []; //a local cache before we check the remote
 
-    public function __construct()
+    public function __construct($config = null)
     {
-        global $CONFIG;
-        if (isset($CONFIG->redis)) {
-            if (isset($CONFIG->redis['master'])) {
-                $this->master =  $CONFIG->redis['master'];
-            }
-            if (isset($CONFIG->redis['slave'])) {
-                $this->slave =  $CONFIG->redis['slave'];
-            }
-        }
+        $this->config = Di::_()->get('Config');
+        $this->master =  $this->config->redis['master'];
+        $this->slave =  $this->config->redis['slave'];
     }
 
     private function getMaster()

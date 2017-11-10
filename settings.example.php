@@ -12,6 +12,11 @@ $CONFIG->cassandra = (object) [
     'cql_servers' => [ '{{cassandra-server}}' ]
 ];
 
+$CONFIG->redis = [
+    'master' => 'redis',
+    'slave' => 'redis'
+];
+
 /**
  * Other Elgg Settings
  */

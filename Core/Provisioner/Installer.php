@@ -110,13 +110,13 @@ class Installer
             throw new ProvisionException('Site email is invalid');
         }
 
-        if (
+        /*if (
             isset($this->options['cassandra-server']) &&
             !filter_var($this->options['cassandra-server'], FILTER_VALIDATE_IP) &&
             !preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['cassandra-server'])
         ) {
             throw new ProvisionException('Cassandra server host is invalid');
-        }
+        }*/
 
         if (isset($this->options['elasticsearch-server']) && !filter_var($this->options['elasticsearch-server'], FILTER_VALIDATE_URL)) {
             throw new ProvisionException('ElasticSearch server URL is invalid');

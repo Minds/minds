@@ -31,5 +31,9 @@ class QueueProvider extends Provider
                 )
             );
         }, [ 'useFactory' => true ]);
+
+        $this->di->bind('Queue\SQS', function ($di) {
+            return new SQS\Client($di->get('Config'));
+        }, [ 'useFactory' => true ]);
     }
 }

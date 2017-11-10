@@ -6,13 +6,11 @@ namespace Minds\Core\Queue\Interfaces;
  */
 interface QueueClient
 {
-    /**
-     * Set the queue to use
-     * @return $this
-     */
     public function setQueue($name = "default");
+
+    public function setExchange($name = "default_exchange", $type = "direct");
     
-    public function send($callback);
+    public function send($message);
     
     public function receive($callback);
 };
