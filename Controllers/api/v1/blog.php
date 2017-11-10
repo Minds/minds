@@ -194,8 +194,21 @@ class blog implements Interfaces\Api
         }
         $blog->last_save = time();
 
-        if (isset($_POST['wire_threshold']) && $_POST['wire_threshold'] != 'null') {
-            $blog->setPaywall();
+        if (isset($_POST['wire_threshold'])) {
+            if (is_array($_POST['wire_threshold']) && ($_POST['wire_threshold']['min'] <= 0 || !$_POST['wire_threshold']['type'])) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Invalid Wire threshold'
+                ]);
+            }
+
+            $blog->setWireThreshold($_POST['wire_threshold']);
+            $blog->setPaywall(!!$_POST['wire_threshold']);
+        }
+
+        if (isset($_POST['paywall']) && !$_POST['paywall']) {
+            $blog->setWireThreshold(false);
+            $blog->setPaywall(false);
         }
 
         if ($blog->monetized && $blog->mature) {
