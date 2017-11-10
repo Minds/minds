@@ -122,3 +122,7 @@ class_alias('Mock', 'Cassandra\Varint');
 class_alias('Mock', 'Cassandra\Timestamp');
 class_alias('Mock', 'Cassandra\Type');
 class_alias('Mock', 'Cassandra\Decimal');
+
+Minds\Core\Di\Di::_()->bind('Database\Cassandra\Cql', function($di) {
+    return new Mock;
+});
