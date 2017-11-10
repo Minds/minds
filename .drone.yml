@@ -5,7 +5,7 @@ pipeline:
     commands:
       - apk add git
       - sh tools/setup.sh
-      #- bin/phpspec run 
+      - bin/phpspec run 
 
   fpm:
     image: plugins/ecr
@@ -17,7 +17,8 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     when: 
-      branches: [ 'master', 'test/codebuild' ]
+      branch: [ 'master', 'test/codebuild' ]
+
   runners:
     image: plugins/ecr
     repo: 324044571751.dkr.ecr.us-east-1.amazonaws.com/engine
@@ -28,4 +29,4 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     when: 
-      branches: [ 'master', 'test/codebuild' ]
+      branch: [ 'master', 'test/codebuild' ]
