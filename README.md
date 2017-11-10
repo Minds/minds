@@ -28,6 +28,14 @@ Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/d
 2. [Testing](https://www.minds.org/docs/testing.html)
 3. [Contributing](https://www.minds.org/docs/contributing.html)
 
+## Docker setup
+
+The Docker environment is currently a work in progress and we intend on streamlining the installation phase.
+
+1. Run `docker ps` and look for the minds_php-fpm container
+2. Run `docker exec -it CONTAINER_ID_HERE php /var/www/Minds/engine/cli.php install keys`
+3. Run `docker exec -it CONTAINER_ID_HERE php /var/www/Minds/engine/cli.php install --graceful-storage-provision --domain=dev.minds.io --username=minds     --password=password --email=minds@dev.minds.io --private-key=/.dev/minds.pem --public-key=/.dev/minds.pub --cassandra-server=cassandra`
+
 ## Contributing
 If you'd like to contribute to the Minds project, check out the [Contribution](https://www.minds.org/docs/contributing.html) section of Minds.org or head right over to the [Minds Open Source Community](https://www.minds.com/groups/profile/365903183068794880).  If you've found or fixed a bug, let us know in the [Minds Help and Support Group](https://www.minds.com/groups/profile/100000000000000681/activity)!
 

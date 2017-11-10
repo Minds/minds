@@ -1,0 +1,92 @@
+# Using v2.2 because v3+ is meant for swarm operations
+version: "2.2"
+
+services:
+  cassandra:
+    image: cassandra:3.11
+    environment:
+      - CASSANDRA_START_RPC=true
+    networks:
+      - app
+
+  mongo:
+    image: mongo:3.4
+    networks:
+      - app
+
+  elasticsearch:
+    image: elasticsearch:5.6-alpine
+    mem_limit: 512MB # keep an eye
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    networks:
+      - app
+
+  redis:
+    image: redis:4.0-alpine
+    mem_limit: 256MB # keep an eye
+    networks:
+      - app
+
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+    networks:
+      - app
+
+  php-fpm:
+    build:
+      context: ./engine
+      dockerfile: ./containers/php-fpm/Dockerfile
+    depends_on:
+      - cassandra
+      - mongo
+      - elasticsearch
+      - rabbitmq
+      - redis
+    networks:
+      - app
+    volumes:
+      ## The following is for development environments only. Comment out on production. ##
+      - "./front/:/var/www/Minds/front"
+      - "./plugins/:/var/www/Minds/plugins"
+      - "./languages/:/var/www/Minds/languages"
+      ## The following is for development environments only. Comment out on production. ##
+      - "./engine/:/var/www/Minds/engine"
+
+  runners:
+    build:
+      context: ./engine
+      dockerfile: ./containers/php-fpm/Dockerfile
+    depends_on:
+      - cassandra
+    #  - mongo
+    #  - elasticsearch
+    #  - rabbitmq
+      - redis
+    networks:
+      - app
+    volumes:
+      - "./front/:/var/www/Minds/front"
+      - "./plugins/:/var/www/Minds/plugins"
+      - "./languages/:/var/www/Minds/languages"
+
+  nginx:
+    build:
+      context: ./containers/nginx
+    depends_on:
+      - php-fpm
+    ports:
+      - "8080:80"
+    networks:
+      - app
+    volumes:
+      ## The following is for development environments only. Comment out on production. ##
+      - "./front/:/var/www/Minds/front"
+
+networks:
+  app:
+    driver: "bridge"
