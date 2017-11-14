@@ -139,11 +139,59 @@ class Aggregates
         return $rows;
     }
 
+    public function getPosts()
+    {
+        $query = [
+            'index' => 'minds_badger',
+            'type' => 'activity',
+            'size' => 0, //we want just the aggregates
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'range' => [
+                                '@timestamp' => [
+                                    'gte' => $this->start * 1000,
+                                    'lte' => $this->end * 1000
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'aggs' => [
+                    'posts' => [
+                        'terms' => [
+                            'field' => 'owner_guid.keyword',
+                            'size' => $this->limit
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $prepared = new Core\Data\ElasticSearch\Prepared\Search();
+        $prepared->query($query);
+
+        $result = $this->client->request($prepared);
+        $rows = [];
+        if ($result) {
+            foreach ($result['aggregations']['posts']['buckets'] as $metric) {
+                $rows[] = [
+                    'guid' => $metric['key'],
+                    'count' => $metric['doc_count']
+                ];
+            }
+        }
+
+        return $rows;
+    }
+
     public function fetch()
     {
         $this->aggregates = [
             'comments' => $this->getComments(),
-            'vote:down' => $this->getDownVotes()
+            'vote:down' => $this->getDownVotes(),
+            'posts' => $this->getPosts()
             ];
         return $this->aggregates;
     }
