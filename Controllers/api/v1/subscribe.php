@@ -145,6 +145,14 @@ class subscribe implements Interfaces\Api
             );
         }
 
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setAction('subscribe')
+            ->setProduct('platform')
+            ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+            ->setEntityGuid((string) $pages[0])
+            ->push();
+
         return Factory::response($response);
     }
 
@@ -156,6 +164,15 @@ class subscribe implements Interfaces\Api
     {
         Factory::isLoggedIn();
         $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
+
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setAction('unsubscribe')
+            ->setProduct('platform')
+            ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+            ->setEntityGuid((string) $pages[0])
+            ->push();
+
         $response = array('status'=>'success');
         if (!$success) {
             $response = array(
