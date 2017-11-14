@@ -11,6 +11,7 @@ namespace Minds\Core\Search;
 use Minds\Core;
 use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Core\Di\Di;
+use Minds\Exceptions\BannedException;
 
 class Index
 {
@@ -70,6 +71,8 @@ class Index
             $prepared->query($query);
 
             $result = (bool) $this->client->request($prepared);
+        } catch (BannedException $e) {
+            $result = false;
         } catch (\Exception $e) {
             error_log('[Search/Index] ' . get_class($e) . ": {$e->getMessage()}");
             $result = false;

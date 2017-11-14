@@ -8,6 +8,8 @@
 
 namespace Minds\Core\Search\Mappings;
 
+use Minds\Exceptions\BannedException;
+
 class UserMapping extends EntityMapping implements MappingInterface
 {
     /**
@@ -33,6 +35,10 @@ class UserMapping extends EntityMapping implements MappingInterface
 
         if (isset($map['tags'])) {
             unset($map['tags']);
+        }
+
+        if ($this->entity->isBanned() == 'yes') {
+            throw new BannedException('User is banned');
         }
 
         $map['mature'] = !!$this->entity->getMatureContent();

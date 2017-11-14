@@ -15,6 +15,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Config;
 
 class ban implements Interfaces\Api, Interfaces\ApiAdminPam
 {
@@ -66,9 +67,24 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
         \cache_entity($user);
 
         (new Core\Data\Sessions())->destroyAll($user->guid);
+        
+        try{
+            $params = [
+                'index' => Config::_()->elasticsearch['index'],
+                'type' => 'user',
+                'id' => $user->guid
+            ];
+            
+            $elastic = $elastic ?: Di::_()->get('Database\ElasticSearch');
+    
+            $elastic->getClient()->delete($params);
+    
+        } catch(\Exception $e) {
+            error_log(print_r($e->getMessage()));
+        }
 
         Dispatcher::trigger('ban', 'user', $user);
-
+        
         return Factory::response([
             'done' => true
         ]);
@@ -93,7 +109,7 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
                 'error' => true
             ];
         }
-
+        
         $user->banned = 'no';
         $user->save();
 

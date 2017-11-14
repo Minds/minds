@@ -51,7 +51,7 @@ class Search extends Cli\Controller implements Interfaces\CliControllerInterface
         ];
 
         $this->out('Setting up mappings…', static::OUTPUT_INLINE);
-//        Di::_()->get('Search\Provisioner')->setUp();
+        Di::_()->get('Search\Provisioner')->setUp();
         $this->out('OK!');
 
         //
