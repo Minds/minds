@@ -12,10 +12,12 @@ class Ban
 {
 
     private $accused;
+    private $recover;
 
-    public function __construct($sessions = null)
+    public function __construct($sessions = null, $recover = null)
     {
         $this->sessions = $sessions ?: new Core\Data\Sessions();
+        $this->recover = $recover ?: new Recover();
     }
 
     public function setAccused($accused)
@@ -27,6 +29,13 @@ class Ban
     public function ban()
     {
         $user = $this->accused->getUser();
+        //if already banned, skip
+        if ($user->banned == 'yes') {
+            return true;
+        }
+
+        echo "\n$user->guid now banned ({$this->accused->getScore()}) \n";
+
         $user->ban_reason = 'spam';
         $user->banned = 'yes';
         $user->code = '';
@@ -36,6 +45,20 @@ class Ban
 
         //@todo make this a dependency too
         Dispatcher::trigger('ban', 'user', $user);
+
+        $this->recover->setAccused($this->accused)
+            ->recover();
+        echo "\n$user->guid recovered";
+
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setAction('ban')
+            ->setProduct('platform')
+            ->setUserGuid(0)
+            ->setEntityGuid((string) $user->guid)
+            ->setEntityType('user')
+            ->setAbuseGuardScore($this->accused->getScore())
+            ->push();
 
         return $success;
     }

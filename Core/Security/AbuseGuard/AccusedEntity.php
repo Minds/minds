@@ -45,7 +45,8 @@ class AccusedEntity
 
     public function getScore()
     {
-        $oneHourAgo = 60 * 60 * 60;
+        $this->score = 0;
+        $oneHourAgo = 60 * 60;
         $multiplier = 0;
         if ($this->user->time_created > time() - $oneHourAgo) {
             $multiplier = 1;
@@ -53,6 +54,7 @@ class AccusedEntity
         foreach ($this->metrics as $count) {
             $this->score += $count;
         }
+        //echo "\n{$this->user->guid} ($this->score * $multiplier)";
         return $this->score * $multiplier;
     }
 

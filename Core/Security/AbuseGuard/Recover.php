@@ -29,14 +29,37 @@ class Recover
     {
         $user = $this->accused->getUser();
         foreach ($this->getComments() as $comment) {
-            if ($comment->guid) {
+            if ($comment->guid && !$comment->deleted) {
+                $comment->deleted = true;
+                $comment->save();
                 $comment->removeFromIndexes();
+
+                //and remove any attachments also
+                if ($comment->attachment_guid) {
+                    $attachment = Entities\Factory::build($comment->attachment_guid);
+                    $attachment->setFlag('deleted', true);
+                    $attachment->save();
+                }
             }
         }
 
         foreach($this->getDownVotes() as $post) {
             if ($post) {
                 Helpers\Counters::increment($post->guid, "thumbs:down", -1);
+            }
+        }
+
+        foreach($this->getPosts() as $post) {
+            if ($post) {
+                $post->setDeleted(true);
+                $post->access_id = 0;
+                $post->save();
+
+                if ($post->entity_guid) {
+                    $attachment = Entities\Factory::build($post->entity_guid);
+                    $attachment->setFlag('deleted', true);
+                    $attachment->save();
+                }
             }
         }
 
@@ -125,4 +148,39 @@ class Recover
         return $posts;
     }
 
+    private function getPosts()
+    {
+        $query = [
+            'index' => 'minds_badger',
+            'type' => 'activity',
+            'size' => 1000,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'should' => [
+                            [
+                                'term' => [
+                                    'owner_guid.keyword' => $this->accused->getUser()->guid
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $prepared = new Core\Data\ElasticSearch\Prepared\Search();
+        $prepared->query($query);
+
+        $result = $this->client->request($prepared);
+
+        $posts= [];
+        if ($result) {
+            foreach ($result['hits']['hits'] as $row) {
+                if (isset($row['_source']['guid'])) {
+                    $posts[] = Entities\Factory::build($row['_source']['guid']);
+                }
+            }
+        }
+        return $posts;
+    }
 }

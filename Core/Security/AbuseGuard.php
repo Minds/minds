@@ -17,12 +17,12 @@ class AbuseGuard
     private $start = 0;
     private $end = 0;
     private $accused = [];
-    private $score = 20;
+    private $score = 15;
 
     public function __construct($aggregates = null)
     {
         $this->aggregates = $aggregates ?: new Aggregates();
-        $this->start = time() - (60 * 60 * 10);
+        $this->start = time() - (60 * 10);
         $this->end = time();
     }
 
@@ -46,7 +46,6 @@ class AbuseGuard
                     $this->accused[$user_guid] = new AccusedEntity();
                     $this->accused[$user_guid]->setUserGuid($user_guid);
                 }
-
                 $this->accused[$user_guid]->setMetric($metric, $count);
             }
         }

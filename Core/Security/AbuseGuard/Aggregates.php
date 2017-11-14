@@ -20,7 +20,7 @@ class Aggregates
     public function __construct($client = null)
     {
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
-        $this->start = time() - (60 * 60 * 10);
+        $this->start = time() - (60 * 10);
         $this->end = time();
     }
 
@@ -46,11 +46,9 @@ class Aggregates
             'body' => [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            [
-                                'term' => [ 
-                                    'action' => 'vote:down' 
-                                ]
+                        'filter' => [
+                            'term' => [ 
+                                'action' => 'vote:down' 
                             ]
                         ],
                         'must' => [
@@ -100,10 +98,8 @@ class Aggregates
             'body' => [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                            [
-                                'term' => [ 'type' => 'vote:down' ]
-                            ]
+                        'filter' => [
+                            'term' => [ 'action' => 'comment' ]
                         ],
                         'must' => [
                             'range' => [
@@ -130,7 +126,6 @@ class Aggregates
         $prepared->query($query);
 
         $result = $this->client->request($prepared);
-        
         $rows = [];
         if ($result) {
             foreach ($result['aggregations']['comments']['buckets'] as $metric) {
@@ -149,7 +144,7 @@ class Aggregates
         $this->aggregates = [
             'comments' => $this->getComments(),
             'vote:down' => $this->getDownVotes()
-        ];
+            ];
         return $this->aggregates;
     }
 
