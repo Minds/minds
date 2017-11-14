@@ -36,6 +36,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('paywall')->willReturn(false);
         $user->get('username')->willReturn('phpspec');
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->isBanned()->willReturn(false);
 
         $user->getMature()->willReturn(true);
         $user->getMatureContent()->willReturn(false);
@@ -70,6 +71,43 @@ class UserMappingSpec extends ObjectBehavior
                 'taxonomy' => 'user',
                 'public' => true,
                 'group_membership' => [ 2000 ]
+            ]);
+    }
+
+    public function it_should_throw_exception_if_banned(User $user)
+    {
+
+        $now = time();
+
+        $user->get('interactions')->willReturn(42);
+        $user->get('guid')->willReturn(1000);
+        $user->get('type')->willReturn('user');
+        $user->get('subtype')->willReturn('');
+        $user->get('time_created')->willReturn($now);
+        $user->get('access_id')->willReturn(2);
+        $user->get('owner_guid')->willReturn(false);
+        $user->get('container_guid')->willReturn(1000);
+        $user->get('mature')->willReturn(false);
+        $user->get('message')->willReturn('PHPSpec Message #test #hashtag');
+        $user->get('name')->willReturn('PHPSpec Name');
+        $user->get('title')->willReturn('PHPSpec Title');
+        $user->get('blurb')->willReturn('PHPSpec Blurb');
+        $user->get('description')->willReturn('PHPSpec Description');
+        $user->get('paywall')->willReturn(false);
+        $user->get('username')->willReturn('phpspec');
+        $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->isBanned()->willReturn(true);
+
+        $user->getMature()->willReturn(true);
+        $user->getMatureContent()->willReturn(false);
+        $user->getGroupMembership()->willReturn([ 2000 ]);
+
+        $this
+            ->setEntity($user)
+            ->shouldThrow('Minds\Exceptions\BannedException')
+            ->duringMap([
+                'passedValue' => 'PHPSpec',
+                'guid' => '4999-will-disappear'
             ]);
     }
 
