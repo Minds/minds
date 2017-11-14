@@ -17,8 +17,9 @@ class ReviewSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Boost\Network\Review');
     }
 
-    function it_should_throw_an_exception_when_accepting_if_boost_isnt_set()
+    function it_should_throw_an_exception_when_accepting_if_boost_isnt_set(MongoDb\Client $mongo)
     {
+        $this->beConstructedWith($mongo);
         $this->shouldThrow(new \Exception('Boost wasn\'t set'))->during('accept');
     }
 
@@ -65,8 +66,9 @@ class ReviewSpec extends ObjectBehavior
     }
 
 
-    function it_should_throw_an_exception_when_rejecting_if_boost_isnt_set()
+    function it_should_throw_an_exception_when_rejecting_if_boost_isnt_set(MongoDb\Client $mongo)
     {
+        $this->beConstructedWith($mongo);
         $this->shouldThrow(new \Exception('Boost wasn\'t set'))->during('reject', [1]);
     }
 
@@ -114,8 +116,9 @@ class ReviewSpec extends ObjectBehavior
         $boost->save()->shouldHaveBeenCalled();
     }
 
-    function it_should_throw_an_exception_when_revoking_if_boost_isnt_set()
+    function it_should_throw_an_exception_when_revoking_if_boost_isnt_set(MongoDb\Client $mongo)
     {
+        $this->beConstructedWith($mongo);
         $this->shouldThrow(new \Exception('Boost wasn\'t set'))->during('revoke');
     }
 

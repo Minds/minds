@@ -1,9 +1,9 @@
 pipeline:
 
   build:
-    image: minds/php
+    image: php:7.1.11-fpm-alpine3.4
     commands:
-      - apk add git
+      - apk update && apk add --no-cache git
       - sh tools/setup.sh
       - bin/phpspec run 
 
