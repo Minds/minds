@@ -568,7 +568,7 @@ class Group extends NormalizedEntity
         $userIsAdmin = Core\Session::isAdmin();
 
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());
-        $export['is:member'] = $userIsAdmin || $this->isMember(Core\Session::getLoggedInUser());
+        $export['is:member'] = $this->isMember(Core\Session::getLoggedInUser());
         $export['is:creator'] = $userIsAdmin || $this->isCreator(Core\Session::getLoggedInUser());
         $export['is:awaiting'] = $this->isAwaiting(Core\Session::getLoggedInUser());
 
