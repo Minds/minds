@@ -13,11 +13,13 @@ class Ban
 
     private $accused;
     private $recover;
+    private $events = true;
 
-    public function __construct($sessions = null, $recover = null)
+    public function __construct($sessions = null, $recover = null, $events = true)
     {
         $this->sessions = $sessions ?: new Core\Data\Sessions();
         $this->recover = $recover ?: new Recover();
+        $this->events = $events;
     }
 
     public function setAccused($accused)
@@ -50,15 +52,17 @@ class Ban
             ->recover();
         echo "\n$user->guid recovered";
 
-        $event = new Core\Analytics\Metrics\Event();
-        $event->setType('action')
-            ->setAction('ban')
-            ->setProduct('platform')
-            ->setUserGuid(0)
-            ->setEntityGuid((string) $user->guid)
-            ->setEntityType('user')
-            ->setAbuseGuardScore($this->accused->getScore())
-            ->push();
+        if ($this->events) {
+            $event = new Core\Analytics\Metrics\Event();
+            $event->setType('action')
+                ->setAction('ban')
+                ->setProduct('platform')
+                ->setUserGuid(0)
+                ->setEntityGuid((string) $user->guid)
+                ->setEntityType('user')
+                ->setAbuseGuardScore($this->accused->getScore())
+                ->push();
+        }
 
         return $success;
     }
