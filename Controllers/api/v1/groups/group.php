@@ -40,7 +40,6 @@ class group implements Interfaces\Api
             $notifications = (new Core\Groups\Notifications)
               ->setGroup($group);
 
-            $response['group']['members'] = Factory::exportable($membership->getMembers(['limit' => 10]));
             $response['group']['is:muted'] = $notifications->isMuted($user);
 
             if ($group->isOwner($user)) {
