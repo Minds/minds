@@ -211,6 +211,11 @@ class Defaults
                 'title' => 'Boost',
                 'description' => 'Boost your channel or content to gain more views and reach new audiences',
                 'image' => 'assets/photos/rocket.jpg'
+            ],
+            'localization' => [
+                'title' => 'Localization',
+                'description' => 'Help translate Minds into every global language',
+                'image' => 'assets/photos/satellite.jpg'
             ]
         ];
 
