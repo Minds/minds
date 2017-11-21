@@ -61,7 +61,7 @@ class search implements Interfaces\Api
                     continue;
                 }
 
-                $conversations[] = (new Entities/Conversation())
+                $conversations[] = (new Entities\Conversation())
                                       ->setParticipant($user->guid)
                                       ->setParticipant(Core\Session::getLoggedInUserGuid());
             }

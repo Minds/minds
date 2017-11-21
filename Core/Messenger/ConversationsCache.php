@@ -8,7 +8,7 @@ namespace Minds\Core\Messenger;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\Cassandra;
 use Minds\Core\Session;
-use Minds\Entities;
+use Minds\Entities\User;
 
 class ConversationsCache
 {
