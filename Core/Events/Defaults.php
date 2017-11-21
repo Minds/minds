@@ -96,6 +96,9 @@ class Defaults
 
         // Blog events
         (new Core\Blogs\Events())->register();
+
+        // Messenger Events
+        (new Core\Messenger\Events())->setup();
     }
 
     public static function _()

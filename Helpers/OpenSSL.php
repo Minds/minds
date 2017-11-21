@@ -61,4 +61,39 @@ class OpenSSL
 
         return $decrypted;
     }
+
+    /**
+     * Return a temporary key
+     *
+     * @param string $private_key - the protected private key
+     * @param string $password - the password to unlock the private key
+     * @param string $newpass (optional) - the new password for the temporary key
+     * @return string - the new key
+     */
+    public static function temporaryPrivateKey($private_key, $password = null, $newpass = null)
+    {
+        $private_key = openssl_get_privatekey($private_key, $password);
+        openssl_pkey_export($private_key, $pkeyout, $newpass);
+        return $pkeyout;
+    }
+
+    /**
+     * Verify the password for the key works
+     */
+    public static function verify($public_key, $private_key, $unlock_password = null)
+    {
+        $message = "hello world";
+        $encrypted = self::encrypt($message, $public_key);
+        //should fail
+        $decrypted = self::decrypt($encrypted, $private_key);
+        if ($decrypted == $message) {
+            return false;
+        }
+
+        //should pass
+        $decrypted = self::decrypt($encrypted, $private_key, $unlock_password);
+        if ($decrypted == $message) {
+            return true;
+        }
+    }
 }

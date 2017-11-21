@@ -23,7 +23,16 @@ class Router
       '/wall' => "Minds\\Controllers\\Legacy\\wall",
       '/not-supported' => "Minds\Controllers\\notSupported",
         //  "/app" => "minds\\pages\\app",
-      '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe"
+      '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe",
+
+      '/api/v1/gatherings' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
+      '/api/v1/conversations' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
+      '/api/v1/keys' => "Minds\\Controllers\\api\\v1\\messenger\\keys",
+
+      '/api/v2/conversations' => "\\Minds\\Controllers\\api\\v2\\messenger\\conversations",
+      '/api/v2/conversations/search' => "\\Minds\\Controllers\\api\\v2\\messenger\\search",
+      '/api/v2/keys' => "\\Minds\\Controllers\\api\\v2\\messenger\\keys",
+
     );
 
     /**

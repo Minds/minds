@@ -277,4 +277,32 @@ class Subscriptions
             $event->setResponse([ 'done' => true, 'results' => $results ]);
         });
     }
+
+    /**
+     * Checks if $user and $to are mutual subscribers
+     * @param  mixed   $user
+     * @param  mixed   $to
+     * @return boolean
+     */
+    public function isMutual($user, $to)
+    {
+        $friendsof = new Core\Data\Call('friendsof');
+        $mutual = false;
+
+        if ($user instanceof User) {
+            $user = $user->guid;
+        }
+
+        if ($to instanceof User) {
+            $to = $to->guid;
+        }
+
+        if ($item = $friendsof->getRow($user, [ 'offset' => $to, 'limit' => 1 ])) {
+            if ($item && key($item) == $to) {
+                $mutual = true;
+            }
+        }
+
+        return $mutual;
+    }
 }
