@@ -28,9 +28,9 @@ class Defaults
     public function init()
     {
         Manager::setDefaults([
-          'title' =>  $this->config->site_name,
+          'title' =>  $this->config->site_name . ': Sign up or Log in',
           'description' => $this->config->site_description,
-          'og:title' => $this->config->site_name,
+          'og:title' => $this->config->site_name . ': Sign up or Log in',
           'og:url' => $this->config->site_url,
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
