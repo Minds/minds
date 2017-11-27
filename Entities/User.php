@@ -26,6 +26,7 @@ class User extends \ElggUser
         $this->attributes['group_membership'] = [];
         $this->attributes['plus'] = 0;
         $this->attributes['verified'] = 0;
+        $this->attributes['founder'] = 0;
         $this->attributes['disabled_boost'] = 0;
         $this->attributes['categories'] = [];
         $this->attributes['wire_rewards'] = '';
@@ -561,6 +562,7 @@ class User extends \ElggUser
         $export['programs'] = $this->getPrograms();
         $export['plus'] = $this->getPlus();
         $export['verified'] = (bool) $this->verified;
+        $export['founder'] = (bool) $this->founder;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
         $export['categories'] = $this->getCategories();
         $export['pinned_posts'] = $this->getPinnedPosts();
@@ -672,6 +674,7 @@ class User extends \ElggUser
             'programs',
             'plus',
             'verified',
+            'founder',
             'disabled_boost',
             'categories',
             'wire_rewards',
