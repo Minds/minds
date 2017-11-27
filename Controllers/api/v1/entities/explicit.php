@@ -20,18 +20,13 @@ class explicit implements Interfaces\Api
         return Factory::response(array());
     }
 
-    public function post($pages)
-    {
-        return Factory::response(array());
-    }
-
     /**
      * Sets the activity as explicit
      * @param array $pages
      *
      * API:: /v1/newsfeed/explicit
      */
-    public function put($pages)
+    public function post($pages)
     {
         $activity = Entities\Factory::build($pages[0]);
 
@@ -65,6 +60,12 @@ class explicit implements Interfaces\Api
         
         $response = [ 'done' => (bool) $activity->save() ];
 
+        return Factory::response($response);
+    }
+
+    public function put($pages)
+    {
+        return Factory::response(array());
     }
 
     public function delete($pages)
