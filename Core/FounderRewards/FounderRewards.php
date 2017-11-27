@@ -35,7 +35,7 @@ class FounderRewards
 
     public function getFounders()
     {
-        $range = 'Ledger | Final!A2:T1547';
+        $range = 'Ledger | Final!A2:U1547';
         $response = $this->client->spreadsheets_values->get($this->spreadsheetId, $range);
         $values = $response->getValues();
 
@@ -49,7 +49,8 @@ class FounderRewards
             $founder->postalAddress = $array[11];
             $founder->tshirtSize = $array[17];
             $founder->address = $array[18];
-            $founder->claimed = strtoupper($array[19]) == 'YES';
+            $founder->guid = $array[19];
+            $founder->claimed = strtoupper($array[20]) == 'YES';
             return $founder;
         };
 
@@ -92,7 +93,7 @@ class FounderRewards
     public function claimReward($founder)
     {
         $founder->claimed = true;
-        $range = 'Ledger | Final!A' . $founder->rowNumber . ':T' . $founder->rowNumber;
+        $range = 'Ledger | Final!A' . $founder->rowNumber . ':U' . $founder->rowNumber;
         $optParams = [];
 
         $optParams['valueInputOption'] = 'USER_ENTERED';

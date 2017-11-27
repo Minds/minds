@@ -21,6 +21,7 @@ class Founder
     public $postalAddress = '';
     public $tshirtSize = '';
     public $address = '';
+    public $guid = '';
     public $claimed = false;
 
     public function getEmail()
@@ -53,6 +54,7 @@ class Founder
             \Google_Model::NULL_VALUE, // Postal Code,
             $this->tshirtSize,
             $this->address,
+            $this->guid,
             $this->claimed ? 'YES' : 'NO'
         ];
     }

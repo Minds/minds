@@ -78,6 +78,8 @@ class claim implements Interfaces\Api, Interfaces\ApiIgnorePam
         $this->checkAndRewardBadges($rewards, $user);
         $this->checkAndRewardPage($rewards, $founder, $user);
 
+        $founder->guid = (string) $user->guid;
+
         //update spreadsheet
         $founderRewards->claimReward($founder);
 
