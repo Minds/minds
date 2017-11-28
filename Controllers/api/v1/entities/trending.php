@@ -99,7 +99,9 @@ class trending implements Interfaces\Api
             $offset = (new \GUID())->migrate($offset);
         }
 
-        $guids = Di::_()->get('Trending\Repository')->fetch($key, 12, $offset);
+        $limit = isset($_GET['limit']) && $_GET['limit'] < 50 ? $_GET['limit'] : 12;
+
+        $guids = Di::_()->get('Trending\Repository')->fetch($key, $limit, $offset);
 
         if (!$guids) {
             return Factory::response([
