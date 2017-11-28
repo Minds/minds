@@ -11,7 +11,7 @@ use Minds\Helpers;
 class User extends \ElggUser
 {
 
-    public $fullExport = true;
+    public $fullExport = false;
 
     protected function initializeAttributes() {
         $this->attributes['boost_rating'] = 1;

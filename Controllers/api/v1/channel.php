@@ -45,6 +45,7 @@ class channel implements Interfaces\Api
             return Factory::response(array('status'=>'error', 'message'=>'The user is banned'));
         }
 
+        $user->fullExport = true; //get counts
         $return = Factory::exportable(array($user));
 
         $response['channel'] = $return[0];
