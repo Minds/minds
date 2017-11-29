@@ -4,6 +4,7 @@ namespace Minds\Core\Storage\Services;
 
 use Aws\S3\S3Client;
 use Minds\Core\Config;
+use Minds\Core\Di\Di;
 
 class S3 implements ServiceInterface
 {
@@ -28,15 +29,29 @@ class S3 implements ServiceInterface
 
         $this->mode = $mode;
 
-        $this->s3 = S3Client::factory([
-          'key' => Config::_()->aws['key'],
-          'secret' => Config::_()->aws['secret'],
-          'region' => 'us-east-1',
-          'curl.options' => [
-            CURLOPT_CONNECTTIMEOUT => 1, //if we don't connect in 1 second
-            CURLOPT_TIMEOUT => 120 //if the request takes longer than 2 minutes (120 seconds)
-          ]
-        ]);
+        $awsConfig = Di::_()->get('Config')->get('aws');
+        $opts = [
+            'region' => 'us-east-1',
+            'version' => 'latest',
+            'http' => [
+                'connect_timeout' => 1, //if we don't connect in 1 second
+                'timeout' => 120 //if the request takes longer than 2 minutes (120 seconds)
+            ]
+        ];
+
+        if (!isset($awsConfig['useRoles']) || !$awsConfig['useRoles']) {
+            $opts['credentials'] = [
+                'key' => $awsConfig['key'],
+                'secret' => $awsConfig['secret'],
+            ];
+        }
+        
+        $this->s3 = new S3Client($opts);
+
+        if (substr($path, 0, 1) === '/') {
+            $path = substr($path, 1);
+            $path = str_replace('//', '/', $path);
+        }
 
         $this->filepath = $path;
         return $this;
@@ -83,7 +98,7 @@ class S3 implements ServiceInterface
                 try{
                     $result = $this->s3->getObject([
                         'Bucket' => Config::_()->aws['bucket'],
-                        'Key' => $this->filepath
+                        'Key' => $this->filepath 
                     ]);
                 } catch (\Exception $e){
                 }

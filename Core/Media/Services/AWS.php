@@ -8,6 +8,7 @@ namespace Minds\Core\Media\Services;
 use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
 use Minds\Core\Config;
+use Minds\Core\Di\Di;
 
 class AWS implements ServiceInterface
 {
@@ -20,17 +21,22 @@ class AWS implements ServiceInterface
 
     public function __construct()
     {
-        $this->s3 = S3Client::factory([
-          'key' => Config::_()->aws['key'],
-          'secret' => Config::_()->aws['secret'],
-          'region' => 'us-east-1'
-        ]);
-        $this->et = ElasticTranscoderClient::factory([
-    			'key' =>  Config::_()->aws['key'],
-    			'secret' => Config::_()->aws['secret'],
-    			'region' => 'us-east-1'
-    		]);
-        $this->dir = Config::_()->aws['elastic_transcoder']['dir'];
+        $awsConfig = Di::_()->get('Config')->get('aws');
+        $opts = [
+            'region' => $awsConfig['region']
+        ];
+
+        if (!isset($awsConfig['useRoles']) || !$awsConfig['useRoles']) {
+            $opts['credentials'] = [
+                'key' => $awsConfig['key'],
+                'secret' => $awsConfig['secret'],
+            ];
+        }
+
+        $this->s3 = new S3Client(array_merge([ 'version' => '2006-03-01' ], $opts));
+        $this->et = new ElasticTranscoderClient(array_merge([ 'version' => '2012-09-25' ], $opts));
+
+        $this->dir = $awsConfig['elastic_transcoder']['dir'];
     }
 
     public function setKey($key)

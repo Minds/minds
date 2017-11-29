@@ -2,7 +2,7 @@
     "name": "minds/minds",
     "description": "The core minds social engine",
     "require": {
-        "aws/aws-sdk-php": "^2.8",
+        "aws/aws-sdk-php": "^3.38",
         "braintree/braintree_php": "3.5.0",
         "bshaffer/oauth2-server-php": "1.7",
         "datastax/php-driver": "1.2.2",
@@ -23,7 +23,8 @@
         "zircote/swagger-php": "2.*@dev",
         "mongodb/mongodb": "^1.0.0",
         "abraham/twitteroauth": "^0.6.4",
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "aws/aws-php-sns-message-validator": "^1.4"
     },
     "repositories": [
         {
