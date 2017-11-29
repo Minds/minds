@@ -9,13 +9,18 @@ use Minds\Core\Di\Provider;
 
 use PhpAmqpLib\Connection\AMQPConnection;
 
+use Aws\Sqs\SqsClient;
+
 class QueueProvider extends Provider
 {
     public function register()
     {
         $this->di->bind('Queue', function($di) {
-            return $di->get('Queue\RabbitMQ');
+            $client = $di->get('Config')->get('queue_engine') ?: 'RabbitMQ';
+            return $di->get('Queue\\' . $client);
         });
+
+        // Clients
 
         $this->di->bind('Queue\RabbitMQ', function ($di) {
             $config = $di->get('Config');
