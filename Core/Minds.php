@@ -53,6 +53,7 @@ class Minds extends base
         (new Groups\GroupsProvider())->register();
         (new Search\SearchProvider())->register();
         (new Features\FeaturesProvider())->register();
+        (new SMS\SMSProvider())->register();
     }
 
     /**

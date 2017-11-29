@@ -11,6 +11,7 @@ use Minds\Core;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Exceptions\TwoFactorRequired;
 
 class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -52,7 +53,7 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
                     $response['status'] = 'success';
                     $response['user'] = $user->export();
                 }
-            } catch (\Exception $e) {
+            } catch (TwoFactorRequired $e) {
                 header('HTTP/1.1 ' + $e->getCode(), true, $e->getCode());
                 $response['status'] = "error";
                 $response['code'] = $e->getCode();

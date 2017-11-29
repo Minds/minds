@@ -99,6 +99,9 @@ class Defaults
 
         // Messenger Events
         (new Core\Messenger\Events())->setup();
+
+        // Security Events
+        (new Core\Security\Events())->register();
     }
 
     public static function _()

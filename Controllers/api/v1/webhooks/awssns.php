@@ -14,6 +14,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
 
+use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
 
 class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
@@ -28,9 +29,10 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function post($pages)
     {
-        $message = MessageValidator\Message::fromRawPostData();
+        $message = Message::fromRawPostData();
+        $validator = new MessageValidator();
 
-        if (!(new MessageValidator\MessageValidator())->isValid($message)) {
+        if (!$validator->isValid($message)) {
             error_log('[AWS-SES] Invalid Amazon SNS message');
             return Factory::response([ 'status' => 'error' ]);
         }
@@ -43,16 +45,16 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         // Check if we're getting a subscription confirmation URL
-        if ($message->get('Type') === 'SubscriptionConfirmation') {
+        if ($message['Type'] === 'SubscriptionConfirmation') {
             // Dump to the error log
-            error_log('[AWS-SES] Subscribed to URL: ' . $message->get('SubscribeURL'));
+            error_log('[AWS-SES] Subscribed to URL: ' . $message['SubscribeURL']);
             // Subscribe
-            file_get_contents($message->get('SubscribeURL'));
+            file_get_contents($message['SubscribeURL']);
 
             return Factory::response([ ]);
         }
 
-        $notification = json_decode($message->get('Message'), true);
+        $notification = json_decode($message['Message'], true);
 
         // Should we proceed?
         $unsubscribe = false;

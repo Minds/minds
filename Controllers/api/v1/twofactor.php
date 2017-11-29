@@ -5,13 +5,14 @@
  * @version 1
  * @author Mark Harding
  */
+
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Security;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Api\Factory;
-use Minds\Core\Security;
 
 class twofactor implements Interfaces\Api
 {
@@ -58,7 +59,7 @@ class twofactor implements Interfaces\Api
             case "setup":
 
                 $secret = $twofactor->createSecret();
-                if (\Minds\plugin\guard\start::sendSMS($_POST['tel'], $twofactor->getCode($secret))) {
+                if (Core\Di\Di::_()->get('SMS')->send($_POST['tel'], $twofactor->getCode($secret))) {
                     $response['secret'] = $secret;
                 } else {
                     $response['status'] = "error";
@@ -83,34 +84,33 @@ class twofactor implements Interfaces\Api
                 $user->save();
                 break;
             case "authenticate":
+                //get our one user twofactor token
+                $lookup = new Core\Data\lookup('twofactor');
+                $return = $lookup->get($_POST['token']);
+                $lookup->remove($pages[0]);
 
-                    //get our one user twofactor token
-                    $lookup = new Core\Data\lookup('twofactor');
-                    $return = $lookup->get($_POST['token']);
-                    $lookup->remove($pages[0]);
+                //we allow for 120 seconds (2 mins) after we send a code
+                if ($return['_guid'] && $return['ts'] > time() - 120) {
+                    $user = new Entities\User($return['_guid']);
+                    $secret = $return['secret'];
+                } else {
+                    header('HTTP/1.1 401 Unauthorized', true, 401);
+                    $response['status'] = 'error';
+                    $response['message'] = 'Invalid token';
+                }
 
-                    //we allow for 120 seconds (2 mins) after we send a code
-                    if ($return['_guid'] && $return['ts'] > time()-120) {
-                        $user = new Entities\User($return['_guid']);
-                        $secret = $return['secret'];
-                    } else {
-                        header('HTTP/1.1 401 Unauthorized', true, 401);
-                        $response['status'] = 'error';
-                        $response['message'] = 'Invalid token';
-                    }
+                if ($twofactor->verifyCode($secret, $_POST['code'], 1)) {
+                    global $TWOFACTOR_SUCCESS;
+                    $TWOFACTOR_SUCCESS = true;
+                    \login($user, true);
 
-                    if ($twofactor->verifyCode($secret, $_POST['code'], 1)) {
-                        global $TWOFACTOR_SUCCESS;
-                        $TWOFACTOR_SUCCESS = true;
-                        \login($user, true);
-
-                        $response['status'] = 'success';
-                        $response['user'] = $user->export();
-                    } else {
-                        header('HTTP/1.1 401 Unauthorized', true, 401);
-                        $response['status'] = 'error';
-                        $response['message'] = 'Could not verify.';
-                    }
+                    $response['status'] = 'success';
+                    $response['user'] = $user->export();
+                } else {
+                    header('HTTP/1.1 401 Unauthorized', true, 401);
+                    $response['status'] = 'error';
+                    $response['message'] = 'Could not verify.';
+                }
                 break;
         }
 
