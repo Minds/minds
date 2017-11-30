@@ -139,10 +139,10 @@ class Points implements MethodInterface
             $this->entity->owner_guid;
 
         $name = $this->recurring ? 'Wire (Recurring)' : 'Wire';
-        if ($this->amount > (int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false)) {
+        if ($this->amount > (int) Helpers\Counters::get($this->from ?: Core\Session::getLoggedinUser()->guid, 'points', false)) {
             throw new \Exception('Not enough points');
         }
-        Helpers\Wallet::createTransaction(Core\Session::getLoggedInUserGuid(), -$this->amount, $this->entity->guid,
+        Helpers\Wallet::createTransaction($this->from ? $this->from->guid: Core\Session::getLoggedInUserGuid(), -$this->amount, $this->entity->guid,
             $name);
         $this->id = Helpers\Wallet::createTransaction($ownerGuid, $this->amount, $this->entity->guid,
             $name);
@@ -168,6 +168,8 @@ class Points implements MethodInterface
 
         $this->cache->destroy("counter:wire:sums:" . $user->getGUID() . "*");
         $this->cache->destroy(Counter::getIndexName($this->entity->guid, null, 'points', null, true));
-        $this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . "*");
+        if ($this->from) {
+            $this->cache->destroy("counter:wire:sums:" . $this->from->getGUID() . "*");
+        }
     }
 }
