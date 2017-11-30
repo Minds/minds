@@ -58,7 +58,7 @@ class Navigation
         ->setPath('groups/featured')
         ->addSubItem($create_link)
         ->addSubItem($featured_link)
-        ->addSubItem($trending_link)
+//        ->addSubItem($trending_link)
         ->addSubItem($my_link);
 
         Manager::add($root_link);
