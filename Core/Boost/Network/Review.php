@@ -216,7 +216,7 @@ class Review implements BoostReviewInterface
         }
         $queue = $this->mongo->find("boost", $query, [
             'limit' => $limit,
-            'sort' => ['priority' => -1, '_id' => 1],
+            'sort' => (object) ['priority' => (int) -1, '_id' => 1],
         ]);
         if (!$queue) {
             return null;
