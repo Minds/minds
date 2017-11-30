@@ -114,20 +114,20 @@ class Tagcloud
         $timestamps = Core\Analytics\Timestamps::span(1, 'day');
 
         $opts = [
-            'index' => 'minds',
+            'index' => 'minds_badger',
             'type' => 'activity',
             'body' => [
                 'query' => [
                     'range' => [
-                        'time_created' => [
-                            'gte' => $timestamps[0]
+                        '@timestamp' => [
+                            'gte' => $timestamps[0] * 1000
                             ]
                         ]
                 ],
                 'aggs' => [
                     'minds' => [
                         'terms' => [
-                            'field' => "hashtags",
+                            'field' => "tags.keyword",
                             'size' => $limit
                         ]
                     ]
