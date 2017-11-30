@@ -135,9 +135,15 @@ class Client implements Interfaces\ClientInterface
                 $options['limit'] = intval($options['limit']);
             }
 
-            return $this->mongodb
+            $cursor = $this->mongodb
                 ->selectCollection($this->db_name, $table)
                 ->find($query, $options);
+
+            if (isset($options['sort'])) {
+                //$cursor->sort($options['sort']);
+            }
+            return $cursor;
+
         } catch (\exception $e) {
             error_log("MongoDB Find [" . get_class($e) . "]: {$e->getMessage()}");
         }
