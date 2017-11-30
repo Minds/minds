@@ -4,14 +4,15 @@ namespace Minds\Core\Boost\Network;
 
 use Minds\Core;
 use Minds\Core\Data;
+use MongoDB\BSON\ObjectID;
 use Minds\Entities\Boost;
 
 class Iterator implements \Iterator
 {
     protected $mongo;
 
-    protected $rating = 1;
-    protected $quality = 75;
+    protected $rating = 2;
+    protected $quality = 0;
     protected $offset = null;
     protected $limit = 1;
     protected $type = 'newsfeed'; // newsfeed, content
@@ -104,7 +105,7 @@ class Iterator implements \Iterator
         if ($this->offset) {
             $match = array_merge([
                 '_id' => [
-                    '$gt' => $this->offset
+                    '$gt' => new ObjectId($this->offset),
                 ]
             ], $match);
         }
@@ -117,14 +118,14 @@ class Iterator implements \Iterator
         // Enable with $CONFIG->set('allowExperimentalCategories', true); in engine/settings.php
         $allowExperimentalCategories = Core\Di\Di::_()->get('Config')->get('allowExperimentalCategories');
 
-        if (!$this->categories || !$allowExperimentalCategories /* TODO: Settle experimental feature */) {
+        //if (!$this->categories || !$allowExperimentalCategories /* TODO: Settle experimental feature */) {
             $boosts = $this->mongo->find("boost", $match, [
                 'limit' => self::MONGO_LIMIT,
                 'sort' => $sort,
             ]);
-        } else {
-            $boosts = $this->getBoostsByCategories($match, $sort);
-        }
+        //} else {
+        //    $boosts = $this->getBoostsByCategories($match, $sort);
+        //}
 
         if (!$boosts) {
             return null;
