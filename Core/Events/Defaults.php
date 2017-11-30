@@ -97,6 +97,9 @@ class Defaults
         // Blog events
         (new Core\Blogs\Events())->register();
 
+        // Vote events
+        (new Core\Votes\Events())->register();
+
         // Messenger Events
         (new Core\Messenger\Events())->setup();
 
