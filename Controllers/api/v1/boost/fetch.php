@@ -32,7 +32,7 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 2;
-        $rating = isset($_GET['rating']) ? (int) $_GET['rating'] : 1;
+        $rating = isset($_GET['rating']) ? (int) $_GET['rating'] : $user->getBoostRating();
         $platform = isset($_GET['platform']) ? $_GET['platform'] : 'other';
         $quality = 0;
 
@@ -56,6 +56,12 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setType($pages[0])
             ->setPriority(true);
 
+        if (isset($_GET['rating']) && $pages[0] == 'newsfeed') {
+            $cacher = Core\Data\cache\factory::build('apcu');
+            $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');
+            $iterator->setOffset($offset);
+        }
+
         switch ($pages[0]) {
             case 'content':
                 $iterator->setIncrement(true);
@@ -72,6 +78,9 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                     $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string)$guid]);
                 }
                 $response['load-next'] = $iterator->getOffset();
+                if (isset($_GET['rating']) && $pages[0] == 'newsfeed') {
+                    $cacher->set(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed', $iterator->getOffset(), (3600 / 2));
+                }
                 if (!$iterator->list) {
                     $cacher = Core\Data\cache\factory::build('apcu');
                     $offset = $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
