@@ -119,7 +119,8 @@ class Counters
     {
         if ($remind['guid']) {
             $this->updateCounter($remind['guid'], $direction, $value);
-        } elseif ($remind['entity_guid']) {
+        }
+        if ($remind['entity_guid']) {
             $this->updateCounter($remind['entity_guid'], $direction, $value);
         }
     }
