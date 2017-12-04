@@ -1,4 +1,4 @@
-FROM markharding/minds-php:latest
+FROM minds/php:latest
 
 # Additional folders
 

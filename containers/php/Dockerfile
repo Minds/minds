@@ -52,3 +52,7 @@ RUN pecl install mongodb-1.2.9 \
 
 RUN pecl install redis-3.1.3 \
     && docker-php-ext-enable redis
+
+# PHP INI
+
+COPY php.ini /usr/local/etc/php/
