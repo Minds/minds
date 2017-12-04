@@ -11,7 +11,8 @@ use Minds\Helpers;
 class User extends \ElggUser
 {
 
-    public $fullExport = false;
+    public $fullExport = true;
+    public $exportCounts = false;
 
     protected function initializeAttributes() {
         $this->attributes['boost_rating'] = 1;
@@ -547,6 +548,8 @@ class User extends \ElggUser
                 $export['subscribed'] = elgg_get_logged_in_user_entity()->isSubscribed($this->guid);
                 $export['subscriber'] = elgg_get_logged_in_user_entity()->isSubscriber($this->guid);
             }
+        }
+        if ($this->exportCounts) {
             if ($this->username != "minds") {
                 $export['subscribers_count'] = $this->getSubscribersCount();
             }

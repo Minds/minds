@@ -46,6 +46,7 @@ class channel implements Interfaces\Api
         }
 
         $user->fullExport = true; //get counts
+        $user->exportCounts = true;
         $return = Factory::exportable(array($user));
 
         $response['channel'] = $return[0];
