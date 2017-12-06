@@ -45,7 +45,7 @@ class Guid
         $port = 5599;
 
         $socket = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REQ);
-        $socket->connect("tcp://localhost:{$port}");
+        $socket->connect("tcp://{$CONFIG->zmq_server}:{$port}");
         $socket->setSockOpt(\ZMQ::SOCKOPT_LINGER, 0);
         $socket->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 500);
         $socket->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 500);

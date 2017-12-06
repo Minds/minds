@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine
+FROM php:7.1-fpm-alpine
 
 # Required extensions
 RUN apk update && apk add --no-cache \
@@ -58,6 +58,12 @@ RUN pecl install redis \
 
 RUN pecl install apcu \
     && docker-php-ext-enable apcu
+
+# ZMQ extension
+
+RUN apk add --no-cache zeromq-dev && \
+    pecl install zmq-beta \
+    && docker-php-ext-enable zmq
 
 # PHP INI
 
