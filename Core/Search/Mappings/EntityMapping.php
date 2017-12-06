@@ -175,7 +175,7 @@ class EntityMapping implements MappingInterface
         $tags = [];
 
         if (isset($matches[2]) && $matches[2]) {
-            $tags = array_unique($matches[2]);
+            $tags = array_values(array_unique($matches[2]));
         }
 
         $map['tags'] = $tags;
