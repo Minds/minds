@@ -2,6 +2,7 @@
 
 namespace Minds\Controllers\Cli;
 
+use Minds\Core\Minds;
 use Minds\Core;
 use Minds\Cli;
 use Minds\Interfaces;
@@ -13,6 +14,8 @@ class QueueRunner extends Cli\Controller implements Interfaces\CliControllerInte
 {
     public function __construct()
     {
+        $minds = new Minds();
+        $minds->start();
     }
 
     public function help($command = null)

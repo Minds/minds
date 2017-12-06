@@ -1,4 +1,4 @@
-FROM php:7.0-fpm-alpine
+FROM php:7.2-fpm-alpine
 
 # Required extensions
 RUN apk update && apk add --no-cache \
@@ -12,10 +12,11 @@ RUN apk update && apk add --no-cache \
     $PHPIZE_DEPS \
     openssl-dev \
     && docker-php-ext-install -j$(nproc) bcmath \
-    && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) exif \
+    && docker-php-ext-install -j$(nproc) mbstring
 
 # Cassandra extension
 
@@ -45,14 +46,20 @@ RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
 
 # Mongo extension
 
-RUN pecl install mongodb-1.2.9 \
+RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 # Redis extension
 
-RUN pecl install redis-3.1.3 \
+RUN pecl install redis \
     && docker-php-ext-enable redis
+
+# APCu extension
+
+RUN pecl install apcu \
+    && docker-php-ext-enable apcu
 
 # PHP INI
 
 COPY php.ini /usr/local/etc/php/
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
