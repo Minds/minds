@@ -86,7 +86,7 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setUserGuid(Core\Session::getLoggedInUser()->guid)
             ->setEntityGuid((string) $entity->getGUID())
             ->setEntityType($entity->type)
-            ->setEntitySubType($entity->subtype)
+            ->setEntitySubtype($entity->subtype)
             ->setEntityOwnerGuid($entity->getOwnerEntity()->getGUID())
             ->push();
 
