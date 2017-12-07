@@ -95,7 +95,7 @@ class Events
             $event = new Core\Analytics\Metrics\Event();
             $event->setType('action')
                 ->setProduct('platform')
-                ->setUserGuid($actor)
+                ->setUserGuid((string) $actor->guid)
                 ->setEntityGuid((string) $entity->guid)
                 ->setEntityType($entity->type)
                 ->setEntitySubtype((string) $entity->subtype)
@@ -115,7 +115,7 @@ class Events
             $event = new Core\Analytics\Metrics\Event();
             $event->setType('action')
                 ->setProduct('platform')
-                ->setUserGuid($actor)
+                ->setUserGuid((string) $actor->guid)
                 ->setEntityGuid((string) $entity->guid)
                 ->setEntityType($entity->type)
                 ->setEntitySubtype((string) $entity->subtype)
