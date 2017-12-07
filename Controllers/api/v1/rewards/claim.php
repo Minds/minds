@@ -59,15 +59,15 @@ class claim implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $rewards = $founderRewards->getEligibleRewards($founder->amount);
 
-        if (RewardType::requiresTShirtSize($rewards) && !isset($_POST['tshirtSize']) || !$_POST['tshirtSize']) {
+        if (RewardType::requiresTShirtSize($rewards) && !isset($_POST['tshirtSize'])) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'Missing T-shirt size'
             ]);
         }
 
-        $founder->tshirtSize = $_POST['tshirtSize'];
-        $founder->address = $_POST['address'];
+        $founder->tshirtSize = isset($_POST['tshirtSize']) ? $_POST['tshirtSize'] : '';
+        $founder->address = isset($_POST['address']) ? $_POST['address'] : '';
 
         $user = Core\Session::getLoggedinUser();
 

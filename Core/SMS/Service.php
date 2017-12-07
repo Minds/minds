@@ -36,6 +36,10 @@ class Service
     {
         $result = null;
 
+        if (strpos($number, '1', 0) === 0) {
+            $number = "+$number";
+        }
+
         if (strpos($number, '+', 0) === FALSE) {
             $number = "+1 $number";
         }
