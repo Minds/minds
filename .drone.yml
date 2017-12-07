@@ -16,7 +16,8 @@ pipeline:
     tags: fpm
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    when: 
+    when:
+      event: [ push, tag, deployment ]
       branch: [ master, test/codebuild ]
 
   fpm-deploy:
@@ -25,7 +26,8 @@ pipeline:
     region: us-east-1
     service: app
     secrets: [ aws_access_key_id, aws_secret_access_key ]
-    when: 
+    when:
+      event: [ push, tag, deployment ]
       branch: [ master, test/codebuild ]
 
   runners:
@@ -38,6 +40,7 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     when: 
+      event: [ push, tag, deployment ]
       branch: [ master, test/codebuild ]
 
   runners-deploy:
@@ -46,5 +49,6 @@ pipeline:
     region: us-east-1
     service: runners
     secrets: [ aws_access_key_id, aws_secret_access_key ]
-    when: 
+    when:
+      event: [ push, tag, deployment ]
       branch: [ master, test/codebuild ]
