@@ -60,7 +60,7 @@ class ServiceSpec extends ObjectBehavior
 
         $client->publish(Argument::that(function ($args) {
 
-            return $args['SenderID'] === 'Minds' && $args['SMSType'] === 'Transactional' && $args['Message'] === 'hello' && $args['PhoneNumber'] === '+1 1234';
+            return $args['SenderID'] === 'Minds' && $args['SMSType'] === 'Transactional' && $args['Message'] === 'hello' && $args['PhoneNumber'] === '+1234';
         }))
             ->shouldBeCalled()
             ->willReturn(['MessageId' => 'test123']);
