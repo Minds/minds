@@ -19,4 +19,6 @@ RUN apk update && apk add --no-cache py-pip && pip install --upgrade pip && pip 
 
 # Copy config
 
+COPY containers/php-fpm/php.ini /usr/local/etc/php/
+COPY containers/php-fpm/opcache.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 COPY containers/php-fpm/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
