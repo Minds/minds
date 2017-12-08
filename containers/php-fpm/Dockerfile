@@ -17,6 +17,10 @@ RUN rm -f /var/www/Minds/engine/settings.php
 
 RUN apk update && apk add --no-cache py-pip && pip install --upgrade pip && pip install awscli
 
+# Copy secrets script
+
+COPY containers/php-fpm/pull-secrets.sh pull-secrets.sh
+
 # Copy config
 
 COPY containers/php-fpm/php.ini /usr/local/etc/php/

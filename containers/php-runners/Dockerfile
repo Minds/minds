@@ -18,6 +18,10 @@ RUN apk add --no-cache \
         supervisor&& \
     mkdir /etc/supervisor && \
     mkdir /etc/supervisor/conf.d
+    
+# Copy secrets script
+
+COPY containers/php-runners/pull-secrets.sh pull-secrets.sh
 
 COPY ./containers/php-runners/supervisord.conf /etc
 COPY ./containers/php-runners/minds.conf /etc/supervisor/conf.d
