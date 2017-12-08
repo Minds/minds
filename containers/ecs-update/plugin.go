@@ -111,7 +111,8 @@ func (p *Plugin) updateService(taskDefinitionArn string) error {
 		return nil
 	}
 
-	return p.wait();
+	//return p.wait();
+	return nil
 }
 
 func (p *Plugin) updateTaskDefinition(taskDefinition *ecs.TaskDefinition) (string, error) {

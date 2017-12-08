@@ -11,8 +11,8 @@ RUN go get -u \
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -o bin/ecs-deploy
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -o /bin/ecs-deploy
 
 ENV AWS_SDK_LOAD_CONFIG=1
 
-CMD [ "./bin/ecs-deploy" ]
+CMD [ "/bin/ecs-deploy" ]

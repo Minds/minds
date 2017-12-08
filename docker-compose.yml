@@ -60,7 +60,7 @@ services:
   runners:
     build:
       context: ./engine
-      dockerfile: ./containers/php-fpm/Dockerfile
+      dockerfile: ./containers/php-runners/Dockerfile
     depends_on:
       - cassandra
     #  - mongo
@@ -73,6 +73,7 @@ services:
       - "./front/:/var/www/Minds/front"
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
+      - "./engine/:/var/www/Minds/engine"
 
   nginx:
     build:
