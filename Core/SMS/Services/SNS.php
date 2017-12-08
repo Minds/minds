@@ -1,18 +1,20 @@
 <?php
 /**
- * Minds SMS Service
+ * Minds SMS Service via SNS
  */
 
-namespace Minds\Core\SMS;
-
+namespace Minds\Core\SMS\Services;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 
-class Service
+
+class SNS
 {
+    /** @var \Aws\Sns\SnsClient  */
     protected $client;
 
-    public function __construct($client = null, $config = null) {
+    public function __construct($client = null, $config = null)
+    {
         $awsConfig = $config ? $config : Di::_()->get('Config')->aws;
 
         $opts = [
@@ -27,8 +29,9 @@ class Service
             ];
         }
 
-        $this->client = $client? $client : new \Aws\Sns\SnsClient($opts);
+        $this->client = $client ? $client : new \Aws\Sns\SnsClient($opts);
     }
+
     /**
      * Send an sms
      */
@@ -40,7 +43,7 @@ class Service
             $number = "+$number";
         }
 
-        if (strpos($number, '+', 0) === FALSE) {
+        if (strpos($number, '+', 0) === false) {
             $number = "+1 $number";
         }
 
