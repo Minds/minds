@@ -20,6 +20,7 @@ class Router
       '/api/v1/thumbs' => Controllers\api\v1\votes::class,
 
       '/icon' => "Minds\\Controllers\\icon",
+      '//icon' => "Minds\\Controllers\\icon",
       '/api' => "Minds\\Controllers\\api\\api",
       '/fs' => "Minds\\Controllers\\fs\\fs",
       '/thumbProxy' => "Minds\\Controllers\\thumbProxy",
