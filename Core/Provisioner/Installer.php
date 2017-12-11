@@ -91,7 +91,7 @@ class Installer
         if (!isset($this->options['domain']) || !$this->options['domain']) {
             throw new ProvisionException('Domain name was not provided');
         } elseif (!preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['domain'])) {
-            throw new ProvisionException('Domain name is invalid');
+            //throw new ProvisionException('Domain name is invalid');
         }
 
         if (!isset($this->options['private-key']) || !$this->options['private-key']) {

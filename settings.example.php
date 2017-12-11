@@ -31,6 +31,7 @@ $CONFIG->site_name = '{{site-name}}';
 $CONFIG->__site_secret__ = '{{site-secret}}';
 // $CONFIG->cdn_url = 'http://{{domain}}/';
 $CONFIG->site_url = 'http://{{domain}}/';
+$CONFIG->zmq_server = 'localhost';
 
 /**
  * Overrides default system cache path from inside data root to custom location.
