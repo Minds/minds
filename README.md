@@ -10,6 +10,12 @@ Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/d
 ### Building
 Please see the documentation on Minds.org for instructions on how to [build the Minds Engine](https://www.minds.org/docs/install/preparation.html#engine-php).
 
+### Docker install
+
+- `docker-compose up -d nginx`
+- `docker build -t minds/installer -f engine/containers/installer/Dockerfile ./engine`
+- `docker run -v "$(pwd)"/engine:/var/www/Minds/engine --link minds_cassandra_1:cassandra --network minds_app -it minds/installer`
+
 ## Contributing
 If you'd like to contribute to the Minds project, check out the [Contribution](https://www.minds.org/docs/contributing.html) section of Minds.org or head right over to the [Minds Open Source Community](https://www.minds.com/groups/profile/365903183068794880).  If you've found or fixed a bug, let us know in the [Minds Help and Support Group](https://www.minds.com/groups/profile/100000000000000681/activity)!
 
