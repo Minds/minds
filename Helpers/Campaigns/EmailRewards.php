@@ -38,24 +38,11 @@ class EmailRewards
             $points = 100;
             $label = "Check-in bonus";
             break;
-          case "october-31":
+          case "december-11":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
-                $points = 1031;
+                $points = 2500;
                 $wire = true;
-
-                if ($_GET['selected'] == 'trick') {
-                    Core\Security\ACL::$ignore = true;
-                    $embeded = new Entities\Activity('771850251358183424');
-                    $activity = new Entities\Activity();
-                    $activity->setMessage("#IGotTricked");
-                    $activity->setRemind($embeded->export());
-                    $activity->setOwner($user);
-                    $activity->save();
-                    Helpers\Counters::increment($embeded->guid, 'remind');
-                    Core\Security\ACL::$ignore = false;
-                    return;
-                }
             } else {
                 echo "Validator failed"; exit;
             }
