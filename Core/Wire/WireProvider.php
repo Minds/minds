@@ -42,7 +42,8 @@ class WireProvider extends Provider
             return new Methods\Money($di->get('StripePayments'));
         }, ['useFactory'=>false]);
 
-        $this->di->bind('Wire\Method\Bitcoin', function ($di) {
+        $this->di->bind('Wire\Method\Tokens', function ($di) {
+            return new Methods\Tokens();
         }, ['useFactory'=>false]);
     }
 }

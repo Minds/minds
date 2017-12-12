@@ -21,5 +21,9 @@ class HttpProvider extends Provider
         $this->di->bind('Http\Json', function ($di) {
             return new Curl\Json\Client();
         }, ['useFactory'=>true]);
+
+        $this->di->bind('Http\JsonRpc', function ($di) {
+            return new Curl\JsonRpc\Client();
+        }, ['useFactory'=>true]);
     }
 }

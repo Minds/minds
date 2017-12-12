@@ -12,6 +12,7 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;
 use Minds\Entities\Wire;
+use Minds\Entities\User;
 
 class Webhook implements HookInterface
 {
@@ -34,14 +35,14 @@ class Webhook implements HookInterface
 
             $to = "";
 
-            if ($entity instanceof Entities\User) {
+            if ($entity instanceof User) {
                 $to = $entity->guid;
             } else {
                 $to = $entity->ownerObj->guid;
             }
 
             $wire = new Wire();
-            $wire->setMethod('usd')
+            $wire->setMethod('money')
                 ->setEntity($entity)
                 ->setTo($to)
                 ->setFrom($user->guid)

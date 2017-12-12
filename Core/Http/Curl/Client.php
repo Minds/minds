@@ -55,6 +55,11 @@ class Client
             is_array($options['data'])
         ) {
             $options['data'] = http_build_query($options['data']);
+        } elseif (
+            in_array('Content-Type: application/json', $options['headers']) &&
+            is_array($options['data'])
+        ) {
+            $options['data'] = json_encode($options['data']);
         }
 
         if (in_array($options['method'], $validMethods)) {

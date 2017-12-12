@@ -22,7 +22,16 @@ class WireNotification implements Interfaces\QueueRunner
                 $entity = unserialize($data['entity']);
                 $receiverUser = $entity->type === 'user' ? $entity : $entity->getOwnerEntity();
 
-                if (isset($data['notMonetizedException']) && $data['notMonetizedException']) {
+                if (isset($data['walletNotSetupException']) && $data['walletNotSetupException']) {
+                    $message = 'Somebody wanted to send you a MindsCoin wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
+                    Dispatcher::trigger('notification', 'wire', [
+                        'to' => [$receiverUser->getGUID()],
+                        'from' => 100000000000000519,
+                        'notification_view' => 'custom_message',
+                        'params' => ['message' => $message],
+                        'message' => $message,
+                    ]);
+                } else if (isset($data['notMonetizedException']) && $data['notMonetizedException']) {
                     $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
                     Dispatcher::trigger('notification', 'wire', [
                         'to' => [$receiverUser->getGUID()],

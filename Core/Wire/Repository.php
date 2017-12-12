@@ -74,6 +74,10 @@ class Repository
             $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
         }
 
+        if ($timestamp instanceof \DateTime) {
+            $timestamp = $timestamp->getTimestamp();
+        }
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
         $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
@@ -112,6 +116,10 @@ class Repository
             $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
         }
 
+        if ($timestamp instanceof \DateTime) {
+            $timestamp = $timestamp->getTimestamp();
+        }
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
         $query->query("SELECT SUM(amount) as amount_sum FROM wire
@@ -146,6 +154,10 @@ class Repository
         // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
         if (!$timestamp) {
             $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
+        }
+
+        if ($timestamp instanceof \DateTime) {
+            $timestamp = $timestamp->getTimestamp();
         }
 
         $query = new Core\Data\Cassandra\Prepared\Custom();

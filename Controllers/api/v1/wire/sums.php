@@ -31,6 +31,7 @@ class sums implements Interfaces\Api
                 $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
                 $timestamp = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
                 $merchant = isset($_GET['merchant']) ? (bool) $_GET['merchant'] : (bool) (new User($guid))->getMerchant();
+                $token_owner = isset($_GET['token_owner']) ? (bool) $_GET['token_owner'] : (bool) (new User($guid))->getEthWallet();
 
                 $isSelf = Core\Session::getLoggedInUser()->guid == $guid;
                 $cache = Di::_()->get('Cache');
@@ -52,6 +53,10 @@ class sums implements Interfaces\Api
                     'money' => 0,
                     'money_count' => 0,
                     'money_avg' => 0,
+
+                    'tokens' => 0,
+                    'tokens_count' => 0,
+                    'tokens_avg' => 0,
                 ];
 
                 if ($merchant) {
@@ -63,6 +68,18 @@ class sums implements Interfaces\Api
                         'money' => $money['sum'],
                         'money_count' => $money['count'],
                         'money_avg' => $money['avg'],
+                    ]);
+                }
+
+                if ($token_owner) {
+                    $tokens = $repo->getAggregatesForReceiver($guid, 'tokens', $timestamp);
+
+                    $response['count'] += $tokens['count'];
+
+                    $response = array_merge($response, [
+                        'tokens' => $tokens['sum'],
+                        'tokens_count' => $tokens['count'],
+                        'tokens_avg' => $tokens['avg'],
                     ]);
                 }
 

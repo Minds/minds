@@ -55,6 +55,8 @@ class Minds extends base
         (new Votes\VotesProvider())->register();
         (new Features\FeaturesProvider())->register();
         (new SMS\SMSProvider())->register();
+        (new Blockchain\BlockchainProvider())->register();
+        (new Payments\RecurringSubscriptions\RecurringSubscriptionsProvider())->register();
     }
 
     /**

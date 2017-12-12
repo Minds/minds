@@ -183,3 +183,41 @@ $CONFIG->set('sandbox', [
 ]);
 
 $CONFIG->set('sns_secret', '{{sns-secret}}');
+
+$CONFIG->set('blockchain', [
+    // Endpoints to connect to the blockchain
+    'rpc_endpoints' => [ 'http://10.0.2.2:8545' ],
+
+    // Client network (1 = main eth network; 4 = rinkeby, 1337 Minds/coin repo's testserver.sh)
+    'client_network' => 1,
+
+    // Escrow wallet
+    'wallet_address' => '0x0000000000000000000000000000000000000000',
+
+    // Escrow wallet private key
+    'wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
+
+    // Boost escrow wallet
+    'boost_wallet_address' => '0x0000000000000000000000000000000000000000',
+
+    // Boost escrow wallet private key
+    'boost_wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
+
+    // Default gas price in Gwei
+    'default_gas_price' => 1,
+
+    // Default gas price in Gwei used for server-side transactions
+    'server_gas_price' => 1,
+
+    // Token
+    'token_address' => '0x0000000000000000000000000000000000000000',
+
+    // Wire
+    'wire_address' => '0x0000000000000000000000000000000000000000',
+
+    // Peer Boost
+    'peer_boost_address' => '0x0000000000000000000000000000000000000000',
+
+    // Web3 Interface binary
+    'mw3' => '/usr/bin/env node /path/to/mw3/index.js'
+]);

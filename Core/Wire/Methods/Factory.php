@@ -14,6 +14,8 @@ class Factory
               return Di::_()->get('Wire\Method\Points');
           case "Money":
                return Di::_()->get('Wire\Method\Money');
+          case "Tokens":
+               return Di::_()->get('Wire\Method\Tokens');
           default:
             throw new \Exception("Method not found");
         }

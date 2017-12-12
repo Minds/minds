@@ -121,6 +121,19 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     }
 
     /**
+     * Set the GUID of this boost
+     * @return $this
+     */
+    public function setGuid($guid)
+    {
+        if (!$this->guid) {
+            $this->guid = $guid;
+            $this->time_created = time();
+        }
+        return $this;
+    }
+
+    /**
      * Get the GUID of this boost
      * @return string
      */

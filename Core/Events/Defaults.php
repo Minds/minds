@@ -105,6 +105,9 @@ class Defaults
 
         // Security Events
         (new Core\Security\Events())->register();
+
+        // Blockchain events
+        (new Core\Blockchain\Events())->register();
     }
 
     public static function _()

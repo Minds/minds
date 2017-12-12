@@ -26,6 +26,7 @@ class Peer implements BoostEntityInterface
     private $scheduledTs;
     private $postToFacebook = false;
     private $handler = 'peer';
+    private $method = '';
 
     public function __construct($db = null)
     {
@@ -63,6 +64,7 @@ class Peer implements BoostEntityInterface
       $this->transactionId = $array['transactionId'];
       $this->scheduledTs = isset($array['scheduledTs']) ? $array['scheduledTs'] : null;
       $this->postToFacebook = isset($array['postToFacebook']) ? $array['postToFacebook'] : false;
+      $this->method = isset($array['method']) ? $array['method'] : '';
       return $this;
   }
 
@@ -89,13 +91,26 @@ class Peer implements BoostEntityInterface
         'last_updated' => time(),
         'transactionId' => $this->transactionId,
         'scheduledTs' => $this->scheduledTs ?: time(),
-        'postToFacebook' => $this->postToFacebook
+        'postToFacebook' => $this->postToFacebook,
+        'method' => $this->method,
       ];
 
       /** @var Core\Boost\Repository $repository */
       $repository = Di::_()->get('Boost\Repository');
       $repository->upsert('peer', $data);
       return $this;
+  }
+
+  /**
+   * Sets the GUID of this boost
+   * @return $this
+   */
+  public function setGuid($guid)
+  {
+      if (!$this->guid) {
+          $this->guid = $guid;
+          $this->time_created = time();
+      }
   }
 
   /**
@@ -241,6 +256,28 @@ class Peer implements BoostEntityInterface
     }
 
     /**
+     * Return the boost currency
+     * @return string
+     */
+    public function getMethod()
+    {
+        if (!$this->method && $this->_type == 'pro') {
+            return 'money';
+        }
+
+        return $this->method;
+    }
+
+    /**
+     * Set the boost currency
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
      * Get the schedule timestamp
      * @return int
      */
@@ -308,7 +345,8 @@ class Peer implements BoostEntityInterface
           'last_updated' => $this->last_updated,
           'type' => $this->_type,
           'scheduledTs' => $this->scheduledTs,
-          'postToFacebook' => $this->postToFacebook
+          'postToFacebook' => $this->postToFacebook,
+          'method' => $this->method,
         ];
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);

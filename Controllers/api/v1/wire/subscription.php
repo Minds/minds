@@ -120,7 +120,7 @@ class subscription implements Interfaces\Api
                 }
 
                 break;
-            case 'btc':
+            case 'tokens':
                 // todo
                 break;
         }

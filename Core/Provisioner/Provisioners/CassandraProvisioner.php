@@ -151,6 +151,21 @@ class CassandraProvisioner implements ProvisionerInterface
                     [ 'alias' => 'wire_sender_guid_idx', 'expr' => 'sender_guid' ]
                 ]
             ],
+            'blockchain_pending' => [
+                'schema' => [
+                    'type' => 'text',
+                    'tx_id' => 'text',
+                    'sender_guid' => 'varint',
+                    'data' => 'text',
+                ],
+                'primaryKeys' => [
+                    'type',
+                    'tx_id'
+                ],
+                'attributes' => [
+                    'compaction = {\'class\': \'org.apache.cassandra.db.compaction.LeveledCompactionStrategy\'}'
+                ]
+            ],
             'reports' => [
                 'schema' => [
                     'guid' => 'varint',

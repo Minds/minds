@@ -32,6 +32,7 @@ class User extends \ElggUser
         $this->attributes['categories'] = [];
         $this->attributes['wire_rewards'] = '';
         $this->attributes['pinned_posts'] = [];
+        $this->attributes['eth_wallet'] = '';
 
         parent::initializeAttributes();
     }
@@ -595,6 +596,8 @@ class User extends \ElggUser
             $export['deleted'] = $this->getDeleted();
         }
 
+        $export['eth_wallet'] = $this->getEthWallet() ?: '';
+
         return $export;
     }
 
@@ -641,6 +644,24 @@ class User extends \ElggUser
         $this->categories = $value;
     }
 
+    /**
+     * @return string
+     */
+    public function getEthWallet()
+    {
+        return $this->eth_wallet ?: '';
+    }
+
+    /**
+     * @param string $eth_wallet
+     * @return $this
+     */
+    public function setEthWallet($eth_wallet)
+    {
+        $this->eth_wallet = $eth_wallet ?: '';
+
+        return $this;
+    }
 
     /**
      * Gets the user's icon URL

@@ -94,6 +94,7 @@ class boost implements Interfaces\Api
                 $response['priority'] = $this->getQueuePriorityRate();
                 $response['usd'] = $this->getUSDRate();
                 $response['minUsd'] = $this->getMinUSDCharge();
+                $response['tokens'] = $this->getTokensRate();
                 break;
             case "p2p":
                 /** @var Core\Boost\Peer\Review $review */
@@ -177,7 +178,7 @@ class boost implements Interfaces\Api
         if ($impressions < $config['network']['min'] || $impressions > $config['network']['max']) {
             return Factory::response([
                 'status' => 'error',
-                'message' => "You must boost between {$config['network']['min']} and {$config['network']['max']} points"
+                'message' => "You must boost between {$config['network']['min']} and {$config['network']['max']} impressions"
             ]);
         }
 
@@ -203,13 +204,6 @@ class boost implements Interfaces\Api
                 if (isset($_POST['priority']) && $_POST['priority']) {
                     $priority = true;
                     $priorityRate = $this->getQueuePriorityRate();
-
-//                    if ($priorityRate != (float)$_POST['priorityContract']) {
-//                        return Factory::response([
-//                            'status' => 'error',
-//                            'message' => 'Priority rate has been updated. Please, try again.'
-//                        ]);
-//                    }
                 }
                 $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
                 $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : 'points';
@@ -220,19 +214,26 @@ class boost implements Interfaces\Api
                     $amount *= $priorityRate + 1;
                 }
 
-                if ($bidType === 'usd') {
-                    $amount = round($amount / $this->getUSDRate(), 2) * 100;
+                switch ($bidType) {
+                    case 'usd':
+                        $amount = round($amount / $this->getUSDRate(), 2) * 100;
 
-                    if (($amount / 100) < $this->getMinUSDCharge()) {
-                        return Factory::response([
-                            'status' => 'error',
-                            'message' => 'You must spend at least $' . $this->getMinUSDCharge()
-                        ]);
-                    }
-                } else {
-                    $amount = ceil($amount);
+                        if (($amount / 100) < $this->getMinUSDCharge()) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'message' => 'You must spend at least $' . $this->getMinUSDCharge()
+                            ]);
+                        }
+                        break;
+
+                    case 'tokens':
+                        $amount = round($amount, 4);
+                        break;
+
+                    default:
+                        $amount = ceil($amount);
+                        break;
                 }
-                // TODO: Add BTC
 
                 $validCategories = array_keys(Di::_()->get('Config')->get('categories') ?: []);
                 if (!is_array($categories)) {
@@ -248,16 +249,49 @@ class boost implements Interfaces\Api
                     }
                 }
 
+                $state = 'created';
+
+                if ($bidType == 'tokens') {
+                    $state = 'pending';
+                }
+
                 $boost = (new Entities\Boost\Network())
                     ->setEntity($entity)
                     ->setBid($amount)
                     ->setBidType($bidType)
                     ->setImpressions($impressions)
                     ->setOwner(Core\Session::getLoggedInUser())
-                    ->setState('created')
+                    ->setState($state)
                     ->setHandler(lcfirst($pages[0]))
                     ->setPriorityRate($priorityRate)
                     ->setCategories($categories);
+
+                if ($bidType == 'tokens' && isset($_POST['guid'])) {
+                    $guid = $_POST['guid'];
+
+                    if (!is_numeric($guid) || $guid < 1) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'stage' => 'transaction',
+                            'message' => 'Provided GUID is invalid'
+                        ]);
+                    }
+
+                    /** @var Core\Boost\Repository $repository */
+                    $repository = Di::_()->get('Boost\Repository');
+
+                    $existingBoost = $repository->getEntity($boost->getHandler(), $guid);
+
+                    if ($existingBoost) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'stage' => 'transaction',
+                            'message' => 'Provided GUID already exists'
+                        ]);
+                    }
+
+                    $boost->setGuid($guid);
+                }
 
                 $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);
                 if ($result) {
@@ -269,13 +303,6 @@ class boost implements Interfaces\Api
                     $boost->setId((string)$result)
                         ->setTransactionId($transactionId)
                         ->save();
-/*                    Core\Events\Dispatcher::trigger('notification', 'boost', [
-                        'to' => [Core\Session::getLoggedinUser()->guid],
-                        'entity' => $pages[1],
-                        'notification_view' => 'boost_submitted',
-                        'params' => ['impressions' => $impressions, 'priority' => $priority],
-                        'impressions' => $impressions
-                    ]);*/
                 } else {
                     $response['status'] = 'error';
                 }
@@ -442,6 +469,11 @@ class boost implements Interfaces\Api
         $config = (array)Core\Di\Di::_()->get('Config')->get('boost');
 
         return isset($config['usd']) ? $config['usd'] : 1000;
+    }
+
+    protected function getTokensRate()
+    {
+        return Core\Di\Di::_()->get('Blockchain\Manager')->getRate();
     }
 
     protected function getMinUSDCharge() {

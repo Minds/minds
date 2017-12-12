@@ -9,6 +9,7 @@
 namespace Minds\Controllers\api\v1\boost;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -73,6 +74,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $destination = Entities\Factory::build($_POST['destination']);
         $bid = intval($_POST['bid']);
         $type = $_POST['type'];
+        $currency = $_POST['currency'];
 
         if (!$entity) {
             return Factory::response([
@@ -90,12 +92,28 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if ($type == "pro" && !$destination->merchant) {
+        if (!in_array($currency, [ 'points', 'money', 'tokens' ])) {
             return Factory::response([
                 'status' => 'error',
                 'stage' => 'initial',
-                'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
+                'message' => 'Unknown currency'
             ]);
+        }
+
+        if ($type == "pro") {
+            if ($currency == 'tokens' && !$destination->getEthWallet()) {
+                return Factory::response([
+                    'status' => 'error',
+                    'stage' => 'initial',
+                    'message' => "@$destination->username is not a wallet holder and can not accept MindsCoin Pro Boosts"
+                ]);
+            } elseif ($currency == 'money' && !$destination->merchant) {
+                return Factory::response([
+                    'status' => 'error',
+                    'stage' => 'initial',
+                    'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
+                ]);
+            }
         }
 
         if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
@@ -106,18 +124,25 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        $state = 'created';
+
+        if ($currency == 'tokens') {
+            $state = 'pending';
+        }
+
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
           ->setType($_POST['type'])
+          ->setMethod($currency)
           ->setBid($bid)
           ->setDestination($destination)
           ->setOwner(Core\Session::getLoggedInUser())
           ->postToFacebook($_POST['postToFacebook'])
           ->setScheduledTs($_POST['scheduledTs'])
-          ->setState('created');
+          ->setState($state);
           //->save();
 
-        if ($type == 'pro') {
+        if ($type == 'pro' && $currency == 'money') {
             $sale = (new Payments\Sale)
             ->setOrderId('boost-' . $boost->getGuid())
             ->setAmount($boost->getBid() * 100) //cents to $
@@ -135,6 +160,46 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                     'message' => $e->getMessage()
                 ]);
             }
+        } elseif ($type == 'pro' && $currency == 'tokens') {
+            if (!isset($_POST['nonce']['txHash']) || !$_POST['nonce']['txHash']) {
+                return Factory::response([
+                    'status' => 'error',
+                    'stage' => 'transaction',
+                    'message' => 'Missing blockchain transaction'
+                ]);
+            }
+
+            if (isset($_POST['guid'])) {
+                $guid = $_POST['guid'];
+
+                if (!is_numeric($guid) || $guid < 1) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'stage' => 'transaction',
+                        'message' => 'Provided GUID is invalid'
+                    ]);
+                }
+
+                /** @var Core\Boost\Repository $repository */
+                $repository = Di::_()->get('Boost\Repository');
+
+                $existingBoost = $repository->getEntity('peer', $guid);
+
+                if ($existingBoost) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'stage' => 'transaction',
+                        'message' => 'Provided GUID already exists'
+                    ]);
+                }
+
+                $boost->setGuid($guid);
+            }
+
+            $transaction_id = $_POST['nonce']['txHash'];
+
+            Di::_()->get('Boost\Pending')
+                ->add($transaction_id, $boost);
         } else {
             $config = array_merge([
                 'peer' => [
@@ -169,7 +234,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             'entity' => $boost->getEntity(),
             'title' => $boost->getEntity()->title,
             'notification_view' => 'boost_peer_request',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType(), 'currency' => $boost->getMethod()]
         ]);
 
         $response['boost_guid'] = $boost->getGuid();
@@ -214,7 +279,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             $activity->setRemind($embeded->export())->save();
         }
 
-        if ($boost->getType() == "pro") {
+        if ($boost->getType() == "pro" && $boost->getMethod() == 'money') {
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
                 $sale = (new Payments\Sale)
@@ -228,6 +293,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ]);
                 return false;
             }
+        } else if ($boost->getType() == 'pro' && $boost->getMethod() == 'tokens') {
+            // Already charged
         } else {
             Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
         }
@@ -283,7 +350,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if ($boost->getType() == "pro") {
+        if ($boost->getType() == "pro" && $boost->getMethod() == 'money') {
             try {
                 $stripe = Core\Di\Di::_()->get('StripePayments');
                 $sale = (new Payments\Sale)
@@ -297,6 +364,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                   'message' => $e->getMessage()
                 ]);
             }
+        } else if ($boost->getType() == 'pro' && $boost->getMethod() == 'tokens') {
+            // Already refunded
         } else {
             $message = "Rejected Peer Boost";
             if ($revoked) {

@@ -67,8 +67,6 @@ class wire implements Interfaces\Api
 
         $service = Methods\Factory::build($method);
 
-
-
         try {
             $service->setAmount($amount)
                 ->setEntity($entity)
@@ -84,6 +82,17 @@ class wire implements Interfaces\Api
 
             //now send notification
 
+        } catch (Methods\WalletNotSetupException $e) {
+            $message = 'Somebody wanted to send you a MindsCoin wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
+
+            Core\Queue\Client::build()->setQueue("WireNotification")
+                ->send(array(
+                    "entity" => $entity,
+                    "walletNotSetupException" => true
+                ));
+
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
         } catch (Methods\NotMonetizedException $e) {
             $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
 

@@ -590,7 +590,7 @@ class Activity extends Entity
         $totals = [];
         $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'points');
         $totals['money'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'money');
-        // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'bitcoin');
+        $totals['tokens'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'tokens');
         return $totals;
     }
 

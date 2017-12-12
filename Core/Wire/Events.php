@@ -7,8 +7,10 @@
 namespace Minds\Core\Wire;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Wire\Methods\Tokens;
 use Minds\Entities;
 use Minds\Entities\User;
 use Minds\Helpers;
@@ -60,6 +62,32 @@ class Events
                   'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount']
                 ];
                 return $event->setResponse($export);
+            }
+        });
+
+        // Recurring subscriptions
+
+        Dispatcher::register('recurring-subscriptions:process', 'wire', function (Core\Events\Event $event) {
+            $params = $event->getParameters();
+            $recurringSubscription = $params['recurring_subscription'];
+
+            switch ($recurringSubscription['payment_method']) {
+                case 'tokens':
+
+                    $user = Entities\Factory::build($recurringSubscription['entity_guid']);
+                    $sender = new User($recurringSubscription['user_guid']);
+
+                    /** @var Tokens $wireMethod */
+                    $wireMethod = Di::_()->get('Wire\Method\Tokens');
+                    $wireMethod
+                        ->setAmount($recurringSubscription['amount'])
+                        ->setEntity($user)
+                        ->setTimestamp(time())
+                        ->chargeRecurringAndCreate($user, $sender);
+
+                    return $event->setResponse(true);
+                default:
+                    return $event->setResponse(false);
             }
         });
     }
