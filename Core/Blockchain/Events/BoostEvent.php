@@ -13,13 +13,13 @@ use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Core\Wire\Methods\Tokens;
 
-class PeerBoostEvent implements BlockchainEventInterface
+class BoostEvent implements BlockchainEventInterface
 {
     public static $eventsMap = [
-        '0xca9b3656fa3420c033337af0b3935a07b180951c1da4ca108992c8b8c6a0b522' => 'peerBoostSent',
-        '0x91753a5b2a6e1eec8cbbe8af7a2d298a9976547d45a2b9e24144d53f50aea954' => 'peerBoostAccepted',
-        '0x7626654009627c066216e658b51dce56d55165d7a27d1fc742d77e6909449bfc' => 'peerBoostRejected',
-        '0xfdca18ab1356c678985966fc2be26accaaa6a8558926ea2a63fcd6f346f4340d' => 'peerBoostRevoked',
+        '0x68170a430a4e2c3743702c7f839f5230244aca61ed306ec622a5f393f9559040' => 'boostSent',
+        '0xd7ccb5dc8647fd89286a201b04b5e65fb7b5e281603e972695fd35f52bbd244b' => 'boostAccepted',
+        '0xc43f9053be9f0ee374d3f8eb929d2e0aa990d33a7d4a51423cb715228d39ab89' => 'boostRejected',
+        '0x0b869ea800008714ae430dc6c4e12a2c880d50fb92937d51a4b223af34040971' => 'boostRevoked',
     ];
 
     /**
@@ -46,7 +46,7 @@ class PeerBoostEvent implements BlockchainEventInterface
         }
     }
 
-    public function peerBoostSent($log)
+    public function boostSent($log)
     {
         $tx = $log['transactionHash'];
         list($guid) = Util::parseData($log['data']);
@@ -66,15 +66,15 @@ class PeerBoostEvent implements BlockchainEventInterface
         }
     }
 
-    public function peerBoostAccepted($log)
+    public function boostAccepted($log)
     {
     }
 
-    public function peerBoostRejected($log)
+    public function boostRejected($log)
     {
     }
 
-    public function peerBoostRevoked($log)
+    public function boostRevoked($log)
     {
     }
 }
