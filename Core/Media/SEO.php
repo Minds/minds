@@ -20,6 +20,10 @@ class SEO
             $guid = $slugs[1];
         }
 
+        if ($guid == 'videos' || $guid == 'images') {
+            return [];
+        }
+
         $entity = Entities\Factory::build($guid);
         if (!$entity || Helpers\Flags::shouldFail($entity)) {
             header("HTTP/1.0 404 Not Found");

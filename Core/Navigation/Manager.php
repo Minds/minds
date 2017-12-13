@@ -29,50 +29,32 @@ class Manager
             ->setPath('capture');
         //self::add($capture);
 
-        $discovery_trending = new Item();
-        $discovery_trending
+        $channels = new Item();
+        $channels
             ->setPriority(2)
-            ->setIcon('trending_up')
-            ->setName('Trending')
-            ->setTitle('Trending')
-            ->setPath('discovery/trending');
+            ->setIcon('people')
+            ->setName('Channels')
+            ->setTitle('Channels')
+            ->setPath('channels');
+        self::add($channels);
 
-        $discovery_suggested = new Item();
-        $discovery_suggested
-            ->setPriority(1)
-            ->setIcon('call_split')
-            ->setName('Suggested')
-            ->setTitle('Suggested')
-            ->setPath('discovery/suggested')
-            ->setVisibility(0); //only show for loggedin
-
-        $discovery_featured = new Item();
-        $discovery_featured
+        $videos = new Item();
+        $videos
             ->setPriority(3)
-            ->setIcon('star')
-            ->setName('Featured')
-            ->setTitle('Featured')
-            ->setPath('discovery/featured');
-        $discovery_my = new Item();
-        $discovery_my
-            ->setPriority(4)
-            ->setIcon('person_pin')
-            ->setName('My Media')
-            ->setTitle('My Media')
-            ->setPath('discovery/owner')
-            ->setVisibility(0); //only show for loggedin
+            ->setIcon('videocam')
+            ->setName('Videos')
+            ->setTitle('Videos')
+            ->setPath('media/videos');
+        self::add($videos);
 
-        $discovery = new Item();
-        $discovery->setPriority(3)
-            ->setIcon('search')
-            ->setName('Discovery')
-            ->setTitle('Discovery')
-            ->setPath('discovery/trending/channels')
-            ->addSubItem($discovery_trending)
-            ->addSubItem($discovery_suggested)
-            ->addSubItem($discovery_featured)
-            ->addSubItem($discovery_my);
-        self::add($discovery);
+        $images = new Item();
+        $images
+            ->setPriority(4)
+            ->setIcon('photo')
+            ->setName('Images')
+            ->setTitle('Images')
+            ->setPath('media/images');
+        self::add($images);
 
         $admin = new Item();
         $admin->setPriority(100)
@@ -151,9 +133,9 @@ class Manager
                 ->setTitle('Verify requests')
                 ->setPath('admin/verify')
             );
-        self::add($admin);
+        //self::add($admin);
 
-        self::add((new Item())
+        /*self::add((new Item())
             ->setPriority(2)
             ->setIcon('account_balance')
             ->setName('Wallet')
@@ -175,16 +157,16 @@ class Manager
                 'counter' => (new Core\Notification\Counters())->getCount()
             )),
             'topbar'
-        );
+        );*/
 
-        self::add((new Item())
+        /*self::add((new Item())
             ->setPriority(10)
             ->setIcon('help_outline')
             ->setName('Support')
             ->setTitle('Help & Support Group')
             ->setPath('groups/profile/100000000000000681/activity')
             //'topbar'
-        );
+        );*/
 
         Core\Pages\Menu::_()->init();
     }

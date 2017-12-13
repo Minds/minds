@@ -52,7 +52,7 @@ class Navigation
             ->setIcon('subject')
             ->setName('Blogs')
             ->setTitle('Blogs')
-            ->setPath('blog/trending')
+            ->setPath('blog')
             ->addSubItem($add_link)
             ->addSubItem($featured_link)
             ->addSubItem($trending_link)

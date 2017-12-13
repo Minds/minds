@@ -55,7 +55,7 @@ class Navigation
         ->setIcon('group_work')
         ->setName('Groups')
         ->setTitle('Groups')
-        ->setPath('groups/featured')
+        ->setPath('groups')
         ->addSubItem($create_link)
         ->addSubItem($featured_link)
 //        ->addSubItem($trending_link)

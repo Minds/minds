@@ -318,6 +318,15 @@ class Blog extends \ElggObject
         return parent::save($index);
     }
 
+    public function getExcerpt()
+    {
+        if ($this->excerpt) {
+            return $this->excerpt;
+        }
+
+        return strip_tags($this->description);
+    }
+
     public function export()
     {
         $export = parent::export();
@@ -326,6 +335,7 @@ class Blog extends \ElggObject
         }
         $export['thumbnail_src'] = $this->getIconUrl();
         $export['description'] = $this->description; //blogs need to be able to export html
+        $export['excerpt'] = $this->getExcerpt();
         $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids'] ?: []);
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
