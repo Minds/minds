@@ -41,7 +41,7 @@ class Webhook implements HookInterface
             }
 
             $wire = new Wire();
-            $wire->setMethod('usd')
+            $wire->setMethod('money')
                 ->setEntity($entity)
                 ->setTo($to)
                 ->setFrom($user->guid)
