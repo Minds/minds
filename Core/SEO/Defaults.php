@@ -204,7 +204,7 @@ class Defaults
             ],
             'wire' => [
                 'title' => 'Wire',
-                'description' => 'Exchange points, dollars and Bitcoin directly with other channels on Minds',
+                'description' => 'Exchange points, dollars and tokens directly with other channels on Minds',
                 'image' => 'assets/photos/blown-bulb.jpg'
             ],
             'boost' => [

@@ -83,7 +83,7 @@ class wire implements Interfaces\Api
             //now send notification
 
         } catch (Methods\WalletNotSetupException $e) {
-            $message = 'Somebody wanted to send you a MindsCoin wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
+            $message = 'Somebody wanted to send you a Token wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
 
             Core\Queue\Client::build()->setQueue("WireNotification")
                 ->send(array(

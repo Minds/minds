@@ -88,7 +88,7 @@ class WireNotification implements Interfaces\QueueRunner
             $currency = $amount > 1 ? ' points' : ' point';
             $amountString = $amount . $currency;
         } else {
-            $currency = $amount > 1 ? ' bitcoins' : ' bitcoin';
+            $currency = $amount > 1 ? ' tokens' : ' token';
             $amountString = $amount . $currency;
         }
         return $amountString;
