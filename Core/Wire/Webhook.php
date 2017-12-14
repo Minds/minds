@@ -8,6 +8,7 @@ namespace Minds\Core\Wire;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Entities;
+use Minds\Entities\User;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;
@@ -34,7 +35,7 @@ class Webhook implements HookInterface
 
             $to = "";
 
-            if ($entity instanceof Entities\User) {
+            if ($entity instanceof User) {
                 $to = $entity->guid;
             } else {
                 $to = $entity->ownerObj->guid;
