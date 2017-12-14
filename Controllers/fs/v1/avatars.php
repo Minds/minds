@@ -55,7 +55,7 @@ class avatars implements Interfaces\FS
 
         $contents = $f->read();
         if (empty($contents)) {
-            $contents = file_get_contents(Core\Config::build()->path . "front/public/assets/avatars/default-$size.png");
+            $contents = file_get_contents(Core\Config::build()->path . "engine/Assets/avatars/default-$size.png");
         }
 
         $finfo    = finfo_open(FILEINFO_MIME);
