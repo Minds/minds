@@ -28,6 +28,12 @@ class icon extends core\page implements Interfaces\page
         //    $join_date = $cached;
         //} else {
             $user = new Entities\User($guid);
+
+        //check the user is enabled
+        if ($user->enabled == 'no') {
+            exit;
+        }
+
         if (isset($user->legacy_guid) && $user->legacy_guid) {
             $guid = $user->legacy_guid;
         }
