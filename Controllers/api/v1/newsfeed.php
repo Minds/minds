@@ -154,7 +154,7 @@ class newsfeed implements Interfaces\Api
                 $iterator->setPriority(!get_input('offset', ''))
                     ->setType('newsfeed')
                     ->setLimit($limit)
-                    ->setRating(0)
+                    //->setRating(0)
                     ->setQuality(0)
                     ->setIncrement(false);
 
