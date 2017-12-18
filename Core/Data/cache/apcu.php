@@ -12,7 +12,7 @@ class apcu extends abstractCacher
 
     public function __construct()
     {
-        if (function_exists('apc_add')) {
+        if (function_exists('apcu_add')) {
             $this->installed = true;
         }
     }
@@ -28,7 +28,7 @@ class apcu extends abstractCacher
             return false;
         }
 
-        $value = apc_fetch($key);
+        $value = apcu_fetch($key);
         $this->local[$key] = $value;
         return $value;
     }
@@ -40,7 +40,7 @@ class apcu extends abstractCacher
             return $this;
         }
 
-        apc_store($key, $value, $ttl);
+        apcu_store($key, $value, $ttl);
         return $this;
     }
 
@@ -50,7 +50,7 @@ class apcu extends abstractCacher
             return false;
         }
 
-        apc_delete($key);
+        apcu_delete($key);
         return $this;
     }
 }
