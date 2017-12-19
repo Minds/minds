@@ -138,7 +138,7 @@ class newsfeed implements Interfaces\Api
         //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
         $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
-        $disabledBoost = true;
+        //$disabledBoost = true;
 
         if (get_input('platform') == 'ios') {
             $disabledBoost = true;
@@ -148,12 +148,15 @@ class newsfeed implements Interfaces\Api
             try {
                 //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
                 $limit = 2;
+                $cacher = Core\Data\cache\factory::build('apcu');
+                $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');    
 
                 /** @var Core\Boost\Network\Iterator $iterator */
                 $iterator = Core\Di\Di::_()->get('Boost\Network\Iterator');
                 $iterator->setPriority(!get_input('offset', ''))
                     ->setType('newsfeed')
                     ->setLimit($limit)
+                    ->setOffset($offset)
                     //->setRating(0)
                     ->setQuality(0)
                     ->setIncrement(false);
@@ -168,6 +171,7 @@ class newsfeed implements Interfaces\Api
                     Counters::increment($boost->owner_guid, "impression");
                     //}
                 }
+                $cacher->set(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed', $iterator->getOffset(), (3600 / 2));
             } catch (\Exception $e) {
             }
 
