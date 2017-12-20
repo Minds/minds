@@ -137,6 +137,13 @@ class Activity extends Entity
             return $this->indexes;
         }
 
+        if ($this->container_guid) {
+            return [
+                "activity:container:$this->container_guid",
+                "activity:network:$this->owner_guid"
+            ];
+        }
+
         $indexes = array(
             $this->type
         );
