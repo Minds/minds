@@ -27,7 +27,8 @@ class ActivitySpec extends ObjectBehavior
         $this->guid = '123';
         $this->getWireTotals()->shouldBeLike([
             'points' => 10,
-            'money' => 10
+            'money' => 10,
+            'tokens' => 10
         ]);
     }
 }

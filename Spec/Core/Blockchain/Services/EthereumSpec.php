@@ -20,7 +20,8 @@ class EthereumSpec extends ObjectBehavior
         $this->beConstructedWith($config, $jsonRpc);
 
         $config->get('blockchain')->willReturn([
-            'rpc_endpoints' => [ '127.0.0.1' ]
+            'rpc_endpoints' => [ '127.0.0.1' ],
+            'mw3' => '/dev/null'
         ]);
 
         $jsonRpc->post(Argument::type('string'), [
@@ -36,7 +37,8 @@ class EthereumSpec extends ObjectBehavior
         $this->beConstructedWith($config, $jsonRpc);
 
         $config->get('blockchain')->willReturn([
-            'rpc_endpoints' => [ '127.0.0.1' ]
+            'rpc_endpoints' => [ '127.0.0.1' ],
+            'mw3' => '/dev/null'
         ]);
 
         $jsonRpc->post(Argument::type('string'), [
@@ -52,7 +54,8 @@ class EthereumSpec extends ObjectBehavior
         $this->beConstructedWith($config, $jsonRpc);
         
         $config->get('blockchain')->willReturn([
-            'rpc_endpoints' => [ '127.0.0.1' ]
+            'rpc_endpoints' => [ '127.0.0.1' ],
+            'mw3' => '/dev/null'
         ]);
 
         $jsonRpc->post(Argument::type('string'), Argument::type('array'))

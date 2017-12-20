@@ -30,7 +30,7 @@ class Repository
      * @param array $options
      * @return Rows
      */
-    public function select(array $options)
+    public function select(array $options = [])
     {
         $options = array_merge([
             'status' => null,

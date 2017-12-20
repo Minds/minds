@@ -29,7 +29,8 @@ class PeerSpec extends ObjectBehavior
           'state' => 'testing',
           'transactionId' => null,
           'time_created' => time(),
-          'last_updated' => time()
+          'last_updated' => time(),
+          'method' => 'mockmethod'
         ];
     }
 
@@ -38,6 +39,7 @@ class PeerSpec extends ObjectBehavior
         $this->loadFromArray($this->mockData)->shouldReturn($this);
         $this->getBid()->shouldReturn(10);
         $this->getState()->shouldReturn('testing');
+        $this->getMethod()->shouldReturn('mockmethod');
     }
 
   //function it_should_should_save(Call $db){
@@ -74,5 +76,11 @@ class PeerSpec extends ObjectBehavior
     {
         $this->setState('testing-set-state')->shouldReturn($this);
         $this->getState()->shouldReturn('testing-set-state');
+    }
+
+    public function it_should_set_the_method()
+    {
+        $this->setMethod('testing-set-method')->shouldReturn($this);
+        $this->getMethod()->shouldReturn('testing-set-method');
     }
 }

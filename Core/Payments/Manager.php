@@ -142,7 +142,7 @@ class Manager
 
     /**
      * @param array $data
-     * @return bool
+     * @return string|bool
      * @throws \Exception
      */
     public function updatePaymentById(array $data)
@@ -160,12 +160,18 @@ class Manager
             ->setUserGuid($row['user_guid'])
             ->setTimeCreated($row['time_created']);
 
-        $this->repository->upsert(
+        $result = $this->repository->upsert(
             $this->getType(),
             $this->getUserGuid(),
             $this->getTimeCreated(),
             $this->getPaymentId(),
             $data
         );
+
+        if (!$result) {
+            throw new \Exception('Cannot update payment');
+        }
+
+        return $this->getPaymentId();
     }
 }

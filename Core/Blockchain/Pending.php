@@ -13,6 +13,8 @@ use Minds\Core\Di\Di;
 
 class Pending
 {
+    const PENDING_TTL = 30 * 24 * 60 * 60;
+
     protected $db;
 
     public function __construct($db = null)
@@ -26,16 +28,16 @@ class Pending
      */
     public function add(array $data)
     {
+        $ttl = static::PENDING_TTL;
+
         $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("INSERT INTO blockchain_pending
-          (type, tx_id, sender_guid, data)
-          VALUES (?, ?, ?, ?)",
-            [
-                (string) $data['type'],
-                (string) $data['tx_id'],
-                new \Cassandra\Varint($data['sender_guid']),
-                (string) json_encode($data['data'])
-            ]);
+        $query->query("INSERT INTO blockchain_pending (type, tx_id, sender_guid, data) VALUES (?, ?, ?, ?) USING TTL ?", [
+            (string) $data['type'],
+            (string) $data['tx_id'],
+            new \Cassandra\Varint($data['sender_guid']),
+            (string) json_encode($data['data']),
+            $ttl
+        ]);
 
         try {
             return (bool) $this->db->request($query);

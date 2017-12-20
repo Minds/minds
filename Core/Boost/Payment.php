@@ -97,7 +97,7 @@ class Payment
                 return $stripe->chargeSale($sale);
 
             case 'tokens':
-                if ($boost->subtype == 'network') {
+                if (isset($boost->subtype) && $boost->subtype == 'network') {
                     Di::_()->get('Boost\Pending')
                         ->approve($boost);
                 }
@@ -131,7 +131,7 @@ class Payment
                 return $stripe->voidOrRefundSale($sale, true);
 
             case 'tokens':
-                if ($boost->subtype == 'network') {
+                if (isset($boost->subtype) && $boost->subtype == 'network') {
                     Di::_()->get('Boost\Pending')
                         ->reject($boost);
                 }

@@ -79,6 +79,12 @@ class Mock
 
     }
 
+    public function time()
+    {
+        //
+        return (int) $this->a;
+    }
+
     public function value()
     {
         return (string) $this->a;

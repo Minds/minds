@@ -200,7 +200,52 @@ class CassandraProvisioner implements ProvisionerInterface
                 'attributes' => [
                     'CLUSTERING ORDER BY (type ASC, guid ASC)'
                 ],
-            ]
+            ],
+            'recurring_subscriptions' => [
+                'schema' => [
+                    'type' => 'text',
+                    'payment_method' => 'text',
+                    'entity_guid' => 'varint',
+                    'user_guid' => 'varint',
+                    'amount' => 'decimal',
+                    'last_billing' => 'timestamp',
+                    'next_billing' => 'timestamp',
+                    'recurring' => 'text',
+                    'status' => 'text',
+                    'subscription_id' => 'text',
+                ],
+                'primaryKeys' => [
+                    'type',
+                    'payment_method',
+                    'entity_guid',
+                    'user_guid',
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (payment_method ASC, entity_guid ASC, user_guid ASC)'
+                ]
+            ],
+            'payments' => [
+                'schema' => [
+                    'type' => 'text',
+                    'user_guid' => 'varint',
+                    'time_created' => 'timestamp',
+                    'payment_id' => 'text',
+                    'amount' => 'decimal',
+                    'description' => 'text',
+                    'payment_method' => 'text',
+                    'status' => 'text',
+                    'subscription_id' => 'text',
+                ],
+                'primaryKeys' => [
+                    'type',
+                    'user_guid',
+                    'time_created',
+                    'payment_id'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (user_guid ASC, time_created DESC, payment_id ASC)'
+                ]
+            ],
         ];
 
         // CQL Materialized Views
@@ -394,6 +439,72 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (mongo_id ASC, guid ASC)'
+                ]
+            ],
+            'recurring_subscriptions_by_subscription_id' => [
+                'from' => 'recurring_subscriptions',
+                'select' => [ '*' ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'payment_method IS NOT NULL',
+                    'entity_guid IS NOT NULL',
+                    'user_guid IS NOT NULL',
+                    'subscription_id IS NOT NULL'
+                ],
+                'primaryKeys' => [
+                    'subscription_id', 'type', 'payment_method', 'entity_guid', 'user_guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (type ASC, payment_method ASC, entity_guid ASC, user_guid ASC)'
+                ]
+            ],
+            'recurring_subscriptions_by_user_guid' => [
+                'from' => 'recurring_subscriptions',
+                'select' => [ '*' ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'payment_method IS NOT NULL',
+                    'entity_guid IS NOT NULL',
+                    'user_guid IS NOT NULL'
+                ],
+                'primaryKeys' => [
+                    'user_guid', 'type', 'payment_method', 'entity_guid'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (type ASC, payment_method ASC, entity_guid ASC)'
+                ]
+            ],
+            'payments_by_subscription_id' => [
+                'from' => 'payments',
+                'select' => [ '*' ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'user_guid IS NOT NULL',
+                    'time_created IS NOT NULL',
+                    'payment_id IS NOT NULL',
+                    'subscription_id IS NOT NULL'
+                ],
+                'primaryKeys' => [
+                    'subscription_id', 'type', 'user_guid', 'time_created', 'payment_id'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (type ASC, user_guid ASC, time_created DESC, payment_id ASC)'
+                ]
+            ],
+            'payments_by_payment_id' => [
+                'from' => 'payments',
+                'select' => [ '*' ],
+                'conditions' => [
+                    'type IS NOT NULL',
+                    'user_guid IS NOT NULL',
+                    'time_created IS NOT NULL',
+                    'payment_id IS NOT NULL'
+                ],
+                'primaryKeys' => [
+                    'payment_id', 'type', 'user_guid', 'time_created'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (type ASC, user_guid ASC, time_created DESC)'
                 ]
             ],
         ];
