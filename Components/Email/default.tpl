@@ -21,7 +21,7 @@
 
                       <p align="center">
                         <a href="https://www.minds.com/?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none;">
-                        <img src="https://www.minds.com/assets/logos/medium-production.png" alt="Minds.com" align="middle" width="200px" height="80px"/>
+                        <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/logos/medium-production.png" alt="Minds.com" align="middle" width="200px" height="80px"/>
                         </a>
                       </p>
                     </td>
