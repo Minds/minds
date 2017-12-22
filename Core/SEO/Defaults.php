@@ -227,7 +227,7 @@ class Defaults
                     'og:title' => $page['title'],
                     'og:description' => $page['description'],
                     'og:url' => $this->config->site_url . $uri,
-                    'og:image' => $this->config->site_url . $page['image'],
+                    'og:image' => $this->config->cdn_assets_url . $page['image'],
                     'og:image:width' => 2000,
                     'og:image:height' => 1000
                 ];
