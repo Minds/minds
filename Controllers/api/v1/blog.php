@@ -171,7 +171,7 @@ class blog implements Interfaces\Api
         }
 
         $original_access = $blog->access_id;
-        $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature', 'monetized', 'wire_threshold', 'categories', 'published');
+        $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature', 'monetized', 'wire_threshold', 'category', 'categories', 'published');
 
         foreach ($allowed as $v) {
             if (isset($_POST[$v])) {
