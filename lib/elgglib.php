@@ -847,7 +847,7 @@ function _elgg_php_exception_handler($exception) {
 	// Wipe any existing output buffer
 	ob_end_clean();
 
-	header('Something is wrong', true, 500);
+	header('X-Minds: Something is wrong', true, 500);
 	// make sure the error isn't cached
 	header("Cache-Control: no-cache, must-revalidate", true);
 	header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', true);
