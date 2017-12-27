@@ -99,6 +99,8 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                         $boost = new Entities\Activity();
                         $boost->guid = $entity->guid;
                         $boost->owner_guid = $entity->owner_guid;
+                        $boost->time_created = $entity->time_created;
+                        $boost->time_updated = $entity->time_updated;
                         $boost->{'thumbs:up:user_guids'} = $entity->{'thumbs:up:user_guids'};
                         $boost->{'thumbs:down:user_guids'} = $entity->{'thumbs:down:user_guids'};
                         $boost->setTitle($entity->title);
