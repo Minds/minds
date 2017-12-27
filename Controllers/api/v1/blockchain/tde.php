@@ -25,7 +25,11 @@ class tde implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $cacher = Di::_()->get('Cache');
 
-        switch ($pages[0] ?? 'stats') {
+        if (!isset($pages[0])) {
+            $pahes[0] = 'stats';
+        }
+
+        switch ($pages[0]) {
             case 'rates':
                 $rates = $cacher->get('blockchain:tde:rates');
 
@@ -92,7 +96,7 @@ class tde implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         Factory::isLoggedIn();
 
-        switch ($pages[0] ?? '') {
+        switch ($pages[0]) {
             case 'pre-register':
                 try {
                     $user = Session::getLoggedinUser();
