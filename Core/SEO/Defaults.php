@@ -216,7 +216,12 @@ class Defaults
                 'title' => 'Localization',
                 'description' => 'Help translate Minds into every global language',
                 'image' => 'assets/photos/satellite.jpg'
-            ]
+            ],
+            'token' => [
+                'title' => 'The Minds Cryptocurrency',
+                'description' => 'Earn money for your contribution to the digital world',
+                'image' => 'assets/marketing/witch-head-1771758_1920.jpg'
+            ],
         ];
 
         foreach ($marketing as $uri => $page) {

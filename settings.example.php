@@ -218,6 +218,9 @@ $CONFIG->set('blockchain', [
     // Peer Boost
     'peer_boost_address' => '0x0000000000000000000000000000000000000000',
 
+    // Token Distribution Event
+    'token_distribution_event_address' => '0x0000000000000000000000000000000000000000',
+
     // Web3 Interface binary
-    'mw3' => '/usr/bin/env node /path/to/mw3/index.js'
+    'mw3' => '/usr/bin/env node /path/to/mw3/index.js',
 ]);

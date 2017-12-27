@@ -13,7 +13,7 @@ class Util
     /**
      * Converts an 0x-prefixed hexadecimal string onto a decimal number
      * @param string $hex
-     * @return float|int
+     * @return float|string
      */
     public static function toDec($hex)
     {
@@ -21,7 +21,7 @@ class Util
             return $hex;
         }
 
-        return hexdec(substr($hex, 2));
+        return (double) hexdec(substr($hex, 2));
     }
 
     /**

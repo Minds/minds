@@ -45,15 +45,35 @@ class Token
     {
         $result = $this->client->call($this->tokenAddress, 'balanceOf(address)', [ $account ]);
 
-        return (double) Util::toDec($result) / (10 ** $this->tokenDecimals);
+        return $this->fromTokenUnit(Util::toDec($result));
+    }
+
+    /**
+     * Gets the total supply of token
+     * @return double
+     */
+    public function totalSupply()
+    {
+        $result = $this->client->call($this->tokenAddress, 'totalSupply()', []);
+
+        return $this->fromTokenUnit(Util::toDec($result));
     }
 
     /**
      * @param $amount
-     * @return float|int
+     * @return float
      */
     public function toTokenUnit($amount)
     {
-        return $amount * (10 ** $this->tokenDecimals);
+        return (double) ($amount * (10 ** $this->tokenDecimals));
+    }
+
+    /**
+     * @param $amount
+     * @return float
+     */
+    public function fromTokenUnit($amount)
+    {
+        return (double) ($amount / (10 ** $this->tokenDecimals));
     }
 }

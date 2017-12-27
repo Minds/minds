@@ -37,6 +37,10 @@ class Manager
         if ($blockchainConfig['boost_address']) {
             $this->contracts['boost'] = Contracts\MindsBoost::at($blockchainConfig['boost_address']);
         }
+
+        if ($blockchainConfig['token_distribution_event_address']) {
+            $this->contracts['token_distribution_event'] = Contracts\MindsTokenSaleEvent::at($blockchainConfig['token_distribution_event_address']);
+        }
     }
 
     public function getContract($contract)
@@ -59,6 +63,7 @@ class Manager
                 'client_network' => $blockchainConfig['client_network'],
                 'wallet_address' => $blockchainConfig['wallet_address'],
                 'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
+                'token_distribution_event_address' => $blockchainConfig['token_distribution_event_address'],
                 'default_gas_price' => $blockchainConfig['default_gas_price'],
             ], $this->contracts
         );
