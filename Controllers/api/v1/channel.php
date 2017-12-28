@@ -244,16 +244,6 @@ class channel implements Interfaces\Api
                     $update['social_profiles'] = json_encode($profiles);
                 }
 
-                if (isset($_POST['coordinates'])) {
-                    //update neo4j with our coordinates
-                    $prepared = new Core\Data\Neo4j\Prepared\Common();
-                    list($lat, $lon) = explode(',', $_POST['coordinates']);
-                    $result = Core\Data\Client::build('Neo4j')->request($prepared->updateEntity($owner, array('lat'=> (double) $lat, 'lon'=> (double) $lon)));
-                    $rows = $result->getRows();
-                    $id = $rows["id(entity)"][0];
-                    error_log(print_r($id, true));
-                    Core\Data\Client::build('Neo4j')->client()->geoLink($id);
-                }
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
                 //update session also
