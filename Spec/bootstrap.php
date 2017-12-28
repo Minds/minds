@@ -38,6 +38,9 @@ class Mock
 
     private $a;
 
+    const BATCH_COUNTER = null;
+    const BATCH_UNLOGGED = 1;
+
     public function __construct($a = null)
     {
         $this->a = $a;
