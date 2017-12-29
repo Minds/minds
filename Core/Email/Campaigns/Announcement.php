@@ -116,7 +116,7 @@ class Announcement
 
     protected function getUsers()
     {
-        $tests = [
+        /*$tests = [
             new User('mark'),
             new User('john'),
             new User('jack'),
@@ -129,7 +129,7 @@ class Announcement
         foreach ($tests as $user) {
             $user->disabled_emails = false;
         }
-        return $tests;
+        return $tests;*/
         //scan all users and return past 30 day period
         $users = new Iterators\SignupsOffsetIterator;
         $users->setOffset($this->offset);
