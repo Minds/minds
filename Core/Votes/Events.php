@@ -108,9 +108,11 @@ class Events
                 switch($entity->custom_type) {
                     case 'video':
                         $subtype = 'video';
+                        $guid = $entity->custom_data['guid'];
                         break;
                     case 'batch':
                         $subtype = 'image';
+                        $guid = $entity->entity_guid;
                         break;
                 }
 
@@ -118,7 +120,7 @@ class Events
                 $event->setType('action')
                     ->setProduct('platform')
                     ->setUserGuid((string) $actor->guid)
-                    ->setEntityGuid((string) $entity->guid)
+                    ->setEntityGuid($guid)
                     ->setEntityType('object')
                     ->setEntitySubtype($subtype)
                     ->setEntityOwnerGuid((string) $entity->owner_guid)
