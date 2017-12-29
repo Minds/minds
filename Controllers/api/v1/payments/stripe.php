@@ -65,11 +65,25 @@ class stripe implements Interfaces\Api
             $stripe = Core\Di\Di::_()->get('StripePayments');
 
             $customer = (new Customer())->setUser(Core\Session::getLoggedInUser());
-            try {
-                $stripe->addCardToCustomer($customer, $pages[1]);
-            } catch (\Exception $e) {
-                $response['status'] = 'error';
-                $response['message'] = $e->getMessage();
+
+            if (!$stripe->getCustomer($customer) || !$customer->getId()) {
+                //create the customer on stripe
+                try {
+                    $customer->setPaymentToken($pages[1]);
+                    $stripe->createCustomer($customer);
+                } catch (\Exception $e) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                      ]);
+                }
+            } else {
+                try {
+                    $stripe->addCardToCustomer($customer, $pages[1]);
+                } catch (\Exception $e) {
+                    $response['status'] = 'error';
+                    $response['message'] = $e->getMessage();
+                }
             }
             break;
         }

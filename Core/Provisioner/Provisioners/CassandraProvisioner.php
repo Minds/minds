@@ -199,7 +199,22 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (type ASC, guid ASC)'
+                ]
+            ],
+            'trending' => [
+                'schema' => [
+                    'type' => 'text',
+                    'place' => 'int',
+                    'guid' => 'varint',
                 ],
+                'primaryKeys' => [
+                    'type',
+                    'place'
+                ],
+                'attributes' => [
+                    'compaction = {\'class\': \'org.apache.cassandra.db.compaction.LeveledCompactionStrategy\'}',
+                    'CLUSTERING ORDER BY (place ASC)'
+                ]
             ],
             'recurring_subscriptions' => [
                 'schema' => [
@@ -245,7 +260,7 @@ class CassandraProvisioner implements ProvisionerInterface
                 'attributes' => [
                     'CLUSTERING ORDER BY (user_guid ASC, time_created DESC, payment_id ASC)'
                 ]
-            ],
+            ]
         ];
 
         // CQL Materialized Views

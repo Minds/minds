@@ -37,16 +37,6 @@ class Register
                     Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                     $params['user']->referrer = (string) $user->guid;
                     $params['user']->save();
-                    //create graph connection for future referral trees
-                    try {
-                        $prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
-                        $prepared->setQuery('MATCH (referrer:User {guid: {referrer_guid}}), (user:User {guid: {user_guid}}) MERGE (referrer)-[:REFER]->(user)', [
-                          'referrer_guid' => (string) Core\Session::getLoggedInUserGuid(),
-                          'user_guid' => (string) $user->guid
-                        ]);
-                        Core\Data\Client::build('Neo4j')->request($prepared);
-                    } catch (\Exception $e) {
-                    }
                     $params['user']->subscribe($user->guid);
                 }
             }

@@ -461,7 +461,7 @@ class boost implements Interfaces\Api
     protected function getQueuePriorityRate()
     {
         // @todo: Calculate based on boost queue
-        return 1;
+        return 10;
     }
 
     protected function getUSDRate()

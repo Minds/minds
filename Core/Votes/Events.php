@@ -124,42 +124,5 @@ class Events
                 ->push();
         });
 
-        // Neo4j events
-
-        Dispatcher::register('vote', 'all', function (Event $event) {
-            $params = $event->getParameters();
-            $direction = $event->getNamespace();
-
-            $vote = $params['vote'];
-            $entity = $vote->getEntity();
-
-            if (
-                !in_array($entity->subtype, ['video', 'image']) &&
-                ($entity->type != 'activity' || !$entity->custom_data)
-            ) {
-                return;
-            }
-
-            $guid = $entity->guid;
-            $subtype = $entity->subtype;
-
-            if ($entity->custom_type == 'video') {
-                $subtype = 'video';
-                $guid = $entity->custom_data['guid'];
-            } elseif ($entity->custom_type == 'batch') {
-                $subtype = 'image';
-                $guid = $entity->entity_guid;
-            }
-
-            /** @var Core\Data\Neo4j\Client $neo4j */
-            $neo4j = Core\Di\Di::_()->get('Database\Neo4j');
-            $prepared = new Core\Data\Neo4j\Prepared\Common();
-
-            if ($direction == 'up') {
-                $neo4j->request($prepared->createVoteUP($guid, $subtype));
-            } elseif ($direction == 'down') {
-                $neo4j->request($prepared->createVoteDOWN($guid, $subtype));
-            }
-        });
     }
 }

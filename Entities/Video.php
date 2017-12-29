@@ -103,13 +103,6 @@ class Video extends Object
         $this->super_subtype = 'archive';
         parent::save((!$this->guid || $force));
 
-
-        //try {
-        //    $prepared = new \Minds\Core\Data\Neo4j\Prepared\Common();
-        //    \Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
-        //} catch (\Exception $e) {
-        //}
-
         $cinemr = $this->cinemr();
         $cinemr::factory('media')->post($this->cinemr_guid, array(
                 'title' => $this->title,

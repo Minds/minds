@@ -256,8 +256,8 @@ class Money implements MethodInterface
             'user' => $merchant,
         ]);
 
-        //$this->cache->destroy("counter:wire:sums:" . $merchant->getGUID() . ":*");
-        $this->cache->destroy(Counter::getIndexName($this->entity->guid, null, 'money', null, true));
+        $this->cache->destroy("counter:wire:sums:" . $merchant->getGUID() . ":*");
+        //$this->cache->destroy(Counter::getIndexName($this->entity->guid, null, 'money', null, true));
         //$this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . ":*");
     }
 }

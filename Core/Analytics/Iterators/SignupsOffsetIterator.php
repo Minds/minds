@@ -12,6 +12,7 @@ use Minds\Core\Analytics\Timestamps;
 class SignupsOffsetIterator implements \Iterator
 {
     private $cursor = -1;
+    private $period = 0;
 
     private $item;
 
@@ -34,6 +35,12 @@ class SignupsOffsetIterator implements \Iterator
     public function setPeriod($period = null)
     {
         $this->period = $period;
+        $this->getUsers();
+    }
+
+    public function setOffset($offset = '')
+    {
+        $this->offset = '';
         $this->getUsers();
     }
 

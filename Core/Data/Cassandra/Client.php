@@ -58,9 +58,9 @@ class Client implements Interfaces\ClientInterface
         return true;
     }
 
-    public function batchRequest($requests = array())
+    public function batchRequest($requests = array(), $batchType = Driver::BATCH_COUNTER)
     {
-        $batch = new Driver\BatchStatement(Driver::BATCH_COUNTER);
+        $batch = new Driver\BatchStatement($batchType);
 
         foreach ($requests as $request) {
             $cql = $request;
@@ -68,7 +68,7 @@ class Client implements Interfaces\ClientInterface
             $batch->add($statement, $cql['values']);
         }
 
-        return $session->execute($batch);
+        return $this->session->execute($batch);
     }
 
     public function getPrefix()

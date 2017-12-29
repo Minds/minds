@@ -43,12 +43,6 @@ class Subscriptions
             $return =  true;
         }
 
-        try {
-            $prepared = new Core\Data\Neo4j\Prepared\Common();
-            Core\Data\Client::build('Neo4j')->requestWrite($prepared->createSubscription($user_guid, $to_guid));
-        } catch (\Exception $e) {
-            error_log("could not write $user_guid subscription to $to_guid in neo4j");
-        }
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');
         $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
@@ -100,10 +94,6 @@ class Subscriptions
         $friends->removeAttributes($user, array($from));
         $friendsof->removeAttributes($from, array($user));
         $return = true;
-
-        //@todo make unsubscribe work with neo4j
-        //$prepared = new Core\Data\Neo4j\Prepared\Common();
-        //$return =  Core\Data\Client::build('Neo4j')->request($prepared->createSubscription($user_guid, $to_guid));
 
         //grab the newsfeed
         $nf = new Core\Data\Call('entities_by_time');

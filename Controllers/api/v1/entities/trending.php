@@ -66,25 +66,30 @@ class trending implements Interfaces\Api
         switch ($pages[1]) {
             case "image":
             case "images":
-                $key = "image";
+                $key = "images";
                 break;
             case "videos":
             case "video":
-                $key = "video";
+                $key = "videos";
                 break;
             case "channels":
             case "channel":
             case "users":
             case "user":
-                $key = "user";
+                $key = "channels";
                 break;
             case "blog":
             case "blogs":
-                $key = "blog";
+                $key = "blogs";
                 break;
             case "group":
             case "groups":
                 $key = "group";
+                break;
+            case "activity":
+            case "activities":
+            case "newsfeed":
+                $key = "newsfeed";
                 break;
         }
 
@@ -101,22 +106,18 @@ class trending implements Interfaces\Api
 
         $limit = isset($_GET['limit']) && $_GET['limit'] < 50 ? $_GET['limit'] : 12;
 
-        $guids = Di::_()->get('Trending\Repository')->fetch($key, $limit, $offset);
+        $result = Di::_()->get('Trending\Repository')->getList(['type' => $key, 'limit' => $limit, 'offset' => $offset]);
 
-        if (!$guids) {
+        if (!$result) {
             return Factory::response([
                 'entities' => []
             ]);
         }
 
-        ksort($guids);
-        $entities = core\Entities::get(array('guids'=>$guids));
+        ksort($result['guids']);
+        $entities = core\Entities::get(array('guids'=>$result['guids']));
         $response['entities'] = Factory::exportable($entities);
-        $response['load-next'] = (string) ($offset + end(array_keys($guids)) + 1); 
-
-        if ($key == 'group') {
-            $response['load-next'] = (string) ($offset + end(array_keys($guids)) +1); 
-        }
+        $response['load-next'] = base64_encode($result['token']);
 
         return Factory::response($response);
 

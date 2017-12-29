@@ -1,43 +1,82 @@
 <?php
 namespace Minds\Core\Trending;
 
-use Minds\Core;
+use Cassandra;
+use Cassandra\Varint;
+use Minds\Core\Data\Cassandra\Client;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
+use Minds\Core\Di\Di;
 
 class Repository
 {
-    private $indexDb;
+    /** @var Client */
+    private $db;
 
-    public function __construct($indexDb)
+    public function __construct($db = null)
     {
-        $this->indexDb = $indexDb;
+        $this->db = $db ? $db : Di::_()->get('Database\Cassandra\Cql');
     }
 
-    public function store($key, array $guids)
+    public function add($key, $guids)
     {
-        $rows = [];
-        $g = new \GUID();
+        $requests = [];
+        $template = "INSERT INTO trending (type, place, guid) VALUES (?,?,?)";
         foreach ($guids as $i => $guid) {
-            $i = $g->migrate($i);
-            $rows[$i] = $guid;
+            $requests[] = ['string' => $template, 'values' => [$key, ($i), new Varint($guid)]];
         }
 
-        $this->indexDb->insert("trending:$key", $rows);
+        $this->db->batchRequest($requests, Cassandra::BATCH_UNLOGGED);
 
         return $this;
     }
 
-    public function fetch($key, $limit = 12, $offset = '')
+    public function getList($options)
     {
-        $rows = $this->indexDb->getRow("trending:$key", [
-            'reversed' => false,
-            'limit' => $limit,
-            'offset' => $offset
+        $options = array_merge([
+            'type' => '',
+            'limit' => 12,
+            'offset' => null
+        ], $options);
+
+
+        $query = new Custom();
+        $query->query("SELECT * from trending WHERE type = ?", [$options['type']]);
+        $query->setOpts([
+            'page_size' => (int) $options['limit'],
+            'paging_state_token' => base64_decode($options['offset'])
         ]);
 
-        if (!$rows) {
+        $result = null;
+
+        try{
+            $rows = $this->db->request($query);
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
+        }
+
+        foreach($rows as $row) {
+            $result[] = $row['guid'];
+        }
+
+        if (!$result) {
             return [];
         }
 
-        return array_values($rows);
+        return [
+            'guids' => $result,
+            'token' => $rows->pagingStateToken()
+        ];
     }
+
+    public function update($key, $guids)
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete($entity)
+    {
+        // TODO: Implement delete() method.
+    }
+
+
 }

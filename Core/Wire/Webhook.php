@@ -8,6 +8,7 @@ namespace Minds\Core\Wire;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Entities;
+use Minds\Entities\User;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;

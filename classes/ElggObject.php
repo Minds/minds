@@ -212,12 +212,6 @@ class ElggObject extends ElggEntity {
         }
 
 		$guid = parent::save($index);
-        if($this->subtype == "video" || $this->subtype == "image"){
-        try{
-            $prepared = new Minds\Core\Data\Neo4j\Prepared\Common();
-            $return = Minds\Core\Data\Client::build('Neo4j')->request($prepared->createObject($this));
-        } catch (\Exception $e){}
-        }
         return $guid;
 	}
 }

@@ -29,7 +29,7 @@ class paywall implements Interfaces\FS
               $contents = $f->read();
 
               if (empty($contents)) {
-                  $contents = file_get_contents(Core\Di\Di::_()->get('Config')->get('path') . 'front/app/assets/photos/andromeda-galaxy.jpg');
+                  $contents = file_get_contents(Core\Di\Di::_()->get('Config')->get('path') . 'engine/Assets/photos/andromeda-galaxy.jpg');
               }
 
               $finfo    = finfo_open(FILEINFO_MIME);

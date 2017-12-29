@@ -28,6 +28,12 @@ class icon extends core\page implements Interfaces\page
         //    $join_date = $cached;
         //} else {
             $user = new Entities\User($guid);
+
+        //check the user is enabled
+        if ($user->enabled == 'no') {
+            exit;
+        }
+
         if (isset($user->legacy_guid) && $user->legacy_guid) {
             $guid = $user->legacy_guid;
         }
@@ -52,6 +58,11 @@ class icon extends core\page implements Interfaces\page
         $file->open("read");
 
         $contents = $file->read();
+
+        if (empty($contents)) {
+            $contents = file_get_contents(Core\Config::build()->path . "engine/Assets/avatars/default-$size.png");
+        }
+
         if (!empty($contents)) {
             header("Content-type: image/jpeg");
             header('Expires: ' . date('r', strtotime("today+6 months")), true);
@@ -67,12 +78,6 @@ class icon extends core\page implements Interfaces\page
             }
             exit;
         }
-
-        //avatar couldn't be found! remove from neo4j list
-        //$prepared = new Core\Data\Neo4j\Prepared\CypherQuery();
-        //Core\Data\Client::build('Neo4j')->request($prepared->setQuery("MATCH (u:User { guid:{guid} }) SET u.hasAvatar=false RETURN u", [ "guid" => (string) $guid ]));
-
-        $this->forward("/assets/avatars/default-$size.png");
     }
 
     public function post($pages)
