@@ -17,14 +17,16 @@ class SignupsOffsetIterator implements \Iterator
     private $item;
 
     private $limit = 400;
+    private $token = "";
     private $offset = "";
+    private $rows;
     private $data = [];
 
     private $valid = true;
 
     public function __construct($db = null)
     {
-        $this->db = $db ?: new Data\Call('entities_by_time');
+        $this->db = $db ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
         $this->position = 0;
     }
 
@@ -40,9 +42,10 @@ class SignupsOffsetIterator implements \Iterator
 
     public function setOffset($offset = '')
     {
-        $this->offset = '';
+        $this->offset = $offset;
         $this->getUsers();
     }
+    
 
     /**
      * Fetch all the users who signed up in a certain period
@@ -52,17 +55,28 @@ class SignupsOffsetIterator implements \Iterator
     {
         $timestamps = array_reverse(Timestamps::span($this->period+1, 'day'));
 
-        $guids = $this->db->getRow("user", ['limit' => $this->limit, 'offset'=> $this->offset]);
-        $guids = array_keys($guids);
+        $prepared = new Data\Cassandra\Prepared\Custom;
+            $prepared->query("SELECT * from entities_by_time where key='user' and column1>?", [
+                (string) $this->offset
+            ]);
+        $prepared->setOpts([
+            'page_size' => $this->limit,
+            'paging_state_token' => $this->token
+        ]);
 
-        if ($this->offset) {
-            array_shift($guids);
+        $rows = $this->db->request($prepared);
+        if (!$rows) {
+           $this->valid = false;
+           return;
         }
 
-        if (empty($guids)) {
-            $this->valid = false;
-            return;
+        $this->token = $rows->pagingStateToken();
+
+        $guids = [];
+        foreach ($rows as $row) {
+            $guids[] = $row['column1'];
         }
+
         $this->valid = true;
         $users = Entities::get(['guids' => $guids]);
 
@@ -74,12 +88,11 @@ class SignupsOffsetIterator implements \Iterator
             }
         }
 
-        if ($this->offset == end($users)->guid) {
+        if ($rows->isLastPage()) { 
             $this->valid = false;
             return;
-        }
+        } 
 
-        $this->offset = end($users)->guid;
         if (!$pushed) {
             error_log("no users past period " . date('d-m-Y', end($users)->time_created));
             $this->getUsers();
