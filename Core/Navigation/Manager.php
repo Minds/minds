@@ -37,14 +37,14 @@ class Manager
             ->setTitle('Trending')
             ->setPath('discovery/trending');
 
-        $discovery_suggested = new Item();
+        /*$discovery_suggested = new Item();
         $discovery_suggested
             ->setPriority(1)
             ->setIcon('call_split')
             ->setName('Suggested')
             ->setTitle('Suggested')
             ->setPath('discovery/suggested')
-            ->setVisibility(0); //only show for loggedin
+            ->setVisibility(0); //only show for loggedin*/
 
         $discovery_featured = new Item();
         $discovery_featured
@@ -69,7 +69,7 @@ class Manager
             ->setTitle('Discovery')
             ->setPath('discovery/trending/channels')
             ->addSubItem($discovery_trending)
-            ->addSubItem($discovery_suggested)
+            //->addSubItem($discovery_suggested)
             ->addSubItem($discovery_featured)
             ->addSubItem($discovery_my);
         self::add($discovery);
