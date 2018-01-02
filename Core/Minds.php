@@ -57,6 +57,7 @@ class Minds extends base
         (new SMS\SMSProvider())->register();
         (new Blockchain\BlockchainProvider())->register();
         (new Payments\RecurringSubscriptions\RecurringSubscriptionsProvider())->register();
+        (new Faq\FaqProvider())->register();
     }
 
     /**
