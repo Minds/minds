@@ -25,12 +25,12 @@ class Question implements \JsonSerializable
         return $this;
     }
 
-    public function getAnswer() : Answer
+    public function getAnswer()
     {
         return $this->answer;
     }
 
-    public function jsonSerialize() : Array
+    public function jsonSerialize()
     {
         return [
             'question' => $this->getQuestion(),

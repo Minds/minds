@@ -16,7 +16,7 @@ class Category implements \JsonSerializable
         return $this;
     }
 
-    public function getCategory() : string
+    public function getCategory()
     {
         return $this->category;
     }
@@ -27,12 +27,12 @@ class Category implements \JsonSerializable
         return $this;
     }
 
-    public function getQuestions() : Array
+    public function getQuestions()
     {
         return $this->questions;
     }
 
-    public function jsonSerialize() : Array
+    public function jsonSerialize()
     {
         return [
             'category' => $this->getCategory(),
