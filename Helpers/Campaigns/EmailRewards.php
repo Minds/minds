@@ -39,10 +39,12 @@ class EmailRewards
             $label = "Check-in bonus";
             break;
           case "xmas-17":
+          case "announcement-30-12-17":
+          case "announcement-31-12-17":
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 1000;
-                $wire = true;
+                $wire = false;
             } else {
                 echo "Validator failed"; exit;
             }

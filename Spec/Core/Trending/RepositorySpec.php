@@ -40,7 +40,7 @@ class RepositorySpec extends ObjectBehavior
 
         $return = $this->getList(['type'=>'newsfeed']);
         $return->shouldHaveCount(2);
-        $return->shouldHaveKeyWithValue('guids', [ 123, 456 ]);
+        $return->shouldHaveKeyWithValue('guids', [ "123", "456" ]);
     }
 
     function it_should_store_a_list_of_trending_entities(Client $client)

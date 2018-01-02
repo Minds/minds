@@ -55,7 +55,7 @@ class Repository
         }
 
         foreach($rows as $row) {
-            $result[] = $row['guid'];
+            $result[] = (string) $row['guid'];
         }
 
         if (!$result) {

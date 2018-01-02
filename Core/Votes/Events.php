@@ -102,6 +102,31 @@ class Events
                 ->setEntityOwnerGuid((string) $entity->owner_guid)
                 ->setAction("vote:{$direction}")
                 ->push();
+            
+            if ($entity->type == 'activity' && $entity->custom_type) {
+                $subtype = '';
+                switch($entity->custom_type) {
+                    case 'video':
+                        $subtype = 'video';
+                        $guid = $entity->custom_data['guid'];
+                        break;
+                    case 'batch':
+                        $subtype = 'image';
+                        $guid = $entity->entity_guid;
+                        break;
+                }
+
+                $event = new Core\Analytics\Metrics\Event();
+                $event->setType('action')
+                    ->setProduct('platform')
+                    ->setUserGuid((string) $actor->guid)
+                    ->setEntityGuid($guid)
+                    ->setEntityType('object')
+                    ->setEntitySubtype($subtype)
+                    ->setEntityOwnerGuid((string) $entity->owner_guid)
+                    ->setAction("vote:{$direction}")
+                    ->push();
+            }
         });
 
         Dispatcher::register('vote:cancel', 'all', function (Event $event) {
