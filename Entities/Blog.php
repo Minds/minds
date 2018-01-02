@@ -324,7 +324,8 @@ class Blog extends \ElggObject
             return $this->excerpt;
         }
 
-        return strip_tags($this->description);
+        $this->excerpt = str_replace("&nbsp;","",$this->description);
+        return strip_tags($this->excerpt);
     }
 
     public function export()
