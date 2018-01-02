@@ -3,13 +3,14 @@
 /**
  * Ethereum RPC Manager
  *
- * @author emi
+ * @author Emi, Mark
  */
 
 namespace Minds\Core\Blockchain\Services;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\JsonRpc;
+use MW3;
 
 class Ethereum
 {
@@ -21,8 +22,11 @@ class Ethereum
     /** @var string[] $endpoints */
     protected $endpoints;
 
-    /** @var string $mw3 */
-    protected $mw3;
+    /** @var MW3\Sign $sign */
+    protected $sign;
+
+    /** @var MW3\Sha3 $sha3 */
+    protected $sha3;
 
     /**
      * Ethereum constructor.
@@ -30,7 +34,7 @@ class Ethereum
      * @param null|mixed $jsonRpc
      * @throws \Exception
      */
-    public function __construct($config = null, $jsonRpc = null)
+    public function __construct($config = null, $jsonRpc = null, $sign = null, $sha3 = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
         $this->jsonRpc = $jsonRpc ?: Di::_()->get('Http\JsonRpc');
@@ -42,7 +46,8 @@ class Ethereum
         }
 
         $this->endpoints = $blockchainConfig['rpc_endpoints'];
-        $this->mw3 = $blockchainConfig['mw3'];
+        $this->sign = $sign ?: new MW3\Sign;
+        $this->sha3 = $sha3 ?: new MW3\Sha3;
     }
 
     /**
@@ -72,14 +77,13 @@ class Ethereum
 
     /**
      * Returns the Ethereum's non-standard SHA3 hash for the given string
-     * @param string $str
+     * @param string $string
      * @return string
-     * @todo Implement a pure PHP solution
      */
-    public function sha3($str)
+    public function sha3($string)
     {
-        $data = unpack('H*', $str);
-        return substr($this->request('web3_sha3', [ '0x' . array_shift($data) ]), 2);
+        return $this->sha3->setString($string)
+            ->hash();
     }
 
     /**
@@ -134,14 +138,11 @@ class Ethereum
      */
     public function sign($privateKey, array $transaction)
     {
-        if (!$this->mw3) {
-            throw new \Exception('MW3 executable is not set up');
-        }
-
         $tx = json_encode($transaction);
-        $cmd = "{$this->mw3} sign --privateKey='{$privateKey}' --tx='{$tx}'";
 
-        return trim((string) shell_exec($cmd));
+        return $this->sign->setPrivateKey($privateKey)
+            ->setTx($tx)
+            ->sign();
     }
 
     /**

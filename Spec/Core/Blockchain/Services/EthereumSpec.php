@@ -7,6 +7,7 @@ use Prophecy\Argument;
 
 use Minds\Core\Http\Curl\JsonRpc\Client as JsonRpc;
 use Minds\Core\Config;
+use MW3\Sha3;
 
 class EthereumSpec extends ObjectBehavior
 {
@@ -49,9 +50,9 @@ class EthereumSpec extends ObjectBehavior
         $this->shouldThrow('\Exception')->duringRequest('eth_err');
     }
 
-    function it_should_return_sha3_from_string(Config $config, JsonRpc $jsonRpc)
+    function it_should_return_sha3_from_string(Config $config, JsonRpc $jsonRpc, Sha3 $sha3)
     {
-        $this->beConstructedWith($config, $jsonRpc);
+        $this->beConstructedWith($config, $jsonRpc, null, $sha3);
         
         $config->get('blockchain')->willReturn([
             'rpc_endpoints' => [ '127.0.0.1' ],
@@ -60,6 +61,9 @@ class EthereumSpec extends ObjectBehavior
 
         $jsonRpc->post(Argument::type('string'), Argument::type('array'))
             ->willReturn([ 'result' => '00hello' ]);
+
+        $sha3->setString("hello")->shouldBeCalled()->willReturn($sha3);
+        $sha3->hash()->willReturn('hello');
 
         $this->sha3("hello")->shouldReturn("hello");
     }
