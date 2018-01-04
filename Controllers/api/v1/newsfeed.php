@@ -29,6 +29,7 @@ class newsfeed implements Interfaces\Api
     public function get($pages)
     {
         $response = array();
+        $loadNext = [];
 
         if (!isset($pages[0])) {
             $pages[0] = 'network';
@@ -63,6 +64,16 @@ class newsfeed implements Interfaces\Api
                 $options = array(
                     'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
                 );
+                break;
+            case 'top':
+                $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+                $result = Core\Di\Di::_()->get('Trending\Repository')->getList(['type' => 'newsfeed', 'limit' => 12, 'offset' => $offset]);
+                ksort($result['guids']);
+                $options['guids'] = $result['guids'];
+                if (!$options['guids']) {
+                    return Factory::response([]);
+                }
+                $loadNext = base64_encode($result['token']);
                 break;
             case 'featured':
                 $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
@@ -184,9 +195,9 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity) {
-            $response['load-next'] = (string) end($activity)->guid;
+            $loadNext = (string) $loadNext ?: end($activity)->guid;
             if ($pages[0] == 'featured') {
-                $response['load-next'] = (string) end($activity)->featured_id;
+                $loadNext = (string) end($activity)->featured_id;
             }
             $response['load-previous'] = $loadPrevious;
 
@@ -222,6 +233,8 @@ class newsfeed implements Interfaces\Api
 
             $response['activity'] = factory::exportable($activity, array('boosted'), true);
         }
+
+        $response['load-next'] = $loadNext;
 
         return Factory::response($response);
     }
