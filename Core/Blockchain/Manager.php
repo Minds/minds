@@ -60,6 +60,7 @@ class Manager
         }
 
         return array_merge([
+                'network_address' => $blockchainConfig['network_address'],
                 'client_network' => $blockchainConfig['client_network'],
                 'wallet_address' => $blockchainConfig['wallet_address'],
                 'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],

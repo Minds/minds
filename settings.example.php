@@ -185,6 +185,8 @@ $CONFIG->set('sandbox', [
 $CONFIG->set('sns_secret', '{{sns-secret}}');
 
 $CONFIG->set('blockchain', [
+    // Our network address
+    'network_address' => 'http://localhost:9545',
     // Endpoints to connect to the blockchain
     'rpc_endpoints' => [ 'http://10.0.2.2:8545' ],
 
