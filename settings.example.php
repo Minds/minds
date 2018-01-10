@@ -225,4 +225,6 @@ $CONFIG->set('blockchain', [
 
     // Web3 Interface binary
     'mw3' => '/usr/bin/env node /path/to/mw3/index.js',
+
+    'token_name' => '',
 ]);
