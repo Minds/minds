@@ -121,7 +121,7 @@ class Activity extends Entity
                                 "type" => "activity"
                             ));
 
-        Core\Events\Dispatcher::trigger('delete', 'activity', [ 'entities' => $this ]);
+        Core\Events\Dispatcher::trigger('delete', 'activity', [ 'entity' => $this ]);
 
         return true;
     }
