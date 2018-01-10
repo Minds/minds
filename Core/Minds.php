@@ -58,6 +58,7 @@ class Minds extends base
         (new Blockchain\BlockchainProvider())->register();
         (new Payments\RecurringSubscriptions\RecurringSubscriptionsProvider())->register();
         (new Faq\FaqProvider())->register();
+        (new Rewards\RewardsProvider())->register();
     }
 
     /**
