@@ -50,6 +50,9 @@ class channel implements Interfaces\Api
         $return = Factory::exportable(array($user));
 
         $response['channel'] = $return[0];
+        if (Core\Session::getLoggedinUser()->guid == $user->guid) {
+            $response['channel']['admin'] = $user->admin;
+        }
         $response['channel']['avatar_url'] = array(
             'tiny' => $user->getIconURL('tiny'),
             'small' => $user->getIconURL('small'),
