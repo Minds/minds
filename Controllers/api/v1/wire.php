@@ -49,6 +49,11 @@ class wire implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'Entity not found']);
         }
 
+        $user = $entity->type == 'user' ? $entity : $entity->getOwnerEntity();
+        if (Core\Session::getLoggedInUserGuid() === $user->guid) {
+            return Factory::response(['status' => 'error', 'message' => 'You cannot send a wire to yourself!']);
+        }
+
         $amount = $_POST['amount'];
         $method = $_POST['method'];
         if ($method == 'usd') {
