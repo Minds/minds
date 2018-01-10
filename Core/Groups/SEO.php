@@ -44,5 +44,18 @@ class SEO
                 'og:image:height' => 1000
             ];
         });
+
+        Manager::add('/groups/featured', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Featured Groups',
+                'description' => 'List of featured groups',
+                'og:title' => 'Featured Groups',
+                'og:description' => 'List of featured groups',
+                'og:url' => Di::_()->get('Config')->site_url . 'groups/featured',
+                'og:image' => Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+        });
     }
 }
