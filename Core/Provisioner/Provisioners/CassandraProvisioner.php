@@ -216,24 +216,25 @@ class CassandraProvisioner implements ProvisionerInterface
                     'CLUSTERING ORDER BY (place ASC)'
                 ]
             ],
-            'recurring_subscriptions' => [
+            'subscriptions' => [
                 'schema' => [
-                    'type' => 'text',
+                    'plan_id' => 'text',
                     'payment_method' => 'text',
                     'entity_guid' => 'varint',
                     'user_guid' => 'varint',
                     'amount' => 'decimal',
                     'last_billing' => 'timestamp',
                     'next_billing' => 'timestamp',
-                    'recurring' => 'text',
+                    'interval' => 'text',
                     'status' => 'text',
                     'subscription_id' => 'text',
                 ],
                 'primaryKeys' => [
-                    'type',
+                    'plan_id',
                     'payment_method',
                     'entity_guid',
                     'user_guid',
+                    'subscription_id'
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (payment_method ASC, entity_guid ASC, user_guid ASC)'

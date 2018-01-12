@@ -4,6 +4,11 @@
  */
 namespace Minds\Core\Payments\Subscriptions;
 
+use Minds\Entities\User;
+use Minds\Entities\Entity;
+use Minds\Entities\Factory;
+use Minds\Core\Guid;
+
 class Subscription
 {
     private $payment_method;
@@ -11,13 +16,16 @@ class Subscription
     private $customer;
     private $merchant;
 
-    private $balance;
-    private $price;
     private $fee;
     private $quantity = 1;
     private $created_at;
-    private $next_billing_period_amount;
-    private $next_billing_date;
+
+    private $amount;
+    private $last_billing;
+    private $next_billing;
+    private $interval = 'monthly';
+    private $status = 'active';
+
     private $plan_id;
     private $trial_period;
     private $addOns;
@@ -32,16 +40,15 @@ class Subscription
         return $this->payment_method;
     }
 
-    public function setPaymentMethod(PaymentMethod $payment_method)
+    public function setPaymentMethod($method)
     {
-        $this->payment_method = $payment_method;
-
+        $this->payment_method = $method;
         return $this;
     }
 
     public function getId()
     {
-        return $this->id;
+        return $this->id ?: 'guid:' . Guid::build();
     }
 
     public function setId($id)
@@ -51,19 +58,61 @@ class Subscription
         return $this;
     }
 
-    public function setCustomer($customer)
+    /**
+     * Set the user who is purchasing the subscriptions
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user)
     {
-        $this->customer = $customer;
+        if (is_numeric($user)) {
+            $this->user = new User();
+            $this->user->guid = $user;
+            return $this;
+        }
+        $this->user = $user;
         return $this;
     }
 
-    public function getCustomer()
+    /**
+     * Return the customer who is purchasing the subscription
+     * @return $this
+     */
+    public function getUser()
     {
-        return $this->customer;
+        return $this->user;
+    }
+
+    /**
+     * Set the entity that is benefitting from the subscription
+     * @param Entity $entity
+     * @return $this
+     */
+    public function setEntity($entity)
+    {
+        if (is_numeric($entity)) {
+            $this->entity = new Entity();
+            $this->entity->guid = $entity;
+            return $this;
+        }
+        $this->entity = $entity;
+        return $this;
+    }
+
+    /**
+     * Return the entity that is benefitting from the subscription
+     * @return $this
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     public function setMerchant($merchant)
     {
+        if ($merchant instanceof User) {
+            $merchant = $merchant->getMerchant();
+        }
         $this->merchant = $merchant;
         return $this;
     }
@@ -73,27 +122,26 @@ class Subscription
         return $this->merchant;
     }
 
-    public function getBalance()
+    public function setAmount($amount)
     {
-        return $this->balance;
-    }
-
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-
+        $this->amount = $amount;
         return $this;
     }
 
-    public function getPrice()
+    public function getAmount()
     {
-        return $this->price;
+        return $this->amount;
     }
 
-    public function setPrice($price)
+    public function setQuantity()
     {
-        $this->price = $price;
+        $this->quantity = $quantity;
         return $this;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 
     public function getFee()
@@ -107,51 +155,48 @@ class Subscription
         return $this;
     }
 
-    public function getQuantity()
+    public function setLastBilling($timestamp)
     {
-        return $this->quantity;
-    }
-
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
+        $this->last_billing = $timestamp;
         return $this;
     }
 
-    public function getCreatedAt()
+    public function getLastBilling()
     {
-        return $this->created_at;
+        return $this->last_billing ?: time();
     }
 
-    public function setCreatedAt($created_at)
+    public function getNextBilling()
     {
-        $this->created_at = $created_at;
+        return $this->next_billing;
+    }
 
+    public function setNextBilling($timestamp)
+    {
+        $this->next_billing = $timestamp;
         return $this;
     }
 
-    public function getNextBillingPeriodAmount()
+    public function setInterval($interval)
     {
-        return $this->next_billing_period_amount;
-    }
-
-    public function setNextBillingPeriodAmount($next_billing_period_amount)
-    {
-        $this->next_billing_period_amount = $next_billing_period_amount;
-
+        $this->interval = $interval;
         return $this;
     }
 
-    public function getNextBillingDate()
+    public function getInterval()
     {
-        return $this->next_billing_date;
+        return $this->interval;
     }
 
-    public function setNextBillingDate($next_billing_date)
+    public function setStatus($status)
     {
-        $this->next_billing_date = $next_billing_date;
-
+        $this->status = $status;
         return $this;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     public function getPlanId()
@@ -162,18 +207,6 @@ class Subscription
     public function setPlanId($plan_id)
     {
         $this->plan_id = $plan_id;
-
-        return $this;
-    }
-
-    public function getTrialPeriod()
-    {
-        return $this->trial_period;
-    }
-
-    public function setTrialPeriod($trial_period)
-    {
-        $this->trial_period = $trial_period;
 
         return $this;
     }
@@ -211,11 +244,14 @@ class Subscription
         return [
             'id',
             'balance',
-            'price',
+            'amount',
             'created_at',
-            'next_billing_period_amount',
-            'next_billing_date',
+            'next_billing',
+            'last_billing',
+            'status',
+            'interval',
             'plan_id',
+            'payment_method',
             'trial_period',
             'addOns'
         ];
@@ -231,9 +267,27 @@ class Subscription
             }
         }
 
+        $export['entity'] = Factory::build($this->getEntity()->guid);
+
         //$export = \Minds\Helpers\Export::dateTimeToTimestamp($export);
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', ['entity' => $this], []));
         $export = \Minds\Helpers\Export::sanitize($export);
         return $export;
     }
+
+    public function isValid()
+    {
+        if (!$this->plan_id) {
+            throw new \Exception('Plan id is required');
+        }
+
+        if (!$this->payment_method) {
+            throw new \Exception('Payment Method is required');
+        }
+
+        if (!$this->user || !$this->user->guid) {
+            throw new \Exception('User is required');
+        }
+    }
+
 }

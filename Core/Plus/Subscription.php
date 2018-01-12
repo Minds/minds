@@ -2,9 +2,9 @@
 
 namespace Minds\Core\Plus;
 
-use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Core\Payments\Subscriptions;
 use Minds\Entities\User;
 
 class Subscription
@@ -13,22 +13,39 @@ class Subscription
     private $stripe;
     private $repo;
     protected $user;
+    /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
+    protected $subscriptionsManager;
+    /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
+    protected $subscriptionsRepository;
 
-    public function __construct($stripe = null, $repo = null)
+    public function __construct(
+        $stripe = null,
+        $subscriptionsManager = null,
+        $subscriptionsRepository = null
+    )
     {
         $this->stripe = $stripe ?: Di::_()->get('StripePayments');
-        $this->repo = $repo ?: new Payments\Plans\Repository();
+        $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Payments\Subscriptions\Manager');
+        $this->subscriptionsRepository = $subscriptionsRepository ?: Di::_()->get('Payments\Subscriptions\Repository');
     }
 
+    /**
+     * @param $user
+     * @return $this
+     */
     public function setUser($user)
     {
         $this->user = $user;
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isActive()
     {
-        $subscription = $this->getPlan();
+        $subscription = $this->getSubscription();
+
         if (!$subscription) {
             return false;
         }
@@ -36,51 +53,54 @@ class Subscription
         return $subscription->getStatus() == 'active';
     }
 
-    public function create($plan)
+    /**
+     * @param $subscription_id
+     * @return $this
+     * @throws \Exception
+     */
+    public function create($subscription)
     {
-        $this->repo->add($plan);
+        $subscription->setInterval('monthly')
+            ->setAmount(5);
+
+        $this->subscriptionsManager
+            ->setSubscription($subscription)
+            ->create();
+
         return $this;
     }
 
     public function cancel()
     {
-        $plan = $this->getPlan();
+        $subscription = $this->getSubscription();
 
-        $subscription = (new Payments\Subscriptions\Subscription)
-          ->setId($plan->getSubscriptionId());
         if ($this->user->referrer){
-            $referrer = new User($user->referrer);
+            $referrer = new User($this->user->referrer);
             $subscription->setMerchant($referrer->getMerchant());
         }
 
         try{
-            $result = $this->stripe->cancelSubscription($subscription);
-            $this->repo->setEntityGuid(0)
-              ->setUserGuid($this->user->guid)
-              ->cancel('plus');
-        } catch (\Exception $e) {
-        }
+            $this->stripe->cancelSubscription($subscription);
+            $this->subscriptionsManager
+                ->setSubscription($subscription)
+                ->cancel();
+        } catch (\Exception $e) { }
 
         return $this;
     }
 
-    public function getPlan()
+    /**
+     * @return array
+     */
+    public function getSubscription()
     {
-        $plan = $this->repo->setEntityGuid(0)
-          ->setUserGuid($this->user->guid)
-          ->getSubscription('plus');
+        $subscriptions = $this->subscriptionsRepository->getList([
+            'plan_id' => 'plus',
+            'payment_method' => 'money',
+            'user_guid' => $this->user->guid
+        ]);
 
-        return $plan;
-
-        /*$subscription = (new Payments\Subscriptions\Subscription)
-          ->setId($plan->getSubscriptionId());
-        if ($user->referrer){
-            $referrer = new User($user->referrer);
-            $subscription->setMerchant($referrer->getMerchant());
-        }
-
-        $subscription = $this->stripe->getSubscription($subscription);*/
-        return $subscription;
+        return $subscriptions[0];
     }
 
 }

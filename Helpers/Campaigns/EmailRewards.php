@@ -68,7 +68,7 @@ class EmailRewards
                 $service = Core\Wire\Methods\Factory::build('points');                
                 $service->setAmount($points)
                     ->setEntity($user)
-                    ->setFrom($plus)
+                    ->setActor($plus)
                     ->create();
                 Core\Queue\Client::build()->setQueue("WireNotification")
                   ->send(array(

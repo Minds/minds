@@ -72,37 +72,11 @@ class wallet implements Interfaces\Api
             case "subscription":
                 Factory::isLoggedIn();
 
-                //check braintree first, as there are still some legacy customers
-                $db = new Core\Data\Call("user_index_to_guid");
-                $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
+                /** @var Payments\Points\Manager $pointsManager */
+                $pointsManager = Core\Di\Di::_()->get('Payments\Points');
+                $pointsManager->setUser(Core\Session::getLoggedinUser());
 
-                if (isset($subscriptionIds[0])) {
-                    $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
-                    $subscription = $braintree->getSubscription($subscriptionIds[0]);
-                    if ($subscription) {
-                        $response['subscription'] = $subscription->export();
-                        return Factory::response($response);
-                    }
-                }
-
-                //now check for new stripe subscription
-                $repo = new Payments\Plans\Repository();
-                $plan = $repo->setEntityGuid(0)
-                  ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-                  ->getSubscription('points');
-
-                $subscription = (new Payments\Subscriptions\Subscription)
-                  ->setId($plan->getSubscriptionId());
-                if (Core\Session::getLoggedInUser()->referrer){
-                    $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
-                    $subscription->setMerchant($referrer->getMerchant());
-                }
-
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $subscription = $stripe->getSubscription($subscription);
-                if ($subscription) {
-                    $response['subscription'] = $subscription->export();
-                }
+                $response['subscription'] = $pointsManager->getSubscription();
                 break;
         }
 
@@ -121,126 +95,30 @@ class wallet implements Interfaces\Api
                 return Factory::response(array('usd'=>$usd));
                 break;
             case "purchase-once":
-                $amount = $_POST['amount'];
-                $points = $_POST['points'];
-                $usd = $this->ex_rate * $points;
-
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $source = $_POST['source'];
-
-                $customer = (new Payments\Customer())
-                  ->setUser(Core\Session::getLoggedInUser());
-
-                if (!$stripe->getCustomer($customer) || !$customer->getId()) {
-                    //create the customer on stripe
-                    try {
-                        $customer->setPaymentToken($_POST['source']);
-                        $customer = $stripe->createCustomer($customer);
-                        $source = $customer->getId(); //can't use the same token twice
-                    } catch (\Exception $e) {
-                        return Factory::response([
-                            'status' => 'error',
-                            'message' => $e->getMessage()
-                          ]);
-                    }
-                }
-
-                $sale = new Payments\Sale();
-                $sale->setOrderId('points-' . microtime(true))
-                   ->setAmount(round($usd * 100)) //cents to $
-                   ->setSource($source)
-                   ->setCustomer($customer)
-                   ->setCustomerId(Core\Session::getLoggedInUser()->guid)
-                   ->capture();
-
-                $user = Core\Session::getLoggedInUser();
-                if ($user->referrer) {
-                    $referrer = new Entities\User($user->referrer);
-                    $sale->setMerchant($referrer)
-                      ->setFee(0.75); //payout 25% to referrer
-                }
+                /** @var Payments\Points\Manager $pointsManager */
+                $pointsManager = Core\Di\Di::_()->get('Payments\Points');
+                $pointsManager->setUser(Core\Session::getLoggedinUser());
 
                 try {
-                    $result = $stripe->setSale($sale);
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, $points, null, "Purchase");
-                    Helpers\Wallet::logPurchasedPoints(Core\Session::getLoggedinUser()->guid, $points);
+                    $response['success'] = $pointsManager->buyOnce($_POST);
                 } catch (\Exception $e) {
-                    $response['status'] = "error";
-                    $response['message'] = $e->getMessage();
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
                 }
                 break;
             case "subscription":
-                $points = $_POST['points'];
-
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $source = $_POST['source'];
-
-                $customer = (new Payments\Customer())
-                  ->setUser(Core\Session::getLoggedInUser());
-
-                if (!$stripe->getCustomer($customer) || !$customer->getId()) {
-                    //create the customer on stripe
-                    $customer->setPaymentToken($_POST['source']);
-                    $customer = $stripe->createCustomer($customer);
-                }
-
-                //look for current subscription
-                $this->cancelSubscription();
-
-                $subscription = (new Payments\Subscriptions\Subscription())
-                  ->setPlanId('points')
-                  ->setQuantity(round($points / 10)) //point subscriptions are in blocks of 10. each block costs $0.01
-                  ->setCustomer($customer);
-
-                if (isset($_POST['coupon'])) {
-                    $subscription->setCoupon($_POST['coupon']);
-                }
-
-                if (Core\Session::getLoggedInUser()->referrer) {
-                    $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
-                    $subscription->setMerchant($referrer)
-                      ->setFee(0.75); //payout 25% to referrer
-
-                    try{
-                        $stripe->createPlan((object) [
-                          'id' => 'points',
-                          'amount' => 1,
-                          'merchantId' => $referrer->getMerchant()['id']
-                        ]);
-                    } catch(\Exception $e){}
-                }
+                /** @var Payments\Points\Manager $pointsManager */
+                $pointsManager = Core\Di\Di::_()->get('Payments\Points');
+                $pointsManager->setUser(Core\Session::getLoggedinUser());
 
                 try {
-
-                    try {
-                        $subscription_id = $stripe->createSubscription($subscription);
-                    } catch (\Exception $e) {
-                        return Factory::response([
-                          'status' => 'error',
-                          'message' => $e->getMessage()
-                        ]);
-                    }
-
-                    /**
-                     * Save the subscription to our user subscriptions list
-                     */
-                    $plan = (new Payments\Plans\Plan)
-                      ->setName('points')
-                      ->setEntityGuid(0)
-                      ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-                      ->setSubscriptionId($subscription_id)
-                      ->setStatus('active')
-                      ->setExpires(-1); //indefinite
-                    $repo = new Payments\Plans\Repository();
-                    $repo->add($plan);
-
-                    return Factory::response([
-                        'subscriptionId' => $subscription_id
-                    ]);
+                    $response['subscriptionId'] = $pointsManager->create($_POST);
                 } catch (\Exception $e) {
                     return Factory::response([
-                      'status' => 'error',
-                      'message' => $e->getMessage()
+                        'status' => 'error',
+                        'message' => $e->getMessage()
                     ]);
                 }
                 break;
@@ -248,61 +126,32 @@ class wallet implements Interfaces\Api
                 break;
         }
 
-
         return Factory::response($response);
     }
 
     public function put($pages)
     {
-        return Factory::response(array());
+        return Factory::response([]);
     }
 
     public function delete($pages)
     {
         switch ($pages[0]) {
           case "subscription":
-              $this->cancelSubscription();
+              /** @var Payments\Points\Manager $pointsManager */
+              $pointsManager = Core\Di\Di::_()->get('Payments\Points');
+              $pointsManager->setUser(Core\Session::getLoggedinUser());
+
+              try {
+                  $pointsManager->cancel();
+              } catch (\Exception $e) {
+                  return Factory::response([
+                      'status' => 'error',
+                      'message' => $e->getMessage()
+                  ]);
+              }
               break;
         }
-        return Factory::response(array());
-    }
-
-    private function cancelSubscription(){
-
-        //check braintree first, as there are still some legacy customers
-        $db = new Core\Data\Call("user_index_to_guid");
-        $subscriptionIds = $db->getRow(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring");
-
-        if (isset($subscriptionIds[0])) {
-            $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
-            $braintree->cancelSubscription((new Payments\Subscriptions\Subscription)
-                  ->setId($subscriptionIds[0]));
-            $db->removeAttributes(Core\Session::getLoggedinUser()->guid . ":subscriptions:recurring", [0]);
-            return Factory::response([]);
-        }
-
-
-        $repo = new Payments\Plans\Repository();
-        $plan = $repo->setEntityGuid(0)
-          ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-          ->getSubscription('points');
-
-        $subscription = (new Payments\Subscriptions\Subscription)
-          ->setId($plan->getSubscriptionId());
-
-        if (Core\Session::getLoggedInUser()->referrer){
-            $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
-            $subscription->setMerchant($referrer->getMerchant());
-        }
-
-        $stripe = Core\Di\Di::_()->get('StripePayments');
-
-        try{
-            $result = $stripe->cancelSubscription($subscription);
-            $repo->cancel('points');
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        return Factory::response([]);
     }
 }

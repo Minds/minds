@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Recurring Subscriptions Queue
+ * Subscriptions Queue
  *
- * @author emi
+ * @author emi / mark
  */
 
-namespace Minds\Core\Payments\RecurringSubscriptions;
+namespace Minds\Core\Payments\Subscriptions;
 
 use Minds\Core\Di\Di;
 
@@ -17,7 +17,7 @@ class Queue
 
     public function __construct($repository = null)
     {
-        $this->repository = $repository ?: Di::_()->get('Payments\RecurringSubscriptions\Repository');
+        $this->repository = $repository ?: Di::_()->get('Payments\Subscriptions\Repository');
     }
 
     /**
@@ -31,7 +31,7 @@ class Queue
             $timestamp = $timestamp->getTimestamp();
         }
 
-        $rows = $this->repository->select([
+        $rows = $this->repository->getList([
             'status' => 'active',
             'next_billing' => $timestamp
         ]);
@@ -51,7 +51,7 @@ class Queue
     public function processed(array $recurring_subscription)
     {
         /** @var Manager $manager */
-        $manager = Di::_()->get('Payments\RecurringSubscriptions\Manager');
+        $manager = Di::_()->get('Payments\Subscriptions\Manager');
         $manager
             ->setType($recurring_subscription['type'])
             ->setPaymentMethod($recurring_subscription['payment_method'])
@@ -59,4 +59,5 @@ class Queue
             ->setUserGuid($recurring_subscription['user_guid'])
             ->updateBilling($recurring_subscription['last_billing'], $recurring_subscription['recurring']);
     }
+
 }

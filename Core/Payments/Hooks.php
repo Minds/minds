@@ -12,7 +12,6 @@ class Hooks
 
     public function loadDefaults()
     {
-        $this->hooks[] = new Core\Wallet\PointsSubscription;
         $this->hooks[] = new Core\Plus\Webhook;
         $this->hooks[] = new Core\Wire\Webhook;
         return $this;

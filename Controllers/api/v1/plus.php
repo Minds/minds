@@ -77,8 +77,11 @@ class plus implements Interfaces\Api
 
                 $subscription = (new Payments\Subscriptions\Subscription())
                   ->setPlanId('plus')
+                  ->setPaymentMethod('money')
                   ->setQuantity(1)
-                  ->setCustomer($customer);
+                  ->setStatus('active')
+                  ->setUser(Core\Session::getLoggedInUser());
+
 
                 if (Core\Session::getLoggedInUser()->referrer) {
                     $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
@@ -97,7 +100,7 @@ class plus implements Interfaces\Api
                 try {
 
                     try {
-                        $subscription_id = $stripe->createSubscription($subscription);
+                        $subscription->setId($stripe->createSubscription($subscription));
                     } catch (\Exception $e) {
                         return Factory::response([
                           'status' => 'error',
@@ -108,15 +111,9 @@ class plus implements Interfaces\Api
                     /**
                      * Save the subscription to our user subscriptions list
                      */
-                    $plan = (new Payments\Plans\Plan)
-                      ->setName('plus')
-                      ->setEntityGuid(0)
-                      ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-                      ->setSubscriptionId($subscription_id)
-                      ->setStatus('active')
-                      ->setExpires(-1); //indefinite
-
-                    $plus->create($plan);
+                    $plus
+                        ->setUser(Core\Session::getLoggedInUser())
+                        ->create($subscription);
 
                     $user = Core\Session::getLoggedInUser();
                     $user->plus = true;
@@ -126,7 +123,7 @@ class plus implements Interfaces\Api
                     $user->subscribe($plusGuid);
 
                     return Factory::response([
-                        'subscriptionId' => $subscription_id
+                        'subscriptionId' => $subscription->getId()
                     ]);
                 } catch (\Exception $e) {
                     return Factory::response([
@@ -163,10 +160,8 @@ class plus implements Interfaces\Api
 
         switch ($pages[0]) {
             case "subscription":
-                $plan = $plus->getPlan();
+                $subscription = $plus->getSubscription();
 
-                $subscription = (new Payments\Subscriptions\Subscription)
-                  ->setId($plan->getSubscriptionId());
                 if ($user->referrer){
                     $referrer = new User($user->referrer);
                     $subscription->setMerchant($referrer->getMerchant());

@@ -68,7 +68,9 @@ class wire implements Interfaces\Api
         $service = Methods\Factory::build($method);
 
         try {
-            $service->setAmount($amount)
+            $service
+                ->setAmount($amount)
+                ->setActor(Core\Session::getLoggedInUser())
                 ->setEntity($entity)
                 ->setPayload((array) $_POST['payload'])
                 ->setRecurring($recurring);
@@ -107,6 +109,7 @@ class wire implements Interfaces\Api
         } catch (\Exception $e) {
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
+            var_dump($e); exit;
         }
 
         return Factory::response($response);

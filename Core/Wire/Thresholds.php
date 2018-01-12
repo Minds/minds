@@ -53,13 +53,9 @@ class Thresholds
 
         //Plus hack
         if ($entity->owner_guid == '730071191229833224') {
-            //Check if a plus subscription exists
-            $repo = new Payments\Plans\Repository();
-            $plan = $repo->setEntityGuid(0)
-                ->setUserGuid($user)
-                ->getSubscription('plus');
+            $plus = (new Core\Plus\Subscription())->setUser($user);
 
-            if ($plan->getStatus() == 'active') {
+            if ($plus->isActive()) {
                 return true; 
             }
         }

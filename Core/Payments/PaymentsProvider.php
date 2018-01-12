@@ -29,6 +29,12 @@ class PaymentsProvider extends Provider
 
         //
 
+        $this->di->bind('Payments\Points', function ($di) {
+            return new Points\Manager();
+        });
+
+        //
+
         $this->di->bind('BraintreePayments', function ($di) {
             $config = $di->get('Config');
             $braintree = new Braintree\Braintree(new Braintree_Configuration(), $di->get('Config'));

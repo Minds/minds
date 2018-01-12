@@ -5,16 +5,16 @@ namespace Minds\Controllers\Cli\Payments;
 use Minds\Cli;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
-use Minds\Core\Payments\RecurringSubscriptions\Manager;
-use Minds\Core\Payments\RecurringSubscriptions\Queue;
+use Minds\Core\Payments\Subscriptions\Manager;
+use Minds\Core\Payments\Subscriptions\Queue;
 use Minds\Helpers\Cql;
 use Minds\Interfaces;
 
-class RecurringSubscriptions extends Cli\Controller implements Interfaces\CliControllerInterface
+class Subscriptions extends Cli\Controller implements Interfaces\CliControllerInterface
 {
     public function help($command = null)
     {
-        $this->out('Syntax usage: payments recurring_subscriptions [run]');
+        $this->out('Syntax usage: payments subscriptions [run]');
     }
 
     public function exec()
@@ -28,7 +28,7 @@ class RecurringSubscriptions extends Cli\Controller implements Interfaces\CliCon
         \Minds\Core\Events\Defaults::_();
 
         /** @var Queue $queue */
-        $queue = Di::_()->get('Payments\RecurringSubscriptions\Queue');
+        $queue = Di::_()->get('Payments\Subscriptions\Queue');
 
         $rows = $queue->get(time());
 
@@ -39,8 +39,8 @@ class RecurringSubscriptions extends Cli\Controller implements Interfaces\CliCon
             $this->out('- Billing was scheduled for ' . date('c', $row['next_billing']));
 
             try {
-                $processed = Dispatcher::trigger('recurring-subscriptions:process', $row['type'], [
-                    'recurring_subscription' => $row
+                $processed = Dispatcher::trigger('subscriptions:process', $row['type'], [
+                    'subscription' => $row
                 ]);
 
                 if ($processed) {

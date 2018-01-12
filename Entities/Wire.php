@@ -199,7 +199,7 @@ class Wire extends NormalizedEntity
     public function setTo($to)
     {
         if (!is_object($to)) {
-            $from = Entities\Factory::build($to);
+            $to = Entities\Factory::build($to);
         }
 
         $this->to = $to;

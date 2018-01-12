@@ -2,115 +2,111 @@
 /**
  * Minds Payments API - Subscriptions
  *
- * @version 1
+ * @version 2
  * @author Emi Balbuena
  */
+
 namespace Minds\Controllers\api\v1\payments;
 
 use Minds\Api\Factory;
 use Minds\Core;
-use Minds\Entities;
 use Minds\Core\Payments;
+use Minds\Entities;
 use Minds\Interfaces;
 
 class subscriptions implements Interfaces\Api
 {
     /**
-     * Returns user subscriptions
-     * @param array $pages
-     *
-     * API:: /v1/payments/subscriptions
+     * Equivalent to HTTP GET method
+     * @param  array $pages
+     * @return mixed|null
      */
     public function get($pages)
     {
-        $response = [];
-        $plansIds = [];
+        /** @var Payments\Subscriptions\Repository $repository */
+        $repository = Core\Di\Di::_()->get('Payments\Subscriptions\Repository');
 
-        if (isset($_GET['plansIds'])) {
-            $plansIds = $_GET['plansIds'];
-            if (!is_array($plansIds)) {
-                $plansIds = explode(',', $plansIds);
-            }
-        }
-
-        $offset = isset($_GET['offset']) ? $_GET['offset'] : '';
-        $repo = new Payments\Plans\Repository();
-
-        $result = $repo
-            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-            ->getAllSubscriptions($plansIds, [
-                'offset' => $offset
+        $subscriptions = $repository
+            ->getList([
+                'user_guid' => Core\Session::getLoggedInUser()->guid
             ]);
-
-        $stripe = Core\Di\Di::_()->get('StripePayments');
-
-        foreach ($result as $plan) {
-
-            $s = [
-              'status' => $plan->getStatus(),
-              'entity_guid' => $plan->getEntityGuid(),
-              'expires' => $plan->getExpires(),
-              'id' => $plan->getSubscriptionId(),
-              'amount' => $plan->getAmount(),
-              'plan' => $plan->getName()
-            ];
-
-
-            if ($entity_guid = $plan->getEntityGuid()) {
-                $entity = Entities\Factory::build($entity_guid);
-                if ($entity) {
-                    $s['entity'] = $entity->export();
-                }
-            }
-
-            $response['subscriptions'][] = $s;
-        }
-
-        return Factory::response($response);
+    
+        return Factory::response([
+            'subscriptions' => Factory::exportable($subscriptions)
+        ]);
     }
 
+    /**
+     * Equivalent to HTTP POST method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function post($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP PUT method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function put($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP DELETE method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function delete($pages)
     {
-        if (!isset($pages[0])) {
+        if (!isset($pages[0]) || !$pages[0]) {
             return Factory::response([
-              'status' => 'error',
-              'message' => 'subscription id must be supplied'
+                'status' => 'error',
+                'message' => 'Subscription ID is required'
             ]);
         }
 
+        /** @var Payments\Subscriptions\Repository $repository */
+        $repository = Core\Di\Di::_()->get('Payments\Subscriptions\Repository');
+
+        /** @var Payments\Subscriptions\Manager $manager */
+        $manager = Core\Di\Di::_()->get('Payments\Subscriptions\Manager');
+
         $subscription_id = $pages[0];
-        $subscription = (new Payments\Subscriptions\Subscription)->setId($subscription_id);
+        $subscription = $repository->get($subscription_id);
 
-        $repo = new Payments\Plans\Repository();
-        $plan = $repo->getSubscriptionById($subscription_id);
-
-        //detect if the subscription is braintree or stripe
-        if (strpos($subscription_id, 'sub_', 0) >= -1) {
-
-            if (Core\Session::getLoggedInUser()->referrer){
-                $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
-                $subscription->setMerchant($referrer->getMerchant());
-            }
-
-            $stripe = Core\Di\Di::_()->get('StripePayments');
-            $subscription = $stripe->cancelSubscription($subscription);
-        } else {
-            $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
-            $subscription = $braintree->cancelSubscription($subscription);
+        if (!$subscription) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'subscription not found'
+            ]);
         }
 
-        $repo->cancel($plan);
+        if ($subscription->getPaymentMethod() == "money") {
+            if (strpos($subscription->getId(), 'sub_', 0) >= -1) {
+                if (Core\Session::getLoggedInUser()->referrer){
+                    $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
+                    $subscription->setMerchant($referrer->getMerchant());
+                }
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $stripe->cancelSubscription($subscription);
+            } else {
+                $braintree = Payments\Factory::build("Braintree", ['gateway'=>'default']);
+                $braintree->cancelSubscription($subscription);
+            }
+        }
 
-        return Factory::response([]);
+        $success = $manager
+            ->setSubscription($subscription)
+            ->cancel();
+
+        return Factory::response([
+            'done' => (bool) $success
+        ]);
     }
+
 }

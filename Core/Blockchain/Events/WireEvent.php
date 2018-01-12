@@ -55,13 +55,13 @@ class WireEvent implements BlockchainEventInterface
         $wireMethod = Di::_()->get('Wire\Method\Tokens');
 
         try {
-            $wireMethod->checkAndSaveWire($tx, $sender, $receiver, $amount);
+            $wireMethod->confirmWire($tx, $sender, $receiver, $amount);
         } catch (\Exception $e) {
             // Catch race condition. Mining might be faster than /v1/wire request.
             sleep(2);
 
             try {
-                $wireMethod->checkAndSaveWire($tx, $sender, $receiver, $amount);
+                $wireMethod->confirmWire($tx, $sender, $receiver, $amount);
             } catch (\Exception $e) {
                 // Log?
             }

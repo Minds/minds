@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Payments;
 
+use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Events\Dispatcher;
@@ -105,13 +106,9 @@ class Events
 
             //Plus hack
             if ($entity->owner_guid == '730071191229833224') {
-                //Check if a plus subscription exists
-                $repo = new Payments\Plans\Repository();
-                $plan = $repo->setEntityGuid(0)
-                    ->setUserGuid($user->guid)
-                    ->getSubscription('plus');
+                $plus = (new Core\Plus\Subscription())->setUser($user);
 
-                if ($plan->getStatus() == 'active') {
+                if ($plus->isActive()) {
                     return $event->setResponse(true);
                 }
             }
@@ -124,12 +121,22 @@ class Events
                 return $event->setResponse(true);
             }
 
-            $repo = new Payments\Plans\Repository();
-            $plan = $repo->setEntityGuid($entity->owner_guid)
-                ->setUserGuid($user->guid)
-                ->getSubscription('exclusive');
+            /** @var Subscriptions\Manager $manager */
+            $manager = Di::_()->get('Payments\Subscriptions\Manager');
 
-            return $event->setResponse($plan->getStatus() == 'active');
+            $manager
+                ->setUserGuid($user->guid)
+                ->setEntityGuid($entity->owner_guid)
+                ->setType('exclusive')
+                ->setPaymentMethod('money');
+
+            $exclusiveSubscription = $manager->fetchSubscription([ 'hydrate' => false ]);
+
+            if ($exclusiveSubscription) {
+                return $event->setResponse($exclusiveSubscription['status'] == 'active');
+            }
+
+            return $event->setResponse(false);
         });
 
         Dispatcher::register('wire-payment-email', 'object', function ($event) {

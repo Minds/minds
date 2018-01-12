@@ -71,43 +71,53 @@ class Events
             $params = $event->getParameters();
             $recurringSubscription = $params['recurring_subscription'];
 
-            switch ($recurringSubscription['payment_method']) {
-                case 'tokens':
+            $user = Entities\Factory::build($recurringSubscription['entity_guid']);
+            $sender = new User($recurringSubscription['user_guid']);
 
-                    $user = Entities\Factory::build($recurringSubscription['entity_guid']);
-                    $sender = new User($recurringSubscription['user_guid']);
+            /** @var Tokens $wireMethod */
+            $wireMethod = Methods\Factory::build($recurringSubscription['payment_method']);
 
-                    /** @var Tokens $wireMethod */
-                    $wireMethod = Di::_()->get('Wire\Method\Tokens');
-                    $wireMethod
-                        ->setAmount($recurringSubscription['amount'])
-                        ->setEntity($user)
-                        ->setTimestamp(time())
-                        ->chargeRecurringAndCreate($user, $sender);
+            $onRecurring = $wireMethod
+                ->setRecurring(true)
+                ->setAmount($recurringSubscription['amount'])
+                ->setActor($sender)
+                ->setEntity($user)
+                ->setTimestamp(time())
+                ->onRecurring($recurringSubscription['subscription_id']);
 
-                    return $event->setResponse(true);
-                default:
-                    return $event->setResponse(false);
-            }
+            return $event->setResponse($onRecurring);
         });
     }
 
     private function cancelSubscriptions(User $user)
     {
-        $repo = new Core\Payments\Plans\Repository();
-        $repo->setUserGuid($user->guid);
-        $subscriptions = $repo->getAllSubscriptions(['wire'], ['limit' => 0]);
-        foreach ($subscriptions as $subscription) {
-            $repo->setEntityGuid($subscription[0]);
-            $plan = $repo->getSubscription('wire');
+        /** @var Core\Payments\Subscriptions\Manager $manager */
+        $manager = Di::_()->get('Payments\Subscriptions\Manager');
+        $manager
+            ->setUserGuid($user->guid)
+            ->setType('wire');
 
-            $subscription = new Core\Payments\Subscriptions\Subscription()< $subscription->setId($plan->getSubscriptionId())
+        $subscriptions = $manager->fetch([ 'type' => 'wire', 'limit' => null, 'hydrate' => false ]);
+
+        foreach ($subscriptions as $subscription) {
+            if (!$subscription['subscription_id']) {
+                continue;
+            }
+
+            $manager
+                ->setPaymentMethod($subscription['payment_method'])
+                ->setEntityGuid($subscription['entity_guid']);
+
+            $subscription = new Core\Payments\Subscriptions\Subscription();
+            $subscription
+                ->setId($subscription['subscription_id'])
                 ->setMerchant($user);
+
             $stripe = Core\Di\Di::_()->get('StripePayments');
             $stripe->cancelSubscription($subscription);
 
             //cancel the plan itself
-            $repo->cancel('wire');
+            $manager->cancel();
         }
     }
 }

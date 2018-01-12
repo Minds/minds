@@ -8,10 +8,8 @@
 
 namespace Minds\Core\Blockchain\Events;
 
-use Minds\Core\Blockchain\Contracts\MindsToken;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
-use Minds\Core\Wire\Methods\Tokens;
 
 class BoostEvent implements BlockchainEventInterface
 {

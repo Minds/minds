@@ -13,21 +13,40 @@ use Minds\Entities\User;
 class Money implements MethodInterface
 {
 
-    private $amount;
-    private $entity;
-    private $nonce;
-    private $recurring; // monthly
-    private $timestamp;
-    private $manager;
-    private $repository;
-    private $cache;
+    protected $amount;
+    /** @var Entities\User $owner */
+    protected $owner;
+    protected $entity;
+    /** @var Entities\User $actor */
+    protected $actor;
+    protected $nonce;
+    protected $recurring; // monthly
+    protected $timestamp;
+    protected $manager;
+    protected $repository;
+    protected $cache;
+    /** @var Payments\Stripe\Stripe $stripe */
+    protected $stripe;
+    /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
+    protected $subscriptionsManager;
+    /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
+    protected $subscriptionsRepository;
 
-    public function __construct($stripe = null, $manager = null, $repository = null, $cache = null)
+    public function __construct(
+        $stripe = null,
+        $manager = null,
+        $repository = null,
+        $cache = null,
+        $subscriptionsManager = null,
+        $subscriptionsRepository = null
+    )
     {
         $this->stripe = $stripe ?: Di::_()->get('StripePayments');
         $this->manager = $manager ?: Core\Di\Di::_()->get('Wire\Manager');
         $this->repository = $repository ?: Core\Di\Di::_()->get('Wire\Repository');
         $this->cache = $cache ?: Core\Di\Di::_()->get('Cache');
+        $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Payments\Subscriptions\Manager');
+        $this->subscriptionsRepository = $subscriptionsRepository ?: Di::_()->get('Payments\Subscriptions\Repository');        
     }
 
     public function setAmount($amount)
@@ -36,8 +55,22 @@ class Money implements MethodInterface
         return $this;
     }
 
+    public function setActor(User $user)
+    {
+        $this->actor = $user;
+        return $this;
+    }
+
     public function setEntity($entity)
     {
+        if (!is_object($entity)) {
+            $entity = Entities\Factory::build($entity);
+        }
+
+        $this->owner = $entity->type != 'user' ?
+            Entities\Factory::build($entity->owner_guid) :
+            $entity;
+
         $this->entity = $entity;
         return $this;
     }
@@ -61,31 +94,29 @@ class Money implements MethodInterface
 
     public function create()
     {
-        $user = $this->entity->type == 'user' ?
-            $this->entity :
-            $this->entity->getOwnerEntity();
-
         if ($this->recurring) {
-            return $this->createSubscription($user);
+            return $this->createSubscription();
         }
-        return $this->createSale($user);
+        return $this->createSale();
     }
 
     /**
      * @return mixed
      */
     public function refund() {
-
+        throw new \Exception('Cannot refund a money operation');
     }
 
-    private function createSubscription(User $user)
+    private function createSubscription()
     {
-        if (!$user->getMerchant()['id']) {
+        if (!$this->owner->getMerchant()['id']) {
             throw new NotMonetizedException();
         }
 
+        $merchantId = $this->owner->getMerchant()['id'];
+
         $customer = (new Payments\Customer())
-            ->setUser(Core\Session::getLoggedInUser());
+            ->setUser($this->actor);
 
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
@@ -96,55 +127,50 @@ class Money implements MethodInterface
         }
 
         //look for current subscription
-        $this->cancelSubscription($user);
+        $this->cancelSubscription();
 
-        $plan = $stripe->getPlan('wire', $user->getMerchant()['id']);
+        $plan = $stripe->getPlan('wire', $merchantId);
         $wireNominal = 100; //wire subscriptions are all $1
 
         if (!$plan) {
             $stripe->createPlan((object) [
                 'id' => 'wire',
                 'amount' => $wireNominal,
-                'merchantId' => $user->getMerchant()['id']
+                'merchantId' => $merchantId
             ]);
         }
 
         $subscription = (new Payments\Subscriptions\Subscription())
             ->setPlanId('wire')
+            ->setPaymentMethod('money')
             ->setQuantity($this->amount)
-            ->setCustomer($customer)
+            ->setAmount($this->amount)
+            ->setUser($this->actor)
             ->setFee($this->calculateFee($this->amount * $wireNominal))
-            ->setMerchant($user);
+            ->setMerchant($this->owner);
 
-        $subscription_id = $stripe->createSubscription($subscription);
+        $subscription->setId($stripe->createSubscription($subscription));
 
-        /**
-         * Save the subscription to our user subscriptions list
-         */
-        $plan = (new Payments\Plans\Plan)
-            ->setName('wire')
-            ->setEntityGuid($this->entity->guid)
-            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-            ->setSubscriptionId($subscription_id)
-            ->setStatus('active')
-            ->setAmount($this->amount * $wireNominal)
-            ->setExpires(-1); //indefinite
-        $repo = new Payments\Plans\Repository();
-        $repo->add($plan);
+        if (!$subscription->getId()) {
+            throw new \Exception('Cannot create subscription');
+        }
 
-        $this->saveWire($user);
+        $this->subscriptionsManager->setSubscription($subscription);
+        $this->subscriptionsManager->create();
 
-        return ['subscriptionId' => $subscription_id];
+        $this->saveWire();
+
+        return [ 'subscriptionId' => $this->subscription->getId() ];
     }
 
-    private function createSale(User $user)
+    private function createSale()
     {
-        if (!$user->getMerchant()['id']) {
+        if (!$this->owner->getMerchant()['id']) {
             throw new NotMonetizedException();
         }
 
         $customer = (new Payments\Customer())
-            ->setUser(Core\Session::getLoggedInUser());
+            ->setUser($this->actor);
 
         $stripe = Core\Di\Di::_()->get('StripePayments');
 
@@ -158,56 +184,63 @@ class Money implements MethodInterface
         $sale = new Payments\Sale();
         $sale->setOrderId('wire-' . $this->entity->guid)
             ->setAmount($this->amount * 100)//cents to $
-            ->setMerchant($user)
+            ->setMerchant($this->owner)
             ->setCustomer($customer)
             ->setSource($this->nonce)
             ->setFee($this->calculateFee($this->amount * 100))
             ->capture();
-        $this->id = $this->stripe->setSale($sale);
 
-        $this->saveWire($user);
+        $saleId = $this->stripe->setSale($sale);
 
-        return $this->id;
+        $this->saveWire();
+
+        /** @var Core\Payments\Manager $manager */
+        $manager = Di::_()->get('Payments\Manager');
+        $manager
+            ->setType('wire')
+            ->setUserGuid($this->actor->guid)
+            ->setTimeCreated($this->timestamp ?: time())
+            ->create([
+                'payment_method' => 'money',
+                'amount' => $this->amount,
+                'description' => 'Wire @' . $this->owner->username,
+                'status' => 'paid'
+            ]);
+
+        return $saleId;
     }
 
     /**
-     * @param User $user
      * @return string wire_guid
      */
-    private function cancelSubscription(User $user)
+    public function cancelSubscription()
     {
-        $repo = new Payments\Plans\Repository();
-        $plan = $repo->setEntityGuid(0)
-            ->setUserGuid(Core\Session::getLoggedInUser()->guid)
-            ->getSubscription('wire');
 
-        $subscription = (new Payments\Subscriptions\Subscription)
-            ->setId($plan->getSubscriptionId());
-
-        $stripe = Core\Di\Di::_()->get('StripePayments');
-
-        $wires = $this->manager->get([
-            'user_guid' => $user->guid,
-            'type' => 'sent',
-            'order' => 'DESC',
+        $subscriptions = $this->subscriptionsRepository->getList([
+            'plan_id' => 'wire',
+            'payment_method' => 'money',
+            'entity_guid' => $this->owner->guid,
+            'user_guid' => $this->actor->guid
         ]);
 
-        if (count($wires) > 0) {
-            // get last recurring wire
-            foreach ($wires as $wire) {
-                if ($wire->isRecurring() && $wire->isActive() && $wire->getMethod() == 'usd') {
-                    $wire->setActive(false)
-                        ->save();
-                    break;
-                }
-            }
-
+        if (!$subscriptions) {
+            return false;
         }
 
+        $subscription = $subscriptions[0];
+
         try {
-            $result = $stripe->cancelSubscription($subscription, ['stripe_account' => $user->getMerchant()['id']]);
-            $repo->cancel('wire');
-            return true;
+    
+            $subscription->setMerchant($this->owner);
+
+            $result = $this->stripe->cancelSubscription($subscription);
+
+            if ($result) {
+                $this->subscriptionsManager->setSubscription($subscription);
+                $this->subscriptionsManager->cancel();
+            }
+
+            return (bool) $result;
         } catch (\Exception $e) {
             return false;
         }
@@ -227,13 +260,13 @@ class Money implements MethodInterface
         return round($pct, 2);
     }
 
-    private function saveWire($merchant)
+    private function saveWire()
     {
         $wire = (new Entities\Wire)
             ->setAmount($this->amount)
             ->setRecurring($this->recurring)
-            ->setFrom(Core\Session::getLoggedInUser())
-            ->setTo($merchant)
+            ->setFrom($this->actor)
+            ->setTo($this->owner)
             ->setTimeCreated(time())
             ->setEntity($this->entity)
             ->setMethod('money');
@@ -253,11 +286,17 @@ class Money implements MethodInterface
             'charged' => false,
             'amount' => $this->amount,
             'description' => $description,
-            'user' => $merchant,
+            'user' => $this->owner,
         ]);
 
-        $this->cache->destroy("counter:wire:sums:" . $merchant->getGUID() . ":*");
-        //$this->cache->destroy(Counter::getIndexName($this->entity->guid, null, 'money', null, true));
+        // $this->cache->destroy("counter:wire:sums:" . $this->owner->guid . ":*");
+        $this->cache->destroy(Counter::getIndexName($this->entity->guid, null, 'money', null, true));
         //$this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . ":*");
     }
+
+    public function onRecurring($subscription_id)
+    {
+        return true;
+    }
+
 }

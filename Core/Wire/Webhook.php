@@ -6,6 +6,7 @@
 
 namespace Minds\Core\Wire;
 
+use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Entities;
 use Minds\Entities\User;
@@ -13,7 +14,6 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;
 use Minds\Entities\Wire;
-use Minds\Entities\User;
 
 class Webhook implements HookInterface
 {
@@ -26,13 +26,15 @@ class Webhook implements HookInterface
             $stripe = Di::_()->get('StripePayments');
             $stripePlan = $stripe->getPlan('wire', $user->getMerchant()['id']);
 
-            $planRepo = new Payments\Plans\Repository();
-            $plan = $planRepo->setEntityGuid(0)
-                ->setUserGuid($user->guid)
-                ->getSubscriptionById($subscription->getId());
+            /** @var Core\Payments\Subscriptions\Manager $manager */
+            $manager = Di::_()->get('Payments\Subscriptions\Manager');
+            $manager
+                ->setSubscriptionId($subscription->getId());
+
+            $recurringSubscription = $manager->fetchSubscriptionById();
 
             $repo = Di::_()->get('Wire\Repository');
-            $entity = Entities::get($plan->getEntityGuid())[0];
+            $entity = $recurringSubscription['entity'];
 
             $to = "";
 
@@ -54,6 +56,20 @@ class Webhook implements HookInterface
             $repo->setSenderGuid($user->guid)
                 ->setWire($wire)
                 ->add();
+
+            /** @var Core\Payments\Manager $manager */
+            $manager = Di::_()->get('Payments\Manager');
+            $manager
+                ->setType('wire')
+                ->setUserGuid($user->guid)
+                ->setTimeCreated(time())
+                ->create([
+                    'subscription_id' => $subscription->getId(),
+                    'payment_method' => 'money',
+                    'amount' => $stripePlan->amount,
+                    'description' => 'Wire ' . $to  . ' (Recurring)',
+                    'status' => 'paid'
+                ]);
         }
     }
 

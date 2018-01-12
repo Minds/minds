@@ -810,8 +810,11 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function createSubscription(Subscription $subscription)
     {
 
+        $customer = new Customer;
+        $customer->setUser($subscription->getUser());
+
         $params = [
-            'customer' => $subscription->getCustomer()->getId(),
+            'customer' => $customer->getId(),
             'plan' => $subscription->getPlanId(),
             'quantity' => $subscription->getQuantity(),
             'metadata' => [
@@ -827,11 +830,11 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         try {
 
             if ($subscription->getMerchant()) {
-                $merchant = $subscription->getMerchant()->getMerchant(); //@todo clean this up
+                $merchant = $subscription->getMerchant(); //@todo clean this up
                 //subscriptions need to clone customers
                 $token = StripeSDK\Token::create(
                   [
-                    'customer' => $subscription->getCustomer()->getId()
+                    'customer' => $customer->getId()
                   ],
                   [
                     'stripe_account' => $merchant['id']
@@ -842,7 +845,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
                   [
                     'source' => $token->id,
                     'metadata' => [
-                      'user_guid' =>  $subscription->getCustomer()->getUser()->getGuid()
+                      'user_guid' =>  $subscription->getUser()->getGuid()
                     ]
                   ],
                   [
@@ -877,7 +880,8 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
               'stripe_account' => $subscription->getMerchant()['id']
             ]);
 
-          $subscription->setPrice(($result->quantity * $result->plan->amount) / 100);
+          $subscription->setAmount(($result->quantity * $result->plan->amount) / 100);
+          $subscription->setNextBillingDate($result->current_period_end);
 
           return $subscription;
       } catch (StripeSDK\Error\InvalidRequest $e) {
@@ -889,7 +893,7 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function cancelSubscription(Subscription $subscription)
     {
         try {
-            StripeSDK\Subscription::retrieve(
+            return StripeSDK\Subscription::retrieve(
               $subscription->getId(),
               [
                 'stripe_account' => $subscription->getMerchant()['id']

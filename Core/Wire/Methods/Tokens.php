@@ -4,7 +4,6 @@ namespace Minds\Core\Wire\Methods;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Payments;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Wire\Counter;
 use Minds\Entities;
@@ -13,26 +12,45 @@ use Minds\Entities\User;
 class Tokens implements MethodInterface
 {
 
-    private $amount;
-    private $entity;
-    private $nonce;
-    private $recurring; // monthly
-    private $timestamp;
-    private $manager;
-    private $repository;
-    private $cache;
-    private $config;
+    protected $amount;
+    /** @var Entities\User $actor */
+    protected $actor;
+    protected $entity;
+    /** @var Entities\User $owner */
+    protected $owner;
+    protected $nonce;
+    protected $recurring;
+    protected $timestamp;
+    protected $manager;
+    protected $repository;
+    protected $cache;
+    protected $config;
+    /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
+    protected $subscriptionsManager;
+    /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
+    protected $subscriptionsRepository;
 
     /** @var Core\Blockchain\Pending $pendingManager */
-    private $pendingManager;
+    protected $pendingManager;
 
-    public function __construct($stripe = null, $manager = null, $repository = null, $cache = null, $config = null, $pendingManager = null)
+    public function __construct(
+        $stripe = null,
+        $manager = null,
+        $repository = null,
+        $cache = null,
+        $config = null,
+        $pendingManager = null,
+        $subscriptionsManager = null,
+        $subscriptionsRepository = null
+    )
     {
         $this->manager = $manager ?: Core\Di\Di::_()->get('Wire\Manager');
         $this->repository = $repository ?: Core\Di\Di::_()->get('Wire\Repository');
         $this->cache = $cache ?: Core\Di\Di::_()->get('Cache');
         $this->config = $config ?: Core\Di\Di::_()->get('Config');
         $this->pendingManager = $pendingManager ?: Di::_()->get('Blockchain\Pending');
+        $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Payments\Subscriptions\Manager');
+        $this->subscriptionsRepository = $subscriptionsRepository ?: Di::_()->get('Payments\Subscriptions\Repository');
     }
 
     public function setAmount($amount)
@@ -41,8 +59,22 @@ class Tokens implements MethodInterface
         return $this;
     }
 
+    public function setActor(User $user)
+    {
+        $this->actor = $user;
+        return $this;
+    }
+
     public function setEntity($entity)
     {
+        if (!is_object($entity)) {
+            $entity = Entities\Factory::build($entity);
+        }
+
+        $this->owner = $entity->type != 'user' ?
+            Entities\Factory::build($entity->owner_guid) :
+            $entity;
+
         $this->entity = $entity;
         return $this;
     }
@@ -68,85 +100,145 @@ class Tokens implements MethodInterface
         return $this;
     }
 
+    /**
+     * @return mixed
+     * @throws WalletNotSetupException
+     * @throws \Exception
+     */
     public function create()
     {
-        $user = $this->entity->type == 'user' ?
-            $this->entity :
-            Entities\Factory::build($this->entity->owner_guid);
-
         if ($this->recurring) {
-            return $this->createSubscription($user);
+            return $this->createSubscription();
         }
 
-        return $this->createPendingWire($user);
+        return $this->createWire();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function refund()
+    {
+        throw new \Exception('Cannot refund a tokens operation');
     }
 
     /**
      * @return mixed
+     * @throws WalletNotSetupException
+     * @throws \Exception
      */
-    public function refund() {
-
-    }
-
-    private function createSubscription(User $user)
+    protected function createSubscription()
     {
-        if (!$user->getEthWallet()) {
+        if (!$this->owner->getEthWallet()) {
             throw new WalletNotSetupException();
         }
 
-        $firstWire = $this->createPendingWire($user);
-
-        if (!$firstWire) {
-            throw new \Exception('Error creating Wire');
-        }
-
-        /** @var Payments\RecurringSubscriptions\Manager $recurringSubscriptionsManager */
-        $recurringSubscriptionsManager = Di::_()->get('Payments\RecurringSubscriptions\Manager');
-
-        $recurringSubscriptionsManager
-            ->setType('wire')
-            ->setPaymentMethod('tokens')
-            ->setEntityGuid($user->guid)
-            ->setUserGuid(Core\Session::getLoggedInUserGuid());
-
-        $recurringSubscriptionsManager->cancel();
+        $this->cancelSubscription();
 
         $now = time();
 
-        $subscription_id = $recurringSubscriptionsManager->create([
-            'recurring' => 'monthly',
-            'amount' => $this->amount,
-            'last_billing' => $now
-        ]);
-
-        if ($subscription_id) {
-            $recurringSubscriptionsManager->setSubscriptionId($subscription_id);
-
-            $recurringSubscriptionsManager->createPayment([
-                'payment_id' => 'blockchain:' . $this->nonce['txHash'],
-                'time_created' => $now,
-                'amount' => $this->amount,
-                'description' => 'Wire',
-                'status' => 'pending'
-            ]);
-        }
-
-        return $subscription_id;
+        $subscription = (new Payments\Subscriptions\Subscription())
+            ->setPlanId('wire')
+            ->setMethod('tokens')
+            ->setAmount($this->amount)
+            ->setUser($this->actor)
+            ->setFee($this->calculateFee($this->amount * $wireNominal))
+            ->setMerchant($this->owner);
+    
+        return $subscription->getId();
     }
 
-    public function chargeRecurringAndCreate(User $user, User $sender)
+    protected function cancelSubscription()
     {
-        if (!$sender->getEthWallet()) {
-            throw new WalletNotSetupException('Sender does not have a wallet');
+        $subscriptions = $this->subscriptonsRepository->getList([
+            'plan_id' => 'wire',
+            'payment_method' => 'money',
+            'entity_guid' => $this->owner->guid,
+            'user_guid' => $this->actor->guid
+        ]);
+
+        if (!$subscriptions) {
+            return false;
         }
 
-        if (!$user->getEthWallet()) {
-            throw new WalletNotSetupException('User does not have a wallet');
+        $subscription = $subscriptions[0];
+
+        $this->subscriptionsManager->setSubscription($subscription);
+
+        // Cancel old subscription first
+        $this->subscriptionsManager->cancel();
+    }
+
+    /**
+     * @return bool
+     * @throws WalletNotSetupException
+     */
+    protected function createWire(array $options = [])
+    {
+        $options = array_merge([
+            'subscription_id' => null
+        ], $options);
+
+        if (!$this->owner->getEthWallet()) {
+            throw new WalletNotSetupException();
+        }
+
+        $result = $this->pendingManager->add([
+            'type' => 'wire',
+            'tx_id' => $this->nonce['txHash'],
+            'sender_guid' => $this->actor->guid,
+            'data' => [
+                'amount' => (string) $this->amount,
+                'receiver_guid' => $this->owner->guid,
+                'entity_guid' => $this->entity->guid,
+            ]
+        ]);
+
+        if ($result) {
+            /** @var Core\Payments\Manager $paymentsManager */
+            $paymentsManager = Di::_()->get('Payments\Manager');
+
+            $paymentData = [
+                'payment_method' => 'tokens',
+                'amount' => $this->amount,
+                'description' => 'Wire @' . $this->owner->username,
+                'status' => 'pending'
+            ];
+
+            if ($options['subscription_id']) {
+                $paymentData['subscription_id'] = $options['subscription_id'];
+            }
+
+            return $paymentsManager
+                ->setType('wire')
+                ->setPaymentId('ethereum:' . $this->nonce['txHash'])
+                ->setUserGuid($this->actor->guid)
+                ->setTimeCreated($this->timestamp ?: time())
+                ->create($paymentData);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $subscription_id
+     * @return bool
+     * @throws WalletNotSetupException
+     * @throws \Exception
+     */
+    public function onRecurring($subscription_id)
+    {
+        if (!$this->actor->getEthWallet()) {
+            throw new WalletNotSetupException();
+        }
+
+        if (!$this->owner->getEthWallet()) {
+            throw new WalletNotSetupException();
         }
 
         /** @var Core\Blockchain\Services\Ethereum $client */
         $client = Di::_()->get('Blockchain\Services\Ethereum');
-        
+
         /** @var Core\Blockchain\Token $token */
         $token = Di::_()->get('Blockchain\Token');
 
@@ -155,8 +247,8 @@ class Tokens implements MethodInterface
             'to' => $this->config->get('blockchain')['wire_address'],
             'gasLimit' => Core\Blockchain\Util::toHex(200000),
             'data' => $client->encodeContractMethod('wireFrom(address,address,uint256)', [
-                $sender->getEthWallet(),
-                $user->getEthWallet(),
+                $this->actor->getEthWallet(),
+                $this->owner->getEthWallet(),
                 Core\Blockchain\Util::toHex($token->toTokenUnit($this->amount))
             ])
         ]);
@@ -167,30 +259,12 @@ class Tokens implements MethodInterface
 
         $this->setPayload([ 'nonce' => [ 'txHash' => $txHash ]]);
 
-        return $this->createPendingWire($user, $sender->guid);
-    }
-
-    private function createPendingWire(User $user, $sender_guid = null)
-    {
-        if (!$user->getEthWallet()) {
-            throw new WalletNotSetupException();
-        }
-
-        if (!$sender_guid) {
-            $sender_guid = Core\Session::getLoggedInUserGuid();
-        }
-
-        return $this->pendingManager->add([
-            'type' => 'wire',
-            'tx_id' => $this->nonce['txHash'],
-            'sender_guid' => $sender_guid,
-            'data' => [
-                'amount' => (string) $this->amount,
-                'receiver_guid' => $user->guid,
-                'entity_guid' => is_object($this->entity) ? $this->entity->guid : $this->entity,
-            ]
+        return $this->createWire([
+            'subscription_id' => $subscription_id
         ]);
     }
+
+    // -- Token exclusive
 
     /**
      * @param $tx_id
@@ -201,7 +275,7 @@ class Tokens implements MethodInterface
      * @throws \Exception
      * @throws \Minds\Exceptions\StopEventException
      */
-    function checkAndSaveWire($tx_id, $sender, $receiver, $amount)
+    public function confirmWire($tx_id, $sender, $receiver, $amount)
     {
         /** @var Core\Wire\Repository $repo */
         $repo = Di::_()->get('Wire\Repository');
@@ -251,11 +325,11 @@ class Tokens implements MethodInterface
         //     $description .= ' Subscription';
         // }
 
-        /** @var Payments\Manager $paymentsManager */
+        /** @var Core\Payments\Manager $paymentsManager */
         $paymentsManager = Di::_()->get('Payments\Manager');
 
         $paymentsManager
-            ->setPaymentId('blockchain:' . $tx_id)
+            ->setPaymentId('ethereum:' . $tx_id)
             ->updatePaymentById([
                 'status' => 'paid'
             ]);
@@ -271,5 +345,7 @@ class Tokens implements MethodInterface
         //$this->cache->destroy("counter:wire:sums:" . $merchant->getGUID() . ":*");
         $this->cache->destroy(Counter::getIndexName($pending['data']['entity_guid'], null, 'tokens', null, true));
         //$this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . ":*");
+
+        return true;
     }
 }
