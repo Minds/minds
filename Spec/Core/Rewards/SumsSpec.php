@@ -25,7 +25,7 @@ class SumsSpec extends ObjectBehavior
             ]);
 
         $this->getBalance()
-            ->shouldReturn(12);
+            ->shouldReturn((double) 12);
     }
 
 }

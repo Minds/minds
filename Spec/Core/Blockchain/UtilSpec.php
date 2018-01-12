@@ -25,6 +25,6 @@ class UtilSpec extends ObjectBehavior
     function it_should_convert_hex_to_dec()
     {
         $hex = "0xa";
-        $this::toDec($hex)->shouldBe(10);
+        $this::toDec($hex)->shouldBe((double) 10);
     }
 }
