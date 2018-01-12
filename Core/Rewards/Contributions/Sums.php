@@ -67,4 +67,34 @@ class Sums
         return (int) $rows[0]['amount'];
     }
 
+    /**
+     * Get the score
+     */
+    public function getScore()
+    {
+        $query = new Custom();
+
+        if ($this->user) {
+            $query->query("SELECT SUM(score) as score from contributions WHERE user_guid = ? 
+                AND timestamp = ?", 
+                [
+                    new Varint((int) $this->user->guid),
+                    new Timestamp($this->timestamp / 1000)
+                ]);
+        } else {
+            $query->query("SELECT SUM(score) as score from contributions_by_timestamp WHERE timestamp = ?", 
+                [
+                    new Timestamp($this->timestamp / 1000)
+                ]);
+        }
+
+        try{
+            $rows = $this->db->request($query);
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
+        }
+        
+        return (int) $rows[0]['score'];
+    }
+
 }

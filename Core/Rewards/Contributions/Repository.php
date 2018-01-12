@@ -25,7 +25,14 @@ class Repository
         }
 
         $requests = [];
-        $template = "INSERT INTO contributions ( timestamp, user_guid, metric, amount) VALUES (?,?,?,?)";
+        $template = "INSERT INTO contributions (
+            timestamp,
+            user_guid,
+            metric,
+            amount,
+            score
+            ) 
+            VALUES (?,?,?,?)";
         foreach ($contributions as $contribution) {
             $requests[] = [
                 'string' => $template, 
@@ -33,7 +40,8 @@ class Repository
                     new Timestamp($contribution->getTimestamp() / 1000),                    
                     new Varint($contribution->getUser()->guid),
                     $contribution->getMetric(),
-                    new Varint($contribution->getAmount())
+                    new Varint($contribution->getAmount()),
+                    new Varint($contribution->getScore())
                 ]
             ];
         }

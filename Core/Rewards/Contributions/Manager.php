@@ -67,30 +67,31 @@ class Manager
             $this->analytics->setUser($this->user);
         }
 
-        $rewards = [];
+        $contributions = [];
         foreach($this->analytics->getCounts() as $ts => $data) {
             foreach($data as $metric => $count) {
                 $multiplier = ContributionValues::$multipliers[$metric];
-                $reward = new Contribution();
-                $reward->setMetric($metric)
+                $contribution = new Contribution();
+                $contribution->setMetric($metric)
                     ->setTimestamp($ts)
-                    ->setAmount($count * $multiplier);
+                    ->setScore($count * $multiplier)
+                    ->setAmount($count);
 
                 if ($this->user) {
-                    $reward->setUser($this->user);
+                    $contribution->setUser($this->user);
                 }
-                $rewards[] = $reward;
+                $contributions[] = $contribution;
             }
         }
 
 
         if ($this->dryRun) {
-            return $rewards;
+            return $contributions;
         }
 
-        $this->repository->add($rewards);       
+        $this->repository->add($contributions);       
 
-        return $rewards; 
+        return $contributions; 
     }
 
     /**
@@ -104,7 +105,7 @@ class Manager
         return $this->site_contribtion_score_cache[$this->from] = $this->sums
             ->setTimestamp($this->from)
             ->setUser(null)
-            ->getAmount();
+            ->getScore();
     }
 
     /**
@@ -116,7 +117,7 @@ class Manager
         return $this->sums
             ->setTimestamp($this->from)
             ->setUser($this->user)
-            ->getAmount();
+            ->getScore();
     }
 
     /**
