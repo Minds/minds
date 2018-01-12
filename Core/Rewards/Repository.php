@@ -106,11 +106,10 @@ class Repository
         foreach($rows as $row) {
             $reward = new Reward();
             $reward
-                ->setUser((string) $row['user_guid'])
+                ->setUser((int) $row['user_guid'])
                 ->setType((string) $row['type'])
                 ->setTimestamp($row['timestamp']->time() * 1000)
-                ->setAmount((int) $row['amount']);
-
+                ->setAmount((double) $row['amount']);
             $rewards[] = $reward;
         }
 

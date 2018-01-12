@@ -56,7 +56,7 @@ class Sums
             error_log($e->getMessage());
         }
         
-        return (int) $rows[0]['balance'];
+        return (double) $rows[0]['balance'];
     }
 
 }
