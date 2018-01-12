@@ -32,7 +32,7 @@ class Repository
             amount,
             score
             ) 
-            VALUES (?,?,?,?)";
+            VALUES (?,?,?,?,?)";
         foreach ($contributions as $contribution) {
             $requests[] = [
                 'string' => $template, 
@@ -112,7 +112,8 @@ class Repository
                 ->setUser((string) $row['user_guid'])
                 ->setMetric((string) $row['metric'])
                 ->setTimestamp($row['timestamp']->time() * 1000)
-                ->setAmount((int) $row['amount']);
+                ->setAmount((int) $row['amount'])
+                ->setScore((int) $row['score']);
 
             $contributions[] = $contribution;
         }
