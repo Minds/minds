@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d4cfdc24d4bd91a567f44a077aede1c",
+    "content-hash": "b21695fd7c54d27d2e21707c8f23c01e",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -132,16 +132,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.48.6",
+            "version": "3.48.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "53e489f7d13c2f65bb28fde21d96a4f261092dda"
+                "reference": "e083a4dae6f460df1d02dcd827cf547592f5dc29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/53e489f7d13c2f65bb28fde21d96a4f261092dda",
-                "reference": "53e489f7d13c2f65bb28fde21d96a4f261092dda",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e083a4dae6f460df1d02dcd827cf547592f5dc29",
+                "reference": "e083a4dae6f460df1d02dcd827cf547592f5dc29",
                 "shasum": ""
             },
             "require": {
@@ -208,7 +208,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-12-29T17:28:50+00:00"
+            "time": "2018-01-12T21:20:32+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -693,16 +693,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.40",
+            "version": "v0.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "5f474421169fc2d830cb46035cbc27f88c53ba8f"
+                "reference": "873421bf7cd0cab613da792124db04e203ff196b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/5f474421169fc2d830cb46035cbc27f88c53ba8f",
-                "reference": "5f474421169fc2d830cb46035cbc27f88c53ba8f",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/873421bf7cd0cab613da792124db04e203ff196b",
+                "reference": "873421bf7cd0cab613da792124db04e203ff196b",
                 "shasum": ""
             },
             "require": {
@@ -726,7 +726,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-12-23T00:23:13+00:00"
+            "time": "2018-01-13T00:23:28+00:00"
         },
         {
             "name": "google/auth",
@@ -1129,11 +1129,16 @@
         {
             "name": "minds/mw3",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://0544aedfc74db62dcd39301588cd672b2b91e060@github.com/minds/mw3.git",
+                "reference": "e4f6f79e93d36103af5a9681e6ff282c82484942"
+            },
             "dist": {
-                "type": "path",
-                "url": "../../mw3",
-                "reference": "e20c387d64fb9fb0a870a1b66220ca7f91718955",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/Minds/mw3/zipball/e4f6f79e93d36103af5a9681e6ff282c82484942",
+                "reference": "e4f6f79e93d36103af5a9681e6ff282c82484942",
+                "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0"
@@ -1150,7 +1155,12 @@
                     "MW3\\": "src/"
                 }
             },
-            "description": "Minds PHP Web3"
+            "description": "Minds PHP Web3",
+            "support": {
+                "source": "https://github.com/Minds/mw3/tree/master",
+                "issues": "https://github.com/Minds/mw3/issues"
+            },
+            "time": "2018-01-05T09:46:56+00:00"
         },
         {
             "name": "mongodb/mongodb",
@@ -1866,16 +1876,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.32",
+            "version": "v2.8.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "f4f3f1d7090c464434bbbc3e8aa2b41149c59196"
+                "reference": "705d1687222c08deabac8993ec2e04ad1a422c52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/f4f3f1d7090c464434bbbc3e8aa2b41149c59196",
-                "reference": "f4f3f1d7090c464434bbbc3e8aa2b41149c59196",
+                "url": "https://api.github.com/repos/symfony/config/zipball/705d1687222c08deabac8993ec2e04ad1a422c52",
+                "reference": "705d1687222c08deabac8993ec2e04ad1a422c52",
                 "shasum": ""
             },
             "require": {
@@ -1918,20 +1928,20 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-07T11:56:23+00:00"
+            "time": "2018-01-03T07:36:31+00:00"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.8.32",
+            "version": "v2.8.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "d3e81e5402c38500770eb5595d78a6d85ea9e412"
+                "reference": "954ff7c61879479b2f57f427798f9c82555438a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/d3e81e5402c38500770eb5595d78a6d85ea9e412",
-                "reference": "d3e81e5402c38500770eb5595d78a6d85ea9e412",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/954ff7c61879479b2f57f427798f9c82555438a6",
+                "reference": "954ff7c61879479b2f57f427798f9c82555438a6",
                 "shasum": ""
             },
             "require": {
@@ -1981,20 +1991,20 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-23T11:13:33+00:00"
+            "time": "2018-01-03T07:36:31+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.32",
+            "version": "v2.8.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "b59aacf238fadda50d612c9de73b74751872a903"
+                "reference": "d64be24fc1eba62f9daace8a8918f797fc8e87cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b59aacf238fadda50d612c9de73b74751872a903",
-                "reference": "b59aacf238fadda50d612c9de73b74751872a903",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/d64be24fc1eba62f9daace8a8918f797fc8e87cc",
+                "reference": "d64be24fc1eba62f9daace8a8918f797fc8e87cc",
                 "shasum": ""
             },
             "require": {
@@ -2041,7 +2051,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-05T15:25:56+00:00"
+            "time": "2018-01-03T07:36:31+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -2143,16 +2153,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.32",
+            "version": "v2.8.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "968ef42161e4bc04200119da473077f9e7015128"
+                "reference": "be720fcfae4614df204190d57795351059946a77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/968ef42161e4bc04200119da473077f9e7015128",
-                "reference": "968ef42161e4bc04200119da473077f9e7015128",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/be720fcfae4614df204190d57795351059946a77",
+                "reference": "be720fcfae4614df204190d57795351059946a77",
                 "shasum": ""
             },
             "require": {
@@ -2188,7 +2198,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-11-29T09:33:18+00:00"
+            "time": "2018-01-03T07:36:31+00:00"
         },
         {
             "name": "thobbs/phpcassa",
@@ -2331,12 +2341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "0f90b3d8bc50403458f0eefbcba7d1e2329dd0f6"
+                "reference": "edbd9de28d1dd55f906016f985d6151ed2318f94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/0f90b3d8bc50403458f0eefbcba7d1e2329dd0f6",
-                "reference": "0f90b3d8bc50403458f0eefbcba7d1e2329dd0f6",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/edbd9de28d1dd55f906016f985d6151ed2318f94",
+                "reference": "edbd9de28d1dd55f906016f985d6151ed2318f94",
                 "shasum": ""
             },
             "require": {
@@ -2394,7 +2404,7 @@
                 "rabbitmq"
             ],
             "abandoned": "php-amqplib/php-amqplib",
-            "time": "2017-09-26T05:30:15+00:00"
+            "time": "2018-01-11T00:17:04+00:00"
         },
         {
             "name": "vscn/cruftflake",
@@ -2792,16 +2802,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.13",
+            "version": "v2.2.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "669e2327a17b94e47454c3d2e00c6f96203646f0"
+                "reference": "dcf644315abc557e006ce068d299f85d17ec2157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/669e2327a17b94e47454c3d2e00c6f96203646f0",
-                "reference": "669e2327a17b94e47454c3d2e00c6f96203646f0",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/dcf644315abc557e006ce068d299f85d17ec2157",
+                "reference": "dcf644315abc557e006ce068d299f85d17ec2157",
                 "shasum": ""
             },
             "require": {
@@ -2830,6 +2840,7 @@
             "require-dev": {
                 "johnkary/phpunit-speedtrap": "^1.0.1",
                 "justinrainbow/json-schema": "^5.0",
+                "keradus/cli-executor": "^1.0",
                 "mikey179/vfsstream": "^1.6",
                 "php-coveralls/php-coveralls": "^1.0.2",
                 "phpunit/phpunit": "^4.8.35 || ^5.4.3",
@@ -2853,6 +2864,7 @@
                     "PhpCsFixer\\": "src/"
                 },
                 "classmap": [
+                    "tests/TestCase.php",
                     "tests/Test/AbstractFixerTestCase.php",
                     "tests/Test/AbstractIntegrationTestCase.php",
                     "tests/Test/IntegrationCase.php",
@@ -2874,7 +2886,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-12-08T15:17:14+00:00"
+            "time": "2018-01-10T16:43:26+00:00"
         },
         {
             "name": "gecko-packages/gecko-php-unit",
