@@ -38,6 +38,10 @@ class Manager
             $this->contracts['boost'] = Contracts\MindsBoost::at($blockchainConfig['boost_address']);
         }
 
+        if ($blockchainConfig['withdraw_address']) {
+            $this->contracts['withdraw'] = Contracts\MindsWithdraw::at($blockchainConfig['withdraw_address']);
+        }
+
         if ($blockchainConfig['token_distribution_event_address']) {
             $this->contracts['token_distribution_event'] = Contracts\MindsTokenSaleEvent::at($blockchainConfig['token_distribution_event_address']);
         }

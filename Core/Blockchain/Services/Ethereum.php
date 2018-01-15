@@ -41,9 +41,9 @@ class Ethereum
 
         $blockchainConfig = $this->config->get('blockchain');
 
-        if (!$blockchainConfig || !isset($blockchainConfig['rpc_endpoints'])) {
-            throw new \Exception('No RPC endpoints set');
-        }
+        //if (!$blockchainConfig || !isset($blockchainConfig['rpc_endpoints'])) {
+        //    throw new \Exception('No RPC endpoints set');
+        //}
 
         $this->endpoints = $blockchainConfig['rpc_endpoints'];
         $this->sign = $sign ?: new MW3\Sign;

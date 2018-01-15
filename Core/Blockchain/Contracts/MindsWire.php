@@ -3,7 +3,7 @@
 /**
  * Minds Wire contract
  *
- * @author emi
+ * @author mark
  */
 
 namespace Minds\Core\Blockchain\Contracts;

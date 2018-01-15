@@ -8,6 +8,7 @@ class Reward
     protected $timestamp;
     protected $amount = 0;
     protected $user;
+    protected $tx;
 
     /**
      * 
@@ -54,6 +55,17 @@ class Reward
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    public function setTx($tx)
+    {
+        $this->tx = $tx;
+        return $this;
+    }
+
+    public function getTx()
+    {
+        return $this->tx;
     }
 
     public function export() {

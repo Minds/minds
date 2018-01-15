@@ -31,7 +31,7 @@ class BalanceSpec extends ObjectBehavior
             ->willReturn(50);
 
         $this->setUser($user);
-        $this->get()->shouldReturn(50);
+        $this->get()->shouldReturn((double) 50);
     }
 
 

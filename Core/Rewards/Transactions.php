@@ -21,6 +21,15 @@ class Transactions
     /** @var User $user */
     protected $user;
 
+    /** @var string $type */
+    protected $type;
+
+    /** @var double $amount */
+    protected $amount;
+
+    /** @var string $tx */
+    protected $tx;
+
     public function __construct($repository = null, $balance = null)
     {
         $this->repository = $repository ?: new Repository();
@@ -33,11 +42,29 @@ class Transactions
         return $this;
     }
 
-    public function create($amount, $type)
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    public function setTx($tx)
+    {
+        $this->tx = $tx;
+        return $this;
+    }
+
+    public function create()
     {
         $balance = $this->balance->setUser($this->user)->get();
 
-        if ($balance + $amount < 0) {
+        if ($balance + $this->amount < 0) {
             throw new \Exception('Not enough funds');
         }
 
@@ -45,8 +72,9 @@ class Transactions
 
         $reward
             ->setUser($this->user)
-            ->setAmount($amount)
-            ->setType($type);
+            ->setAmount($this->amount)
+            ->setType($this->type)
+            ->setTx($this->tx);
 
         $added = $this->repository->add($reward);
 
@@ -54,7 +82,7 @@ class Transactions
             throw new \Exception("Could not add transaction");
         }
 
-        return "reward-tx:{$this->user->guid}:{$type}:{$reward->getTimestamp()}";
+        return "reward-tx:{$this->user->guid}:{$this->type}:{$reward->getTimestamp()}";
     }
 
     public function toWei($value)

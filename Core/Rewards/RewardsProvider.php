@@ -21,6 +21,10 @@ class RewardsProvider extends Provider
 
         $this->di->bind('Rewards\Transactions', function ($di) {
             return new Transactions();
+        }, [ 'useFactory'=> false ]);
+
+        $this->di->bind('Rewards\Withdraw\Manager', function ($di) {
+            return new Withdraw\Manager();
         }, [ 'useFactory'=> true ]);
     }
 }

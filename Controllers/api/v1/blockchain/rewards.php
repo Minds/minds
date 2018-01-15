@@ -12,6 +12,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Rewards\Withdraw;
 
 class rewards implements Interfaces\Api
 {
@@ -67,8 +68,25 @@ class rewards implements Interfaces\Api
     public function post($pages)
     {
         Factory::isLoggedIn();
+        $response = [];
 
-        return Factory::response([]);
+        switch ($pages[0]) {
+            case "withdraw":
+                $request = new Withdraw\Request();
+                $request->setTx($_POST['tx'])
+                    ->setUserGuid(Session::getLoggedInUser()->guid)
+                    ->setAddress($_POST['address'])
+                    ->setGas($_POST['gas'])
+                    ->setAmount($_POST['amount']);
+
+                $manager = new Withdraw\Manager();
+                $manager->request($request);
+
+                $response['done'] = true;
+                break;
+        }
+
+        return Factory::response($response);
     }
 
     /**

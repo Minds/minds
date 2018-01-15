@@ -30,11 +30,11 @@ class Balance
 
     /**
      * Return the balance
-     * @return int
+     * @return double
      */
     public function get()
     {
-        return $this->sums
+        return (double) $this->sums
             ->setUser($this->user)
             ->getBalance();
     }
