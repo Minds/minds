@@ -92,7 +92,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if (!in_array($currency, [ 'points', 'money', 'tokens' ])) {
+        if (!in_array($currency, [ 'rewards', 'money', 'tokens' ])) {
             return Factory::response([
                 'status' => 'error',
                 'stage' => 'initial',
@@ -142,92 +142,90 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
           ->setState($state);
           //->save();
 
-        if ($type == 'pro' && $currency == 'money') {
-            $sale = (new Payments\Sale)
-            ->setOrderId('boost-' . $boost->getGuid())
-            ->setAmount($boost->getBid() * 100) //cents to $
-            ->setMerchant($boost->getDestination())
-            ->setCustomerId($boost->getOwner()->guid)
-            ->setSource($_POST['nonce']);
+        try {
+            if ($type == 'pro') {
+                switch ($currency) {
+                    case 'money':
+                        $sale = (new Payments\Sale)
+                            ->setOrderId('boost-' . $boost->getGuid())
+                            ->setAmount($boost->getBid() * 100)//cents to $
+                            ->setMerchant($boost->getDestination())
+                            ->setCustomerId($boost->getOwner()->guid)
+                            ->setSource($_POST['nonce']);
 
-            try {
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $transaction_id = $stripe->setSale($sale);
-            } catch (\Exception $e) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'transaction',
-                    'message' => $e->getMessage()
-                ]);
-            }
-        } elseif ($type == 'pro' && $currency == 'tokens') {
-            if (!isset($_POST['nonce']['txHash']) || !$_POST['nonce']['txHash']) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'transaction',
-                    'message' => 'Missing blockchain transaction'
-                ]);
-            }
+                        try {
+                            $stripe = Core\Di\Di::_()->get('StripePayments');
+                            $transaction_id = $stripe->setSale($sale);
+                        } catch (\Exception $e) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'stage' => 'transaction',
+                                'message' => $e->getMessage()
+                            ]);
+                        }
+                        break;
 
-            if (isset($_POST['guid'])) {
-                $guid = $_POST['guid'];
+                    case 'tokens':
+                        if (!isset($_POST['nonce']['txHash']) || !$_POST['nonce']['txHash']) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'stage' => 'transaction',
+                                'message' => 'Missing blockchain transaction'
+                            ]);
+                        }
 
-                if (!is_numeric($guid) || $guid < 1) {
-                    return Factory::response([
-                        'status' => 'error',
-                        'stage' => 'transaction',
-                        'message' => 'Provided GUID is invalid'
-                    ]);
+                        if (isset($_POST['guid'])) {
+                            $guid = $_POST['guid'];
+
+                            if (!is_numeric($guid) || $guid < 1) {
+                                return Factory::response([
+                                    'status' => 'error',
+                                    'stage' => 'transaction',
+                                    'message' => 'Provided GUID is invalid'
+                                ]);
+                            }
+
+                            /** @var Core\Boost\Repository $repository */
+                            $repository = Di::_()->get('Boost\Repository');
+
+                            $existingBoost = $repository->getEntity('peer', $guid);
+
+                            if ($existingBoost) {
+                                return Factory::response([
+                                    'status' => 'error',
+                                    'stage' => 'transaction',
+                                    'message' => 'Provided GUID already exists'
+                                ]);
+                            }
+
+                            $boost->setGuid($guid);
+                        }
+
+                        $transaction_id = $_POST['nonce']['txHash'];
+
+                        Di::_()->get('Boost\Pending')
+                            ->add($transaction_id, $boost);
+                        break;
+
+                    case 'rewards':
+                        $transactions = Di::_()->get('Rewards\Transactions');
+                        $transactions->setUser($boost->getOwner());
+                        $transaction_id = $transactions->create($transactions->toWei(-$boost->getBid()), 'peer_boost');
+                        break;
                 }
-
-                /** @var Core\Boost\Repository $repository */
-                $repository = Di::_()->get('Boost\Repository');
-
-                $existingBoost = $repository->getEntity('peer', $guid);
-
-                if ($existingBoost) {
-                    return Factory::response([
-                        'status' => 'error',
-                        'stage' => 'transaction',
-                        'message' => 'Provided GUID already exists'
-                    ]);
-                }
-
-                $boost->setGuid($guid);
+            } else {
+                throw new \Exception('Points boost are no longer supported');
             }
 
-            $transaction_id = $_POST['nonce']['txHash'];
+            $boost->setTransactionId($transaction_id)
+                ->save();
 
-            Di::_()->get('Boost\Pending')
-                ->add($transaction_id, $boost);
-        } else {
-            $config = array_merge([
-                'peer' => [
-                    'min' => 100,
-                    'max' => 5000000,
-                ]
-            ], (array) Core\Di\Di::_()->get('Config')->get('boost'));
-
-            if ($bid < $config['peer']['min'] || $bid > $config['peer']['max']) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'initial',
-                    'message' => "You must boost between {$config['peer']['min']} and {$config['peer']['max']} points"
-                ]);
-            }
-
-            if ((int) Helpers\Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false) < $boost->getBid()) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'transaction',
-                    'message' => "You don't have enough points"
-                ]);
-            }
-            $transaction_id = Helpers\Wallet::createTransaction($boost->getOwner()->guid, -$boost->getBid(), $boost->getGuid(), "Boost");
+        } catch (\Exception $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
-
-        $boost->setTransactionId($transaction_id)
-          ->save();
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=> [$boost->getDestination()->guid],
@@ -350,28 +348,37 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if ($boost->getType() == "pro" && $boost->getMethod() == 'money') {
-            try {
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $sale = (new Payments\Sale)
-                    ->setId($boost->getTransactionId())
-                    ->setMerchant($boost->getDestination());
+        try {
+            if ($boost->getType() == 'pro') {
+                switch ($boost->getMethod()) {
+                    case 'money':
+                        $stripe = Core\Di\Di::_()->get('StripePayments');
+                        $sale = (new Payments\Sale)
+                            ->setId($boost->getTransactionId())
+                            ->setMerchant($boost->getDestination());
 
-                $stripe->voidSale($sale);
-            } catch (\Exception $e) {
-                return Factory::response([
-                  'status' => 'error',
-                  'message' => $e->getMessage()
-                ]);
+                        $stripe->voidSale($sale);
+                        break;
+
+                    case 'tokens':
+                        // Already refunded
+                        break;
+
+                    case 'rewards':
+                        $txType = $revoked ? 'peer_boost_revoke' : 'peer_boost_reject';
+                        $transactions = Di::_()->get('Rewards\Transactions');
+                        $transactions->setUser($boost->getOwner());
+                        $transactions->create($transactions->toWei($boost->getBid()), $txType);
+                        break;
+                }
+            } else {
+                throw new \Exception('Point boosts are no longer supported');
             }
-        } else if ($boost->getType() == 'pro' && $boost->getMethod() == 'tokens') {
-            // Already refunded
-        } else {
-            $message = "Rejected Peer Boost";
-            if ($revoked) {
-                $message = "Revoked Peer Boost";
-            }
-            Helpers\Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), $message);
+        } catch (\Exception $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
 
         try {

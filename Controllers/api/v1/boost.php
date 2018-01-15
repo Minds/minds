@@ -79,6 +79,7 @@ class boost implements Interfaces\Api
                 break;
             case "rates":
                 $response['balance'] = (int)Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
+                $response['rewardsBalance'] = Di::_()->get('Rewards\Balance')->setUser(Core\Session::getLoggedInUser())->get();
                 $response['hasPaymentMethod'] = false;
                 $response['rate'] = $this->rate;
 
@@ -196,137 +197,145 @@ class boost implements Interfaces\Api
             $pages[0] = "newsfeed";
         }
 
-        switch (ucfirst($pages[0])) {
-            case "Newsfeed":
-            case "Content":
-                $priority = false;
-                $priorityRate = 0;
-                if (isset($_POST['priority']) && $_POST['priority']) {
-                    $priority = true;
-                    $priorityRate = $this->getQueuePriorityRate();
-                }
-                $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
-                $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : 'points';
-                $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
+        try {
+            switch (ucfirst($pages[0])) {
+                case "Newsfeed":
+                case "Content":
+                    $priority = false;
+                    $priorityRate = 0;
+                    if (isset($_POST['priority']) && $_POST['priority']) {
+                        $priority = true;
+                        $priorityRate = $this->getQueuePriorityRate();
+                    }
+                    $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
+                    $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : 'points';
+                    $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
 
-                $amount = $impressions / $this->rate;
-                if ($priority) {
-                    $amount *= $priorityRate + 1;
-                }
+                    $amount = $impressions / $this->rate;
+                    if ($priority) {
+                        $amount *= $priorityRate + 1;
+                    }
 
-                switch ($bidType) {
-                    case 'usd':
-                        $amount = round($amount / $this->getUSDRate(), 2) * 100;
+                    switch ($bidType) {
+                        case 'usd':
+                            $amount = round($amount / $this->getUSDRate(), 2) * 100;
 
-                        if (($amount / 100) < $this->getMinUSDCharge()) {
+                            if (($amount / 100) < $this->getMinUSDCharge()) {
+                                return Factory::response([
+                                    'status' => 'error',
+                                    'message' => 'You must spend at least $' . $this->getMinUSDCharge()
+                                ]);
+                            }
+                            break;
+
+                        case 'tokens':
+                        case 'rewards':
+                            $amount = round($amount / $this->getTokensRate(), 4);
+                            break;
+
+                        default:
+                            $amount = ceil($amount);
+                            break;
+                    }
+
+                    $validCategories = array_keys(Di::_()->get('Config')->get('categories') ?: []);
+                    if (!is_array($categories)) {
+                        $categories = [$categories];
+                    }
+
+                    foreach ($categories as $category) {
+                        if (!in_array($category, $validCategories)) {
                             return Factory::response([
                                 'status' => 'error',
-                                'message' => 'You must spend at least $' . $this->getMinUSDCharge()
+                                'message' => 'Invalid category ID: ' . $category
                             ]);
                         }
-                        break;
-
-                    case 'tokens':
-                        $amount = round($amount, 4);
-                        break;
-
-                    default:
-                        $amount = ceil($amount);
-                        break;
-                }
-
-                $validCategories = array_keys(Di::_()->get('Config')->get('categories') ?: []);
-                if (!is_array($categories)) {
-                    $categories = [ $categories ];
-                }
-
-                foreach ($categories as $category) {
-                    if (!in_array($category, $validCategories)) {
-                        return Factory::response([
-                           'status' => 'error',
-                           'message' => 'Invalid category ID: ' . $category
-                       ]);
-                    }
-                }
-
-                $state = 'created';
-
-                if ($bidType == 'tokens') {
-                    $state = 'pending';
-                }
-
-                $boost = (new Entities\Boost\Network())
-                    ->setEntity($entity)
-                    ->setBid($amount)
-                    ->setBidType($bidType)
-                    ->setImpressions($impressions)
-                    ->setOwner(Core\Session::getLoggedInUser())
-                    ->setState($state)
-                    ->setHandler(lcfirst($pages[0]))
-                    ->setPriorityRate($priorityRate)
-                    ->setCategories($categories);
-
-                if ($bidType == 'tokens' && isset($_POST['guid'])) {
-                    $guid = $_POST['guid'];
-
-                    if (!is_numeric($guid) || $guid < 1) {
-                        return Factory::response([
-                            'status' => 'error',
-                            'stage' => 'transaction',
-                            'message' => 'Provided GUID is invalid'
-                        ]);
                     }
 
-                    /** @var Core\Boost\Repository $repository */
-                    $repository = Di::_()->get('Boost\Repository');
+                    $state = 'created';
 
-                    $existingBoost = $repository->getEntity($boost->getHandler(), $guid);
-
-                    if ($existingBoost) {
-                        return Factory::response([
-                            'status' => 'error',
-                            'stage' => 'transaction',
-                            'message' => 'Provided GUID already exists'
-                        ]);
+                    if ($bidType == 'tokens') {
+                        $state = 'pending';
                     }
 
-                    $boost->setGuid($guid);
-                }
+                    $boost = (new Entities\Boost\Network())
+                        ->setEntity($entity)
+                        ->setBid($amount)
+                        ->setBidType($bidType)
+                        ->setImpressions($impressions)
+                        ->setOwner(Core\Session::getLoggedInUser())
+                        ->setState($state)
+                        ->setHandler(lcfirst($pages[0]))
+                        ->setPriorityRate($priorityRate)
+                        ->setCategories($categories);
 
-                $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);
-                if ($result) {
-                    if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200 && !$priority) {
-                        $transactionId = "free";
+                    if ($bidType == 'tokens' && isset($_POST['guid'])) {
+                        $guid = $_POST['guid'];
+
+                        if (!is_numeric($guid) || $guid < 1) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'stage' => 'transaction',
+                                'message' => 'Provided GUID is invalid'
+                            ]);
+                        }
+
+                        /** @var Core\Boost\Repository $repository */
+                        $repository = Di::_()->get('Boost\Repository');
+
+                        $existingBoost = $repository->getEntity($boost->getHandler(), $guid);
+
+                        if ($existingBoost) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'stage' => 'transaction',
+                                'message' => 'Provided GUID already exists'
+                            ]);
+                        }
+
+                        $boost->setGuid($guid);
+                    }
+
+                    $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);
+                    if ($result) {
+                        if (isset($_POST['newUserPromo']) && $_POST['newUserPromo'] && $impressions == 200 && !$priority) {
+                            $transactionId = "free";
+                        } else {
+                            $transactionId = Di::_()->get('Boost\Payment')->pay($boost, $paymentMethod);
+                        }
+                        $boost->setId((string)$result)
+                            ->setTransactionId($transactionId)
+                            ->save();
                     } else {
-                        $transactionId = Di::_()->get('Boost\Payment')->pay($boost, $paymentMethod);
+                        $response['status'] = 'error';
                     }
-                    $boost->setId((string)$result)
-                        ->setTransactionId($transactionId)
-                        ->save();
-                } else {
+                    break;
+                case "Channel": //this is a polyfill for the new boost PRO
+                    $result = Core\Boost\Factory::build("Channel", [
+                        'destination' => isset($_POST['destination']) ? $_POST['destination'] : null
+                    ])->boost($entity, $impressions);
+                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
+                    if ($result) {
+                        Core\Events\Dispatcher::trigger('notification', 'boost', [
+                            'to' => [$pages[2]],
+                            'entity' => $pages[1],
+                            'notification_view' => 'boost_gift',
+                            'params' => ['impressions' => $impressions],
+                            'impressions' => $impressions
+                        ]);
+                    } else {
+                        $response['status'] = 'error';
+                    }
+                    break;
+                default:
                     $response['status'] = 'error';
-                }
-                break;
-            case "Channel": //this is a polyfill for the new boost PRO
-                $result = Core\Boost\Factory::build("Channel", [
-                    'destination' => isset($_POST['destination']) ? $_POST['destination'] : null
-                ])->boost($entity, $impressions);
-                Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
-                if ($result) {
-                    Core\Events\Dispatcher::trigger('notification', 'boost', [
-                        'to' => [$pages[2]],
-                        'entity' => $pages[1],
-                        'notification_view' => 'boost_gift',
-                        'params' => ['impressions' => $impressions],
-                        'impressions' => $impressions
-                    ]);
-                } else {
-                    $response['status'] = 'error';
-                }
-                break;
-            default:
-                $response['status'] = 'error';
-                $response['message'] = "boost handler not found";
+                    $response['message'] = "boost handler not found";
+            }
+        } catch (\Exception $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
 
         return Factory::response($response);
@@ -476,7 +485,8 @@ class boost implements Interfaces\Api
         return Core\Di\Di::_()->get('Blockchain\Manager')->getRate();
     }
 
-    protected function getMinUSDCharge() {
+    protected function getMinUSDCharge()
+    {
         return 1.00;
     }
 }

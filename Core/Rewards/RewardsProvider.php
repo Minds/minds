@@ -18,5 +18,9 @@ class RewardsProvider extends Provider
         $this->di->bind('Rewards\Balance', function ($di) {
             return new Balance();
         }, [ 'useFactory'=> false ]);
+
+        $this->di->bind('Rewards\Transactions', function ($di) {
+            return new Transactions();
+        }, [ 'useFactory'=> true ]);
     }
 }

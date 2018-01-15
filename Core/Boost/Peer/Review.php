@@ -94,8 +94,6 @@ class Review implements BoostReviewInterface
 
         $this->boost->setState('revoked')
             ->save();
-
-        Core\Di\Di::_()->get('Boost\Payment')->refund($this->boost);
     }
 
     protected function enableBoostRejectionReasonFlag($entity = null, $reason = -1)

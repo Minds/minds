@@ -72,7 +72,7 @@ class Manager
 
     public function getRate()
     {
-        // how many points per MC
-        return 10000;
+        // how many units per token
+        return 1000;
     }
 }
