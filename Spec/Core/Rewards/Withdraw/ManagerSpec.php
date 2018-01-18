@@ -77,11 +77,12 @@ class ManagerSpec extends ObjectBehavior
         $eth->sendRawTransaction('private-key-here', [
             'from' => '0xfunds-address',
             'to' => '0xwidthdraw-address',
-            'gasLimit' => Util::toHex(200000),
+            'gasLimit' => Util::toHex(4612388),
+            'gasPrice' => Util::toHex(10000000000),
             'data' => '0xRESULT'
         ])->shouldBeCalled();
 
-        $eth->encodeContractMethod('complete(address, uint256, uint256, uint256)', [
+        $eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
             '0xRequesterAddr',
             Util::toHex(123),
             Util::toHex(50),

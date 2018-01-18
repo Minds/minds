@@ -89,7 +89,7 @@ class Util
             15 => 'f'
         ];
 
-        $h = null;
+        $hexval = '';
         do {
             $hexval = $hex[bcmod($dec,'16')].$hexval;
             $dec = bcdiv($dec,'16',0);
