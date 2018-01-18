@@ -4,7 +4,7 @@
  */
 namespace Minds\Core\Rewards\Withdraw;
 
-use Minds\Core\Blockchain\Pending;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Entities\User;
@@ -22,13 +22,13 @@ class Manager
     protected $config;
 
     public function __construct(
-        $pending = null,
+        $blockchainTx = null,        
         $transactions = null,
         $config = null,
         $eth = null
     )
     {
-        $this->pending = $pending ?: Di::_()->get('Blockchain\Pending');
+        $this->blockchainTx = $blockchainTx ?: Di::_()->get('Blockchain\Transactions\Manager');        
         $this->transactions = $transactions ?: Di::_()->get('Rewards\Transactions');
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
@@ -41,68 +41,70 @@ class Manager
      */
     public function request($request)
     {
-        $this->pending->add([
-            'type' => 'withdraw',
-            'tx_id' => $request->getTx(),
-            'sender_guid' => $request->getUserGuid(),
-            'data' => [
+        $transaction = new Transaction();
+        $transaction
+            ->setTx($request->getTx())
+            ->setContract('withdraw')
+            ->setTimestamp(time())
+            ->setUserGuid($request->getUserGuid())
+            ->setData([
                 'amount' => $request->getAmount(),
                 'gas' => $request->getGas(),
                 'address' => $request->getAddress(),
-            ],
-        ]);
+            ]);
+        
+        $this->blockchainTx->add($transaction);
     }
 
     /**
      * Complete the requested transaction
      * @param Request $request
+     * @param Transaction $transaction - the transaction we store
      * @return void
      */
-    public function complete($request)
+    public function complete($request, $transaction)
     {
-        $pending = $this->pending->get('withdrawal', $request->getTx());
-
-        if ($request->getUserGuid() != $pending['sender_guid']) {
+        
+        if ($request->getUserGuid() != $transaction->getUserGuid()) {
             throw new \Exception('The user who requested this operation does not match the transaction');
         }
 
-        if ($request->getAddress() != $pending['data']['address']) {
+        if ($request->getAddress() != $transaction->getData()['address']) {
             throw new \Exception('The address does not match the transaction');
         }
 
-        if ($request->getAmount() != $pending['data']['amount']) {
+        if ($request->getAmount() != $transaction->getData()['amount']) {
             throw new \Exception('The amount request does not match the transaction');
         }
 
-        if ($request->getGas() != $pending['data']['gas']) {
+        if ($request->getGas() != $transaction->getData()['gas']) {
             throw new \Exception('The gas requested does not match the transaction');
         }
 
-        //remove from pending now we are interacting with
-        $this->pending->delete('withdrawal', $pending['tx_id']);
-
         //debit the users balance
         $user = new User;
-        $user->guid = $request->getUserGuid();
+        $user->guid = (string) $request->getUserGuid();
+        
         $this->transactions
             ->setUser($user)
             ->setType('withdrawal')
             ->setTx($request->getTx())
             ->setAmount(0 - $request->getAmount())
             ->create();
-
+        
         //now issue the transaction
-        $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [
+        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [
             'from' => $this->config->get('blockchain')['rewards_wallet_address'],
             'to' => $this->config->get('blockchain')['withdraw_address'],
-            'gasLimit' => Util::toHex(200000),
-            'data' => $this->eth->encodeContractMethod('complete(address, uint256, uint256, uint256)', [
+            'gasLimit' => Util::toHex(4612388),
+            'gasPrice' => Util::toHex(10000000000),
+            'data' => $this->eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
                 $request->getAddress(),
-                Util::toHex($request->getUserGuid()),
+                Util::toHex((int) $request->getUserGuid()),
                 Util::toHex($request->getGas()),
-                Util::toHex($request->getAmount()),
+                Util::toHex((int) $request->getAmount()),
             ])
-        ]);
+         ]);
     }
 
 }

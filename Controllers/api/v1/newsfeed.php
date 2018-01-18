@@ -195,7 +195,9 @@ class newsfeed implements Interfaces\Api
         }
 
         if ($activity) {
-            $loadNext = (string) $loadNext ?: end($activity)->guid;
+            if (!$loadNext) {
+                $loadNext = (string) end($activity)->guid;
+            }
             if ($pages[0] == 'featured') {
                 $loadNext = (string) end($activity)->featured_id;
             }

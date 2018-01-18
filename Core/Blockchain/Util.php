@@ -24,6 +24,14 @@ class Util
         return (double) hexdec(substr($hex, 2));
     }
 
+    public static function toInt($hex)
+    {
+        if (!is_string($hex) || strpos($hex, '0x') !== 0) {
+            return $hex;
+        }
+
+        return (int) hexdec(substr($hex, 2));
+    }
     /**
      * Converts a decimal number onto an 0x-prefixed hexadecimal string
      * @param number $dec
@@ -83,10 +91,10 @@ class Util
 
         $h = null;
         do {
-            $h = $hex[($dec % 16)] . $h;
-            $dec /= 16;
+            $hexval = $hex[bcmod($dec,'16')].$hexval;
+            $dec = bcdiv($dec,'16',0);
         } while ($dec >= 1);
 
-        return $sign . $h;
+        return $sign . $hexval;
     }
 }

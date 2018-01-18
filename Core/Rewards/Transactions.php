@@ -50,7 +50,7 @@ class Transactions
 
     public function setAmount($amount)
     {
-        $this->amount = $amount;
+        $this->amount = (double) $amount;
         return $this;
     }
 
@@ -62,9 +62,9 @@ class Transactions
 
     public function create()
     {
-        $balance = $this->balance->setUser($this->user)->get();
-
-        if ($balance + $this->amount < 0) {
+        $balance = (double) $this->balance->setUser($this->user)->get();
+        
+        if ($balance + $this->amount < (double) 0) {
             throw new \Exception('Not enough funds');
         }
 

@@ -10,6 +10,8 @@ use Minds\Core\Rewards\Withdraw\Request;
 use Minds\Core\Rewards\Transactions;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Blockchain\Services\Ethereum;
+use Minds\Core\Blockchain\Transactions\Manager as BlockchainTx;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Config\Config;
 use Minds\Entities\User;
 
@@ -21,20 +23,23 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Rewards\Withdraw\Manager');
     }
 
-    function it_should_allow_a_withdrawl_request_to_be_made(Pending $pending)
+    function it_should_allow_a_withdrawl_request_to_be_made(BlockchainTx $transactions)
     {
-        $this->beConstructedWith($pending);
+        $this->beConstructedWith($transactions);
 
-        $pending->add([
-            'type' => 'withdraw',
-            'tx_id' => '0xabc220393',
-            'sender_guid' => 123,
-            'data' => [
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setTimestamp(time())
+            ->setData([
                 'amount' => 1000,
                 'gas' => 50,
                 'address' => '0xRequesterAddr'
-            ]
-        ])->shouldBeCalled();
+            ]);
+
+        $transactions->add($transaction)->shouldBeCalled();
 
         $request = new Request();
         $request->setTx('0xabc220393')
@@ -47,27 +52,13 @@ class ManagerSpec extends ObjectBehavior
     }
 
     function it_should_complete_the_withdrawal_after_a_request(
-        Pending $pending, 
+        BlockchainTx $blockchainTx, 
         Transactions $transactions,
         Config $config,
         Ethereum $eth
     )
     {
-        $this->beConstructedWith($pending, $transactions, $config, $eth);
-
-        $pending->get('withdrawal', '0xabc220393')
-            ->shouldBeCalled()
-            ->willReturn([
-                'tx_id' => '0xabc220393',
-                'sender_guid' => 123,
-                'data' => [
-                    'address' => '0xRequesterAddr',
-                    'amount' => 1000,
-                    'gas' => 50,
-                ],
-            ]);
-
-        $pending->delete('withdrawal', '0xabc220393')->shouldBeCalled();
+        $this->beConstructedWith($blockchainTx, $transactions, $config, $eth);
 
         $user = new User();
         $user->guid = 123;
@@ -106,24 +97,23 @@ class ManagerSpec extends ObjectBehavior
             ->setAmount(1000)
             ->setGas(50);
 
-        $this->complete($request);
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setData([
+                'amount' => 1000,
+                'gas' => 50,
+                'address' => '0xRequesterAddr'
+            ]);
+
+        $this->complete($request, $transaction);
     }
 
-    function it_should_not_complete_the_withdrawal_if_user_mismatch(Pending $pending)
+    function it_should_not_complete_the_withdrawal_if_user_mismatch(BlockchainTx $blockchainTx)
     {
-        $this->beConstructedWith($pending);
-
-        $pending->get('withdrawal', '0xabc220393')
-            ->shouldBeCalled()
-            ->willReturn([
-                'tx_id' => '0xabc220393',
-                'sender_guid' => 123,
-                'data' => [
-                    'address' => '0xRequesterAddr',
-                    'amount' => 1000,
-                    'gas' => 50,
-                ],
-            ]);
+        $this->beConstructedWith($blockchainTx);
 
         $request = new Request();
         $request->setTx('0xabc220393')
@@ -132,24 +122,23 @@ class ManagerSpec extends ObjectBehavior
             ->setAmount(1000)
             ->setGas(50);
 
-        $this->shouldThrow('\Exception')->duringComplete($request);
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setData([
+                'amount' => 1000,
+                'gas' => 50,
+                'address' => '0xRequesterAddr'
+            ]);
+
+        $this->shouldThrow('\Exception')->duringComplete($request, $transaction);
     }
 
-    function it_should_not_complete_the_withdrawal_if_address_mismatch(Pending $pending)
+    function it_should_not_complete_the_withdrawal_if_address_mismatch(BlockchainTx $blockchainTx)
     {
-        $this->beConstructedWith($pending);
-
-        $pending->get('withdrawal', '0xabc220393')
-            ->shouldBeCalled()
-            ->willReturn([
-                'tx_id' => '0xabc220393',
-                'sender_guid' => 123,
-                'data' => [
-                    'address' => '0xRequesterAddr',
-                    'amount' => 1000,
-                    'gas' => 50,
-                ],
-            ]);
+        $this->beConstructedWith($blockchainTx);
 
         $request = new Request();
         $request->setTx('0xabc220393')
@@ -158,24 +147,23 @@ class ManagerSpec extends ObjectBehavior
             ->setAmount(1000)
             ->setGas(50);
 
-        $this->shouldThrow('\Exception')->duringComplete($request);
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setData([
+                'amount' => 1000,
+                'gas' => 50,
+                'address' => '0xRequesterAddr'
+            ]);
+
+        $this->shouldThrow('\Exception')->duringComplete($request, $transaction);
     }
 
-    function it_should_not_complete_the_withdrawal_if_amount_mismatch(Pending $pending)
+    function it_should_not_complete_the_withdrawal_if_amount_mismatch(BlockchainTx $blockchainTx)
     {
-        $this->beConstructedWith($pending);
-
-        $pending->get('withdrawal', '0xabc220393')
-            ->shouldBeCalled()
-            ->willReturn([
-                'tx_id' => '0xabc220393',
-                'sender_guid' => 123,
-                'data' => [
-                    'address' => '0xRequesterAddr',
-                    'amount' => 1000,
-                    'gas' => 50,
-                ],
-            ]);
+        $this->beConstructedWith($blockchainTx);
 
         $request = new Request();
         $request->setTx('0xabc220393')
@@ -184,24 +172,23 @@ class ManagerSpec extends ObjectBehavior
             ->setAmount(10001)
             ->setGas(50);
 
-        $this->shouldThrow('\Exception')->duringComplete($request);
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setData([
+                'amount' => 1000,
+                'gas' => 50,
+                'address' => '0xRequesterAddr'
+            ]);
+
+        $this->shouldThrow('\Exception')->duringComplete($request, $transaction);
     }
 
-    function it_should_not_complete_the_withdrawal_if_gas_mismatch(Pending $pending)
+    function it_should_not_complete_the_withdrawal_if_gas_mismatch(BlockchainTx $blockchainTx)
     {
-        $this->beConstructedWith($pending);
-
-        $pending->get('withdrawal', '0xabc220393')
-            ->shouldBeCalled()
-            ->willReturn([
-                'tx_id' => '0xabc220393',
-                'sender_guid' => 123,
-                'data' => [
-                    'address' => '0xRequesterAddr',
-                    'amount' => 1000,
-                    'gas' => 50,
-                ],
-            ]);
+        $this->beConstructedWith($blockchainTx);
 
         $request = new Request();
         $request->setTx('0xabc220393')
@@ -210,7 +197,18 @@ class ManagerSpec extends ObjectBehavior
             ->setAmount(1000)
             ->setGas(501);
 
-        $this->shouldThrow('\Exception')->duringComplete($request);
+        $transaction = new Transaction();
+        $transaction
+            ->setContract('withdraw')
+            ->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setData([
+                'amount' => 1000,
+                'gas' => 50,
+                'address' => '0xRequesterAddr'
+            ]);
+
+        $this->shouldThrow('\Exception')->duringComplete($request, $transaction);
     }
 
 }

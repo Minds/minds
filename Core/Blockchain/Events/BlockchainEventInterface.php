@@ -18,7 +18,8 @@ interface BlockchainEventInterface
     /**
      * @param $topic
      * @param array $log
+     * @param Transaction $transaction
      * @return void
      */
-    public function event($topic, array $log);
+    public function event($topic, array $log, $transaction);
 }

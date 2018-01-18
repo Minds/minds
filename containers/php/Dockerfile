@@ -65,6 +65,10 @@ RUN apk add --no-cache zeromq-dev && \
     pecl install zmq-beta \
     && docker-php-ext-enable zmq
 
+# Install nodejs (needed for mw3)
+
+RUN apk add --update --no-cache nodejs
+
 # PHP INI
 
 COPY php.ini /usr/local/etc/php/

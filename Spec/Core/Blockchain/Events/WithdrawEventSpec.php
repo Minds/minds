@@ -6,6 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Core\Rewards\Withdraw\Manager;
+use Minds\Core\Blockchain\Transactions\Transaction;
 
 class WithdrawEventSpec extends ObjectBehavior
 {
@@ -25,7 +26,7 @@ class WithdrawEventSpec extends ObjectBehavior
                 && $request->getUserGuid() == 786645648014315523
                 && $request->getGas() == 67839000000000
                 && $request->getAmount() == 10000000000000000000;
-            }))
+            }), Argument::type('\Minds\Core\Blockchain\Transactions\Transaction'))
             ->shouldBeCalled();
 
         $data = "0x000000000000000000000000177fd9efd24535e73b81e99e7f838cdef265e6cb"
@@ -35,7 +36,7 @@ class WithdrawEventSpec extends ObjectBehavior
         $this->onRequest([
             'data' => $data,
             'transactionHash' => '0x62a70ccf3b37b9368efa3dd4785e715139c994ba9957a125e299b14a8eccd00c'
-        ]);
+        ], new Transaction);
     }
 
 }

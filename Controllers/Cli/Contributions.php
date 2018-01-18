@@ -32,7 +32,7 @@ class Contributions extends Cli\Controller implements Interfaces\CliControllerIn
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
-        $from = $this->getOpt('from') ?: (strtotime('midnight -48 hours') * 1000);
+        $from = $this->getOpt('from') ?: (strtotime('midnight tomorrow -2 days') * 1000);
 
         $users = new UsersIterator;
         $users->setFrom($from);

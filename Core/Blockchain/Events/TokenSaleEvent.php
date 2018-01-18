@@ -29,12 +29,12 @@ class TokenSaleEvent implements BlockchainEventInterface
      * @param array $log
      * @throws \Exception
      */
-    public function event($topic, array $log)
+    public function event($topic, array $log, $transaction)
     {
         $method = static::$eventsMap[$topic];
 
         if (method_exists($this, $method)) {
-            $this->{$method}($log);
+            $this->{$method}($log, $transaction);
         } else {
             throw new \Exception('Method not found');
         }
