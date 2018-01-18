@@ -247,6 +247,9 @@ class channel implements Interfaces\Api
                     $update['social_profiles'] = json_encode($profiles);
                 }
 
+                //always update icon time on profile edit...
+                $update['icontime'] = time();
+
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
                 //update session also
