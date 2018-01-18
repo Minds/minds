@@ -249,6 +249,7 @@ class channel implements Interfaces\Api
 
                 //always update icon time on profile edit...
                 $update['icontime'] = time();
+                $owner->icontime = time();
 
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
