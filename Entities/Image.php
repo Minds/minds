@@ -16,6 +16,7 @@ class Image extends File
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "image";
         $this->attributes['boost_rejection_reason'] = -1;
+        $this->attributes['rating'] = 1;
     }
 
     public function getUrl()
@@ -154,12 +155,13 @@ class Image extends File
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
-        'thumbnail',
-                'cinemr_guid',
-                'license',
-                'mature',
-                'boost_rejection_reason'
-            ));
+            'thumbnail',
+            'cinemr_guid',
+            'license',
+            'mature',
+            'boost_rejection_reason',
+            'rating'
+        ));
     }
 
     public function getAlbumChildrenGuids()
@@ -184,6 +186,7 @@ class Image extends File
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         $export['mature'] = $this->mature ?: $this->getFlag('mature');
+        $export['rating'] = $this->getRating();
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
@@ -225,7 +228,8 @@ class Image extends File
             'hidden' => null,
             'batch_guid' => null,
             'access_id' => null,
-            'container_guid' => null
+            'container_guid' => null,
+            'rating' => 1,
         ], $data);
 
         $allowed = [
@@ -237,7 +241,8 @@ class Image extends File
             'access_id',
             'container_guid',
             'mature',
-            'boost_rejection_reason'
+            'boost_rejection_reason',
+            'rating',
         ];
 
         foreach ($allowed as $field) {

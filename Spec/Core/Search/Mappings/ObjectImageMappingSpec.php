@@ -19,6 +19,7 @@ class ObjectImageMappingSpec extends ObjectBehavior
     {
         $now = time();
 
+        $image->get('rating')->willReturn(1);
         $image->get('interactions')->willReturn(42);
         $image->get('guid')->willReturn(5000);
         $image->get('type')->willReturn('object');
@@ -63,6 +64,7 @@ class ObjectImageMappingSpec extends ObjectBehavior
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
                 'license' => 'cc-test-lic',
+                'rating' => 1,
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:image',
                 'public' => true,

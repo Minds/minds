@@ -1538,4 +1538,19 @@ abstract class ElggEntity extends ElggData implements
 
 		return true;
 	}
+
+    public function getRating()
+    {
+        $this->rating = (int) $this->rating;
+        return $this->rating === 0 ? 1 : $this->rating;
+    }
+
+    public function setRating($value)
+    {
+        if ($value !== 1 && $value !== 2) {
+            $this->rating = 1;
+        }
+        $this->rating = $value;
+        return $this;
+    }
 }

@@ -42,6 +42,10 @@ class Reminds extends Aggregate
             ];
         }
 
+        $must[]['match'] = [
+            'rating' => 1
+        ];
+
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',

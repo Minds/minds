@@ -23,6 +23,7 @@ class Video extends Object
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "video";
         $this->attributes['boost_rejection_reason'] = -1;
+        $this->attributes['rating'] = 1;
     }
 
 
@@ -164,6 +165,7 @@ class Video extends Object
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = (new Core\Security\XSS())->clean($this->description); //videos need to be able to export html.. sanitize soon!
+        $export['rating'] = $this->getRating();
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
@@ -204,7 +206,8 @@ class Video extends Object
             'boost_rejection_reason' => null,
             'hidden' => null,
             'access_id' => null,
-            'container_guid' => null
+            'container_guid' => null,
+            'rating' => 1,
         ], $data);
 
         $allowed = [
@@ -215,7 +218,8 @@ class Video extends Object
             'access_id',
             'container_guid',
             'mature',
-            'boost_rejection_reason'
+            'boost_rejection_reason',
+            'rating',
         ];
 
         foreach ($allowed as $field) {

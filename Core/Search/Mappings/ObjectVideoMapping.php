@@ -16,7 +16,8 @@ class ObjectVideoMapping extends EntityMapping implements MappingInterface
     public function __construct()
     {
         $this->mappings = array_merge($this->mappings, [
-            'license' => [ 'type' => 'text', '$exportField' => 'license' ]
+            'license' => [ 'type' => 'text', '$exportField' => 'license' ],
+            'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
         ]);
     }
 }

@@ -19,6 +19,7 @@ class ObjectVideoMappingSpec extends ObjectBehavior
     {
         $now = time();
 
+        $video->get('rating')->willReturn(1);
         $video->get('interactions')->willReturn(42);
         $video->get('guid')->willReturn(5000);
         $video->get('type')->willReturn('object');
@@ -63,6 +64,7 @@ class ObjectVideoMappingSpec extends ObjectBehavior
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
                 'license' => 'cc-test-lic',
+                'rating' => 1,
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:video',
                 'public' => true,
