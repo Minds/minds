@@ -91,8 +91,8 @@ class Util
 
         $hexval = '';
         do {
-            $hexval = $hex[bcmod($dec,'16')].$hexval;
-            $dec = bcdiv($dec,'16',0);
+            $hexval = $hex[\bcmod($dec,'16')].$hexval;
+            $dec = \bcdiv($dec,'16',0);
         } while ($dec >= 1);
 
         return $sign . $hexval;
