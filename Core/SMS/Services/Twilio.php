@@ -6,9 +6,9 @@
 namespace Minds\Core\SMS\Services;
 
 use Minds\Core\Di\Di;
+use Minds\Core\SMS\SMSServiceInterface;
 
-
-class Twilio
+class Twilio implements SMSServiceInterface
 {
     /** @var \Services_Twilio */
     protected $client;

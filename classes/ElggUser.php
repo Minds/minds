@@ -191,6 +191,9 @@ class ElggUser extends ElggEntity
 				if(!$db->getRow(strtolower($this->username))){
 						$db->insert(strtolower($this->username), $data);
 						$db->insert(strtolower($this->email), $data);
+                    if ($this->phone_number_hash) {
+                        $db->insert(strtolower($this->phone_number_hash), $data);
+                    }
 				}
 
 				//update our session, if it is us logged in

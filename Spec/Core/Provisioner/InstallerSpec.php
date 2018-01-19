@@ -30,8 +30,10 @@ class InstallerSpec extends ObjectBehavior
             'site-email' => 'phpspec@minds.io',
             'cassandra-server' => '127.0.0.1',
             'elasticsearch-server' => 'http://localhost',
-            'public-key' => __FILE__,
-            'private-key' => __FILE__
+            'email-public-key' => __FILE__,
+            'email-private-key' => __FILE__,
+            'phone-number-public-key' => __FILE__,
+            'phone-number-private-key' => __FILE__
         ]);
 
         $CONFIG->site_name = 'PHPSpec Minds';

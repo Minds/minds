@@ -151,8 +151,12 @@ $CONFIG->set('boost', [
 
 $CONFIG->set('encryptionKeys', [
     'email' => [
-        'private' => '{{private-key}}',
-        'public' => '{{public-key}}'
+        'private' => '{{email-private-key}}',
+        'public' => '{{email-public-key}}'
+    ],
+    'phone_number' => [
+        'private' => '{{phone-number-private-key}}',
+        'public' => '{{phone-number-public-key}}'
     ]
 ]);
 

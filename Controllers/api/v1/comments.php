@@ -159,6 +159,7 @@ class comments implements Interfaces\Api
                     ->setAction('comment')
                     ->setProduct('platform')
                     ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+                    ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
                     ->setEntityGuid((string) $parent->guid)
                     ->setEntityType($parent->type)
                     ->setEntitySubtype((string) $parent->subtype)

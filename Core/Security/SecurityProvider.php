@@ -27,5 +27,8 @@ class SecurityProvider extends Provider
         $this->di->bind('Security\ReCaptcha', function ($di) {
             return new ReCaptcha(Di::_()->get('Config'));
         }, ['useFactory'=>true]);
+        $this->di->bind('Security\TwoFactor', function ($di) {
+            return new TwoFactor();
+        }, ['useFactory'=>false]);
     }
 }

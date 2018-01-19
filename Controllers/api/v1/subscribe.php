@@ -150,6 +150,7 @@ class subscribe implements Interfaces\Api
             ->setAction('subscribe')
             ->setProduct('platform')
             ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+            ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $pages[0])
             ->push();
 
@@ -170,6 +171,7 @@ class subscribe implements Interfaces\Api
             ->setAction('unsubscribe')
             ->setProduct('platform')
             ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+            ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $pages[0])
             ->push();
 

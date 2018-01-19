@@ -33,6 +33,8 @@ class User extends \ElggUser
         $this->attributes['wire_rewards'] = '';
         $this->attributes['pinned_posts'] = [];
         $this->attributes['eth_wallet'] = '';
+        $this->attributes['phone_number'] = null;
+        $this->attributes['phone_number_hash'] = null;
 
         parent::initializeAttributes();
     }
@@ -191,6 +193,42 @@ class User extends \ElggUser
             return $this->email;
         }
         return Helpers\OpenSSL::decrypt(base64_decode($this->email), file_get_contents($CONFIG->encryptionKeys['email']['private']));
+    }
+
+    /**
+     * Sets and encrypts a users phone number
+     * @param  string $phone
+     * @return $this
+     */
+    public function setPhoneNumber($phone)
+    {
+        global $CONFIG; //@todo use object config instead
+        $this->phone_number = base64_encode(Helpers\OpenSSL::encrypt($phone, file_get_contents($CONFIG->encryptionKeys['phone-number']['public'])));
+        return $this;
+    }
+
+    /**
+     * Returns and decrypts an phone number
+     * @return $this
+     */
+    public function getPhoneNumber()
+    {
+        global $CONFIG; //@todo use object config instead
+        if ($this->phone_number && !base64_decode($this->phone_number, true)) {
+            return $this->phone_number;
+        }
+        return Helpers\OpenSSL::decrypt(base64_decode($this->phone_number), file_get_contents($CONFIG->encryptionKeys['phone-number']['private']));
+    }
+
+    public function setPhoneNumberHash($hash)
+    {
+        $this->phone_number_hash = $hash;
+        return $this;
+    }
+
+    public function getPhoneNumberHash()
+    {
+        return $this->phone_number_hash;
     }
 
     /**
@@ -570,6 +608,7 @@ class User extends \ElggUser
         $export['disabled_boost'] = (bool) $this->disabled_boost;
         $export['categories'] = $this->getCategories();
         $export['pinned_posts'] = $this->getPinnedPosts();
+        $export['rewards'] = (bool)$this->getPhoneNumberHash();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];

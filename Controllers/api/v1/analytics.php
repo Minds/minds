@@ -84,6 +84,7 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
         $event->setType($type)
             ->setFields($fields)
             ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+            ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $entity->getGUID())
             ->setEntityType($entity->type)
             ->setEntitySubtype($entity->subtype)

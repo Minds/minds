@@ -15,5 +15,8 @@ class SMSProvider extends Provider
         $this->di->bind('SMS', function ($di) {
             return new Twilio();
         }, ['useFactory' => true]);
+        $this->di->bind('SMS\SNS', function ($di) {
+            return new Services\SNS();
+        }, ['useFactory' => true]);
     }
 }

@@ -97,6 +97,7 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $event->setType('action')
             ->setProduct('boost')
             ->setUserGuid(Core\Session::getLoggedInUser()->guid)
+            ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $boost->getGuid())
             ->setEntityType('boost')
             ->setEntityOwnerGuid($boost->getOwner()->getGuid())

@@ -59,6 +59,7 @@ class Ban
                 ->setProduct('platform')
                 ->setUserGuid(0)
                 ->setEntityGuid((string) $user->guid)
+                ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
                 ->setEntityType('user')
                 ->setAbuseGuardScore($this->accused->getScore())
                 ->push();

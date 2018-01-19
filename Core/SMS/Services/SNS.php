@@ -7,8 +7,9 @@ namespace Minds\Core\SMS\Services;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 
+use Minds\Core\SMS\SMSServiceInterface;
 
-class SNS
+class SNS implements SMSServiceInterface
 {
     /** @var \Aws\Sns\SnsClient  */
     protected $client;
