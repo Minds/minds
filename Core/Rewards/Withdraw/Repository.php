@@ -36,16 +36,16 @@ class Repository
         }
 
         $queries = [];
-        $template = "INSERT INTO withdrawals ( user_guid, timestamp, amount, tx, completed) VALUES (?,?,?,?)";
+        $template = "INSERT INTO withdrawals (user_guid, timestamp, amount, tx, completed) VALUES (?,?,?,?,?)";
         foreach ($transactions as $transaction) {
             $queries[] = [
                 'string' => $template,
                 'values' => [
                     new Varint($transaction->getUserGuid()),
                     new Timestamp($transaction->getTimestamp()),
-                    $transaction->getData()['amount'],
+                    new Decimal($transaction->getData()['amount']),
                     $transaction->getTx(),
-                    $transaction->isCompleted()
+                    (bool) $transaction->isCompleted()
                 ]
             ];
         }
@@ -115,14 +115,12 @@ class Repository
         }
 
         foreach($rows as $row) {
-            $withdrawal = [
-                'user' => new User($row['user_guid']),
-                'user_guid' => $row['user_guid'],
-                'timestamp' => $row['timestamp'],
-                'amount' => (double) $row['amount'],
-                'tx' => $row['tx'],
-                'completed' => (bool) $row['completed']
-            ];
+            $withdrawal = new Withdrawal();
+            $withdrawal->setUser($row['user_guid']);
+            $withdrawal->setTimestamp($row['timestamp']->time() * 1000);
+            $withdrawal->setAmount((double) $row['amount']);
+            $withdrawal->setTx($row['tx']);
+            $withdrawal->setCompleted((bool) $row['completed']);
             $withdrawals[] = $withdrawal;
         }
 
