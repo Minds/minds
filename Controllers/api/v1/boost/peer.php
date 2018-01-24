@@ -92,7 +92,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if (!in_array($currency, [ 'rewards', 'money', 'tokens' ])) {
+        if (!in_array($currency, [ 'money', 'tokens' ])) {
             return Factory::response([
                 'status' => 'error',
                 'stage' => 'initial',
@@ -205,12 +205,6 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                         Di::_()->get('Boost\Pending')
                             ->add($transaction_id, $boost);
-                        break;
-
-                    case 'rewards':
-                        $transactions = Di::_()->get('Rewards\Transactions');
-                        $transactions->setUser($boost->getOwner());
-                        $transaction_id = $transactions->create($transactions->toWei(-$boost->getBid()), 'peer_boost');
                         break;
                 }
             } else {
@@ -362,13 +356,6 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
                     case 'tokens':
                         // Already refunded
-                        break;
-
-                    case 'rewards':
-                        $txType = $revoked ? 'peer_boost_revoke' : 'peer_boost_reject';
-                        $transactions = Di::_()->get('Rewards\Transactions');
-                        $transactions->setUser($boost->getOwner());
-                        $transactions->create($transactions->toWei($boost->getBid()), $txType);
                         break;
                 }
             } else {
