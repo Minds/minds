@@ -7,6 +7,7 @@ use Prophecy\Argument;
 
 use Minds\Core\Blockchain\Pending;
 use Minds\Core\Rewards\Withdraw\Request;
+use Minds\Core\Rewards\Withdraw\Repository;
 use Minds\Core\Rewards\Transactions;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Blockchain\Services\Ethereum;
@@ -23,9 +24,12 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Rewards\Withdraw\Manager');
     }
 
-    function it_should_allow_a_withdrawl_request_to_be_made(BlockchainTx $transactions)
+    function it_should_allow_a_withdrawl_request_to_be_made(
+        BlockchainTx $transactions,
+        Repository $repository
+    )
     {
-        $this->beConstructedWith($transactions);
+        $this->beConstructedWith($transactions, null, null, null, $repository);
 
         $transaction = new Transaction();
         $transaction
@@ -46,6 +50,7 @@ class ManagerSpec extends ObjectBehavior
             ->setUserGuid(123)
             ->setAmount(1000)
             ->setAddress('0xRequesterAddr')
+            ->setTimestamp(time())
             ->setGas(50);
 
         $this->request($request);
@@ -55,10 +60,11 @@ class ManagerSpec extends ObjectBehavior
         BlockchainTx $blockchainTx, 
         Transactions $transactions,
         Config $config,
-        Ethereum $eth
+        Ethereum $eth,
+        Repository $repository
     )
     {
-        $this->beConstructedWith($blockchainTx, $transactions, $config, $eth);
+        $this->beConstructedWith($blockchainTx, $transactions, $config, $eth, $repository);
 
         $user = new User();
         $user->guid = 123;
