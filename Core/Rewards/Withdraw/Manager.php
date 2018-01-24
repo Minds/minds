@@ -6,11 +6,16 @@ namespace Minds\Core\Rewards\Withdraw;
 
 use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Util;
+use Minds\Core\Config;
 use Minds\Core\Di\Di;
+use Minds\Core\Rewards\Transactions;
 use Minds\Entities\User;
 
 class Manager
 {
+
+    /** @var \Minds\Core\Blockchain\Transactions\Manager */
+    protected $blockchainTx;
 
     /** @var Pending $pending */
     protected $pending;
@@ -21,17 +26,22 @@ class Manager
     /** @var Config $config */
     protected $config;
 
+    /** @var \Minds\Core\Rewards\Withdraw\Repository */
+    protected $repo;
+
     public function __construct(
         $blockchainTx = null,        
         $transactions = null,
         $config = null,
-        $eth = null
+        $eth = null,
+        $withdrawRepository = null
     )
     {
         $this->blockchainTx = $blockchainTx ?: Di::_()->get('Blockchain\Transactions\Manager');        
         $this->transactions = $transactions ?: Di::_()->get('Rewards\Transactions');
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->repo = $withdrawRepository ?: Di::_()->get('Rewards\Withdraw\Repository');
     }
 
     /**
@@ -52,7 +62,8 @@ class Manager
                 'gas' => $request->getGas(),
                 'address' => $request->getAddress(),
             ]);
-        
+
+        $this->repo->add($transaction);
         $this->blockchainTx->add($transaction);
     }
 
@@ -91,7 +102,9 @@ class Manager
             ->setTx($request->getTx())
             ->setAmount(0 - $request->getAmount())
             ->create();
-        
+
+        $this->repo->add($transaction);
+
         //now issue the transaction
         $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [
             'from' => $this->config->get('blockchain')['rewards_wallet_address'],

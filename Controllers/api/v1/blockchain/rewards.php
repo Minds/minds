@@ -57,6 +57,20 @@ class rewards implements Interfaces\Api
                     'load-next' => base64_encode($result['token'])
                 ];
                 break;
+            case "withdrawals":
+                $repo = Di::_()->get('Rewards\Withdraw\Repository');
+                $result = $repo->getList([
+                    'user_guid' => Session::getLoggedInUser()->guid,
+                    'from' => $from,
+                    'to' => $to,
+                    'offset' => $offset
+                ]);
+
+                $response = [
+                    'withdrawals' => Factory::exportable($result['withdrawals']),
+                    'load-next' => base64_encode($result['token'])
+                ];
+                break;
         }
         
         return Factory::response($response);

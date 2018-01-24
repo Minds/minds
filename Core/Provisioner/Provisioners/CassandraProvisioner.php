@@ -166,6 +166,23 @@ class CassandraProvisioner implements ProvisionerInterface
                     'compaction = {\'class\': \'org.apache.cassandra.db.compaction.LeveledCompactionStrategy\'}'
                 ]
             ],
+            'withdrawals' => [
+                'schema' => [
+                    'user_guid' => 'varint',
+                    'timestamp' => 'timestamp',
+                    'amount' => 'decimal',
+                    'tx' => 'text',
+                    'completed' => 'boolean'
+                    ],
+                'primaryKeys' => [
+                    'user_guid',
+                    'timestamp',
+                    'tx'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (timestamp DESC)'
+                ]
+            ],
             'reports' => [
                 'schema' => [
                     'guid' => 'varint',

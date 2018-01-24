@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Contracts\MindsToken;
+use Minds\Core\Blockchain\Transactions\Manager;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Core\Rewards\Withdraw;
