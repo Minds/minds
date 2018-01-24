@@ -23,7 +23,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <p>Another channel on Minds just wired you 500 points! Be sure to hit the button below to login and see who it was from.</p> 
+        <p>Another channel on Minds just wired you! Be sure to hit the button below to login and see who it was from.</p> 
       </td>
     </tr>
     <tr>
