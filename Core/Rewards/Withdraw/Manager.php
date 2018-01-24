@@ -55,7 +55,7 @@ class Manager
         $transaction
             ->setTx($request->getTx())
             ->setContract('withdraw')
-            ->setTimestamp(time())
+            ->setTimestamp($request->getTimestamp())
             ->setUserGuid($request->getUserGuid())
             ->setData([
                 'amount' => $request->getAmount(),
@@ -63,7 +63,7 @@ class Manager
                 'address' => $request->getAddress(),
             ]);
 
-        $this->repo->add($transaction);
+        $this->repo->add($request);
         $this->blockchainTx->add($transaction);
     }
 
@@ -103,7 +103,8 @@ class Manager
             ->setAmount(0 - $request->getAmount())
             ->create();
 
-        $this->repo->add($transaction);
+        $request->setCompleted(true);
+        $this->repo->add($request);
 
         //now issue the transaction
         $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [

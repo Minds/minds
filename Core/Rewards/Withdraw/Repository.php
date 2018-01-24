@@ -29,23 +29,23 @@ class Repository
      * @param Transaction[]|Transaction $transactions
      * @return $this
      */
-    public function add($transactions)
+    public function add($requests)
     {
-        if (!is_array($transactions)) {
-            $transactions = [ $transactions ];
+        if (!is_array($requests)) {
+            $requests = [ $requests ];
         }
 
         $queries = [];
         $template = "INSERT INTO withdrawals (user_guid, timestamp, amount, tx, completed) VALUES (?,?,?,?,?)";
-        foreach ($transactions as $transaction) {
+        foreach ($requests as $request) {
             $queries[] = [
                 'string' => $template,
                 'values' => [
-                    new Varint($transaction->getUserGuid()),
-                    new Timestamp($transaction->getTimestamp()),
-                    new Decimal($transaction->getData()['amount']),
-                    $transaction->getTx(),
-                    (bool) $transaction->isCompleted()
+                    new Varint($request->getUserGuid()),
+                    new Timestamp($request->getTimestamp()),
+                    new Varint((int) $request->getAmount()),
+                    $request->getTx(),
+                    (bool) $request->isCompleted()
                 ]
             ];
         }
@@ -115,17 +115,17 @@ class Repository
         }
 
         foreach($rows as $row) {
-            $withdrawal = new Withdrawal();
-            $withdrawal->setUser($row['user_guid']);
-            $withdrawal->setTimestamp($row['timestamp']->time() * 1000);
-            $withdrawal->setAmount((double) $row['amount']);
-            $withdrawal->setTx($row['tx']);
-            $withdrawal->setCompleted((bool) $row['completed']);
-            $withdrawals[] = $withdrawal;
+            $request = new Request();
+            $request->setUserGuid($row['user_guid']);
+            $request->setTimestamp($row['timestamp']->time());
+            $request->setAmount((double) $row['amount']);
+            $request->setTx($row['tx']);
+            $request->setCompleted((bool) $row['completed']);
+            $requests[] = $request;
         }
 
         return [
-            'withdrawals' => $withdrawals,
+            'withdrawals' => $requests,
             'token' => $rows->pagingStateToken()
         ];
     }

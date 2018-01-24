@@ -92,6 +92,7 @@ class rewards implements Interfaces\Api
                 $request->setTx($_POST['tx'])
                     ->setUserGuid(Session::getLoggedInUser()->guid)
                     ->setAddress($_POST['address'])
+                    ->setTimestamp(time())
                     ->setGas($_POST['gas'])
                     ->setAmount($_POST['amount']);
 

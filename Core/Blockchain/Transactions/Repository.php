@@ -149,7 +149,7 @@ class Repository
         $transaction
             ->setContract($row['contract'])            
             ->setUserGuid((int) $row['user_guid'])
-            ->setTimestamp((int) $row['timestamp'])
+            ->setTimestamp((int) $row['timestamp']->time())
             ->setTx($row['tx'])
             ->setCompleted((bool) $row['completed'])
             ->setData(json_decode($row['data'], true));

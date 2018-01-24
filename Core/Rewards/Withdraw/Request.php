@@ -1,36 +1,33 @@
 <?php
 namespace Minds\Core\Rewards\Withdraw;
 
+use Minds\Traits\MagicAttributes;
+
 class Request
 {
 
+    use MagicAttributes;
+
+    /** @var string $tx **/
     private $tx;
+
+    /** @var string $address **/
     private $address;
+
+    /** @var int $user_guid **/
     private $user_guid;
+
+    /** @var double $gas **/
     private $gas;
+
+    /** @var double $amount **/
     private $amount;
 
-    public function setTx($tx)
-    {
-        $this->tx = $tx;
-        return $this;
-    }
+    /** @var bool $completed **/
+    private $completed;
 
-    public function getTx()
-    {
-        return $this->tx;
-    }
-
-    public function setAddress($address)
-    {
-        $this->address = $address;
-        return $this;
-    }
-
-    public function getAddress()
-    {
-        return $this->address;
-    }
+    /** @var int $timestamp **/
+    private $timestamp;
 
     public function setUserGuid($user_guid)
     {
@@ -43,26 +40,12 @@ class Request
         return $this->user_guid;
     }
 
-    public function setGas($gas)
-    {
-        $this->gas = $gas;
-        return $this;
+    public function export() {
+        return [
+            'timestamp' => $this->timestamp,
+            'amount' => $this->amount,
+            'user_guid' => $this->user_guid,
+            'completed' => $this->completed
+        ];
     }
-
-    public function getGas()
-    {
-        return $this->gas;
-    }
-
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
 }

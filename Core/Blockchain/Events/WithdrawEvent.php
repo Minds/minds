@@ -69,6 +69,7 @@ class WithdrawEvent implements BlockchainEventInterface
             ->setAddress($address)
             ->setUserGuid((int) $user_guid)
             ->setGas((double) $gas)
+            ->setTimestamp($transaction->getTimestamp())
             ->setAmount((double) $amount);
 
         try {        
