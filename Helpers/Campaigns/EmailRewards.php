@@ -44,7 +44,7 @@ class EmailRewards
             $validator = $_GET['validator'];
             if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
                 $points = 500;
-                $wire = false;
+                $wire = true;
             } else {
                 echo "Validator failed"; exit;
             }
