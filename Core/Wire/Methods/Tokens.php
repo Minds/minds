@@ -135,24 +135,26 @@ class Tokens implements MethodInterface
 
         $this->cancelSubscription();
 
-        $now = time();
-
-        $subscription = (new Payments\Subscriptions\Subscription())
+        $subscription = (new Core\Payments\Subscriptions\Subscription())
             ->setPlanId('wire')
-            ->setMethod('tokens')
+            ->setPaymentMethod('tokens')
             ->setAmount($this->amount)
             ->setUser($this->actor)
-            ->setFee($this->calculateFee($this->amount * $wireNominal))
+            ->setEntity($this->owner)
+            ->setFee($this->amount)
             ->setMerchant($this->owner);
+
+        $this->subscriptionsManager->setSubscription($subscription);
+        $this->subscriptionsManager->create();
     
         return $subscription->getId();
     }
 
     protected function cancelSubscription()
     {
-        $subscriptions = $this->subscriptonsRepository->getList([
+        $subscriptions = $this->subscriptionsRepository->getList([
             'plan_id' => 'wire',
-            'payment_method' => 'money',
+            'payment_method' => 'tokens',
             'entity_guid' => $this->owner->guid,
             'user_guid' => $this->actor->guid
         ]);

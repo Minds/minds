@@ -36,10 +36,10 @@ class RepositorySpec extends ObjectBehavior
                 'entity_guid' => 0,
                 'user_guid' => 123,
                 'subscription_id' => 'abc1',
-                'amount' => 12,
+                'amount' => new \Cassandra\Decimal(12),
                 'interval' => 'monthly',
-                'last_billing' => time(),
-                'next_billing' => time(),
+                'last_billing' => new \Cassandra\Timestamp(time()),
+                'next_billing' => new \Cassandra\Timestamp(time()),
                 'status' => 'active'
             ],
             [
@@ -48,10 +48,10 @@ class RepositorySpec extends ObjectBehavior
                 'entity_guid' => 0,
                 'user_guid' => 223,
                 'subscription_id' => 'abc1',
-                'amount' => 12,
+                'amount' => new \Cassandra\Decimal(12),
                 'interval' => 'monthly',
-                'last_billing' => time(),
-                'next_billing' => time(),
+                'last_billing' => new \Cassandra\Timestamp(time()),
+                'next_billing' => new \Cassandra\Timestamp(time()),
                 'status' => 'active'
             ]
          ];
@@ -80,10 +80,10 @@ class RepositorySpec extends ObjectBehavior
                 'entity_guid' => 0,
                 'user_guid' => 123,
                 'subscription_id' => 'abc1',
-                'amount' => 12,
+                'amount' => new \Cassandra\Decimal(12),
                 'interval' => 'monthly',
-                'last_billing' => time(),
-                'next_billing' => time(),
+                'last_billing' => new \Cassandra\Timestamp(time()),
+                'next_billing' => new \Cassandra\Timestamp(time()),
                 'status' => 'active'
             ]
          ];
@@ -111,10 +111,10 @@ class RepositorySpec extends ObjectBehavior
                 'entity_guid' => 0,
                 'user_guid' => 123,
                 'subscription_id' => 'abc1',
-                'amount' => 12,
+                'amount' => new \Cassandra\Decimal(12),
                 'interval' => 'monthly',
-                'last_billing' => time(),
-                'next_billing' => time(),
+                'last_billing' => new \Cassandra\Timestamp(time()),
+                'next_billing' => new \Cassandra\Timestamp(time()),
                 'status' => 'active'
             ]
          ];
@@ -142,10 +142,10 @@ class RepositorySpec extends ObjectBehavior
                 'entity_guid' => 0,
                 'user_guid' => 123,
                 'subscription_id' => 'abc1',
-                'amount' => 12,
+                'amount' => new \Cassandra\Decimal(12),
                 'interval' => 'monthly',
-                'last_billing' => time(),
-                'next_billing' => time(),
+                'last_billing' => new \Cassandra\Timestamp(time()),
+                'next_billing' => new \Cassandra\Timestamp(time()),
                 'status' => 'active'
             ]
          ];
@@ -167,20 +167,20 @@ class RepositorySpec extends ObjectBehavior
     {
         $this->cql->request(Argument::that(function ($query) {
             $values = $query->build()['values'];
-            return stripos($query->build()['string'], 'insert into subscriptions') === 0; //&&
-            // $values == [
+            return stripos($query->build()['string'], 'insert into subscriptions') === 0;
+            // && $values == [
             //     'sub_abc',
             //     'plan',
             //     'spec',
             //     new \Cassandra\Decimal(20),
-            //     new \Cassandra\Varint(1000),
             //     new \Cassandra\Varint(0),
+            //     new \Cassandra\Varint(1000),
             //     'monthly',
             //     'active',
             //     new \Cassandra\Timestamp(time()),
             //     new \Cassandra\Timestamp(strtotime('+1 month'))
             // ];
-            // FIXME: Cannot compare class instances
+            // TODO: Fix comparing instances
         }))
             ->shouldBeCalled()
             ->willReturn(true);

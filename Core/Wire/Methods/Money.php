@@ -146,6 +146,7 @@ class Money implements MethodInterface
             ->setQuantity($this->amount)
             ->setAmount($this->amount)
             ->setUser($this->actor)
+            ->setEntity($this->owner)
             ->setFee($this->calculateFee($this->amount * $wireNominal))
             ->setMerchant($this->owner);
 
@@ -160,7 +161,7 @@ class Money implements MethodInterface
 
         $this->saveWire();
 
-        return [ 'subscriptionId' => $this->subscription->getId() ];
+        return $subscription->getId();
     }
 
     private function createSale()

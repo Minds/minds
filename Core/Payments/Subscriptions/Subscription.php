@@ -133,7 +133,7 @@ class Subscription
         return $this->amount;
     }
 
-    public function setQuantity()
+    public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
         return $this;
@@ -243,7 +243,6 @@ class Subscription
     {
         return [
             'id',
-            'balance',
             'amount',
             'created_at',
             'next_billing',
@@ -268,6 +267,8 @@ class Subscription
         }
 
         $export['entity'] = Factory::build($this->getEntity()->guid);
+        $export['entity_guid'] = $this->getEntity() ? $this->getEntity()->guid : null;
+        $export['user_guid'] = $this->getUser() ? $this->getUser()->guid : null;
 
         //$export = \Minds\Helpers\Export::dateTimeToTimestamp($export);
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', ['entity' => $this], []));

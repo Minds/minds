@@ -14,6 +14,7 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Core\Payments;
 use Minds\Core\Payments\HookInterface;
 use Minds\Entities\Wire;
+use Minds\Entities\Factory;
 
 class Webhook implements HookInterface
 {
@@ -26,15 +27,12 @@ class Webhook implements HookInterface
             $stripe = Di::_()->get('StripePayments');
             $stripePlan = $stripe->getPlan('wire', $user->getMerchant()['id']);
 
-            /** @var Core\Payments\Subscriptions\Manager $manager */
-            $manager = Di::_()->get('Payments\Subscriptions\Manager');
-            $manager
-                ->setSubscriptionId($subscription->getId());
+            /** @var Core\Payments\Subscriptions\Repository $repository */
+            $repository = Di::_()->get('Payments\Subscriptions\Repository');
+            $dbSubscription = $repository->get($subscription->getId());
 
-            $recurringSubscription = $manager->fetchSubscriptionById();
-
-            $repo = Di::_()->get('Wire\Repository');
-            $entity = $recurringSubscription['entity'];
+            $wireRepository = Di::_()->get('Wire\Repository');
+            $entity = Factory::build($dbSubscription->getEntity()->guid);
 
             $to = "";
 
@@ -53,7 +51,7 @@ class Webhook implements HookInterface
                 ->setAmount($stripePlan->amount)
                 ->setRecurring(true);
 
-            $repo->setSenderGuid($user->guid)
+            $wireRepository->setSenderGuid($user->guid)
                 ->setWire($wire)
                 ->add();
 

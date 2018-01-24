@@ -35,23 +35,23 @@ class Subscriptions extends Cli\Controller implements Interfaces\CliControllerIn
         foreach ($rows as $row) {
             $row = Cql::parseQueueRowTypes($row);
 
-            $this->out("Processing subscription `{$row['subscription_id']}`");
-            $this->out('- Billing was scheduled for ' . date('c', $row['next_billing']));
+            $this->out("Processing subscription `{$row->getId()}`");
+            $this->out('- Billing was scheduled for ' . date('c', $row->getNextBilling()));
 
             try {
-                $processed = Dispatcher::trigger('subscriptions:process', $row['type'], [
+                $processed = Dispatcher::trigger('subscriptions:process', $row->getPlanId(), [
                     'subscription' => $row
                 ]);
 
                 if ($processed) {
-                    $queue->processed($row);
+                    // $queue->processed($row);
                     $this->out('- OK!');
                 } else {
-                    $this->out("- Failed to process subscription `{$row['subscription_id']}`");
+                    $this->out("- Failed to process subscription `{$row->getId()}`");
                     // TODO: check age and cancel subscription if > 15 days. Send a notification to user?
                 }
             } catch (\Exception $e) {
-                $this->out("- Failed to process subscription `{$row['subscription_id']}`");
+                $this->out("- Failed to process subscription `{$row->getId()}`");
                 $this->out([ get_class($e) . ": {$e->getMessage()}", $e->getTraceAsString() ]);
             }
 

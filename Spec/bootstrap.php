@@ -84,11 +84,25 @@ class Mock
 
     public function time()
     {
-        //
         return (int) $this->a;
     }
 
+    public function toInt()
+    {
+        return (int) $this->a;
+    }
+
+    public function toDouble()
+    {
+        return (double) $this->a;
+    }
+
     public function value()
+    {
+        return (string) $this->a;
+    }
+
+    public function __toString()
     {
         return (string) $this->a;
     }

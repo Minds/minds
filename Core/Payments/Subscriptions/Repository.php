@@ -9,7 +9,6 @@
 namespace Minds\Core\Payments\Subscriptions;
 
 use Cassandra\Decimal;
-use Cassandra\Rows;
 use Cassandra\Timestamp;
 use Cassandra\Varint;
 use Minds\Core\Data\Cassandra\Client;
@@ -28,7 +27,7 @@ class Repository
 
     /**
      * @param array $options
-     * @return Rows
+     * @return Subscription[]
      */
     public function getList(array $options = [])
     {
@@ -111,10 +110,10 @@ class Repository
                 ->setPaymentMethod($row['payment_method'])
                 ->setEntity((string) $row['entity_guid'])
                 ->setUser((string) $row['user_guid'])
-                ->setAmount((int) $row['amount'])
+                ->setAmount($row['amount']->toDouble())
                 ->setInterval($row['interval'])
-                ->setLastBilling((int) $row['last_billing'])
-                ->setNextBilling((int) $row['next_billing'])
+                ->setLastBilling($row['last_billing']->time())
+                ->setNextBilling($row['next_billing']->time())
                 ->setStatus($row['status']);
             $subscriptions[] = $subscription;
         }
@@ -124,7 +123,7 @@ class Repository
 
     /**
      * @param string $id
-     * @return array|bool
+     * @return Subscription|false
      * @throws \Exception
      */
     public function get($id)
@@ -154,10 +153,10 @@ class Repository
             ->setPaymentMethod($row['payment_method'])
             ->setEntity((string) $row['entity_guid'])
             ->setUser((string) $row['user_guid'])
-            ->setAmount((int) $row['amount'])
+            ->setAmount($row['amount']->toDouble())
             ->setInterval($row['interval'])
-            ->setLastBilling((int) $row['last_billing'])
-            ->setNextBilling((int) $row['next_billing'])
+            ->setLastBilling($row['last_billing']->time())
+            ->setNextBilling($row['next_billing']->time())
             ->setStatus($row['status']);
 
         return $subscription;
@@ -224,7 +223,7 @@ class Repository
                 (string) $subscription->getId(),
                 $subscription->getPlanId(),
                 $subscription->getPaymentMethod(),
-                new Varint($subscription->getEntity()->guid),
+                new Varint($subscription->getEntity() ? $subscription->getEntity()->guid : 0),
                 new Varint($subscription->getUser()->guid)
             ]);
 
