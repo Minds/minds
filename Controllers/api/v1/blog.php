@@ -41,7 +41,7 @@ class blog implements Interfaces\Api
                     'offset' => $offset,
                     'limit' => $limit
                 ));
-                $response['blogs'] = Factory::exportable($entities);
+                $response['entities'] = Factory::exportable($entities);
                 $response['load-next'] = (string) end($entities)->guid;
                 break;
             case "featured":
@@ -61,6 +61,7 @@ class blog implements Interfaces\Api
                 $response['load-next'] = (string) end($entities)->featured_id;
                 break;
             case "trending":
+            case "top":
                 $repository = Core\Di\Di::_()->get('Trending\Repository');
                 $result = $repository->getList(['type' => 'blogs', 'limit' => $limit, 'offset'=> $offset]);
 
@@ -68,7 +69,7 @@ class blog implements Interfaces\Api
                     break;
                 }
                 $entities = core\Entities::get(['guids' => $result['guids']]);
-                $response['blogs'] = Factory::exportable($entities);
+                $response['entities'] = Factory::exportable($entities);
                 $response['load-next'] = base64_encode($result['token']); 
                 break;
             case "owner":
@@ -82,7 +83,7 @@ class blog implements Interfaces\Api
                     'offset' => $offset,
                     'limit' => $limit
                 ));
-                $response['blogs'] = Factory::exportable($entities);
+                $response['entities'] = Factory::exportable($entities);
                 $response['load-next'] = $entities ? (string) end($entities)->guid : null;
                 break;
             case "next":
