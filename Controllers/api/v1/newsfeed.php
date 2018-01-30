@@ -353,7 +353,9 @@ class newsfeed implements Interfaces\Api
                                     $activity->setCustom('batch', [[
                                         'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
                                         'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
-                                        'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                        'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
+                                        'width' => $embeded->width,
+                                        'height' => $embeded->height,
                                     ]])
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
@@ -366,7 +368,9 @@ class newsfeed implements Interfaces\Api
                                         ->setCustom('batch', [[
                                             'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
                                             'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
-                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
+                                            'width' => $embeded->width,
+                                            'height' => $embeded->height,
                                         ]])
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
@@ -556,7 +560,9 @@ class newsfeed implements Interfaces\Api
                             $activity->setCustom('batch', [[
                                 'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $attachment->guid,
                                 'href' => elgg_get_site_url() . 'media/' . $attachment->container_guid . '/' . $attachment->guid,
-                                'mature' => $attachment instanceof Flaggable ? $attachment->getFlag('mature') : false
+                                'mature' => $attachment instanceof Flaggable ? $attachment->getFlag('mature') : false,
+                                'width' => $attachment->width,
+                                'height' => $attachment->height,
                             ]])
                                 ->setFromEntity($attachment)
                                 ->setTitle($attachment->message);

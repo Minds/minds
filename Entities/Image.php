@@ -17,6 +17,8 @@ class Image extends File
         $this->attributes['subtype'] = "image";
         $this->attributes['boost_rejection_reason'] = -1;
         $this->attributes['rating'] = 1;
+        $this->attributes['width'] = 0;
+        $this->attributes['height'] = 0;
     }
 
     public function getUrl()
@@ -160,7 +162,9 @@ class Image extends File
             'license',
             'mature',
             'boost_rejection_reason',
-            'rating'
+            'rating',
+            'width',
+            'height',
         ));
     }
 
@@ -187,6 +191,8 @@ class Image extends File
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         $export['mature'] = $this->mature ?: $this->getFlag('mature');
         $export['rating'] = $this->getRating();
+        $export['width'] = $this->width ?: 0;
+        $export['height'] = $this->height ?: 0;
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
@@ -281,6 +287,9 @@ class Image extends File
                 $this->gif = true;
             }
         }
+
+        $this->width = $assets['width'] ?: 0;
+        $this->height = $assets['height'] ?: 0;
 
         if (isset($assets['container_guid'])) {
             $this->container_guid = $assets['container_guid'];
