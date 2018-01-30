@@ -16,6 +16,8 @@ class Image extends File
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "image";
         $this->attributes['boost_rejection_reason'] = -1;
+        $this->attributes['width'] = 0;
+        $this->attributes['height'] = 0;
     }
 
     public function getUrl()
@@ -154,12 +156,14 @@ class Image extends File
     public function getExportableValues()
     {
         return array_merge(parent::getExportableValues(), array(
-        'thumbnail',
-                'cinemr_guid',
-                'license',
-                'mature',
-                'boost_rejection_reason'
-            ));
+            'thumbnail',
+            'cinemr_guid',
+            'license',
+            'mature',
+            'boost_rejection_reason',
+            'width',
+            'height',
+        ));
     }
 
     public function getAlbumChildrenGuids()
@@ -184,6 +188,8 @@ class Image extends File
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
         $export['description'] = $this->description; //videos need to be able to export html.. sanitize soon!
         $export['mature'] = $this->mature ?: $this->getFlag('mature');
+        $export['width'] = $this->width ?: 0;
+        $export['height'] = $this->height ?: 0;
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
@@ -276,6 +282,9 @@ class Image extends File
                 $this->gif = true;
             }
         }
+
+        $this->width = $assets['width'] ?: 0;
+        $this->height = $assets['height'] ?: 0;
 
         if (isset($assets['container_guid'])) {
             $this->container_guid = $assets['container_guid'];

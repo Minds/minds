@@ -29,9 +29,13 @@ class Image implements AssetsInterface
         $file->write(file_get_contents($media['file']));
         $file->close();
 
+        list($width, $height) = getimagesize($media['file']);
+
         return [
             'filename' => $filename,
-            'media' => $media
+            'media' => $media,
+            'width' => $width,
+            'height' => $height,
         ];
     }
 
