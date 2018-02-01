@@ -100,6 +100,7 @@ class rewards implements Interfaces\Api
                 $manager->request($request);
 
                 $response['done'] = true;
+                $response['entity'] = $request->export();
                 break;
             case 'verify':
                 if (!isset($_POST['number'])) {
