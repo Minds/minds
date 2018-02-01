@@ -33,10 +33,18 @@ class explicit implements Interfaces\Api
         if (!$activity->canEdit()) {
             return Factory::response(array('status' => 'error', 'message' => 'Can´t edit this Post'));
         }
-
-        $value = (bool) $_POST['value'];
-        $activity->setMature($value);
         
+        $value = (bool) $_POST['value'];
+
+        if (method_exists($activity, 'setMature')) {
+            $activity->setMature($value);
+        } elseif (method_exists($activity, 'setFlag')) {
+            $activity->setFlag('mature', $value);
+        } 
+        if (isset($activity->mature)) {
+            $activity->mature = $value;
+        }
+
         if (isset($activity->custom_data['mature'])) {
             $activity->custom_data['mature'] = $activity->getMature();
         }
