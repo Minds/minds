@@ -209,7 +209,9 @@ class comments implements Interfaces\Api
                     $comment->setCustom('batch', [[
                       'src'=>elgg_get_site_url() . 'fs/v1/thumbnail/'.$attachment->guid,
                       'href'=>elgg_get_site_url() . 'media/'.$attachment->container_guid.'/'.$attachment->guid,
-                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
+                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false,
+                      'width' => $attachment->width,
+                      'height' => $attachment->height,
                     ]]);
                     break;
                   case "video":
