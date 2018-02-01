@@ -48,13 +48,15 @@ class search implements Interfaces\Api
         if ($entities) {
             $guids = [];
             foreach ($entities as $entity) {
-                $guids[] = $entity['guid'];
+                if ($entity['guid']) {
+                    $guids[] = $entity['guid'];
+                }
             }
 
             $users = Core\Entities::get([
               'guids' => $guids
             ]);
-
+            
             $conversations = [];
             foreach ($users as $user) {
                 if ($user->guid == Core\Session::getLoggedInUserGuid()) {
