@@ -667,6 +667,7 @@ class newsfeed implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'you don\'t have permission'));
         }
 
+        /** @var Entities\User $owner */
         $owner = $activity->getOwnerEntity();
 
         if (
@@ -684,6 +685,9 @@ class newsfeed implements Interfaces\Api
                 error_log("Cannot delete attachment: {$activity->entity_guid}");
             }
         }
+
+        // remove from pinned
+        $owner->removePinned($activity->guid);
 
         if ($activity->delete()) {
             if ($activity->remind_object && $activity->remind_object['owner_guid'] != Core\Session::getLoggedinUser()->guid) {
