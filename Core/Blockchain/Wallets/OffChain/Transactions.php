@@ -1,14 +1,17 @@
 <?php
 
 /**
- * Minds Rewards Transactions
+ * Minds Offchain Transactions
  *
- * @author emi
+ * @author mark
  */
 
-namespace Minds\Core\Rewards;
+namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Entities\User;
+use Minds\Core\Di\Di;
+use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Guid;
 
 class Transactions
 {
@@ -32,8 +35,8 @@ class Transactions
 
     public function __construct($repository = null, $balance = null)
     {
-        $this->repository = $repository ?: new Repository();
-        $this->balance = $balance ?: new Balance();
+        $this->repository = $repository ?: Di::_()->get('Blockchain\Transactions\Repository');
+        $this->balance = $balance ?: Di::_()->get('Blockchain\Wallets\OffChain\Balance');
     }
 
     public function setUser(User $user)
@@ -54,12 +57,6 @@ class Transactions
         return $this;
     }
 
-    public function setTx($tx)
-    {
-        $this->tx = $tx;
-        return $this;
-    }
-
     public function create()
     {
         $balance = (double) $this->balance->setUser($this->user)->get();
@@ -68,25 +65,29 @@ class Transactions
             throw new \Exception('Not enough funds');
         }
 
-        $reward = new Reward();
+        $transaction = new Transaction();
 
-        $reward
-            ->setUser($this->user)
+        $transaction
+            ->setUserGuid($this->user->guid)
+            ->setWalletAddress('offchain')
+            ->setTimestamp(time())
+            ->setTx('oc:' . Guid::build())
             ->setAmount($this->amount)
-            ->setType($this->type)
-            ->setTx($this->tx);
+            ->setContract('offchain:' . $this->type)
+            ->setCompleted(true);
 
-        $added = $this->repository->add($reward);
+        $added = $this->repository->add($transaction);
 
         if (!$added) {
             throw new \Exception("Could not add transaction");
         }
 
-        return "reward-tx:{$this->user->guid}:{$this->type}:{$reward->getTimestamp()}";
+        return $transaction;
     }
 
     public function toWei($value)
     {
         return (double) $value * (10 ** 18);
     }
+
 }

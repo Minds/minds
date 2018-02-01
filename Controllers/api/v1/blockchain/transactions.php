@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Crypto Rewards
+ * Crypto transactions
  *
  * @author Mark
  */
@@ -16,7 +16,7 @@ use Minds\Api\Factory;
 use Minds\Core\Rewards\Withdraw;
 use Minds\Core\Rewards\Join;
 
-class rewards implements Interfaces\Api
+class transactions implements Interfaces\Api
 {
 
     /**
@@ -35,25 +35,22 @@ class rewards implements Interfaces\Api
         $response = [];
 
         switch ($pages[0]) {
-            case "balance":
-                $balance = Di::_()->get('Rewards\Balance');
-                $balance->setUser(Session::getLoggedinUser());
-
-                $response = [
-                    'balance' => $balance->get()
-                ];
-                break;
             case "ledger":
-                $repo = Di::_()->get('Rewards\Repository');
+                $repo = Di::_()->get('Blockchain\Transactions\Repository');
                 $result = $repo->getList([
-                    'from' => $from,
-                    'to' => $to,
+                    'timestamp' => [
+                        'gte' => $from,
+                        //'lte' => $to,
+                    ],
+                    'wallet_addresses' => [
+                        'offchain',
+                    ],
                     'user_guid' => Session::getLoggedInUser()->guid,
                     'offset' => $offset
                 ]);
                 
                 $response = [
-                    'rewards' => Factory::exportable($result['rewards']),
+                    'transactions' => Factory::exportable($result['transactions']),
                     'load-next' => base64_encode($result['token'])
                 ];
                 break;

@@ -45,5 +45,17 @@ class BlockchainProvider extends Provider
         $this->di->bind('Blockchain\Services\Ethereum', function () {
             return new Services\Ethereum();
         });
+
+        $this->di->bind('Blockchain\Wallets\OffChain\Balance', function () {
+            return new Wallets\OffChain\Balance();
+        });
+
+        $this->di->bind('Blockchain\Wallets\OffChain\Transactions', function () {
+            return new Wallets\OffChain\Transactions();
+        }, [ 'useFactory' => false ]);
+
+        $this->di->bind('Blockchain\Wallets\OnChain\Balance', function () {
+            return new Wallets\OnChain\Balance();
+        });
     }
 }

@@ -1,19 +1,19 @@
 <?php
 
-namespace Spec\Minds\Core\Rewards;
+namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Entities\User;
-use Minds\Core\Rewards\Sums;
+use Minds\Core\Blockchain\Wallets\OffChain\Sums;
 
 class BalanceSpec extends ObjectBehavior
 {
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Rewards\Balance');
+        $this->shouldHaveType('Minds\Core\Blockchain\Wallets\OffChain\Balance');
     }
 
     function it_should_return_the_balance(Sums $sums)

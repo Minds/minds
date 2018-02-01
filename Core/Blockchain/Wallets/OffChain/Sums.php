@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Rewards;
+namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Cassandra;
 use Cassandra\Varint;
@@ -42,18 +42,23 @@ class Sums
         $query = new Custom();
 
         if ($this->user) {
-            $query->query("SELECT SUM(amount) as balance from rewards WHERE user_guid = ?", 
+            $query->query("SELECT 
+                SUM(amount) as balance 
+                FROM blockchain_transactions
+                WHERE user_guid = ?
+                AND wallet_address = 'offchain'", 
                 [
                     new Varint((int) $this->user->guid)
                 ]);
         } else {
-            $query->query("SELECT SUM(amount) as balance from rewards");
+            //$query->query("SELECT SUM(amount) as balance from rewards");
         }
 
         try{
             $rows = $this->db->request($query);
         } catch(\Exception $e) {
             error_log($e->getMessage());
+            return 0;
         }
         
         return (double) $rows[0]['balance'];

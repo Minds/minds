@@ -67,5 +67,22 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
             echo "\r [$i][$guid]: synced past 48 hours. $total";
         }
     }
+    
+    public function issue()
+    {
+        $username = $this->getOpt('username');
+        $user = new Entities\User($username);
+        
+        $amount = $this->getOpt('amount') * 10 ** 18;
+
+        $offChainTransactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+        $offChainTransactions
+            ->setType('test')
+            ->setUser($user)
+            ->setAmount($amount)
+            ->create();
+
+        $this->out('Issued');
+    }
 
 }

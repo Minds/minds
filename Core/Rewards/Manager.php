@@ -4,20 +4,43 @@
  */
 namespace Minds\Core\Rewards;
 
+use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
+use Minds\Core\Di\Di;
+
 class Manager
 {
 
+    /** @var Contributions\Manager $contributions */
     protected $contributions;
-    protected $repository;
+
+    /** @var Transactions $transactions */
+    protected $transactions;
+
+    /** @var Repository $txTransactions */
+    protected $txRepository;
+
+    /** @var User $user */
     protected $user;
+
+    /** @var int $from */
     protected $from;
+
+    /** @var int $to */
     protected $to;
+
+    /** @var bool $dryRun */
     protected $dryRun = false;
 
-    public function __construct($contributions = null, $repository = null)
+    public function __construct(
+        $contributions = null,
+        $transactions = null,
+        $txRepository = null
+    )
     {
         $this->contributions = $contributions ?: new Contributions\Manager;
-        $this->repository = $repository ?: new Repository;
+        $this->transactions = $transactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+        $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->from = strtotime('-7 days') * 1000;
         $this->to = time() * 1000;
     }
@@ -57,13 +80,17 @@ class Manager
 
         //First double check that we have not already credited them any
         //rewards for this timeperiod
-        $rewards = $this->repository->getList([
-            'timestamp' => $this->from,
-            'type' => 'contribution',
-            'user_guid' => $this->user->guid
+        $transactions = $this->txRepository->getList([
+            'user_guid' => $this->user->guid,
+            'wallet_address' => 'offchain',
+            'timestamp' => [
+                'gte' => $this->from,
+                'lte' => $this->to,
+            ],
+            'contract' => 'oc:reward',
         ]);
 
-        if ($rewards) {
+        if ($transactions) {
             throw new \Exception("Already issued rewards to this user");
         }
 
@@ -78,20 +105,16 @@ class Manager
 
         $amount = $this->contributions->getRewardsAmount();
  
-        $reward = new Reward();
-        $reward->setType('contribution')
-            ->setTimestamp($this->from)
+        $this->transactions
             ->setUser($this->user)
+            ->setType('reward')
             ->setAmount($amount);
 
-
         if ($this->dryRun) {
-            return $reward;
+            return $this->transactions;
         }
-
-        $this->repository->add($reward);        
     
-        return $reward;
+        return $this->transactions->create();
     }
 
 }

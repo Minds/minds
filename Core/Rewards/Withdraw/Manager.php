@@ -15,30 +15,30 @@ class Manager
 {
 
     /** @var \Minds\Core\Blockchain\Transactions\Manager */
-    protected $blockchainTx;
+    protected $txManager;
 
-    /** @var Pending $pending */
-    protected $pending;
-
-    /** @var Transactions $transactions */
-    protected $transactions;
+    /** @var Transactions $offChainTransactions */
+    protected $offChainTransactions;
 
     /** @var Config $config */
     protected $config;
+
+    /** @var Ethereum $eth */
+    protected $eth;
 
     /** @var \Minds\Core\Rewards\Withdraw\Repository */
     protected $repo;
 
     public function __construct(
-        $blockchainTx = null,        
-        $transactions = null,
+        $txManager = null,        
+        $offChainTransactions = null,
         $config = null,
         $eth = null,
         $withdrawRepository = null
     )
     {
-        $this->blockchainTx = $blockchainTx ?: Di::_()->get('Blockchain\Transactions\Manager');        
-        $this->transactions = $transactions ?: Di::_()->get('Rewards\Transactions');
+        $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');        
+        $this->offChainTransactions = $offChainTransactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->repo = $withdrawRepository ?: Di::_()->get('Rewards\Withdraw\Repository');
@@ -64,7 +64,7 @@ class Manager
             ]);
 
         $this->repo->add($request);
-        $this->blockchainTx->add($transaction);
+        $this->txManager->add($transaction);
     }
 
     /**
@@ -96,10 +96,10 @@ class Manager
         $user = new User;
         $user->guid = (string) $request->getUserGuid();
         
-        $this->transactions
+        $this->offChainTransactions
             ->setUser($user)
             ->setType('withdrawal')
-            ->setTx($request->getTx())
+            //->setTx($request->getTx())
             ->setAmount(0 - $request->getAmount())
             ->create();
 

@@ -45,7 +45,7 @@ class Token
     {
         $result = $this->client->call($this->tokenAddress, 'balanceOf(address)', [ $account ]);
 
-        return $this->fromTokenUnit(Util::toDec($result));
+        return (double) Util::toDec($result);
     }
 
     /**

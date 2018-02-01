@@ -36,29 +36,32 @@ class wallet implements Interfaces\Api
                     'address' => Session::getLoggedinUser()->getEthWallet()
                 ];
                 break;
-
             case 'balance':
-                $address = Session::getLoggedinUser()->getEthWallet();
+                $onChainBalance = Di::_()->get('Blockchain\Wallets\OnChain\Balance');
+                $onChainBalance->setUser(Session::getLoggedinUser());
+                $onChainBalanceVal = (double) $onChainBalance->get();
 
-                if (!$address) {
-                    return Factory::response([
-                        'status' => 'error',
-                        'message' => 'User have not setup a wallet address'
-                    ]);
-                }
+                $offChainBalance = Di::_()->get('Blockchain\Wallets\OffChain\Balance');
+                $offChainBalance->setUser(Session::getLoggedinUser());
+                $offChainBalanceVal = (double) $offChainBalance->get();
+                
+               
+                $balance = $onChainBalanceVal + $offChainBalanceVal;
 
-                $cacheKey = "blockchain:balance:{$address}";
-
-                $balance = $cache->get($cacheKey);
-
-                if (!$balance && $balance !== 0) {
-                    $balance = Di::_()->get('Blockchain\Token')->balanceOf($address);
-
-                    $cache->set($cacheKey, $balance, 60);
-                }
-
-                $response['wallet'] = [
-                    'balance' => (string) $balance
+                $response = [
+                    'addresses' => [
+                        [
+                            'address' => Session::getLoggedinUser()->getEthWallet(),
+                            'label' => 'Receiver',
+                            'balance' => (double) $onChainBalanceVal,
+                        ],
+                        [
+                            'address' => 'offchain',
+                            'label' => 'OffChain',
+                            'balance' => (double) $offChainBalanceVal,
+                        ]
+                    ],
+                    'balance' => (double) $balance,
                 ];
 
                 break;

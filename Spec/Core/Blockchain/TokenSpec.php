@@ -26,9 +26,10 @@ class TokenSpec extends ObjectBehavior
 
         $manager->getContract('token')->willReturn($contract);
 
-        $client->call('minds_token_addr', 'balanceOf(address)', [ 'foo' ])->willReturn('0x2B5E3AF16B1880000');
+        $client->call('minds_token_addr', 'balanceOf(address)', [ 'foo' ])
+            ->willReturn('0x2B5E3AF16B1880000');
 
-        $this->balanceOf('foo')->shouldBe((double) 50);
+        $this->balanceOf('foo')->shouldBe((double) 50000000000000000000);
     }
 
 }

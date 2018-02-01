@@ -30,24 +30,28 @@ class Repository
 
         $requests = [];
         $template = "INSERT INTO blockchain_transactions (
-            contract,
-            tx,
             user_guid,
+            wallet_address,
             timestamp,
+            tx,
+            contract,
+            amount,
             completed,
             data
             ) 
-            VALUES (?,?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?,?,?)";
         foreach ($transactions as $transaction) {
             $requests[] = [
                 'string' => $template, 
                 'values' => [
-                    $transaction->getContract(),
-                    $transaction->getTx(),                    
                     new Varint($transaction->getUserGuid()),
+                    $transaction->getWalletAddress(),
                     new Timestamp($transaction->getTimestamp()),
+                    $transaction->getTx(),
+                    $transaction->getContract(),
+                    new Varint($transaction->getAmount()),
                     $transaction->isCompleted(),
-                    json_encode($transaction->getData())
+                    json_encode($transaction->getData()),
                 ]
             ];
         }
@@ -61,27 +65,62 @@ class Repository
     {
         $options = array_merge([
             'user_guid' => null,
+            'wallet_address' => null,
+            'wallet_addresses' => null,
             'contract' => null,
+            'timestamp' => [
+                'gte' => null,
+                'lte' => null,
+            ],
             'limit' => 12,
-            'offset' => null
+            'offset' => null,
+            'allowFiltering' => false,
         ], $options);
 
         $cql = "SELECT * from blockchain_transactions";
         $where = [];
         $values = [];
 
-        if ($options['contract']) {
-            $where[] = 'contract = ?';
-            $values[] = $options['contract'];
-        }
-
         if ($options['user_guid']) {
             $where[] = 'user_guid = ?';
             $values[] = new Varint($options['user_guid']);
         }
 
+        if ($options['wallet_address']) {
+            $where[] = 'wallet_address = ?';
+            $values[] = $options['wallet_address'];
+        }
+
+        if ($options['wallet_addresses']) {
+            $placeholders = implode(', ', array_fill(0, count($options['wallet_addresses']), '?'));
+            $where[] = "wallet_address IN ({$placeholders})";
+            $values = array_merge($values, array_map(function ($value) {
+                return (string) $value;
+            }, $options['wallet_addresses']));
+        }
+
+        if ($options['timestamp']['gte']) {
+            $where[] = 'timestamp >= ?';
+            $values[] = new Timestamp($options['timestamp']['gte']);
+        }
+
+        if ($options['timestamp']['lte']) {
+            $where[] = 'timestamp <= ?';
+            $values[] = new Timestamp($options['timestamp']['lte']);
+        }
+
+        if ($options['contract']) {
+            $where[] = 'contract = ?';
+            $values[] = $options['contract'];
+            $options['allowFiltering'] = true;
+        }
+
         if ($where) {
             $cql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        if ($options['allowFiltering']) {
+            $cql .= " ALLOW FILTERING";
         }
 
         $query = new Custom();
@@ -107,10 +146,12 @@ class Repository
         foreach($rows as $row) {
             $transaction = new Transaction();
             $transaction
-                ->setContract($row['contract'])            
-                ->setUserGuid((int) $row['user_guid'])
-                ->setTimestamp((int) $row['timestamp'])
                 ->setTx($row['tx'])
+                ->setUserGuid((int) $row['user_guid'])
+                ->setWalletAddress($row['wallet_address'])
+                ->setTimestamp((int) $row['timestamp'])
+                ->setContract($row['contract'])            
+                ->setAmount((double) $row['amount'])
                 ->setCompleted((bool) $row['completed'])
                 ->setData(json_decode($row['data'], true));
                 
@@ -126,7 +167,7 @@ class Repository
     public function get($tx)
     {
 
-        $cql = "SELECT * from blockchain_transactions WHERE tx = ?";
+        $cql = "SELECT * from blockchain_transactions_by_id WHERE tx = ?";
         $values = [ (string) $tx ];
 
         $query = new Custom();
@@ -147,10 +188,12 @@ class Repository
 
         $transaction = new Transaction();
         $transaction
-            ->setContract($row['contract'])            
-            ->setUserGuid((int) $row['user_guid'])
-            ->setTimestamp((int) $row['timestamp']->time())
             ->setTx($row['tx'])
+            ->setUserGuid((int) $row['user_guid'])
+            ->setWalletAddress($row['wallet_address'])
+            ->setTimestamp((int) $row['timestamp'])
+            ->setContract($row['contract'])            
+            ->setAmount((double) $row['amount'])
             ->setCompleted((bool) $row['completed'])
             ->setData(json_decode($row['data'], true));
             

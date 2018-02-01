@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Rewards;
+namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Entities\User;
 

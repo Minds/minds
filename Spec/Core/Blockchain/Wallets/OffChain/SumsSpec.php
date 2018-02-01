@@ -1,6 +1,6 @@
 <?php
 
-namespace Spec\Minds\Core\Rewards;
+namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -12,7 +12,7 @@ class SumsSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Rewards\Sums');
+        $this->shouldHaveType('Minds\Core\Blockchain\Wallets\OffChain\Sums');
     }
 
     function it_sould_get_a_balance(Client $db)

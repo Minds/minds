@@ -1,12 +1,12 @@
 <?php
 
-namespace Spec\Minds\Core\Rewards;
+namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-use Minds\Core\Rewards\Repository;
-use Minds\Core\Rewards\Balance;
+use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Blockchain\Wallets\OffChain\Balance;
 use Minds\Entities\User;
 
 class TransactionsSpec extends ObjectBehavior
@@ -14,7 +14,7 @@ class TransactionsSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Rewards\Transactions');
+        $this->shouldHaveType('Minds\Core\Blockchain\Wallets\OffChain\Transactions');
     }
 
     function it_should_create_a_rewards_transaction(Repository $repo, Balance $balance)
@@ -30,15 +30,21 @@ class TransactionsSpec extends ObjectBehavior
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
 
-        $repo->add(Argument::that(function ($reward) use ($user) {
-            return $reward->getUser() == $user
-                && $reward->getAmount() == 5
-                && $reward->getType() == 'spec';
+        $guid = null;
+
+        $repo->add(Argument::that(function ($transaction) use ($user, &$guid) {
+            $guid = $transaction->getTx();
+            return $transaction->getUserGuid() == $user->guid
+                && $transaction->getWalletAddress() == 'offchain'
+                && $transaction->getAmount() == 5
+                && $transaction->getContract() == 'offchain:spec'
+                && $transaction->isCompleted() == true;
             }))
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->create()->shouldReturn('reward-tx:123:spec:' . (time() * 1000));
+        $transaction = $this->create();
+        $transaction->getTx()->shouldBe($guid);
     }
 
     function it_should_not_create_a_rewards_transaction_if_insufficient_balance(Repository $repo, Balance $balance)
@@ -70,10 +76,10 @@ class TransactionsSpec extends ObjectBehavior
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
 
-        $repo->add(Argument::that(function ($reward) use ($user) {
-            return $reward->getUser() == $user
-                && $reward->getAmount() == 5
-                && $reward->getType() == 'spec';
+        $repo->add(Argument::that(function ($transaction) use ($user) {
+            return $transaction->getUserGuid() == $user->guid
+                && $transaction->getAmount() == 5
+                && $transaction->getContract() == 'offchain:spec';
             }))
             ->shouldBeCalled()
             ->willReturn(false);

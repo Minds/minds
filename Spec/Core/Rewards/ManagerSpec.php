@@ -6,8 +6,9 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Core\Rewards\Contributions\Manager as ContributionsManager;
-use Minds\Core\Rewards\Repository;
-use Minds\Core\Rewards\Reward;
+use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Entities\User;
 
 class ManagerSpec extends ObjectBehavior
@@ -18,18 +19,26 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Rewards\Manager');
     }
 
-    function it_should_sync_contributions_to_rewards(ContributionsManager $contributions, Repository $repository)
+    function it_should_sync_contributions_to_rewards(
+        ContributionsManager $contributions,
+        Transactions $transactions,
+        Repository $txRepository
+    )
     {
-        $this->beConstructedWith($contributions, $repository);
+        $this->beConstructedWith($contributions, $transactions, $txRepository);
 
         $timestamp = time() * 1000;
         $user = new User;
         $user->guid = 123;
 
-        $repository->getList([
-                'timestamp' => $timestamp,
-                'type' => 'contribution',
-                'user_guid' => 123
+        $txRepository->getList([
+            'user_guid' => 123,
+            'wallet_address' => 'offchain',
+            'timestamp' => [
+                'gte' => $timestamp,
+                'lte' => $timestamp,
+            ],
+            'contract' => 'oc:reward',
             ])
             ->shouldBeCalled()
             ->willReturn(null);
@@ -52,41 +61,61 @@ class ManagerSpec extends ObjectBehavior
         $contributions->getRewardsAmount()
             ->shouldBeCalled()
             ->willReturn(20);
-        
-        $reward = (new Reward)
-            ->setType('contribution')
-            ->setTimestamp($timestamp)
-            ->setUser($user)
-            ->setAmount(20);
 
-        $repository->add($reward)
-            ->shouldBeCalled();
+        $transactions->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($transactions);
+
+        $transactions->setType('reward')
+            ->shouldBeCalled()
+            ->willReturn($transactions);
+
+        $transactions->setAmount(20)
+            ->shouldBeCalled()
+            ->willReturn($transactions);
+
+        $transactions->create()
+            ->shouldBeCalled()
+            ->willReturn((new Transaction)
+                ->setAmount(20)
+                ->setContract('offchain:reward')
+                ->setTimestamp($timestamp)
+            );
 
         $this->setUser($user)
             ->setFrom($timestamp)
             ->setTo(time() * 1000);
 
         $this->sync()->getAmount()->shouldBe(20);
-        $this->sync()->getType()->shouldBe('contribution');
+        $this->sync()->getContract()->shouldBe('offchain:reward');
         $this->sync()->getTimestamp()->shouldBe($timestamp);
     }
 
-    function it_should_not_allow_duplicate_rewards_to_be_sent(ContributionsManager $contributions, Repository $repository)
+    function it_should_not_allow_duplicate_rewards_to_be_sent(
+        ContributionsManager $contributions,
+        Transactions $transactions,
+        Repository $txRepository
+    )
     {
-        $this->beConstructedWith($contributions, $repository);
+        $this->beConstructedWith($contributions, $transactions, $txRepository);
 
-        $repository->getList(Argument::any())
+        $txRepository->getList([
+            'user_guid' => 123,
+            'wallet_address' => 'offchain',
+            'timestamp' => [
+                'gte' => time() * 1000,
+                'lte' => time() * 1000,
+            ],
+            'contract' => 'oc:reward',
+            ])
             ->shouldBeCalled()
-            ->willReturn([
-                (new Reward)
-                ->setType('contribution')
-                ->setTimestamp(time())
-                ->setAmount(20)
-            ]);
+            ->willReturn([(new Transaction)]);
 
         $user = new User;
         $user->guid = 123;   
-        $this->setUser($user);
+        $this->setUser($user)
+            ->setFrom(time() * 1000)
+            ->setTo(time() * 1000);
 
         $this->shouldThrow('\Exception')->duringSync();
     }
