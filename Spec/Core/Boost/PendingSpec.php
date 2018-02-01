@@ -4,6 +4,8 @@ namespace Spec\Minds\Core\Boost;
 
 use Minds\Core\Blockchain\Pending;
 use Minds\Core\Blockchain\Services\Ethereum;
+use Minds\Core\Blockchain\Transactions\Manager;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Boost\Repository;
 use Minds\Core\Config;
@@ -19,17 +21,20 @@ class PendingSpec extends ObjectBehavior
     protected $config;
     protected $pendingManager;
     protected $ethereumClient;
+    protected $blockchainTx;
 
     function let(
         Config $config,
         Pending $pendingManager,
-        Ethereum $ethereumClient
+        Ethereum $ethereumClient,
+        Manager $blockchainTx
     ) {
         $this->config = $config;
         $this->pendingManager = $pendingManager;
         $this->ethereumClient = $ethereumClient;
+        $this->blockchainTx = $blockchainTx;
 
-        $this->beConstructedWith($config, $pendingManager, $ethereumClient);
+        $this->beConstructedWith($config, $pendingManager, $ethereumClient, $blockchainTx);
     }
 
     function it_is_initializable()
@@ -47,6 +52,16 @@ class PendingSpec extends ObjectBehavior
         $boost->getOwner()->willReturn($owner);
         $boost->getHandler()->willReturn('network');
         $boost->getGuid()->willReturn(4000);
+        $boost->getTimeCreated()->willReturn(123456);
+
+        $this->blockchainTx->add(Argument::that(function (Transaction $tx) use ($boost) {
+            return (
+                $tx->getTx() === 'tx123' &&
+                $tx->getContract() === 'boost'
+            );
+        }))
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->pendingManager->add([
             'type' => 'boost',

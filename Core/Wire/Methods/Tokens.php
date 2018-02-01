@@ -3,6 +3,7 @@
 namespace Minds\Core\Wire\Methods;
 
 use Minds\Core;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Wire\Counter;
@@ -25,10 +26,15 @@ class Tokens implements MethodInterface
     protected $repository;
     protected $cache;
     protected $config;
+
     /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
     protected $subscriptionsManager;
+
     /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
     protected $subscriptionsRepository;
+
+    /** @var Core\Blockchain\Transactions\Manager */
+    protected $blockchainTx;
 
     /** @var Core\Blockchain\Pending $pendingManager */
     protected $pendingManager;
@@ -41,7 +47,8 @@ class Tokens implements MethodInterface
         $config = null,
         $pendingManager = null,
         $subscriptionsManager = null,
-        $subscriptionsRepository = null
+        $subscriptionsRepository = null,
+        $blockchainTx = null
     )
     {
         $this->manager = $manager ?: Core\Di\Di::_()->get('Wire\Manager');
@@ -51,6 +58,7 @@ class Tokens implements MethodInterface
         $this->pendingManager = $pendingManager ?: Di::_()->get('Blockchain\Pending');
         $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Payments\Subscriptions\Manager');
         $this->subscriptionsRepository = $subscriptionsRepository ?: Di::_()->get('Payments\Subscriptions\Repository');
+        $this->blockchainTx = $blockchainTx ?: Di::_()->get('Blockchain\Transactions\Manager');
     }
 
     public function setAmount($amount)
@@ -195,6 +203,20 @@ class Tokens implements MethodInterface
                 'entity_guid' => $this->entity->guid,
             ]
         ]);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setTx($this->nonce['txHash'])
+            ->setContract('wire')
+            ->setTimestamp(time())
+            ->setUserGuid($this->actor->guid)
+            ->setData([
+                'amount' => (string) $this->amount,
+                'receiver_guid' => $this->owner->guid,
+                'entity_guid' => $this->entity->guid,
+            ]);
+
+        $this->blockchainTx->add($transaction);
 
         if ($result) {
             /** @var Core\Payments\Manager $paymentsManager */

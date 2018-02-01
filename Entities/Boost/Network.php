@@ -207,6 +207,15 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     }
 
     /**
+     * Get the time created
+     * @return int
+     */
+    public function getTimeCreated()
+    {
+        return $this->time_created ?: time();
+    }
+
+    /**
      * Return the bid
      * @return float
      */

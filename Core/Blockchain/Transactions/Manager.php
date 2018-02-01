@@ -76,6 +76,7 @@ class Manager
                     try {
                         (new $topics[$topic]())->event($topic, $log, $transaction);
                     } catch (\Exception $e) {
+                        error_log("Tx[{$this->tx}] {$topic} threw " . get_class($e) . ": {$e->getMessage()}");
                         continue;
                     }
                 }

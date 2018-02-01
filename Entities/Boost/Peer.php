@@ -187,6 +187,15 @@ class Peer implements BoostEntityInterface
   }
 
   /**
+   * Get the time created
+   * @return int
+   */
+    public function getTimeCreated()
+  {
+      return $this->time_created ?: time();
+  }
+
+  /**
    * Return the bid
    * @return int
    */

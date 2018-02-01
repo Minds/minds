@@ -9,6 +9,7 @@
 namespace Minds\Core\Boost;
 
 use Minds\Core;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 
@@ -23,15 +24,24 @@ class Pending
     /** @var Core\Blockchain\Services\Ethereum $ethereumClient */
     protected $ethereumClient;
 
+    /** @var Core\Blockchain\Transactions\Manager */
+    protected $blockchainTx;
+
     /**
      * Pending constructor.
      * @param Config $config
      */
-    public function __construct($config = null, $pendingManager = null, $ethereumClient = null)
+    public function __construct(
+        $config = null,
+        $pendingManager = null,
+        $ethereumClient = null,
+        $blockchainTx = null
+    )
     {
         $this->config = $config ?: Di::_()->get('Config');
         $this->pendingManager = $pendingManager ?: Di::_()->get('Blockchain\Pending');
         $this->ethereumClient = $ethereumClient ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->blockchainTx = $blockchainTx ?: Di::_()->get('Blockchain\Transactions\Manager');
     }
 
     /**
@@ -49,6 +59,19 @@ class Pending
                 'guid' => $boost->getGuid()
             ]
         ]);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setTx($tx_id)
+            ->setContract('boost')
+            ->setTimestamp($boost->getTimeCreated())
+            ->setUserGuid($boost->getOwner()->guid)
+            ->setData([
+                'type' => $boost->getHandler(),
+                'guid' => $boost->getGuid(),
+            ]);
+
+        $this->blockchainTx->add($transaction);
     }
 
     /**
