@@ -256,7 +256,7 @@ class User extends \ElggUser
         if (!$pinned) {
             $pinned = [];
         } else if (count($pinned) > 2) {
-            return;
+            array_shift($pinned);
         }
 
         if (array_search($guid, $pinned) === false) {
