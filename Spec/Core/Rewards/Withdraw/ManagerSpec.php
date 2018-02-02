@@ -36,6 +36,8 @@ class ManagerSpec extends ObjectBehavior
             ->setContract('withdraw')
             ->setTx('0xabc220393')
             ->setUserGuid(123)
+            ->setWalletAddress('0xRequesterAddr')
+            ->setAmount(1000)
             ->setTimestamp(time())
             ->setData([
                 'amount' => 1000,

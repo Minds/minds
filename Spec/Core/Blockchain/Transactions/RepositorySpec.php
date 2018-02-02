@@ -61,7 +61,7 @@ class RepositorySpec extends ObjectBehavior
                 [
                     'user_guid' => 123,
                     'wallet_address' => '0xWALLETADDR',
-                    'timestamp' => time(),
+                    'timestamp' => new Timestamp(time()),
                     'tx' => '0xtid',
                     'contract' => 'spec',
                     'amount' => 50,                    
@@ -137,7 +137,7 @@ class RepositorySpec extends ObjectBehavior
                 [
                     'user_guid' => 123,
                     'wallet_address' => '0xWALLETADDR',
-                    'timestamp' => time(),
+                    'timestamp' => new Timestamp(time()),
                     'tx' => '0xtid',
                     'contract' => 'spec',
                     'amount' => 50,                    
