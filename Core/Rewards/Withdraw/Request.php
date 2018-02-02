@@ -42,7 +42,7 @@ class Request
 
     public function export() {
         return [
-            'timestamp' => $this->timestamp * 1000,
+            'timestamp' => $this->timestamp,
             'amount' => $this->amount,
             'user_guid' => $this->user_guid,
             'completed' => $this->completed
