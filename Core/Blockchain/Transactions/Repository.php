@@ -149,7 +149,7 @@ class Repository
                 ->setTx($row['tx'])
                 ->setUserGuid((int) $row['user_guid'])
                 ->setWalletAddress($row['wallet_address'])
-                ->setTimestamp((int) $row['timestamp'])
+                ->setTimestamp((int) $row['timestamp']->time())
                 ->setContract($row['contract'])            
                 ->setAmount((double) $row['amount'])
                 ->setCompleted((bool) $row['completed'])
@@ -157,7 +157,7 @@ class Repository
                 
             $transactions[] = $transaction;
         }
-
+        
         return [
             'transactions' => $transactions,
             'token' => $rows->pagingStateToken()
@@ -167,7 +167,7 @@ class Repository
     public function get($tx)
     {
 
-        $cql = "SELECT * from blockchain_transactions_by_id WHERE tx = ?";
+        $cql = "SELECT * from blockchain_transactions_by_tx WHERE tx = ?";
         $values = [ (string) $tx ];
 
         $query = new Custom();
@@ -191,7 +191,7 @@ class Repository
             ->setTx($row['tx'])
             ->setUserGuid((int) $row['user_guid'])
             ->setWalletAddress($row['wallet_address'])
-            ->setTimestamp((int) $row['timestamp'])
+            ->setTimestamp((int) $row['timestamp']->time())
             ->setContract($row['contract'])            
             ->setAmount((double) $row['amount'])
             ->setCompleted((bool) $row['completed'])
