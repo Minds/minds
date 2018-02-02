@@ -90,7 +90,7 @@ class Manager
             'contract' => 'oc:reward',
         ]);
 
-        if ($transactions) {
+        if ($transactions['transactions']) {
             throw new \Exception("Already issued rewards to this user");
         }
 
