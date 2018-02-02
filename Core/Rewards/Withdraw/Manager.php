@@ -55,6 +55,8 @@ class Manager
         $transaction
             ->setTx($request->getTx())
             ->setContract('withdraw')
+            ->setAmount($request->getAmount())
+            ->setWalletAddress($request->getAddress())
             ->setTimestamp($request->getTimestamp())
             ->setUserGuid($request->getUserGuid())
             ->setData([
