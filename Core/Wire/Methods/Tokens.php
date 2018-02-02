@@ -208,6 +208,8 @@ class Tokens implements MethodInterface
         $transaction
             ->setTx($this->nonce['txHash'])
             ->setContract('wire')
+            ->setWalletAddress($this->owner->getEthWallet())
+            ->setAmount($this->amount)
             ->setTimestamp(time())
             ->setUserGuid($this->actor->guid)
             ->setData([
