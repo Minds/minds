@@ -13,6 +13,7 @@ class Password
      * Check if a password is valid
      * @param mixed $user
      * @param string $password
+     * @throws Exceptions\PasswordRequiresHashUpgradeException
      * @return boolean
      */
     public function check($user, $password)
@@ -21,17 +22,24 @@ class Password
             $user = new Entities\User($user);
         }
 
+        // if the password was generated using password_hash, then return, otherwise try other algorithms
+        if (password_verify($password, $user->password)) {
+            return true;
+        }
+
         $algo = 'sha256';
-        if (strlen($user->password) == 32) { //legacy users might still be using md5
+        $length = strlen($user->password);
+        if ($length == 32) { //legacy users might still be using md5
             $algo = 'md5';
         }
 
-        if ($user->password !== self::generate($user, $password, $algo)) {
-            //log_login_failure($user->guid);
-        return false;
+        $matches = $user->password === self::generate($user, $password, $algo);
+
+        if ($matches) {
+            throw new Core\Security\Exceptions\PasswordRequiresHashUpgradeException();
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -41,12 +49,15 @@ class Password
      * @param string $algo (optional)
      * @return string
      */
-    public static function generate($user, $password, $algo = "sha256")
+    public static function generate($user, $password, $algo = "bcrypt")
     {
         if ($algo == 'md5') {
             return md5($password . $user->salt);
+        } elseif ($algo == 'sha256') {
+            return hash('sha256', $password . $user->salt);
         }
-        return hash('sha256', $password . $user->salt);
+
+        return password_hash($password, PASSWORD_BCRYPT);
     }
 
     /**
