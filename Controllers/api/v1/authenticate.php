@@ -41,27 +41,36 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $user = new Entities\User(strtolower($_POST['username']));
 
+        if (!$user->username) {
+            header('HTTP/1.1 401 Unauthorized', true, 401);
+            return Factory::response(['status' => 'failed']);
+        }
+
         if (!$user->isEnabled() && !$user->isBanned()) {
             $user->enable();
         }
 
-        if ($user->username &&
-          Core\Security\Password::check($user, $_POST['password'])) {
-            //is twofactor authentication setup?
-            try {
-                if (login($user) && Core\Session::isLoggedIn()) {
-                    $response['status'] = 'success';
-                    $response['user'] = $user->export();
-                }
-            } catch (TwoFactorRequired $e) {
-                header('HTTP/1.1 ' + $e->getCode(), true, $e->getCode());
-                $response['status'] = "error";
-                $response['code'] = $e->getCode();
-                $response['message'] = $e->getMessage();
+        try {
+            if (!Core\Security\Password::check($user, $_POST['password'])) {
+                header('HTTP/1.1 401 Unauthorized', true, 401);
+                return Factory::response(['status' => 'failed']);
             }
-        } else {
-            header('HTTP/1.1 401 Unauthorized', true, 401);
-            $response['status'] = 'failed';
+        } catch (Core\Security\Exceptions\PasswordRequiresHashUpgradeException $e) {
+            $user->password = Core\Security\Password::generate($user, $_POST['password']);
+            $user->override_password = true;
+            $user->save();
+        }
+
+        try {
+            if (login($user) && Core\Session::isLoggedIn()) {
+                $response['status'] = 'success';
+                $response['user'] = $user->export();
+            }
+        } catch (TwoFactorRequired $e) {
+            header('HTTP/1.1 ' + $e->getCode(), true, $e->getCode());
+            $response['status'] = "error";
+            $response['code'] = $e->getCode();
+            $response['message'] = $e->getMessage();
         }
 
         return Factory::response($response);

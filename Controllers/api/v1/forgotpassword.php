@@ -93,7 +93,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
               break;
           }
 
-          $user->salt = Core\Security\Password::salt();
+          //$user->salt = Core\Security\Password::salt();
           $user->password = Core\Security\Password::generate($user, $_POST['password']);
           $user->password_reset_code = "";
           $user->override_password = true;
