@@ -90,12 +90,14 @@ class Points implements MethodInterface
      */
     public function create()
     {
-        if ($this->recurring) {
-            $this->createSubscription();
-            return;
-        }
+        throw new \Exception('Points are no longer supported');
 
-        $this->createWire();
+        // if ($this->recurring) {
+        //     $this->createSubscription();
+        //     return;
+        // }
+        //
+        // $this->createWire();
     }
 
     /**
@@ -213,8 +215,9 @@ class Points implements MethodInterface
 
     public function onRecurring($subscription_id)
     {
-        return $this->createWire([
-            'subscription_id' => $subscription_id
-        ]);
+        throw new \Exception('Points are no longer supported');
+        // return $this->createWire([
+        //     'subscription_id' => $subscription_id
+        // ]);
     }
 }

@@ -79,7 +79,6 @@ class boost implements Interfaces\Api
                 break;
             case "rates":
                 $response['balance'] = (int)Counters::get(Core\Session::getLoggedinUser()->guid, 'points', false);
-                $response['rewardsBalance'] = Di::_()->get('Rewards\Balance')->setUser(Core\Session::getLoggedInUser())->get();
                 $response['hasPaymentMethod'] = false;
                 $response['rate'] = $this->rate;
 
@@ -229,7 +228,7 @@ class boost implements Interfaces\Api
                             break;
 
                         case 'tokens':
-                        case 'rewards':
+                        case 'offchain':
                             $amount = round($amount / $this->getTokensRate(), 4);
                             break;
 

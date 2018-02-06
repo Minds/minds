@@ -29,10 +29,15 @@ class Payment
             case 'points':
                 // return Wallet::createTransaction($boost->getOwner()->guid, 0 - $boost->getBid(), $boost->getGuid(), "Boost");
 
-            case 'rewards':
-                $transactions = Di::_()->get('Rewards\Transactions');
-                $transactions->setUser($boost->getOwner());
-                return $transactions->create($transactions->toWei(-$boost->getBid()), 'boost');
+            case 'offchain':
+                /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
+                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                $transactions
+                    ->setUser($boost->getOwner())
+                    ->setType('boost')
+                    ->setAmount($transactions->toWei(-$boost->getBid()));
+
+                return $transactions->create();
 
             case 'usd':
             case 'money':
@@ -86,7 +91,7 @@ class Payment
 
         switch ($currency) {
             case 'points':
-            case 'rewards':
+            case 'offchain':
                 return true; // Already charged
 
             case 'usd':
@@ -124,10 +129,15 @@ class Payment
                 throw new \Exception('Points are no longer supported');
                 // return Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
 
-            case 'rewards':
-                $transactions = Di::_()->get('Rewards\Transactions');
-                $transactions->setUser($boost->getOwner());
-                return $transactions->create($transactions->toWei($boost->getBid()), 'boost_refund');
+            case 'offchain':
+                /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
+                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                $transactions
+                    ->setUser($boost->getOwner())
+                    ->setType('boost_refund')
+                    ->setAmount($transactions->toWei($boost->getBid()));
+
+                return $transactions->create();
 
             case 'usd':
             case 'money':

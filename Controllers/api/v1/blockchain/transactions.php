@@ -99,6 +99,38 @@ class transactions implements Interfaces\Api
                 $response['done'] = true;
                 $response['entity'] = $request->export();
                 break;
+            case 'spend':
+                if (!$_POST['type']) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'Type is required'
+                    ]);
+                }
+
+                if (!$_POST['amount'] || !is_numeric($_POST['amount']) || $_POST['amount'] <= 0) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'Amount should be a positive number'
+                    ]);
+                }
+
+                /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
+                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+
+                $amount = $transactions->toWei((double) $_POST['amount']);
+
+                $transactions
+                    ->setUser(Session::getLoggedinUser())
+                    ->setType($_POST['type'])
+                    ->setAmount(-$amount);
+
+                $transaction = $transactions->create();
+
+                $response = [
+                    'txHash' => $transaction->getTx()
+                ];
+
+                break;
             case 'verify':
                 if (!isset($_POST['number'])) {
                     return Factory::response(['status' => 'error', 'message' => 'phone field is required']);

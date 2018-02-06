@@ -52,10 +52,10 @@ class Balance
         $balance = $this->cache->get($cacheKey);
 
         if ($balance)
-            return (double) $balance;
+            return unserialize($balance);
 
         $balance = $this->token->balanceOf($address);
-        $this->cache->set($cacheKey, $balance, 60);
+        $this->cache->set($cacheKey, serialize($balance), 60);
 
         return (double) $balance;
     }
