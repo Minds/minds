@@ -6,7 +6,7 @@
  * @author eiennohi
  */
 
-namespace Minds\Controllers\api\v1\blockchain;
+namespace Minds\Controllers\api\v2\blockchain;
 
 use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Data\cache\Redis;

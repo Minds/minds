@@ -6,7 +6,7 @@
  * @author Mark
  */
 
-namespace Minds\Controllers\api\v1\blockchain;
+namespace Minds\Controllers\api\v2\blockchain;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
