@@ -7,6 +7,7 @@ namespace Minds\Core\Rewards;
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Di\Di;
+use Minds\Core\Events\Dispatcher;
 
 class Manager
 {
@@ -113,6 +114,14 @@ class Manager
         if ($this->dryRun) {
             return $this->transactions;
         }
+
+        Dispatcher::trigger('notification', 'contributions', [
+            'to' => [$this->user->guid],
+            'from' => 100000000000000519,
+            'notification_view' => 'contributions',
+            'params' => ['amount' => $amount],
+            'message' => ''
+        ]);
     
         return $this->transactions->create();
     }
