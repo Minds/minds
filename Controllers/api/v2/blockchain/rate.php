@@ -8,80 +8,82 @@
 
 namespace Minds\Controllers\api\v2\blockchain;
 
+use Minds\Core\Blockchain\Services\RatesInterface;
 use Minds\Core\Data\cache\abstractCacher;
-use Minds\Core\Data\cache\Redis;
 use Minds\Core\Di\Di;
-use Minds\Core\Http\Curl\Client;
-use Minds\Core\Session;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
 
 class rate implements Interfaces\Api
 {
+    /**
+     * Equivalent to HTTP GET method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function get($pages)
     {
-        /** @var Redis $cacher */
+        $currencyId = isset($pages[0]) ? $pages[0] : 'ethereum';
+        $cacheKey = "blockchain:rate:{$currencyId}";
+
+        /** @var RatesInterface $rates */
+        $rates = Di::_()->get('Blockchain\Rates');
+
+        /** @var abstractCacher $cacher */
         $cacher = \Minds\Core\Data\cache\factory::build();
 
-        $rate = $cacher->get('tokens:rate');
-
-        if (!$rate) {
-            try {
-                $rate = $this->getRate();
-            } catch (\Exception $e) {
-                return Factory::response(['status' => 'error', 'message' => $e->getMessage()]);
-            }
-
-            $cacheTTL = Di::_()->get('Config')->get('blockchain')['token_rate_cache_ttl'];
-
-            $cacher->set('tokens:rate', ['rate' => $rate], $cacheTTL * 60);
+        if ($rate = $cacher->get($cacheKey)) {
+            return Factory::response([
+                'rate' => unserialize($rate)
+            ]);
         }
 
+        $rate = $rates
+            ->setCurrency($currencyId)
+            ->get();
 
-        return Factory::response(['rate' => is_numeric($rate) ? $rate : floatval($rate['rate']) ]);
+        if (!$rate) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Cannot get rates'
+            ]);
+        }
+
+        $cacher->set($cacheKey, serialize($rate), 15 * 60);
+
+        return Factory::response([
+            'rate' => $rate
+        ]);
     }
 
     /**
-     * @return mixed
-     * @throws \Exception
+     * Equivalent to HTTP POST method
+     * @param  array $pages
+     * @return mixed|null
      */
-    private function getRate()
-    {
-        /** @var Client $http */
-        $http = Di::_()->get('Http');
-
-        $res = $http->get('https://api.coinmarketcap.com/v1/ticker/EOS/?convert=USD');
-        $res = json_decode($res);
-
-        $errorMessage = 'There was an error while querying Tokens rate';
-
-        if (is_array($res)) {
-            $res = $res[0];
-        } else {
-            throw new \Exception($errorMessage);
-        }
-
-        if (!$res->price_usd) {
-            throw new \Exception($errorMessage);
-        }
-
-        return $res->price_usd;
-    }
-
     public function post($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP PUT method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function put($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP DELETE method
+     * @param  array $pages
+     * @return mixed|null
+     */
     public function delete($pages)
     {
         return Factory::response([]);
     }
-
 }

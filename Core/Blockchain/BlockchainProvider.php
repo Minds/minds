@@ -57,5 +57,9 @@ class BlockchainProvider extends Provider
         $this->di->bind('Blockchain\Wallets\OnChain\Balance', function () {
             return new Wallets\OnChain\Balance();
         });
+
+        $this->di->bind('Blockchain\Rates', function () {
+            return new Services\CoinMarketCap();
+        });
     }
 }
