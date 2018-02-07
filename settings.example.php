@@ -232,3 +232,10 @@ $CONFIG->set('blockchain', [
 
     'token_name' => '',
 ]);
+
+$CONFIG->set('plus', [
+    'tokens' => [
+        'month' => 5,
+        'year' => 50
+    ]
+]);

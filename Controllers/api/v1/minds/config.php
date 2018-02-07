@@ -32,7 +32,8 @@ class config implements Interfaces\Api, Interfaces\ApiIgnorePam
             "recaptchaKey" => Minds\Core\Config::_()->get('google')['recaptcha']['site_key'],
             "max_video_length" => Minds\Core\Config::_()->get('max_video_length'),
             "features" => (object) (Minds\Core\Config::_()->get('features') ?: []),
-            "blockchain" => (object) Minds\Core\Di\Di::_()->get('Blockchain\Manager')->getPublicSettings()
+            "blockchain" => (object) Minds\Core\Di\Di::_()->get('Blockchain\Manager')->getPublicSettings(),
+            "plus" => Minds\Core\Config::_()->get('plus'),
         ];
 
         return Factory::response($minds);
