@@ -200,6 +200,7 @@ class channel implements Interfaces\Api
                 if (!$owner->canEdit()) {
                     return Factory::response(array('status'=>'error'));
                 }
+
                 $update = array();
                 foreach (['name', 'website', 'briefdescription', 'gender',
                   'dob', 'city', 'coordinates', 'monetized'] as $field) {
@@ -207,6 +208,13 @@ class channel implements Interfaces\Api
                         $update[$field] = $_POST[$field];
                         $owner->$field = $_POST[$field];
                     }
+                }
+
+                try {
+                    $spam = new Core\Security\Spam();
+                    $spam->check($owner);
+                } catch (\Exception $e) {
+                    return Factory::response(['status'=>'error', 'message' => $e->getMessage() ]);
                 }
 
                 if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
