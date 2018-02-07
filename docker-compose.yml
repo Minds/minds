@@ -3,11 +3,14 @@ version: "2.2"
 
 services:
   cassandra:
-    image: cassandra:3.11
+    image: cassandra:3.11.1
     environment:
       - CASSANDRA_START_RPC=true
     networks:
       - app
+    volumes:
+      - "./cassandra:/var/lib/cassandra"
+      - "./logs:/var/log"
 
   mongo:
     image: mongo:3.4
@@ -28,7 +31,7 @@ services:
 
   redis:
     image: redis:4.0-alpine
-    mem_limit: 256MB # keep an eye
+    mem_limit: 100MB # keep an eye
     networks:
       - app
 
@@ -43,9 +46,9 @@ services:
       dockerfile: ./containers/php-fpm/Dockerfile
     depends_on:
       - cassandra
-      - mongo
-      - elasticsearch
-      - rabbitmq
+      #- mongo
+      #- elasticsearch
+      #- rabbitmq
       - redis
     networks:
       - app
@@ -87,6 +90,15 @@ services:
     volumes:
       ## The following is for development environments only. Comment out on production. ##
       - "./front/:/var/www/Minds/front"
+
+  installer:
+    build:
+      context: ./engine
+      dockerfile: ./containers/installer/Dockerfile
+    depends_on:
+      - nginx #this will then load in everything else
+    volumes:
+      - "./engine/:/var/www/Minds/engine"
 
 networks:
   app:
