@@ -580,7 +580,16 @@ class newsfeed implements Interfaces\Api
                     ]);
                 }
 
-                if ($guid = $activity->save()) {
+                try {
+                    $guid = $activity->save();
+                } catch (\Exception $e) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
+                if ($guid) {
                     if (in_array($activity->custom_type, ['batch', 'video'])) {
                         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $guid, 'Post');
                     } else {
