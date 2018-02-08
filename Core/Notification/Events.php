@@ -34,7 +34,7 @@ class Events
                 $from = $params['from'];
             }
 
-            if ($params['entity'] && !is_object($params['entity'])) {
+            if (isset($params['entity']) && $params['entity'] && !is_object($params['entity'])) {
                 $params['entity'] = Entities\Factory::build($params['entity']);
             }
 
