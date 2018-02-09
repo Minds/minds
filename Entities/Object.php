@@ -97,9 +97,9 @@ class Object extends \ElggObject implements Flaggable
             // @todo: migrate to Prepared\Timeline()
             $db = new Core\Data\Call('entities_by_time');
             $remove = [
-                "$this->type",
-                "$this->type:$this->subtype",
-                "$this->type:$this->super_subtype",
+                //"$this->type",
+                //"$this->type:$this->subtype",
+                //"$this->type:$this->super_subtype",
                 "$this->type:$this->super_subtype:user:$this->owner_guid",
                 "$this->type:$this->subtype:user:$this->owner_guid",
             ];
