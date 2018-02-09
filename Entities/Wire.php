@@ -6,6 +6,7 @@ use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 
 /**
+ * DEPRECATED
  * Report Entity (Entities reported by users)
  */
 class Wire extends NormalizedEntity

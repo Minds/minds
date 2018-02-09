@@ -131,7 +131,8 @@ class RepositorySpec extends ObjectBehavior
 
         $db->request(Argument::that(function($query) {
                 $values = $query->build()['values'];
-                return $values[0] == '0xtid';
+                return $values[1] == new Varint(123)
+                    && $values[0] == '0xtid';
             }))
             ->willReturn(new Mocks\Cassandra\Rows([
                 [
@@ -146,7 +147,7 @@ class RepositorySpec extends ObjectBehavior
                 ]
             ], ''));
 
-        $result = $this->get('0xtid');
+        $result = $this->get(123, '0xtid');
         
         $result
             ->getUserGuid()

@@ -1,0 +1,252 @@
+<?php
+/**
+ * Sums for wires
+ */
+namespace Minds\Core\Wire;
+
+use Minds\Core;
+use Minds\Core\Di\Di;
+
+class Sums
+{
+    /** @var Client $db **/
+    private $db;
+
+    /** @var Config $config **/
+    private $config;
+
+    /** @var string method */
+    private $method = 'tokens';
+
+    /** @var string $receiver_guid **/
+    private $receiver_guid;
+
+    /** @var string $sender_guid **/
+    private $sender_guid;
+
+    /** @var int $from */
+    private $from;
+
+    /** @var string $entity_guid **/
+    private $entity_guid;
+
+    public function __construct($db = null, $config = null)
+    {
+        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->config = $config ?: Di::_()->get('Config');
+    }
+
+    /**
+     * Sets the receiver
+     * @param int $receiver
+     * @return $this
+     */
+    public function setReceiver($receiver)
+    {
+        if (is_object($receiver)) {
+            $this->receiver_guid = $receiver->guid;
+        } else {
+            $this->receiver_guid = $receiver;
+        }
+        return $this;
+    }
+
+    /**
+     * Sets the sender
+     * @param int $from
+     * @return $this
+     */
+    public function setSender($sender)
+    {
+        if (is_object($sender)) {
+            $this->sender_guid = $sender->guid;
+        } else {
+            $this->sender_guid = $sender;
+        }
+        return $this;
+    }
+
+    /**
+     * Sets the entity
+     * @param int $from
+     * @return $this
+     */
+    public function setEntity($entity)
+    {
+        $this->entity_guid = $entity;
+        return $this;
+    }
+
+    /**
+     * Timestamp to search from
+     * @param int $from
+     * @return $this
+     */
+    public function setFrom($from)
+    {
+        $this->from = $from;
+        return $this;
+    }
+
+    /**
+     * Returns how much money or points a user has sent through wire in a given time
+     * @param $sender_guid
+     * @param $method
+     * @param $timestamp
+     * @return int
+     */
+    public function getSent()
+    {
+        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
+        if (!$this->from) {
+            $this->from = mktime(0, 0, 0, 1, 1, 2000);
+        }
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        if ($this->receiver_guid) {
+            $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
+                WHERE sender_guid=?
+                AND receiver_guid=?
+                AND method=?
+                AND timestamp >= ?", [
+                    new \Cassandra\Varint($this->sender_guid),
+                    new \Cassandra\Varint($this->receiver_guid),
+                    $this->method,
+                    new \Cassandra\Timestamp($this->from)
+                ]);
+        } else {
+            $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
+                WHERE sender_guid=?
+                AND method=?
+                AND timestamp >= ? ALLOW FILTERING", [
+                    new \Cassandra\Varint($this->sender_guid),
+                    $this->method,
+                    new \Cassandra\Timestamp($this->from)
+                ]);
+        }
+
+        try {
+            $result = $this->db->request($query);
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+    /**
+     *  Returns how much money or points a user has received through wire
+     * @param $receiver_guid
+     * @param $method
+     * @param $timestamp
+     * @return int
+     */
+    public function getReceived()
+    {
+        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
+        if (!$this->from) {
+            $this->from = mktime(0, 0, 0, 1, 1, 2000);
+        }
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire
+          WHERE receiver_guid=?
+          AND method=?
+          AND timestamp >= ?", [
+            new \Cassandra\Varint($this->receiver_guid),
+            $this->method,
+            new \Cassandra\Timestamp($this->from)
+        ]);
+
+        try {
+            $result = $this->db->request($query);
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+    /**
+     * Returns aggregates for a receiver
+     * @param $receiver_guid
+     * @param $method
+     * @param $timestamp
+     * @return int
+     */
+    public function getAggregates()
+    {
+        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
+        if (!$timestamp) {
+            $timestamp = mktime(0, 0, 0, 1, 1, 2000);
+        }
+
+        if ($timestamp instanceof \DateTime) {
+            $timestamp = $timestamp->getTimestamp();
+        }
+
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        $query->query("SELECT
+          SUM(amount) as sum,
+          COUNT(*) as count,
+          AVG(amount) as avg
+          FROM wire
+          WHERE receiver_guid=?
+          AND method=?
+          AND timestamp >= ?", [
+            new \Cassandra\Varint($this->receiver_guid),
+            $this->method,
+            new \Cassandra\Timestamp($this->from)
+        ]);
+
+        try {
+            $result = $this->db->request($query);
+            if (!$result) {
+                return 0;
+            }
+            return [
+                'sum' => $result[0]['sum']->value(),
+                'count' => $result[0]['count']->value(),
+                'avg' => $result[0]['avg']->value()
+            ];
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+    /**
+     * @param $entity_guid
+     * @param $method
+     * @param $timestamp
+     * @return int
+     */
+    public function getEntity()
+    {
+        $query = new Core\Data\Cassandra\Prepared\Custom();
+
+        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_entity
+          WHERE entity_guid=?
+          AND method=?", [
+            new \Cassandra\Varint($this->entity_guid),
+            $this->method
+        ]);
+
+        try {
+            $result = $this->db->request($query);
+            if (!$result) {
+                return 0;
+            }
+            return $result[0]['amount_sum']->value();
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+}

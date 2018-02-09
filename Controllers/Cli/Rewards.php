@@ -11,6 +11,7 @@ use Minds\Entities;
 use Minds\Helpers\Flags;
 use Minds\Interfaces;
 use Minds\Core\Rewards\Contributions\UsersIterator;
+use Minds\Core\Events\Dispatcher;
 
 class Rewards extends Cli\Controller implements Interfaces\CliControllerInterface
 {
@@ -63,6 +64,14 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
 //            $manager->setDryRun(true);
             $reward = $manager->sync();
             $total += (int) $reward->getAmount();
+
+            Dispatcher::trigger('notification', 'contributions', [
+                'to' => [$user->guid],
+                'from' => 100000000000000519,
+                'notification_view' => 'contributions',
+                'params' => ['amount' => (int) $reward->getAmount()],
+                'message' => ''
+            ]);
 
             echo "\r [$i][$guid]: synced past 48 hours. $total";
         }

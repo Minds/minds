@@ -17,6 +17,9 @@ class Manager
     /** @var string $tx */
     private $tx;
 
+    /** @var string $user_guid */
+    private $user_guid;
+
     /** @var Ethereum $eth */
     private $eth;
 
@@ -41,12 +44,23 @@ class Manager
     }
 
     /**
+     * Set the user_guid
+     * @param string $guid
+     * @return $this
+     */
+    public function setUserGuid($user_guid)
+    {
+        $this->user_guid = $user_guid;
+        return $this;
+    }
+
+    /**
      * Act upon the transaction
      * @return void
      */
     public function run()
     {
-        $transaction = $this->repo->get($this->tx);
+        $transaction = $this->repo->get($this->user_guid, $this->tx);
 
         if (!$transaction) {
             throw new \Exception("Transaction " . $this->tx . " not found");
@@ -96,7 +110,8 @@ class Manager
         Queue\Client::build()
             ->setQueue("BlockchainTransactions")
             ->send([
-                'tx' => $transaction->getTx()
+                'tx' => $transaction->getTx(),
+                'user_guid' => $transaction->getUserGuid(),
             ]);
     }
 

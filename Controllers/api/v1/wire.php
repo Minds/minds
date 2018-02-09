@@ -11,7 +11,7 @@ namespace Minds\Controllers\api\v1;
 
 use Minds\Api\Factory;
 use Minds\Core;
-use Minds\Core\Wire\Methods;
+use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Entities;
 use Minds\Interfaces;
 
@@ -50,10 +50,6 @@ class wire implements Interfaces\Api
         }
 
         $amount = $_POST['amount'];
-        $method = $_POST['method'];
-        if ($method == 'usd') {
-            $method = 'money';
-        }
 
         $recurring = isset($_POST['recurring']) ? $_POST['recurring'] : false;
 
@@ -65,28 +61,23 @@ class wire implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'amount must be a positive number']);
         }
 
-        $service = Methods\Factory::build($method);
+        $manager = Core\Di\Di::_()->get('Wire\Manager');
 
         try {
-            $service
-                ->setAmount($amount)
-                ->setActor(Core\Session::getLoggedInUser())
+            $manager
+                ->setAmount($amount * 10 ** 18)
+                ->setRecurring($recurring)
+                ->setSender(Core\Session::getLoggedInUser())
                 ->setEntity($entity)
-                ->setPayload((array) $_POST['payload'])
-                ->setRecurring($recurring);
-            $result = $service->create();
+                ->setPayload((array) $_POST['payload']);
+            $result = $manager->create();
 
-            $this->sendNotifications($amount,  Core\Session::getLoggedinUser(), $entity, $method, $recurring);
+            $this->sendNotifications($amount, Core\Session::getLoggedinUser(), $entity, $recurring);
 
-            if (isset($result['subscriptionId'])) {
-                $response['subscriptionId'] = $result['subscriptionId'];
+            if (!$result) {
+                throw new \Exception("Something failed");
             }
-
-            //now send notification
-
-        } catch (Methods\WalletNotSetupException $e) {
-            $message = 'Somebody wanted to send you a Token wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
-
+        } catch (WalletNotSetupException $e) {
             Core\Queue\Client::build()->setQueue("WireNotification")
                 ->send(array(
                     "entity" => $entity,
@@ -95,21 +86,9 @@ class wire implements Interfaces\Api
 
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
-        } catch (Methods\NotMonetizedException $e) {
-            $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
-
-            Core\Queue\Client::build()->setQueue("WireNotification")
-                ->send(array(
-                    "entity" => $entity,
-                    "notMonetizedException" => true
-                ));
-
-            $response['status'] = 'error';
-            $response['message'] = $e->getMessage();
         } catch (\Exception $e) {
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
-            var_dump($e); exit;
         }
 
         return Factory::response($response);
@@ -127,15 +106,14 @@ class wire implements Interfaces\Api
     {
     }
 
-    private function sendNotifications($amount, $sender, $entity, $method, $subscribed = false)
+    private function sendNotifications($amount, $sender, $entity, $subscribed = false)
     {
         Core\Queue\Client::build()->setQueue("WireNotification")
-            ->send(array(
+            ->send([
                 "amount" => $amount,
                 "sender" => serialize($sender),
                 "entity" => serialize($entity),
-                "method" => $method,
                 "subscribed" => $subscribed
-            ));
+            ]);
     }
 }

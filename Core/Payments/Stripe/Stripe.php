@@ -25,7 +25,9 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->setConfig($config->payments['stripe']);
+        if ($config->payments && isset($config->payments['stripe'])) {
+            $this->setConfig($config->payments['stripe']);
+        }
     }
 
     public function setConfig($config)

@@ -24,14 +24,16 @@ class sums implements Interfaces\Api
     public function get($pages)
     {
         $response = [];
-        $repo = Di::_()->get('Wire\Repository');
+        /** @var Wire\Sums $sums */
+        $sums = Core\Di\Di::_()->get('Wire\Sums');
 
         switch ($pages[0]) {
             case 'overview':
                 $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
                 $timestamp = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
-                $merchant = isset($_GET['merchant']) ? (bool) $_GET['merchant'] : (bool) (new User($guid))->getMerchant();
-                $token_owner = isset($_GET['token_owner']) ? (bool) $_GET['token_owner'] : (bool) (new User($guid))->getEthWallet();
+
+                $sums->setFrom($timestamp)
+                    ->setReceiver(Core\Session::getLoggedInUser());
 
                 $isSelf = Core\Session::getLoggedInUser()->guid == $guid;
                 $cache = Di::_()->get('Cache');
@@ -41,80 +43,51 @@ class sums implements Interfaces\Api
                     return Factory::response($cached);
                 }
 
-                $points = $repo->getAggregatesForReceiver($guid, 'points', $timestamp);
-
                 $response = [
-                    'count' => $points['count'],
-
-                    'points' => $points['sum'],
-                    'points_count' => $points['count'],
-                    'points_avg' => $points['avg'],
-
-                    'money' => 0,
-                    'money_count' => 0,
-                    'money_avg' => 0,
-
                     'tokens' => 0,
                     'tokens_count' => 0,
                     'tokens_avg' => 0,
                 ];
 
-                if ($merchant) {
-                    $money = $repo->getAggregatesForReceiver($guid, 'money', $timestamp);
+                $tokens = $sums->getAggregates($guid, 'tokens', $timestamp);
 
-                    $response['count'] += $money['count'];
+                $response['count'] += $tokens['count'];
 
-                    $response = array_merge($response, [
-                        'money' => $money['sum'],
-                        'money_count' => $money['count'],
-                        'money_avg' => $money['avg'],
-                    ]);
-                }
-
-                if ($token_owner) {
-                    $tokens = $repo->getAggregatesForReceiver($guid, 'tokens', $timestamp);
-
-                    $response['count'] += $tokens['count'];
-
-                    $response = array_merge($response, [
-                        'tokens' => $tokens['sum'],
-                        'tokens_count' => $tokens['count'],
-                        'tokens_avg' => $tokens['avg'],
-                    ]);
-                }
-
+                $response = array_merge($response, [
+                    'tokens' => $tokens['sum'],
+                    'tokens_count' => $tokens['count'],
+                    'tokens_avg' => $tokens['avg'],
+                ]);
+                
                 $cache->set($cacheKey, $response, 6 * 60 * 60 /* 6 hours cache */);
 
                 break;
             case "receiver":
-                $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
-                $method = isset($pages[2]) ? $pages[2] : 'points';
-                $response['method'] = $method;
                 $timestamp = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
 
+                $sums->setFrom($timestamp)
+                    ->setReceiver(Core\Session::getLoggedInUser());
+
                 if (isset($_GET['advanced'])) {
-                    $ags = $repo->getAggregatesForReceiver($guid, $method, $timestamp);
+                    $ags = $sums->getAggregates();
                     $response = [
                         'sum' => $ags['sum'],
                         'count' => $ags['count'],
                         'avg' => $ags['avg']
                     ];
                 } else {
-                    $response['sum'] = Wire\Counter::getSumByReceiver($guid, $method, $timestamp);
+                    $response['sum'] = Wire\Counter::getSumByReceiver(Core\Session::getLoggedInUser()->guid, 'token', $timestamp);
                 }
                 break;
             case "sender":
-                $guid = isset($pages[1]) ? $pages[1] : Core\Session::getLoggedInUser()->guid;
-                $method = isset($pages[2]) ? $pages[2] : 'points';
                 $receiver_guid = isset($pages[3]) ? $pages[3] : false;
-                $response['method'] = $method;
                 $thirtyDaysAgoTS = (new \DateTime('midnight'))->modify("-30 days");
 
-                if ($receiver_guid) {
-                    $response['sum'] = $repo->getSumBySenderForReceiver($guid, $receiver_guid, $method, $thirtyDaysAgoTS);
-                } else {
-                    $response['sum'] = $repo->getSumBySender($guid, $method, $thirtyDaysAgoTS);
-                }
+                $sums->setFrom($thirtyDaysAgoTS)
+                    ->setSender(Core\Session::getLoggedInUser())
+                    ->setReceiver($receiver_guid);
+
+                $response['sum'] = $sums->getSent();
                 break;
         }
 

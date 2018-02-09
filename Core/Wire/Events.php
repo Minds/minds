@@ -10,10 +10,9 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
-use Minds\Core\Wire\Methods\Tokens;
+use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Entities;
 use Minds\Entities\User;
-use Minds\Helpers;
 
 class Events
 {
@@ -26,6 +25,7 @@ class Events
                 return;
             }
 
+            /** @var Manager $manager */
             $manager = Core\Di\Di::_()->get('Wire\Manager');
 
             $wires = $manager->get(['user_guid' => $user->guid, 'type' => 'sent', 'order' => 'DESC']);
@@ -75,19 +75,65 @@ class Events
             $user = Entities\Factory::build($subscription->getEntity()->guid);
             $sender = new User($subscription->getUser()->guid);
 
-            /** @var Tokens $wireMethod */
-            $wireMethod = Methods\Factory::build($subscription->getPaymentMethod());
-
-            $onRecurring = $wireMethod
-                ->setRecurring(true)
-                ->setAmount($subscription->getAmount())
-                ->setActor($sender)
-                ->setEntity($user)
-                ->setTimestamp(time())
-                ->onRecurring($subscription->getId());
+            $onRecurring = $this->onRecurring($sender, $user,$subscription->getAmount(), $subscription->getId());
 
             return $event->setResponse($onRecurring);
         });
+    }
+
+    /**
+     * @param User $actor
+     * @param User $owner
+     * @param $amount
+     * @param string $subscription_id
+     * @return mixed
+     * @throws WalletNotSetupException
+     * @throws \Exception
+     */
+    private function onRecurring($actor, $owner, $amount, $subscription_id) {
+        if (!$actor->getEthWallet()) {
+            throw new WalletNotSetupException();
+        }
+
+        if (!$actor->getEthWallet()) {
+            throw new WalletNotSetupException();
+        }
+
+        /** @var Core\Config $config */
+        $config = Core\Di\Di::_()->get('Config');
+
+        /** @var Core\Blockchain\Services\Ethereum $client */
+        $client = Di::_()->get('Blockchain\Services\Ethereum');
+
+        /** @var Core\Blockchain\Token $token */
+        $token = Di::_()->get('Blockchain\Token');
+
+        $txHash = $client->sendRawTransaction($config->get('blockchain')['wallet_pkey'], [
+            'from' => $config->get('blockchain')['wallet_address'],
+            'to' => $config->get('blockchain')['wire_address'],
+            'gasLimit' => Core\Blockchain\Util::toHex(200000),
+            'data' => $client->encodeContractMethod('wireFrom(address,address,uint256)', [
+                $actor->getEthWallet(),
+                $owner->getEthWallet(),
+                Core\Blockchain\Util::toHex($token->toTokenUnit($amount))
+            ])
+        ]);
+
+        if (!$txHash) {
+            throw new \Exception('Transaction hash is null');
+        }
+
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Wire\Manager');
+        $manager
+            ->setPayload(['nonce' => ['txHash' => $txHash]])
+            ->setAmount($amount)
+            ->setActor($actor)
+            ->setEntity($owner)
+            ->setTimestamp(time());
+        return $manager->create([
+            'subscription_id' => $subscription_id
+        ]);
     }
 
     private function cancelSubscriptions(User $user)

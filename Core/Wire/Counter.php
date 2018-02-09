@@ -7,6 +7,7 @@
 namespace Minds\Core\Wire;
 
 
+use Minds\Core\Data\cache\Redis;
 use Minds\Core\Di\Di;
 use Minds\Entities\Entity;
 
@@ -16,15 +17,18 @@ class Counter
 
     public static function getSumByReceiver($user_guid, $method, $timestamp = null)
     {
+        /** @var Redis $cache */
         $cache = Di::_()->get('Cache');
-        $repository = Di::_()->get('Wire\Repository');
+        /** @var Sums $sums */
+        $sums = Di::_()->get('Wire\Sums');
+        $sums->setReceiver($user_guid)
+            ->setFrom($timestamp);
 
-        if (($cached = $cache->get(static::getIndexName($user_guid, null, $method, $timestamp, false,
-                false))) !== false) {
+        //if (($cached = $cache->get(static::getIndexName($user_guid, null, $method, $timestamp, false, false))) !== false) {
             //return $cached;
-        }
+        //}
 
-        $sum = $repository->getSumByReceiver($user_guid, $method);
+        $sum = $sums->getReceived();
 
         $cache->set(static::getIndexName($user_guid, null, $method, $timestamp, false, false), $sum,
             $timestamp ? static::CACHE_DURATION : false);
@@ -34,8 +38,12 @@ class Counter
 
     public static function getSumBySender($user_guid, $method, $timestamp = null)
     {
+        /** @var Redis $cache */
         $cache = Di::_()->get('Cache');
-        $repository = Di::_()->get('Wire\Repository');
+        /** @var Sums $sums */
+        $sums = Di::_()->get('Wire\Sums');
+        $sums->setFrom($timestamp)
+            ->setSender($user_guid);
 
         if (($cached = $cache->get(static::getIndexName($user_guid, null, $method, $timestamp, false,
                 true))) !== false) {
@@ -43,7 +51,7 @@ class Counter
         }
 
         try {
-            $sum = $repository->getSumBySender($user_guid, $method);
+            $sum = $sums->getSent();
             $cache->set(static::getIndexName($user_guid, null, $method, $timestamp, false, true), $sum,
                 $timestamp ? static::CACHE_DURATION : false);
         } catch(\Exception $e) {
@@ -55,15 +63,20 @@ class Counter
 
     public static function getSumBySenderForReceiver($sender_guid, $receiver_guid, $method, $timestamp = null)
     {
+        /** @var Redis $cache */
         $cache = Di::_()->get('Cache');
-        $repository = Di::_()->get('Wire\Repository');
+        /** @var Sums $sums */
+        $sums = Di::_()->get('Wire\Sums');
+        $sums->setFrom($timestamp)
+            ->setSender($sender_guid)
+            ->setReceiver($receiver_guid);
 
         if (($cached = $cache->get(static::getIndexName($sender_guid, $receiver_guid, $method, $timestamp, false,
                 true))) !== false) {
             return $cached;
         }
 
-        $sum = $repository->getSumBySenderForReceiver($sender_guid, $receiver_guid, $method);
+        $sum = $sums->getSent();
 
         $cache->set(static::getIndexName($sender_guid, $receiver_guid, $method, $timestamp, false, true), $sum,
             $timestamp ? static::CACHE_DURATION : false);
@@ -73,15 +86,18 @@ class Counter
 
     public static function getSumByEntity($entity_guid, $method, $timestamp = null)
     {
+        /** @var Redis $cache */
         $cache = Di::_()->get('Cache');
-        $repository = Di::_()->get('Wire\Repository');
+        /** @var Sums $sums */
+        $sums = Di::_()->get('Wire\Sums');
+        $sums->setEntity($entity_guid);
 
         /*if (($cached = $cache->get(static::getIndexName($entity_guid, null, $method, $timestamp, true))) !== false) {
             return $cached;
         }*/
 
         try {
-            $sum = $repository->getSumByEntity($entity_guid, $method);
+            $sum = $sums->getEntity();
             $cache->set(static::getIndexName($entity_guid, null, $method, $timestamp, true), $sum,
                 $timestamp ? static::CACHE_DURATION : false);
         } catch (\Exception $e) {
@@ -115,4 +131,5 @@ class Counter
         }
         return 'counter:wire:sums:' . $guid . ':' . $method . $lastPart;
     }
+
 }

@@ -3,7 +3,7 @@
 namespace Spec\Minds\Entities;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Wire\Repository;
+use Minds\Core\Wire\Sums;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -14,20 +14,20 @@ class ActivitySpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Entities\Activity');
     }
 
-    public function it_has_wire_totals(Repository $repository)
+    public function it_has_wire_totals(Sums $sums)
     {
-        $repository->getSumByEntity(Argument::any(), Argument::any())
+        $sums->setEntity(Argument::any())
+            ->willReturn($sums);
+        $sums->getEntity()
             ->willReturn(10);
 
-        Di::_()->bind('Wire\Repository', function ($di) use ($repository) {
-            return $repository->getWrappedObject();
+        Di::_()->bind('Wire\Sums', function ($di) use ($sums) {
+            return $sums->getWrappedObject();
         });
 
         $this->beConstructedWith(null);
         $this->guid = '123';
         $this->getWireTotals()->shouldBeLike([
-            'points' => 10,
-            'money' => 10,
             'tokens' => 10
         ]);
     }

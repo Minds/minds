@@ -4,7 +4,7 @@
  * Date: 28/07/2017
  */
 
-namespace Minds\Core\Wire\Methods;
+namespace Minds\Core\Wire\Exceptions;
 
 
 class NotMonetizedException extends \Exception

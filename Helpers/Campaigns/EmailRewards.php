@@ -64,20 +64,21 @@ class EmailRewards
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
             if ($wire) {
-                $plus = new Entities\User('730071191229833224');
-                $service = Core\Wire\Methods\Factory::build('points');                
-                $service->setAmount($points)
-                    ->setEntity($user)
-                    ->setActor($plus)
-                    ->create();
-                Core\Queue\Client::build()->setQueue("WireNotification")
-                  ->send(array(
-                    "amount" => $points,
-                    "sender" => serialize($plus),
-                    "entity" => serialize($user),
-                    "method" => 'points',
-                    "subscribed" => false 
-                   ));
+                //@todo refactor this
+                //$plus = new Entities\User('730071191229833224');
+                //$service = Core\Wire\Methods\Factory::build('points');
+                //$service->setAmount($points)
+                //    ->setEntity($user)
+                //    ->setActor($plus)
+                //    ->create();
+                //Core\Queue\Client::build()->setQueue("WireNotification")
+                //  ->send(array(
+                //    "amount" => $points,
+                //    "sender" => serialize($plus),
+                //    "entity" => serialize($user),
+                //    "method" => 'points',
+                //    "subscribed" => false
+                //   ));
             } else {
                 Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
             }

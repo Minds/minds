@@ -199,6 +199,7 @@ class plans implements Interfaces\Api
                     ]);
                 }
 
+                /** @var Core\Wire\Manager $manager */
                 $manager = Core\Di\Di::_()->get('Wire\Manager');
                 $wires = $manager->get(['type' => 'sent', 'user_guid' => $user_guid, 'order' => 'DESC']);
 

@@ -23,16 +23,7 @@ class WireNotification implements Interfaces\QueueRunner
                 $receiverUser = $entity->type === 'user' ? $entity : $entity->getOwnerEntity();
 
                 if (isset($data['walletNotSetupException']) && $data['walletNotSetupException']) {
-                    $message = 'Somebody wanted to send you a MindsCoin wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
-                    Dispatcher::trigger('notification', 'wire', [
-                        'to' => [$receiverUser->getGUID()],
-                        'from' => 100000000000000519,
-                        'notification_view' => 'custom_message',
-                        'params' => ['message' => $message],
-                        'message' => $message,
-                    ]);
-                } else if (isset($data['notMonetizedException']) && $data['notMonetizedException']) {
-                    $message = 'Somebody wanted to send you a money wire, but you need to setup your merchant account first! You can monetize your account in your Wallet.';
+                    $message = 'Somebody wanted to send you a Tokens wire, but you need to setup your wallet address first! You can set it up in your Wallet.';
                     Dispatcher::trigger('notification', 'wire', [
                         'to' => [$receiverUser->getGUID()],
                         'from' => 100000000000000519,
@@ -41,7 +32,7 @@ class WireNotification implements Interfaces\QueueRunner
                         'message' => $message,
                     ]);
                 } else {
-                    $amount = $this->getAmountString($data['amount'], $data['method']);
+                    $amount = $this->getAmountString($data['amount']);
                     $senderUser = unserialize($data['sender']);
 
                     //send notification to receiver
@@ -79,19 +70,10 @@ class WireNotification implements Interfaces\QueueRunner
             });
     }
 
-    private function getAmountString($amount, $method)
+    private function getAmountString($amount)
     {
-        $amountString = null;
-        if ($method == 'money') {
-            $amountString = '$' . $amount;
-        } else if ($method == 'points') {
-            $currency = $amount > 1 ? ' points' : ' point';
-            $amountString = $amount . $currency;
-        } else {
-            $currency = $amount > 1 ? ' tokens' : ' token';
-            $amountString = $amount . $currency;
-        }
-        return $amountString;
+        $currency = $amount > 1 ? ' tokens' : ' token';
+        return $amount . $currency;
     }
 
 }

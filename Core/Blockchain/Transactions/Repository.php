@@ -164,11 +164,11 @@ class Repository
         ];
     }
 
-    public function get($tx)
+    public function get($user_guid, $tx)
     {
 
-        $cql = "SELECT * from blockchain_transactions_by_tx WHERE tx = ?";
-        $values = [ (string) $tx ];
+        $cql = "SELECT * from blockchain_transactions_by_tx WHERE tx = ? AND user_guid = ?";
+        $values = [ (string) $tx, new Varint($user_guid) ];
 
         $query = new Custom();
         $query->query($cql, $values);
@@ -200,16 +200,5 @@ class Repository
         return $transaction;
 
     }
-
-    public function update($key, $guids)
-    {
-        // TODO: Implement update() method.
-    }
-
-    public function delete($entity)
-    {
-        // TODO: Implement delete() method.
-    }
-
 
 }

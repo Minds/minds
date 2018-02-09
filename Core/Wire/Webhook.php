@@ -24,6 +24,7 @@ class Webhook implements HookInterface
         $planId = $subscription->getPlanId();
         if ($planId == 'wire' || $planId == 'exclusive') {
             $user = $subscription->getCustomer()->getUser();
+            /** @var Payments\Stripe\Stripe $stripe */
             $stripe = Di::_()->get('StripePayments');
             $stripePlan = $stripe->getPlan('wire', $user->getMerchant()['id']);
 
@@ -31,6 +32,7 @@ class Webhook implements HookInterface
             $repository = Di::_()->get('Payments\Subscriptions\Repository');
             $dbSubscription = $repository->get($subscription->getId());
 
+            /** @var Repository $wireRepository */
             $wireRepository = Di::_()->get('Wire\Repository');
             $entity = Factory::build($dbSubscription->getEntity()->guid);
 

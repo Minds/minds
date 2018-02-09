@@ -1,16 +1,17 @@
 <?php
 /**
- * Created by Marcelo.
- * Date: 31/07/2017
+ * Wire Repository
  */
 
 namespace Minds\Core\Wire;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Entities\User;
-use Minds\Entities\Wire;
-
+use Cassandra;
+use Cassandra\Varint;
+use Cassandra\Timestamp;
 
 class Repository
 {
@@ -24,365 +25,150 @@ class Repository
     }
 
     /**
-     * Returns how much money or points a user has sent through wire in a given time
-     * @param $sender_guid
-     * @param $method
-     * @param $timestamp
-     * @return int
+     * Inserts wires to the database
+     * @param array[Wire] $wires
      */
-    public function getSumBySender($sender_guid, $method, $timestamp = null)
+    public function add($wires)
     {
-        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
+        if (!is_array($wires)) {
+            $wires = [ $wires ];
         }
 
-        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $requests = [];
+        $template = "INSERT INTO wire
+            (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, amount, recurring, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
-          WHERE sender_guid=?
-          AND method=?
-          AND timestamp >= ? ALLOW FILTERING", [
-            new \Cassandra\Varint($sender_guid),
-            $method,
-            new \Cassandra\Timestamp($timestamp)
-        ]);
-
-        try {
-            $result = $this->db->request($query);
-            if (!$result) {
-                return 0;
-            }
-            return $result[0]['amount_sum']->value();
-        } catch (\Exception $e) {
-            return -1;
-        }
-    }
-
-    /**
-     * Returns how much money or points a user has sent through wire in a given time to a given user
-     * @param $sender_guid
-     * @param $receiver_guid
-     * @param $method
-     * @param $timestamp
-     * @return int
-     */
-    public function getSumBySenderForReceiver($sender_guid, $receiver_guid, $method, $timestamp = null)
-    {
-        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
-        }
-
-        if ($timestamp instanceof \DateTime) {
-            $timestamp = $timestamp->getTimestamp();
-        }
-
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
-          WHERE sender_guid=?
-          AND receiver_guid=?
-          AND method=?
-          AND timestamp >= ?", [
-            new \Cassandra\Varint($sender_guid),
-            new \Cassandra\Varint($receiver_guid),
-            $method,
-            new \Cassandra\Timestamp($timestamp)
-        ]);
-
-        try {
-            $result = $this->db->request($query);
-            if (!$result) {
-                return 0;
-            }
-            return $result[0]['amount_sum']->value();
-        } catch (\Exception $e) {
-            return -1;
-        }
-    }
-
-    /**
-     *  Returns how much money or points a user has received through wire
-     * @param $receiver_guid
-     * @param $method
-     * @param $timestamp
-     * @return int
-     */
-    public function getSumByReceiver($receiver_guid, $method, $timestamp = null)
-    {
-        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
-        }
-
-        if ($timestamp instanceof \DateTime) {
-            $timestamp = $timestamp->getTimestamp();
-        }
-
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire
-          WHERE receiver_guid=?
-          AND method=?
-          AND timestamp >= ?", [
-            new \Cassandra\Varint($receiver_guid),
-            $method,
-            new \Cassandra\Timestamp($timestamp)
-        ]);
-
-        try {
-            $result = $this->db->request($query);
-            if (!$result) {
-                return 0;
-            }
-            return $result[0]['amount_sum']->value();
-        } catch (\Exception $e) {
-            return -1;
-        }
-    }
-
-    /**
-     * Returns aggregates for a receiver
-     * @param $receiver_guid
-     * @param $method
-     * @param $timestamp
-     * @return int
-     */
-    public function getAggregatesForReceiver($receiver_guid, $method, $timestamp)
-    {
-        // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp =  mktime(0, 0, 0, 1, 1, 2000);
-        }
-
-        if ($timestamp instanceof \DateTime) {
-            $timestamp = $timestamp->getTimestamp();
-        }
-
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-
-        $query->query("SELECT
-          SUM(amount) as sum,
-          COUNT(*) as count,
-          AVG(amount) as avg
-          FROM wire
-          WHERE receiver_guid=?
-          AND method=?
-          AND timestamp >= ?", [
-            new \Cassandra\Varint($receiver_guid),
-            $method,
-            new \Cassandra\Timestamp($timestamp)
-        ]);
-
-        try {
-            $result = $this->db->request($query);
-            if (!$result) {
-                return 0;
-            }
-            return [
-              'sum' => $result[0]['sum']->value(),
-              'count' => $result[0]['count']->value(),
-              'avg' => $result[0]['avg']->value()
+        foreach ($wires as $wire) {
+            $requests[] = [
+                'string' => $template, 
+                'values' => [
+                    new Varint($wire->getReceiver()->guid),
+                    new Varint($wire->getSender()->guid),
+                    $wire->getMethod(),
+                    new Timestamp($wire->getTimestamp()),
+                    new Varint($wire->getEntity()->guid),
+                    new Varint($wire->getGuid()),
+                    new Cassandra\Decimal($wire->getAmount()),
+                    (boolean) $wire->isRecurring(),
+                    'success'
+                ]
             ];
-        } catch (\Exception $e) {
-            return -1;
         }
+
+        return $this->db->batchRequest($requests, Cassandra::BATCH_UNLOGGED);
     }
 
-    /**
-     * @param $entity_guid
-     * @param $method
-     * @param $timestamp
-     * @return int
-     */
-    public function getSumByEntity($entity_guid, $method)
+    public function getList($options = [])
     {
-        $query = new Core\Data\Cassandra\Prepared\Custom();
+        $options = array_merge([
+            'limit' => 12,
+            'offset' => '',
+            'timestamp' => [
+                'gte' => null,
+                'lte' => null,
+            ],
+            'entity_guid' => null,
+            'sender_guid' => null,
+            'receiver_guid' => null,
+            'allowFiltering' => false,
+        ], $options);
 
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_entity
-          WHERE entity_guid=?
-          AND method=?", [
-            new \Cassandra\Varint($entity_guid),
-            $method
+        $table = 'wire';
+        $where = [ 'method = ?' ];
+        $values = [ 'tokens' ];
+
+        if ($options['receiver_guid']) {
+            $where[] = 'receiver_guid = ?';
+            $values[] = new Varint($options['receiver_guid']);
+        }
+
+        if ($options['sender_guid']) {
+            $table = 'wire_by_sender';
+            $where[] = 'sender_guid = ?';
+            $values[] = new Varint($options['sender_guid']);
+        }
+
+        if ($options['entity_guid']) {
+            $table = 'wire_by_entity';
+            $where[] = 'entity_guid = ?';
+            $values[] = new Varint($options['entity_guid']);
+        }
+
+        if ($options['timestamp']['gte']) {
+            $where[] = 'timestamp >= ?';
+            $values[] = new Timestamp($options['timestamp']['gte']);
+        }
+
+        if ($options['timestamp']['lte']) {
+            $where[] = 'timestamp <= ?';
+            $values[] = new Timestamp($options['timestamp']['lte']);
+        }
+
+        $cql = "SELECT * from $table";
+    
+        if ($where) {
+            $cql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $cql .=  " ORDER BY method DESC, timestamp DESC";
+
+        if ($options['allowFiltering']) {
+            $cql .= " ALLOW FILTERING";
+        }
+
+        $query = new Custom();
+        $query->query($cql, $values);
+        $query->setOpts([
+            'page_size' => (int) $options['limit'],
+            'paging_state_token' => base64_decode($options['offset'])
         ]);
 
-        try {
-            $result = $this->db->request($query);
-            if (!$result) {
-                return 0;
-            }
-            return $result[0]['amount_sum']->value();
-        } catch (\Exception $e) {
-            return -1;
-        }
-    }
+        $wires = [];
 
-    public function get($entity_guid, $receiver_guid, $method)
-    {
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("SELECT * FROM wire where method=? AND entity_guid=? and receiver_guid=? ALLOW FILTERING",
-            [
-                $method,
-                new \Cassandra\Varint($entity_guid),
-                new \Cassandra\Varint($receiver_guid)
-            ]);
-        try {
-            $result = $this->db->request($query);
-            $wires = [];
-            foreach ($result as $row) {
-                $wire = new Wire();
-                $wire->setFrom(new User($row['sender_guid']))
-                    ->setTo(new User($row['receiver_guid']))
-                    ->setTimeCreated($row['timestamp'])
-                    ->setEntity(Core\Entities::get(['guid' => $row['entity_guid']])[0])
-                    ->setRecurring($row['recurring'])
-                    ->setMethod($row['method'])
-                    ->setAmount($row['amount'])
-                    ->setActive($row['active']);
-                $wires[] = $wire;
-            }
-            return $wires;
-        } catch (\Exception $e) {
+        try{
+            $rows = $this->db->request($query);
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
             return [];
         }
-    }
 
-    public function getWiresByReceiver($receiver_guid, $method = null, $timeframe = [], $opts = [])
-    {
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->setOpts($opts);
-
-        $timeframe = array_merge([
-          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
-          'end' => time()
-        ], $timeframe);
-
-        if ($method) {
-            $query->query("SELECT * FROM wire
-              WHERE receiver_guid=?
-              AND method=?
-              AND timestamp>=?
-              AND timestamp<=?
-              ORDER BY method DESC, timestamp DESC",
-            [
-                new \Cassandra\Varint($receiver_guid),
-                $method,
-                new \Cassandra\Timestamp($timeframe['start']),
-                new \Cassandra\Timestamp($timeframe['end'])
-            ]);
-        } else {
-            $query->query("SELECT * FROM wire
-              WHERE receiver_guid=?
-              AND timestamp>=?
-              AND timestamp<=?
-              ORDER BY method DESC, timestamp DESC
-              ALLOW FILTERING",
-            [
-                new \Cassandra\Varint($receiver_guid),
-                new \Cassandra\Timestamp($timeframe['start']),
-                new \Cassandra\Timestamp($timeframe['end'])
-            ]);
-        }
-        try {
-            $result = $this->db->request($query);
-            $guids = [];
-            foreach ($result as $row) {
-                $guids[] = (int) $row['wire_guid'];
-            }
-            if (!$guids) {
-                return false;
-            }
-            return [
-              'wires' => Core\Entities::get([ 'guids' => $guids ]),
-              'token' => base64_encode($result->pagingStateToken())
-            ];
-        } catch (\Exception $e) {
+        if (!$rows) {
             return [];
         }
+
+        foreach($rows as $row) {
+            $entity = Core\Entities::get(['guid' => $row['entity_guid']])[0];
+            $wire = new Wire();
+            $wire->setSender(new User($row['sender_guid']))
+                ->setReceiver(new User($row['receiver_guid']))
+                ->setTimestamp($row['timestamp'])
+                ->setEntity($entity)
+                ->setRecurring($row['recurring'])
+                ->setMethod($row['method'])
+                ->setAmount($row['amount']);
+            $wires[] = $wire;
+        }
+
+        return [
+            'wires' => $wires,
+            'token' => $rows->pagingStateToken(),
+        ];
     }
 
-    public function getWiresBySender($sender_guid, $method = null, $timeframe = [], $opts = [])
+    public function get($guid)
     {
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->setOpts($opts);
 
-        $timeframe = array_merge([
-          'start' => (new \DateTime('midnight'))->modify("-30 days")->getTimestamp(),
-          'end' => time()
-        ], $timeframe);
-
-        if ($method) {
-             $query->query("SELECT * FROM wire_by_sender
-               WHERE sender_guid=?
-               AND method=?
-               AND timestamp>=?
-               AND timestamp<=?
-               ALLOW FILTERING",
-             [
-                 new \Cassandra\Varint($sender_guid),
-                 $method,
-                 new \Cassandra\Timestamp($timeframe['start']),
-                 new \Cassandra\Timestamp($timeframe['end'])
-             ]);
-         } else {
-             $query->query("SELECT * FROM wire_by_sender
-               WHERE sender_guid=?
-               AND timestamp>=?
-               AND timestamp<=?
-               ALLOW FILTERING",
-             [
-                 new \Cassandra\Varint($sender_guid),
-                 new \Cassandra\Timestamp($timeframe['start']),
-                 new \Cassandra\Timestamp($timeframe['end'])
-             ]);
-        }
-        try {
-            $result = $this->db->request($query);
-            $guids = [];
-            foreach ($result as $row) {
-                $guids[] = (int) $row['wire_guid'];
-            }
-            if (!$guids) {
-                return false;
-            }
-            return [
-              'wires' => Core\Entities::get([ 'guids' => $guids ]),
-              'token' => base64_encode($result->pagingStateToken())
-            ];
-        } catch (\Exception $e) {
-            return [];
-        }
     }
 
-    /**
-     * when adding a new wire, if it's recurring then it should check for a pre-existing recurring wire for that user
-     * and cancel it before creating the new one
-     * @param Wire $wire
-     */
-    public function add(Wire $wire)
+    public function update($key, $guids)
     {
-        $query = new Core\Data\Cassandra\Prepared\Custom();
-        $query->query("INSERT INTO wire
-          (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, amount, recurring, status)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                new \Cassandra\Varint($wire->getTo()->guid),
-                new \Cassandra\Varint($wire->getFrom()->guid),
-                $wire->getMethod(),
-                new \Cassandra\Timestamp($wire->getTimeCreated()),
-                new \Cassandra\Varint($wire->getEntity()->guid),
-                new \Cassandra\Varint($wire->getGuid()),
-                new \Cassandra\Decimal($wire->getAmount()),
-                (boolean) $wire->isRecurring(),
-                'success'
-            ]);
-
-        try {
-            $result = $this->db->request($query);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        // TODO: Implement update() method.
     }
+
+    public function delete($entity)
+    {
+        // TODO: Implement delete() method.
+    }
+
 }

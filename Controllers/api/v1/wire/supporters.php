@@ -33,22 +33,26 @@ class supporters implements Interfaces\Api
         $method = isset($_GET['method']) ? $_GET['method'] : 'money';
 
         $timeframe = [
-          'start' => $start,
-          'end' => time()
+          'gte' => $start,
+          'lte' => time()
         ];
 
         switch ($type) {
             case 'sent':
-                $result = $repo->getWiresBySender($actor_guid, $method, $timeframe, [
-                    'page_size' => 1000,
-                    'paging_state_token' => base64_decode($_GET['offset'])
+                $result = $repository->getList([
+                    'sender_guid' => $actor_guid,
+                    'timestamp' => $timeframe,
+                    'limit' => 1000,
+                    'offset' => base64_decode($_GET['offset']),
                 ]);
                 break;
 
             case 'received':
-                $result = $repo->getWiresByReceiver($actor_guid, $method, $timeframe, [
-                    'page_size' => 1000,
-                    'paging_state_token' => base64_decode($_GET['offset'])
+                $result = $repository->getList([
+                    'receiver_guid' => $actor_guid,
+                    'timestamp' => $timeframe,
+                    'limit' => 1000,
+                    'offset' => base64_decode($_GET['offset']),
                 ]);
                 break;
 

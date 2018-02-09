@@ -31,19 +31,13 @@ class Thresholds
         }
 
         $amount = 0;
-        $repository = Di::_()->get('Wire\Repository');
+        /** @var Sums $sums */
+        $sums = Di::_()->get('Wire\Sums');
+        $sums->setReceiver($entity->getOwnerGUID())
+            ->setSender($user)
+            ->setFrom((new \DateTime('midnight'))->modify("-30 days"));
 
-        switch ($threshold['type']) {
-            case 'points':
-                $amount = $repository->getSumBySenderForReceiver($user, $entity->getOwnerGUID(), 'points', (new \DateTime('midnight'))->modify("-30 days"));
-                break;
-            case 'money':
-                $amount = $repository->getSumBySenderForReceiver($user, $entity->getOwnerGUID(), 'money', (new \DateTime('midnight'))->modify("-30 days"));
-                break;
-            case 'tokens':
-                $amount = $repository->getSumBySenderForReceiver($user, $entity->getOwnerGUID(), 'tokens', (new \DateTime('midnight'))->modify("-30 days"));
-                break;
-        }
+        $amount = $sums->getSent();
 
         $allowed = $amount - $threshold['min'] >= 0;
 

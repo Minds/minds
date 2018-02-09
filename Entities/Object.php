@@ -115,8 +115,6 @@ class Object extends \ElggObject implements Flaggable
      */
      public function getWireTotals() {
         $totals = [];
-        $totals['points'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'points');
-        $totals['money'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'money');
         // $totals['bitcoin'] = \Minds\Core\Wire\Counter::getSumByEntity($this->guid, 'bitcoin');
         return $totals;
     }
