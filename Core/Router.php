@@ -28,6 +28,7 @@ class Router
       '/not-supported' => "Minds\Controllers\\notSupported",
         //  "/app" => "minds\\pages\\app",
       '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe",
+      '/sitemap' => "Minds\\Controllers\\sitemap",
 
       '/api/v1/gatherings' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
       '/api/v1/conversations' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
