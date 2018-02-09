@@ -59,6 +59,8 @@ class Router
 
         $this->detectContentType();
 
+        header('X-Frame-Options: DENY');
+
         $route = rtrim($uri, '/');
         $segments = explode('/', $route);
         $method = $method ? $method : strtolower($_SERVER['REQUEST_METHOD']);
