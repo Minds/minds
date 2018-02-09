@@ -59,15 +59,16 @@ class WireEvent implements BlockchainEventInterface
 
         $tx = $log['transactionHash'];
         list($sender, $receiver, $amount) = Util::parseData($log['data']);
-        $amount = Util::toDec($amount) / (10 ** $token->getExtra()['decimals']);
+        $amount = Util::toDec($amount);
 
         $data = $transaction->getData();
 
         $wire = (new Wire)
-            ->setAmount((string) $amount)
+            ->setAmount((double) $amount)
             ->setRecurring(false)
             ->setSender(new User($data['sender_guid']))
             ->setReceiver(new User($data['receiver_guid']))
+            ->setEntity(new User($data['receiver_guid'])) //TODO: make this the entity
             ->setTimestamp($transaction->getTimestamp())
             ->setEntity($data['entity_guid'])
             ->setMethod('tokens');

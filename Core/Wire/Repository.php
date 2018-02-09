@@ -47,7 +47,7 @@ class Repository
                     new Varint($wire->getSender()->guid),
                     $wire->getMethod(),
                     new Timestamp($wire->getTimestamp()),
-                    new Varint($wire->getEntity()->guid),
+                    new Varint($wire->getEntity()->guid ?: $wire->getReceiver()->guid),
                     new Varint($wire->getGuid()),
                     new Cassandra\Decimal($wire->getAmount()),
                     (boolean) $wire->isRecurring(),

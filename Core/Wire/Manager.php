@@ -7,6 +7,7 @@
 namespace Minds\Core\Wire;
 
 use Minds\Core;
+use Minds\Core\Guid;
 use Minds\Core\Data;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
@@ -254,6 +255,7 @@ class Manager
             throw new \Exception('The amount request does not match the transaction');
         }
 
+        $wire->setGuid(Guid::build());
         $success = $this->repository->add($wire);
 
         //create a new transaction for receiver

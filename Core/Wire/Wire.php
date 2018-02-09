@@ -10,6 +10,9 @@ class Wire
 {
     use MagicAttributes;
 
+    /** @var int **/
+    private $guid;
+
     /** @var User **/
     private $receiver;
 
