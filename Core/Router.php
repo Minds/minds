@@ -17,8 +17,6 @@ class Router
       '/api/v1/archive/albums' => "Minds\\Controllers\\api\\v1\\media\\albums",
       '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
 
-      '/api/v1/thumbs' => Controllers\api\v1\votes::class,
-
       '/icon' => "Minds\\Controllers\\icon",
       '//icon' => "Minds\\Controllers\\icon",
       '/api' => "Minds\\Controllers\\api\\api",
