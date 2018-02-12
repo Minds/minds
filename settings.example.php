@@ -231,6 +231,8 @@ $CONFIG->set('blockchain', [
     'mw3' => '/usr/bin/env node /path/to/mw3/index.js',
 
     'token_name' => '',
+
+    'token_symbol' => '',
 ]);
 
 $CONFIG->set('plus', [

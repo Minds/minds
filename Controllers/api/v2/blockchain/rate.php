@@ -25,6 +25,11 @@ class rate implements Interfaces\Api
     public function get($pages)
     {
         $currencyId = isset($pages[0]) ? $pages[0] : 'ethereum';
+
+        if ($currencyId === 'tokens') {
+            $currencyId = Di::_()->get('Config')->get('blockchain')['token_symbol'];
+        }
+
         $cacheKey = "blockchain:rate:{$currencyId}";
 
         /** @var RatesInterface $rates */
