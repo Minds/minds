@@ -17,8 +17,6 @@ class Router
       '/api/v1/archive/albums' => "Minds\\Controllers\\api\\v1\\media\\albums",
       '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
 
-      '/api/v1/thumbs' => Controllers\api\v1\votes::class,
-
       '/icon' => "Minds\\Controllers\\icon",
       '//icon' => "Minds\\Controllers\\icon",
       '/api' => "Minds\\Controllers\\api\\api",
@@ -28,6 +26,7 @@ class Router
       '/not-supported' => "Minds\Controllers\\notSupported",
         //  "/app" => "minds\\pages\\app",
       '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe",
+      '/sitemap' => "Minds\\Controllers\\sitemap",
 
       '/api/v1/gatherings' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
       '/api/v1/conversations' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
@@ -57,6 +56,8 @@ class Router
         }
 
         $this->detectContentType();
+
+        header('X-Frame-Options: DENY');
 
         $route = rtrim($uri, '/');
         $segments = explode('/', $route);

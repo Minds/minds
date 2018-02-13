@@ -37,7 +37,9 @@ class Defaults
           'og:type' => 'website',
           'og:image' => $this->config->site_url . 'assets/share/master.jpg',
           'og:image:width' => 1024,
-          'og:image:height' => 681
+          'og:image:height' => 681,
+          'twitter:site' => '@minds',
+          'twitter:card' => 'summary',
         ]);
 
         /**
@@ -66,7 +68,9 @@ class Defaults
                 'og:url' => $this->config->site_url . $user->username,
                 'og:image' => $user->getIconUrl('master'),
                 'og:image:width' => 2000,
-                'og:image:height' => 1000
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
               ];
             }
         });
@@ -98,7 +102,9 @@ class Defaults
                   'og:url' => $activity->getUrl(),
                   'og:image' => $activity->custom_type == 'batch' ? $activity->custom_data[0]['src'] : $activity->thumbnail_src,
                   'og:image:width' => 2000,
-                  'og:image:height' => 1000
+                  'og:image:height' => 1000,
+                  'twitter:site' => '@minds',
+                  'twitter:card' => 'summary',
                 ];
 
                 if ($activity->custom_type == 'video') {
@@ -152,7 +158,9 @@ class Defaults
               'og:url' => $this->config->site_url . 'register',
               'og:image' => $this->config->site_url . 'assets/screenshots/register.png',
               'og:image:width' => 2000,
-              'og:image:height' => 1000
+              'og:image:height' => 1000,
+              'twitter:site' => '@minds',
+              'twitter:card' => 'summary',
             ];
 
             if (isset($_GET['referrer'])) {
@@ -175,7 +183,9 @@ class Defaults
                 'og:url' => $this->config->site_url . 'login',
                 'og:image' => $this->config->site_url . 'assets/screenshots/login.png',
                 'og:image:width' => 2000,
-                'og:image:height' => 1000
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
             ];
 
             return $meta;
@@ -234,7 +244,9 @@ class Defaults
                     'og:url' => $this->config->site_url . $uri,
                     'og:image' => $this->config->cdn_assets_url . $page['image'],
                     'og:image:width' => 2000,
-                    'og:image:height' => 1000
+                    'og:image:height' => 1000,
+                    'twitter:site' => '@minds',
+                    'twitter:card' => 'summary',
                 ];
                 return $meta;
             });

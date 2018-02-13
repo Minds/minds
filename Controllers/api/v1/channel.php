@@ -50,6 +50,9 @@ class channel implements Interfaces\Api
         $return = Factory::exportable(array($user));
 
         $response['channel'] = $return[0];
+        if (Core\Session::getLoggedinUser()->guid == $user->guid) {
+            $response['channel']['admin'] = $user->admin;
+        }
         $response['channel']['avatar_url'] = array(
             'tiny' => $user->getIconURL('tiny'),
             'small' => $user->getIconURL('small'),
@@ -197,6 +200,7 @@ class channel implements Interfaces\Api
                 if (!$owner->canEdit()) {
                     return Factory::response(array('status'=>'error'));
                 }
+
                 $update = array();
                 foreach (['name', 'website', 'briefdescription', 'gender',
                   'dob', 'city', 'coordinates', 'monetized'] as $field) {
@@ -205,6 +209,13 @@ class channel implements Interfaces\Api
                         $owner->$field = $_POST[$field];
                     }
                 }
+
+                /*try {
+                    $spam = new Core\Security\Spam();
+                    $spam->check($owner);
+                } catch (\Exception $e) {
+                    return Factory::response(['status'=>'error', 'message' => $e->getMessage() ]);
+                }*/
 
                 if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
                     $allowedKeys = [
@@ -243,6 +254,10 @@ class channel implements Interfaces\Api
                     $owner->setSocialProfiles($profiles);
                     $update['social_profiles'] = json_encode($profiles);
                 }
+
+                //always update icon time on profile edit...
+                $update['icontime'] = time();
+                $owner->icontime = time();
 
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);

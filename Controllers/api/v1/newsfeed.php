@@ -596,7 +596,16 @@ class newsfeed implements Interfaces\Api
                     ]);
                 }
 
-                if ($guid = $activity->save()) {
+                try {
+                    $guid = $activity->save();
+                } catch (\Exception $e) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
+                if ($guid) {
                     if (in_array($activity->custom_type, ['batch', 'video'])) {
                         Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, 15, $guid, 'Post');
                     } else {
@@ -683,6 +692,7 @@ class newsfeed implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'you don\'t have permission'));
         }
 
+        /** @var Entities\User $owner */
         $owner = $activity->getOwnerEntity();
 
         if (
@@ -700,6 +710,9 @@ class newsfeed implements Interfaces\Api
                 error_log("Cannot delete attachment: {$activity->entity_guid}");
             }
         }
+
+        // remove from pinned
+        $owner->removePinned($activity->guid);
 
         if ($activity->delete()) {
             if ($activity->remind_object && $activity->remind_object['owner_guid'] != Core\Session::getLoggedinUser()->guid) {

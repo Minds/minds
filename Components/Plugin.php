@@ -26,8 +26,8 @@ class Plugin extends \ElggPlugin
     public function start($flags = null)
     {
         //only legacy plugins use the start function
-        $this->registerViews();
-        $this->registerLanguages();
+        //$this->registerViews();
+        //$this->registerLanguages();
     }
 
     /**

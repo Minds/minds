@@ -35,6 +35,8 @@ class User extends \ElggUser
         $this->attributes['eth_wallet'] = '';
         $this->attributes['phone_number'] = null;
         $this->attributes['phone_number_hash'] = null;
+        $this->attributes['icontime'] = time();
+		$this->attributes['briefdescription'] = '';
 
         parent::initializeAttributes();
     }
@@ -295,7 +297,7 @@ class User extends \ElggUser
         if (!$pinned) {
             $pinned = [];
         } else if (count($pinned) > 2) {
-            return;
+            array_shift($pinned);
         }
 
         if (array_search($guid, $pinned) === false) {

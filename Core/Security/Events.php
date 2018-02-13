@@ -19,6 +19,7 @@ class Events
     public function register()
     {
         Dispatcher::register('create', 'elgg/event/object', [$this, 'onCreateHook']);
+        Dispatcher::register('create', 'elgg/event/activity', [$this, 'onCreateHook']);
         Dispatcher::register('update', 'elgg/event/object', [$this, 'onCreateHook']);
         Dispatcher::register('login', 'elgg/event/user', [$this, 'onLoginHook']);
     }
@@ -255,8 +256,11 @@ class Events
     public function onCreateHook($hook, $type, $params, $return = null)
     {
         $object = $params;
-        if ($this->strposa($object->description, $this->prohibitedDomains()) || $this->strposa($object->briefdescription,
-                $this->prohibitedDomains())) {
+        if ($this->strposa($object->description, $this->prohibitedDomains()) || 
+            $this->strposa($object->briefdescription, $this->prohibitedDomains()) ||
+            $this->strposa($object->message, $this->prohibitedDomains()) ||
+            $this->strposa($object->title, $this->prohibitedDomains())
+        ) {
             throw new \Exception('Sorry, your post contains a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
             if (PHP_SAPI != 'cli') {
                 forward(REFERRER);

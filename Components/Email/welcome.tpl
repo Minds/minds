@@ -30,7 +30,7 @@
     <tr>
       <td style="text-align:center">
         <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed">
-          <img src="<?php echo Minds\Core\Config::_()->site_url; ?>assets/tutorial.png" align="center" width="450px" height="750px"/>
+          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/tutorial.png" align="center" width="450px" height="750px"/>
         </a>
       </td>
     </tr>

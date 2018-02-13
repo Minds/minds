@@ -12,6 +12,19 @@ class SEO
     {
         Core\SEO\Manager::add('/blog/view', [$this, 'viewHandler']);
 
+        Core\SEO\Manager::add('/blog/featured', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Featured Blogs',
+                'description' => 'List of featured blogs',
+                'og:title' => 'Featured Blogs',
+                'og:description' => 'List of featured blogs',
+                'og:url' => Core\Di\Di::_()->get('Config')->site_url . 'blog/featured',
+                'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+        });
+
         Core\Events\Dispatcher::register('seo:route', '/', function (Core\Events\Event $event) {
             $params = $event->getParameters();
             $slugs = $params['slugs'];
