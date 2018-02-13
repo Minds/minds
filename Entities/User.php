@@ -32,6 +32,8 @@ class User extends \ElggUser
         $this->attributes['categories'] = [];
         $this->attributes['wire_rewards'] = '';
         $this->attributes['pinned_posts'] = [];
+        $this->attributes['icontime'] = time();
+		$this->attributes['briefdescription'] = '';
 
         parent::initializeAttributes();
     }
