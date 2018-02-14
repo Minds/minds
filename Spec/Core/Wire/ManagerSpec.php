@@ -92,8 +92,11 @@ class ManagerSpec extends ObjectBehavior
 
         $receiver = new User;
         $receiver->guid = 123;
+        $sender = new User;
+        $sender->guid = 123;
         $wire = new WireModel();
         $wire->setReceiver($receiver)
+            ->setSender($sender)
             ->setEntity($receiver)
             ->setAmount(100001);
 
