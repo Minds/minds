@@ -11,6 +11,10 @@ class RewardsProvider extends Provider
             return new Contributions\Repository();
         }, [ 'useFactory'=> true ]);
 
+        $this->di->bind('Rewards\Contributions\DailyCollection', function ($di) {
+            return new Contributions\DailyCollection();
+        }, [ 'useFactory'=> false ]);
+
         $this->di->bind('Rewards\Withdraw\Manager', function ($di) {
             return new Withdraw\Manager();
         }, [ 'useFactory'=> true ]);

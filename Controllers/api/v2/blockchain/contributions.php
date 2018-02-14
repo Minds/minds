@@ -36,9 +36,12 @@ class contributions implements Interfaces\Api
             'user_guid' => Session::getLoggedInUser()->guid,
             'offset' => $offset
         ]);
+
+        $collection = Di::_()->get('Rewards\Contributions\DailyCollection');
+        $collection->setContributions($result['contributions']);
         
         $response = [
-            'contributions' => Factory::exportable($result['contributions']),
+            'contributions' => Factory::exportable($collection),
             'load-next' => base64_encode($result['token'])
         ];
 
