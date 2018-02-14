@@ -131,68 +131,6 @@ class transactions implements Interfaces\Api
                 ];
 
                 break;
-            case 'verify':
-                if (!isset($_POST['number'])) {
-                    return Factory::response(['status' => 'error', 'message' => 'phone field is required']);
-                }
-                $number = $_POST['number'];
-
-                try {
-                    $join = new Join();
-                    $join
-                        ->setUser(Session::getLoggedInUser())
-                        ->setNumber($number);
-
-                    $secret = $join->verify();
-
-                    $response['secret'] = $secret;
-                } catch (\Exception $e) {
-                    $response = [
-                        'status' => 'error',
-                        'message' => $e->getMessage(),
-                    ];
-                }
-                break;
-            case 'confirm':
-                if (!isset($_POST['number'])) {
-                    return Factory::response(['status' => 'error', 'message' => 'phone field is required']);
-                }
-
-                $number = $_POST['number'];
-
-                if (!isset($_POST['code'])) {
-                    return Factory::response(['status' => 'error', 'message' => 'code field is required']);
-                }
-                $code = $_POST['code'];
-
-                if (!isset($_POST['secret'])) {
-                    return Factory::response(['status' => 'error', 'message' => 'code field is required']);
-                }
-                $secret = $_POST['secret'];
-
-                $user = Session::getLoggedInUser();
-
-                try {
-                    $join = new Join();
-                    $join
-                        ->setUser($user)
-                        ->setNumber($number)
-                        ->setCode($code)
-                        ->setSecret($secret)
-                        ->confirm();
-                    
-                    $response['phone_number_hash'] = $user->getPhoneNumberHash();
-
-                    Session::regenerate(false, $user);
-                    //sync our change to our other sessions
-                    (new Core\Data\Sessions())->syncAll($user->guid);
-                } catch (\Exception $e) {
-                    $response = [
-                        'status' => 'error',
-                        'message' => 'Confirmation failed'
-                    ];
-                }
-                break;
         }
 
         return Factory::response($response);
