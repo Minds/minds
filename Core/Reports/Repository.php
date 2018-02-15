@@ -58,7 +58,10 @@ class Repository
             }
         } elseif ($options['state']) {
             $template = "SELECT * FROM reports_by_state WHERE state = ?";
-            $values = [ (string) $options['state'] ];
+            if ($options['state'] === 'archived') {
+                $template .= ' ORDER BY guid DESC';
+            }
+            $values = [(string)$options['state']];
         }
 
         if ($allowFiltering) {
