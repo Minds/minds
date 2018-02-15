@@ -31,20 +31,25 @@ class transactions implements Interfaces\Api
         $from = isset($_GET['from']) ? $_GET['from'] : strtotime('midnight -7 days') * 1000;
         $to = isset($_GET['to']) ? $_GET['to'] : time() * 1000;
         $offset = $_GET['offset'] ? $_GET['offset'] : '';
+        $contract = $_GET['contract'] && strlen($_GET['contract']) > 0 ? $_GET['contract'] : null;
+        $addresses = $_GET['addresses'] && strlen($_GET['addresses']) > 0 ? $_GET['addresses'] : 'offchain';
+
+        $addresses = array_filter(explode(',', $addresses), function($value) { return $value !== ''; });
+        $addresses = array_map('trim', $addresses);
 
         $response = [];
 
         switch ($pages[0]) {
             case "ledger":
+                /** @var Core\Blockchain\Transactions\Repository $repo */
                 $repo = Di::_()->get('Blockchain\Transactions\Repository');
                 $result = $repo->getList([
                     'timestamp' => [
                         'gte' => $from,
                         //'lte' => $to,
                     ],
-                    'wallet_addresses' => [
-                        'offchain',
-                    ],
+                    'wallet_addresses' => $addresses,
+                    'contract' => $contract,
                     'user_guid' => Session::getLoggedInUser()->guid,
                     'offset' => $offset
                 ]);
