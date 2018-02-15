@@ -31,11 +31,8 @@ class transactions implements Interfaces\Api
         $from = isset($_GET['from']) ? $_GET['from'] : strtotime('midnight -7 days') * 1000;
         $to = isset($_GET['to']) ? $_GET['to'] : time() * 1000;
         $offset = $_GET['offset'] ? $_GET['offset'] : '';
-        $contract = $_GET['contract'] && strlen($_GET['contract']) > 0 ? $_GET['contract'] : null;
-        $addresses = $_GET['addresses'] && strlen($_GET['addresses']) > 0 ? $_GET['addresses'] : 'offchain';
-
-        $addresses = array_filter(explode(',', $addresses), function($value) { return $value !== ''; });
-        $addresses = array_map('trim', $addresses);
+        $contract = isset($_GET['contract']) && $_GET['contract'] ? $_GET['contract'] : null;
+        $addresses = isset($_GET['addresses']) && $_GET['addresses'] ? $_GET['addresses'] : 'offchain';
 
         $response = [];
 
@@ -43,18 +40,30 @@ class transactions implements Interfaces\Api
             case "ledger":
                 /** @var Core\Blockchain\Transactions\Repository $repo */
                 $repo = Di::_()->get('Blockchain\Transactions\Repository');
-                $result = $repo->getList([
+                $opts = [
                     'timestamp' => [
                         'gte' => $from,
                         //'lte' => $to,
                     ],
-                    'wallet_addresses' => $addresses,
-                    'contract' => $contract,
                     'user_guid' => Session::getLoggedInUser()->guid,
-                    'offset' => $offset
-                ]);
+                    'offset' => $offset,
+                ];
+
+                if ($addresses) {
+                    $addresses = array_filter(explode(',', $addresses), function($value) { return $value !== ''; });
+                    $addresses = array_map('trim', $addresses);
+                    $opts['wallet_addresses'] = $addresses;
+                }
+
+                if ($contract) {
+                    $opts['contract'] = $contract;
+                }
+
+                $result = $repo->getList($opts);
                 
                 $response = [
+                    'addresses' => $addresses,
+                    'contract' => $contract,
                     'transactions' => Factory::exportable($result['transactions']),
                     'load-next' => base64_encode($result['token'])
                 ];
