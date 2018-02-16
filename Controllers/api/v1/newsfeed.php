@@ -173,13 +173,14 @@ class newsfeed implements Interfaces\Api
                     ->setIncrement(false);
 
 
-                foreach ($iterator as $boost) {
+                foreach ($iterator as $guid => $boost) {
                     $boost->boosted = true;
+                    $boost->boosted_guid = (string) $guid;
                     array_unshift($activity, $boost);
                     //if (get_input('offset')) {
                     //bug: sometimes views weren't being calculated on scroll down
-                    Counters::increment($boost->guid, "impression");
-                    Counters::increment($boost->owner_guid, "impression");
+                    //Counters::increment($boost->guid, "impression");
+                    //Counters::increment($boost->owner_guid, "impression");
                     //}
                 }
                 $cacher->set(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed', $iterator->getOffset(), (3600 / 2));
@@ -233,7 +234,7 @@ class newsfeed implements Interfaces\Api
 //                $response['pinned'] = Factory::Exportable();
             }
 
-            $response['activity'] = factory::exportable($activity, array('boosted'), true);
+            $response['activity'] = factory::exportable($activity, ['boosted', 'boosted_guid'], true);
         }
 
         $response['load-next'] = $loadNext;
