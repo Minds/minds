@@ -41,7 +41,7 @@ class contributions implements Interfaces\Api
         $collection->setContributions($result['contributions']);
         
         $response = [
-            'contributions' => Factory::exportable($collection),
+            'contributions' => $collection->export(),
             'load-next' => base64_encode($result['token'])
         ];
 
