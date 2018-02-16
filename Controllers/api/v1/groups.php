@@ -38,6 +38,7 @@ class groups implements Interfaces\Api
         ];
 
         switch ($pages[0]) {
+          case "top":
           case "featured":
             $guids = $indexDb->get('group:featured', $opts);
             end($guids); //get last in array
@@ -60,6 +61,7 @@ class groups implements Interfaces\Api
         $groups = Entities::get(['guids' => $guids]);
 
         $response['groups'] = Factory::exportable($groups);
+        $response['entities'] = Factory::exportable($groups);
 
         if (!isset($response['load-next']) && $groups) {
             $response['load-next'] = (string) end($groups)->getGuid();
