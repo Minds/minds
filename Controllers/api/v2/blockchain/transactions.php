@@ -98,6 +98,10 @@ class transactions implements Interfaces\Api
         $response = [];
 
         switch ($pages[0]) {
+            case "can-withdraw":
+                $manager = new Withdraw\Manager();
+                $response['canWithdraw'] = $manager->check(Session::getLoggedinUser()->guid);
+                break;
             case "withdraw":
                 $request = new Withdraw\Request();
                 $request->setTx($_POST['tx'])
@@ -108,10 +112,14 @@ class transactions implements Interfaces\Api
                     ->setAmount($_POST['amount']);
 
                 $manager = new Withdraw\Manager();
-                $manager->request($request);
+                try {
+                    $manager->request($request);
 
-                $response['done'] = true;
-                $response['entity'] = $request->export();
+                    $response['done'] = true;
+                    $response['entity'] = $request->export();
+                } catch (\Exception $e) {
+                    $response = ['status' => 'error', 'message' => $e->getMessage()];
+                }
                 break;
             case 'spend':
                 if (!$_POST['type']) {

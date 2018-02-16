@@ -101,11 +101,9 @@ class Repository
             'paging_state_token' => base64_decode($options['offset'])
         ]);
 
-        $withdrawals = [];
-
-        try{
+        try {
             $rows = $this->db->request($query);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
             return [];
         }
@@ -113,6 +111,8 @@ class Repository
         if (!$rows) {
             return [];
         }
+
+        $requests = [];
 
         foreach($rows as $row) {
             $request = new Request();

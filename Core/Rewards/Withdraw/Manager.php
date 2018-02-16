@@ -30,18 +30,34 @@ class Manager
     protected $repo;
 
     public function __construct(
-        $txManager = null,        
+        $txManager = null,
         $offChainTransactions = null,
         $config = null,
         $eth = null,
         $withdrawRepository = null
     )
     {
-        $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');        
+        $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
         $this->offChainTransactions = $offChainTransactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->repo = $withdrawRepository ?: Di::_()->get('Rewards\Withdraw\Repository');
+    }
+
+    /**
+     * Checks if a withdrawal has been made in the last 24 hours
+     * @param $userGuid
+     * @return boolean
+     */
+    public function check($userGuid)
+    {
+        $previousRequests = $this->repo->getList([
+            'user_guid' => $userGuid,
+            'contract' => 'withdraw',
+            'from' => strtotime('-1 day')
+        ]);
+
+        return !isset($previousRequests) || !isset($previousRequests['withdrawals']) || count($previousRequests['withdrawals']) === 0;
     }
 
     /**
@@ -77,7 +93,7 @@ class Manager
      */
     public function complete($request, $transaction)
     {
-        
+
         if ($request->getUserGuid() != $transaction->getUserGuid()) {
             throw new \Exception('The user who requested this operation does not match the transaction');
         }
@@ -97,7 +113,7 @@ class Manager
         //debit the users balance
         $user = new User;
         $user->guid = (string) $request->getUserGuid();
-        
+
         $this->offChainTransactions
             ->setUser($user)
             ->setType('withdrawal')
