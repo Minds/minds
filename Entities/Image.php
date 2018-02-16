@@ -165,6 +165,7 @@ class Image extends File
             'rating',
             'width',
             'height',
+            'gif',
         ));
     }
 
@@ -193,6 +194,7 @@ class Image extends File
         $export['rating'] = $this->getRating();
         $export['width'] = $this->width ?: 0;
         $export['height'] = $this->height ?: 0;
+        $export['gif'] = (bool) $this->gif;
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
