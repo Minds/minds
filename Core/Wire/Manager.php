@@ -7,6 +7,7 @@
 namespace Minds\Core\Wire;
 
 use Minds\Core;
+use Minds\Core\Blockchain\Services\RatesInterface;
 use Minds\Core\Guid;
 use Minds\Core\Data;
 use Minds\Core\Di\Di;
@@ -33,13 +34,13 @@ class Manager
     /** @var Core\Blockchain\Transactions\Repository */
     protected $txRepo;
 
-    /** @var int $sender */
+    /** @var Entities\User $sender */
     protected $sender;
 
     /** @var Entities\User $receiver */
     protected $receiver;
 
-    /** @var Entity $entity */
+    /** @var Entities\Entity $entity */
     protected $entity;
 
     /** @var double $amount */
@@ -48,7 +49,7 @@ class Manager
     /** @var bool $recurring */
     protected $recurring;
 
-    /** @var string $payload */
+    /** @var array $payload */
     protected $payload;
 
 
@@ -128,7 +129,7 @@ class Manager
      */
     public function create()
     {
-        if (!$this->receiver->getEthWallet() || $this->receiver->getEthWallet() != $this->payload['receiver']) {
+        if ($this->payload['method'] == 'onchain' && (!$this->receiver->getEthWallet() || $this->receiver->getEthWallet() != $this->payload['receiver'])) {
             throw new WalletNotSetupException();
         }
 
@@ -154,6 +155,33 @@ class Manager
                     ]);
                 $this->txManager->add($transaction);
                 break;
+
+            case 'offchain':
+                $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
+                $sendersTx
+                    ->setAmount(-$this->amount)
+                    ->setType('wire')
+                    ->setUser($this->sender)
+                    ->create();
+
+                $receiversTx = new Core\Blockchain\Wallets\OffChain\Transactions();
+                $receiversTx
+                    ->setAmount($this->amount)
+                    ->setType('wire')
+                    ->setUser($this->receiver)
+                    ->create();
+
+                $wire = new Wire();
+                $wire
+                    ->setSender($this->sender)
+                    ->setReceiver($this->receiver)
+                    ->setEntity($this->entity)
+                    ->setAmount($this->amount)
+                    ->setTimestamp(time());
+                $this->repository->add($wire);
+
+                break;
+
             case 'creditcard':
                 //charge the card
                 $customer = (new Core\Payments\Customer())
@@ -161,14 +189,21 @@ class Manager
                     
                 $nonce = $this->payload['token'];
                 // if customer doesn't exist on Stripe, create it
-                if (!$this->stripe->getCustomer($customer) || !$this->customer->getId()) { 
+                if (!$this->stripe->getCustomer($customer) || !$customer->getId()) {
                     $customer->setPaymentToken($nonce);
-                    $customer = $stripe->createCustomer($customer);
+                    $customer = $this->stripe->createCustomer($customer);
                     $nonce = $customer->getId();
                 }
 
-                $exRate = 0.25 * 10 ** 18;
-                $usd = $this->amount * $exRate * 100; //*100 for $ -> cents
+                $currencyId = Di::_()->get('Config')->get('blockchain')['token_symbol'];
+
+                /** @var RatesInterface $rates */
+                $rates = Di::_()->get('Blockchain\Rates');
+                $exRate = $rates
+                    ->setCurrency($currencyId)
+                    ->get();
+
+                $usd = round(($this->amount / (10 ** 18)) * $exRate * 100); //*100 for $ -> cents
 
                 $sale = new Core\Payments\Sale();
                 $sale->setOrderId('wire-' . $this->entity->guid)
@@ -177,7 +212,7 @@ class Manager
                     ->setSource($nonce)
                     ->capture();
 
-                $tx = 'creditcard:' + $this->stripe->setSale($sale);
+                $tx = 'creditcard:' . $this->stripe->setSale($sale);
 
                 $sendersTx = new Core\Blockchain\Transactions\Transaction();
                 $sendersTx
@@ -186,7 +221,7 @@ class Manager
                     ->setWalletAddress('creditcard')
                     ->setAmount(-$this->amount)
                     ->setTimestamp(time())
-                    ->setUserGuid($this->owner->guid)
+                    ->setUserGuid($this->sender->guid)
                     ->setCompleted(true)
                     ->setData([
                         'amount' => (string) $this->amount,
@@ -196,6 +231,7 @@ class Manager
                         'sender_guid' => $this->sender->guid,
                         'entity_guid' => $this->entity->guid,
                     ]);
+                $this->txManager->add($sendersTx);
 
                 // what the receiver gets
                 $receiversTx = new Core\Blockchain\Transactions\Transaction();
@@ -205,7 +241,7 @@ class Manager
                     ->setWalletAddress('offchain')
                     ->setAmount($this->amount)
                     ->setTimestamp(time())
-                    ->setUserGuid($this->owner->guid)
+                    ->setUserGuid($this->receiver->guid)
                     ->setCompleted(false)
                     ->setData([
                         'amount' => (string) $this->amount,
@@ -215,15 +251,16 @@ class Manager
                         'sender_guid' => $this->sender->guid,
                         'entity_guid' => $this->entity->guid,
                     ]);
-                $this->txManager->add([ $sendersTx, $receiversTx ]);
+                $this->txManager->add($receiversTx);
 
                 $wire = new Wire();
-                $wire->setSender($this->sender)
+                $wire
+                    ->setSender($this->sender)
                     ->setReceiver($this->receiver)
                     ->setEntity($this->entity)
                     ->setAmount($this->amount)
                     ->setTimestamp(time());
-                $this->repo->add($wire);
+                $this->repository->add($wire);
 
                 break;
         }

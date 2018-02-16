@@ -39,4 +39,12 @@ class Balance
             ->getBalance();
     }
 
+    public function getByContract($contract, $ts = null, $onlySpend = false)
+    {
+        return (double) $this->sums
+            ->setUser($this->user)
+            ->setTimestamp($ts)
+            ->getContractBalance($contract, $onlySpend);
+    }
+
 }

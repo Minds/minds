@@ -17,6 +17,9 @@ class Sums
     /** @var User */
     private $user;
 
+    /** @var int $timestamp */
+    private $timestamp;
+
     public function __construct($db = null)
     {
         $this->db = $db ? $db : Di::_()->get('Database\Cassandra\Cql');
@@ -61,6 +64,41 @@ class Sums
             return 0;
         }
         
+        return (double) $rows[0]['balance'];
+    }
+
+    public function getContractBalance($contract = '', $onlySpend = false)
+    {
+        $cql = "SELECT SUM(amount) as balance from blockchain_transactions WHERE user_guid = ? AND wallet_address = ?";
+        $values = [
+            new Varint($this->user->guid),
+            'offchain',
+        ];
+
+        if ($this->timestamp) {
+            $cql .= " AND timestamp >= ?";
+            $values[] = new Timestamp($this->timestamp);
+        }
+
+        if ($contract) {
+            $cql .= " AND contract = ?";
+            $values[] = (string) $contract;
+        }
+
+        if ($onlySpend) {
+            $cql .= " AND amount < 0 ALLOW FILTERING";
+        }
+
+        $query = new Custom();
+        $query->query($cql, $values);
+
+        try {
+            $rows = $this->db->request($query);
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return 0;
+        }
+
         return (double) $rows[0]['balance'];
     }
 

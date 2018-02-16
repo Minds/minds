@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Wire;
 
+use Minds\Core\Guid;
 use Minds\Traits\MagicAttributes;
 
 class Wire
@@ -33,6 +34,14 @@ class Wire
 
     /** @var int $timestamp **/
     private $timestamp;
+
+    public function getGuid() {
+        if (!$this->guid) {
+            $this->guid = Guid::build();
+        }
+
+        return $this->guid;
+    }
 
     public function export() {
         return [

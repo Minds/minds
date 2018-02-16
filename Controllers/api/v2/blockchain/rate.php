@@ -30,19 +30,8 @@ class rate implements Interfaces\Api
             $currencyId = Di::_()->get('Config')->get('blockchain')['token_symbol'];
         }
 
-        $cacheKey = "blockchain:rate:{$currencyId}";
-
         /** @var RatesInterface $rates */
         $rates = Di::_()->get('Blockchain\Rates');
-
-        /** @var abstractCacher $cacher */
-        $cacher = \Minds\Core\Data\cache\factory::build();
-
-        if ($rate = $cacher->get($cacheKey)) {
-            return Factory::response([
-                'rate' => unserialize($rate)
-            ]);
-        }
 
         $rate = $rates
             ->setCurrency($currencyId)
@@ -54,8 +43,6 @@ class rate implements Interfaces\Api
                 'message' => 'Cannot get rates'
             ]);
         }
-
-        $cacher->set($cacheKey, serialize($rate), 15 * 60);
 
         return Factory::response([
             'rate' => $rate

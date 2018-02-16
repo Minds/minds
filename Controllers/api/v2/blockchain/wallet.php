@@ -48,6 +48,9 @@ class wallet implements Interfaces\Api
                
                 $balance = $onChainBalanceVal + $offChainBalanceVal;
 
+                $todayWiresBalance = -$offChainBalance->getByContract('offchain:wire', strtotime('today 00:00'), true);
+                $wireCap = (100 * (10 ** 18)) - $todayWiresBalance;
+
                 $response = [
                     'addresses' => [
                         [
@@ -62,6 +65,7 @@ class wallet implements Interfaces\Api
                         ]
                     ],
                     'balance' => (double) $balance,
+                    'wireCap' => $wireCap,
                 ];
 
                 break;

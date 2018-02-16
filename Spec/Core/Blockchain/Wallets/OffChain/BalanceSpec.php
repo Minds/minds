@@ -34,5 +34,75 @@ class BalanceSpec extends ObjectBehavior
         $this->get()->shouldReturn((double) 50);
     }
 
+    function it_should_return_the_balance_by_contract(Sums $sums)
+    {
+        $this->beConstructedWith($sums);
+
+        $user = new User;
+        $user->guid = 123;
+
+        $sums->setTimestamp(null)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->getContractBalance('spec', false)
+            ->shouldBeCalled()
+            ->willReturn(50);
+
+        $this->setUser($user);
+        $this->getByContract('spec')->shouldReturn((double) 50);
+    }
+
+    function it_should_return_the_balance_by_contract_with_timestamp(Sums $sums)
+    {
+        $this->beConstructedWith($sums);
+
+        $user = new User;
+        $user->guid = 123;
+
+        $sums->setTimestamp(1000000)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->getContractBalance('spec', false)
+            ->shouldBeCalled()
+            ->willReturn(50);
+
+        $this->setUser($user);
+        $this->getByContract('spec', 1000000)->shouldReturn((double) 50);
+    }
+
+
+    function it_should_return_the_negative_balance_by_contract_with_timestamp(Sums $sums)
+    {
+        $this->beConstructedWith($sums);
+
+        $user = new User;
+        $user->guid = 123;
+
+        $sums->setTimestamp(1000000)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->getContractBalance('spec', true)
+            ->shouldBeCalled()
+            ->willReturn(50);
+
+        $this->setUser($user);
+        $this->getByContract('spec', 1000000, true)->shouldReturn((double) 50);
+    }
+
 
 }

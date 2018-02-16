@@ -8,6 +8,8 @@
 
 namespace Minds\Core\Blockchain\Services;
 
+use Minds\Core\Data\cache\abstractCacher;
+use Minds\Core\Data\cache\factory as CacheFactory;
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\Json\Client;
 
@@ -57,9 +59,21 @@ class CoinMarketCap implements RatesInterface
             throw new \Exception('Currency is required');
         }
 
-        $rates = $this->request("v1/ticker/{$this->currency}");
+        $cacheKey = "blockchain:cmc:rate:{$this->currency}";
 
-        return (double) $rates['price_usd'];
+        /** @var abstractCacher $cacher */
+        $cacher = CacheFactory::build();
+
+        if ($rate = $cacher->get($cacheKey)) {
+            return unserialize($rate);
+        }
+
+        $rates = $this->request("v1/ticker/{$this->currency}");
+        $rate = (double) $rates['price_usd'];
+
+        $cacher->set($cacheKey, serialize($rate), 15 * 60);
+
+        return $rate;
     }
 
     /**
