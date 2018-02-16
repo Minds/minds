@@ -13,7 +13,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class trending implements Interfaces\Api
+class trending implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     /**
      * Returns the entities
