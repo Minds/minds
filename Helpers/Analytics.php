@@ -41,6 +41,15 @@ class Analytics
         $db->insert("analytics:$metric:day:$ts", [$user_guid => time()]);
         $ts = self::buildTS("month", $ts);
         $db->insert("analytics:$metric:month:$ts", [$user_guid => time()]);
+
+
+        //HACK UNTIL THIS GETS REFACTORED!
+        $event = new Core\Analytics\Metrics\Event();
+        $event->setType('action')
+            ->setAction($metric)
+            ->setProduct('platform')
+            ->setUserGuid((string) $user_guid)
+            ->push();
     }
 
     /**
