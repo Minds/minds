@@ -74,10 +74,21 @@ class Payment
 
             case 'tokens':
                 // Pending, actually
-
-                Di::_()->get('Boost\Pending')
-                    ->add($paymentMethodNonce['txHash'], $boost);
-
+                $txManager = Di::_()->get('Blockchain\Transactions\Manager');
+                $transaction = new Core\Blockchain\Transactions\Transaction();
+                $transaction
+                    ->setUserGuid($boost->getOwner()->guid)
+                    ->setWalletAddress($paymentMethodNonce['address'])
+                    ->setContract('boost')
+                    ->setTx($paymentMethodNonce['txHash'])
+                    ->setAmount(-$boost->getBid())
+                    ->setTimestamp(time())
+                    ->setCompleted(false)
+                    ->setData([
+                        'amount' => (string) $boost->getBid(),
+                        'guid' => (string) $boost->getGuid(),
+                    ]);
+                $txManager->add($transaction); 
                 return $paymentMethodNonce['txHash'];
         }
 
