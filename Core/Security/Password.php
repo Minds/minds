@@ -76,7 +76,7 @@ class Password
      */
     public static function reset($user)
     {
-        $code = self::generate($user, microtime() . rand());
+        $code = self::generate($user, microtime() . rand(), 'md5');
         $user->password_reset_code = $code;
         $user->save();
         return $code;
