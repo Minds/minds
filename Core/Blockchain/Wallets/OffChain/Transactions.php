@@ -8,6 +8,8 @@
 
 namespace Minds\Core\Blockchain\Wallets\OffChain;
 
+use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Data\Cassandra\Locks\Locks;
 use Minds\Entities\User;
 use Minds\Core\Di\Di;
 use Minds\Core\Blockchain\Transactions\Transaction;
@@ -21,6 +23,9 @@ class Transactions
     /** @var Balance $balance */
     protected $balance;
 
+    /** @var Locks locks */
+    protected $locks;
+
     /** @var User $user */
     protected $user;
 
@@ -33,10 +38,11 @@ class Transactions
     /** @var string $tx */
     protected $tx;
 
-    public function __construct($repository = null, $balance = null)
+    public function __construct($repository = null, $balance = null, $locks = null)
     {
         $this->repository = $repository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->balance = $balance ?: Di::_()->get('Blockchain\Wallets\OffChain\Balance');
+        $this->locks = $locks ?: Di::_()->get('Database\Cassandra\Locks');
     }
 
     public function setUser(User $user)
@@ -59,6 +65,16 @@ class Transactions
 
     public function create()
     {
+        $this->locks->setKey("balance:{$this->user->guid}");
+        if ($this->locks->isLocked()) {
+            throw new \Exception('Offchain Wallet is locked');
+        }
+
+        //create a lock of the balance
+        $this->locks
+            ->setTTL(120)
+            ->lock();
+
         $balance = (double) $this->balance->setUser($this->user)->get();
         
         if ($balance + $this->amount < (double) 0) {
@@ -81,6 +97,9 @@ class Transactions
         if (!$added) {
             throw new \Exception("Could not add transaction");
         }
+
+        //release the lock?
+        //$this->locks->unlock();
 
         return $transaction;
     }

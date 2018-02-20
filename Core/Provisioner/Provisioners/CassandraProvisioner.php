@@ -278,6 +278,13 @@ class CassandraProvisioner implements ProvisionerInterface
                 'attributes' => [
                     'CLUSTERING ORDER BY (user_guid ASC, time_created DESC, payment_id ASC)'
                 ]
+            ],
+            'locks' => [
+                'schema' => [
+                    'key' => 'text',
+                    'lock' => 'boolean'
+                ],
+                'primaryKeys' => ['key']
             ]
         ];
 

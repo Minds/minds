@@ -37,7 +37,7 @@ class CassandraProvisionerSpec extends ObjectBehavior
         $this->_db->createKeyspace(Argument::type('array'))->shouldBeCalled()->willReturn(true);
 
         $this->_client->request(Argument::type(Cassandra\Prepared\System::class))
-            ->shouldBeCalledTimes(37)
+            ->shouldBeCalledTimes(38)
             ->willReturn(null);
 
         $this->provision()->shouldReturn(true);

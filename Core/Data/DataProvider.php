@@ -5,6 +5,7 @@
 
 namespace Minds\Core\Data;
 
+use Minds\Core\Data\Cassandra\Locks\Locks;
 use Minds\Core\Di\Provider;
 
 class DataProvider extends Provider
@@ -47,6 +48,9 @@ class DataProvider extends Provider
         $this->di->bind('Database\Cassandra\Relationships', function ($di) {
             return new Cassandra\Thrift\Relationships(new Call('relationships'));
         }, ['useFactory'=>false]);
+        $this->di->bind('Database\Cassandra\Locks', function ($di) {
+            return new Locks();
+        }, ['useFactory' => false]);
         $this->di->bind('Database\MongoDB', function ($di) {
             return new MongoDB\Client();
         }, ['useFactory'=>true]);

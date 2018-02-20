@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
+use Minds\Core\Data\Cassandra\Locks\Locks;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -17,15 +18,28 @@ class TransactionsSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Blockchain\Wallets\OffChain\Transactions');
     }
 
-    function it_should_create_a_rewards_transaction(Repository $repo, Balance $balance)
+    function it_should_create_a_rewards_transaction(Repository $repo, Balance $balance, Locks $locks)
     {
-        $this->beConstructedWith($repo, $balance);
+        $this->beConstructedWith($repo, $balance, $locks);
 
         $user = new User;
         $user->guid = 123;
         $this->setUser($user)
             ->setAmount(5)
             ->setType('spec');
+
+        $locks->setKey(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->setTTL(120)
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->isLocked()
+            ->shouldBeCalled()
+            ->willReturn(false);
+        $locks->lock()
+            ->shouldBeCalled()
+            ->willReturn(null);
 
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
@@ -47,15 +61,28 @@ class TransactionsSpec extends ObjectBehavior
         $transaction->getTx()->shouldBe($guid);
     }
 
-    function it_should_not_create_a_rewards_transaction_if_insufficient_balance(Repository $repo, Balance $balance)
+    function it_should_not_create_a_rewards_transaction_if_insufficient_balance(Repository $repo, Balance $balance, Locks $locks)
     {
-        $this->beConstructedWith($repo, $balance);
+        $this->beConstructedWith($repo, $balance, $locks);
 
         $user = new User;
         $user->guid = 123;
         $this->setUser($user)
-            ->setAmount(15)
+            ->setAmount(5)
             ->setType('spec');
+
+        $locks->setKey(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->setTTL(120)
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->isLocked()
+            ->shouldBeCalled()
+            ->willReturn(false);
+        $locks->lock()
+            ->shouldBeCalled()
+            ->willReturn(null);
 
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
@@ -63,15 +90,30 @@ class TransactionsSpec extends ObjectBehavior
         $this->shouldThrow('\Exception')->duringCreate();
     }
 
-    function it_should_throw_exception_if_save_fails(Repository $repo, Balance $balance)
+    function it_should_throw_exception_if_save_fails(Repository $repo, Balance $balance, Locks $locks)
     {
-        $this->beConstructedWith($repo, $balance);
+        $this->beConstructedWith($repo, $balance, $locks);
 
         $user = new User;
         $user->guid = 123;
         $this->setUser($user)
             ->setAmount(5)
             ->setType('spec');
+
+        $locks->setKey(Argument::that(function ($key) use ($user) {
+            return $key === "balance:{$user->guid}";
+        }))
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->setTTL(120)
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->isLocked()
+            ->shouldBeCalled()
+            ->willReturn(false);
+        $locks->lock()
+            ->shouldBeCalled()
+            ->willReturn(null);
 
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
@@ -83,6 +125,31 @@ class TransactionsSpec extends ObjectBehavior
             }))
             ->shouldBeCalled()
             ->willReturn(false);
+
+        $this->shouldThrow('\Exception')->duringCreate();
+    }
+
+    function it_should_throw_exception_if_locked(Repository $repo, Balance $balance, Locks $locks)
+    {
+        $this->beConstructedWith($repo, $balance, $locks);
+
+        $user = new User;
+        $user->guid = 123;
+        $this->setUser($user)
+            ->setAmount(5)
+            ->setType('spec');
+
+        $locks->setKey(Argument::that(function ($key) use ($user) {
+            return $key === "balance:{$user->guid}";
+        }))
+            ->shouldBeCalled()
+            ->willReturn($locks);
+        $locks->isLocked()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $balance->setUser($user)->willReturn($balance);
+        $balance->get()->willReturn(10);
 
         $this->shouldThrow('\Exception')->duringCreate();
     }
