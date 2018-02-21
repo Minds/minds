@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td height="80px;" style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed?message=<?php echo urlencode('Hi Minds, I’m new here. Say hello. ' . Minds\Core\Config::_()->site_url . $vars['user']->username )?>&newUser=true"
+        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed;message=<?php echo urlencode('Hi Minds, I’m new here. Say hello. ' . Minds\Core\Config::_()->site_url . $vars['user']->username )?>;newUser=true"
           style="padding:16px 32px; background-color:#546e7a; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
           POST!
         </a>
@@ -42,7 +42,7 @@
     <tr>
       <td style="text-align:center">
         <a href="https://www.minds.com/media/440854538476326912">
-          <img src="<?php echo Minds\Core\Config::_()->site_url; ?>assets/mobile-video.png" align="center" width="600px" height="378px"/>
+          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/mobile-video.png" align="center" width="600px" height="378px"/>
         </a>
       </td>
     </tr>
