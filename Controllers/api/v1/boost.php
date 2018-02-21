@@ -174,7 +174,10 @@ class boost implements Interfaces\Api
             ],
         ], (array)Core\Di\Di::_()->get('Config')->get('boost'));
 
-        if ($impressions < $config['network']['min'] || $impressions > $config['network']['max']) {
+        if (($impressions < $config['network']['min'] || $impressions > $config['network']['max']) 
+            && isset($_POST['newUserPromo'])
+        )
+        {
             return Factory::response([
                 'status' => 'error',
                 'message' => "You must boost between {$config['network']['min']} and {$config['network']['max']} points"
