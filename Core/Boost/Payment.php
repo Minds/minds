@@ -6,12 +6,31 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Entities\User;
-use Minds\Helpers\Wallet;
 
 class Payment
 {
-    public function __construct()
-    {
+    /** @var Core\Blockchain\Wallets\OffChain\Transactions */
+    protected $offchainTransactions;
+
+    /** @var Payments\Stripe\Stripe */
+    protected $stripePayments;
+
+    /** @var Core\Blockchain\Transactions\Manager */
+    protected $txManager;
+
+    /** @var Pending */
+    protected $boostPending;
+
+    public function __construct(
+        $offchainTransactions = null,
+        $stripePayments = null,
+        $txManager = null,
+        $boostPending = null
+    ) {
+        $this->offchainTransactions = $offchainTransactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+        $this->stripePayments = $stripePayments ?: Di::_()->get('StripePayments');
+        $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
+        $this->boostPending = $boostPending ?: Di::_()->get('Boost\Pending');
     }
 
     /**
@@ -30,18 +49,15 @@ class Payment
                 // return Wallet::createTransaction($boost->getOwner()->guid, 0 - $boost->getBid(), $boost->getGuid(), "Boost");
 
             case 'offchain':
-                /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
-                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
-                $transactions
+                $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost')
-                    ->setAmount($transactions->toWei(-$boost->getBid()));
+                    ->setAmount($this->offchainTransactions->toWei(-$boost->getBid()));
 
-                return $transactions->create();
+                return $this->offchainTransactions->create();
 
             case 'usd':
             case 'money':
-                $stripe = Di::_()->get('StripePayments');
                 $customer = (new Payments\Customer())
                     ->setUser($boost->getOwner());
 
@@ -49,7 +65,7 @@ class Payment
 
                 if (!$customer->getId()) {
                     $customer->setPaymentToken($paymentMethodNonce);
-                    $customer = $stripe->createCustomer($customer);
+                    $customer = $this->stripePayments->createCustomer($customer);
 
                     // Token already consumed to set default payment method, let's use the
                     // customer itself
@@ -70,11 +86,10 @@ class Payment
                         ->setFee(0.75); //payout 25% to referrer
                 }
 
-                return $stripe->setSale($sale);
+                return $this->stripePayments->setSale($sale);
 
             case 'tokens':
                 // Pending, actually
-                $txManager = Di::_()->get('Blockchain\Transactions\Manager');
                 $transaction = new Core\Blockchain\Transactions\Transaction();
                 $transaction
                     ->setUserGuid($boost->getOwner()->guid)
@@ -88,7 +103,7 @@ class Payment
                         'amount' => (string) $boost->getBid(),
                         'guid' => (string) $boost->getGuid(),
                     ]);
-                $txManager->add($transaction); 
+                $this->txManager->add($transaction);
                 return $paymentMethodNonce['txHash'];
         }
 
@@ -107,7 +122,6 @@ class Payment
 
             case 'usd':
             case 'money':
-                $stripe = Di::_()->get('StripePayments');
                 $sale = (new Payments\Sale())
                     ->setId($boost->getTransactionId());
 
@@ -116,12 +130,11 @@ class Payment
                     $sale->setMerchant($referrer);
                 }
 
-                return $stripe->chargeSale($sale);
+                return $this->stripePayments->chargeSale($sale);
 
             case 'tokens':
                 if (isset($boost->subtype) && $boost->subtype == 'network') {
-                    Di::_()->get('Boost\Pending')
-                        ->approve($boost);
+                    $this->boostPending->approve($boost);
                 }
 
                 return true;
@@ -138,21 +151,18 @@ class Payment
         switch ($currency) {
             case 'points':
                 throw new \Exception('Points are no longer supported');
-                // return Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
+            // return Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
 
             case 'offchain':
-                /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
-                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
-                $transactions
+                $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost_refund')
-                    ->setAmount($transactions->toWei($boost->getBid()));
+                    ->setAmount($this->offchainTransactions->toWei($boost->getBid()));
 
-                return $transactions->create();
+                return $this->offchainTransactions->create();
 
             case 'usd':
             case 'money':
-                $stripe = Di::_()->get('StripePayments');
                 $sale = (new Payments\Sale())
                     ->setId($boost->getTransactionId());
 
@@ -161,12 +171,11 @@ class Payment
                     $sale->setMerchant($referrer);
                 }
 
-                return $stripe->voidOrRefundSale($sale, true);
+                return $this->stripePayments->voidOrRefundSale($sale, true);
 
             case 'tokens':
                 if (isset($boost->subtype) && $boost->subtype == 'network') {
-                    Di::_()->get('Boost\Pending')
-                        ->reject($boost);
+                    $this->boostPending->reject($boost);
                 }
 
                 return true;
