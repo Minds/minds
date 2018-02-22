@@ -161,7 +161,7 @@ class ACL
 
     /**
      * Check if a user can interact with the entity
-     * @param Entity $entity
+     * @param Entities\Entity $entity
      * @param (optional) $user
      * @return boolean
      */

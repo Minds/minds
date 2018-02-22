@@ -2,6 +2,7 @@
 namespace Minds\Core;
 
 use Minds\Core\Data;
+use Minds\Entities\Entity;
 
 /**
  * Minds Entities Controller
