@@ -70,19 +70,34 @@ class blog implements Interfaces\Api
                 }
                 $entities = core\Entities::get(['guids' => $result['guids']]);
                 $response['entities'] = Factory::exportable($entities);
-                $response['load-next'] = base64_encode($result['token']); 
+                $response['load-next'] = base64_encode($result['token']);
+                break;
+            case "network":
+                if (isset($pages[1]) && !is_numeric($pages[1])) {
+                    $lookup = new Core\Data\lookup();
+                    $pages[1] = key($lookup->get(strtolower($pages[1])));
+                }
+                $entities = core\Entities::get([
+                    'subtype' => 'blog',
+                    'offset' => $offset,
+                    'limit' => $limit,
+                    'network' => isset($pages[1]) ? $pages[1] : Core\Session::getLoggedinUserGuid()
+                ]);
+                $response['entities'] = Factory::exportable($entities);
+                $response['load-next'] = $entities ? (string) end($entities)->guid : null;
+                break;
                 break;
             case "owner":
                 if (isset($pages[1]) && !is_numeric($pages[1])) {
                     $lookup = new Core\Data\lookup();
                     $pages[1] = key($lookup->get(strtolower($pages[1])));
                 }
-                $entities = core\Entities::get(array(
+                $entities = core\Entities::get([
                     'subtype' => 'blog',
                     'owner_guid' => isset($pages[1]) ? $pages[1] : \Minds\Core\Session::getLoggedInUser()->guid,
                     'offset' => $offset,
                     'limit' => $limit
-                ));
+                ]);
                 $response['entities'] = Factory::exportable($entities);
                 $response['load-next'] = $entities ? (string) end($entities)->guid : null;
                 break;

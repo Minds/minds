@@ -71,6 +71,8 @@ class entities implements Interfaces\Api
         $type = "object";
         $subtype = null;
         $owner = null;
+        $options = [];
+
         switch ($pages[0]) {
             case "all":
                 $type="user";
@@ -88,6 +90,9 @@ class entities implements Interfaces\Api
                 $owner = isset($pages[2]) && is_numeric($pages[2]) ? $pages[2] : Core\Session::getLoggedInUser()->guid;
 
                 $subtype = "archive";
+                break;
+            case "network":
+                $options = ['network' => isset($pages[2]) ? $pages[2] : Core\Session::getLoggedinUserGuid()];
                 break;
         }
 
@@ -111,12 +116,12 @@ class entities implements Interfaces\Api
         }
 
         //the allowed, plus default, options
-        $options = [
+        $options = array_merge($options, [
           'type' => $type,
           'subtype' => $subtype,
           'limit'=>12,
           'offset'=>''
-        ];
+        ]);
 
         if ($pages[0] == 'container') {
             $options['container_guids'] = [ $owner ];

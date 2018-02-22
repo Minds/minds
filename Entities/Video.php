@@ -95,6 +95,14 @@ class Video extends Object
         return elgg_get_site_url() . 'media/'.$this->guid;
     }
 
+    protected function getIndexKeys($ia = false)
+    {
+        $indexes = [
+            "object:video:network:$this->owner_guid"
+        ];
+        return array_merge(parent::getIndexKeys($ia), $indexes);
+    }
+
     /**
      * Extend the default entity save function to update the remote service
      *

@@ -46,6 +46,14 @@ class Image extends File
         return $base_url. 'api/v1/media/thumbnails/' . $this->guid . '/'.$size;
     }
 
+    protected function getIndexKeys($ia = false)
+    {
+        $indexes = [
+            "object:image:network:$this->owner_guid"
+        ];
+        return array_merge(parent::getIndexKeys($ia), $indexes);
+    }
+
     /**
      * Extend the default entity save function to update the remote service
      *

@@ -283,6 +283,14 @@ class Blog extends \ElggObject
         return "{$siteUrl}blog/view/{$this->guid}";
     }
 
+    protected function getIndexKeys($ia = false)
+    {
+        $indexes = [
+            "object:blog:network:$this->owner_guid"
+        ];
+        return array_merge(parent::getIndexKeys($ia), $indexes);
+    }
+
     public function save($index = true)
     {
         if ($this->getDeleted()) {

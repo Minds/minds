@@ -1255,34 +1255,36 @@ abstract class ElggEntity extends ElggData implements
 	 * @param bool $ia - ignore access
 	 * @return array
 	 */
-	protected function getIndexKeys($ia = false){
-		//remove from the various lines
-		if($this->access_id == ACCESS_PUBLIC || $ia){
-			$indexes = array(
-				$this->type,
-				"$this->type:$this->subtype"
-			);
+    protected function getIndexKeys($ia = false)
+    {
+        //remove from the various lines
+        if ($this->access_id == ACCESS_PUBLIC || $ia) {
+            $indexes = array(
+                $this->type,
+                "$this->type:$this->subtype"
+            );
 
-			if($this->super_subtype)
-				array_push($indexes, "$this->type:$this->super_subtype");
-		} else {
-			$indexes = array();
-		}
+            if ($this->super_subtype) {
+                array_push($indexes, "$this->type:$this->super_subtype");
+            }
+        } else {
+            $indexes = array();
+        }
 
-    if(!$this->hidden){
-		    array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid");
-		    array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid");
-    } else {
-        array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid:hidden");
-        array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid:hidden");
+        if (!$this->hidden) {
+            array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid");
+            array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid");
+        } else {
+            array_push($indexes, "$this->type:$this->super_subtype:user:$this->owner_guid:hidden");
+            array_push($indexes, "$this->type:$this->subtype:user:$this->owner_guid:hidden");
+        }
+
+        array_push($indexes, "$this->type:container:$this->container_guid");
+        array_push($indexes, "$this->type:$this->subtype:container:$this->container_guid");
+
+
+        return $indexes;
     }
-
-		array_push($indexes, "$this->type:container:$this->container_guid");
-		array_push($indexes, "$this->type:$this->subtype:container:$this->container_guid");
-
-
-		return $indexes;
-	}
 
 	/*
 	 * LOCATABLE INTERFACE
