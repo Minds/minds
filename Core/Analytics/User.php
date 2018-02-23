@@ -79,7 +79,7 @@ class User
      * Factory singleton builder
      * @return static
      */
-    public function _()
+    public static function _()
     {
         if (!self::$_) {
             self::$_ = new User();
