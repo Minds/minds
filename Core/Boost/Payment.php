@@ -62,7 +62,7 @@ class Payment
                 $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost')
-                    ->setAmount($this->offchainTransactions->toWei(-$boost->getBid()));
+                    ->setAmount(-$boost->getBid());
 
                 return $this->offchainTransactions->create();
 
@@ -166,7 +166,7 @@ class Payment
                 $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost_refund')
-                    ->setAmount($this->offchainTransactions->toWei($boost->getBid()));
+                    ->setAmount($boost->getBid());
 
                 return $this->offchainTransactions->create();
 

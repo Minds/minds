@@ -229,7 +229,7 @@ class boost implements Interfaces\Api
 
                         case 'tokens':
                         case 'offchain':
-                            $amount = round($amount / $this->getTokensRate(), 4);
+                            $amount = round($amount / $this->getTokensRate(), 4) * (10 ** 18);
                             break;
 
                         default:
