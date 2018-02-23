@@ -42,7 +42,10 @@ class Event
                 'connect_timeout' => 1
             ] 
         ]);
-        return $this->elastic->request($prepared);
+
+        try {
+            return $this->elastic->request($prepared);
+        } catch (\Exception $e) { }
     }
 
     /**

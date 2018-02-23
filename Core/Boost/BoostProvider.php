@@ -56,9 +56,6 @@ class BoostProvider extends Provider
         $this->di->bind('Boost\Payment', function ($di) {
             return new Payment();
         }, ['useFactory' => true]);
-
-        $this->di->bind('Boost\Pending', function ($di) {
-            return new Pending();
-        }, ['useFactory' => true]);
     }
+
 }

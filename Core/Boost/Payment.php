@@ -15,8 +15,14 @@ class Payment
     /** @var Payments\Stripe\Stripe */
     protected $stripePayments;
 
+    /** @var Config */
+    protected $config;
+
     /** @var Core\Blockchain\Transactions\Manager */
     protected $txManager;
+
+    /** @var Core\Blockchain\Transactions\Repository */
+    protected $txRepository;
 
     /** @var Pending */
     protected $boostPending;
@@ -24,13 +30,17 @@ class Payment
     public function __construct(
         $offchainTransactions = null,
         $stripePayments = null,
+        $eth = null,
         $txManager = null,
-        $boostPending = null
+        $txRepository = null,
+        $config = null
     ) {
         $this->offchainTransactions = $offchainTransactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $this->stripePayments = $stripePayments ?: Di::_()->get('StripePayments');
+        $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
-        $this->boostPending = $boostPending ?: Di::_()->get('Boost\Pending');
+        $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
@@ -89,7 +99,6 @@ class Payment
                 return $this->stripePayments->setSale($sale);
 
             case 'tokens':
-                // Pending, actually
                 $transaction = new Core\Blockchain\Transactions\Transaction();
                 $transaction
                     ->setUserGuid($boost->getOwner()->guid)
@@ -133,9 +142,9 @@ class Payment
                 return $this->stripePayments->chargeSale($sale);
 
             case 'tokens':
-                if (isset($boost->subtype) && $boost->subtype == 'network') {
-                    $this->boostPending->approve($boost);
-                }
+                //if (isset($boost->subtype) && $boost->subtype == 'network') {
+                //    $this->boostPending->approve($boost);
+                //}
 
                 return true;
         }
@@ -174,13 +183,40 @@ class Payment
                 return $this->stripePayments->voidOrRefundSale($sale, true);
 
             case 'tokens':
-                if (isset($boost->subtype) && $boost->subtype == 'network') {
-                    $this->boostPending->reject($boost);
-                }
+
+                //get the transaction
+                $boostTransaction = $this->txRepository->get($boost->getOwner()->guid, $boost->getTransactionId());
+
+                //send the tokens back to the booster
+                $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
+                    'from' => $this->config->get('blockchain')['boost_wallet_address'],
+                    'to' => $this->config->get('blockchain')['boost_address'],
+                    'gasLimit' => Core\Blockchain\Util::toHex(200000),
+                    'data' => $this->eth->encodeContractMethod('reject(uint256)', [
+                        Core\Blockchain\Util::toHex($boost->getGuid())
+                    ])
+                ]);
+
+                $refundTransaction = new Core\Blockchain\Transactions\Transaction();
+                $refundTransaction
+                    ->setUserGuid($boost->getOwner()->guid)
+                    ->setWalletAddress($boostTransaction->getWalletAddress())
+                    ->setContract('boost')
+                    ->setTx($boost->getTransactionId())
+                    ->setAmount($boostTransaction->getAmount())
+                    ->setTimestamp(time())
+                    ->setCompleted(false)
+                    ->setData([
+                        'amount' => (string) $boost->getBid(),
+                        'guid' => (string) $boost->getGuid(),
+                    ]);
+
+                $this->txManager->add($refundTransaction);
 
                 return true;
         }
 
         throw new \Exception('Unsupported Bid Type');
     }
+
 }
