@@ -84,7 +84,9 @@ class Mailer
                 ->send([
                     "message" => serialize($message)
                 ]);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            var_dump($e); exit;
+        }
     }
 
     public function getStats()

@@ -10,7 +10,7 @@ use Minds\Core\Entities;
 class Activity implements EmailBatchInterface
 {
     protected $period;
-    protected $offset;
+    protected $offset = '';
 
     public function setPeriod($period)
     {
@@ -20,7 +20,7 @@ class Activity implements EmailBatchInterface
 
     public function setOffset($offset)
     {
-        $this->offset = isset($offset) ?: '';
+        $this->offset = isset($offset) ? $offset : '';
         return $this;
     }
 
@@ -29,11 +29,12 @@ class Activity implements EmailBatchInterface
         $trendingPosts = $this->getTrendingActivities();
 
         $iterator = new EmailSubscribersIterator();
-        $iterator->setCampaign('when')
+        $iterator->setCampaign('with')
             ->setTopic('top_posts')
-            ->setValue($this->period)
-            ->setOffset($this->offset);
-
+            //->setValue($this->period) //TODO: add back in later
+            ->setOffset($this->offset)
+            ->getSubscribers();
+        
         foreach ($iterator as $user) {
             $campaign = new WithActivity();
             $campaign->setUser($user)

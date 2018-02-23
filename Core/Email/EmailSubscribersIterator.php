@@ -9,7 +9,7 @@ use Minds\Core\Data;
 use Minds\Core\Analytics\Timestamps;
 
 
-class EmailSubscribersIterator
+class EmailSubscribersIterator implements \Iterator
 {
     private $cursor = -1;
 
@@ -26,12 +26,10 @@ class EmailSubscribersIterator
 
     /** @var Repository */
     private $repository;
-    private $position = 0;
 
     public function __construct($repository = null)
     {
         $this->repository = $repository ?: Core\Di\Di::_()->get('Email\Repository');
-        $this->position = 0;
     }
 
     /**
@@ -68,13 +66,14 @@ class EmailSubscribersIterator
     public function setOffset($offset = '')
     {
         $this->offset = $offset;
+        return $this;
     }
 
 
     /**
      * Fetch all the users who are subscribed to a certain email campaign/topic
      */
-    protected function getSubscribers()
+    public function getSubscribers()
     {
         $options = [
             'campaign' => $this->campaign,
@@ -85,20 +84,26 @@ class EmailSubscribersIterator
         ];
 
         $result = $this->repository->getList($options);
-
-        if (!$result || count($result['data'] === 0)) {
+        
+        if (!$result || count($result['data']) === 0) {
             $this->valid = false;
             return;
         }
 
-        $this->token = $result['token'];
+        $this->offset = $result['next'] ?: '';
 
         $guids = array_map(function ($item) {
             return $item->getUserGuid();
         }, $result['data']);
 
         $this->valid = true;
-        $this->data = Entities::get(['guids' => $guids]);
+        $users = Entities::get(['guids' => $guids]);
+
+        foreach ($users as $user) {
+            $this->data[] = $user;
+        }
+
+        return $this;
     }
 
     /**
