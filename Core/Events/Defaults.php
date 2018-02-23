@@ -108,6 +108,9 @@ class Defaults
 
         // Blockchain events
         (new Core\Blockchain\Events())->register();
+
+        // Boost events
+        (new Core\Boost\Events())->register();
     }
 
     public static function _()

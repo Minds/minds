@@ -79,6 +79,33 @@ class Events
 
             return $event->setResponse($onRecurring);
         });
+
+        Dispatcher::register('subscriptions:process', 'wire', function (Core\Events\Event $event) {
+            $params = $event->getParameters();
+            /** @var Core\Payments\Subscriptions\Subscription $subscription */
+            $subscription = $params['subscription'];
+
+            $user = Entities\Factory::build($subscription->getEntity()->guid);
+            $sender = new User($subscription->getUser()->guid);
+
+            $onRecurring = $this->onRecurring($sender, $user,$subscription->getAmount(), $subscription->getId());
+
+            return $event->setResponse($onRecurring);
+        });
+
+        Dispatcher::register('wire:email', 'wire', function (Core\Events\Event $event) {
+            $params = $event->getParameters();
+            /** @var User $receiver */
+            $receiver = $params['receiver'];
+
+            $campaign = new Core\Email\Campaigns\WhenWire();
+
+            $campaign->setUser($receiver);
+
+            $campaign->send();
+
+            return $event->setResponse(true);
+        });
     }
 
     /**

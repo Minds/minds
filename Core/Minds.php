@@ -59,6 +59,7 @@ class Minds extends base
         (new Payments\Subscriptions\SubscriptionsProvider())->register();
         (new Faq\FaqProvider())->register();
         (new Rewards\RewardsProvider())->register();
+        (new Email\EmailProvider())->register();
     }
 
     /**

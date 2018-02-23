@@ -241,3 +241,58 @@ $CONFIG->set('plus', [
         'year' => 50
     ]
 ]);
+
+$CONFIG->set('default_email_subscriptions', [
+    [
+        'campaign' => 'when',
+        'topic' => 'unread_notifications',
+        'value' => true
+    ],
+    [
+        'campaign' => 'when',
+        'topic' => 'wire_received',
+        'value' => true
+    ],
+    [
+        'campaign' => 'when',
+        'topic' => 'boost_completed',
+        'value' => true
+    ],
+
+    [
+        'campaign' => 'with',
+        'topic' => 'top_posts',
+        'value' => 'periodically'
+    ],
+    [
+        'campaign' => 'with',
+        'topic' => 'channel_improvement_tips',
+        'value' => true
+    ],
+    [
+        'campaign' => 'with',
+        'topic' => 'posts_missed_since_login',
+        'value' => true
+    ],
+    [
+        'campaign' => 'with',
+        'topic' => 'new_channels',
+        'value' => true
+    ],
+
+    [
+        'campaign' => 'global',
+        'topic' => 'minds_news',
+        'value' => false
+    ],
+    [
+        'campaign' => 'global',
+        'topic' => 'minds_tips',
+        'value' => true
+    ],
+    [
+        'campaign' => 'global',
+        'topic' => 'exclusive_promotions',
+        'value' => false
+    ],
+]);

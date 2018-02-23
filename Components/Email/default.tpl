@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="https://www.minds.com/emails/unsubscribe/<?= $vars['username']?>/<?= $vars['email']?>?__e_ct_guid=<?= $vars['guid']?>" align="center" style="color:#888">
+                    <a href="https://www.minds.com/emails/unsubscribe/<?= $vars['username']?>/<?= $vars['email']?>/<?= $vars['campaign']?><?= '/' . $vars['topic']?>?__e_ct_guid=<?= $vars['guid']?>" align="center" style="color:#888">
                       un-subscribe
                     </a>
                     from future emails.

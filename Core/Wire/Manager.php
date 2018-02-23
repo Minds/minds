@@ -274,6 +274,10 @@ class Manager
                 ->create();
         }
 
+        // send wire email
+        Dispatcher::trigger('wire:email', 'wire', [
+            'receiver' => $this->receiver
+        ]);
         return true;
     }
     

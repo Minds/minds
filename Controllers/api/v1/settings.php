@@ -30,10 +30,11 @@ class settings implements Interfaces\Api
         Factory::isLoggedIn();
 
         if (Core\Session::getLoggedInUser()->isAdmin() && isset($pages[0])) {
-            $user = new entities\User($pages[0]);
+            $user = new Entities\User($pages[0]);
         } else {
             $user = Core\Session::getLoggedInUser();
         }
+
 
         $response = array();
 
@@ -135,7 +136,7 @@ class settings implements Interfaces\Api
             $user->setCategories($newCategories);
         }
 
-        $response = array();
+        $response = [];
         if (!$user->save()) {
             //update or session
             if ($user->getGuid() == Core\Session::getLoggedInUser()->getGuid()) {

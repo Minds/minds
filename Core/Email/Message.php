@@ -4,6 +4,8 @@
  */
 namespace Minds\Core\Email;
 
+use Minds\Entities\User;
+
 class Message
 {
     public $from = array();
@@ -42,7 +44,7 @@ class Message
 
   /**
    * Set to data
-   * @param Entities\User $user
+   * @param User $user
    * @return $this
    */
   public function setTo($user)

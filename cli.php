@@ -8,6 +8,7 @@ if (PHP_SAPI !== 'cli') {
 
 require_once(dirname(__FILE__) . "/vendor/autoload.php");
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
 array_shift($argv);

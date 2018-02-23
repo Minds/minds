@@ -65,6 +65,11 @@ class Register
                   ->setHtml($template);
                 $mailer = new Core\Email\Mailer();
                 $mailer->queue($message);
+
+                Core\Queue\Client::build()->setQueue("Registered")
+                    ->send([
+                        "user_guid" => $params['user']->guid,
+                    ]);
             } catch (\Exception $e) { }
         });
     }

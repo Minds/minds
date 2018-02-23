@@ -21,8 +21,6 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
     
     public function exec()
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         $campaign_id = $this->getOpt('campaign');
         $dry = $this->getOpt('dry-run') ?: false;
         $offset = $this->getOpt('offset') ?: '';
@@ -37,6 +35,31 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
             ->send();
 
         $this->out('Done.');
+    }
+
+    public function topPosts()
+    {
+        $period = $this->getOpt('period');
+        $offset = '';
+
+        if (!$period || $period !== 'periodically' && $period !== 'daily' && $period !== 'weekly') {
+            throw new CliException('You must set a correct period (periodically, daily or weekly)');
+        }
+
+        $batch = Core\Email\Batches\Factory::build('activity');
+
+        $batch->setPeriod($period)
+            ->setOffset($offset)
+            ->run();
+    }
+
+    public function unreadNotifications()
+    {
+        $offset = $this->getOpt('offset') ?: '';
+
+        $batch = Core\Email\Batches\Factory::build('notifications');
+        $batch->setOffset($offset)
+            ->run();
     }
 
 }
