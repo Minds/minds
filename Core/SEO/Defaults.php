@@ -40,6 +40,17 @@ class Defaults
           'og:image:height' => 681,
           'twitter:site' => '@minds',
           'twitter:card' => 'summary',
+          'smartbanner:title' => 'Minds',
+          'smartbanner:author' => 'Minds.com',
+          'smartbanner:price' => 'free',
+          'smartbanner:price-suffix-apple' => ' - On the App Store',
+          'smartbanner:price-suffix-google' => ' - In Google Play',
+          'smartbanner:icon-apple' => $this->config->cdn_assets_url . 'assets/logos/bulb.svg',
+          'smartbanner:icon-google' => $this->config->cdn_assets_url . 'assets/logos/bulb.svg',
+          'smartbanner:button' => 'VIEW',
+          'smartbanner:button-url-apple' => 'https://itunes.apple.com/app/minds-com/id961771928',
+          'smartbanner:button-url-google' => 'https://play.google.com/store/apps/details?id=com.minds.mobile',
+          'smartbanner:enabled-platforms' => 'android,ios',
         ]);
 
         /**
