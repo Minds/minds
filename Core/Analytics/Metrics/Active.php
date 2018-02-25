@@ -137,8 +137,8 @@ class Active implements AnalyticsMetric
         $data = [];
         foreach ($result['aggregations']['counts']['buckets'] as $count) {
             $data[] = [
-                'timestamp' => $count['key'],
-                'date' => date('d-m-Y', $count['key']),
+                'timestamp' => $count['key'] / 1000,
+                'date' => date('d-m-Y', $count['key'] / 1000),
                 'total' => (int) $count['uniques']['value']
             ];
         }
