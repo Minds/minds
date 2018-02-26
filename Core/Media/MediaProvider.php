@@ -32,5 +32,15 @@ class MediaProvider extends Provider
         $this->di->bind('Media\Recommended', function ($di) {
             return new Recommended();
         }, [ 'useFactory' => true ]);
+
+        // Proxy
+
+        $this->di->bind('Media\Proxy\Download', function ($di) {
+            return new Proxy\Download();
+        }, [ 'useFactory' => true ]);
+
+        $this->di->bind('Media\Proxy\Resize', function ($di) {
+            return new Proxy\Resize();
+        }, [ 'useFactory' => true ]);
     }
 }
