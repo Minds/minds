@@ -7,6 +7,7 @@ use Cassandra\Timestamp;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Repository
 {
@@ -112,7 +113,7 @@ class Repository
                 ->setUser((string) $row['user_guid'])
                 ->setMetric((string) $row['metric'])
                 ->setTimestamp($row['timestamp']->time() * 1000)
-                ->setAmount((int) $row['amount'])
+                ->setAmount((string) BigNumber::_($row['amount']))
                 ->setScore((int) $row['score']);
 
             $contributions[] = $contribution;

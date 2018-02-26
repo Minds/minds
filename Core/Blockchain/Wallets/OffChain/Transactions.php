@@ -10,6 +10,7 @@ namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Data\Cassandra\Locks\Locks;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 use Minds\Core\Di\Di;
 use Minds\Core\Blockchain\Transactions\Transaction;
@@ -59,7 +60,7 @@ class Transactions
 
     public function setAmount($amount)
     {
-        $this->amount = (double) $amount;
+        $this->amount = $amount;
         return $this;
     }
 
@@ -75,9 +76,9 @@ class Transactions
             ->setTTL(120)
             ->lock();
 
-        $balance = (double) $this->balance->setUser($this->user)->get();
+        $balance = BigNumber::_($this->balance->setUser($this->user)->get());
         
-        if ($balance + $this->amount < (double) 0) {
+        if ($balance->add($this->amount)->lt(0)) {
             throw new \Exception('Not enough funds');
         }
 
@@ -106,7 +107,7 @@ class Transactions
 
     public function toWei($value)
     {
-        return (double) $value * (10 ** 18);
+        return (string) BigNumber::toPlain($value, 18);
     }
 
 }

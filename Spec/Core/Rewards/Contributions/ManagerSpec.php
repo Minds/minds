@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Rewards\Contributions;
 
+use Minds\Core\Util\BigNumber;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -135,9 +136,9 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1, 10);
 
-        $supply = (100000000 * 10 ** 18 / 4) / 365;
-        
-        $this->getRewardsAmount()->shouldReturn($supply / 10);
+        $supply = BigNumber::toPlain('100000000', 18)->div(4)->div(365);
+
+        $this->getRewardsAmount()->shouldReturn((string) $supply->div(10));
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Rewards\Withdraw;
 
+use Minds\Core\Util\BigNumber;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -85,16 +86,16 @@ class ManagerSpec extends ObjectBehavior
         $eth->sendRawTransaction('private-key-here', [
             'from' => '0xfunds-address',
             'to' => '0xwidthdraw-address',
-            'gasLimit' => Util::toHex(4612388),
-            'gasPrice' => Util::toHex(10000000000),
+            'gasLimit' => BigNumber::_(4612388)->toHex(true),
+            'gasPrice' => BigNumber::_(10000000000)->toHex(true),
             'data' => '0xRESULT'
         ])->shouldBeCalled();
 
         $eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
             '0xRequesterAddr',
-            Util::toHex(123),
-            Util::toHex(50),
-            Util::toHex(1000)
+            BigNumber::_(123)->toHex(true),
+            BigNumber::_(50)->toHex(true),
+            BigNumber::_(1000)->toHex(true)
         ])
         ->shouldBeCalled()
         ->willReturn('0xRESULT');

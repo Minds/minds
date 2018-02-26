@@ -12,6 +12,7 @@ namespace Minds\Controllers\api\v1;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities;
 use Minds\Helpers;
 use Minds\Helpers\Counters;
@@ -229,7 +230,7 @@ class boost implements Interfaces\Api
 
                         case 'tokens':
                         case 'offchain':
-                            $amount = round($amount / $this->getTokensRate(), 4) * (10 ** 18);
+                            $amount = BigNumber::toPlain(round($amount / $this->getTokensRate(), 4), 18);
                             break;
 
                         default:
@@ -310,21 +311,23 @@ class boost implements Interfaces\Api
                     }
                     break;
                 case "Channel": //this is a polyfill for the new boost PRO
-                    $result = Core\Boost\Factory::build("Channel", [
-                        'destination' => isset($_POST['destination']) ? $_POST['destination'] : null
-                    ])->boost($entity, $impressions);
-                    Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
-                    if ($result) {
-                        Core\Events\Dispatcher::trigger('notification', 'boost', [
-                            'to' => [$pages[2]],
-                            'entity' => $pages[1],
-                            'notification_view' => 'boost_gift',
-                            'params' => ['impressions' => $impressions],
-                            'impressions' => $impressions
-                        ]);
-                    } else {
-                        $response['status'] = 'error';
-                    }
+                    $response['status'] = 'error';
+                    $response['message'] = "Points boosts are not allowed";
+                    // $result = Core\Boost\Factory::build("Channel", [
+                    //     'destination' => isset($_POST['destination']) ? $_POST['destination'] : null
+                    // ])->boost($entity, $impressions);
+                    // Helpers\Wallet::createTransaction(Core\Session::getLoggedinUser()->guid, -$impressions, $pages[1], "P2P Boost");
+                    // if ($result) {
+                    //     Core\Events\Dispatcher::trigger('notification', 'boost', [
+                    //         'to' => [$pages[2]],
+                    //         'entity' => $pages[1],
+                    //         'notification_view' => 'boost_gift',
+                    //         'params' => ['impressions' => $impressions],
+                    //         'impressions' => $impressions
+                    //     ]);
+                    // } else {
+                    //     $response['status'] = 'error';
+                    // }
                     break;
                 default:
                     $response['status'] = 'error';

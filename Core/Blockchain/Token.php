@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Token
 {
@@ -33,19 +34,20 @@ class Token
         }
 
         $this->tokenAddress = $contract->getAddress();
-        $this->tokenDecimals = $contract->getExtra()['decimals'];
+        $this->tokenDecimals = $contract->getExtra()['decimals'] ?: 18;
     }
 
     /**
      * Gets an account's balance of token
      * @param $account
-     * @return double
+     * @return string
+     * @throws \Exception
      */
     public function balanceOf($account)
     {
         $result = $this->client->call($this->tokenAddress, 'balanceOf(address)', [ $account ]);
 
-        return (double) Util::toDec($result);
+        return (string) BigNumber::fromHex($result);
     }
 
     /**
@@ -56,24 +58,26 @@ class Token
     {
         $result = $this->client->call($this->tokenAddress, 'totalSupply()', []);
 
-        return $this->fromTokenUnit(Util::toDec($result));
+        return $this->fromTokenUnit(BigNumber::fromHex($result));
     }
 
     /**
      * @param $amount
-     * @return float
+     * @return string
+     * @throws \Exception
      */
     public function toTokenUnit($amount)
     {
-        return (double) ($amount * (10 ** $this->tokenDecimals));
+        return (string) BigNumber::toPlain($amount, $this->tokenDecimals);
     }
 
     /**
      * @param $amount
      * @return float
+     * @throws \Exception
      */
     public function fromTokenUnit($amount)
     {
-        return (double) ($amount / (10 ** $this->tokenDecimals));
+        return (string) BigNumber::fromPlain($amount, $this->tokenDecimals);
     }
 }

@@ -11,6 +11,7 @@ namespace Minds\Controllers\api\v2\blockchain;
 use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
+use Minds\Core\Util\BigNumber;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
@@ -39,33 +40,32 @@ class wallet implements Interfaces\Api
             case 'balance':
                 $onChainBalance = Di::_()->get('Blockchain\Wallets\OnChain\Balance');
                 $onChainBalance->setUser(Session::getLoggedinUser());
-                $onChainBalanceVal = (double) $onChainBalance->get();
+                $onChainBalanceVal = BigNumber::_($onChainBalance->get());
 
                 $offChainBalance = Di::_()->get('Blockchain\Wallets\OffChain\Balance');
                 $offChainBalance->setUser(Session::getLoggedinUser());
-                $offChainBalanceVal = (double) $offChainBalance->get();
+                $offChainBalanceVal = BigNumber::_($offChainBalance->get());
                 
-               
-                $balance = $onChainBalanceVal + $offChainBalanceVal;
+                $balance = $onChainBalanceVal->add($offChainBalanceVal);
 
-                $todayWiresBalance = -$offChainBalance->getByContract('offchain:wire', strtotime('today 00:00'), true);
-                $wireCap = (100 * (10 ** 18)) - $todayWiresBalance;
+                $todayWiresBalance = BigNumber::_($offChainBalance->getByContract('offchain:wire', strtotime('today 00:00'), true))->neg();
+                $wireCap = BigNumber::toPlain(100, 18)->sub($todayWiresBalance);
 
                 $response = [
                     'addresses' => [
                         [
                             'address' => Session::getLoggedinUser()->getEthWallet(),
                             'label' => 'Receiver',
-                            'balance' => (double) $onChainBalanceVal,
+                            'balance' => (string) $onChainBalanceVal,
                         ],
                         [
                             'address' => 'offchain',
                             'label' => 'OffChain',
-                            'balance' => (double) $offChainBalanceVal,
+                            'balance' => (string) $offChainBalanceVal,
                         ]
                     ],
-                    'balance' => (double) $balance,
-                    'wireCap' => $wireCap,
+                    'balance' => (string) $balance,
+                    'wireCap' => (string) $wireCap,
                 ];
 
                 break;

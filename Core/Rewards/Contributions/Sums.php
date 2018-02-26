@@ -7,6 +7,7 @@ use Cassandra\Timestamp;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 
 class Sums
@@ -64,7 +65,7 @@ class Sums
             error_log($e->getMessage());
         }
         
-        return (int) $rows[0]['amount'];
+        return (string) BigNumber::_($rows[0]['amount']);
     }
 
     /**

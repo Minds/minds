@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class TokenDistributionEvent
 {
@@ -37,34 +38,37 @@ class TokenDistributionEvent
 
     /**
      * Gets the token <-> eth exchange rate
-     * @return double
+     * @return string
+     * @throws \Exception
      */
     public function rate()
     {
         $result = $this->client->call($this->tokenDistributionEventAddress, 'rate()', []);
 
-        return (double) Util::toDec($result);
+        return (string) BigNumber::fromHex($result);
     }
 
     /**
      * Gets the total of ETH raised
      * @return double
+     * @throws \Exception
      */
     public function raised()
     {
         $result = $this->client->call($this->tokenDistributionEventAddress, 'weiRaised()', []);
 
-        return (double) Util::toDec($result) / (10 ** 18);
+        return BigNumber::fromPlain(BigNumber::fromHex($result), 18)->toDouble();
     }
 
     /**
      * Gets the end time of the event
      * @return double
+     * @throws \Exception
      */
     public function endTime()
     {
         $result = $this->client->call($this->tokenDistributionEventAddress, 'endTime()', []);
 
-        return (int) Util::toDec($result);
+        return BigNumber::fromHex($result)->toInt();
     }
 }

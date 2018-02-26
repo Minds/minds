@@ -3,8 +3,10 @@
 namespace Minds\Core\Boost;
 
 use Minds\Core;
+use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 
 class Payment
@@ -56,13 +58,13 @@ class Payment
 
         switch ($currency) {
             case 'points':
-                // return Wallet::createTransaction($boost->getOwner()->guid, 0 - $boost->getBid(), $boost->getGuid(), "Boost");
+                throw new \Exception('Points are no longer supported');
 
             case 'offchain':
                 $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost')
-                    ->setAmount(-$boost->getBid());
+                    ->setAmount((string) BigNumber::_($boost->getBid())->neg());
 
                 return $this->offchainTransactions->create();
 
@@ -105,7 +107,7 @@ class Payment
                     ->setWalletAddress($paymentMethodNonce['address'])
                     ->setContract('boost')
                     ->setTx($paymentMethodNonce['txHash'])
-                    ->setAmount(-$boost->getBid())
+                    ->setAmount((string) BigNumber::_($boost->getBid())->neg())
                     ->setTimestamp(time())
                     ->setCompleted(false)
                     ->setData([
@@ -127,6 +129,7 @@ class Payment
         switch ($currency) {
             case 'points':
             case 'offchain':
+            case 'tokens':
                 return true; // Already charged
 
             case 'usd':
@@ -140,13 +143,6 @@ class Payment
                 }
 
                 return $this->stripePayments->chargeSale($sale);
-
-            case 'tokens':
-                //if (isset($boost->subtype) && $boost->subtype == 'network') {
-                //    $this->boostPending->approve($boost);
-                //}
-
-                return true;
         }
 
         throw new \Exception('Unsupported Bid Type');
@@ -160,13 +156,12 @@ class Payment
         switch ($currency) {
             case 'points':
                 throw new \Exception('Points are no longer supported');
-            // return Wallet::createTransaction($boost->getOwner()->guid, $boost->getBid(), $boost->getGuid(), "Boost Refund");
 
             case 'offchain':
                 $this->offchainTransactions
                     ->setUser($boost->getOwner())
                     ->setType('boost_refund')
-                    ->setAmount($boost->getBid());
+                    ->setAmount((string) BigNumber::_($boost->getBid()));
 
                 return $this->offchainTransactions->create();
 
@@ -183,7 +178,6 @@ class Payment
                 return $this->stripePayments->voidOrRefundSale($sale, true);
 
             case 'tokens':
-
                 //get the transaction
                 $boostTransaction = $this->txRepository->get($boost->getOwner()->guid, $boost->getTransactionId());
 
@@ -191,9 +185,9 @@ class Payment
                 $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
                     'from' => $this->config->get('blockchain')['boost_wallet_address'],
                     'to' => $this->config->get('blockchain')['boost_address'],
-                    'gasLimit' => Core\Blockchain\Util::toHex(200000),
+                    'gasLimit' => BigNumber::_(200000)->toHex(true),
                     'data' => $this->eth->encodeContractMethod('reject(uint256)', [
-                        Core\Blockchain\Util::toHex($boost->getGuid())
+                        BigNumber::_($boost->getGuid())->toHex(true)
                     ])
                 ]);
 

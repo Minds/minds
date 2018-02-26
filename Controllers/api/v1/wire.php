@@ -11,6 +11,7 @@ namespace Minds\Controllers\api\v1;
 
 use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -54,7 +55,7 @@ class wire implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'You cannot send a wire to yourself!']);
         }
 
-        $amount = $_POST['amount'];
+        $amount = BigNumber::_($_POST['amount']);
 
         $recurring = isset($_POST['recurring']) ? $_POST['recurring'] : false;
 
@@ -62,7 +63,7 @@ class wire implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'you must send an amount']);
         }
 
-        if ($amount <= 0) {
+        if ($amount->lt(0)) {
             return Factory::response(['status' => 'error', 'message' => 'amount must be a positive number']);
         }
 
@@ -70,14 +71,14 @@ class wire implements Interfaces\Api
 
         try {
             $manager
-                ->setAmount($amount * 10 ** 18)
+                ->setAmount((string) BigNumber::toPlain($amount, 18))
                 ->setRecurring($recurring)
                 ->setSender(Core\Session::getLoggedInUser())
                 ->setEntity($entity)
                 ->setPayload((array) $_POST['payload']);
             $result = $manager->create();
 
-            $this->sendNotifications($amount, Core\Session::getLoggedinUser(), $entity, $recurring);
+            $this->sendNotifications((string) $amount, Core\Session::getLoggedinUser(), $entity, $recurring);
 
             if (!$result) {
                 throw new \Exception("Something failed");

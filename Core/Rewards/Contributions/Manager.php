@@ -5,6 +5,7 @@
 namespace Minds\Core\Rewards\Contributions;
 
 use Minds\Core\Analytics;
+use Minds\Core\Util\BigNumber;
 
 class Manager
 {
@@ -122,14 +123,14 @@ class Manager
 
     /**
      * Return the number of tokens to be rewarded
-     * @return int
+     * @return string
      */
     public function getRewardsAmount()
     {
-        $share = $this->getUserContributionScore() / $this->getSiteContribtionScore();
-        $pool = ((100000000 * (10 ** 18)) / 4) / 365;
+        $share = BigNumber::_($this->getUserContributionScore(), 18)->div($this->getSiteContribtionScore());
+        $pool = BigNumber::toPlain('100000000', 18)->div(4)->div(365);
 
-        return round($share * $pool, 0);
+        return (string) $pool->mul($share);
     }
 
 }

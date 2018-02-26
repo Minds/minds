@@ -73,7 +73,7 @@ class SumsSpec extends ObjectBehavior
 
         $this->beConstructedWith($cassandra, $config);
 
-        $this->getReceived()->shouldReturn('10');
+        $this->setReceiver(1000)->getReceived()->shouldReturn('10');
     }
 
     function it_should_get_a_sum_by_entity(Client $cassandra, Config $config)
@@ -87,7 +87,7 @@ class SumsSpec extends ObjectBehavior
 
         $this->beConstructedWith($cassandra, $config);
 
-        $this->getEntity()->shouldReturn('10');
+        $this->setEntity(5000)->getEntity()->shouldReturn('10');
     }
 
 }

@@ -21,10 +21,4 @@ class UtilSpec extends ObjectBehavior
         $this::parseData($data)->shouldHaveKeyWithValue(1, '0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef');
         $this::parseData($data)->shouldHaveKeyWithValue(2, '0xa');
     }
-
-    function it_should_convert_hex_to_dec()
-    {
-        $hex = "0xa";
-        $this::toDec($hex)->shouldBe((double) 10);
-    }
 }

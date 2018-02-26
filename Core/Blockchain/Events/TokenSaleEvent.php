@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Util;
+use Minds\Core\Util\BigNumber;
 
 class TokenSaleEvent implements BlockchainEventInterface
 {
@@ -43,8 +44,8 @@ class TokenSaleEvent implements BlockchainEventInterface
     protected function tokenPurchase($log)
     {
         list($purchaser, $beneficiary, $value, $amount) = Util::parseData($log['data']);
-        $value = Util::toDec($value);
-        $amount = Util::toDec($amount);
+        $value = (string) BigNumber::fromHex($value);
+        $amount = (string) BigNumber::fromHex($amount);
 
         echo 'TOKEN PURCHASE' . PHP_EOL;
         var_dump([

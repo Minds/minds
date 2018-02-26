@@ -29,7 +29,7 @@ class TokenSpec extends ObjectBehavior
         $client->call('minds_token_addr', 'balanceOf(address)', [ 'foo' ])
             ->willReturn('0x2B5E3AF16B1880000');
 
-        $this->balanceOf('foo')->shouldBe((double) 50000000000000000000);
+        $this->balanceOf('foo')->shouldBe('50000000000000000000');
     }
 
 }

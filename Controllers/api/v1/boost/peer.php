@@ -10,6 +10,7 @@ namespace Minds\Controllers\api\v1\boost;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -72,7 +73,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
-        $bid = intval($_POST['bid']);
+        $bid = (string) BigNumber::_($_POST['bid']);
         $type = $_POST['type'];
         $currency = $_POST['currency'];
 

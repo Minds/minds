@@ -38,14 +38,14 @@ class Balance
 
     /**
      * Return the balance
-     * @return double
+     * @return string
      */
     public function get()
     {
         $address = $this->user->getEthWallet();
 
         if (!$address) {
-            return (double) 0;
+            return 0;
         }
 
         $cacheKey = "blockchain:balance:{$address}";
@@ -57,7 +57,7 @@ class Balance
         $balance = $this->token->balanceOf($address);
         $this->cache->set($cacheKey, serialize($balance), 60);
 
-        return (double) $balance;
+        return $balance;
     }
 
 }

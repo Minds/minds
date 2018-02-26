@@ -23,7 +23,7 @@ class Wire
     /** @var User **/
     private $sender;
 
-    /** @var double **/
+    /** @var string **/
     private $amount;
 
     /** @var bool **/

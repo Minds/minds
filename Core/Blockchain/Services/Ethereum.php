@@ -10,6 +10,7 @@ namespace Minds\Core\Blockchain\Services;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\JsonRpc;
+use Minds\Core\Util\BigNumber;
 use MW3;
 
 class Ethereum
@@ -158,7 +159,7 @@ error_log(print_r($params, true));
         }
 
         if (!isset($transaction['gasPrice'])) {
-            $transaction['gasPrice'] = '0x' . dechex($this->config->get('blockchain')['server_gas_price'] ?: 1);
+            $transaction['gasPrice'] = BigNumber::_($this->config->get('blockchain')['server_gas_price'] ?: 1)->toHex(true);
         }
 
         if (!isset($transaction['nonce'])) {

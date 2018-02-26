@@ -92,7 +92,7 @@ class RepositorySpec extends ObjectBehavior
 
         $result['transactions'][0]
             ->getAmount()
-            ->shouldBe((double) 50);
+            ->shouldBe('50');
         
         $result['transactions'][0]
             ->isCompleted()
@@ -167,7 +167,7 @@ class RepositorySpec extends ObjectBehavior
 
         $result
             ->getAmount()
-            ->shouldBe((double) 50);
+            ->shouldBe('50');
         
         $result
             ->isCompleted()

@@ -26,7 +26,7 @@ class SumsSpec extends ObjectBehavior
             ]);
 
         $this->getBalance()
-            ->shouldReturn((double) 12);
+            ->shouldReturn('12');
     }
 
     function it_should_get_a_contract_balance(Client $db, User $user)
@@ -54,7 +54,7 @@ class SumsSpec extends ObjectBehavior
 
         $this
             ->getContractBalance('spec', false)
-            ->shouldReturn((double) 12);
+            ->shouldReturn('12');
     }
 
     function it_should_get_a_contract_balance_spend_only(Client $db, User $user)
@@ -82,7 +82,7 @@ class SumsSpec extends ObjectBehavior
 
         $this
             ->getContractBalance('spec', true)
-            ->shouldReturn((double) 12);
+            ->shouldReturn('12');
     }
 
     function it_should_get_a_contract_balance_spend_only_and_timestamp(Client $db, User $user)
@@ -113,7 +113,7 @@ class SumsSpec extends ObjectBehavior
 
         $this
             ->getContractBalance('spec', true)
-            ->shouldReturn((double) 12);
+            ->shouldReturn('12');
     }
 
 }

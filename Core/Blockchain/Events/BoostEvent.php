@@ -10,6 +10,7 @@ namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class BoostEvent implements BlockchainEventInterface
 {
@@ -48,7 +49,7 @@ class BoostEvent implements BlockchainEventInterface
     {
         $tx = $log['transactionHash'];
         list($guid) = Util::parseData($log['data']);
-        $guid = Util::toDec($guid);
+        $guid = (string) BigNumber::fromHex($guid);
 
         try {
             Di::_()->get('Boost\Pending')->resolve($tx, $guid);

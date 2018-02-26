@@ -8,6 +8,7 @@ namespace Minds\Controllers\api\v1\wire;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class ledger
 {
@@ -65,7 +66,7 @@ class ledger
                 $user->getEmail(),
                 date('Y-m-d H:i:s', $wire->getTimeCreated()),
                 $wire->getMethod(),
-                $wire->getAmount()
+                $wire->getMethod() === 'tokens' ? BigNumber::fromPlain($wire->getAmount(), 18) : $wire->getAmount()
             ]);
         }
 

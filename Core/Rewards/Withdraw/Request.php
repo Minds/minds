@@ -20,7 +20,7 @@ class Request
     /** @var double $gas **/
     private $gas;
 
-    /** @var double $amount **/
+    /** @var string $amount **/
     private $amount;
 
     /** @var bool $completed **/

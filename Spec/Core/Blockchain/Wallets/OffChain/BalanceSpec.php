@@ -28,10 +28,10 @@ class BalanceSpec extends ObjectBehavior
             ->willReturn($sums);
         $sums->getBalance()
             ->shouldBeCalled()
-            ->willReturn(50);
+            ->willReturn('50');
 
         $this->setUser($user);
-        $this->get()->shouldReturn((double) 50);
+        $this->get()->shouldReturn('50');
     }
 
     function it_should_return_the_balance_by_contract(Sums $sums)
@@ -51,10 +51,10 @@ class BalanceSpec extends ObjectBehavior
 
         $sums->getContractBalance('spec', false)
             ->shouldBeCalled()
-            ->willReturn(50);
+            ->willReturn('50');
 
         $this->setUser($user);
-        $this->getByContract('spec')->shouldReturn((double) 50);
+        $this->getByContract('spec')->shouldReturn('50');
     }
 
     function it_should_return_the_balance_by_contract_with_timestamp(Sums $sums)
@@ -74,10 +74,10 @@ class BalanceSpec extends ObjectBehavior
 
         $sums->getContractBalance('spec', false)
             ->shouldBeCalled()
-            ->willReturn(50);
+            ->willReturn('50');
 
         $this->setUser($user);
-        $this->getByContract('spec', 1000000)->shouldReturn((double) 50);
+        $this->getByContract('spec', 1000000)->shouldReturn('50');
     }
 
 
@@ -98,10 +98,10 @@ class BalanceSpec extends ObjectBehavior
 
         $sums->getContractBalance('spec', true)
             ->shouldBeCalled()
-            ->willReturn(50);
+            ->willReturn('50');
 
         $this->setUser($user);
-        $this->getByContract('spec', 1000000, true)->shouldReturn((double) 50);
+        $this->getByContract('spec', 1000000, true)->shouldReturn('50');
     }
 
 

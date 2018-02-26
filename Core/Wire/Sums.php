@@ -6,6 +6,7 @@ namespace Minds\Core\Wire;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Sums
 {
@@ -131,7 +132,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return $result[0]['amount_sum']->value();
+            return (string) BigNumber::_($result[0]['amount_sum']);
         } catch (\Exception $e) {
             return -1;
         }
@@ -167,7 +168,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return $result[0]['amount_sum']->value();
+            return (string) BigNumber::_($result[0]['amount_sum']);
         } catch (\Exception $e) {
             return -1;
         }
@@ -178,17 +179,13 @@ class Sums
      * @param $receiver_guid
      * @param $method
      * @param $timestamp
-     * @return int
+     * @return array
      */
     public function getAggregates()
     {
         // if $timestamp isn't set, I set it to a default date prior to wire creation so the query sums everything
-        if (!$timestamp) {
-            $timestamp = mktime(0, 0, 0, 1, 1, 2000);
-        }
-
-        if ($timestamp instanceof \DateTime) {
-            $timestamp = $timestamp->getTimestamp();
+        if (!$this->from) {
+            $this->from = mktime(0, 0, 0, 1, 1, 2000);
         }
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
@@ -209,15 +206,15 @@ class Sums
         try {
             $result = $this->db->request($query);
             if (!$result) {
-                return 0;
+                return [];
             }
             return [
-                'sum' => $result[0]['sum']->value(),
-                'count' => $result[0]['count']->value(),
-                'avg' => $result[0]['avg']->value()
+                'sum' => (string) BigNumber::_($result[0]['sum']),
+                'count' => (string) BigNumber::_($result[0]['count']),
+                'avg' => (string) BigNumber::_($result[0]['avg'])
             ];
         } catch (\Exception $e) {
-            return -1;
+            return [];
         }
     }
 
@@ -243,7 +240,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return $result[0]['amount_sum']->value();
+            return (string) BigNumber::_($result[0]['amount_sum']);
         } catch (\Exception $e) {
             return -1;
         }

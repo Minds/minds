@@ -38,7 +38,7 @@ class UsersIterator implements \Iterator
         $this->to = time() * 1000;
     }
 
-    public function setAction()
+    public function setAction($action)
     {
         $this->action = $action;
         return $this;

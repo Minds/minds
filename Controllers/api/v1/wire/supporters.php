@@ -39,7 +39,7 @@ class supporters implements Interfaces\Api
 
         switch ($type) {
             case 'sent':
-                $result = $repository->getList([
+                $result = $repo->getList([
                     'sender_guid' => $actor_guid,
                     'timestamp' => $timeframe,
                     'limit' => 1000,
@@ -48,7 +48,7 @@ class supporters implements Interfaces\Api
                 break;
 
             case 'received':
-                $result = $repository->getList([
+                $result = $repo->getList([
                     'receiver_guid' => $actor_guid,
                     'timestamp' => $timeframe,
                     'limit' => 1000,

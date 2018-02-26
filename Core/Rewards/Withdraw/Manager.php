@@ -4,11 +4,12 @@
  */
 namespace Minds\Core\Rewards\Withdraw;
 
+use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Blockchain\Transactions\Transaction;
-use Minds\Core\Blockchain\Util;
+use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
-use Minds\Core\Rewards\Transactions;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 
 class Manager
@@ -118,7 +119,7 @@ class Manager
             ->setUser($user)
             ->setType('withdrawal')
             //->setTx($request->getTx())
-            ->setAmount(0 - $request->getAmount())
+            ->setAmount((string) BigNumber::_($request->getAmount())->neg())
             ->create();
 
         $request->setCompleted(true);
@@ -128,13 +129,13 @@ class Manager
         $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [
             'from' => $this->config->get('blockchain')['rewards_wallet_address'],
             'to' => $this->config->get('blockchain')['withdraw_address'],
-            'gasLimit' => Util::toHex(4612388),
-            'gasPrice' => Util::toHex(10000000000),
+            'gasLimit' => BigNumber::_(4612388)->toHex(true),
+            'gasPrice' => BigNumber::_(10000000000)->toHex(true),
             'data' => $this->eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
                 $request->getAddress(),
-                Util::toHex((int) $request->getUserGuid()),
-                Util::toHex($request->getGas()),
-                Util::toHex((int) $request->getAmount()),
+                BigNumber::_($request->getUserGuid())->toHex(true),
+                BigNumber::_($request->getGas())->toHex(true),
+                BigNumber::_($request->getAmount())->toHex(true),
             ])
          ]);
     }

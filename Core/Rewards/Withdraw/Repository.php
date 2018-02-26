@@ -12,6 +12,7 @@ use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Rewards\Transactions;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 
 
@@ -43,7 +44,7 @@ class Repository
                 'values' => [
                     new Varint($request->getUserGuid()),
                     new Timestamp($request->getTimestamp()),
-                    new Varint((int) $request->getAmount()),
+                    new Varint($request->getAmount()),
                     $request->getTx(),
                     (bool) $request->isCompleted()
                 ]
@@ -118,7 +119,7 @@ class Repository
             $request = new Request();
             $request->setUserGuid($row['user_guid']);
             $request->setTimestamp($row['timestamp']->time());
-            $request->setAmount((double) $row['amount']);
+            $request->setAmount((string) BigNumber::_($row['amount']));
             $request->setTx($row['tx']);
             $request->setCompleted((bool) $row['completed']);
             $requests[] = $request;

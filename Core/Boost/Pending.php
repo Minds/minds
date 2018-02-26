@@ -12,6 +12,7 @@ use Minds\Core;
 use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Pending
 {
@@ -126,9 +127,9 @@ class Pending
         return $this->ethereumClient->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
             'from' => $this->config->get('blockchain')['boost_wallet_address'],
             'to' => $this->config->get('blockchain')['peer_boost_address'],
-            'gasLimit' => Core\Blockchain\Util::toHex(200000),
+            'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => $this->ethereumClient->encodeContractMethod('approve(uint256)', [
-                Core\Blockchain\Util::toHex($boost)
+                BigNumber::_($boost)->toHex(true)
             ])
         ]);
     }
@@ -142,9 +143,9 @@ class Pending
         return $this->ethereumClient->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
             'from' => $this->config->get('blockchain')['boost_wallet_address'],
             'to' => $this->config->get('blockchain')['peer_boost_address'],
-            'gasLimit' => Core\Blockchain\Util::toHex(200000),
+            'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => $this->ethereumClient->encodeContractMethod('reject(uint256)', [
-                Core\Blockchain\Util::toHex($boost)
+                BigNumber::_($boost)->toHex(true)
             ])
         ]);
     }

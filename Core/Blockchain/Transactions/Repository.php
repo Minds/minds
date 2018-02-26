@@ -11,6 +11,7 @@ use Cassandra\Timestamp;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Repository
 {
@@ -151,7 +152,7 @@ class Repository
                 ->setWalletAddress($row['wallet_address'])
                 ->setTimestamp((int) $row['timestamp']->time())
                 ->setContract($row['contract'])            
-                ->setAmount((double) $row['amount'])
+                ->setAmount((string) BigNumber::_($row['amount']))
                 ->setCompleted((bool) $row['completed'])
                 ->setData(json_decode($row['data'], true));
                 
@@ -193,7 +194,7 @@ class Repository
             ->setWalletAddress($row['wallet_address'])
             ->setTimestamp((int) $row['timestamp']->time())
             ->setContract($row['contract'])            
-            ->setAmount((double) $row['amount'])
+            ->setAmount((string) BigNumber::_($row['amount']))
             ->setCompleted((bool) $row['completed'])
             ->setData(json_decode($row['data'], true));
             

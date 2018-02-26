@@ -11,6 +11,7 @@ use Minds\Core\Config\Config;
 use Minds\Core\Boost\Pending;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments\Stripe\Stripe;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\Boost\Network;
 use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
@@ -77,6 +78,7 @@ class PaymentSpec extends ObjectBehavior
 
         $boost = new Network();
         $boost->setBidType('tokens')
+            ->setBid((string) BigNumber::toPlain(5, 18))
             ->setOwner(new User);
 
         $this->txManager->add(Argument::that(function($transaction) {

@@ -12,6 +12,7 @@ use Minds\Core\Guid;
 use Minds\Core\Data;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Entities;
 use Minds\Entities\User;
@@ -142,7 +143,7 @@ class Manager
                     ->setWalletAddress($this->payload['address'])
                     ->setContract('wire')
                     ->setTx($this->payload['txHash'])
-                    ->setAmount(-$this->amount)
+                    ->setAmount((string) BigNumber::_($this->amount)->neg())
                     ->setTimestamp(time())
                     ->setCompleted(false)
                     ->setData([
@@ -159,7 +160,7 @@ class Manager
             case 'offchain':
                 $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
                 $sendersTx
-                    ->setAmount(-$this->amount)
+                    ->setAmount((string) BigNumber::_($this->amount)->neg())
                     ->setType('wire')
                     ->setUser($this->sender)
                     ->create();
@@ -203,7 +204,10 @@ class Manager
                     ->setCurrency($currencyId)
                     ->get();
 
-                $usd = round(($this->amount / (10 ** 18)) * $exRate * 100); //*100 for $ -> cents
+                $usd = BigNumber::fromPlain($this->amount, 18)
+                    ->mul($exRate)
+                    ->mul(100)
+                    ->toDouble(); //*100 for $ -> cents
 
                 $sale = new Core\Payments\Sale();
                 $sale->setOrderId('wire-' . $this->entity->guid)
@@ -219,7 +223,7 @@ class Manager
                     ->setTx($tx)
                     ->setContract('wire')
                     ->setWalletAddress('creditcard')
-                    ->setAmount(-$this->amount)
+                    ->setAmount((string) BigNumber::_($this->amount)->neg())
                     ->setTimestamp(time())
                     ->setUserGuid($this->sender->guid)
                     ->setCompleted(true)

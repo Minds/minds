@@ -13,6 +13,7 @@ use Minds\Core\Blockchain\Transactions\Manager;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Core\Rewards\Withdraw;
+use Minds\Core\Util\BigNumber;
 
 class WithdrawEvent implements BlockchainEventInterface
 {
@@ -57,20 +58,20 @@ class WithdrawEvent implements BlockchainEventInterface
     {
         $tx = $log['transactionHash'];
         list($address, $user_guid, $gas, $amount) = Util::parseData($log['data']);
-        $user_guid = Util::toInt($user_guid);
-        $gas = Util::toDec($gas);
-        $amount = Util::toDec($amount);
-        
+        $user_guid = BigNumber::fromHex($user_guid)->toInt();
+        $gas = (string) BigNumber::fromHex($gas);
+        $amount = (string) BigNumber::fromHex($amount);
+
         //double check the details of this transaction match with what the user actually requested
         $request = new Withdraw\Request();
 
         $request
             ->setTx($tx)
             ->setAddress($address)
-            ->setUserGuid((int) $user_guid)
-            ->setGas((double) $gas)
+            ->setUserGuid($user_guid)
+            ->setGas($gas)
             ->setTimestamp($transaction->getTimestamp())
-            ->setAmount((double) $amount);
+            ->setAmount($amount);
 
         try {        
             $this->manager->complete($request, $transaction);

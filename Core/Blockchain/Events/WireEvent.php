@@ -11,6 +11,7 @@ namespace Minds\Core\Blockchain\Events;
 use Minds\Core\Blockchain\Contracts\MindsToken;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Manager;
 use Minds\Core\Wire\Wire;
 use Minds\Entities\User;
@@ -59,12 +60,12 @@ class WireEvent implements BlockchainEventInterface
 
         $tx = $log['transactionHash'];
         list($sender, $receiver, $amount) = Util::parseData($log['data']);
-        $amount = Util::toDec($amount);
+        $amount = (string) BigNumber::fromHex($amount);
 
         $data = $transaction->getData();
 
         $wire = (new Wire)
-            ->setAmount((double) $amount)
+            ->setAmount($amount)
             ->setRecurring(false)
             ->setSender(new User($data['sender_guid']))
             ->setReceiver(new User($data['receiver_guid']))

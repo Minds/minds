@@ -7,6 +7,7 @@ namespace Minds\Core\Rewards;
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Manager
 {

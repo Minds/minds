@@ -7,6 +7,7 @@ use Elasticsearch\ClientBuilder;
 use Minds\Cli;
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities;
 use Minds\Helpers\Flags;
 use Minds\Interfaces;
@@ -47,7 +48,7 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
 
         $this->out("Getting rewards for all users");
 
-        $total = 0; 
+        $total = BigNumber::_(0);
         $i = 0;
         foreach ($users as $guid) {
             $i++;
@@ -63,13 +64,13 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
             $manager->setUser($user);
 //            $manager->setDryRun(true);
             $reward = $manager->sync();
-            $total += (int) $reward->getAmount();
+            $total = $total->add($reward->getAmount());
 
             Dispatcher::trigger('notification', 'contributions', [
                 'to' => [$user->guid],
                 'from' => 100000000000000519,
                 'notification_view' => 'contributions',
-                'params' => ['amount' => (int) $reward->getAmount()],
+                'params' => [ 'amount' => (string) BigNumber::_($reward->getAmount()) ],
                 'message' => ''
             ]);
 
@@ -82,13 +83,13 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
         $username = $this->getOpt('username');
         $user = new Entities\User($username);
         
-        $amount = $this->getOpt('amount') * 10 ** 18;
+        $amount = BigNumber::toPlain($this->getOpt('amount'), 18);
 
         $offChainTransactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $offChainTransactions
             ->setType('test')
             ->setUser($user)
-            ->setAmount($amount)
+            ->setAmount((string) $amount)
             ->create();
 
         $this->out('Issued');

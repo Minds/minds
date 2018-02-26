@@ -10,6 +10,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Entities;
 use Minds\Entities\User;
@@ -138,11 +139,11 @@ class Events
         $txHash = $client->sendRawTransaction($config->get('blockchain')['wallet_pkey'], [
             'from' => $config->get('blockchain')['wallet_address'],
             'to' => $config->get('blockchain')['wire_address'],
-            'gasLimit' => Core\Blockchain\Util::toHex(200000),
+            'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => $client->encodeContractMethod('wireFrom(address,address,uint256)', [
                 $actor->getEthWallet(),
                 $owner->getEthWallet(),
-                Core\Blockchain\Util::toHex($token->toTokenUnit($amount))
+                BigNumber::_($token->toTokenUnit($amount))->toHex(true)
             ])
         ]);
 

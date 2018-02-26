@@ -4,6 +4,7 @@ namespace Minds\Core\Wire;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
+use Minds\Core\Util\BigNumber;
 
 class Thresholds
 {
@@ -35,11 +36,11 @@ class Thresholds
         $sums = Di::_()->get('Wire\Sums');
         $sums->setReceiver($entity->getOwnerGUID())
             ->setSender($user)
-            ->setFrom((new \DateTime('midnight'))->modify("-30 days"));
+            ->setFrom((new \DateTime('midnight'))->modify("-30 days")->getTimestamp());
 
         $amount = $sums->getSent();
 
-        $allowed = $amount - $threshold['min'] >= 0;
+        $allowed = BigNumber::_($amount)->sub($threshold['min'])->gte(0);
 
         if ($allowed) {
             return true;

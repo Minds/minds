@@ -10,6 +10,7 @@ use Minds\Core\Blockchain\Util;
 use Minds\Core\Boost\Repository;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\Boost\Network;
 use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
@@ -265,6 +266,8 @@ class PendingSpec extends ObjectBehavior
         Network $boost
     )
     {
+        $boost->getGuid()->willReturn(1000);
+
         $this->config->get('blockchain')->willReturn([
             'boost_wallet_address' => '0xBWA',
             'boost_wallet_pkey' => '0xBWPKEY',
@@ -278,7 +281,7 @@ class PendingSpec extends ObjectBehavior
         $this->ethereumClient->sendRawTransaction('0xBWPKEY', [
             'from' => '0xBWA',
             'to' => '0xPBA',
-            'gasLimit' => Util::toHex(200000),
+            'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => '0xDATA'
         ])
             ->shouldBeCalled()
@@ -293,6 +296,8 @@ class PendingSpec extends ObjectBehavior
         Network $boost
     )
     {
+        $boost->getGuid()->willReturn(1000);
+
         $this->config->get('blockchain')->willReturn([
             'boost_wallet_address' => '0xBWA',
             'boost_wallet_pkey' => '0xBWPKEY',
@@ -306,7 +311,7 @@ class PendingSpec extends ObjectBehavior
         $this->ethereumClient->sendRawTransaction('0xBWPKEY', [
             'from' => '0xBWA',
             'to' => '0xPBA',
-            'gasLimit' => Util::toHex(200000),
+            'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => '0xDATA'
         ])
             ->shouldBeCalled()

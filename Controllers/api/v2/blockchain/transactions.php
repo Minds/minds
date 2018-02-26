@@ -11,6 +11,7 @@ namespace Minds\Controllers\api\v2\blockchain;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
+use Minds\Core\Util\BigNumber;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Rewards\Withdraw;
@@ -109,7 +110,7 @@ class transactions implements Interfaces\Api
                     ->setAddress($_POST['address'])
                     ->setTimestamp(time())
                     ->setGas($_POST['gas'])
-                    ->setAmount($_POST['amount']);
+                    ->setAmount((string) BigNumber::_($_POST['amount']));
 
                 $manager = new Withdraw\Manager();
                 try {
@@ -129,7 +130,9 @@ class transactions implements Interfaces\Api
                     ]);
                 }
 
-                if (!$_POST['amount'] || !is_numeric($_POST['amount']) || $_POST['amount'] <= 0) {
+                $amount = BigNumber::_($_POST['amount']);
+
+                if ($amount->lte(0)) {
                     return Factory::response([
                         'status' => 'error',
                         'message' => 'Amount should be a positive number'
@@ -139,12 +142,10 @@ class transactions implements Interfaces\Api
                 /** @var Core\Blockchain\Wallets\OffChain\Transactions $transactions */
                 $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
 
-                $amount = $transactions->toWei((double) $_POST['amount']);
-
                 $transactions
                     ->setUser(Session::getLoggedinUser())
                     ->setType($_POST['type'])
-                    ->setAmount(-$amount);
+                    ->setAmount((string) BigNumber::_($amount)->neg());
 
                 $transaction = $transactions->create();
 
