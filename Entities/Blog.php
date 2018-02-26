@@ -56,6 +56,7 @@ class Blog extends \ElggObject
             'draft_access_id',
             'slug',
             'perma_url',
+            'rating',
         ));
     }
 
