@@ -82,6 +82,9 @@ class Defaults
                 'og:image:height' => 1000,
                 'twitter:site' => '@minds',
                 'twitter:card' => 'summary',
+                'al:ios:url' => 'minds://channel/' . $user->guid,
+                'al:android:url' => 'minds://minds/channel/' . $user->guid,
+                'al:ios:app_name' => 'Minds',
               ];
             }
         });
@@ -116,6 +119,8 @@ class Defaults
                   'og:image:height' => 1000,
                   'twitter:site' => '@minds',
                   'twitter:card' => 'summary',
+                  'al:ios:url' => 'minds://activity/' . $activity->guid,
+                  'al:android:url' => 'minds://minds/activity/' . $activity->guid,
                 ];
 
                 if ($activity->custom_type == 'video') {

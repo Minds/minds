@@ -99,7 +99,9 @@ class SEO
             'og:type' => 'article',
             'og:image' => $blog->getIconUrl(800),
             'og:image:width' => 2000,
-            'og:image:height' => 1000
+            'og:image:height' => 1000,
+            'al:ios:url' => 'minds://blog/view/' . $blog->guid,
+            'al:android:url' => 'minds://blog/view/' . $blog->guid,
         );
     }
 }
