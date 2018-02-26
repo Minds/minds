@@ -282,7 +282,6 @@ class CassandraProvisioner implements ProvisionerInterface
             'locks' => [
                 'schema' => [
                     'key' => 'text',
-                    'lock' => 'boolean'
                 ],
                 'primaryKeys' => ['key']
             ]

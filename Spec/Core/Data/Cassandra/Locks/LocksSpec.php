@@ -49,8 +49,8 @@ class LocksSpec extends ObjectBehavior
 
         $db->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['string'] === 'INSERT INTO locks(key, lock) values(?,?) IF NOT EXISTS USING TTL ?'
-                && $query['values'][0] === 'balance:123' && $query['values'][2] === 10;
+            return $query['string'] === 'INSERT INTO locks(key) values(?) IF NOT EXISTS USING TTL ?'
+                && $query['values'][0] === 'balance:123' && $query['values'][1] === 10;
         }))
             ->shouldBeCalled()
             ->willReturn([true]);
@@ -74,7 +74,7 @@ class LocksSpec extends ObjectBehavior
 
         $db->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['string'] === 'DELETE FROM locks where key = ?'
+            return $query['string'] === 'DELETE FROM locks where key = ? IF EXISTS'
                 && $query['values'][0] === 'balance:123';
         }))
             ->shouldBeCalled()

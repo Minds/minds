@@ -50,8 +50,8 @@ class Locks
         if (!isset($this->key)) {
             throw new KeyNotSetupException();
         }
-        $template = 'INSERT INTO locks(key, lock) values(?,?) IF NOT EXISTS';
-        $values = [$this->key, true];
+        $template = 'INSERT INTO locks(key) values(?) IF NOT EXISTS';
+        $values = [$this->key];
 
         if (isset($this->ttl)) {
             $template .= ' USING TTL ?';
@@ -61,6 +61,10 @@ class Locks
 
         $query->query($template, $values);
         $result = $this->db->request($query);
+
+        if (!$result) {
+            throw new LockFailedException();
+        }
         return $result;
     }
 
@@ -70,7 +74,7 @@ class Locks
             throw new KeyNotSetupException();
         }
         $query = new Custom();
-        $query->query('DELETE FROM locks where key = ?', [
+        $query->query('DELETE FROM locks where key = ? IF EXISTS', [
             $this->key
         ]);
 
