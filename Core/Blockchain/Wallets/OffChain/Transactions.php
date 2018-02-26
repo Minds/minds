@@ -100,7 +100,7 @@ class Transactions
         }
 
         //release the lock?
-        //$this->locks->unlock();
+        $this->locks->unlock();
 
         return $transaction;
     }
