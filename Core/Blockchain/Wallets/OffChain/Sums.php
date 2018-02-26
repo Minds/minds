@@ -48,7 +48,7 @@ class Sums
         if ($this->user) {
             $query->query("SELECT 
                 SUM(amount) as balance 
-                FROM blockchain_transactions
+                FROM blockchain_transactions_by_address
                 WHERE user_guid = ?
                 AND wallet_address = 'offchain'", 
                 [
