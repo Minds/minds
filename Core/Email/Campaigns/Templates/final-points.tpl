@@ -47,17 +47,6 @@
     </tr>
 
     <tr>
-      <td style="font-size: 16px;
-        line-height: 22px;
-        letter-spacing: 0.2px;
-        font-family: 'Lato', helvetica;">
-          <a href="https://www.minds.com/blog/view/813867825399005184?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>" target="_blank">
-            <img src="https://d15u56mvtglc6v.cloudfront.net/emails/tucker.jpg" width="558"/>
-          </a>
-      </td>
-    </tr>
-
-    <tr>
       <td height="50px" style="text-align:center;">
         <a href="https://www.minds.com/?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>"
           style="padding:16px 32px; background-color:#4caf50; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
