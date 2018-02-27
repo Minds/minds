@@ -200,6 +200,27 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                             }
 
                             $boost->setGuid($guid);
+
+                            $checksum = isset($_POST['checksum']) ? $_POST['checksum'] : null;
+
+                            $prehash = $guid 
+                                . $entity->type 
+                                . $entity->guid 
+                                . ($entity->owner_guid ?: '')
+                                . ($entity->perma_url ?: '')
+                                . ($entity->message ?: '') 
+                                . ($entity->title ?: '') 
+                                . $entity->time_created;
+
+                            if ($checksum !== md5($prehash)) {
+                                return Factory::response([
+                                    'status' => 'error',
+                                    'stage' => 'transaction',
+                                    'message' => 'Checksum does not match'
+                                ]);
+                            }
+
+                            $boost->setChecksum($checksum);
                         }
 
                         $transaction_id = $_POST['nonce']['txHash'];

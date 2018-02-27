@@ -32,11 +32,12 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     protected $quality = 75;
     protected $categories = [];
     protected $rejection_reason = -1;
+    protected $checksum = null;
 
     protected $exportableDefaults = [
         'guid', '_id', 'entity', 'bid', 'bidType', 'destination', 'owner', 'state',
         'transactionId', 'time_created', 'last_updated', 'type', 'subtype', 'handler',
-        'rating', 'quality', 'impressions', 'categories', 'rejection_reason'
+        'rating', 'quality', 'impressions', 'categories', 'rejection_reason', 'checksum'
     ];
 
     public function __construct($db = null)
@@ -80,6 +81,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->priorityRate = (float)$array['priorityRate'];
         $this->categories = $array['categories'];
         $this->rejection_reason = $array['rejection_reason'];
+        $this->checksum = $array['checksum'];
         return $this;
     }
 
@@ -111,7 +113,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
             'rating' => $this->rating,
             'quality'=> $this->getQuality(),
             'categories' => $this->categories,
-            'rejection_reason'=> $this->getRejectionReason()
+            'rejection_reason'=> $this->getRejectionReason(),
+            'checksum' => $this->getChecksum(),
         ];
 
         /** @var Core\Boost\Repository $repository */
@@ -408,6 +411,26 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
     {
         return $this->handler;
     }
+
+    /**
+     * @param string $checksum
+     * @return $this
+     */
+    public function setChecksum($checksum)
+    {
+        $this->checksum = $checksum;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChecksum()
+    {
+        return $this->checksum;
+    }
+
+
 
     /**
      * Exports the boost onto an array

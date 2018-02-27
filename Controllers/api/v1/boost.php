@@ -210,6 +210,7 @@ class boost implements Interfaces\Api
                     $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
                     $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : 'points';
                     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
+                    $checksum =  isset($_POST['checksum']) ? $_POST['checksum'] : '';
 
                     $amount = $impressions / $this->rate;
                     if ($priority) {
@@ -294,6 +295,24 @@ class boost implements Interfaces\Api
                         }
 
                         $boost->setGuid($guid);
+
+                        $prehash = $guid 
+                            . $entity->type 
+                            . $entity->guid 
+                            . ($entity->owner_guid ?: '')
+                            . ($entity->perma_url ?: '') 
+                            . ($entity->message ?: '') 
+                            . ($entity->title ?: '') 
+                            . $entity->time_created;
+
+                        if ($checksum !== md5($prehash)) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'stage' => 'transaction',
+                                'message' => 'Checksum does not match. Expected: ' . md5($prehash)
+                            ]);
+                        }
+                        $boost->setChecksum($checksum);
                     }
 
                     $result = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);

@@ -25,6 +25,7 @@ class Peer implements BoostEntityInterface
     private $_type = 'pro';
     private $scheduledTs;
     private $postToFacebook = false;
+    private $checksum = null;
     private $handler = 'peer';
     private $method = '';
 
@@ -64,6 +65,7 @@ class Peer implements BoostEntityInterface
       $this->transactionId = $array['transactionId'];
       $this->scheduledTs = isset($array['scheduledTs']) ? $array['scheduledTs'] : null;
       $this->postToFacebook = isset($array['postToFacebook']) ? $array['postToFacebook'] : false;
+      $this->checksum = isset($array['checksum']) ? $array['checksum'] : null;
       $this->method = isset($array['method']) ? $array['method'] : '';
       return $this;
   }
@@ -92,6 +94,7 @@ class Peer implements BoostEntityInterface
         'transactionId' => $this->transactionId,
         'scheduledTs' => $this->scheduledTs ?: time(),
         'postToFacebook' => $this->postToFacebook,
+        'checksum' => $this->checksum,
         'method' => $this->method,
       ];
 
@@ -336,6 +339,24 @@ class Peer implements BoostEntityInterface
     }
 
     /**
+     * @param string $checksum
+     * @return $this
+     */
+    public function setChecksum($checksum)
+    {
+        $this->checksum = $checksum;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChecksum()
+    {
+        return $this->checksum;
+    }
+
+    /**
      * Exports the boost onto an array
      * @return array
      */
@@ -355,6 +376,7 @@ class Peer implements BoostEntityInterface
           'type' => $this->_type,
           'scheduledTs' => $this->scheduledTs,
           'postToFacebook' => $this->postToFacebook,
+          'checksum' => $this->checksum,
           'method' => $this->method,
         ];
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), array()));
