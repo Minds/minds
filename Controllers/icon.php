@@ -2,6 +2,7 @@
 /**
  * Minds main page controller
  */
+
 namespace Minds\Controllers;
 
 use Minds\Core;
@@ -27,12 +28,7 @@ class icon extends core\page implements Interfaces\page
         //if ($cached = $cacher->get("usericon:$guid")) {
         //    $join_date = $cached;
         //} else {
-            $user = new Entities\User($guid);
-
-        //check the user is enabled
-        if ($user->enabled == 'no') {
-            exit;
-        }
+        $user = new Entities\User($guid);
 
         if (isset($user->legacy_guid) && $user->legacy_guid) {
             $guid = $user->legacy_guid;
@@ -50,6 +46,13 @@ class icon extends core\page implements Interfaces\page
         if (!in_array($size, array('xlarge', 'large', 'medium', 'small', 'tiny', 'master', 'topbar'))) {
             $size = "medium";
         }
+
+        //check the user is enabled
+        if ($user->enabled == 'no') {
+            $contents = file_get_contents(Core\Config::build()->path . "engine/Assets/avatars/default-$size.png");
+            $this->returnImage($contents, $etag);
+        }
+
         $data_root = $CONFIG->dataroot;
 
         $file = new \ElggFile();
@@ -63,6 +66,11 @@ class icon extends core\page implements Interfaces\page
             $contents = file_get_contents(Core\Config::build()->path . "engine/Assets/avatars/default-$size.png");
         }
 
+        $this->returnImage($contents, $etag);
+    }
+
+    private function returnImage($contents, $etag)
+    {
         if (!empty($contents)) {
             header("Content-type: image/jpeg");
             header('Expires: ' . date('r', strtotime("today+6 months")), true);
@@ -76,8 +84,8 @@ class icon extends core\page implements Interfaces\page
             foreach ($split_string as $chunk) {
                 echo $chunk;
             }
-            exit;
         }
+        exit;
     }
 
     public function post($pages)
