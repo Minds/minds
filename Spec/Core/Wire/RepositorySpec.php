@@ -31,7 +31,8 @@ class RepositorySpec extends ObjectBehavior
                     'timestamp' => '2017-05-03',
                     'entity_guid' => 1337,
                     'recurring' => true,
-                    'amount' => 10,
+                    'amount' => null,
+                    'wei' => 10,
                     'method' => 'tokens',
                     'active' => true
                 ]
@@ -45,7 +46,7 @@ class RepositorySpec extends ObjectBehavior
             ->setTimestamp('2017-05-03')
             ->setEntity(Entities::get(['guid' => 1337])[0])
             ->setRecurring(true)
-            ->setAmount(10)
+            ->setAmount('10')
             ->setMethod('tokens');
 
         $result = $this->getList([

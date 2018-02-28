@@ -33,7 +33,7 @@ class sums implements Interfaces\Api
                 $timestamp = isset($_GET['start']) ? ((int) $_GET['start']) : (new \DateTime('midnight'))->modify("-30 days")->getTimestamp();
 
                 $sums->setFrom($timestamp)
-                    ->setReceiver(Core\Session::getLoggedInUser());
+                    ->setReceiver($guid);
 
                 $isSelf = Core\Session::getLoggedInUser()->guid == $guid;
                 $cache = Di::_()->get('Cache');
@@ -49,7 +49,7 @@ class sums implements Interfaces\Api
                     'tokens_avg' => 0,
                 ];
 
-                $tokens = $sums->getAggregates($guid, 'tokens', $timestamp);
+                $tokens = $sums->getAggregates();
 
                 $response['count'] += $tokens['count'];
 

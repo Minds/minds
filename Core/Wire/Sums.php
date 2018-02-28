@@ -106,7 +106,7 @@ class Sums
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
         if ($this->receiver_guid) {
-            $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_sender
+            $query->query("SELECT SUM(amount) as amount_sum, SUM(wei) as wei_sum FROM wire_by_sender
                 WHERE sender_guid=?
                 AND receiver_guid=?
                 AND method=?
@@ -132,7 +132,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return (string) BigNumber::_($result[0]['amount_sum']);
+            return (string) BigNumber::_($result[0]['amount_sum'])->add($result[0]['wei_sum']);
         } catch (\Exception $e) {
             return -1;
         }
@@ -154,7 +154,7 @@ class Sums
 
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire
+        $query->query("SELECT SUM(amount) as amount_sum, SUM(wei) as wei_sum FROM wire
           WHERE receiver_guid=?
           AND method=?
           AND timestamp >= ?", [
@@ -168,7 +168,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return (string) BigNumber::_($result[0]['amount_sum']);
+            return (string) BigNumber::_($result[0]['amount_sum'])->add($result[0]['wei_sum']);
         } catch (\Exception $e) {
             return -1;
         }
@@ -192,8 +192,8 @@ class Sums
 
         $query->query("SELECT
           SUM(amount) as sum,
-          COUNT(*) as count,
-          AVG(amount) as avg
+          SUM(wei) as wei_sum,
+          COUNT(*) as count
           FROM wire
           WHERE receiver_guid=?
           AND method=?
@@ -206,12 +206,20 @@ class Sums
         try {
             $result = $this->db->request($query);
             if (!$result) {
-                return [];
+                return [
+                    'sum' => 0,
+                    'count' => 0,
+                    'avg' => 0
+                ];
             }
+
+            $sum = (string) BigNumber::_($result[0]['sum'])->add($result[0]['wei_sum']);
+            $count = (string) BigNumber::_($result[0]['count']);
+
             return [
-                'sum' => (string) BigNumber::_($result[0]['sum']),
-                'count' => (string) BigNumber::_($result[0]['count']),
-                'avg' => (string) BigNumber::_($result[0]['avg'])
+                'sum' => $sum,
+                'count' => $count,
+                'avg' => (string) BigNumber::_($sum)->div($count ?: 1)
             ];
         } catch (\Exception $e) {
             return [];
@@ -228,7 +236,7 @@ class Sums
     {
         $query = new Core\Data\Cassandra\Prepared\Custom();
 
-        $query->query("SELECT SUM(amount) as amount_sum FROM wire_by_entity
+        $query->query("SELECT SUM(amount) as amount_sum, SUM(wei) as wei_sum FROM wire_by_entity
           WHERE entity_guid=?
           AND method=?", [
             new \Cassandra\Varint($this->entity_guid),
@@ -240,7 +248,7 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return (string) BigNumber::_($result[0]['amount_sum']);
+            return (string) BigNumber::_($result[0]['amount_sum'])->add($result[0]['wei_sum']);
         } catch (\Exception $e) {
             return -1;
         }

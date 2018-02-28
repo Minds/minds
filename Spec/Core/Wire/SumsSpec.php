@@ -25,7 +25,8 @@ class SumsSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 [
-                    'amount_sum' => new \Cassandra\Decimal(10)
+                    'amount_sum' => new \Cassandra\Decimal(0),
+                    'wei_sum' => new \Cassandra\Varint(10)
                 ]
             ]);
 
@@ -47,7 +48,8 @@ class SumsSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 [
-                    'amount_sum' => new \Cassandra\Decimal(20)
+                    'amount_sum' => new \Cassandra\Decimal(0),
+                    'wei_sum' => new \Cassandra\Varint(20)
                 ]
             ]);
 
@@ -67,7 +69,8 @@ class SumsSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 [
-                    'amount_sum' => new \Cassandra\Decimal(10)
+                    'amount_sum' => new \Cassandra\Decimal(0),
+                    'wei_sum' => new \Cassandra\Varint(10)
                 ]
             ]);
 
@@ -81,7 +84,8 @@ class SumsSpec extends ObjectBehavior
 
         $cassandra->request(Argument::type('\Minds\Core\Data\Cassandra\Prepared\Custom'))->willReturn([
             [
-                'amount_sum' => new \Cassandra\Decimal(10)
+                'amount_sum' => new \Cassandra\Decimal(0),
+                'wei_sum' => new \Cassandra\Varint(10)
             ]
         ]);
 

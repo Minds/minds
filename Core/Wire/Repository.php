@@ -36,7 +36,7 @@ class Repository
 
         $requests = [];
         $template = "INSERT INTO wire
-            (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, amount, recurring, status)
+            (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, wei, recurring, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         foreach ($wires as $wire) {
@@ -49,7 +49,7 @@ class Repository
                     new Timestamp($wire->getTimestamp()),
                     new Varint($wire->getEntity()->guid ?: $wire->getReceiver()->guid),
                     new Varint($wire->getGuid()),
-                    new Cassandra\Decimal($wire->getAmount()),
+                    new Cassandra\Varint($wire->getAmount()),
                     (boolean) $wire->isRecurring(),
                     'success'
                 ]
@@ -146,7 +146,7 @@ class Repository
                 ->setEntity($entity)
                 ->setRecurring($row['recurring'])
                 ->setMethod($row['method'])
-                ->setAmount($row['amount']);
+                ->setAmount((string) Core\Util\BigNumber::_($row['amount'] ?: 0)->add($row['wei'] ?: 0));
             $wires[] = $wire;
         }
 
