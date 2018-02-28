@@ -6,25 +6,62 @@ use Minds\Entities;
 class EntityValidator
 {
 
-    public function isValid($guid)
+    public function isValid($guid, $type = null, $subtype = null)
     {
+        \Minds\Core\Security\ACL::$ignore = true;
         $entity = Entities\Factory::build($guid);
         if (!$entity) {
             return false;
         }
 
-        return !$this->isMature($entity);
+        if ($type && $type != $entity->type) {
+            echo "$guid type $type is not $entity->type";
+            return false;
+        }
+
+        if ($subtype && $subtype != $entity->subtype) {
+            echo "$guid type $type is not $entity->type";
+            return false;
+        }
+
+        return $this->isEnabled($entity) && $this->isOwnerEnabled($entity->getOwnerEntity()) && !$this->isMature($entity) && !$this->isMature($entity->getOwnerEntity());
     }
 
     protected function isMature($entity)
     {
+        $mature = false;
         if (method_exists($entity, 'getMature')) {
-            return $entity->getMature();
+            $mature = $entity->getMature();
         } elseif (method_exists($entity, 'getFlag')) {
-            return $entity->getFlag('mature');
+            $mature = $entity->getFlag('mature');
         }
 
+        if ($mature) {
+            return true;
+        }
+        
+        return $entity->rating >= 2; 
+
         return false;
+    }
+
+    protected function isEnabled($entity)
+    {
+        if ($entity->banned == 'yes' || $entity->enabled == 'no') {
+            echo $entity->guid . "is not valid";
+            return false;
+        }
+        return true;
+    }
+
+    protected function isOwnerEnabled($entity)
+    {
+        if (!$entity) {
+            return true;
+        }
+        $entity = Entities\Factory::build($entity->guid);
+
+        return $this->isEnabled($entity) && !$this->isMature($entity);
     }
 
 }
