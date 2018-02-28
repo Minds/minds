@@ -40,10 +40,21 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         $user = new Entities\User(strtolower($_POST['username']));
+        /** @var Core\Security\LoginAttempts $attempts */
+        $attempts = Core\Di\Di::_()->get('Security\LoginAttempts');
 
         if (!$user->username) {
             header('HTTP/1.1 401 Unauthorized', true, 401);
             return Factory::response(['status' => 'failed']);
+        }
+
+        $attempts->setUser($user);
+
+        if ($attempts->checkFailures()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'LoginException::AttemptsExceeded'
+            ]);
         }
 
         if (!$user->isEnabled() && !$user->isBanned()) {
@@ -52,6 +63,7 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         try {
             if (!Core\Security\Password::check($user, $_POST['password'])) {
+                $attempts->logFailure();
                 header('HTTP/1.1 401 Unauthorized', true, 401);
                 return Factory::response(['status' => 'failed']);
             }
@@ -63,6 +75,7 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         try {
             if (login($user) && Core\Session::isLoggedIn()) {
+                $attempts->resetFailuresCount(); // Reset any previous failed login attempts
                 $response['status'] = 'success';
                 $response['user'] = $user->export();
             }

@@ -318,7 +318,7 @@ function login(ElggUser $user, $persistent = false) {
 
 	// Update statistics
 	set_last_login($_SESSION['guid']);
-	reset_login_failure_count($user->guid); // Reset any previous failed login attempts
+	//reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
 	 setcookie('loggedin', 1, time() + 3600, '/');
 
