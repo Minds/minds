@@ -40,6 +40,8 @@ class TransactionsSpec extends ObjectBehavior
         $locks->lock()
             ->shouldBeCalled()
             ->willReturn(null);
+        $locks->unlock()
+            ->shouldBeCalled();
 
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);

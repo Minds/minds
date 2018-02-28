@@ -31,6 +31,7 @@ class RepositorySpec extends ObjectBehavior
         'rating' => 0,
         'quality' => 0,
         'priorityRate' => 1,
+        'checksum' => 'testme',
         'categories' => [],
         'rejection_reason' => []
     ];

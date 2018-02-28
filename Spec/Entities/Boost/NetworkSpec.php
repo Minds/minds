@@ -36,7 +36,8 @@ class NetworkSpec extends ObjectBehavior
             'quality' => 75,
             'impressions' => 0,
             'rating' => 1,
-            'priorityRate' => 0
+            'priorityRate' => 0,
+            'checksum' => md5('testme'),
         ];
     }
 
