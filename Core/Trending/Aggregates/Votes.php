@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class Votes extends Aggregate
 {
 
-    protected $multiplier = 1;
+    protected $multiplier = 2;
 
     public function get()
     {

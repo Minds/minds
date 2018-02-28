@@ -35,15 +35,15 @@ class ManagerSpec extends ObjectBehavior
         ];
         $this->beConstructedWith($repo, $validator, $maps);
 
-        $validator->isValid('123')
+        $validator->isValid('123', 'activity', '')
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $validator->isValid('456')
+        $validator->isValid('456', 'activity', '')
             ->shouldBeCalled()
             ->willReturn(false);
         
-        $validator->isValid('789')
+        $validator->isValid('789', 'activity', '')
             ->shouldBeCalled()
             ->willReturn(true);
         
@@ -51,6 +51,7 @@ class ManagerSpec extends ObjectBehavior
         $agg->setSubtype('')->shouldBeCalled();
         $agg->setFrom(Argument::any())->shouldBeCalled();
         $agg->setTo(Argument::any())->shouldBeCalled();
+        $agg->setLimit(100)->shouldBeCalled();
 
         $agg->get()
             ->shouldBeCalled()
