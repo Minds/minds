@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Minds\Controllers\api\v2;
+namespace Minds\Controllers\api\v2\analytics;
 
 
 use Minds\Api\Factory;
