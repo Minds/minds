@@ -55,13 +55,16 @@ class PaymentSpec extends ObjectBehavior
         $this->config = $config;
 
         $this->beConstructedWith(
-            $this->offchainTransactions,
             $this->stripePayments,
             $this->eth,
             $this->txManager,
             $this->txRepository,
             $this->config
         );
+
+        Di::_()->bind('Blockchain\Wallets\OffChain\Transactions', function () use ($offchainTransactions) {
+            return $offchainTransactions->getWrappedObject();
+        });
     }
 
     function it_is_initializable()
@@ -69,19 +72,34 @@ class PaymentSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Boost\Payment');
     }
 
-    function it_should_pay_with_tokens()
+    function it_should_pay_with_onchain_tokens(
+        Network $boost,
+        User $boost_owner
+    )
     {
         $paymentMethodNonce = [
+            'method' => 'onchain',
             'address' => '0xaddress',
             'txHash' => '0xTX',
         ];
 
-        $boost = new Network();
-        $boost->setBidType('tokens')
-            ->setBid((string) BigNumber::toPlain(5, 18))
-            ->setOwner(new User);
+        $boost->getHandler()
+            ->willReturn('network');
 
-        $this->txManager->add(Argument::that(function($transaction) {
+        $boost->getGuid()
+            ->willReturn(1000);
+
+        $boost->getBidType()
+            ->willReturn('tokens');
+
+        $boost->getBid()
+            ->willReturn((string) BigNumber::toPlain(5, 18));
+
+        $boost->getOwner()
+            ->willReturn($boost_owner);
+
+        $this->txManager
+            ->add(Argument::that(function($transaction) {
                 return $transaction->getTx() == '0xTX'
                     && $transaction->getWalletAddress() == '0xaddress';
             }))
@@ -92,18 +110,56 @@ class PaymentSpec extends ObjectBehavior
             ->shouldReturn('0xTX');
     }
 
-    /*function it_should_charge_peer_with_tokens(Peer $boost)
+    function it_should_pay_with_offchain_tokens(
+        Network $boost,
+        User $boost_owner
+    )
     {
-        $boost->getMethod()->willReturn('tokens');
+        $bid = (string) BigNumber::toPlain(5, 18);
 
-        $this->boostPending->approve($boost)
-            ->shouldNotBeCalled();
+        $paymentMethodNonce = [
+            'method' => 'offchain',
+            'address' => 'offchain'
+        ];
+
+        $boost->getHandler()
+            ->willReturn('network');
+
+        $boost->getGuid()
+            ->willReturn(1000);
+
+        $boost->getBidType()
+            ->willReturn('tokens');
+
+        $boost->getBid()
+            ->willReturn($bid);
+
+        $boost->getOwner()
+            ->willReturn($boost_owner);
+
+        $this->offchainTransactions->setAmount((string) BigNumber::_($bid)->neg())
+            ->shouldBeCalled()
+            ->willReturn($this->offchainTransactions);
+
+        $this->offchainTransactions->setType('boost')
+            ->shouldBeCalled()
+            ->willReturn($this->offchainTransactions);
+
+        $this->offchainTransactions->setUser($boost_owner)
+            ->shouldBeCalled()
+            ->willReturn($this->offchainTransactions);
+
+        $tx = new Transaction();
+        $tx->setTx('oc:123');
+
+        $this->offchainTransactions->create(Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn($tx);
 
         $this
-            ->charge($boost)
-            ->shouldReturn(true);
-    }*/
-
+            ->pay($boost, $paymentMethodNonce)
+            ->shouldReturn('oc:123');
+    }
 
     function it_should_refund_with_tokens()
     {
@@ -135,18 +191,4 @@ class PaymentSpec extends ObjectBehavior
             ->refund($boost)
             ->shouldReturn(true);
     }
-
-    /*function it_should_refund_peer_with_tokens(Peer $boost)
-    {
-
-        $boost->getMethod()->willReturn('tokens');
-
-        $this->boostPending->reject($boost)
-            ->shouldNotBeCalled();
-
-        $this
-            ->refund($boost)
-            ->shouldReturn(true);
-    }*/
-
 }

@@ -162,7 +162,7 @@ class Peer implements BoostEntityInterface
 
   /**
    * Get the destination
-   * @return Entity
+   * @return User
    */
   public function getDestination()
   {

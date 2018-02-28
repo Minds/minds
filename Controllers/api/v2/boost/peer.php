@@ -65,7 +65,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
      * Boost an entity
      * @param array $pages
      *
-     * API:: /v1/boost/:type/:guid
+     * API:: /v2/boost/:type/:guid
      */
     public function post($pages)
     {
@@ -74,8 +74,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
         $bid = (string) BigNumber::_($_POST['bid']);
-        $type = $_POST['type'];
-        $currency = $_POST['currency'];
+        $currency = isset($_POST['currency']) ? $_POST['currency'] : '';
+        $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : [];
 
         if (!$entity) {
             return Factory::response([
@@ -93,7 +93,7 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if (!in_array($currency, [ 'money', 'tokens' ])) {
+        if ($currency !== 'tokens') {
             return Factory::response([
                 'status' => 'error',
                 'stage' => 'initial',
@@ -101,20 +101,12 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        if ($type == "pro") {
-            if ($currency == 'tokens' && !$destination->getEthWallet()) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'initial',
-                    'message' => "@$destination->username is not a wallet holder and can not accept MindsCoin Pro Boosts"
-                ]);
-            } elseif ($currency == 'money' && !$destination->merchant) {
-                return Factory::response([
-                    'status' => 'error',
-                    'stage' => 'initial',
-                    'message' => "@$destination->username is not a merchant and can not accept Pro Boosts"
-                ]);
-            }
+        if (!$bid) {
+            return Factory::response([
+                'status' => 'error',
+                'stage' => 'initial',
+                'message' => 'Invalid bid'
+            ]);
         }
 
         if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
@@ -125,15 +117,17 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        // Build entity
+
         $state = 'created';
 
-        if ($currency == 'tokens') {
+        if ($paymentMethod['method'] === 'onchain') {
             $state = 'pending';
         }
 
         $boost = (new Entities\Boost\Peer())
           ->setEntity($entity)
-          ->setType($_POST['type'])
+          ->setType('peer')
           ->setMethod($currency)
           ->setBid($bid)
           ->setDestination($destination)
@@ -141,99 +135,65 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
           ->postToFacebook($_POST['postToFacebook'])
           ->setScheduledTs($_POST['scheduledTs'])
           ->setState($state);
-          //->save();
 
         try {
-            if ($type == 'pro') {
-                switch ($currency) {
-                    case 'money':
-                        $sale = (new Payments\Sale)
-                            ->setOrderId('boost-' . $boost->getGuid())
-                            ->setAmount($boost->getBid() * 100)//cents to $
-                            ->setMerchant($boost->getDestination())
-                            ->setCustomerId($boost->getOwner()->guid)
-                            ->setSource($_POST['nonce']);
+            // Pre-set GUID
+            if (isset($_POST['guid'])) {
+                $guid = $_POST['guid'];
 
-                        try {
-                            $stripe = Core\Di\Di::_()->get('StripePayments');
-                            $transaction_id = $stripe->setSale($sale);
-                        } catch (\Exception $e) {
-                            return Factory::response([
-                                'status' => 'error',
-                                'stage' => 'transaction',
-                                'message' => $e->getMessage()
-                            ]);
-                        }
-                        break;
-
-                    case 'tokens':
-                        if (!isset($_POST['nonce']['txHash']) || !$_POST['nonce']['txHash']) {
-                            return Factory::response([
-                                'status' => 'error',
-                                'stage' => 'transaction',
-                                'message' => 'Missing blockchain transaction'
-                            ]);
-                        }
-
-                        if (isset($_POST['guid'])) {
-                            $guid = $_POST['guid'];
-
-                            if (!is_numeric($guid) || $guid < 1) {
-                                return Factory::response([
-                                    'status' => 'error',
-                                    'stage' => 'transaction',
-                                    'message' => 'Provided GUID is invalid'
-                                ]);
-                            }
-
-                            /** @var Core\Boost\Repository $repository */
-                            $repository = Di::_()->get('Boost\Repository');
-
-                            $existingBoost = $repository->getEntity('peer', $guid);
-
-                            if ($existingBoost) {
-                                return Factory::response([
-                                    'status' => 'error',
-                                    'stage' => 'transaction',
-                                    'message' => 'Provided GUID already exists'
-                                ]);
-                            }
-
-                            $boost->setGuid($guid);
-
-                            $checksum = isset($_POST['checksum']) ? $_POST['checksum'] : null;
-
-                            $prehash = $guid 
-                                . $entity->type 
-                                . $entity->guid 
-                                . ($entity->owner_guid ?: '')
-                                . ($entity->perma_url ?: '')
-                                . ($entity->message ?: '') 
-                                . ($entity->title ?: '') 
-                                . $entity->time_created;
-
-                            if ($checksum !== md5($prehash)) {
-                                return Factory::response([
-                                    'status' => 'error',
-                                    'stage' => 'transaction',
-                                    'message' => 'Checksum does not match'
-                                ]);
-                            }
-
-                            $boost->setChecksum($checksum);
-                        }
-
-                        $transaction_id = $_POST['nonce']['txHash'];
-
-                        Di::_()->get('Boost\Pending')
-                            ->add($transaction_id, $boost);
-                        break;
+                if (!is_numeric($guid) || $guid < 1) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'stage' => 'transaction',
+                        'message' => 'Provided GUID is invalid'
+                    ]);
                 }
-            } else {
-                throw new \Exception('Points boost are no longer supported');
+
+                /** @var Core\Boost\Repository $repository */
+                $repository = Di::_()->get('Boost\Repository');
+
+                $existingBoost = $repository->getEntity('peer', $guid);
+
+                if ($existingBoost) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'stage' => 'transaction',
+                        'message' => 'Provided GUID already exists'
+                    ]);
+                }
+
+                $boost->setGuid($guid);
+
+                $checksum = isset($_POST['checksum']) ? $_POST['checksum'] : null;
+
+                $prehash = $guid 
+                    . $entity->type 
+                    . $entity->guid 
+                    . ($entity->owner_guid ?: '')
+                    . ($entity->perma_url ?: '')
+                    . ($entity->message ?: '') 
+                    . ($entity->title ?: '') 
+                    . $entity->time_created;
+
+                if ($checksum !== md5($prehash)) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'stage' => 'transaction',
+                        'message' => 'Checksum does not match'
+                    ]);
+                }
+
+                $boost->setChecksum($checksum);
             }
 
-            $boost->setTransactionId($transaction_id)
+            // Charge
+
+            $transactionId = Di::_()->get('Boost\Payment')->pay($boost, $paymentMethod);
+
+            // Save Boost
+
+            $boost
+                ->setTransactionId($transactionId)
                 ->save();
 
         } catch (\Exception $e) {
@@ -242,6 +202,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'message' => $e->getMessage()
             ]);
         }
+
+        // Notify
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=> [$boost->getDestination()->guid],
@@ -275,43 +237,42 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        //now add to the newsfeed
-        $embeded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
-        if (!$embeded) {
+        // Check embedded entity
+
+        $embedded = Entities\Factory::build($boost->getEntity()->guid); //more accurate, as entity doesn't do this @todo maybe it should in the future
+
+        if (!$embedded) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'The original post was deleted'
             ]);
         }
-        \Minds\Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
+
+        // Charge
+
+        $chargeId = Di::_()->get('Boost\Payment')->charge($boost);
+
+        if (!$chargeId) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Cannot process charge'
+            ]);
+        }
+
+        // Post
+
+        Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
 
         $activity = new Entities\Activity();
         $activity->p2p_boosted = true;
-        if ($embeded->remind_object) {
-            $activity->setRemind($embeded->remind_object)->save();
+
+        if ($embedded->remind_object) {
+            $activity->setRemind($embedded->remind_object)->save();
         } else {
-            $activity->setRemind($embeded->export())->save();
+            $activity->setRemind($embedded->export())->save();
         }
 
-        if ($boost->getType() == "pro" && $boost->getMethod() == 'money') {
-            try {
-                $stripe = Core\Di\Di::_()->get('StripePayments');
-                $sale = (new Payments\Sale)
-                    ->setId($boost->getTransactionId())
-                    ->setMerchant($boost->getDestination());
-                $stripe->chargeSale($sale);
-            } catch (\Exception $e) {
-                return Factory::response([
-                    'status' => 'error',
-                    'message' => $e->getMessage()
-                ]);
-                return false;
-            }
-        } else if ($boost->getType() == 'pro' && $boost->getMethod() == 'tokens') {
-            // Already charged
-        } else {
-            Helpers\Wallet::createTransaction($boost->getDestination()->guid, $boost->getBid(), $boost->getGuid(), "Peer Boost");
-        }
+        // Notify
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=>array($boost->getOwner()->guid),
@@ -322,14 +283,17 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         ]);
 
         //Now forward through to social networks if selected
+
         if ($boost->shouldPostToFacebook()) {
             $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
             $facebook->getApiCredentials();
             if ($boost->getScheduledTs() > time()) {
                 $facebook->schedule($boost->getScheduledTs());
             }
-            $facebook->post($embeded);
+            $facebook->post($embedded);
         }
+
+        // Set state
 
         $review->setBoost($boost);
         try {
@@ -360,37 +324,24 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($boost->getState() != 'created') {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'This boost is in the ' . $boost->getState() . ' state and can not be approved'
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and cannot be refunded'
             ]);
         }
 
         try {
-            if ($boost->getType() == 'pro') {
-                switch ($boost->getMethod()) {
-                    case 'money':
-                        $stripe = Core\Di\Di::_()->get('StripePayments');
-                        $sale = (new Payments\Sale)
-                            ->setId($boost->getTransactionId())
-                            ->setMerchant($boost->getDestination());
+            // Refund payment
 
-                        $stripe->voidSale($sale);
-                        break;
+            $refund = Di::_()->get('Boost\Payment')->refund($boost);
 
-                    case 'tokens':
-                        // Already refunded
-                        break;
-                }
-            } else {
-                throw new \Exception('Point boosts are no longer supported');
+            if (!$refund) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Cannot process refund'
+                ]);
             }
-        } catch (\Exception $e) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
-        }
 
-        try {
+            // Action
+
             if ($revoked) {
                 $review->revoke();
             } else {
@@ -403,12 +354,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ]);
                 $review->reject();
             }
+
+            $response['status'] = 'success';
         } catch (\Exception $e) {
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
         }
 
-        $response['status'] = 'success';
         return Factory::response($response);
     }
 }

@@ -64,6 +64,10 @@ class Sums
             error_log($e->getMessage());
             return 0;
         }
+
+        if (!$rows) {
+            return 0;
+        }
         
         return (string) BigNumber::_($rows[0]['balance']);
     }
@@ -97,6 +101,10 @@ class Sums
             $rows = $this->db->request($query);
         } catch (\Exception $e) {
             error_log($e->getMessage());
+            return 0;
+        }
+
+        if (!$rows) {
             return 0;
         }
 

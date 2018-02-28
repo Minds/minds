@@ -3,17 +3,17 @@
 namespace Minds\Core\Boost;
 
 use Minds\Core;
+use Minds\Core\Blockchain\Services\RatesInterface;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Core\Util\BigNumber;
+use Minds\Entities\Boost\Network;
+use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
 
 class Payment
 {
-    /** @var Core\Blockchain\Wallets\OffChain\Transactions */
-    protected $offchainTransactions;
-
     /** @var Payments\Stripe\Stripe */
     protected $stripePayments;
 
@@ -30,14 +30,12 @@ class Payment
     protected $boostPending;
 
     public function __construct(
-        $offchainTransactions = null,
         $stripePayments = null,
         $eth = null,
         $txManager = null,
         $txRepository = null,
         $config = null
     ) {
-        $this->offchainTransactions = $offchainTransactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $this->stripePayments = $stripePayments ?: Di::_()->get('StripePayments');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
@@ -46,37 +44,30 @@ class Payment
     }
 
     /**
-     * @param \Minds\Entities\Boost\Network $boost
-     * @param $paymentMethodNonce
+     * @param Network|Peer $boost
+     * @param $payload
      * @return null
      * @throws \Exception
      */
-    public function pay($boost, $paymentMethodNonce)
+    public function pay($boost, $payload)
     {
         $currency = method_exists($boost, 'getMethod') ?
             $boost->getMethod() : $boost->getBidType();
 
         switch ($currency) {
-            case 'points':
-                throw new \Exception('Points are no longer supported');
-
-            case 'offchain':
-                $this->offchainTransactions
-                    ->setUser($boost->getOwner())
-                    ->setType('boost')
-                    ->setAmount((string) BigNumber::_($boost->getBid())->neg());
-
-                return $this->offchainTransactions->create();
-
             case 'usd':
             case 'money':
+                if ($boost->getHandler() === 'peer') {
+                    throw new \Exception('Money P2P boosts are not supported');
+                }
+
                 $customer = (new Payments\Customer())
                     ->setUser($boost->getOwner());
 
-                $source = $paymentMethodNonce;
+                $source = $payload;
 
                 if (!$customer->getId()) {
-                    $customer->setPaymentToken($paymentMethodNonce);
+                    $customer->setPaymentToken($payload);
                     $customer = $this->stripePayments->createCustomer($customer);
 
                     // Token already consumed to set default payment method, let's use the
@@ -101,24 +92,125 @@ class Payment
                 return $this->stripePayments->setSale($sale);
 
             case 'tokens':
-                $transaction = new Core\Blockchain\Transactions\Transaction();
-                $transaction
-                    ->setUserGuid($boost->getOwner()->guid)
-                    ->setWalletAddress($paymentMethodNonce['address'])
-                    ->setContract('boost')
-                    ->setTx($paymentMethodNonce['txHash'])
-                    ->setAmount((string) BigNumber::_($boost->getBid())->neg())
-                    ->setTimestamp(time())
-                    ->setCompleted(false)
-                    ->setData([
-                        'amount' => (string) $boost->getBid(),
-                        'guid' => (string) $boost->getGuid(),
-                    ]);
-                $this->txManager->add($transaction);
-                return $paymentMethodNonce['txHash'];
+                switch ($payload['method']) {
+                    case 'offchain':
+                        if ($boost->getHandler() === 'peer' && !$boost->getDestination()->getPhoneNumberHash()) {
+                            throw new \Exception('Boost target should participate in the Rewards program.');
+                        }
+
+                        /** @var Core\Blockchain\Wallets\OffChain\Transactions $sendersTx */
+                        $sendersTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                        $tx = $sendersTx
+                            ->setAmount((string) BigNumber::_($boost->getBid())->neg())
+                            ->setType('boost')
+                            ->setUser($boost->getOwner())
+                            ->create([
+                                'amount' => (string) $boost->getBid(),
+                                'guid' => (string) $boost->getGuid(),
+                            ]);
+
+                        return $tx->getTx();
+
+                    case 'creditcard':
+                        if ($boost->getHandler() === 'peer' && !$boost->getDestination()->getPhoneNumberHash()) {
+                            throw new \Exception('Boost target should participate in the Rewards program.');
+                        }
+
+                        //charge the card
+                        $customer = (new Core\Payments\Customer())
+                            ->setUser($boost->getOwner());
+
+                        $source = $payload['token'];
+                        // if customer doesn't exist on Stripe, create it
+                        if (!$this->stripePayments->getCustomer($customer) || !$customer->getId()) {
+                            $customer->setPaymentToken($source);
+                            $customer = $this->stripePayments->createCustomer($customer);
+                            $source = $customer->getId();
+                        }
+
+                        $currencyId = Di::_()->get('Config')->get('blockchain')['token_symbol'];
+
+                        /** @var RatesInterface $rates */
+                        $rates = Di::_()->get('Blockchain\Rates');
+                        $exRate = $rates
+                            ->setCurrency($currencyId)
+                            ->get();
+
+                        $usd = round(BigNumber::fromPlain($boost->getBid(), 18)
+                            ->mul($exRate)
+                            ->mul(100)
+                            ->toDouble()); //*100 for $ -> cents
+
+                        $sale = new Core\Payments\Sale();
+                        $sale
+                            ->setOrderId('boost-' . $boost->getGuid())
+                            ->setAmount($usd)
+                            ->setCustomerId($customer->getId())
+                            ->setCustomer($customer)
+                            ->setSource($source)
+                            ->setSettle(false);
+
+                        $tx = 'creditcard:' . $this->stripePayments->setSale($sale);
+
+                        $sendersTx = new Core\Blockchain\Transactions\Transaction();
+                        $sendersTx
+                            ->setTx($tx)
+                            ->setContract('boost')
+                            ->setWalletAddress('creditcard')
+                            ->setAmount((string) BigNumber::_($boost->getBid())->neg())
+                            ->setTimestamp(time())
+                            ->setUserGuid($boost->getOwner()->guid)
+                            ->setCompleted(true)
+                            ->setData([
+                                'amount' => (string) $boost->getBid(),
+                                'guid' => (string) $boost->getGuid(),
+                            ]);
+                        $this->txManager->add($sendersTx);
+
+                        return $tx;
+
+                    case 'onchain':
+                        if ($boost->getHandler() === 'peer' && !$boost->getDestination()->getEthWallet()) {
+                            throw new \Exception('Boost target should participate in the Rewards program.');
+                        }
+
+                        $sendersTx = new Core\Blockchain\Transactions\Transaction();
+                        $sendersTx
+                            ->setUserGuid($boost->getOwner()->guid)
+                            ->setWalletAddress($payload['address'])
+                            ->setContract('boost')
+                            ->setTx($payload['txHash'])
+                            ->setAmount((string) BigNumber::_($boost->getBid())->neg())
+                            ->setTimestamp(time())
+                            ->setCompleted(false)
+                            ->setData([
+                                'amount' => (string) $boost->getBid(),
+                                'guid' => (string) $boost->getGuid(),
+                            ]);
+                        $this->txManager->add($sendersTx);
+
+                        if ($boost->getHandler() === 'peer') {
+                            $receiversTx = new Core\Blockchain\Transactions\Transaction();
+                            $receiversTx
+                                ->setUserGuid($boost->getDestination()->guid)
+                                ->setWalletAddress($payload['address'])
+                                ->setContract('boost')
+                                ->setTx($payload['txHash'])
+                                ->setAmount($boost->getBid())
+                                ->setTimestamp(time())
+                                ->setCompleted(false)
+                                ->setData([
+                                    'amount' => (string) $boost->getBid(),
+                                    'guid' => (string) $boost->getGuid(),
+                                ]);
+                            $this->txManager->add($receiversTx);
+                        }
+
+                        return $payload['txHash'];
+                }
         }
 
-        throw new \Exception('Unsupported Bid Type');
+        throw new \Exception('Payment Method not supported');
     }
 
     public function charge($boost)
@@ -127,11 +219,6 @@ class Payment
             $boost->getMethod() : $boost->getBidType();
 
         switch ($currency) {
-            case 'points':
-            case 'offchain':
-            case 'tokens':
-                return true; // Already charged
-
             case 'usd':
             case 'money':
                 $sale = (new Payments\Sale())
@@ -143,9 +230,67 @@ class Payment
                 }
 
                 return $this->stripePayments->chargeSale($sale);
+
+            case 'tokens':
+                $method = '';
+                $txIdMeta = '';
+
+                if (stripos($boost->getTransactionId(), '0x') === 0) {
+                    $method = 'onchain';
+                } elseif (stripos($boost->getTransactionId(), 'oc:') === 0) {
+                    $method = 'offchain';
+                } elseif (stripos($boost->getTransactionId(), 'creditcard:') === 0) {
+                    $method = 'creditcard';
+                    $txIdMeta = explode(':', $boost->getTransactionId(), 2)[1];
+                }
+
+                switch ($method) {
+                    case 'offchain':
+                        if ($boost->getHandler() === 'peer') {
+                            /** @var Core\Blockchain\Wallets\OffChain\Transactions $receiversTx */
+                            $receiversTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                            $receiversTx
+                                ->setAmount($boost->getBid())
+                                ->setType('boost')
+                                ->setUser($boost->getDestination())
+                                ->create([
+                                    'amount' => (string) $boost->getBid(),
+                                    'guid' => (string) $boost->getGuid(),
+                                ]);
+                        }
+                        break;
+
+                    case 'creditcard':
+                        $sale = (new Payments\Sale())
+                            ->setId($txIdMeta);
+
+                        $sale = $this->stripePayments->chargeSale($sale);
+
+                        if ($boost->getHandler() === 'peer') {
+                            // what the receiver gets
+                            $receiversTx = new Core\Blockchain\Transactions\Transaction();
+                            $receiversTx
+                                ->setTx($boost->getTransactionId())
+                                ->setContract('boost')
+                                ->setWalletAddress('offchain')
+                                ->setAmount($boost->getBid())
+                                ->setTimestamp(time())
+                                ->setUserGuid($boost->getDestination()->guid)
+                                ->setCompleted(false)
+                                ->setData([
+                                    'amount' => (string) $boost->getBid(),
+                                    'guid' => (string) $boost->getGuid(),
+                                ]);
+                            $this->txManager->add($receiversTx);
+                        }
+
+                        return $sale;
+                }
+
+                return true; // Already charged
         }
 
-        throw new \Exception('Unsupported Bid Type');
+        throw new \Exception('Payment Method not supported');
     }
 
     public function refund($boost)
@@ -154,17 +299,6 @@ class Payment
             $boost->getMethod() : $boost->getBidType();
 
         switch ($currency) {
-            case 'points':
-                throw new \Exception('Points are no longer supported');
-
-            case 'offchain':
-                $this->offchainTransactions
-                    ->setUser($boost->getOwner())
-                    ->setType('boost_refund')
-                    ->setAmount((string) BigNumber::_($boost->getBid()));
-
-                return $this->offchainTransactions->create();
-
             case 'usd':
             case 'money':
                 $sale = (new Payments\Sale())
@@ -178,39 +312,82 @@ class Payment
                 return $this->stripePayments->voidOrRefundSale($sale, true);
 
             case 'tokens':
-                //get the transaction
-                $boostTransaction = $this->txRepository->get($boost->getOwner()->guid, $boost->getTransactionId());
+                $method = '';
+                $txIdMeta = '';
 
-                //send the tokens back to the booster
-                $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
-                    'from' => $this->config->get('blockchain')['boost_wallet_address'],
-                    'to' => $this->config->get('blockchain')['boost_address'],
-                    'gasLimit' => BigNumber::_(200000)->toHex(true),
-                    'data' => $this->eth->encodeContractMethod('reject(uint256)', [
-                        BigNumber::_($boost->getGuid())->toHex(true)
-                    ])
-                ]);
+                if (stripos($boost->getTransactionId(), '0x') === 0) {
+                    $method = 'onchain';
+                } elseif (stripos($boost->getTransactionId(), 'oc:') === 0) {
+                    $method = 'offchain';
+                } elseif (stripos($boost->getTransactionId(), 'creditcard:') === 0) {
+                    $method = 'creditcard';
+                    $txIdMeta = explode(':', $boost->getTransactionId(), 2)[1];
+                }
 
-                $refundTransaction = new Core\Blockchain\Transactions\Transaction();
-                $refundTransaction
-                    ->setUserGuid($boost->getOwner()->guid)
-                    ->setWalletAddress($boostTransaction->getWalletAddress())
-                    ->setContract('boost')
-                    ->setTx($boost->getTransactionId())
-                    ->setAmount($boostTransaction->getAmount())
-                    ->setTimestamp(time())
-                    ->setCompleted(false)
-                    ->setData([
-                        'amount' => (string) $boost->getBid(),
-                        'guid' => (string) $boost->getGuid(),
-                    ]);
+                switch ($method) {
+                    case 'onchain':
+                        if ($boost->getHandler() === 'peer') {
+                            // Already refunded
+                            return true;
+                        }
 
-                $this->txManager->add($refundTransaction);
+                        //get the transaction
+                        $boostTransaction = $this->txRepository->get($boost->getOwner()->guid, $boost->getTransactionId());
+
+                        //send the tokens back to the booster
+                        $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
+                            'from' => $this->config->get('blockchain')['boost_wallet_address'],
+                            'to' => $this->config->get('blockchain')['boost_address'],
+                            'gasLimit' => BigNumber::_(200000)->toHex(true),
+                            'data' => $this->eth->encodeContractMethod('reject(uint256)', [
+                                BigNumber::_($boost->getGuid())->toHex(true)
+                            ])
+                        ]);
+
+                        $refundTransaction = new Core\Blockchain\Transactions\Transaction();
+                        $refundTransaction
+                            ->setUserGuid($boost->getOwner()->guid)
+                            ->setWalletAddress($boostTransaction->getWalletAddress())
+                            ->setContract('boost')
+                            ->setTx($boost->getTransactionId())
+                            ->setAmount($boostTransaction->getAmount())
+                            ->setTimestamp(time())
+                            ->setCompleted(false)
+                            ->setData([
+                                'amount' => (string) $boost->getBid(),
+                                'guid' => (string) $boost->getGuid(),
+                            ]);
+
+                        $this->txManager->add($refundTransaction);
+                        break;
+
+                    case 'offchain':
+                        /** @var Core\Blockchain\Wallets\OffChain\Transactions $sendersTx */
+                        $sendersTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                        $sendersTx
+                            ->setAmount($boost->getBid())
+                            ->setType('boost_refund')
+                            ->setUser($boost->getOwner())
+                            ->create([
+                                'amount' => (string) $boost->getBid(),
+                                'guid' => (string) $boost->getGuid(),
+                            ]);
+
+                        break;
+
+                    case 'creditcard':
+                        $sale = (new Payments\Sale())
+                            ->setId($txIdMeta);
+
+                        return $this->stripePayments->voidOrRefundSale($sale, true);
+                }
+
+
 
                 return true;
         }
 
-        throw new \Exception('Unsupported Bid Type');
+        throw new \Exception('Payment Method not supported');
     }
 
 }

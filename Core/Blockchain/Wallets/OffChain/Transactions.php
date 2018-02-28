@@ -64,7 +64,7 @@ class Transactions
         return $this;
     }
 
-    public function create()
+    public function create($data = [])
     {
         $this->locks->setKey("balance:{$this->user->guid}");
         if ($this->locks->isLocked()) {
@@ -92,6 +92,10 @@ class Transactions
             ->setAmount($this->amount)
             ->setContract('offchain:' . $this->type)
             ->setCompleted(true);
+
+        if ($data) {
+            $transaction->setData($data);
+        }
 
         $added = $this->repository->add($transaction);
 
