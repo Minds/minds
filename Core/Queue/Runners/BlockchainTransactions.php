@@ -23,8 +23,10 @@ class BlockchainTransactions implements Interfaces\QueueRunner
 
                 $manager = Di::_()->get('Blockchain\Transactions\Manager');
                 $manager
-                    ->setTx($data['tx'])
                     ->setUserGuid($data['user_guid'])
+                    ->setTimestamp($data['timestamp'])
+                    ->setWalletAddress($data['wallet_address'])
+                    ->setTx($data['tx'])
                     ->run();
             });
     }

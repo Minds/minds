@@ -68,11 +68,13 @@ class Repository
             'user_guid' => null,
             'wallet_address' => null,
             'wallet_addresses' => null,
-            'contract' => null,
             'timestamp' => [
                 'gte' => null,
                 'lte' => null,
+                'eq' => null,
             ],
+            'tx' => null,
+            'contract' => null,
             'limit' => 12,
             'offset' => null,
             'allowFiltering' => false,
@@ -110,10 +112,20 @@ class Repository
             $values[] = new Timestamp($options['timestamp']['lte']);
         }
 
+        if ($options['timestamp']['eq']) {
+            $where[] = 'timestamp = ?';
+            $values[] = new Timestamp($options['timestamp']['lte']);
+        }
+
         if ($options['contract']) {
             $where[] = 'contract = ?';
             $values[] = $options['contract'];
             $options['allowFiltering'] = true;
+        }
+
+        if ($options['tx']) {
+            $where[] = 'tx = ?';
+            $values[] = $options['tx'];
         }
 
         if ($where) {

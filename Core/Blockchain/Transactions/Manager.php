@@ -14,11 +14,17 @@ class Manager
     /** @var string $contract */
     private $contract;
 
-    /** @var string $tx */
-    private $tx;
-
     /** @var string $user_guid */
     private $user_guid;
+
+    /** @var int $timestamp */
+    private $timestamp;
+
+    /** @var string $wallet_address */
+    private $wallet_address;
+
+    /** @var string $tx */
+    private $tx;
 
     /** @var Ethereum $eth */
     private $eth;
@@ -33,17 +39,6 @@ class Manager
     }
 
     /**
-     * Set the tx
-     * @param string $tx
-     * @return $this
-     */
-    public function setTx($tx)
-    {
-        $this->tx = $tx;
-        return $this;
-    }
-
-    /**
      * Set the user_guid
      * @param string $guid
      * @return $this
@@ -55,16 +50,58 @@ class Manager
     }
 
     /**
+     * Set the timestamp
+     * @param int $timestamp
+     * @return $this
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+        return $this;
+    }
+
+    /**
+     * Set the wallet address
+     * @param string $address
+     * @return $this
+     */
+    public function setWalletAddress($address)
+    {
+        $this->wallet_address = $address;
+        return $this;
+    }
+
+    /**
+     * Set the tx
+     * @param string $tx
+     * @return $this
+     */
+    public function setTx($tx)
+    {
+        $this->tx = $tx;
+        return $this;
+    }
+
+    /**
      * Act upon the transaction
      * @return void
      */
     public function run()
     {
-        $transaction = $this->repo->get($this->user_guid, $this->tx);
+        $result = $this->repo->getList([
+            'user_guid' => $this->user_guid, 
+            'timestamp' => [
+                'eq' => $this->timestamp,
+            ],
+            'wallet_address' => $this->wallet_address,
+            'tx' => $this->tx,
+        ]);
 
-        if (!$transaction) {
+        if (!$result || !$result['transactions']) {
             throw new \Exception("Transaction " . $this->tx . " not found");
         }
+
+        $transaction = $result['transactions'][0];
 
         if ($transaction->isCompleted()) {
             throw new \Exception("Transaction already completed");
@@ -110,8 +147,10 @@ class Manager
         Queue\Client::build()
             ->setQueue("BlockchainTransactions")
             ->send([
-                'tx' => $transaction->getTx(),
                 'user_guid' => $transaction->getUserGuid(),
+                'timestamp' => $transaction->getTimestamp(),
+                'wallet_address' => $transaction->getWalletAddress(),
+                'tx' => $transaction->getTx(),
             ]);
     }
 

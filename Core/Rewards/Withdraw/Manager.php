@@ -99,7 +99,7 @@ class Manager
             throw new \Exception('The user who requested this operation does not match the transaction');
         }
 
-        if ($request->getAddress() != $transaction->getData()['address']) {
+        if (strtolower($request->getAddress()) != strtolower($transaction->getData()['address'])) {
             throw new \Exception('The address does not match the transaction');
         }
 
