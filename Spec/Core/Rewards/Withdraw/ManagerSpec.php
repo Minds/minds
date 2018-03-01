@@ -59,6 +59,33 @@ class ManagerSpec extends ObjectBehavior
         $this->request($request);
     }
 
+    function it_should_not_allow_a_withdrawl_request_to_be_made_if_already_exists_in_last_24_hours(
+        BlockchainTx $offChainTransactions,
+        Repository $repository
+    )
+    {
+        $this->beConstructedWith($offChainTransactions, null, null, null, $repository);
+
+        $request = new Request();
+        $request->setTx('0xabc220393')
+            ->setUserGuid(123)
+            ->setAmount(1000)
+            ->setAddress('0xRequesterAddr')
+            ->setTimestamp(time())
+            ->setGas(50);
+
+        $repository->getList([
+                'user_guid' => 123,
+                'contract' => 'withdraw',
+                'from' => strtotime('-1 day')
+            ])
+            ->willReturn([
+                'withdraws' => [ $request ]
+            ]);
+
+        $this->shouldThrow('\Exception')->duringRequest($request);
+    }
+
     function it_should_complete_the_withdrawal_after_a_request(
         BlockchainTx $txManager, 
         Transactions $offChainTransactions,

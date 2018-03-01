@@ -58,7 +58,9 @@ class Manager
             'from' => strtotime('-1 day')
         ]);
 
-        return !isset($previousRequests) || !isset($previousRequests['withdrawals']) || count($previousRequests['withdrawals']) === 0;
+        return !isset($previousRequests) 
+            || !isset($previousRequests['withdrawals']) 
+            || count($previousRequests['withdrawals']) === 0;
     }
 
     /**
@@ -68,6 +70,10 @@ class Manager
      */
     public function request($request)
     {
+        if (!$this->check($request->getUserGuid())) {
+            throw new \Exception('A withdrawal has already been requested in the last 24 hours');
+        }
+
         $transaction = new Transaction();
         $transaction
             ->setTx($request->getTx())

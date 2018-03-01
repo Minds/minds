@@ -8,7 +8,6 @@ use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Core\Util\BigNumber;
-use Minds\Entities\Boost\Network;
 use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
 
