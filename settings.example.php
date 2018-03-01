@@ -296,3 +296,7 @@ $CONFIG->set('default_email_subscriptions', [
         'value' => false
     ],
 ]);
+
+$CONFIG->set('offchain', [
+    'cap' => 10
+]);

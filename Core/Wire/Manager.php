@@ -158,6 +158,15 @@ class Manager
                 break;
 
             case 'offchain':
+                /** @var Core\Blockchain\Wallets\OffChain\Cap $cap */
+                $cap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
+                    ->setUser($this->sender)
+                    ->setContract('boost');
+
+                if (!$cap->isAllowed($this->amount)) {
+                    throw new \Exception('You are not allowed to spend that amount of coins.');
+                }
+
                 $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
                 $sendersTx
                     ->setAmount((string) BigNumber::_($this->amount)->neg())

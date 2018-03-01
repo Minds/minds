@@ -48,8 +48,15 @@ class wallet implements Interfaces\Api
                 
                 $balance = $onChainBalanceVal->add($offChainBalanceVal);
 
-                $todayWiresBalance = BigNumber::_($offChainBalance->getByContract('offchain:wire', strtotime('today 00:00'), true))->neg();
-                $wireCap = BigNumber::toPlain(100, 18)->sub($todayWiresBalance);
+                $wireCap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
+                    ->setUser(Session::getLoggedinUser())
+                    ->setContract('wire')
+                    ->allowance();
+
+                $boostCap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
+                    ->setUser(Session::getLoggedinUser())
+                    ->setContract('boost')
+                    ->allowance();
 
                 $response = [
                     'addresses' => [
@@ -66,6 +73,7 @@ class wallet implements Interfaces\Api
                     ],
                     'balance' => (string) $balance,
                     'wireCap' => (string) $wireCap,
+                    'boostCap' => (string) $boostCap,
                 ];
 
                 break;

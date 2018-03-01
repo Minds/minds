@@ -5,6 +5,7 @@ namespace Spec\Minds\Core\Boost;
 use Minds\Core\Blockchain\Transactions\Manager;
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Blockchain\Wallets\OffChain\Cap;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Config\Config;
@@ -38,13 +39,17 @@ class PaymentSpec extends ObjectBehavior
     /** @var Config */
     protected $config;
 
+    /** @var Cap */
+    protected $offchainCap;
+
     function let(
         Transactions $offchainTransactions,
         Stripe $stripePayments,
         Ethereum $eth,
         Manager $txManager,
         Repository $txRepository,
-        Config $config
+        Config $config,
+        Cap $offchainCap
     )
     {
         $this->offchainTransactions = $offchainTransactions;
@@ -53,6 +58,7 @@ class PaymentSpec extends ObjectBehavior
         $this->txManager = $txManager;
         $this->txRepository = $txRepository;
         $this->config = $config;
+        $this->offchainCap = $offchainCap;
 
         $this->beConstructedWith(
             $this->stripePayments,
@@ -64,6 +70,10 @@ class PaymentSpec extends ObjectBehavior
 
         Di::_()->bind('Blockchain\Wallets\OffChain\Transactions', function () use ($offchainTransactions) {
             return $offchainTransactions->getWrappedObject();
+        });
+
+        Di::_()->bind('Blockchain\Wallets\OffChain\Cap', function () use ($offchainCap) {
+            return $offchainCap->getWrappedObject();
         });
     }
 
@@ -148,6 +158,18 @@ class PaymentSpec extends ObjectBehavior
         $this->offchainTransactions->setUser($boost_owner)
             ->shouldBeCalled()
             ->willReturn($this->offchainTransactions);
+
+        $this->offchainCap->setUser($boost_owner)
+            ->shouldBeCalled()
+            ->willReturn($this->offchainCap);
+
+        $this->offchainCap->setContract('boost')
+            ->shouldBeCalled()
+            ->willReturn($this->offchainCap);
+
+        $this->offchainCap->isAllowed($bid)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $tx = new Transaction();
         $tx->setTx('oc:123');

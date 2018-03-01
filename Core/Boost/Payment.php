@@ -97,6 +97,15 @@ class Payment
                             throw new \Exception('Boost target should participate in the Rewards program.');
                         }
 
+                        /** @var Core\Blockchain\Wallets\OffChain\Cap $cap */
+                        $cap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
+                            ->setUser($boost->getOwner())
+                            ->setContract('boost');
+
+                        if (!$cap->isAllowed($boost->getBid())) {
+                            throw new \Exception('You are not allowed to spend that amount of coins.');
+                        }
+
                         /** @var Core\Blockchain\Wallets\OffChain\Transactions $sendersTx */
                         $sendersTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
                         $tx = $sendersTx

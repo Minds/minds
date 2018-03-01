@@ -54,6 +54,10 @@ class BlockchainProvider extends Provider
             return new Wallets\OffChain\Transactions();
         }, [ 'useFactory' => false ]);
 
+        $this->di->bind('Blockchain\Wallets\OffChain\Cap', function () {
+            return new Wallets\OffChain\Cap();
+        });
+
         $this->di->bind('Blockchain\Wallets\OnChain\Balance', function () {
             return new Wallets\OnChain\Balance();
         });
