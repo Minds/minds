@@ -6,7 +6,7 @@
  * @author Mark Harding
  *
  */
-namespace Minds\Controllers\api\v1\boost;
+namespace Minds\Controllers\api\v2\boost;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
