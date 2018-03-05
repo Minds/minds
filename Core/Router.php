@@ -99,7 +99,7 @@ class Router
         }
 
         if (!$this->legacyRoute($uri)) {
-            include(dirname(dirname(dirname((__FILE__)))) . '/front/public/index.php');
+            include(dirname(dirname(dirname((__FILE__)))) . '/front/dist/index.php');
         }
     }
 
