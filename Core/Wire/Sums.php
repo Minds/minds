@@ -132,7 +132,11 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return (string) BigNumber::_($result[0]['amount_sum'])->add($result[0]['wei_sum']);
+            if ($this->method == 'tokens') {
+                return (string) $result[0]['wei_sum'];
+            } else {
+                return (string) $result[0]['amount_sum'];
+            }
         } catch (\Exception $e) {
             return -1;
         }
@@ -168,7 +172,11 @@ class Sums
             if (!$result) {
                 return 0;
             }
-            return (string) BigNumber::_($result[0]['amount_sum'])->add($result[0]['wei_sum']);
+            if ($this->method == 'tokens') {
+                return (string) $result[0]['wei_sum'];
+            } else {
+                return (string) $result[0]['amount_sum'];
+            }
         } catch (\Exception $e) {
             return -1;
         }
@@ -213,7 +221,11 @@ class Sums
                 ];
             }
 
-            $sum = (string) BigNumber::_($result[0]['sum'])->add($result[0]['wei_sum']);
+            if ($this->method == 'tokens') {
+                $sum = (string) $result[0]['wei_sum'];
+            } else {
+                $sum = (string) $result[0]['sum'];
+            }
             $count = (string) BigNumber::_($result[0]['count']);
 
             return [
