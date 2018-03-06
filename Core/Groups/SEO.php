@@ -57,5 +57,29 @@ class SEO
                 'og:image:height' => 681
             ];
         });
+        Manager::add('/groups/top', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Top Groups',
+                'description' => 'List of top groups',
+                'og:title' => 'Top Groups',
+                'og:description' => 'List of top groups',
+                'og:url' => Di::_()->get('Config')->site_url . 'groups/top',
+                'og:image' => Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+            Manager::add('/groups/my', function ($slugs = []) {
+                return $meta = [
+                    'title' => 'Your Groups',
+                    'description' => 'List of your groups',
+                    'og:title' => 'Your Groups',
+                    'og:description' => 'List of your groups',
+                    'og:url' => Di::_()->get('Config')->site_url . 'groups/my',
+                    'og:image' => Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                    'og:image:width' => 1024,
+                    'og:image:height' => 681
+                ];
+            });
+        });
     }
 }

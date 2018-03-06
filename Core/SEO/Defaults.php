@@ -207,6 +207,51 @@ class Defaults
             return $meta;
         });
 
+        // channels
+        Manager::add('/channels', function ($slugs = []) {
+            $allowedSections = ['top', 'subscriptions', 'subscribers'];
+            $meta = [];
+
+            if(array_search($slugs[0], $allowedSections) !== false) {
+                $meta = [
+                    'og:url' => Core\Di\Di::_()->get('Config')->site_url . implode('/', $slugs),
+                    'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                    'og:image:width' => 1024,
+                    'og:image:height' => 681
+                ];
+
+                switch($slugs[0]){
+                    case 'top':
+                        $meta = array_merge([
+                                'title' => 'Top Channels',
+                                'og:title' => 'Top Channels',
+                                'description' => 'List of top channels',
+                                'og:description' => 'List of top channels'
+                            ], $meta);
+                        break;
+                    case 'subscriptions':
+                        $meta = array_merge([
+                            'title' => "Your Subscriptions",
+                            'og:title' => "Your Subscriptions",
+                            'description' => "Channels you're subscribed to",
+                            'og:description' => "Channels you're subscribed to"
+                        ], $meta);
+                        break;
+                    case 'subscribers':
+                        $meta = array_merge([
+                            'title' => "Your Subscribers",
+                            'og:title' => "Your Subscribers",
+                            'description' => "Channels who are subscribed to you",
+                            'og:description' => "Channels who are subscribed to you"
+                        ], $meta);
+                        break;
+                    default:
+                        $meta = [];
+                }
+            }
+            return $meta;
+        });
+
         $marketing = [
             'affiliates' => [
                 'title' => 'Affiliate Program',

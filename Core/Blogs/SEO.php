@@ -25,6 +25,43 @@ class SEO
             ];
         });
 
+        Core\SEO\Manager::add('/blog/top', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Top Blogs',
+                'description' => 'List of top blogs',
+                'og:title' => 'Top Blogs',
+                'og:description' => 'List of top blogs',
+                'og:url' => Core\Di\Di::_()->get('Config')->site_url . 'blog/top',
+                'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+        });
+        Core\SEO\Manager::add('/blog/network', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Blogs from your Network',
+                'description' => "Blogs from channels you're subscribed to",
+                'og:title' => 'Blogs from your Network',
+                'og:description' => "Blogs from channels you're subscribed to",
+                'og:url' => Core\Di\Di::_()->get('Config')->site_url . 'blog/network',
+                'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+        });
+        Core\SEO\Manager::add('/blog/my', function ($slugs = []) {
+            return $meta = [
+                'title' => 'Your Blogs',
+                'description' => 'List of your blogs',
+                'og:title' => 'Your Blogs',
+                'og:description' => 'List of your blogs',
+                'og:url' => Core\Di\Di::_()->get('Config')->site_url . 'blog/my',
+                'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+                'og:image:width' => 1024,
+                'og:image:height' => 681
+            ];
+        });
+
         Core\Events\Dispatcher::register('seo:route', '/', function (Core\Events\Event $event) {
             $params = $event->getParameters();
             $slugs = $params['slugs'];
@@ -103,5 +140,18 @@ class SEO
             'al:ios:url' => 'minds://blog/view/' . $blog->guid,
             'al:android:url' => 'minds://blog/view/' . $blog->guid,
         );
+    }
+
+    private function getInfo($title, $description, $url) {
+        return [
+            'title' => $title,
+            'description' => $description,
+            'og:title' => $title,
+            'og:description' => $description,
+            'og:url' => $url,
+            'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
+            'og:image:width' => 1024,
+            'og:image:height' => 681
+        ];
     }
 }
