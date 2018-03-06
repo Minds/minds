@@ -83,7 +83,6 @@ class Client implements Interfaces\QueueClient
         //error_log("=== AMPQ MESSAGE CONTRUCTED === \n");
         if ($this->connection->isConnected()) {
             $this->channel->basic_publish($msg, $this->exchange, $this->binder);
-            error_log("Published from minds and complete...\n");
         } else {
             error_log("Not connected.. but tried to send message to channel");
         }
