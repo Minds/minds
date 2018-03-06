@@ -29,7 +29,9 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
         $url = $_POST['url'];
 
         $event = new Core\Analytics\Metrics\Event();
-        $event->setProduct('platform')
+        $event
+            ->setType('action')
+            ->setProduct('platform')
             ->setAction('pageview')
             ->setRouteUri($url)
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
