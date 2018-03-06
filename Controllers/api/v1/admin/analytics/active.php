@@ -31,7 +31,7 @@ class active implements Interfaces\Api, Interfaces\ApiAdminPam
         ->setMetric('active');
 
         $mam = $app->get(4, "month");
-        $dam = $app->get(15, "day");
+        $dam = $app->get(7, "day");
 
         $response['monthly'] = $mam;
         $response['daily'] = $dam;
