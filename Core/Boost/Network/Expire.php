@@ -56,7 +56,7 @@ class Expire
             'entity' => $this->boost->getEntity(),
             'title' => $this->boost->getEntity()->title,
             'notification_view' => 'boost_completed',
-            'params' => ['impressions' => $this->boost->getBid()],
+            'params' => ['impressions' => $this->boost->getImpressions()],
             'impressions' => $this->boost->getBid()
         ]);
     }

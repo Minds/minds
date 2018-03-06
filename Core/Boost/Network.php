@@ -183,7 +183,7 @@ class Network implements BoostHandlerInterface
           'entity' => $boost->getEntity(),
           'title' => $boost->getEntity()->title,
           'notification_view' => 'boost_completed',
-          'params' => ['impressions' => $boost->getBid()],
+          'params' => ['impressions' => $boost->getImpressions()],
           'impressions' => $boost->getBid()
         ]);
     }
