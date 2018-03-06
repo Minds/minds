@@ -64,7 +64,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
           $message->setTo($user)
             ->setSubject("Password Reset")
             ->setHtml($template);
-          $mailer->queue($message);
+          $mailer->queue($message, true);
 
           break;
         case "reset":
