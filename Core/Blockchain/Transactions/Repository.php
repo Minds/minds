@@ -84,6 +84,10 @@ class Repository
         $where = [];
         $values = [];
 
+        if ($options['wallet_address'] && $options['user_guid'] && ($options['timestamp']['gte'] || $options['timestamp']['lte'])) {
+            $cql = "SELECT * from blockchain_transactions_by_address";
+        }
+
         if ($options['user_guid']) {
             $where[] = 'user_guid = ?';
             $values[] = new Varint($options['user_guid']);
@@ -114,7 +118,7 @@ class Repository
 
         if ($options['timestamp']['eq']) {
             $where[] = 'timestamp = ?';
-            $values[] = new Timestamp($options['timestamp']['lte']);
+            $values[] = new Timestamp($options['timestamp']['eq']);
         }
 
         if ($options['contract']) {
@@ -212,6 +216,21 @@ class Repository
             
         return $transaction;
 
+    }
+
+    public function delete($user_guid, $timestamp, $wallet_address) {
+        $cql = "DELETE FROM blockchain_transactions where user_guid = ? AND timestamp = ?";
+        $values = [ new Varint($user_guid), new Timestamp($timestamp) ];
+
+        $query = new Custom();
+        $query->query($cql, $values);
+
+        try{
+            $rows = $this->db->request($query);
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
+            return [];
+        }
     }
 
 }
