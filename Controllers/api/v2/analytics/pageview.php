@@ -41,6 +41,10 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
             $event->setReferrerUri((string) $_POST['referrer']);
         }
 
+        if ($ip = $_SERVER['HTTP_X_FORWARDED_FOR']) {
+            $event->setIpAddr($ip);
+        }
+
         if (Core\Session::isLoggedIn()) {
             $event->setUserGuid(Core\Session::getLoggedInUser()->guid);
         }
