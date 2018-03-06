@@ -71,7 +71,7 @@ class Cap
         $offChainBalanceVal = $this->offChainBalance->getByContract($contract, strtotime('today 00:00'), true);
 
         $todaySpendBalance = BigNumber::_($offChainBalanceVal)->neg();
-        $cap = BigNumber::toPlain($this->config->get('offchain')['cap'] ?: 0, 18)->sub($todaySpendBalance);
+        $cap = BigNumber::toPlain($this->config->get('blockchain')['offchain']['cap'] ?: 0, 18)->sub($todaySpendBalance);
 
         return (string) $cap;
     }

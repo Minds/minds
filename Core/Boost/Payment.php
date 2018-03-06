@@ -266,6 +266,7 @@ class Payment
                                     'guid' => (string) $boost->getGuid(),
                                 ]);
                         }
+
                         break;
 
                     case 'creditcard':
@@ -290,6 +291,19 @@ class Payment
                                     'guid' => (string) $boost->getGuid(),
                                 ]);
                             $this->txManager->add($receiversTx);
+
+                            $withholding = new Core\Blockchain\Wallets\OffChain\Withholding\Withholding();
+                            $withholding
+                                ->setUserGuid($boost->getDestination())
+                                ->setTimestamp(time())
+                                ->setTx($boost->getTransactionId())
+                                ->setType('boost')
+                                ->setWalletAddress('offchain')
+                                ->setAmount($boost->getBid())
+                                ->setTtl($this->config->get('blockchain')['offchain']['withholding']['boost']);
+
+                            Di::_()->get('Blockchain\Wallets\OffChain\Withholding\Repository')
+                                ->add($withholding);
                         }
 
                         return $sale;

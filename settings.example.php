@@ -233,6 +233,16 @@ $CONFIG->set('blockchain', [
     'token_name' => '',
 
     'token_symbol' => '',
+
+    'disable_creditcards' => false,
+
+    'offchain' => [
+        'cap' => 10,
+        'withholding' => [
+            'wire' => 30 * 24 * 60 * 60,
+            'boost' => 30 * 24 * 60 * 60,
+        ]
+    ]
 ]);
 
 $CONFIG->set('plus', [
@@ -295,8 +305,4 @@ $CONFIG->set('default_email_subscriptions', [
         'topic' => 'exclusive_promotions',
         'value' => false
     ],
-]);
-
-$CONFIG->set('offchain', [
-    'cap' => 10
 ]);

@@ -45,7 +45,8 @@ class wallet implements Interfaces\Api
                 $offChainBalance = Di::_()->get('Blockchain\Wallets\OffChain\Balance');
                 $offChainBalance->setUser(Session::getLoggedinUser());
                 $offChainBalanceVal = BigNumber::_($offChainBalance->get());
-                
+                $offchainAvailableVal = BigNumber::_($offChainBalance->getAvailable());
+
                 $balance = $onChainBalanceVal->add($offChainBalanceVal);
 
                 $wireCap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
@@ -69,11 +70,12 @@ class wallet implements Interfaces\Api
                             'address' => 'offchain',
                             'label' => 'OffChain',
                             'balance' => (string) $offChainBalanceVal,
+                            'available' => (string) $offchainAvailableVal,
                         ]
                     ],
                     'balance' => (string) $balance,
                     'wireCap' => (string) $wireCap,
-                    'boostCap' => (string) $boostCap,
+                    'boostCap' => (string) $boostCap
                 ];
 
                 break;

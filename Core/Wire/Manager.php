@@ -53,6 +53,9 @@ class Manager
     /** @var array $payload */
     protected $payload;
 
+    /** @var Core\Config */
+    protected $config;
+
 
     public function __construct(
         $cache = null,
@@ -60,7 +63,8 @@ class Manager
         $subscriptionsManager = null,
         $txManager = null,
         $txRepo = null,
-        $stripe = null
+        $stripe = null,
+        $config = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
@@ -68,6 +72,7 @@ class Manager
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
         $this->txRepo = $txRepo ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->stripe = $stripe ?: Di::_()->get('StripePayments');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
@@ -218,6 +223,8 @@ class Manager
                     ->mul(100)
                     ->toDouble(); //*100 for $ -> cents
 
+                $usd = round($usd);
+
                 $sale = new Core\Payments\Sale();
                 $sale->setOrderId('wire-' . $this->entity->guid)
                     ->setAmount($usd)
@@ -265,6 +272,19 @@ class Manager
                         'entity_guid' => $this->entity->guid,
                     ]);
                 $this->txManager->add($receiversTx);
+
+                $withholding = new Core\Blockchain\Wallets\OffChain\Withholding\Withholding();
+                $withholding
+                    ->setUserGuid($this->receiver)
+                    ->setTimestamp(time())
+                    ->setTx($tx)
+                    ->setType('wire')
+                    ->setWalletAddress('offchain')
+                    ->setAmount($this->amount)
+                    ->setTtl($this->config->get('blockchain')['offchain']['withholding']['wire']);
+
+                Di::_()->get('Blockchain\Wallets\OffChain\Withholding\Repository')
+                    ->add($withholding);
 
                 $wire = new Wire();
                 $wire

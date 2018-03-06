@@ -58,6 +58,14 @@ class BlockchainProvider extends Provider
             return new Wallets\OffChain\Cap();
         });
 
+        $this->di->bind('Blockchain\Wallets\OffChain\Withholding\Repository', function ($di) {
+            return new Wallets\OffChain\Withholding\Repository();
+        }, [ 'useFactory'=> true ]);
+
+        $this->di->bind('Blockchain\Wallets\OffChain\Withholding\Sums', function ($di) {
+            return new Wallets\OffChain\Withholding\Sums();
+        }, [ 'useFactory'=> true ]);
+
         $this->di->bind('Blockchain\Wallets\OnChain\Balance', function () {
             return new Wallets\OnChain\Balance();
         });

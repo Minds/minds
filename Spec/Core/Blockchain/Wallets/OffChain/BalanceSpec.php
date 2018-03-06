@@ -2,11 +2,13 @@
 
 namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
+use Minds\Core\Util\BigNumber;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Entities\User;
 use Minds\Core\Blockchain\Wallets\OffChain\Sums;
+use Minds\Core\Blockchain\Wallets\OffChain\Withholding\Sums as WithholdingSums;
 
 class BalanceSpec extends ObjectBehavior
 {
@@ -32,6 +34,33 @@ class BalanceSpec extends ObjectBehavior
 
         $this->setUser($user);
         $this->get()->shouldReturn('50');
+    }
+
+    function it_should_return_the_available(Sums $sums, WithholdingSums $withholdingSums)
+    {
+        $this->beConstructedWith($sums, $withholdingSums);
+
+        $user = new User;
+        $user->guid = 123;
+
+        $withholdingSums->setUserGuid($user)
+            ->shouldBeCalled()
+            ->willReturn($withholdingSums);
+
+        $withholdingSums->get()
+            ->shouldBeCalled()
+            ->willReturn((string) BigNumber::toPlain(10, 18));
+
+        $sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($sums);
+
+        $sums->getBalance()
+            ->shouldBeCalled()
+            ->willReturn((string) BigNumber::toPlain(50, 18));
+
+        $this->setUser($user);
+        $this->getAvailable()->shouldReturn((string) BigNumber::toPlain(40, 18));
     }
 
     function it_should_return_the_balance_by_contract(Sums $sums)

@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Rewards\Withdraw;
 
+use Minds\Core\Blockchain\Wallets\OffChain\Balance;
 use Minds\Core\Util\BigNumber;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -25,12 +26,13 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Rewards\Withdraw\Manager');
     }
 
-    function it_should_allow_a_withdrawl_request_to_be_made(
+    function it_should_allow_a_withdrawal_request_to_be_made(
         BlockchainTx $offChainTransactions,
-        Repository $repository
+        Repository $repository,
+        Balance $offChainBalance
     )
     {
-        $this->beConstructedWith($offChainTransactions, null, null, null, $repository);
+        $this->beConstructedWith($offChainTransactions, null, null, null, $repository, $offChainBalance);
 
         $transaction = new Transaction();
         $transaction
@@ -47,6 +49,14 @@ class ManagerSpec extends ObjectBehavior
             ]);
 
         $offChainTransactions->add($transaction)->shouldBeCalled();
+
+        $offChainBalance->setUser(Argument::type(User::class))
+            ->shouldBeCalled()
+            ->willReturn($offChainBalance);
+
+        $offChainBalance->getAvailable()
+            ->shouldBeCalled()
+            ->willReturn((string) BigNumber::toPlain(10, 18));
 
         $request = new Request();
         $request->setTx('0xabc220393')

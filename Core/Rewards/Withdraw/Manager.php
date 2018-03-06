@@ -6,6 +6,7 @@ namespace Minds\Core\Rewards\Withdraw;
 
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Blockchain\Wallets\OffChain\Balance;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
@@ -30,12 +31,16 @@ class Manager
     /** @var \Minds\Core\Rewards\Withdraw\Repository */
     protected $repo;
 
+    /** @var Balance */
+    protected $offChainBalance;
+
     public function __construct(
         $txManager = null,
         $offChainTransactions = null,
         $config = null,
         $eth = null,
-        $withdrawRepository = null
+        $withdrawRepository = null,
+        $offChainBalance = null
     )
     {
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
@@ -43,6 +48,7 @@ class Manager
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->repo = $withdrawRepository ?: Di::_()->get('Rewards\Withdraw\Repository');
+        $this->offChainBalance = $offChainBalance ?: Di::_()->get('Blockchain\Wallets\OffChain\Balance');
     }
 
     /**
@@ -67,11 +73,21 @@ class Manager
      * Create a request
      * @param Request $request
      * @return void
+     * @throws \Exception
      */
     public function request($request)
     {
         if (!$this->check($request->getUserGuid())) {
             throw new \Exception('A withdrawal has already been requested in the last 24 hours');
+        }
+
+        $available = BigNumber::_($this->offChainBalance
+            ->setUser(new User($request->getUserGuid()))
+            ->getAvailable());
+
+        if ($available->lt($request->getAmount())) {
+            $readableAvailable = round(BigNumber::fromPlain($available, 18)->toDouble(),4);
+            throw new \Exception("You can only request {$readableAvailable} tokens.");
         }
 
         $transaction = new Transaction();
