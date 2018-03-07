@@ -13,6 +13,7 @@ class WhenNotifications extends EmailCampaign
     protected $db;
     protected $template;
     protected $mailer;
+    protected $amount;
 
     public function __construct(Template $template = null, Mailer $mailer = null)
     {
@@ -20,6 +21,17 @@ class WhenNotifications extends EmailCampaign
         $this->mailer = $mailer ?: new Mailer();
         $this->campaign = 'when';
         $this->topic = 'unread_notifications';
+    }
+
+    /**
+     * Sets the amount of new notifications
+     * @param mixed $amount
+     * @return WhenNotifications
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+        return $this;
     }
 
     public function send()
@@ -35,7 +47,9 @@ class WhenNotifications extends EmailCampaign
         $this->template->set('campaign', $this->campaign);
         $this->template->set('topic', $this->topic);
 
-        $subject = 'You have unread notifications';
+        $this->template->set('amount', $this->amount);
+
+        $subject = "You have {$this->amount} new unread notifications";
 
         $message = new Message();
         $message->setTo($this->user)

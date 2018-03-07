@@ -44,6 +44,18 @@ class Manager
         ];
     }
 
+    public function isSubscribed(EmailSubscription $subscription)
+    {
+        $result = $this->repository->getList([
+            'user_guid' => $subscription->getUserGuid(),
+            'campaign' => $subscription->getCampaign(),
+            'topic' => $subscription->getTopic(),
+            'value' => $subscription->getValue(),
+        ]);
+
+        return count($result['data']) > 0 && $result['data'][0]->getValue() !== '0' && $result['data'][0]->getValue() !== '';
+    }
+
     public function unsubscribe($user, $campaign, $topic)
     {
         return $this->repository->add(new EmailSubscription(

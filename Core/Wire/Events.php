@@ -99,11 +99,22 @@ class Events
             /** @var User $receiver */
             $receiver = $params['receiver'];
 
-            $campaign = new Core\Email\Campaigns\WhenWire();
+            /** @var Core\Email\Manager $manager */
+            $manager = Di::_()->get('Email\Manager');
 
-            $campaign->setUser($receiver);
+            $subscription = new Core\Email\EmailSubscription();
+            $subscription
+                ->setUserGuid($receiver->guid)
+                ->setCampaign('when')
+                ->setTopic('wire_received')
+                ->setValue(true);
 
-            $campaign->send();
+
+            if ($manager->isSubscribed($subscription)) {
+                $campaign = new Core\Email\Campaigns\WhenWire();
+                $campaign->setUser($receiver);
+                $campaign->send();
+            }
 
             return $event->setResponse(true);
         });

@@ -13,7 +13,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-            <p>You have unread notifications. Log in to check them out!</p>
+            <p>You have <?php echo $vars['amount'] ?> new unread notifications waiting for you. Log in to check them out!</p>
         </td>
     </tr>
     <tr>

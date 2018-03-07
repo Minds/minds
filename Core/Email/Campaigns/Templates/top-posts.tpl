@@ -36,7 +36,15 @@
                             <tr>
                                 <td>
                                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign==<?= $vars['topic']?>-<?= $vars['period'] ?>">
-                                        <img src="<?= $object->getIconUrl('xlarge') ?>" width="600px" alt="<?php echo $object->title ?>">
+                                        <img src="<?php
+                                            $src = '';
+                                            if ($object->custom_data && $object->custom_data[0] && $object->custom_data[0]['src']) {
+                                                $src = $object->custom_data[0]['src'];
+                                            } else if ($object->custom_data && $object->custom_data['thumbnail_src']) {
+                                                $src = $object->custom_data['thumbnail_src'];
+                                            }
+                                            echo $src;
+                                            ?>" width="600px" alt="<?php echo $object->title ?>">
                                     </a>
                                 </td>
                             </tr>

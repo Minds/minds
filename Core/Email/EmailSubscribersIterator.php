@@ -4,9 +4,6 @@
 namespace Minds\Core\Email;
 
 use Minds\Core;
-use Minds\Core\Entities;
-use Minds\Core\Data;
-use Minds\Core\Analytics\Timestamps;
 
 
 class EmailSubscribersIterator implements \Iterator
@@ -16,7 +13,6 @@ class EmailSubscribersIterator implements \Iterator
     private $campaign;
     private $topic;
     private $value;
-    private $token;
 
     private $limit = 2000;
     private $offset = "";
@@ -26,10 +22,13 @@ class EmailSubscribersIterator implements \Iterator
 
     /** @var Repository */
     private $repository;
+    /** @var Core\EntitiesBuilder */
+    private $builder;
 
-    public function __construct($repository = null)
+    public function __construct($repository = null, $entitiesBuilder = null)
     {
         $this->repository = $repository ?: Core\Di\Di::_()->get('Email\Repository');
+        $this->builder = $entitiesBuilder ?: Core\Di\Di::_()->get('EntitiesBuilder');
     }
 
     /**
@@ -75,29 +74,33 @@ class EmailSubscribersIterator implements \Iterator
      */
     public function getSubscribers()
     {
+        if (!isset($this->offset)) {
+            $this->valid = false;
+            return;
+        }
         $options = [
             'campaign' => $this->campaign,
             'topic' => $this->topic,
             'value' => $this->value,
             'limit' => $this->limit,
-            'offset' => $this->offset
+            'offset' => base64_decode($this->offset)
         ];
 
         $result = $this->repository->getList($options);
-        
+
         if (!$result || count($result['data']) === 0) {
             $this->valid = false;
             return;
         }
 
-        $this->offset = $result['next'] ?: '';
+        $this->offset = $result['next'] !== '' ? $result['next'] : null;
 
         $guids = array_map(function ($item) {
             return $item->getUserGuid();
         }, $result['data']);
 
         $this->valid = true;
-        $users = Entities::get(['guids' => $guids]);
+        $users = $this->builder->get(['guids' => $guids]);
 
         foreach ($users as $user) {
             $this->data[] = $user;

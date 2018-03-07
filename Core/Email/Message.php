@@ -69,7 +69,7 @@ class Message
 
   /**
    * Set Message ID sender data
-   * @return string
+   * @return $this
    */
   public function setMessageId($messageId)
   {

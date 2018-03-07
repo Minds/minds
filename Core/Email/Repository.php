@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Email Repository
  *
