@@ -20,8 +20,10 @@ class CapSpec extends ObjectBehavior
     ) {
         $this->offchainBalance = $offchainBalance;
 
-        $config->get('offchain')->willReturn([
-            'cap' => 7
+        $config->get('blockchain')->willReturn([
+            'offchain' => [
+                'cap' => 7,
+            ],
         ]);
 
         $this->beConstructedWith($config, $offchainBalance);

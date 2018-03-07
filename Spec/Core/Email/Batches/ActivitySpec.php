@@ -3,7 +3,7 @@
 namespace Spec\Minds\Core\Email\Batches;
 
 use Minds\Core\Data\Cassandra\Client;
-use Minds\Core\Entities;
+use Minds\Core\EntitiesBuilder;
 use Minds\Core\Trending\Repository;
 use PhpSpec\ObjectBehavior;
 
@@ -13,7 +13,7 @@ class ActivitySpec extends ObjectBehavior
     protected $repository;
     protected $entities;
 
-    function let(Client $client, Repository $repository, Entities $entities)
+    function let(Client $client, Repository $repository, EntitiesBuilder $entities)
     {
         $this->client = $client;
         $this->repository = $repository;
