@@ -37,6 +37,7 @@ class User extends \ElggUser
         $this->attributes['phone_number_hash'] = null;
         $this->attributes['icontime'] = time();
 		$this->attributes['briefdescription'] = '';
+		$this->attributes['rating'] = 1;
 
         parent::initializeAttributes();
     }
@@ -638,6 +639,7 @@ class User extends \ElggUser
         }
 
         $export['eth_wallet'] = $this->getEthWallet() ?: '';
+        $export['rating'] = $this->getRating();
 
         return $export;
     }
