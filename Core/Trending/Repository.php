@@ -20,7 +20,7 @@ class Repository
     public function add($key, $guids)
     {
         $requests = [];
-        $template = "INSERT INTO trending (type, place, guid) VALUES (?,?,?)";
+        $template = "INSERT INTO trending (type, place, guid) VALUES (?,?,?) USING TTL 1200";
         foreach ($guids as $i => $guid) {
             $requests[] = ['string' => $template, 'values' => [$key, ($i), new Varint($guid)]];
         }
@@ -40,7 +40,7 @@ class Repository
 
 
         $query = new Custom();
-        $query->query("SELECT * from trending WHERE type = ?", [$options['type']]);
+        $query->query("SELECT * from trending WHERE type = ? ORDER BY place ASC", [$options['type']]);
         $query->setOpts([
             'page_size' => (int) $options['limit'],
             'paging_state_token' => base64_decode($options['offset'])
@@ -57,7 +57,7 @@ class Repository
         foreach($rows as $row) {
             $result[] = (string) $row['guid'];
         }
-
+        
         if (!$result) {
             return [];
         }
@@ -73,9 +73,16 @@ class Repository
         // TODO: Implement update() method.
     }
 
-    public function delete($entity)
+    public function delete($options)
     {
-        // TODO: Implement delete() method.
+        $query = new Custom();
+        $query->query("DELETE from trending WHERE type = ? ", [$options['type']]);
+
+        try{
+            $rows = $this->db->request($query);
+        } catch(\Exception $e) {
+            error_log($e->getMessage());
+        }
     }
 
 

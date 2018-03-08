@@ -60,7 +60,17 @@ class Reminds extends Aggregate
                     'entities' => [
                         'terms' => [ 
                             'field' => "$field.keyword",
-                            'size' => $this->limit
+                            'size' => $this->limit,
+                                'order' => [
+                                'uniques' => 'desc'
+                            ]
+                        ],
+                        'aggs' => [
+                            'uniques' => [
+                                'cardinality' => [
+                                    'field' => 'user_guid.keyword'
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -74,7 +84,7 @@ class Reminds extends Aggregate
 
         $entities = [];
         foreach ($result['aggregations']['entities']['buckets'] as $entity) {
-            $entities[$entity['key']] = $entity['doc_count'] * $this->multiplier;
+            $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
         }
         return $entities;
     }

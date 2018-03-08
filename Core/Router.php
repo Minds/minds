@@ -35,7 +35,8 @@ class Router
       '/api/v2/conversations' => "\\Minds\\Controllers\\api\\v2\\messenger\\conversations",
       '/api/v2/conversations/search' => "\\Minds\\Controllers\\api\\v2\\messenger\\search",
       '/api/v2/keys' => "\\Minds\\Controllers\\api\\v2\\messenger\\keys",
-      '/apple-app-site-association' => '\\Minds\\Controllers\\deeplinks'
+      '/apple-app-site-association' => '\\Minds\\Controllers\\deeplinks',
+      '/sitemaps' => '\\Minds\\Controllers\\sitemaps',
 
     );
 

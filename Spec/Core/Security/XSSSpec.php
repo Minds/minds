@@ -39,25 +39,25 @@ class XSSSpec extends ObjectBehavior
     public function it_should_dissallow_onClick_attributes()
     {
         $dirty = "<a onclick=\"console.log('hmmm...')\">click me</a>";
-        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a target=\"_blank\">click me</a>");
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a target=\"_blank\" rel=\"noopener noreferrer\">click me</a>");
     }
 
     public function it_should_allow_href_on_anchor_tags()
     {
         $dirty = "<a href=\"https://www.minds.com\">take me home</a>";
-        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"https://www.minds.com\" target=\"_blank\">take me home</a>");
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"https://www.minds.com\" target=\"_blank\" rel=\"noopener noreferrer\">take me home</a>");
     }
 
     public function it_should_not_allow_bad_url_schemes()
     {
         $dirty = "<a href=\"javascript:alert('HEYHO')\">bad scheme here</a>";
-        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\" rel=\"noopener noreferrer\">bad scheme here</a>");
     }
 
     public function it_should_not_allow_bad_url_schemes_with_case_hacks()
     {
         $dirty = "<a href=\"Javascript:alert('HEYHO')\">bad scheme here</a>";
-        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\">bad scheme here</a>");
+        $this->clean($dirty)->shouldReturn('<?xml encoding="utf-8" ?>'."<a href=\"alert('HEYHO')\" target=\"_blank\" rel=\"noopener noreferrer\">bad scheme here</a>");
     }
 
     public function it_should_not_allow_bad_url_schemes_from_multiple_keywords()

@@ -42,7 +42,7 @@ class Maps
             ]
         ],
         'channels' => [
-            'type' => '',
+            'type' => 'user',
             'subtype' => '',
             'aggregates' => [
                 Aggregates\ChannelVotes::class,

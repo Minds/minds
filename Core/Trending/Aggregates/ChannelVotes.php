@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class ChannelVotes extends Aggregate
 {
 
-    protected $multiplier = 1;
+    protected $multiplier = 0;
 
     public function get()
     {

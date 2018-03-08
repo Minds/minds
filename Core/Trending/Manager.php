@@ -43,16 +43,17 @@ class Manager
     {
         foreach ($this->maps as $key => $map) {
             $entities = [];
-
             foreach ($map['aggregates'] as $aggregate) {
                 $class = is_string($aggregate) ? new $aggregate : $aggregate;
+                $class->setLimit(100);
                 $class->setType($map['type']);
                 $class->setSubtype($map['subtype']);
                 $class->setFrom($this->from);
                 $class->setTo($this->to);
 
                 foreach ($class->get() as $guid => $score) {
-                    if (!$this->validator->isValid($guid)) {
+                    if (!$this->validator->isValid($guid, $map['type'], $map['subtype'])) {
+                        echo "\n[{$map['type']} $guid is not valid";
                         continue;
                     }
                     //initialize the new guid
@@ -64,7 +65,12 @@ class Manager
             }
 
             arsort($entities);
-            $this->repository->add($key, array_keys($entities));
+            $guids = [];
+            foreach($entities as $guid => $score) {
+                $guids[] = $guid;
+                echo "\n$key: $guid ($score)";
+            }
+            $this->repository->add($key, $guids);
         }
     }
 

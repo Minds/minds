@@ -168,7 +168,7 @@ class Session extends base
         if (isset($_SESSION['user'])) {
             //cache username
             $USERNAME_TO_GUID_MAP_CACHE[$_SESSION['username']] = $_SESSION['guid'];
-            return new User($_SESSION['user']->toArray());
+            return new User($_SESSION['user']);
         }
 
         return null;

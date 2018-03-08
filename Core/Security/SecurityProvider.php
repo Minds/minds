@@ -7,7 +7,6 @@ namespace Minds\Core\Security;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Data;
 use Minds\Core\Di\Provider;
 
 class SecurityProvider extends Provider
@@ -21,14 +20,21 @@ class SecurityProvider extends Provider
               Core\Data\cache\factory::build()
             );
         }, ['useFactory'=>true]);
+
         $this->di->bind('Security\Captcha', function ($di) {
             return new Captcha(Di::_()->get('Config'));
         }, ['useFactory'=>true]);
+
         $this->di->bind('Security\ReCaptcha', function ($di) {
             return new ReCaptcha(Di::_()->get('Config'));
         }, ['useFactory'=>true]);
+
         $this->di->bind('Security\TwoFactor', function ($di) {
             return new TwoFactor();
         }, ['useFactory'=>false]);
+
+        $this->di->bind('Security\LoginAttempts', function ($di) {
+            return new LoginAttempts();
+        }, ['useFactory' => false]);
     }
 }

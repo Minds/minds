@@ -37,6 +37,10 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
             ->setCookieId($_COOKIE['minds']);
 
+        if (isset($_POST['referrer']) && $_POST['referrer']) {
+            $event->setReferrerUri((string) $_POST['referrer']);
+        }
+
         if (Core\Session::isLoggedIn()) {
             $event->setUserGuid(Core\Session::getLoggedInUser()->guid);
         }

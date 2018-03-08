@@ -29,7 +29,7 @@ class Votes extends Aggregate
                 ]
             ]
         ];
-
+        
         if ($this->type) {
             $must[]['match'] = [
                 'entity_type' => $this->type
@@ -49,7 +49,7 @@ class Votes extends Aggregate
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
-            'size' => 1, //we want just the aggregates
+            'size' => 0, //we want just the aggregates
             'body' => [
                 'query' => [
                     'bool' => [
@@ -61,7 +61,15 @@ class Votes extends Aggregate
                     'entities' => [
                         'terms' => [ 
                             'field' => 'entity_guid.keyword',
-                            'size' => $this->limit 
+                            'size' => $this->limit,
+                            'order' => [ 'uniques' => 'DESC' ],
+                        ],
+                        'aggs' => [
+                            'uniques' => [
+                                'cardinality' => [
+                                    'field' => 'user_guid.keyword'
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -75,7 +83,7 @@ class Votes extends Aggregate
 
         $entities = [];
         foreach ($result['aggregations']['entities']['buckets'] as $entity) {
-            $entities[$entity['key']] = $entity['doc_count'] * $this->multiplier;
+            $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
         }
         return $entities;
     }
