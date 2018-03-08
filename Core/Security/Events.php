@@ -249,7 +249,15 @@ class Events
             'goo.gl',
             'getmooovie.com',
             'marketreportscenter.com',
-            'getsooft.com'
+            'getsooft.com',
+            'myowndom.ru',
+            'print-mgn.ru',
+            'wiki-data.ru',
+            'velobog.ru',
+            'mobisony.ru',
+            'dzeroki.ru',
+            'slimkor.ru',
+            'kak-brosit-kyrit.ru'
         ];
     }
 
