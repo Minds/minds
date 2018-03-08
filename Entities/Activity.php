@@ -35,7 +35,7 @@ class Activity extends Entity
             'wire_threshold' => null,
             'boost_rejection_reason' => -1,
             'pending' => false,
-            'rating' => 1,
+            'rating' => 2, //open by default
             //	'node' => elgg_get_site_url()
         ));
     }

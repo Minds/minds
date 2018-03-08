@@ -245,7 +245,7 @@ class Image extends File
             'batch_guid' => null,
             'access_id' => null,
             'container_guid' => null,
-            'rating' => 1,
+            'rating' => 2, //open by default
         ], $data);
 
         $allowed = [

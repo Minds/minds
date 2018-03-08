@@ -215,7 +215,7 @@ class Video extends Object
             'hidden' => null,
             'access_id' => null,
             'container_guid' => null,
-            'rating' => 1,
+            'rating' => 2, //open by default
         ], $data);
 
         $allowed = [
