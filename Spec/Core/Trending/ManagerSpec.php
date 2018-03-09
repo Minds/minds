@@ -35,15 +35,27 @@ class ManagerSpec extends ObjectBehavior
         ];
         $this->beConstructedWith($repo, $validator, $maps);
 
-        $validator->isValid('123', 'activity', '')
+        $validator->isValid('123', 'activity', '', 1)
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $validator->isValid('456', 'activity', '')
+        $validator->isValid('456', 'activity', '', 1)
             ->shouldBeCalled()
             ->willReturn(false);
         
-        $validator->isValid('789', 'activity', '')
+        $validator->isValid('789', 'activity', '', 1)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $validator->isValid('123', 'activity', '', 2)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $validator->isValid('456', 'activity', '', 2)
+            ->shouldBeCalled()
+            ->willReturn(false);
+        
+        $validator->isValid('789', 'activity', '', 2)
             ->shouldBeCalled()
             ->willReturn(true);
         
@@ -61,7 +73,10 @@ class ManagerSpec extends ObjectBehavior
                 789 => 10
             ]);
 
-        $repo->add('newsfeed', [ 789, 123 ])
+        $repo->add('newsfeed', [ 789, 123 ], 1)
+            ->shouldBeCalled();
+
+        $repo->add('newsfeed', [ 789, 123 ], 2)
             ->shouldBeCalled();
         
         $this->run();

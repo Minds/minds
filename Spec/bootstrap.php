@@ -126,6 +126,7 @@ class_alias('Mock', 'Cassandra\Timestamp');
 class_alias('Mock', 'Cassandra\Type');
 class_alias('Mock', 'Cassandra\Decimal');
 class_alias('Mock', 'Cassandra\Bigint');
+class_alias('Mock', 'Cassandra\Tinyint');
 class_alias('Mock', 'MongoDB\BSON\UTCDateTime');
 
 Minds\Core\Di\Di::_()->bind('Database\Cassandra\Cql', function($di) {
