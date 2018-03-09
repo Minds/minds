@@ -63,7 +63,12 @@ class blog implements Interfaces\Api
             case "trending":
             case "top":
                 $repository = Core\Di\Di::_()->get('Trending\Repository');
-                $result = $repository->getList(['type' => 'blogs', 'limit' => $limit, 'offset'=> $offset]);
+                $result = $repository->getList([
+                    'type' => 'blogs',
+                    'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+                    'limit' => $limit,
+                    'offset'=> $offset,
+                ]);
 
                 if (!$result) {
                     break;

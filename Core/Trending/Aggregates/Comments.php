@@ -42,9 +42,9 @@ class Comments extends Aggregate
             ];
         }
 
-        $must[]['match'] = [
-            'rating' => 1
-        ];
+        //$must[]['match'] = [
+        //    'rating' => $this->rating
+        //];
 
         $query = [
             'index' => 'minds-metrics-*',

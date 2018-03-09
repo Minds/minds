@@ -106,7 +106,12 @@ class trending implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $limit = isset($_GET['limit']) && $_GET['limit'] < 50 ? $_GET['limit'] : 12;
 
-        $result = Di::_()->get('Trending\Repository')->getList(['type' => $key, 'limit' => $limit, 'offset' => $offset]);
+        $result = Di::_()->get('Trending\Repository')->getList([
+            'type' => $key,
+            'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
 
         if (!$result) {
             return Factory::response([

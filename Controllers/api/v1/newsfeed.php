@@ -67,7 +67,13 @@ class newsfeed implements Interfaces\Api
                 break;
             case 'top':
                 $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
-                $result = Core\Di\Di::_()->get('Trending\Repository')->getList(['type' => 'newsfeed', 'limit' => 12, 'offset' => $offset]);
+                $result = Core\Di\Di::_()->get('Trending\Repository')
+                    ->getList([
+                        'type' => 'newsfeed',
+                        'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+                        'limit' => 12,
+                        'offset' => $offset
+                      ]);
                 ksort($result['guids']);
                 $options['guids'] = $result['guids'];
                 if (!$options['guids']) {
