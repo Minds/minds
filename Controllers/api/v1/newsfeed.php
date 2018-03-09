@@ -29,7 +29,7 @@ class newsfeed implements Interfaces\Api
     public function get($pages)
     {
         $response = array();
-        $loadNext = [];
+        $loadNext = '';
 
         if (!isset($pages[0])) {
             $pages[0] = 'network';
