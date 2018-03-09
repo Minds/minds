@@ -40,7 +40,13 @@ class Thresholds
 
         $amount = $sums->getSent();
 
-        $allowed = BigNumber::_($amount)->sub($threshold['min'])->gte(0);
+        $minThreshold = $threshold['min'];
+
+        if($threshold['type'] === 'tokens') {
+            $minThreshold = BigNumber::toPlain($threshold['min'], 18);
+        }
+
+        $allowed = BigNumber::_($amount)->sub($minThreshold)->gte(0);
 
         if ($allowed) {
             return true;
