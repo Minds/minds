@@ -64,6 +64,22 @@ class newsfeed implements Interfaces\Api
                     'network' => isset($pages[1]) ? $pages[1] : core\Session::getLoggedInUserGuid()
                 );
                 break;
+            case 'top':
+                $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+                $result = Core\Di\Di::_()->get('Trending\Repository')
+                    ->getList([
+                        'type' => 'newsfeed',
+                        'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+                        'limit' => 12,
+                        'offset' => $offset
+                      ]);
+                ksort($result['guids']);
+                $options['guids'] = $result['guids'];
+                if (!$options['guids']) {
+                    return Factory::response([]);
+                }
+                $loadNext = base64_encode($result['token']);
+                break;
             case 'featured':
                 $db = Core\Di\Di::_()->get('Database\Cassandra\Indexes');
                 $offset = isset($_GET['offset']) ? $_GET['offset'] : "";

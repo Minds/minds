@@ -41,36 +41,40 @@ class Manager
 
     public function run()
     {
-        foreach ($this->maps as $key => $map) {
-            $entities = [];
-            foreach ($map['aggregates'] as $aggregate) {
-                $class = is_string($aggregate) ? new $aggregate : $aggregate;
-                $class->setLimit(100);
-                $class->setType($map['type']);
-                $class->setSubtype($map['subtype']);
-                $class->setFrom($this->from);
-                $class->setTo($this->to);
+        $ratings = [1, 2];
+        foreach ($ratings as $rating) {
+            foreach ($this->maps as $key => $map) {
+                $entities = [];
+                foreach ($map['aggregates'] as $aggregate) {
+                    $class = is_string($aggregate) ? new $aggregate : $aggregate;
+                    $class->setLimit(100);
+                    $class->setType($map['type']);
+                    $class->setSubtype($map['subtype']);
+                    $class->setFrom($this->from);
+                    $class->setTo($this->to);
 
-                foreach ($class->get() as $guid => $score) {
-                    if (!$this->validator->isValid($guid, $map['type'], $map['subtype'])) {
-                        echo "\n[{$map['type']} $guid is not valid";
-                        continue;
+                    foreach ($class->get() as $guid => $score) {
+                        if (!$this->validator->isValid($guid, $map['type'], $map['subtype'], $rating)) {
+                            echo "\n[{$map['type']} $guid is not valid";
+                            continue;
+                        }
+                        //initialize the new guid
+                        if (!isset($entities[$guid])) {
+                            $entities[$guid] = 0;
+                        }
+                        $entities[$guid] += $score;
                     }
-                    //initialize the new guid
-                    if (!isset($entities[$guid])) {
-                        $entities[$guid] = 0;
-                    }
-                    $entities[$guid] += $score;
                 }
-            }
 
-            arsort($entities);
-            $guids = [];
-            foreach($entities as $guid => $score) {
-                $guids[] = $guid;
-                echo "\n$key: $guid ($score)";
+                arsort($entities);
+                $guids = [];
+                foreach($entities as $guid => $score) {
+                    $guids[] = $guid;
+                    echo "\n$key: $guid ($score)";
+                }
+
+                $this->repository->add($key, $guids, $rating);
             }
-            $this->repository->add($key, $guids);
         }
     }
 

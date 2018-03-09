@@ -30,6 +30,7 @@ class Blog extends \ElggObject
         $this->attributes['draft_access_id'] = 0;
         $this->attributes['slug'] = '';
         $this->attributes['custom_meta'] = [];
+        $this->attributes['rating'] = 2;
     }
 
     /**

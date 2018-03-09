@@ -3,6 +3,7 @@ namespace Minds\Core\Trending;
 
 use Cassandra;
 use Cassandra\Varint;
+use Cassandra\Tinyint;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
@@ -17,12 +18,17 @@ class Repository
         $this->db = $db ? $db : Di::_()->get('Database\Cassandra\Cql');
     }
 
-    public function add($key, $guids)
+    public function add($key, $guids, $rating = 1)
     {
         $requests = [];
-        $template = "INSERT INTO trending (type, place, guid) VALUES (?,?,?) USING TTL 1200";
+        $template = "INSERT INTO trending2 (type, rating, place, guid) VALUES (?,?,?,?)";
+
+        if ($rating > 1) {
+            $template .= " USING TTL 1200";
+        }
+
         foreach ($guids as $i => $guid) {
-            $requests[] = ['string' => $template, 'values' => [$key, ($i), new Varint($guid)]];
+            $requests[] = ['string' => $template, 'values' => [$key, new Tinyint($rating), ($i), new Varint($guid)]];
         }
 
         $this->db->batchRequest($requests, Cassandra::BATCH_UNLOGGED);
@@ -34,13 +40,17 @@ class Repository
     {
         $options = array_merge([
             'type' => '',
+            'rating' => 1,
             'limit' => 12,
             'offset' => null
         ], $options);
 
 
         $query = new Custom();
-        $query->query("SELECT * from trending WHERE type = ? ORDER BY place ASC", [$options['type']]);
+        $query->query("SELECT * from trending2 WHERE type = ? AND rating= ? ORDER BY place ASC", [
+            $options['type'],
+            new Tinyint($options['rating']),
+        ]);
         $query->setOpts([
             'page_size' => (int) $options['limit'],
             'paging_state_token' => base64_decode($options['offset'])

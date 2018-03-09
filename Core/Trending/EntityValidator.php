@@ -6,7 +6,7 @@ use Minds\Entities;
 class EntityValidator
 {
 
-    public function isValid($guid, $type = null, $subtype = null)
+    public function isValid($guid, $type = null, $subtype = null, $rating = 1)
     {
         \Minds\Core\Security\ACL::$ignore = true;
         $entity = Entities\Factory::build($guid);
@@ -21,6 +21,10 @@ class EntityValidator
 
         if ($subtype && $subtype != $entity->subtype) {
             echo "$guid type $type is not $entity->type";
+            return false;
+        }
+
+        if ($entity->getRating() > $rating) {
             return false;
         }
 
@@ -39,8 +43,6 @@ class EntityValidator
         if ($mature) {
             return true;
         }
-        
-        return $entity->rating >= 2; 
 
         return false;
     }

@@ -42,6 +42,10 @@ class Votes extends Aggregate
             ];
         }
 
+        //$must[]['match'] = [
+        //    'rating' => $this->rating
+        //];
+
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
