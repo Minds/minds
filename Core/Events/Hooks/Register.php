@@ -31,15 +31,6 @@ class Register
                 ->setPrivateKey($keypair['private'])
                 ->save();
 
-            //@todo maybe put this in background process
-            foreach (array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type) {
-                Core\Events\Dispatcher::trigger('notification', 'welcome', array(
-                  'to' => [ $guid ],
-                  'from' => "100000000000000519",
-                  'notification_view' => $notif_type,
-                ));
-            }
-
             //@todo again, maybe in a background task?
             if ($params['referrer']) {
                 $user = new Entities\User(strtolower(ltrim($params['referrer'], '@')));
