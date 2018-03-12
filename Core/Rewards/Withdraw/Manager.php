@@ -9,6 +9,7 @@ use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Wallets\OffChain\Balance;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Config;
+use Minds\Core\Data\Cassandra\Locks\LockFailedException;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
@@ -137,12 +138,17 @@ class Manager
         $user = new User;
         $user->guid = (string) $request->getUserGuid();
 
-        $this->offChainTransactions
-            ->setUser($user)
-            ->setType('withdrawal')
-            //->setTx($request->getTx())
-            ->setAmount((string) BigNumber::_($request->getAmount())->neg())
-            ->create();
+        try {
+            $this->offChainTransactions
+                ->setUser($user)
+                ->setType('withdrawal')
+                //->setTx($request->getTx())
+                ->setAmount((string) BigNumber::_($request->getAmount())->neg())
+                ->create();
+        } catch (LockFailedException $e) {
+            $this->txManager->add($transaction);
+            return;
+        }
 
         $request->setCompleted(true);
         $this->repo->add($request);

@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Data\Cassandra\Locks\LockFailedException;
 use Minds\Core\Data\Cassandra\Locks\Locks;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
@@ -68,7 +69,7 @@ class Transactions
     {
         $this->locks->setKey("balance:{$this->user->guid}");
         if ($this->locks->isLocked()) {
-            throw new \Exception('Offchain Wallet is locked');
+            throw new LockFailedException();
         }
 
         //create a lock of the balance
