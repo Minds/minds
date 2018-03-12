@@ -32,6 +32,7 @@ class ExpireSpec extends ObjectBehavior
 
         $boost->getState()->willReturn('approved');
         $boost->getBid()->willReturn('1000');
+        $boost->getImpressions()->willReturn('1000');
 
         $boost->setState(Argument::containingString('completed'))->willReturn($boost);
         $boost->save()->shouldBeCalled()->willReturn();
