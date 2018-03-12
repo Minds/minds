@@ -409,7 +409,9 @@ class boost implements Interfaces\Api
             ]);
         }
 
-        if ($boost->getOwner()->guid != Core\Session::getLoggedInUserGuid()) {
+        if ($boost->getOwner()->guid != Core\Session::getLoggedInUserGuid() ||
+            $boost->getState() != 'created'
+        ) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'You cannot revoke that boost'
