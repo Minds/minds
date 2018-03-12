@@ -21,6 +21,16 @@ class Register
             $minds = new Entities\User('minds');
             $params['user']->subscribe($minds->guid);
 
+            //setup chat keys
+            $openssl = new Core\Messenger\Encryption\OpenSSL();
+            $keystore = (new Core\Messenger\Keystore($openssl))
+                ->setUser($params['user']);
+            $keypair = $openssl->generateKeypair($params['password']);
+
+            $keystore->setPublicKey($keypair['public'])
+                ->setPrivateKey($keypair['private'])
+                ->save();
+
             //@todo maybe put this in background process
             foreach (array("welcome_boost", "welcome_chat", "welcome_discover") as $notif_type) {
                 Core\Events\Dispatcher::trigger('notification', 'welcome', array(
