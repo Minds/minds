@@ -22,12 +22,13 @@ class Registered implements QueueRunner
         $client = Queue\Client::Build();
         $client->setQueue("Registered")
             ->receive(function ($data) use ($subscriptions, $repository) {
-                echo "[registered]: User registered \n";
+                $data = $data->getData();
+                $user_guid = $data['user_guid'];
 
-                $user_guid = unserialize($data['user_guid']);
+                echo "[registered]: User registered $user_guid\n";
 
                 foreach ($subscriptions as $subscription) {
-                    $sub = array_merge($subscription, ['user_guid' => $user_guid]);
+                    $sub = array_merge($subscription, ['userGuid' => $user_guid]);
                     $repository->add(new EmailSubscription($sub));
                 }
 
