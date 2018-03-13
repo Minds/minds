@@ -99,6 +99,8 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
           $user->override_password = true;
           $user->save();
 
+          (new \Minds\Core\Data\Sessions())->destroyAll($user->guid);
+
           login($user);
 
           $response['user'] = $user->export();
