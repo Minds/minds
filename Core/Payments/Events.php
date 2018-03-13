@@ -5,7 +5,6 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Events\Dispatcher;
-use Minds\Core\Payments;
 use Minds\Core\Session;
 
 /**
@@ -173,5 +172,36 @@ class Events
 
             return $event->setResponse(true);
         });
+
+        Core\Events\Dispatcher::register('invoice:email', 'all', function ($event) {
+            $params = $event->getParameters();
+            $user = $params['user'];
+            if (!$user) {
+                return false;
+            }
+            $amount = $params['amount'];
+            if (!$amount) {
+                return false;
+            }
+
+            $currency = $params['currency'];
+            if (!$currency) {
+                return false;
+            }
+
+            $description = $params['description'];
+            if (!$description) {
+                return false;
+            }
+
+            $campaign = new Campaigns\Invoice();
+            $campaign->setUser($user)
+                ->setAmount($amount)
+                ->setCurrency($currency)
+                ->setDescription($description)
+                ->send();
+            return $event->setResponse(true);
+        });
+
     }
 }

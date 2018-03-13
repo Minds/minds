@@ -239,7 +239,17 @@ class Payment
                     $sale->setMerchant($referrer);
                 }
 
-                return $this->stripePayments->chargeSale($sale);
+                $charged = $this->stripePayments->chargeSale($sale);
+
+                if ($charged) {
+                    Core\Events\Dispatcher::trigger('invoice:email', 'all', [
+                        'user' => $boost->getOwner(),
+                        'amount' => $boost->getBid(),
+                        'description' => 'Boost'
+                    ]);
+                }
+
+                return $charged;
 
             case 'tokens':
                 $method = '';
@@ -275,7 +285,20 @@ class Payment
                         $sale = (new Payments\Sale())
                             ->setId($txIdMeta);
 
-                        $sale = $this->stripePayments->chargeSale($sale);
+                        $charged = $this->stripePayments->chargeSale($sale);
+
+                        if ($charged) {
+                            $sale = $this->stripePayments->getSale($txIdMeta);
+
+                            $usdAmount = $sale->getAmount();
+                            $tokenAmount = $boost->getBid() / 10 ** 18;
+
+                            Core\Events\Dispatcher::trigger('invoice:email', 'all', [
+                                'user' => $boost->getOwner(),
+                                'amount' => $usdAmount,
+                                'description' => $tokenAmount . ' tokens'
+                            ]);
+                        }
 
                         if ($boost->getHandler() === 'peer') {
                             // what the receiver gets
@@ -308,7 +331,7 @@ class Payment
                                 ->add($withholding);
                         }
 
-                        return $sale;
+                        return $charged;
                 }
 
                 return true; // Already charged

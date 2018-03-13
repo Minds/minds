@@ -232,6 +232,12 @@ class Manager
                     ->setSource($nonce)
                     ->capture();
 
+                Core\Events\Dispatcher::trigger('invoice:email', 'all', [
+                    'user'=>$this->sender(),
+                    'amount'=>$this->amount,
+                    'description'=> 'Wire' . $this->recurring ? ' (recurring)' : '' . ' for @' . $this->receiver->username
+                ]);
+
                 $tx = 'creditcard:' . $this->stripe->setSale($sale);
 
                 $sendersTx = new Core\Blockchain\Transactions\Transaction();
