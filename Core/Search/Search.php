@@ -52,6 +52,9 @@ class Search
      */
     public function query(array $options, $limit = 12, $offset = 0)
     {
+        $prepared = new Prepared\Match();
+        $prepared->setIndex($this->estIndex);
+
         $options = array_merge([
             'text' => '',
             'taxonomies' => null,
@@ -133,20 +136,33 @@ class Search
                 [ '@timestamp' => 'desc' ]
             ];
         } elseif ($options['sort'] == 'top') {
+            $prepared->setRange([
+                [ 
+                    'interactions' => [
+                        'gt' => '0'
+                        ]
+                ],
+                [
+                    '@timestamp' => [
+                        'gte' => strtotime('48 hours ago') * 1000
+                    ]
+                ]
+            ]);   
             $params['field_value_factor'] = [
                 'field' => 'interactions',
                 'modifier' => 'log1p',
                 'factor' => 2,
                 'missing' => 0.1
             ];
+            $params['sort'] = [
+                [ 'interactions' => 'desc' ]
+            ]; 
         }
 
         // Execute
         $guids = [];
 
-        $prepared = new Prepared\Match();
         $prepared->query($this->esIndex, $match, $filters, $params);
-
         $results = $this->client->request($prepared);
 
         foreach ($results['hits']['hits'] as $result) {
