@@ -24,6 +24,31 @@ class Match implements PreparedMethodInterface
     /** @var array $_params */
     protected $_params;
 
+    /** @var array $_range */
+    protected $_range;
+
+    /**
+     * Set the index to query against
+     * @param string $index
+     * return $this
+     */
+    public function setIndex($index)
+    {
+        $this->_index = $index;
+        return $this;
+    }
+
+    /**
+     * Set the range to query against
+     * @param array
+     * @return $this
+     */
+    public function setRange($range)
+    {
+        $this->_range = $range;
+        return $this;
+    }
+
     /**
      * @param array $match
      * @param array $filters
@@ -79,6 +104,15 @@ class Match implements PreparedMethodInterface
             'multi_match' => $multi_match
         ];
 
+        
+        // Range
+
+        if ($this->_range) {
+            foreach ($this->_range as $range) {
+                $body['query']['bool']['filter'][]['range'] = $range;
+            }
+        }
+
         // Score
 
         if (isset($this->_params['field_value_factor'])) {
@@ -97,6 +131,7 @@ class Match implements PreparedMethodInterface
         if (isset($this->_params['sort'])) {
             $body['sort'] = $this->_params['sort'];
         }
+
 
         //
 

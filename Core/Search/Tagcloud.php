@@ -128,9 +128,17 @@ class Tagcloud
                     'minds' => [
                         'terms' => [
                             'field' => "tags.keyword",
-                            'size' => $limit
-                        ]
-                    ]
+                            'size' => $limit,
+                            'order' => [ 'uniques' => 'desc' ]
+                         ],
+                         'aggs' => [
+                            'uniques' => [
+                                'cardinality' => [
+                                    'field' => 'owner_guid.keyword'
+                                ]
+                             ]
+                         ]
+                    ],
                 ]
             ]
         ];
