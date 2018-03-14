@@ -147,7 +147,9 @@ class Search
                         'gte' => strtotime('48 hours ago') * 1000
                     ]
                 ]
-            ]);   
+            ]);
+            //prevent people gaming the hashtags
+            $prepared->setScripts([ "doc['tags.keyword'].values.size() < 3" ]); 
             $params['field_value_factor'] = [
                 'field' => 'interactions',
                 'modifier' => 'log1p',

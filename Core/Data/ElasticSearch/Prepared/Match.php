@@ -27,6 +27,9 @@ class Match implements PreparedMethodInterface
     /** @var array $_range */
     protected $_range;
 
+    /** @var array $_scripts */
+    protected $_scripts;
+
     /**
      * Set the index to query against
      * @param string $index
@@ -46,6 +49,17 @@ class Match implements PreparedMethodInterface
     public function setRange($range)
     {
         $this->_range = $range;
+        return $this;
+    }
+
+    /**
+     * Set the scripts
+     * @param array
+     * @return $this
+     */
+    public function setScripts($scripts)
+    {
+        $this->_scripts = $scripts;
         return $this;
     }
 
@@ -111,6 +125,14 @@ class Match implements PreparedMethodInterface
             foreach ($this->_range as $range) {
                 $body['query']['bool']['filter'][]['range'] = $range;
             }
+        }
+
+        // scripts
+        
+        if ($this->_scripts) {
+            foreach ($this->_scripts as $script) {
+                $body['query']['bool']['filter'][]['script']['script'] = $script;
+            }    
         }
 
         // Score
