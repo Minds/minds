@@ -53,7 +53,7 @@ class Search
     public function query(array $options, $limit = 12, $offset = 0)
     {
         $prepared = new Prepared\Match();
-        $prepared->setIndex($this->estIndex);
+        $prepared->setIndex($this->esIndex);
 
         $options = array_merge([
             'text' => '',
