@@ -172,6 +172,7 @@ class Payment
                             ->setData([
                                 'amount' => (string) $boost->getBid(),
                                 'guid' => (string) $boost->getGuid(),
+                                'handler' => (string) $boost->getHandler()
                             ]);
                         $this->txManager->add($sendersTx);
 
@@ -194,6 +195,7 @@ class Payment
                             ->setData([
                                 'amount' => (string) $boost->getBid(),
                                 'guid' => (string) $boost->getGuid(),
+                                'handler' => (string) $boost->getHandler()
                             ]);
                         $this->txManager->add($sendersTx);
 
@@ -210,6 +212,7 @@ class Payment
                                 ->setData([
                                     'amount' => (string) $boost->getBid(),
                                     'guid' => (string) $boost->getGuid(),
+                                    'handler' => (string) $boost->getHandler()
                                 ]);
                             $this->txManager->add($receiversTx);
                         }
@@ -314,6 +317,7 @@ class Payment
                                 ->setData([
                                     'amount' => (string) $boost->getBid(),
                                     'guid' => (string) $boost->getGuid(),
+                                    'handler' => (string) $boost->getHandler()
                                 ]);
                             $this->txManager->add($receiversTx);
 
@@ -403,6 +407,7 @@ class Payment
                             ->setData([
                                 'amount' => (string) $boost->getBid(),
                                 'guid' => (string) $boost->getGuid(),
+                                'handler' => (string) $boost->getHandler()
                             ]);
 
                         $this->txManager->add($refundTransaction);

@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Blockchain\Events;
 
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
@@ -45,24 +46,44 @@ class BoostEvent implements BlockchainEventInterface
         }
     }
 
-    public function boostSent($log)
+    public function boostSent($log, $transaction)
     {
-        $tx = $log['transactionHash'];
-        list($guid) = Util::parseData($log['data']);
-        $guid = (string) BigNumber::fromHex($guid);
-
         try {
-            Di::_()->get('Boost\Pending')->resolve($tx, $guid);
+            $this->resolve($transaction);
         } catch (\Exception $e) {
             // Catch race condition. Mining might be faster than /v1/boost or /v1/boost/peer request.
             sleep(2);
 
             try {
-                Di::_()->get('Boost\Pending')->resolve($tx, $guid);
+                $this->resolve($transaction);
             } catch (\Exception $e) {
+                error_log($e->getMessage());
                 // Log?
             }
         }
+    }
+
+    /**
+     * @param Transaction $transaction
+     */
+    private function resolve($transaction) {
+        $repo = Di::_()->get('Boost\Repository');
+
+        $boost = $repo->getEntity($transaction->getData()['handler'], $transaction->getData()['guid']);
+
+        $tx = (string) $transaction->getTx();
+
+        if(!$boost) {
+            throw new \Exception("No boost with hash ${$tx}");
+        }
+
+        if($boost->getState() != 'pending') {
+            throw new \Exception("Boost with hash ${$tx} already processed. State: " . $boost->getState());
+        }
+
+        $boost->setState('created')
+            ->save();
+
     }
 
     public function boostAccepted($log)
