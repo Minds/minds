@@ -6,21 +6,9 @@ use Minds\Entities;
 class EntityValidator
 {
 
-    public function isValid($guid, $type = null, $subtype = null, $rating = 1)
+    public function isValid($entity, $rating = 1)
     {
-        \Minds\Core\Security\ACL::$ignore = true;
-        $entity = Entities\Factory::build($guid);
         if (!$entity) {
-            return false;
-        }
-
-        if ($type && $type != $entity->type) {
-            echo "$guid type $type is not $entity->type";
-            return false;
-        }
-
-        if ($subtype && $subtype != $entity->subtype) {
-            echo "$guid type $type is not $entity->type";
             return false;
         }
 
@@ -28,7 +16,10 @@ class EntityValidator
             return false;
         }
 
-        return $this->isEnabled($entity) && $this->isOwnerEnabled($entity->getOwnerEntity()) && !$this->isMature($entity) && !$this->isMature($entity->getOwnerEntity());
+        return $this->isEnabled($entity) 
+            && $this->isOwnerEnabled($entity->getOwnerEntity())
+            && !$this->isMature($entity)
+            && !$this->isMature($entity->getOwnerEntity());
     }
 
     protected function isMature($entity)

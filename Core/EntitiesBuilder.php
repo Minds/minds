@@ -3,9 +3,21 @@
 
 namespace Minds\Core;
 
+use Minds\Entities\Factory;
 
 class EntitiesBuilder
 {
+
+    /**
+     * Build by a single guid
+     * @param $guid number
+     * @return Entity
+     */
+    public function single($guid)
+    {
+        return Factory::build($guid);
+    }
+
     /**
      * Get entities
      * @param  array  $options

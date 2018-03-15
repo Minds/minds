@@ -9,6 +9,8 @@ use Minds\Core\Trending\Maps;
 use Minds\Core\Trending\Aggregates\Aggregate;
 use Minds\Core\Trending\EntityValidator;
 use Minds\Core\Trending\Repository;
+use Minds\Core\EntitiesBuilder;
+use Minds\Entities\Entity;
 
 class ManagerSpec extends ObjectBehavior
 {
@@ -21,7 +23,9 @@ class ManagerSpec extends ObjectBehavior
     function it_should_collect_and_store_trending_entities(
         Repository $repo,
         Aggregate $agg,
-        EntityValidator $validator
+        Aggregate $aggImages,
+        EntityValidator $validator,
+        EntitiesBuilder $entitiesBuilder
     )
     {
         $maps = [
@@ -31,31 +35,57 @@ class ManagerSpec extends ObjectBehavior
                 'aggregates' => [
                     $agg
                 ]
+            ],
+            'images' => [
+                'type' => 'object',
+                'subtype' => 'image',
+                'aggregates' => [
+                    $aggImages
+                ]
             ]
         ];
-        $this->beConstructedWith($repo, $validator, $maps);
+        $this->beConstructedWith($repo, $validator, $maps, $entitiesBuilder);
 
-        $validator->isValid('123', 'activity', '', 1)
+        $entities = [
+            1 => (new Entity)
+                ->set('guid', 10)
+                ->set('type', 'activity')
+                ->set('perma_url', 'https://minds.com/blog/view/1000001')
+                ->setRating(1),
+            2 => (new Entity)
+                ->set('guid', 20)
+                ->setRating(1),
+            3 => (new Entity)
+                ->set('guid', 30)
+                ->setRating(1),
+        ];
+
+        foreach ($entities as $entity) {
+            $entitiesBuilder->single($entity->guid)
+                ->willReturn($entity);
+        }
+
+        $validator->isValid($entities[1], 1)
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $validator->isValid('456', 'activity', '', 1)
+        $validator->isValid($entities[2], 1)
             ->shouldBeCalled()
             ->willReturn(false);
         
-        $validator->isValid('789', 'activity', '', 1)
+        $validator->isValid($entities[3], 1)
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $validator->isValid('123', 'activity', '', 2)
+        $validator->isValid($entities[1], 2)
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $validator->isValid('456', 'activity', '', 2)
+        $validator->isValid($entities[2], 2)
             ->shouldBeCalled()
             ->willReturn(false);
         
-        $validator->isValid('789', 'activity', '', 2)
+        $validator->isValid($entities[3], 2)
             ->shouldBeCalled()
             ->willReturn(true);
         
@@ -68,15 +98,33 @@ class ManagerSpec extends ObjectBehavior
         $agg->get()
             ->shouldBeCalled()
             ->willReturn([
-                123 => 5,
-                456 => 10,
-                789 => 10
+                10 => 5,
+                20 => 10,
+                30 => 10
             ]);
 
-        $repo->add('newsfeed', [ 789, 123 ], 1)
+        $aggImages->setType('object')->shouldBeCalled();
+        $aggImages->setSubtype('image')->shouldBeCalled();
+        $aggImages->setFrom(Argument::any())->shouldBeCalled();
+        $aggImages->setTo(Argument::any())->shouldBeCalled();
+        $aggImages->setLimit(100)->shouldBeCalled();
+
+        $aggImages->get()
+            ->shouldBeCalled()
+            ->willReturn([
+                10 => 5,
+            ]);
+
+        $repo->add('newsfeed', [ 30, 10 ], 1)
             ->shouldBeCalled();
 
-        $repo->add('newsfeed', [ 789, 123 ], 2)
+        $repo->add('newsfeed', [ 30, 10 ], 2)
+            ->shouldBeCalled();
+
+        $repo->add('images', [ 10 ], 1)
+            ->shouldBeCalled();
+
+        $repo->add('images', [ 10 ], 2)
             ->shouldBeCalled();
         
         $this->run();

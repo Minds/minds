@@ -5,6 +5,15 @@ class Maps
 {
 
     public static $maps = [
+        'newsfeed' => [
+            'type' => 'activity',
+            'subtype' => '',
+            'aggregates' => [
+                Aggregates\Comments::class,
+                Aggregates\Votes::class,
+                Aggregates\Reminds::class
+            ]
+        ],
         'videos' => [
             'type' => 'object',
             'subtype' => 'video',
@@ -26,15 +35,6 @@ class Maps
         'blogs' => [
             'type' => 'object',
             'subtype' => 'blog',
-            'aggregates' => [
-                Aggregates\Comments::class,
-                Aggregates\Votes::class,
-                Aggregates\Reminds::class
-            ]
-        ],
-        'newsfeed' => [
-            'type' => 'activity',
-            'subtype' => '',
             'aggregates' => [
                 Aggregates\Comments::class,
                 Aggregates\Votes::class,

@@ -6,6 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Core\Rewards\Contributions\Contribution;
+use Minds\Core\Rewards\Contributions\Sums;
 
 class DailyCollectionSpec extends ObjectBehavior
 {
@@ -15,8 +16,13 @@ class DailyCollectionSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Rewards\Contributions\DailyCollection');
     }
 
-    function it_should_return_daily_collections()
+    function it_should_return_daily_collections(Sums $sums)
     {
+        $this->beConstructedWith($sums);
+        $sums->setTimestamp(Argument::any())
+            ->willReturn($sums);
+
+        $sums->getScore()->willReturn(10000);
 
         $this->setContributions([
             (new Contribution())

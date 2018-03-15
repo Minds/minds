@@ -204,7 +204,7 @@ abstract class ElggEntity extends ElggData implements
 		if($this->guid){
 	//		$this->save();
 		}
-		return TRUE;
+		return $this;
 	}
 
 	/**
