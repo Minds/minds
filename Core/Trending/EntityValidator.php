@@ -13,13 +13,14 @@ class EntityValidator
         }
 
         if ($entity->getRating() > $rating) {
+            echo "..rating too high";
             return false;
         }
-
+        
         return $this->isEnabled($entity) 
             && $this->isOwnerEnabled($entity->getOwnerEntity())
-            && !$this->isMature($entity)
-            && !$this->isMature($entity->getOwnerEntity());
+            && !$this->isMature($entity);
+            //&& !$this->isMature($entity->getOwnerEntity());
     }
 
     protected function isMature($entity)
@@ -40,7 +41,7 @@ class EntityValidator
 
     protected function isEnabled($entity)
     {
-        if ($entity->banned == 'yes' || $entity->enabled == 'no') {
+        if ($entity->type == 'user' && ($entity->banned == 'yes' || $entity->enabled == 'no')) {
             echo $entity->guid . "is not valid";
             return false;
         }
@@ -54,7 +55,7 @@ class EntityValidator
         }
         $entity = Entities\Factory::build($entity->guid);
 
-        return $this->isEnabled($entity) && !$this->isMature($entity);
+        return $this->isEnabled($entity);
     }
 
 }
