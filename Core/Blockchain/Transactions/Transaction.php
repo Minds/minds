@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Blockchain\Transactions;
 
+use Minds\Entities\User;
 use Minds\Traits\MagicAttributes;
 
 class Transaction
@@ -12,7 +13,7 @@ class Transaction
 
     /** @var string $tx (PRIMARY KEY)*/
     private $tx;
-    
+
     /** @var int $userGuid (PRIMARY KEY)*/
     private $userGuid;
 
@@ -37,15 +38,21 @@ class Transaction
     /**
      * Export
      */
-    public function export() {
-        return [
+    public function export()
+    {
+        $export = [
             'user_guid' => $this->userGuid,
+            'user' => (new User($this->userGuid))->export(),
             'wallet_address' => $this->walletAddress,
             'tx' => $this->tx,
             'amount' => $this->amount,
             'timestamp' => $this->timestamp,
-            'contract' => $this->contract,
+            'contract' => $this->contract
         ];
+        if ($this->data['sender_guid']) {
+            $export['sender'] = (new User($this->data['sender_guid']))->export();
+        }
+        return $export;
     }
 
 }
