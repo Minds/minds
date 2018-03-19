@@ -175,8 +175,9 @@ class Iterator implements \Iterator
         }
 
         if (empty($return) && $this->tries++ <= 1) {
-            $this->offset = "";
-            return $this->getList();
+            return null;
+            //$this->offset = "";
+            //return $this->getList();
         }
 
         $return = $this->patchThumbs($return);
