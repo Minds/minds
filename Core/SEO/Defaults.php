@@ -75,6 +75,21 @@ class Defaults
             }
         });
 
+        Manager::add('/crypto', function ($slugs = []) {
+            return [
+                'title' => 'The Minds Token',
+                'description' => 'Coming soon',
+                'og:title' => 'The Minds Token',
+                'og:description' => 'Coming soon',
+                'og:url' => '/token',
+                'og:image' => $this->config->app_cdn_url . 'assets/videos/space-1/space.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+        });
+
         /**
          * Activity SEO default
          */

@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <td>
-        Welcome to Minds! Here’s 200 free views to introduce yourself and be seen by the community. All you need to do is post your first status.
+        Welcome to Minds! Our crypto <a href="https://www.minds.com/newsfeed/793558593763016704">launch</a> is imminent. Here are 200 free views. Please make your first post and stay tuned for the next evolution
       </td>
     </tr>
     <tr>
@@ -24,27 +24,3 @@
   </tbody>
 </table>
 
-
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-  <tbody>
-    <tr>
-      <td style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed">
-          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/tutorial.png" align="center" width="450px" height="750px"/>
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-  <tbody>
-    <tr>
-      <td style="text-align:center">
-        <a href="https://www.minds.com/media/440854538476326912">
-          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/mobile-video.png" align="center" width="600px" height="378px"/>
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
