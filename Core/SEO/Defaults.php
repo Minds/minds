@@ -82,7 +82,7 @@ class Defaults
                 'og:title' => 'The Minds Token',
                 'og:description' => 'Coming soon',
                 'og:url' => '/token',
-                'og:image' => $this->config->app_cdn_url . 'assets/videos/space-1/space.jpg',
+                'og:image' => $this->config->cdn_assets_url . 'assets/videos/space-1/space.jpg',
                 'og:image:width' => 2000,
                 'og:image:height' => 1000,
                 'twitter:site' => '@minds',
