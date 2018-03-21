@@ -195,6 +195,8 @@ class Manager
                     ->setTimestamp(time());
                 $this->repository->add($wire);
 
+                $this->clearWireCache($wire);
+
                 break;
 
             case 'creditcard':
@@ -301,6 +303,8 @@ class Manager
                     ->setTimestamp(time());
                 $this->repository->add($wire);
 
+                $this->clearWireCache($wire);
+
                 break;
         }
         
@@ -317,6 +321,7 @@ class Manager
         Dispatcher::trigger('wire:email', 'wire', [
             'receiver' => $this->receiver
         ]);
+
         return true;
     }
     
@@ -355,11 +360,16 @@ class Manager
             'user' => $wire->getReceiver(),
         ]);*/
 
-        //$this->cache->destroy("counter:wire:sums:" . $merchant->getGUID() . ":*");
-        $this->cache->destroy(Counter::getIndexName($wire->getEntity()->guid, null, 'tokens', null, true));
-        //$this->cache->destroy("counter:wire:sums:" . Core\Session::getLoggedInUser()->getGUID() . ":*");
+        $this->clearWireCache($wire);
 
         return $success;
+    }
+
+    /**
+     * @param Wire $wire
+     */
+    protected function clearWireCache(Wire $wire) {
+        $this->cache->destroy(Counter::getIndexName($wire->getEntity()->guid, null, 'tokens', null, true));
     }
 
 }

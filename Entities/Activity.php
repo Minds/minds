@@ -591,7 +591,7 @@ class Activity extends Entity
         }
 
         $totals = [];
-        $totals['tokens'] = \Minds\Core\Wire\Counter::getSumByEntity($guid, 'tokens');
+        $totals['tokens'] = Core\Wire\Counter::getSumByEntity($guid, 'tokens');
         return $totals;
     }
 
