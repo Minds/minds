@@ -8,6 +8,8 @@ use Minds\Core\Di\Di;
 use Minds\Core\Data;
 use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
+use Minds\Entities\DenormalizedEntity;
+use Minds\Entities\NormalizedEntity;
 
 class Repository
 {
@@ -138,7 +140,7 @@ class Repository
     }
 
     /**
-     * @param \ElggEntity|string|integer $entity
+     * @param \ElggEntity|NormalizedEntity|DenormalizedEntity|string|integer $entity
      * @param Entities\User|string|integer $reporter
      * @param string|integer $reason
      * @param string $reason_note

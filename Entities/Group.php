@@ -33,6 +33,7 @@ class Group extends NormalizedEntity
     protected $owner_guids = [];
     protected $boost_rejection_reason = -1;
     protected $indexes = [ 'group' ];
+    protected $mature = false;
 
     protected $exportableDefaults = [
         'guid',
@@ -49,6 +50,7 @@ class Group extends NormalizedEntity
         'featured_id',
         'tags',
         'boost_rejection_reason',
+        'mature'
     ];
 
     /**
@@ -548,6 +550,25 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Sets the maturity flag for this activity
+     * @param mixed $value
+     */
+    public function setMature($value)
+    {
+        $this->mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the maturity flag
+     * @return boolean
+     */
+    public function getMature()
+    {
+        return (bool) $this->mature;
+    }
+
+    /**
      * Public facing properties export
      * @param  array  $keys
      * @return array
@@ -564,6 +585,7 @@ class Group extends NormalizedEntity
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
+        $export['mature'] = (bool) $this->getMature();
 
         $userIsAdmin = Core\Session::isAdmin();
 
