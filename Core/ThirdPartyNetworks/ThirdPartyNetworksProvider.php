@@ -13,10 +13,14 @@ class ThirdPartyNetworksProvider extends Provider
     {
         $this->di->bind('ThirdPartyNetworks\Manager', function ($di) {
             return new Manager();
-        }, [ 'useFactory' => true ]);
+        }, ['useFactory' => true]);
 
         $this->di->bind('ThirdPartyNetworks\Credentials', function ($di) {
             return new Credentials();
-        }, [ 'useFactory' => true ]);
+        }, ['useFactory' => true]);
+
+        $this->di->bind('ThirdPartyNetworks\Facebook\Manager', function ($di) {
+            return new Facebook\Manager();
+        }, ['useFactory' => false]);
     }
 }

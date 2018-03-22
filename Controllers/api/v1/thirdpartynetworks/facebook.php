@@ -7,13 +7,9 @@
  */
 namespace Minds\Controllers\api\v1\thirdpartynetworks;
 
-use Minds\Core;
-use Minds\Entities;
-use Minds\Helpers;
-use Minds\Interfaces;
 use Minds\Api\Factory;
-use Minds\Core\Payments;
-use Minds\Plugin\Guard\Exceptions\TwoFactorRequired;
+use Minds\Core;
+use Minds\Interfaces;
 
 class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -26,7 +22,10 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
   {
       $response = [];
 
+      /** @var Core\ThirdPartyNetworks\Networks\Facebook $facebook */
       $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
+      /** @var Core\ThirdPartyNetworks\Facebook\Manager $manager */
+      $manager = Core\Di\Di::_()->get('ThirdPartyNetworks\Facebook\Manager');
 
       switch ($pages[0]) {
           case "login-url":
@@ -71,93 +70,32 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
 
               $_SESSION['force'] = true;
 
-              $helper = $facebook->getFb()->getRedirectLoginHelper();
-              $url = $helper->getReRequestUrl(Core\Config::_()->site_url . 'api/v1/thirdpartynetworks/facebook/login-callback', [
-                'email'
-              ]);
-              forward($url);
+              forward($manager->getRedirectUrl());
               break;
           case "login-callback":
-
               try {
                   $helper = $facebook->getFb()->getRedirectLoginHelper();
                   $accessToken = $helper->getAccessToken();
 
                   $me = $facebook->getFb()->get('/me?fields=id,name,email', $accessToken);
                   $fb_user = $me->getGraphUser();
-                  $fb_uuid = $fb_user['id'];
 
                   if (!isset($fb_user['email'])) {
                       return $this->get(['login']);
                   }
 
-                  //@todo move this login to a core class
-                  $lu = new Core\Data\Call('user_index_to_guid');
-                  $user_guids = $lu->getRow("fb:$fb_uuid");
+                  $manager->checkFbAccount($fb_user);
 
-                  //check if a user matches this uuid from facebook
-                  if ($user_guids) {
-                      //login.. this logic should be in a core class
-                      $guid = key($user_guids);
-                      $user = new Entities\User($guid);
-                      if ($user->username) {
-                          if (!$user->fb_uuid || $user->signup_method != 'facebook') {
-                              $user->fb_uuid = $fb_uuid;
-                              $user->signup_method = 'facebook';
-                              $user->save();
-                          }
-                          login($user);
-                          $export = $user->export();
-                          $export['new'] = false;
-                          $json = json_encode($export);
-                          echo "<script>window.opener.onSuccessCallback($json); window.close();</script>";
-                          exit;
-                      }
-                  } else {
+                  $username = $manager->generateUsername($fb_user);
+                  $json = json_encode($username);
 
-                      //find a username
-                      $username = strtolower(preg_replace("/[^[:alnum:]]/u", '', $fb_user['name']));
-                      while ($lu->getRow($username)) {
-                          $username .= rand(0, 100);
-                      }
+                  $_SESSION['fb_user'] = $fb_user;
 
-                      $password = base64_encode(openssl_random_pseudo_bytes(128));
-                      $user = register_user($username, $password, $fb_user['name'] ?: $username, $fb_user['email'], false);
-                      $params = [
-                          'user' => $user,
-                          'password' => $_POST['password'],
-                          'friend_guid' => "",
-                          'invitecode' => ""
-                      ];
-                      elgg_trigger_plugin_hook('register', 'user', $params, true);
-                      Core\Events\Dispatcher::trigger('register', 'user', $params);
-
-                      //pull in avatar
-                      $avatar_url = "https://graph.facebook.com/{$fb_uuid}/picture?type=large&width=720&height=720";
-                      $user->icontime = $this->saveAvatar($user, $avatar_url);
-
-                      //@todo update analytics to say signedup with facebook
-
-                      $user->fb_uuid = $fb_uuid;
-                      $user->signup_method = 'facebook';
-                      $user->save();
-
-                      //again, this should be a core function, not here
-                      $lu->insert("fb:$fb_uuid", [ $user->guid => $user->guid ]);
-
-                      login($user);
-                      $export = $user->export();
-                      $export['new'] = true;
-                      $json = json_encode($export);
-                      echo "<script>window.opener.onSuccessCallback($json); window.close();</script>";
-                      exit;
-                  }
-              } catch (TwoFactorRequired $e) {
-                  echo "<script>window.opener.onErrorCallback('Two factor is not supported for facebook right now'); window.close();</script>";
+                  echo "<script>window.opener.onSuccessCallback($json); window.close();</script>";
                   exit;
               } catch (\Exception $e) {
                   error_log("[fbreg]: " . $e->getMessage());
-                  echo "<script>window.opener.onErrorCallback(); window.close();</script>";
+                  echo "<script>window.opener.onErrorCallback($e->getMessage()); window.close();</script>";
                   exit;
               }
               break;
@@ -196,6 +134,37 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 ];
                 $user->boostProPlus = true;
                 $user->save();
+                break;
+            case "register":
+                if (!isset($_POST['username']) || !$_POST['username']) {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Username must be provided';
+                    break;
+                }
+
+                if (!isset($_POST['password']) || !$_POST['password']) {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Password must be provided';
+                    break;
+                }
+
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+
+                /** @var Core\ThirdPartyNetworks\Facebook\Manager $manager */
+                $manager = Core\Di\Di::_()->get('ThirdPartyNetworks\Facebook\Manager');
+                try {
+                    $user = $manager->register($username, $password, $_SESSION['fb_user']);
+
+                    login($user);
+
+                    $response = [
+                        'guid' => $user->guid,
+                        'user' => $user->export()
+                    ];
+                } catch (\Exception $e) {
+                    $response = ['status' => 'error', 'message' => $e->getMessage()];
+                }
                 break;
             case "complete-register": //changes username of a facebook account and sends welcome email
 
@@ -261,36 +230,5 @@ class facebook implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $user->save();
           }
         return Factory::response([]);
-    }
-
-    public function saveAvatar($user, $url)
-    {
-        $icon_sizes = Core\Config::_()->get('icon_sizes');
-
-        $img = file_get_contents($url);
-        file_put_contents("/tmp/fb-" . md5($url), $img);
-
-        $files = [];
-        foreach ($icon_sizes as $name => $size_info) {
-            $resized = get_resized_image_from_existing_file("/tmp/fb-" . md5($url), $size_info['w'], $size_info['h'], $size_info['square'], 0, 0, 0, 0, $size_info['upscale']);
-
-            if ($resized) {
-                //@todo Make these actual entities.  See exts #348.
-                $file = new \ElggFile();
-                $file->owner_guid = $user->guid;
-                $file->setFilename("profile/{$user->guid}{$name}.jpg");
-                $file->open('write');
-                $file->write($resized);
-                $file->close();
-                $files[] = $file;
-            } else {
-                // cleanup on fail
-                foreach ($files as $file) {
-                    $file->delete();
-                }
-            }
-        }
-        unlink("/tmp/fb-" . md5($url));
-        return time();
     }
 }
