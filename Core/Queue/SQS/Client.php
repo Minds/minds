@@ -75,7 +75,7 @@ class Client implements QueueClient
         $queueUrl = "https://sqs.{$awsConfig['region']}.amazonaws.com/{$awsConfig['account_id']}/";
 
         if (isset($awsConfig['queue']['namespace']) && $awsConfig['queue']['namespace']) {
-            $namespace = $awsConfig['queue']['namespace'] . '-';
+            $namespace = $awsConfig['queue']['namespace'] . '';
         }
 
         return $queueUrl . $namespace . $this->queueName;
