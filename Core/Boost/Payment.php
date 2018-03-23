@@ -379,6 +379,9 @@ class Payment
             $boost->getMethod() : $boost->getBidType();
 
         switch ($currency) {
+            case 'points':
+                return true;
+                break;
             case 'usd':
             case 'money':
                 $sale = (new Payments\Sale())
