@@ -22,14 +22,14 @@ class Register
             $params['user']->subscribe($minds->guid);
 
             //setup chat keys
-            $openssl = new Core\Messenger\Encryption\OpenSSL();
+            /*$openssl = new Core\Messenger\Encryption\OpenSSL();
             $keystore = (new Core\Messenger\Keystore($openssl))
                 ->setUser($params['user']);
             $keypair = $openssl->generateKeypair($params['password']);
 
             $keystore->setPublicKey($keypair['public'])
                 ->setPrivateKey($keypair['private'])
-                ->save();
+                ->save();*/
 
             //@todo again, maybe in a background task?
             if ($params['referrer']) {
