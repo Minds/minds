@@ -16,6 +16,8 @@ class HourlyRewards
      */
     public static function reward()
     {
+        return;
+
         if (!Core\Session::isLoggedin()) {
             return false;
         }
