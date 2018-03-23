@@ -33,7 +33,7 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
             $_COOKIE['mwa'] = $id;
         }
 
-        $url = $_POST['url'];
+        $url = strtok($_POST['url'], '?');
 
         $event = new Core\Analytics\Metrics\Event();
         $event
