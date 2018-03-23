@@ -277,6 +277,10 @@ class Peer implements BoostEntityInterface
             return 'money';
         }
 
+        if ($this->time_created < strtotime('19th March 2018') && !$this->method) {
+            return $this->method = 'points';
+        }
+
         return $this->method;
     }
 
