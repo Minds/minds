@@ -23,7 +23,7 @@ class Video extends Object
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "video";
         $this->attributes['boost_rejection_reason'] = -1;
-        $this->attributes['rating'] = 1;
+        $this->attributes['rating'] = 2;
     }
 
 

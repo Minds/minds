@@ -22,6 +22,7 @@ class Object extends \ElggObject implements Flaggable
 
         $this->attributes['flags'] = [];
         $this->attributes['wire_threshold'] = 0;
+        $this->attributes['rating'] = 2;
     }
 
     /**

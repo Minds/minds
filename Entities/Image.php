@@ -16,7 +16,7 @@ class Image extends File
         $this->attributes['super_subtype'] = 'archive';
         $this->attributes['subtype'] = "image";
         $this->attributes['boost_rejection_reason'] = -1;
-        $this->attributes['rating'] = 1;
+        $this->attributes['rating'] = 2;
         $this->attributes['width'] = 0;
         $this->attributes['height'] = 0;
     }
