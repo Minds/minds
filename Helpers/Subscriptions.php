@@ -43,11 +43,13 @@ class Subscriptions
             $return =  true;
         }
 
-        //grab the newsfeed
-        $nf = new Core\Data\Call('entities_by_time');
-        $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
-        if ($feed) {
-            $nf->insert("activity:network:$user_guid", $feed);
+        if ($to_guid != '100000000000000519') {
+            // Sync copy of first 12 activities, if the user is not Minds
+            $nf = new Core\Data\Call('entities_by_time');
+            $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
+            if ($feed) {
+                $nf->insert("activity:network:$user_guid", $feed);
+            }
         }
 
         $cacher = Core\Data\cache\factory::build();
