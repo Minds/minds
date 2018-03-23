@@ -70,7 +70,7 @@ class newsfeed implements Interfaces\Api
                 $result = Core\Di\Di::_()->get('Trending\Repository')
                     ->getList([
                         'type' => 'newsfeed',
-                        'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+                        'rating' => isset($_GET['rating']) ? (int) $_GET['rating'] : 1,
                         'limit' => 12,
                         'offset' => $offset
                       ]);
