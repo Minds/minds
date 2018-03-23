@@ -108,7 +108,7 @@ class trending implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         $result = Di::_()->get('Trending\Repository')->getList([
             'type' => $key,
-            'rating' => isset($_GET['rating']) ? $_GET['rating'] : 1,
+            'rating' => isset($_GET['rating']) ? (int) $_GET['rating'] : 1,
             'limit' => $limit,
             'offset' => $offset
         ]);
