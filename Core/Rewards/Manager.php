@@ -6,8 +6,10 @@ namespace Minds\Core\Rewards;
 
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
+use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Di\Di;
 use Minds\Entities\User;
+use Minds\Core\Guid;
 
 class Manager
 {
@@ -78,19 +80,19 @@ class Manager
 
     public function sync()
     {
-
         //First double check that we have not already credited them any
         //rewards for this timeperiod
         $transactions = $this->txRepository->getList([
             'user_guid' => $this->user->guid,
-            'wallet_address' => 'offchain',
+            'wallet_address' => 'offchain', //removed because of allow filtering issues.
             'timestamp' => [
                 'gte' => $this->from,
                 'lte' => $this->to,
+                'eq' => null,
             ],
-            'contract' => 'oc:reward',
+            'contract' => 'offchain:reward',
         ]);
-
+        
         if ($transactions['transactions']) {
             throw new \Exception("Already issued rewards to this user");
         }
@@ -106,16 +108,22 @@ class Manager
 
         $amount = $this->contributions->getRewardsAmount();
  
-        $this->transactions
-            ->setUser($this->user)
-            ->setType('reward')
-            ->setAmount($amount);
-
         if ($this->dryRun) {
             return $this->transactions;
         }
-    
-        return $this->transactions->create();
+
+        $transaction = new Transaction(); 
+        $transaction
+            ->setUserGuid($this->user->guid)
+            ->setWalletAddress('offchain')
+            ->setTimestamp($this->from / 1000)
+            ->setTx('oc:' . Guid::build())
+            ->setAmount($amount)
+            ->setContract('offchain:reward')
+            ->setCompleted(true);
+
+        $this->txRepository->add($transaction);
+        return $transaction;
     }
 
 }
