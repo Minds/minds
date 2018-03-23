@@ -88,7 +88,7 @@ class EmailSubscribersIterator implements \Iterator
 
         $result = $this->repository->getList($options);
 
-        if (!$result || count($result['data']) === 0) {
+        if (!$result || !$result['data'] || count($result['data']) === 0) {
             $this->valid = false;
             return;
         }
@@ -101,6 +101,11 @@ class EmailSubscribersIterator implements \Iterator
 
         $this->valid = true;
         $users = $this->builder->get(['guids' => $guids]);
+
+        if (!$users) {
+            $this->valid = false;
+            return;
+        }
 
         foreach ($users as $user) {
             $this->data[] = $user;

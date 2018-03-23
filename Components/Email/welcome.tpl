@@ -2,49 +2,38 @@
   <tbody>
     <tr>
       <td>
-        <b>Hello @<?php echo $vars['user']->username?></b>
+        <p>Welcome to Minds!</p>
       </td>
-    </tr>
-    <tr>
-      <td height="20px"></td>
     </tr>
     <tr>
       <td>
-        Welcome to Minds! Here’s 200 free views to introduce yourself and be seen by the community. All you need to do is post your first status.
+        <p>We are an open source and decentralized social network for Internet freedom. You earn tokens for your contributions to the network. Your tokens can be used to boost your content for more views, or wire to other channels you support in exchange for custom rewards.</p>
       </td>
     </tr>
     <tr>
-      <td height="80px;" style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed;message=<?php echo urlencode('Hi Minds, I’m new here. Say hello. ' . Minds\Core\Config::_()->site_url . $vars['user']->username )?>;newUser=true"
-          style="padding:16px 32px; background-color:#546e7a; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
-          POST!
-        </a>
+      <td>
+        <p>If you haven’t already, make sure to design your <a href="https://www.minds.com/<?php echo $vars['username'] ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=welcome">channel</a>, subscribe to <a href="https://www.minds.com/channels/top?__e_ct_guid=<?= $vars['guid']?>&campaign=welcome">others</a> and download our mobile app for the best user experience.</p>
       </td>
     </tr>
-  </tbody>
-</table>
-
-
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-  <tbody>
+  
     <tr>
-      <td style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed">
-          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/tutorial.png" align="center" width="450px" height="750px"/>
-        </a>
+      <td>
+        <p>
+          <a href="https://itunes.apple.com/us/app/minds-com/id961771928?ls=1&mt=8" style="text-decoration: none">
+            <img src="<?php echo $vars['cdn_assets_url']; ?>assets/ext/appstore.png" width="142" alt="Apple App Store"/>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.minds.mobile" style="text-decoration: none">
+            <img src="<?php echo $vars['cdn_assets_url']; ?>assets/ext/playstore.png" width="142" alt="Google Play"/>
+          </a>
+        </p>
       </td>
     </tr>
+
+    <tr>
+      <td>
+        <p>Thanks for being a pioneer for the free and open internet.</p> 
+      </td>
+    </tr>    
   </tbody>
 </table>
 
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-  <tbody>
-    <tr>
-      <td style="text-align:center">
-        <a href="https://www.minds.com/media/440854538476326912">
-          <img src="https://d15u56mvtglc6v.cloudfront.net/front/public/assets/mobile-video.png" align="center" width="600px" height="378px"/>
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>

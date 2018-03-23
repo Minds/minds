@@ -68,6 +68,7 @@ class Activity implements EmailBatchInterface
                     ->setPosts($filtered)
                     ->send();
             }
+            echo "\n$user->guid...";
         }
     }
 
@@ -80,6 +81,7 @@ class Activity implements EmailBatchInterface
             'type' => 'newsfeed',
             'limit' => 12
         ]);
+        
         if (!$result || !$result['guids'] || count($result['guids']) === 0) {
             return [];
         }
