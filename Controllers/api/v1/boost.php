@@ -22,7 +22,7 @@ class boost implements Interfaces\Api
      */
     public function get($pages)
     {
-        return (new Controllers\Api\v2\boost())->get($pages);
+        return (new Controllers\api\v2\boost())->get($pages);
     }
 
     /**
