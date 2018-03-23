@@ -119,10 +119,10 @@ class Tagcloud
             'body' => [
                 'query' => [
                     'range' => [
-                        '@timestamp' => [
+                       '@timestamp' => [
                             'gte' => $timestamps[0] * 1000
-                            ]
                         ]
+                    ],
                 ],
                 'aggs' => [
                     'minds' => [
@@ -136,6 +136,11 @@ class Tagcloud
                                 'cardinality' => [
                                     'field' => 'owner_guid.keyword'
                                 ]
+                             ],
+                             'interactions' => [
+                                 'avg' => [
+                                     'field' => 'interactions'
+                                 ]
                              ]
                          ]
                     ],
