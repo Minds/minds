@@ -36,6 +36,7 @@ class logout implements Interfaces\Api
 
         //remove the oauth access token
         \minds\plugin\oauth2\storage::remove($_POST['access_token']);
+        return Factory::response([]);
     }
 
     public function put($pages)
