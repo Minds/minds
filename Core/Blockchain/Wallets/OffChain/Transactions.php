@@ -40,6 +40,9 @@ class Transactions
     /** @var string $tx */
     protected $tx;
 
+    /** @var array|null $data */
+    protected $data;
+
     public function __construct($repository = null, $balance = null, $locks = null)
     {
         $this->repository = $repository ?: Di::_()->get('Blockchain\Transactions\Repository');
@@ -65,7 +68,13 @@ class Transactions
         return $this;
     }
 
-    public function create($data = [])
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function create()
     {
         $this->locks->setKey("balance:{$this->user->guid}");
         if ($this->locks->isLocked()) {
@@ -94,8 +103,8 @@ class Transactions
             ->setContract('offchain:' . $this->type)
             ->setCompleted(true);
 
-        if ($data) {
-            $transaction->setData($data);
+        if ($this->data) {
+            $transaction->setData($this->data);
         }
 
         $added = $this->repository->add($transaction);

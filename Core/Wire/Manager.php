@@ -155,9 +155,9 @@ class Manager
                         'amount' => (string) $this->amount,
                         'receiver_address' => $this->payload['receiver'],
                         'sender_address' => $this->payload['address'],
-                        'receiver_guid' => $this->receiver->guid,
-                        'sender_guid' => $this->sender->guid,
-                        'entity_guid' => $this->entity->guid,
+                        'receiver_guid' => (string) $this->receiver->guid,
+                        'sender_guid' => (string) $this->sender->guid,
+                        'entity_guid' => (string) $this->entity->guid,
                     ]);
                 $this->txManager->add($transaction);
                 break;
@@ -172,11 +172,19 @@ class Manager
                     throw new \Exception('You are not allowed to spend that amount of coins.');
                 }
 
+                $txData = [
+                    'amount' => (string) $this->amount,
+                    'sender_guid' => (string) $this->sender->guid,
+                    'receiver_guid' => (string) $this->receiver->guid,
+                    'entity_guid' => (string) $this->entity->guid,
+                ];
+
                 $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
                 $sendersTx
                     ->setAmount((string) BigNumber::_($this->amount)->neg())
                     ->setType('wire')
                     ->setUser($this->sender)
+                    ->setData($txData)
                     ->create();
 
                 $receiversTx = new Core\Blockchain\Wallets\OffChain\Transactions();
@@ -184,6 +192,7 @@ class Manager
                     ->setAmount($this->amount)
                     ->setType('wire')
                     ->setUser($this->receiver)
+                    ->setData($txData)
                     ->create();
 
                 $wire = new Wire();
@@ -255,9 +264,9 @@ class Manager
                         'amount' => (string) $this->amount,
                         'receiver_address' => 'offchain',
                         'sender_address' => 'creditcard',
-                        'receiver_guid' => $this->receiver->guid,
-                        'sender_guid' => $this->sender->guid,
-                        'entity_guid' => $this->entity->guid,
+                        'receiver_guid' => (string) $this->receiver->guid,
+                        'sender_guid' => (string) $this->sender->guid,
+                        'entity_guid' => (string) $this->entity->guid,
                     ]);
                 $this->txManager->add($sendersTx);
 
@@ -275,9 +284,9 @@ class Manager
                         'amount' => (string) $this->amount,
                         'receiver_address' => 'offchain',
                         'sender_address' => 'creditcard',
-                        'receiver_guid' => $this->receiver->guid,
-                        'sender_guid' => $this->sender->guid,
-                        'entity_guid' => $this->entity->guid,
+                        'receiver_guid' => (string) $this->receiver->guid,
+                        'sender_guid' => (string) $this->sender->guid,
+                        'entity_guid' => (string) $this->entity->guid,
                     ]);
                 $this->txManager->add($receiversTx);
 

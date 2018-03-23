@@ -61,7 +61,7 @@ class transactions implements Interfaces\Api
                 }
 
                 $result = $repo->getList($opts);
-                
+
                 $response = [
                     'addresses' => $addresses,
                     'contract' => $contract,

@@ -106,16 +106,24 @@ class Payment
                             throw new \Exception('You are not allowed to spend that amount of coins.');
                         }
 
+                        $txData = [
+                            'amount' => (string) $boost->getBid(),
+                            'guid' => (string) $boost->getGuid(),
+                        ];
+
+                        if ($boost->getHandler() === 'peer') {
+                            $txData['sender_guid'] = (string) $boost->getOwner()->guid;
+                            $txData['receiver_guid'] = (string) $boost->getDestination()->guid;
+                        }
+
                         /** @var Core\Blockchain\Wallets\OffChain\Transactions $sendersTx */
                         $sendersTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
                         $tx = $sendersTx
                             ->setAmount((string) BigNumber::_($boost->getBid())->neg())
                             ->setType('boost')
                             ->setUser($boost->getOwner())
-                            ->create([
-                                'amount' => (string) $boost->getBid(),
-                                'guid' => (string) $boost->getGuid(),
-                            ]);
+                            ->setData($txData)
+                            ->create();
 
                         return $tx->getTx();
 
@@ -160,6 +168,17 @@ class Payment
 
                         $tx = 'creditcard:' . $this->stripePayments->setSale($sale);
 
+                        $txData = [
+                            'amount' => (string) $boost->getBid(),
+                            'guid' => (string) $boost->getGuid(),
+                            'handler' => (string) $boost->getHandler()
+                        ];
+
+                        if ($boost->getHandler() === 'peer') {
+                            $txData['sender_guid'] = (string) $boost->getOwner()->guid;
+                            $txData['receiver_guid'] = (string) $boost->getDestination()->guid;
+                        }
+
                         $sendersTx = new Core\Blockchain\Transactions\Transaction();
                         $sendersTx
                             ->setTx($tx)
@@ -169,11 +188,7 @@ class Payment
                             ->setTimestamp(time())
                             ->setUserGuid($boost->getOwner()->guid)
                             ->setCompleted(true)
-                            ->setData([
-                                'amount' => (string) $boost->getBid(),
-                                'guid' => (string) $boost->getGuid(),
-                                'handler' => (string) $boost->getHandler()
-                            ]);
+                            ->setData($txData);
                         $this->txManager->add($sendersTx);
 
                         return $tx;
@@ -181,6 +196,17 @@ class Payment
                     case 'onchain':
                         if ($boost->getHandler() === 'peer' && !$boost->getDestination()->getEthWallet()) {
                             throw new \Exception('Boost target should participate in the Rewards program.');
+                        }
+
+                        $txData = [
+                            'amount' => (string) $boost->getBid(),
+                            'guid' => (string) $boost->getGuid(),
+                            'handler' => (string) $boost->getHandler()
+                        ];
+
+                        if ($boost->getHandler() === 'peer') {
+                            $txData['sender_guid'] = (string) $boost->getOwner()->guid;
+                            $txData['receiver_guid'] = (string) $boost->getDestination()->guid;
                         }
 
                         $sendersTx = new Core\Blockchain\Transactions\Transaction();
@@ -192,11 +218,7 @@ class Payment
                             ->setAmount((string) BigNumber::_($boost->getBid())->neg())
                             ->setTimestamp(time())
                             ->setCompleted(false)
-                            ->setData([
-                                'amount' => (string) $boost->getBid(),
-                                'guid' => (string) $boost->getGuid(),
-                                'handler' => (string) $boost->getHandler()
-                            ]);
+                            ->setData($txData);
                         $this->txManager->add($sendersTx);
 
                         if ($boost->getHandler() === 'peer') {
@@ -212,7 +234,9 @@ class Payment
                                 ->setData([
                                     'amount' => (string) $boost->getBid(),
                                     'guid' => (string) $boost->getGuid(),
-                                    'handler' => (string) $boost->getHandler()
+                                    'handler' => (string) $boost->getHandler(),
+                                    'sender_guid' => (string) $boost->getOwner()->guid,
+                                    'receiver_guid' => (string) $boost->getDestination()->guid,
                                 ]);
                             $this->txManager->add($receiversTx);
                         }
@@ -276,10 +300,13 @@ class Payment
                                 ->setAmount($boost->getBid())
                                 ->setType('boost')
                                 ->setUser($boost->getDestination())
-                                ->create([
+                                ->setData([
                                     'amount' => (string) $boost->getBid(),
                                     'guid' => (string) $boost->getGuid(),
-                                ]);
+                                    'sender_guid' => (string) $boost->getOwner()->guid,
+                                    'receiver_guid' => (string) $boost->getDestination()->guid,
+                                ])
+                                ->create();
                         }
 
                         break;
@@ -317,7 +344,9 @@ class Payment
                                 ->setData([
                                     'amount' => (string) $boost->getBid(),
                                     'guid' => (string) $boost->getGuid(),
-                                    'handler' => (string) $boost->getHandler()
+                                    'handler' => (string) $boost->getHandler(),
+                                    'sender_guid' => (string) $boost->getOwner()->guid,
+                                    'receiver_guid' => (string) $boost->getDestination()->guid,
                                 ]);
                             $this->txManager->add($receiversTx);
 
@@ -414,16 +443,24 @@ class Payment
                         break;
 
                     case 'offchain':
+                        $txData = [
+                            'amount' => (string) $boost->getBid(),
+                            'guid' => (string) $boost->getGuid(),
+                        ];
+
+                        if ($boost->getHandler() === 'peer') {
+                            $txData['sender_guid'] = (string) $boost->getOwner()->guid;
+                            $txData['receiver_guid'] = (string) $boost->getDestination()->guid;
+                        }
+
                         /** @var Core\Blockchain\Wallets\OffChain\Transactions $sendersTx */
                         $sendersTx = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
                         $sendersTx
                             ->setAmount($boost->getBid())
                             ->setType('boost_refund')
                             ->setUser($boost->getOwner())
-                            ->create([
-                                'amount' => (string) $boost->getBid(),
-                                'guid' => (string) $boost->getGuid(),
-                            ]);
+                            ->setData($txData)
+                            ->create();
 
                         break;
 

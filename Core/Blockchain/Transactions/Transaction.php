@@ -52,6 +52,9 @@ class Transaction
         if ($this->data['sender_guid']) {
             $export['sender'] = (new User($this->data['sender_guid']))->export();
         }
+        if ($this->data['receiver_guid']) {
+            $export['receiver'] = (new User($this->data['receiver_guid']))->export();
+        }
         return $export;
     }
 
