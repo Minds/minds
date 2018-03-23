@@ -60,7 +60,7 @@ class Pageview implements AnalyticsMetric
      * @param  int $timestamp (optional) - sets the base to work off
      * @return array
      */
-    public function get($span = 3, $unit = 'day', $timestamp = null)
+    public function get($span = 30, $unit = 'day', $timestamp = null)
     {
         $time = null;
         switch ($unit) {

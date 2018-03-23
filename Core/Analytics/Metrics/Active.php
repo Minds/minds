@@ -71,14 +71,16 @@ class Active implements AnalyticsMetric
      */
     public function get($span = 3, $unit = 'day', $timestamp = null)
     {
-        $time = null;
+        $from = null;
         switch ($unit) {
             case "day":
-                $time = (new DateTime('midnight'))->modify("-$span days");
+                $from = (new DateTime('midnight'))->modify("-$span days");
+                $to = (new DateTime('midnight'));
                 $interval = '1d';
                 break;
             case "month":
-                $time = (new DateTime('midnight first day of this month'))->modify("-$span months");
+                $from = (new DateTime('midnight first day of next month'))->modify("-$span months");
+                $to = new DateTime('midnight first day of next month');
                 $interval = '1M';
                 break;
             default:
@@ -87,32 +89,34 @@ class Active implements AnalyticsMetric
 
         $query = [
             'index' => 'minds-metrics-*',
-            'type' => 'action',
+            //'type' => 'action',
             'body' => [
                 'query' => [
                     'bool' => [
-                        'filter' => [
-                            'term' => [
-                                'action' => 'active'
-                            ]
-                        ],
+                        //'filter' => [
+                        //    'term' => [
+                        //        'action' => 'active'
+                        //    ]
+                        //],
                         'must' => [
                             'range' => [
                                 '@timestamp' => [
-                                    'gte' => $time->getTimestamp() * 1000,
-                                    'lt' => time() * 1000,
+                                    'gte' => $from->getTimestamp() * 1000,
+                                    'lt' => ($to->getTimestamp() * 1000) -1,
                                     'format' => 'epoch_millis'
                                 ]
                             ]
                         ]
                     ]
                 ],
+                'size' => 0,
                 'aggs' => [
                     'counts' => [
                         'date_histogram' => [
                             'field' => '@timestamp',
                             'interval' => $interval,
                             'min_doc_count' => 1,
+                            'time_zone' => 'UTC',
                         ],
                         'aggs' => [
                             'uniques' => [
@@ -128,7 +132,7 @@ class Active implements AnalyticsMetric
 
             ]
         ];
-
+        
         $prepared = new Core\Data\ElasticSearch\Prepared\Search();
         $prepared->query($query);
 
