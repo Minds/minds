@@ -25,9 +25,8 @@
                     -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07);
                     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07);">
             <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-                <?php if (isset($object->remind_object)) {
+                <?php if (isset($object->remind_object) && $object->remind_object) {
                     $remindOwnerObj = $object->ownerObj;
-
                 ?>
                 <tr>
                     <td>
@@ -69,6 +68,25 @@
                         </table>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="600" align="center"
+                                style="padding:16px;">
+                            <tr>
+                                <td colspan="2">
+                                    <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['topic']?>-<?= $vars['period'] ?>"
+                                            style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;">
+                                        <?php if($object->type === "activity") {
+                                        echo htmlspecialchars_decode($object->message, ENT_QUOTES);
+                                        } else {
+                                        echo htmlspecialchars_decode($object->title, ENT_QUOTES);
+                                        }
+                                        ?>
+                                    </a>
+                                </td>
+                        </table>
+                    </td>
+                </tr>
                 <?php //if a thumbnail exists
                 $src = '';
                 if ($object->custom_data && $object->custom_data[0] && $object->custom_data[0]['src']) {
@@ -99,33 +117,13 @@
                     <td>
                         <table cellspacing="0" cellpadding="0" border="0" width="600" align="center"
                                 style="padding:16px;">
-                            <tr>
-                                <td colspan="2">
-                                    <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['topic']?>-<?= $vars['period'] ?>"
-                                            style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;">
-                                        <?php if($object->type === "activity") {
-                                        echo htmlspecialchars_decode($object->message, ENT_QUOTES);
-                                        } else {
-                                        echo htmlspecialchars_decode($object->title, ENT_QUOTES);
-                                        }
-                                        ?>
-                                    </a>
-                                </td>
-                        </table>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <table cellspacing="0" cellpadding="0" border="0" width="600" align="center"
-                                style="padding:16px;">
                             <?php
-                            if (isset($object->title)) {
+                            if (isset($object->title) && $object->title) {
                             ?>
                             <tr>
                                 <td colspan="2">
                                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['topic']?>-<?= $vars['period'] ?>"
-                                            style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 45px; margin: 0; font-weight: bold">
+                                            style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 40px; margin: 0; font-weight: bold">
                                         <?php
                                             echo htmlspecialchars_decode($object->title, ENT_QUOTES);
                                         ?>
@@ -134,12 +132,12 @@
                             </tr>
                             <?php
                             }
-                            if (isset($object->blurb)) {
+                            if (isset($object->blurb) && $object->blurb) {
                             ?>
                             <tr>
                                 <td colspan="2">
                                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['topic']?>-<?= $vars['period'] ?>"
-                                            style="text-decoration:none; max-height:45px; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 45px; margin: 0;">
+                                            style="text-decoration:none; max-height:45px; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 40px; margin: 0;">
                                         <?php
                                             echo htmlspecialchars_decode($object->blurb);
                                         ?>
