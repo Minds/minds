@@ -159,6 +159,10 @@ class PaymentSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->offchainTransactions);
 
+        $this->offchainTransactions->setData([ 'amount' => $bid, 'guid' => 1000 ])
+            ->shouldBeCalled()
+            ->willReturn($this->offchainTransactions);
+
         $this->offchainCap->setUser($boost_owner)
             ->shouldBeCalled()
             ->willReturn($this->offchainCap);
@@ -174,7 +178,7 @@ class PaymentSpec extends ObjectBehavior
         $tx = new Transaction();
         $tx->setTx('oc:123');
 
-        $this->offchainTransactions->create(Argument::type('array'))
+        $this->offchainTransactions->create()
             ->shouldBeCalled()
             ->willReturn($tx);
 

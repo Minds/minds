@@ -37,8 +37,9 @@ class ManagerSpec extends ObjectBehavior
             'timestamp' => [
                 'gte' => $timestamp,
                 'lte' => $timestamp,
+                'eq' => null,
             ],
-            'contract' => 'oc:reward',
+            'contract' => 'offchain:reward',
             ])
             ->shouldBeCalled()
             ->willReturn(null);
@@ -62,25 +63,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(20);
 
-        $transactions->setUser($user)
-            ->shouldBeCalled()
-            ->willReturn($transactions);
-
-        $transactions->setType('reward')
-            ->shouldBeCalled()
-            ->willReturn($transactions);
-
-        $transactions->setAmount(20)
-            ->shouldBeCalled()
-            ->willReturn($transactions);
-
-        $transactions->create()
-            ->shouldBeCalled()
-            ->willReturn((new Transaction)
-                ->setAmount(20)
-                ->setContract('offchain:reward')
-                ->setTimestamp($timestamp)
-            );
+        $txRepository->add(Argument::that(function($transaction) {
+            return true;
+        }))
+            ->shouldBeCalled();
 
         $this->setUser($user)
             ->setFrom($timestamp)
@@ -88,7 +74,7 @@ class ManagerSpec extends ObjectBehavior
 
         $this->sync()->getAmount()->shouldBe(20);
         $this->sync()->getContract()->shouldBe('offchain:reward');
-        $this->sync()->getTimestamp()->shouldBe($timestamp);
+        $this->sync()->getTimestamp()->shouldBe($timestamp / 1000);
     }
 
     function it_should_not_allow_duplicate_rewards_to_be_sent(
@@ -105,8 +91,9 @@ class ManagerSpec extends ObjectBehavior
             'timestamp' => [
                 'gte' => time() * 1000,
                 'lte' => time() * 1000,
+                'eq' => null,
             ],
-            'contract' => 'oc:reward',
+            'contract' => 'offchain:reward',
             ])
             ->shouldBeCalled()
             ->willReturn([(new Transaction)]);

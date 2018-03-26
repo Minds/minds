@@ -89,7 +89,7 @@ class ClientSpec extends ObjectBehavior
         $this
             ->setQueue('test')
             ->getQueueUrl()
-            ->shouldReturn('https://sqs.x-test-1.amazonaws.com/5000/phpspec-test');
+            ->shouldReturn('https://sqs.x-test-1.amazonaws.com/5000/phpspectest');
     }
 
     public function it_should_send(
