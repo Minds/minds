@@ -7,7 +7,7 @@
           font-family: Roboto,Arial,sans-serif;
           font-size: 18px;
           line-height: 1.5;
-          color: #444;
+          color: #444 !important;
         }
         a {
           color: #4690df !important;
@@ -15,19 +15,23 @@
       </style>
   </head>
   <body style="margin:0; padding:0;">
+    <div style="display:none;font-size:1px;color:#333333;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+       --- The crypto social network --- --- --- --- --- --- --- --- --- 
+    </div>
+
 
     <table cellspacing="0" cellpadding="0" border="0" width="100%" align="center" style="width:100%!important">
       <tbody>
         <tr>
           <td>
             <!-- START HEADER -->
-            <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <table cellspacing="8" cellpadding="8" border="0" width="600" align="center">
               <tbody>
                 <tr>
                     <td height="20"></td>
                 </tr>
                 <tr>
-                    <td bgcolor="#ffffff" style="font-family:Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;font-size:14px;line-height:20px">
+                    <td bgcolor="#ffffff" style="font-family:Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;font-size:14px;line-height:20px" width="520">
                       <h3 style="margin-bottom: 0;margin-top: 84px;color: #444;font-size: 24px;">@<?php echo $vars['username'] ?></h3>
                     </td>
                     <td bgcolor="#ffffff" style="font-family:Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;font-size:14px;line-height:20px">
@@ -57,7 +61,7 @@
             </table>
             <!-- END BODY -->
 
-            <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <table cellspacing="8" cellpadding="8" border="0" width="600" align="center">
               <tbody>
                 <tr>
                   <td>
@@ -70,7 +74,7 @@
 
             <!-- START FOOTER -->
             <?php if(isset($vars['username']) && isset($vars['email'])){ ?>
-            <table cellspacing="0" cellpadding="0" border="0" width="300" align="center">
+            <table cellspacing="8" cellpadding="8" border="0" width="300" align="center">
               <tbody>
                 <tr>
                   <td height="20"></td>
