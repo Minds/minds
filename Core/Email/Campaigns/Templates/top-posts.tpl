@@ -1,11 +1,15 @@
 <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
     <tbody>
 
+    <tr>
+        <td>
+            <h2 style="color: #444; margin: 0 0 32px 16px;">Here's the top posts from your networks</h2>
+        </td>
+    </tr>
+
     <?php foreach($vars['posts'] as $object){ ?>
     <tr>
-        <td style="background:#FEFEFE; padding: 0;
-                    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07);
-                    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.07);">
+        <td style="background:#FFF; padding: 0; border: 1px solid #ececec;">
             <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
                 <?php
                 $postOwner = $object->ownerObj;
@@ -27,7 +31,7 @@
 
                                     <img src="<?php echo Minds\Core\Config::_()->get('cdn_url') . '/icon/' . $object->ownerObj['guid']?>/small/<?php echo $object->ownerObj['icontime']?>"
                                             width="24px" style="border-radius:50%; vertical-align:middle;">
-                                    <span style="line-height: 24px; vertical-align:middle; text-decoration:none; color: #333;">
+                                    <span style="line-height: 24px; vertical-align:middle; text-decoration:none; color: #444;">
                                         <strong>
                                             <?= $object->ownerObj['name'] ?>
                                         </strong>
@@ -58,32 +62,19 @@
                  }?>
                 <tr>
                     <td>
-                        <table cellspacing="0" cellpadding="0" border="0" width="600" align="center"
-                            <?php
-                            if (isset($object->remind_object) && $object->remind_object) {
-                            ?>
-                                style="padding: 0 0 16px 16px">
-                            <?php
-                            } else {
-                            ?>
-                                style="padding: 16px 0">
-                            <?php
-                            }
-                            ?>
+                        <table cellspacing="8" cellpadding="8" border="0" width="600" align="center">
                             <tr>
-                                <td style="display: flex; align-items: center;">
+                                <td width="50">
                                     <img src="<?php echo Minds\Core\Config::_()->get('cdn_url') . '/icon/' . $postOwner['guid']?>/icon/<?= $postOwner['guid'] . '/medium/' . $postOwner['icontime'] ?>"
-                                            width="50px" style="border-radius:50%; vertical-align:middle;">
-                                    <div style="margin-left: 16px">
-                                        <span style="letter-spacing:0.25px; line-height: 18px; text-decoration:none; color: #333;">
-                                            <strong>
-                                                <?= $postOwner['name'] ?>
-                                            </strong>
-                                        </span>
-                                        <span style="display:block; line-height:18px; text-decoration:none; color: rgb(136, 136, 136); font-size:11px; letter-spacing: 0.75px">
-                                                <?= strtoupper(date('M d, Y, g:i:s a', $obj['time_created'])) ?>
-                                        </span>
-                                    </div>
+                                        width="50" style="border-radius:50%; vertical-align:middle;">
+                                </td>
+                                <td>
+                                    <strong style="color: #444; width: 100%; display: block;">
+                                        <?= $postOwner['name'] ?>
+                                    </strong>
+                                    <span style="display:block; line-height:18px; text-decoration:none; color: #888; font-size:11px; letter-spacing: 0.75px">
+                                            <?= strtoupper(date('M d, Y, g:i:s a', $obj['time_created'])) ?>
+                                    </span>
                                 </td>
                             </tr>
 
@@ -148,21 +139,10 @@
                             if (isset($obj->title) && $obj->title) {
                             ?>
                             <tr>
-                                <td colspan="2" style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 30px; margin: 0; font-weight: bold">
-                                    <?php
-                                        echo htmlspecialchars_decode($obj->title, ENT_QUOTES);
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php
-                            }
-                            if (isset($obj->blurb) && $obj->blurb) {
-                            ?>
-                            <tr>
-                                <td colspan="2" style="text-decoration:none; font-weight:400; color:rgba(0,0,0,0.8); font-size:16px; display:block; padding-bottom: 12px;text-overflow: ellipsis;text-rendering: auto; white-space: pre-line; overflow: hidden; max-height: 30px; margin: 0;">
-                                    <?php
-                                        echo htmlspecialchars_decode($obj->blurb);
-                                    ?>
+                                <td>
+                                    <h3 style="font-size:16px; color: #444; margin: 0;">
+                                        <?php echo htmlspecialchars_decode($obj->title, ENT_QUOTES);?>
+                                    </h3>
                                 </td>
                             </tr>
                             <?php } ?>

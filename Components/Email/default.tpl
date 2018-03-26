@@ -15,10 +15,6 @@
       </style>
   </head>
   <body style="margin:0; padding:0;">
-    <div style="display:none;font-size:1px;color:#333333;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
-       --- The crypto social network --- --- --- --- --- --- --- --- --- 
-    </div>
-
 
     <table cellspacing="0" cellpadding="0" border="0" width="100%" align="center" style="width:100%!important">
       <tbody>
@@ -39,7 +35,7 @@
 
                       <p align="right">
                         <a href="https://www.minds.com/?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none;">
-                          <img src="<?php echo $vars['cdn_assets_url']; ?>assets/logos/bulb.jpg" alt="Minds.com" align="middle" height="80px"/>
+                          <img src="<?php echo $vars['cdn_assets_url']; ?>assets/logos/bulb.jpg" align="middle" height="80px"/>
                         </a>
                       </p>
                     </td>
