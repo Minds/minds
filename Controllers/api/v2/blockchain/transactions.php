@@ -33,7 +33,7 @@ class transactions implements Interfaces\Api
         $to = isset($_GET['to']) ? $_GET['to'] : time() * 1000;
         $offset = $_GET['offset'] ? $_GET['offset'] : '';
         $contract = isset($_GET['contract']) && $_GET['contract'] ? $_GET['contract'] : null;
-        $addresses = isset($_GET['addresses']) && $_GET['addresses'] ? $_GET['addresses'] : 'offchain';
+        $address = isset($_GET['address']) && $_GET['address'] ? $_GET['address'] : null;
 
         $response = [];
 
@@ -50,10 +50,9 @@ class transactions implements Interfaces\Api
                     'offset' => $offset,
                 ];
 
-                if ($addresses) {
-                    $addresses = array_filter(explode(',', $addresses), function($value) { return $value !== ''; });
-                    $addresses = array_map('trim', $addresses);
-                    $opts['wallet_addresses'] = $addresses;
+
+                if ($address) {
+                    $opts['wallet_address'] = $address;
                 }
 
                 if ($contract) {
