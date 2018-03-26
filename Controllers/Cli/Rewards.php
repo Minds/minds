@@ -56,25 +56,29 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
             if (!$guid) {
                 continue;
             }
-            $manager = new Core\Rewards\Manager();
-            $manager->setFrom($timestamp)
-                ->setTo($to);
-            $user = new Entities\User();
-            $user->guid = (string) $guid;
-            $manager->setUser($user);
-//            $manager->setDryRun(true);
-            $reward = $manager->sync();
-            $total = $total->add($reward->getAmount());
+            try {
+                $manager = new Core\Rewards\Manager();
+                $manager->setFrom($timestamp)
+                    ->setTo($to);
+                $user = new Entities\User();
+                $user->guid = (string) $guid;
+                $manager->setUser($user);
+    //            $manager->setDryRun(true);
+                $reward = $manager->sync();
+                $total = $total->add($reward->getAmount());
 
-            Dispatcher::trigger('notification', 'contributions', [
-                'to' => [$user->guid],
-                'from' => 100000000000000519,
-                'notification_view' => 'contributions',
-                'params' => [ 'amount' => (string) BigNumber::_($reward->getAmount()) ],
-                'message' => ''
-            ]);
+                /*Dispatcher::trigger('notification', 'contributions', [
+                    'to' => [$user->guid],
+                    'from' => 100000000000000519,
+                    'notification_view' => 'contributions',
+                    'params' => [ 'amount' => (string) BigNumber::_($reward->getAmount()) ],
+                    'message' => ''
+                    ]);*/
 
-            echo "\r [$i][$guid]: synced past 48 hours. $total";
+                echo "\r [$i][$guid]: synced past 48 hours. $total";
+            } catch (\Exception $e) {
+                echo "\r [$i][$guid]: failed synced past 48 hours. $total";
+            }
         }
     }
     
