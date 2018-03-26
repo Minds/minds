@@ -8,6 +8,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments\HookInterface;
 use Minds\Helpers\Wallet as WalletHelper;
+use Minds\Core\Blockchain\Transactions\Transaction;
 
 class Webhook implements HookInterface
 {
@@ -16,7 +17,21 @@ class Webhook implements HookInterface
     {
         if ($subscription->getPlanId() == 'plus') {
             $user = $subscription->getCustomer()->getUser();
-            WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
+            //WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
+
+            $transaction = new Transaction(); 
+            $transaction
+                ->setUserGuid($user->guid)
+                ->setWalletAddress('offchain')
+                ->setTimestamp(time())
+                ->setTx('oc:' . Guid::build())
+                ->setAmount(1000 * 10 ** 18)
+                ->setContract('offchain:plus')
+                ->setCompleted(true);
+
+            Di::_()->get('Blockchain\Transactions\Repository')
+                ->add($transaction);
+
 
             /** @var Core\Payments\Manager $manager */
             $manager = Di::_()->get('Payments\Manager');

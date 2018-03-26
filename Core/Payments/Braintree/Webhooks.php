@@ -10,6 +10,8 @@ use Minds\Core\Guid;
 use Minds\Core\Payments;
 use Minds\Entities;
 use Minds\Helpers\Wallet as WalletHelper;
+use Minds\Core\Di\Di;
+use Minds\Core\Blockchain\Transactions\Transaction;
 
 use Braintree_ClientToken;
 use Braintree_Configuration;
@@ -138,8 +140,21 @@ class Webhooks
         //find the customer
         $user_guids = $db->getRow("subscription:" . $subscription->getId());
         $user = Entities\Factory::build($user_guids[0]);
-        WalletHelper::createTransaction($user->guid, ($subscription->getPrice() * 1000) * 1.1, null, "Purchase (Recurring)");
+        //WalletHelper::createTransaction($user->guid, ($subscription->getPrice() * 1000) * 1.1, null, "Purchase (Recurring)");
         //$this->hooks->onCharged($subscription);
+
+        $transaction = new Transaction(); 
+        $transaction
+            ->setUserGuid($user->guid)
+            ->setWalletAddress('offchain')
+            ->setTimestamp(time())
+            ->setTx('oc:' . Guid::build())
+            ->setAmount(($subscription->getPrice() * 1000) * 1.1 * 1000 * 10 ** 18)
+            ->setContract('offchain:plus')
+            ->setCompleted(true);
+
+        Di::_()->get('Blockchain\Transactions\Repository')
+            ->add($transaction);
     }
 
     /**
