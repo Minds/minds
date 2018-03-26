@@ -77,8 +77,8 @@ class Events
             Dispatcher::trigger('notification', 'thumbs', [
                 'to' => [ $entity->owner_guid ],
                 'notification_view' => $direction == 'up' ? 'like' : 'downvote',
-                'title' => $entity->title,
-                'entity' => $entity
+                'entity' => $entity,
+                'params' => ['title' => $entity->title ?: $entity->message]
             ]);
         });
 

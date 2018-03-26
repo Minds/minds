@@ -208,9 +208,13 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=> [$boost->getDestination()->guid],
             'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
             'notification_view' => 'boost_peer_request',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType(), 'currency' => $boost->getMethod()]
+            'params' => [
+                'bid' => $boost->getBid(),
+                'type' => $boost->getType(),
+                'currency' => $boost->getMethod(),
+                'title' => $boost->getEntity()->title ?: $boost->getEntity()->message
+            ]
         ]);
 
         $response['boost_guid'] = $boost->getGuid();
@@ -277,9 +281,8 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to'=>array($boost->getOwner()->guid),
             'entity' => $boost->getEntity(),
-            'title' => $boost->getEntity()->title,
             'notification_view' => 'boost_peer_accepted',
-            'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+            'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType(), 'title' => $boost->getEntity()->title]
         ]);
 
         //Now forward through to social networks if selected
@@ -348,9 +351,12 @@ class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
                 Core\Events\Dispatcher::trigger('notification', 'boost', [
                     'to' => array($boost->getOwner()->guid),
                     'entity' => $boost->getEntity(),
-                    'title' => $boost->getEntity()->title,
                     'notification_view' => 'boost_peer_rejected',
-                    'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType()]
+                    'params' => [
+                        'bid' => $boost->getBid(),
+                        'type' => $boost->getType(),
+                        'title' => $boost->getEntity()->title,
+                    ]
                 ]);
                 $review->reject();
             }

@@ -110,8 +110,10 @@ class Review implements BoostReviewInterface
                 'to' => [$this->boost->getOwner()->guid],
                 'from' => 100000000000000519,
                 'entity' => $this->boost->getEntity(),
-                'title' => $this->boost->getEntity()->title,
-                'params' => ['reason' => $this->boost->getRejectionReason()],
+                'params' => [
+                    'reason' => $this->boost->getRejectionReason(),
+                    'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
+                ],
                 'notification_view' => 'boost_rejected',
             ]);
 
@@ -143,7 +145,9 @@ class Review implements BoostReviewInterface
             'to' => [$this->boost->getOwner()->guid],
             'from' => 100000000000000519,
             'entity' => $this->boost->getEntity(),
-            'title' => $this->boost->getEntity()->title,
+            'params' => [
+                'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
+            ],
             'notification_view' => 'boost_revoked',
         ]);
         return true;

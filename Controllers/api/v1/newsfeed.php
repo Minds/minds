@@ -266,7 +266,12 @@ class newsfeed implements Interfaces\Api
                 Counters::increment($embeded->guid, 'remind');
 
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
-                    Core\Events\Dispatcher::trigger('notification', 'remind', array('to' => array($embeded->owner_guid), 'notification_view' => 'remind', 'title' => $embeded->title, 'entity' => $embeded));
+                    Core\Events\Dispatcher::trigger('notification', 'remind', [
+                        'to' => [$embeded->owner_guid],
+                        'notification_view' => 'remind',
+                        'params' => ['title' => $embeded->title ?: $embeded->message],
+                        'entity' => $embeded
+                    ]);
                 }
 
                 $message = '';

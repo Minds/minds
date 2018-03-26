@@ -136,6 +136,8 @@ class Push implements Interfaces\NotificationExtensionInterface
 
         $name = $from_user->name;
 
+        $title = $notification['params']['title'] ?: 'your post';
+
         switch ($notification['params']['notification_view']) {
 
             case 'comment':
@@ -143,7 +145,7 @@ class Push implements Interfaces\NotificationExtensionInterface
                 break;
 
             case 'like':
-                $message = sprintf('%s voted up %s', $name, $notification['params']['title']);
+                $message = sprintf('%s voted up %s', $name, $title);
                 break;
 
             case 'tag':
@@ -155,7 +157,7 @@ class Push implements Interfaces\NotificationExtensionInterface
                 break;
 
             case 'remind':
-                $message = sprintf('%s reminded %s', $name, $notification['params']['title']);
+                $message = sprintf('%s reminded %s', $name, $title);
                 break;
 
             case 'boost_gift':
@@ -167,19 +169,19 @@ class Push implements Interfaces\NotificationExtensionInterface
                 break;
 
             case 'boost_accepted':
-                $message = sprintf('%d views for %s were accepted', $notification['params']['impressions'], $notification['params']['title']);
+                $message = sprintf('%d views for %s were accepted', $notification['params']['impressions'], $title);
                 break;
 
             case 'boost_rejected':
-                $message = sprintf('Your boost request for %s was rejected', $notification['params']['title']);
+                $message = sprintf('Your boost request for %s was rejected', $title);
                 break;
 
             case 'boost_revoked':
-                $message = sprintf('You revoked the boost request for %s', $notification['params']['title']);
+                $message = sprintf('You revoked the boost request for %s', $title);
                 break;
 
             case 'boost_completed':
-                $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $notification['params']['title']);
+                $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $title);
                 break;
 
             case 'group_invite':

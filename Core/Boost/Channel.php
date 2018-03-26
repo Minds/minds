@@ -49,9 +49,12 @@ class Channel implements Interfaces\BoostHandlerInterface
         Core\Events\Dispatcher::trigger('notification', 'boost', [
           'to'=> [$boost->getDestination()->guid],
           'entity' => $boost->getEntity(),
-          'title' => $boost->getEntity()->title,
           'notification_view' => 'boost_peer_request',
-          'params' => ['bid'=>$boost->getBid(), 'type'=>$boost->getType()]
+          'params' => [
+              'bid' => $boost->getBid(),
+              'type' => $boost->getType(),
+              'title' => $boost->getEntity()->title ?: $boost->getEntity()->message
+          ]
         ]);
 
         return $boost->getGuid();

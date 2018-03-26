@@ -178,13 +178,15 @@ class Network implements BoostHandlerInterface
         $this->mongo->remove("boost", [ '_id' => $boost->getId() ]);
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-          'to'=> [ $boost->getOwner()->guid ],
-          'from'=> 100000000000000519,
-          'entity' => $boost->getEntity(),
-          'title' => $boost->getEntity()->title,
-          'notification_view' => 'boost_completed',
-          'params' => ['impressions' => $boost->getImpressions()],
-          'impressions' => $boost->getBid()
+            'to' => [$boost->getOwner()->guid],
+            'from' => 100000000000000519,
+            'entity' => $boost->getEntity(),
+            'notification_view' => 'boost_completed',
+            'params' => [
+                'impressions' => $boost->getImpressions(),
+                'title' => $boost->getEntity()->title ?: $boost->getEntity()->message
+            ],
+            'impressions' => $boost->getBid()
         ]);
     }
 

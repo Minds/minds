@@ -35,7 +35,7 @@ class remind implements Interfaces\Api
             Core\Events\Dispatcher::trigger('notification', 'remind', [
                 'to' => [$embedded->owner_guid],
                 'notification_view' => 'remind',
-                'title' => $embedded->title,
+                'params' => ['title' => $embedded->title ?: $embedded->message],
                 'entity' => $embedded
             ]);
         }

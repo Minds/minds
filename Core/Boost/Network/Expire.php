@@ -54,9 +54,11 @@ class Expire
             'to' => [$this->boost->getOwner()->guid],
             'from' => 100000000000000519,
             'entity' => $this->boost->getEntity(),
-            'title' => $this->boost->getEntity()->title,
             'notification_view' => 'boost_completed',
-            'params' => ['impressions' => $this->boost->getImpressions()],
+            'params' => [
+                'impressions' => $this->boost->getImpressions(),
+                'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
+            ],
             'impressions' => $this->boost->getBid()
         ]);
     }

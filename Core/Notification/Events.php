@@ -120,7 +120,7 @@ class Events
                         'entity' => $params,
                         'notification_view' => 'tag',
                         'description' => $params->message,
-                        'title' => $params->title
+                        'params' => ['title' => $params->title]
                     ]);
                 }
             }
