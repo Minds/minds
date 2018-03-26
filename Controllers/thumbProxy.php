@@ -5,6 +5,7 @@
 namespace Minds\Controllers;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 
@@ -17,6 +18,12 @@ class thumbProxy extends core\page implements Interfaces\page
     {
         set_time_limit(1); //don't spend longer than 1 seconds
         ini_set('max_execution_time', 1);
+
+        if (!$_GET['src']) {
+            header("X-Minds-Exception: NO_SRC");
+            $this->sendDefault();
+            exit;
+        }
 
         $src = urldecode($_GET['src']);
         //assume https if url not set
@@ -43,14 +50,9 @@ class thumbProxy extends core\page implements Interfaces\page
         curl_close($ch);
 
         if ($errorno) {
-            header('Content-type: image/jpeg');
-            header('Access-Control-Allow-Origin: *');
             header('X-ERROR: $errorno');
-            $img = imagecreatetruecolor(120, 1);
-            $bg = imagecolorallocate($img, 255, 255, 255);
-            imagefilledrectangle($img, 0, 0, 120, 1, $bg);
-            imagejpeg($img, null, 100);
-            die();
+            $this->sendDefault();
+            exit;
         }
 
         if (!$image) {
@@ -149,5 +151,11 @@ class thumbProxy extends core\page implements Interfaces\page
 
     public function delete($pages)
     {
+    }
+
+    protected function sendDefault()
+    {
+        $url = Di::_()->get('Config')->get('site_url') . 'assets/photos/andromeda-galaxy.jpg';
+        \forward($url);
     }
 }
