@@ -30,11 +30,19 @@ class Join
     /** @var string $secret */
     private $secret;
 
-    public function __construct($twofactor = null, $sms = null, $libphonenumber = null)
+    /** @var Config $config */
+
+    public function __construct(
+        $twofactor = null,
+        $sms = null,
+        $libphonenumber = null,
+        $config = null
+    )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
         $this->sms = $sms ?: Di::_()->get('SMS\SNS');
         $this->libphonenumber = $libphonenumber ?: \libphonenumber\PhoneNumberUtil::getInstance();
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     public function setUser(&$user)
@@ -75,8 +83,8 @@ class Join
     public function confirm()
     {
         if ($this->twofactor->verifyCode($this->secret, $this->code, 8)) {
-            $this->user->setPhoneNumber($this->number);
-            $this->user->setPhoneNumberHash(sha1($this->number));
+            //$this->user->setPhoneNumber($this->number);
+            $this->user->setPhoneNumberHash(hash('sha256', $this->number . $this->config->get('phone_number_hash_salt')));
             $this->user->save();
         } else {
             throw new \Exception('The confirmation failed');
