@@ -1,23 +1,5 @@
 <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
     <tbody>
-    <tr>
-        <td style="text-align:center">
-            <b>Hello @<?php echo $vars['user']->username?></b>
-        </td>
-    </tr>
-    <tr>
-        <td height="8px"></td>
-    </tr>
-    </tr>
-    <tr>
-        <td height="20px"></td>
-    </tr>
-    </tbody>
-</table>
-
-
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-    <tbody>
 
     <?php foreach($vars['posts'] as $object){ ?>
     <tr>
