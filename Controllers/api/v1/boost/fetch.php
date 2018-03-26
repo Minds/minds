@@ -122,8 +122,8 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                         $boost->boosted = true;
                         $response['boosts'][] = $boost->export();
                     }
-                    if (count($response['boosts']) < 5) {
-                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", "");
+                    if (!$response['boosts'] || count($response['boosts']) < 5) {
+                        $cacher->destory(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset");
                     } else {
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", end($entities)->guid);
                     }

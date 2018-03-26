@@ -59,7 +59,7 @@ class Expire
                 'impressions' => $this->boost->getImpressions(),
                 'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
             ],
-            'impressions' => $this->boost->getBid()
+            'impressions' => $this->boost->getImpressions()
         ]);
     }
 }

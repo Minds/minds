@@ -35,7 +35,7 @@ class Defaults
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => $this->config->site_url . 'assets/share/master.jpg',
+          'og:image' => $this->config->cdn_assets_url . 'assets/share/master.jpg',
           'og:image:width' => 1024,
           'og:image:height' => 681,
           'twitter:site' => '@minds',
@@ -87,6 +87,21 @@ class Defaults
                 'al:ios:app_name' => 'Minds',
               ];
             }
+        });
+
+        Manager::add('/crypto', function ($slugs = []) {
+            return [
+                'title' => 'The Minds Token',
+                'description' => 'Coming soon',
+                'og:title' => 'The Minds Token',
+                'og:description' => 'Coming soon',
+                'og:url' => '/token',
+                'og:image' => $this->config->cdn_assets_url . 'assets/videos/space-1/space.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
         });
 
         /**
@@ -197,7 +212,7 @@ class Defaults
                 'og:title' => 'Login',
                 'og:description' => $this->config->site_description,
                 'og:url' => $this->config->site_url . 'login',
-                'og:image' => $this->config->site_url . 'assets/screenshots/login.png',
+                'og:image' => $this->config->cdn_assets_url . 'assets/screenshots/login.png',
                 'og:image:width' => 2000,
                 'og:image:height' => 1000,
                 'twitter:site' => '@minds',

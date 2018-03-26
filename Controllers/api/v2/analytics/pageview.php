@@ -26,7 +26,14 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
-        $url = $_POST['url'];
+        if(!isset($_COOKIE['mwa'])) {
+            //@TODO make this more unique
+            $id = uniqid(true);
+            setcookie('mwa', $id, time() + (60 * 60 * 24 * 30 * 12), '/');
+            $_COOKIE['mwa'] = $id;
+        }
+
+        $url = strtok($_POST['url'], '?');
 
         $event = new Core\Analytics\Metrics\Event();
         $event
@@ -35,14 +42,14 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setAction('pageview')
             ->setRouteUri($url)
             ->setUserAgent($_SERVER['HTTP_USER_AGENT'])
-            ->setCookieId($_COOKIE['minds']);
+            ->setCookieId($_COOKIE['mwa']);
 
         if (isset($_POST['referrer']) && $_POST['referrer']) {
             $event->setReferrerUri((string) $_POST['referrer']);
         }
 
         if (Core\Session::isLoggedIn()) {
-            $event->setUserGuid(Core\Session::getLoggedInUser()->guid);
+            $event->setLoggedIn(true);
         }
         $event->push();
 

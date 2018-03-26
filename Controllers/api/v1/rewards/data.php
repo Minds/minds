@@ -38,7 +38,7 @@ class data implements Interfaces\Api
             return Factory::response([
                 'valid' => false,
                 'validator' => $validator,
-                'sha1' => sha1($founder->name . $founder->email . $founder->uuid . $founder->amount)
+                //'sha1' => sha1($founder->name . $founder->email . $founder->uuid . $founder->amount)
                 ]);
         }
 
