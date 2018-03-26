@@ -8,6 +8,7 @@
 
 namespace Minds\Controllers\api\v2\blockchain;
 
+use Minds\Core\Blockchain\Wallets\OnChain\Incentive;
 use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
@@ -108,6 +109,14 @@ class wallet implements Interfaces\Api
         $user = Session::getLoggedinUser();
         $user->setEthWallet($_POST['address']);
         $user->save();
+
+        try {
+            (new Incentive())
+                ->setUser($user)
+                ->send();
+        } catch (\Exception $e) {
+            error_log('[OnChain/Incentive] ' . $e->getMessage());
+        }
 
         return Factory::response([]);
     }

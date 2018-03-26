@@ -33,6 +33,7 @@ class User extends \ElggUser
         $this->attributes['wire_rewards'] = '';
         $this->attributes['pinned_posts'] = [];
         $this->attributes['eth_wallet'] = '';
+        $this->attributes['eth_incentive'] = '';
         $this->attributes['phone_number'] = null;
         $this->attributes['phone_number_hash'] = null;
         $this->attributes['icontime'] = time();
@@ -705,6 +706,24 @@ class User extends \ElggUser
         $this->eth_wallet = $eth_wallet ?: '';
 
         return $this;
+    }
+
+    /**
+     * @param string $eth_incentive
+     * @return User
+     */
+    public function setEthIncentive($eth_incentive = '')
+    {
+        $this->eth_incentive = $eth_incentive;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEthIncentive()
+    {
+        return $this->eth_incentive;
     }
 
     /**

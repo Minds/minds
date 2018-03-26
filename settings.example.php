@@ -189,8 +189,12 @@ $CONFIG->set('sandbox', [
 $CONFIG->set('sns_secret', '{{sns-secret}}');
 
 $CONFIG->set('blockchain', [
+    // Are we on the testnet?
+    'testnet' => true,
+
     // Our network address
     'network_address' => 'http://localhost:9545',
+
     // Endpoints to connect to the blockchain
     'rpc_endpoints' => [ 'http://10.0.2.2:8545' ],
 
@@ -202,6 +206,12 @@ $CONFIG->set('blockchain', [
 
     // Escrow wallet private key
     'wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
+
+    // Incentive funds wallet
+    'incentive_wallet_address' => '0x0000000000000000000000000000000000000000',
+
+    // Incentive funds wallet private key
+    'incentive_wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
 
     // Boost escrow wallet
     'boost_wallet_address' => '0x0000000000000000000000000000000000000000',
