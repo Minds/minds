@@ -17,7 +17,7 @@ class pageviews implements Interfaces\Api, Interfaces\ApiAdminPam
         $app = Core\Analytics\App::_()
             ->setMetric('pageview');
 
-        $pageviews = $app->get(1);
+        $pageviews = $app->get(30);
 
         $response['pageviews'] = $pageviews;
 
