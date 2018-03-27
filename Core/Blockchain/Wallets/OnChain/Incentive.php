@@ -56,7 +56,7 @@ class Incentive
 
         if (!$this->user->getEthWallet() || $this->user->getEthIncentive()) {
             // No wallet or already sent
-            return false;
+            //return false;
         }
 
         $config = $this->config->get('blockchain');
