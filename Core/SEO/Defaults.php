@@ -35,7 +35,7 @@ class Defaults
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => $this->config->cdn_assets_url . 'assets/share/master.jpg',
+          'og:image' => $this->config->cdn_assets_url . 'assets/photos/audience.jpg',
           'og:image:width' => 1024,
           'og:image:height' => 681,
           'twitter:site' => '@minds',
@@ -311,7 +311,7 @@ class Defaults
             'faq' => [
                 'title' => 'FAQ',
                 'description' => 'Everything you need to know about Minds',
-                'image' => 'assets/marketing/witch-head-1771758_1920.jpg'
+                'image' => 'assets/photos/canyon.jpg'
             ],
         ];
 
