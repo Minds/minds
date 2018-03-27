@@ -71,6 +71,7 @@ class Incentive
             'from' => $config['incentive_wallet_address'],
             'to' => $this->user->getEthWallet(),
             'gasLimit' => BigNumber::_(300000)->toHex(true),
+            'nonce' => BigNumber::_(time())->toHex(true),
             'value' => $this->getIncentive()->toHex(true),
         ]);
 
