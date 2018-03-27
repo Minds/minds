@@ -1249,13 +1249,7 @@
             "source": {
                 "type": "git",
                 "url": "https://0544aedfc74db62dcd39301588cd672b2b91e060@github.com/minds/mw3.git",
-                "reference": "e4f6f79e93d36103af5a9681e6ff282c82484942"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Minds/mw3/zipball/e4f6f79e93d36103af5a9681e6ff282c82484942",
-                "reference": "e4f6f79e93d36103af5a9681e6ff282c82484942",
-                "shasum": ""
+                "reference": "54f2061b483b832c31af9af5b59d8490b13fff82"
             },
             "require": {
                 "composer-plugin-api": "^1.0"
@@ -1273,11 +1267,7 @@
                 }
             },
             "description": "Minds PHP Web3",
-            "support": {
-                "source": "https://github.com/Minds/mw3/tree/master",
-                "issues": "https://github.com/Minds/mw3/issues"
-            },
-            "time": "2018-01-05T09:46:56+00:00"
+            "time": "2018-03-27T04:49:02+00:00"
         },
         {
             "name": "mongodb/mongodb",

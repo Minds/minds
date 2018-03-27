@@ -3,7 +3,7 @@ pipeline:
   build:
     image: php:7.1.11-fpm-alpine3.4
     commands:
-      - apk update && apk add --no-cache git
+      - apk update && apk add --no-cache git nodejs
       - docker-php-ext-install bcmath
       - sh tools/setup.sh
       - bin/phpspec run 
