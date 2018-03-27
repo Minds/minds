@@ -159,7 +159,7 @@ error_log(print_r($params, true));
         }
 
         if (!isset($transaction['gasPrice'])) {
-            $transaction['gasPrice'] = BigNumber::_($this->config->get('blockchain')['server_gas_price'] ?: 1)->toHex(true);
+            $transaction['gasPrice'] = BigNumber::_(($this->config->get('blockchain')['server_gas_price'] ?: 1) * 1000000000)->toHex(true);
         }
 
         if (!isset($transaction['nonce'])) {

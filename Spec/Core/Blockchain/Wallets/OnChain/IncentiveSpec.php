@@ -53,7 +53,6 @@ class IncentiveSpec extends ObjectBehavior
             'from' => '0xWALLET',
             'to' => '0xTEST',
             'gasLimit' => BigNumber::_(300000)->toHex(true),
-            'nonce' => BigNumber::_(time())->toHex(true),
             'value' => BigNumber::toPlain('0.002', 18)->toHex(true),
         ])
             ->shouldBeCalled()
