@@ -26,7 +26,7 @@ class views implements Interfaces\Api
                 $expire = Di::_()->get('Boost\Network\Expire');
                 $metrics = Di::_()->get('Boost\Network\Metrics');
 
-                $boost = Core\Boost\Factory::build($pages[1])->getBoostEntity($pages[2]);
+                $boost = Core\Boost\Factory::build("Newsfeed")->getBoostEntity($pages[1]);
                 if (!$boost) {
                     return Factory::response([
                         'status' => 'error',
@@ -45,7 +45,7 @@ class views implements Interfaces\Api
                 Counters::increment($boost->getEntity()->owner_guid, "impression");
                 break;
             case 'activity':
-                $activity = new Entities\Activity($pages[0]);
+                $activity = new Entities\Activity($pages[1]);
 
                 if (!$activity->guid) {
                     return Factory::response([
