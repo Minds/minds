@@ -55,6 +55,9 @@ class CoinMarketCap implements RatesInterface
      */
     public function get()
     {
+
+        return 0.25; //hard code for testnet
+
         if (!$this->currency) {
             throw new \Exception('Currency is required');
         }
