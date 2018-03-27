@@ -308,6 +308,11 @@ class Defaults
                 'description' => 'Earn money for your contribution to the digital world',
                 'image' => 'assets/marketing/witch-head-1771758_1920.jpg'
             ],
+            'faq' => [
+                'title' => 'FAQ',
+                'description' => 'Everything you need to know about Minds',
+                'image' => 'assets/marketing/witch-head-1771758_1920.jpg'
+            ],
         ];
 
         foreach ($marketing as $uri => $page) {
