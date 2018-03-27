@@ -12,9 +12,6 @@ class Router
     // these are core pages, other pages are registered by plugins
     public static $routes = array(
       '/archive/thumbnail' => "Minds\\Controllers\\fs\\v1\\thumbnail",
-
-      '/api/v1/archive' => "Minds\\Controllers\\api\\v1\\media",
-      '/api/v1/archive/albums' => "Minds\\Controllers\\api\\v1\\media\\albums",
       '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
 
       '/icon' => "Minds\\Controllers\\icon",
@@ -28,13 +25,6 @@ class Router
       '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe",
       '/sitemap' => "Minds\\Controllers\\sitemap",
 
-      '/api/v1/gatherings' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
-      '/api/v1/conversations' => "\\Minds\\Controllers\\api\\v1\\messenger\\conversations",
-      '/api/v1/keys' => "Minds\\Controllers\\api\\v1\\messenger\\keys",
-
-      '/api/v2/conversations' => "\\Minds\\Controllers\\api\\v2\\messenger\\conversations",
-      '/api/v2/conversations/search' => "\\Minds\\Controllers\\api\\v2\\messenger\\search",
-      '/api/v2/keys' => "\\Minds\\Controllers\\api\\v2\\messenger\\keys",
       '/apple-app-site-association' => '\\Minds\\Controllers\\deeplinks',
       '/sitemaps' => '\\Minds\\Controllers\\sitemaps',
 
