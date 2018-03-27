@@ -21,6 +21,7 @@ class Wallet
      */
     public static function createTransaction($user_guid, $points, $entity_guid = null, $description = "")
     {
+        return;
         $transaction = new Entities\Object\Points_transaction();
         $transaction->setPoints($points)
             ->setOwnerGuid($user_guid)
