@@ -38,7 +38,8 @@ class emails implements Interfaces\Api
         ]);
 
         $response = [
-            'notifications' => Factory::exportable($result['data'])
+            'email' => $user->getEmail(),
+            'notifications' => Factory::exportable($result['data']),
         ];
 
         return Factory::response($response);
@@ -51,6 +52,18 @@ class emails implements Interfaces\Api
             $user = new User($pages[0]);
         } else {
             $user = Core\Session::getLoggedInUser();
+        }
+
+        if (isset($_POST['email']) && $_POST['email']) {
+            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Invalid e-mail address'
+                ]);
+            }
+
+            $user->setEmail($_POST['email']);
+            $user->save();
         }
 
         if (isset($_POST['notifications'])) {
