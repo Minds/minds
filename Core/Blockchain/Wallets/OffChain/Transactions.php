@@ -82,9 +82,13 @@ class Transactions
         }
 
         //create a lock of the balance
-        $this->locks
-            ->setTTL(120)
-            ->lock();
+        try {
+            $this->locks
+                ->setTTL(120)
+                ->lock();
+        } catch (\Exception $e) {
+
+        }
 
         $balance = BigNumber::_($this->balance->setUser($this->user)->get());
         
