@@ -40,7 +40,7 @@ class Join
     )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
-        $this->sms = $sms ?: Di::_()->get('SMS\Twillio');
+        $this->sms = $sms ?: Di::_()->get('SMS');
         $this->libphonenumber = $libphonenumber ?: \libphonenumber\PhoneNumberUtil::getInstance();
         $this->config = $config ?: Di::_()->get('Config');
     }
