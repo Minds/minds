@@ -38,6 +38,15 @@ class Analytics
             $user_guid = Core\Session::getLoggedinUser()->guid;
             $phone_number_hash = Core\Session::getLoggedInUser()->getPhoneNumberHash();
         }
+
+        //skip if we've cached this hour
+        $ts = static::buildTS("hour", time());
+        $cacher = Core\Data\cache\factory::build('apcu');
+        if ($cacher->get("active:$ts:$user_guid") == true) {
+            return;
+        }
+        $cacher->set("rewarded:$ts:" . Core\Session::getLoggedinUser()->guid, true, 360);
+
         /*$db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
         $db->insert("analytics:$metric:day:$ts", [$user_guid => time()]);
