@@ -45,7 +45,7 @@ class Analytics
         if ($cacher->get("active:$ts:$user_guid") == true) {
             return;
         }
-        $cacher->set("rewarded:$ts:" . Core\Session::getLoggedinUser()->guid, true, 360);
+        $cacher->set("active:$ts:" . Core\Session::getLoggedinUser()->guid, true, 360);
 
         /*$db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
