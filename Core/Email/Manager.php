@@ -90,7 +90,7 @@ class Manager
             foreach ($topics as $topic) {
                 $subscriptions[] = (new EmailSubscription)
                     ->setUserGuid($user->guid)
-                    ->setCampaign($campaigns)
+                    ->setCampaign($campaigns[0])
                     ->setTopic($topic);
             }
         } else {
