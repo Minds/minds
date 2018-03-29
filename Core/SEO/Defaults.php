@@ -286,7 +286,7 @@ class Defaults
             'wallet' => [
                 'title' => 'Wallet',
                 'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.',
-                'image' => 'assets/screenshots/register.png'
+                'image' => 'assets/photos/canyon.jpg'
             ],
             'wire' => [
                 'title' => 'Wire',
@@ -314,6 +314,11 @@ class Defaults
                 'image' => 'assets/photos/canyon.jpg'
             ],
             'wallet/101' => [
+                'title' => 'Token 101',
+                'description' => 'Everything you need to know about Minds Tokens',
+                'image' => 'assets/photos/canyon.jpg',
+            ],
+            'wallet/tokens/101' => [
                 'title' => 'Token 101',
                 'description' => 'Everything you need to know about Minds Tokens',
                 'image' => 'assets/photos/canyon.jpg',
