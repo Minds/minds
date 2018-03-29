@@ -25,7 +25,7 @@ class unsubscribe extends core\page implements Interfaces\page
             /** @var Core\Email\Manager $manager */
             $manager = Core\Di\Di::_()->get('Email\Manager');
 
-            $manager->unsubscribe($user, $campaign, $topic);
+            $manager->unsubscribe($user, [ $campaign ], [ $topic ]);
             $user->save();
         }
 

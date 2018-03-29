@@ -2,10 +2,12 @@
 
 namespace Spec\Minds\Core\Email;
 
-use Minds\Core\Email\Repository;
-use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+
+use Minds\Core\Email\Repository;
+use Minds\Entities\User;
+use Minds\Core\Email\EmailSubscription;
 
 class ManagerSpec extends ObjectBehavior
 {
@@ -53,14 +55,61 @@ class ManagerSpec extends ObjectBehavior
         $user = new User();
         $user->guid = '123';
         $user->username = 'user1';
-        $campaign = 'when';
-        $topic = 'boost_received';
 
-        $repository->add(Argument::type('Minds\Core\Email\EmailSubscription'))
+        $repository->delete(Argument::type('Minds\Core\Email\EmailSubscription'))
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->unsubscribe($user, $campaign, $topic)->shouldReturn(true);
+        $this->unsubscribe($user, [ 'when' ], [ 'boost_received' ])
+            ->shouldReturn(true);
 
     }
+
+    function it_should_unsubscribe_from_all_emails(Repository $repository)
+    {
+        $this->beConstructedWith($repository);
+
+        $user = new User();
+        $user->guid = '123';
+
+        $subscriptions = [
+            (new EmailSubscription)
+                ->setUserGuid($user->guid)
+                ->setCampaign('when')
+                ->setTopic('unread_notifications'),
+            (new EmailSubscription)
+                ->setUserGuid($user->guid)
+                ->setCampaign('with')
+                ->setTopic('top_posts'),
+        ];
+
+        $repository->getList([
+            'campaigns' => [ 'when', 'with', 'global' ],
+            'topics' => [ 
+                'unread_notifications',
+                'wire_received',
+                'boost_completed',
+                'top_posts',
+                'channel_improvement_tips',
+                'posts_missed_since_login',
+                'new_channels',
+                'minds_news',
+                'minds_tips',
+                'exclusive_promotions',
+            ],
+            'user_guid' => $user->guid,
+        ])
+            ->shouldBeCalled()
+            ->willReturn($subscriptions);
+
+        $repository->delete($subscriptions[0])
+            ->shouldBeCalled();
+
+        $repository->delete($subscriptions[1])
+            ->shouldBeCalled();
+        
+        $this->unsubscribe($user)
+            ->shouldReturn(true);
+    }
+
 }

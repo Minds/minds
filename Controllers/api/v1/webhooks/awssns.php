@@ -107,6 +107,9 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
             $user->disabled_emails = true;
             $user->bounced = true;
             $user->save();
+
+            Di::_()->get('Email\Manager')->unsubscribe($user);
+
             error_log('[AWS-SES] Disabled emails for ' . $guid);
             return Factory::response([]);
         }

@@ -56,14 +56,56 @@ class Manager
         return count($result['data']) > 0 && $result['data'][0]->getValue() !== '0' && $result['data'][0]->getValue() !== '';
     }
 
-    public function unsubscribe($user, $campaign, $topic)
+    /**
+     * Unsubscribe from emails
+     * @param User $user
+     * @param array $campaigns
+     * @param array $topics
+     * @return bool
+     */
+    public function unsubscribe($user, $campaigns = [], $topics = [])
     {
-        return $this->repository->add(new EmailSubscription(
-            [
+        if (!$campaigns) {
+            $campaigns = [ 'when', 'with', 'global' ];
+        }
+
+        if (!$topics) {
+            $topics = [ 
+                'unread_notifications',
+                'wire_received',
+                'boost_completed',
+                'top_posts',
+                'channel_improvement_tips',
+                'posts_missed_since_login',
+                'new_channels',
+                'minds_news',
+                'minds_tips',
+                'exclusive_promotions',
+            ];
+        }
+
+        //We can skip the read here
+        if (count($campaigns) == 1 && count($topics) >= 1) {
+            $subscriptions = [];
+            foreach ($topics as $topic) {
+                $subscriptions[] = (new EmailSubscription)
+                    ->setUserGuid($user->guid)
+                    ->setCampaign($campaigns)
+                    ->setTopic($topic);
+            }
+        } else {
+            $subscriptions = $this->repository->getList([
+                'campaigns' => $campaigns,
+                'topics' => $topics,
                 'user_guid' => $user->guid,
-                'campaign' => $campaign,
-                'topic' => $topic,
-                'value' => false
-            ]));
+            ]);
+        }
+
+        foreach ($subscriptions as $subscription) {
+            $this->repository->delete($subscription);
+        }
+
+        return true;
     }
+
 }

@@ -14,6 +14,7 @@ use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Email\EmailSubscription;
+use Minds\Entities\User;
 
 class Repository
 {
@@ -33,7 +34,7 @@ class Repository
 
     /**
      * @param array $options
-     * @return array
+     * @return EmailSubscription[]
      */
     public function getList(array $options = [])
     {
@@ -47,6 +48,7 @@ class Repository
             'topic' => null,
             'campaigns' => [],
             'topics' => [],
+            'allowFiltering' => false
         ], $options);
 
         $template = 'SELECT * FROM email_subscriptions';
@@ -81,7 +83,7 @@ class Repository
                 ...array_map(
                     function ($guid) {
                         return new Varint($guid);
-                    }, 
+                    },
                     $options['user_guids']
                 )
             );
@@ -96,6 +98,10 @@ class Repository
             $template .= " WHERE " . implode(" AND ", $where);
         }
 
+        if ($options['allowFiltering']) {
+            $template .= " ALLOW FILTERING";
+        }
+
         $query = new Custom();
         $query->query($template, $values);
 
@@ -106,7 +112,7 @@ class Repository
 
         $notifications = [];
         $token = '';
-        
+
         try {
             $result = $this->db->request($query);
         } catch (\Exception $e) {
@@ -157,6 +163,38 @@ class Repository
             (string) $subscription->getCampaign(),
             new Varint($subscription->getUserGuid()),
             (string) $subscription->getValue()
+        ];
+
+        $query = new Custom();
+        $query->query($template, $values);
+
+        return $this->db->request($query);
+    }
+
+    /**
+     * @param EmailSubscription $subscription
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete($subscription)
+    {
+
+        if (!$subscription->getUserGuid()) {
+            throw new \Exception('user_guid is required');
+        }
+        if (!$subscription->getCampaign()) {
+            throw new \Exception('campaign is required');
+        }
+        if (!$subscription->getTopic()) {
+            throw new \Exception('topic is required');
+        }
+
+        $template = "DELETE FROM email_subscriptions where campaign = ? and topic = ? and user_guid = ?";
+
+        $values = [
+            (string) $subscription->getCampaign(),
+            (string) $subscription->getTopic(),
+            new Varint($subscription->getUserGuid())
         ];
 
         $query = new Custom();
