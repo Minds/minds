@@ -371,6 +371,7 @@ class Blog extends \ElggObject
         }
 
         $export['custom_meta'] = $this->getCustomMeta();
+        $export['rating'] = (int) $this->getRating();
 
         $export = array_merge($export, Dispatcher::trigger('export:extender', 'blog', ['entity'=>$this], []));
 
