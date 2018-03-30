@@ -14,7 +14,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 
-class block extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePam
+class block extends Controller implements Interfaces\Api
 {
     /**
      * Return a list of your blocked users
