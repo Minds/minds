@@ -8,9 +8,33 @@ use Minds\Core\Email\EmailSubscribersIterator;
 
 class Announcement implements EmailBatchInterface
 {
+
+    /** @var boolean $dyrRun **/
+    protected $dryRun = false;
+
+    /** @var Campaign $campaign **/
+    protected $campaign;
+
     protected $offset;
     protected $templateKey;
     protected $subject;
+
+    public function __construct($campaign = null)
+    {
+        $this->campaign = $campaign ?: new Campaigns\Announcement;
+    }
+
+
+    /**
+     * Run the batch as a test or not
+     * @param $dryRun
+     * @return $this
+     */
+    public function setDryRun($dryRun)
+    {
+        $this->dryRun = $dryRun;
+        return $this;
+    }
 
     /**
      * @param string $offset
@@ -57,15 +81,15 @@ class Announcement implements EmailBatchInterface
 
         $iterator = new EmailSubscribersIterator();
         $iterator->setCampaign('global')
-            ->setTopic('exclusive_promotions')
+            ->setTopic('minds_news')
             ->setValue(true)
-            ->setOffset($this->offset);
+            ->setOffset($this->offset)
+            ->setDryRun(false);
 
         $queued = 0;
 
         foreach ($iterator as $user) {
-            $campaign = new Campaigns\Announcement();
-            $campaign
+            $this->campaign
                 ->setUser($user)
                 ->setTemplateKey($this->templateKey)
                 ->setSubject($this->subject)

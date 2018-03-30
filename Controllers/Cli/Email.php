@@ -21,24 +21,31 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
     
     public function exec()
     {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
         $campaign_id = $this->getOpt('campaign');
         $dry = $this->getOpt('dry-run') ?: false;
         $offset = $this->getOpt('offset') ?: '';
         $subject = $this->getOpt('subject') ?: '';
         $template = $this->getOpt('template') ?: '';
 
-        $campaign = Core\Email\Campaigns\Factory::build($campaign_id);
+        $campaign = Core\Email\Batches\Factory::build($campaign_id);
         $campaign->setDryRun($dry)
             ->setOffset($offset)
             ->setSubject($subject)
-            ->setTemplate($template)
-            ->send();
+            ->setTemplateKey($template)
+            ->run();
 
         $this->out('Done.');
     }
 
     public function topPosts()
     {
+        $this->out('Top posts');
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        
         $period = $this->getOpt('period');
         $offset = '';
 
@@ -51,6 +58,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $batch->setPeriod($period)
             ->setOffset($offset)
             ->run();
+        $this->out('done');
     }
 
     public function unreadNotifications()
@@ -60,6 +68,26 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $batch = Core\Email\Batches\Factory::build('notifications');
         $batch->setOffset($offset)
             ->run();
+    }
+
+    public function testWelcome()
+    {
+        $user = new Entities\User('mark');
+        $template = new Core\Email\Template();
+        $template
+          ->setTemplate()
+          ->setBody('welcome.tpl')
+          ->set('guid', $user->guid)
+          ->set('username', $user->username)
+          ->set('email', $user->getEmail())
+          ->set('user', $user);
+        $message = new Core\Email\Message();
+        $message->setTo($user)
+          ->setMessageId(implode('-', [ $user->guid, sha1($user->getEmail()), sha1('register-' . time()) ]))
+          ->setSubject("Welcome to Minds. Introduce yourself.")
+          ->setHtml($template);
+        $mailer = new Core\Email\Mailer();
+        $mailer->send($message);
     }
 
 }

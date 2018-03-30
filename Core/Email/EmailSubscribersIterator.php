@@ -4,7 +4,7 @@
 namespace Minds\Core\Email;
 
 use Minds\Core;
-
+use Minds\Entities\User;
 
 class EmailSubscribersIterator implements \Iterator
 {
@@ -17,6 +17,7 @@ class EmailSubscribersIterator implements \Iterator
     private $limit = 2000;
     private $offset = "";
     private $data = [];
+    private $dryRun = false;
 
     private $valid = true;
 
@@ -68,13 +69,29 @@ class EmailSubscribersIterator implements \Iterator
         return $this;
     }
 
+    /**
+     * @param mixed $value
+     * @return EmailSubscribersIterator
+     */
+    public function setDryRun($value)
+    {
+        $this->dryRun = $value;
+
+        $this->data = [
+            new User('mark'),
+            new User('jack'),
+            new User('john'),
+            new User('ottman')
+        ];
+        return $this;
+    }
 
     /**
      * Fetch all the users who are subscribed to a certain email campaign/topic
      */
     public function getSubscribers()
     {
-        if (!isset($this->offset)) {
+        if (!isset($this->offset) || $this->dryRun) {
             $this->valid = false;
             return;
         }
