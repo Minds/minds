@@ -73,6 +73,12 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
             $user->save();
         }
 
+        
+        if ($user->last_login < 1514764800) {
+            $user->boost_rating = 1;
+            $user->save();
+        }
+
         try {
             if (login($user) && Core\Session::isLoggedIn()) {
                 $attempts->resetFailuresCount(); // Reset any previous failed login attempts
