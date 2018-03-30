@@ -35,9 +35,9 @@ class Defaults
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => $this->config->cdn_assets_url . 'assets/photos/audience.jpg',
-          'og:image:width' => 1024,
-          'og:image:height' => 681,
+          'og:image' => $this->config->cdn_assets_url . 'assets/logos/medium-production.jpg',
+          'og:image:width' => 471,
+          'og:image:height' => 199,
           'twitter:site' => '@minds',
           'twitter:card' => 'summary',
           'smartbanner:title' => 'Minds',
@@ -267,30 +267,89 @@ class Defaults
             return $meta;
         });
 
+        Manager::add('/wallet/tokens/transactions', function ($slugs = []) {
+            $meta = [
+                'title' => 'Transactions Ledger',
+                'description' => 'Keep track of your tokens transactions',
+                'og:title' => 'Transactions Ledger',
+                'og:description' => 'Keep track of your tokens transactions',
+                'og:url' => $this->config->site_url . 'wallet/tokens/transactions',
+                'og:image' => $this->config->cdn_assets_url . 'assets/photos/graph.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+
+            return $meta;
+        });
+
+        Manager::add('/wallet/tokens/contributions', function ($slugs = []) {
+            $meta = [
+                'title' => 'Contributions Ledger',
+                'description' => 'Keep track of your contributions to Minds',
+                'og:title' => 'Login',
+                'og:description' => 'Keep track of your contributions to Minds',
+                'og:url' => $this->config->site_url . 'wallet/tokens/contributions',
+                'og:image' => $this->config->cdn_assets_url . 'assets/photos/graph.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+
+            return $meta;
+        });
+
+        Manager::add('/wallet/tokens/withdraw', function ($slugs = []) {
+            $meta = [
+                'title' => 'Token Rewards Withdrawal',
+                'description' => 'Withdraw your token rewards',
+                'og:title' => 'Login',
+                'og:description' => 'Withdraw your token rewards',
+                'og:url' => $this->config->site_url . 'wallet/tokens/withdraw',
+                'og:image' => $this->config->cdn_assets_url . 'assets/photos/graph.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+
+            return $meta;
+        });
+
+
+        Manager::add('/wallet/tokens/addresses', function ($slugs = []) {
+            $meta = [
+                'title' => 'Wallet Address Configuration',
+                'description' => 'Configure your wallet address',
+                'og:title' => 'Wallet Address Configuration',
+                'og:description' => 'Configure your wallet address',
+                'og:url' => $this->config->site_url . 'wallet/tokens/addresses',
+                'og:image' => $this->config->cdn_assets_url . 'assets/photos/graph.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+
+            return $meta;
+        });
+
         $marketing = [
-            'affiliates' => [
-                'title' => 'Affiliate Program',
-                'description' => 'Earn 25% of the revenue Minds generates from your referrals',
-                'image' => 'assets/photos/balloon.jpg'
-            ],
-            'monetization' => [
-                'title' => 'Monetization',
-                'description' => 'Start earning revenue on Minds by monetizing your channel',
-                'image' => 'assets/photos/sunset.jpg'
-            ],
             'plus' => [
                 'title' => 'Minds Plus',
-                'description' => 'Opt-out of boosts, earn 1,000 monthly points, access exclusive Minds content, and more',
+                'description' => 'Upgrade your channel for premium features',
                 'image' => 'assets/photos/fractal.jpg'
             ],
             'wallet' => [
                 'title' => 'Wallet',
-                'description' => 'Your Wallet keeps track of your points, payouts, and how much money you’ve earned on Minds.',
-                'image' => 'assets/photos/canyon.jpg'
+                'description' => 'Manage all of your transactions and earnings on Minds',
+                'image' => 'assets/photos/graph.jpg'
             ],
             'wire' => [
                 'title' => 'Wire',
-                'description' => 'Exchange points, dollars and tokens directly with other channels on Minds',
+                'description' => 'Exchange tokens with other channels on Minds',
                 'image' => 'assets/photos/blown-bulb.jpg'
             ],
             'boost' => [
@@ -304,9 +363,9 @@ class Defaults
                 'image' => 'assets/photos/satellite.jpg'
             ],
             'token' => [
-                'title' => 'The Minds Cryptocurrency',
-                'description' => 'Earn money for your contribution to the digital world',
-                'image' => 'assets/marketing/witch-head-1771758_1920.jpg'
+                'title' => 'The Minds Token',
+                'description' => 'Earn crypto for your contributions to the network',
+                'image' => 'assets/photos/globe.jpg'
             ],
             'faq' => [
                 'title' => 'FAQ',
