@@ -24,7 +24,7 @@ class Webhook implements HookInterface
                 ->setUserGuid($user->guid)
                 ->setWalletAddress('offchain')
                 ->setTimestamp(time())
-                ->setTx('oc:' . Guid::build())
+                ->setTx('cc:' . $subscription->getId())
                 ->setAmount(1000 * 10 ** 18)
                 ->setContract('offchain:plus')
                 ->setCompleted(true);

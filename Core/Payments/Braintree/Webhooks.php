@@ -148,7 +148,7 @@ class Webhooks
             ->setUserGuid($user->guid)
             ->setWalletAddress('offchain')
             ->setTimestamp(time())
-            ->setTx('oc:' . Guid::build())
+            ->setTx('cc:bt-' . Guid::build())
             ->setAmount(($subscription->getPrice() * 1000) * 1.1 * 1000 * 10 ** 18)
             ->setContract('offchain:plus')
             ->setCompleted(true);
