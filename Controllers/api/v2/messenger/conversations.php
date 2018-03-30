@@ -238,7 +238,8 @@ class conversations implements Interfaces\Api
                                       ->send([
                                             "user_guid"=>$participant,
                                             "message"=>"You have a new message.",
-                                            "uri" => 'chat'
+                                            "uri" => 'chat',
+                                            'type' => 'message'
                                         ]);
         }
 
