@@ -59,7 +59,7 @@ class Repository
             'from' => null,
             'to' => null,
             'type' => '',
-            'limit' => 12,
+            'limit' => 1000,
             'offset' => null
         ], $options);
 
