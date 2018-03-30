@@ -29,7 +29,7 @@
     <tr>
       <td height="50px" style="text-align:center;">
         <a href="<?php echo Minds\Core\Config::_()->site_url; ?><?php echo $vars['user']->username?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>"
-          style="padding:16px 32px; background-color:#4caf50; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
+          style="padding:16px 32px; background-color:#4caf50; color:#ffffff !important; text-decoration:none; font-weight:bold; border-radius:3px;">
           See who wired you!
         </a>
       </td>
@@ -47,7 +47,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <p> <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>">Wire</a> is the peer-to-peer payment system that allows you to exchange points or dollars with other channels on Minds. It makes it easier than ever to support other channels or earn rewards for sharing great content.</p>
+        <p> <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>">Wire</a> is the peer-to-peer payment and crowdfunding system on Minds. Minds tokens are accepted through Wire. It makes it easier than ever to support other channels or earn rewards for sharing great content.</p>
       </td>
     </tr>
     <tr>
@@ -55,7 +55,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <p>You can exchange your points for extra views on the Minds network using Boost (1 point = 1 view), or you can Wire them to other channels to show your support.</p>
+        <p>You can exchange your tokens for extra views on the Minds network using Boost, or you can Wire them to other channels to show your support.</p>
       </td>
     </tr>
     <tr>
