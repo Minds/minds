@@ -392,7 +392,9 @@ class Manager
     {
         $this->queue->setQueue("WireNotification")
             ->send([
-                "amount" => $wire ? $wire->getAmount() : $this->amount,
+                "amount" => $wire ? 
+                    (string) BigNumber::_($wire->getAmount())->div(10 ** 18)
+                    : (string) BigNumber::_($this->amount)->div(10 ** 18),
                 "sender" => serialize($wire ? $wire->getSender() : $this->sender),
                 "entity" => serialize($wire ? $wire->getEntity() : $this->entity),
                 "subscribed" => $wire ? $wire->isRecurring() : $this->recurring,
