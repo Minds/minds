@@ -78,8 +78,6 @@ class wire implements Interfaces\Api
                 ->setPayload((array) $_POST['payload']);
             $result = $manager->create();
 
-            $this->sendNotifications((string) $amount, Core\Session::getLoggedinUser(), $entity, $recurring);
-
             if (!$result) {
                 throw new \Exception("Something failed");
             }

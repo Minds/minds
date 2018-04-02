@@ -64,7 +64,8 @@ class Manager
         $txManager = null,
         $txRepo = null,
         $stripe = null,
-        $config = null
+        $config = null,
+        $queue = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
@@ -73,6 +74,7 @@ class Manager
         $this->txRepo = $txRepo ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->stripe = $stripe ?: Di::_()->get('StripePayments');
         $this->config = $config ?: Di::_()->get('Config');
+        $this->queue = $queue ?: Core\Queue\Client::build();
     }
 
     /**
@@ -160,6 +162,8 @@ class Manager
                         'entity_guid' => (string) $this->entity->guid,
                     ]);
                 $this->txManager->add($transaction);
+
+                $this->sendNotification();
                 break;
 
             case 'offchain':
@@ -369,6 +373,8 @@ class Manager
             'user' => $wire->getReceiver(),
         ]);*/
 
+        $this->sendNotification($wire);
+
         $this->clearWireCache($wire);
 
         return $success;
@@ -377,8 +383,20 @@ class Manager
     /**
      * @param Wire $wire
      */
-    protected function clearWireCache(Wire $wire) {
+    protected function clearWireCache(Wire $wire)
+    {
         $this->cache->destroy(Counter::getIndexName($wire->getEntity()->guid, null, 'tokens', null, true));
+    }
+
+    protected function sendNotification(Wire $wire = null)
+    {
+        $this->queue->setQueue("WireNotification")
+            ->send([
+                "amount" => $wire ? $wire->getAmount() : $this->amount,
+                "sender" => serialize($wire ? $wire->getSender() : $this->sender),
+                "entity" => serialize($wire ? $wire->getEntity() : $this->entity),
+                "subscribed" => $wire ? $wire->isRecurring() : $this->recurring,
+            ]);
     }
 
 }

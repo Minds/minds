@@ -14,6 +14,7 @@ use Minds\Core\Wire\Repository;
 use Minds\Core\Wire\Subscriptions\Manager;
 use Minds\Core\Wire\Wire as WireModel;
 use Minds\Entities\User;
+use Minds\Core\Queue\SQS\Client;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -27,10 +28,11 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_create_an_onchain_wire(
         Repository $repo,
-        BlockchainManager $txManager
+        BlockchainManager $txManager,
+        Client $queue
     )
     {
-        $this->beConstructedWith(null, $repo, null, $txManager);
+        $this->beConstructedWith(null, $repo, null, $txManager, null, null, null, $queue);
 
         $txManager->add(Argument::that(function($transaction) {
                 $data = $transaction->getData();
@@ -49,6 +51,11 @@ class ManagerSpec extends ObjectBehavior
             }))
             ->shouldBeCalled();
 
+        $queue->setQueue(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($queue);
+        $queue->send(Argument::any())
+            ->shouldBeCalled();
 
         $sender = new User();
         $sender->guid = 123;
@@ -76,10 +83,11 @@ class ManagerSpec extends ObjectBehavior
         Redis $cache,
         Repository $repo,
         BlockchainManager $txManager,
-        BlockchainRepo $txRepo
+        BlockchainRepo $txRepo,
+        Client $queue
     )
     {
-        $this->beConstructedWith($cache, $repo, null, $txManager, $txRepo);
+        $this->beConstructedWith($cache, $repo, null, $txManager, $txRepo, null, null, $queue);
 
         $txRepo->add(Argument::that(function($transaction) {
                 return $transaction->getUserGuid() == 123
@@ -89,6 +97,12 @@ class ManagerSpec extends ObjectBehavior
             }))
             ->shouldBeCalled()
             ->willReturn(true);
+        
+        $queue->setQueue(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($queue);
+        $queue->send(Argument::any())
+            ->shouldBeCalled();
 
         $receiver = new User;
         $receiver->guid = 123;
@@ -117,10 +131,11 @@ class ManagerSpec extends ObjectBehavior
     }
 
     function it_should_create_a_creditcard_wire(
-        BlockchainManager $txManager
+        BlockchainManager $txManager,
+        Client $queue
     )
     {
-        $this->beConstructedWith(null, null, null, $txManager);
+        $this->beConstructedWith(null, null, null, $txManager, null, null, null, $queue);
 
         $txManager->add(Argument::that(function($transaction) {
                 $data = $transaction->getData();
@@ -139,6 +154,11 @@ class ManagerSpec extends ObjectBehavior
             }))
             ->shouldBeCalled();
 
+        $queue->setQueue(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($queue);
+        $queue->send(Argument::any())
+            ->shouldBeCalled();
 
         $sender = new User();
         $sender->guid = 123;
