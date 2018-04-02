@@ -163,7 +163,6 @@ class Manager
                     ]);
                 $this->txManager->add($transaction);
 
-                $this->sendNotification();
                 break;
 
             case 'offchain':
@@ -207,6 +206,8 @@ class Manager
                     ->setAmount($this->amount)
                     ->setTimestamp(time());
                 $this->repository->add($wire);
+
+                $this->sendNotification($wire);
 
                 $this->clearWireCache($wire);
 

@@ -51,12 +51,6 @@ class ManagerSpec extends ObjectBehavior
             }))
             ->shouldBeCalled();
 
-        $queue->setQueue(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($queue);
-        $queue->send(Argument::any())
-            ->shouldBeCalled();
-
         $sender = new User();
         $sender->guid = 123;
 
@@ -152,12 +146,6 @@ class ManagerSpec extends ObjectBehavior
                     && $data['sender_guid'] == 123
                     && $data['entity_guid'] == 456;
             }))
-            ->shouldBeCalled();
-
-        $queue->setQueue(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($queue);
-        $queue->send(Argument::any())
             ->shouldBeCalled();
 
         $sender = new User();
