@@ -75,9 +75,10 @@ class Events
             $user = $params['user'];
 
             if ($message instanceof Entities\Message) {
-                $key = "message:$user->guid";
-                if ($message->$key) {
+                if (in_array($user->guid, array_keys($message->getMessages()))) {
                     $event->setResponse(true);
+                } else {
+                    $event->setResponse(false);
                 }
             }
         });

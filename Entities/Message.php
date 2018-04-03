@@ -11,9 +11,13 @@ use Minds\Core\Events;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\User;
 use Minds\Core\Messenger;
+use Minds\Traits;
 
 class Message extends DenormalizedEntity
 {
+
+    use Traits\MagicAttributes;
+
     protected $conversation;
 
     protected $exportableDefaults = [
@@ -28,6 +32,7 @@ class Message extends DenormalizedEntity
     protected $owner_guid;
     protected $owner;
     protected $time_created;
+    protected $accessId = 0;
 
     public function setConversation($conversation)
     {
