@@ -350,6 +350,7 @@ class Blog extends \ElggObject
         $export['thumbs:up:user_guids'] = (array) array_values($export['thumbs:up:user_guids'] ?: []);
         $export['thumbs:up:count'] = Helpers\Counters::get($this->guid, 'thumbs:up');
         $export['thumbs:down:count'] = Helpers\Counters::get($this->guid, 'thumbs:down');
+        $export['reminds'] = Helpers\Counters::get($this->guid, 'remind');
         $export['mature'] = (bool) $export['mature'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason();
         $export['monetized'] = (bool) $export['monetized'];
