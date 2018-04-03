@@ -9,6 +9,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Entities;
 use Minds\Core\Messenger;
+use Minds\Core\Security\ACL;
 
 class Messages
 {
@@ -16,11 +17,17 @@ class Messages
     private $db;
     private $conversation;
     private $participants = [];
+    private $acl;
 
-    public function __construct($db = null, $indexes = null)
+    public function __construct(
+        $db = null,
+        $indexes = null,
+        $acl = null
+    )
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Entities');
         $this->indexes = $indexes ?: Di::_()->get('Database\Cassandra\Indexes');
+        $this->acl = $acl ?: ACL::_();
     }
 
     public function setConversation($conversation)
@@ -47,24 +54,11 @@ class Messages
 
         foreach ($messages as $guid => $json) {
             $message = json_decode($json, true);
-            if (!is_array($message)) {
-                //@todo polyfill for legacy messages (new messages are now denomalized)
-                $legacy_guids[$guid] = $json;
-                continue;
-            }
-            $entities[$guid] = new Entities\Message();
-            $entities[$guid]->loadFromArray($message);
-        }
+            $entity = new Entities\Message();
+            $entity->loadFromArray($message);
 
-        if ($legacy_guids) {
-            $legacy_messages = $this->db->getRows($legacy_guids);
-            foreach ($legacy_messages as $guid => $message) {
-                $entities[$guid] = new Entities\Message();
-                $message['owner'] = $message['ownerObj'];
-                $entities[$guid]->loadFromArray($message);
-                $entities[$guid]->setMessages([
-                    Session::getLoggedInUserGuid() => $message["message:".Session::getLoggedInUserGuid()]
-                    ], true);
+            if ($this->acl->read($entity)) {
+                $entities[$guid] = $entity;
             }
         }
 
