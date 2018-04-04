@@ -67,7 +67,7 @@ class Votes extends Aggregate
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_guid.keyword'
+                                    'field' => 'user_phone_number_hash.keyword'
                                 ]
                             ]
                         ]

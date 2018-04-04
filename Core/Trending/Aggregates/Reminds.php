@@ -68,7 +68,7 @@ class Reminds extends Aggregate
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_guid.keyword'
+                                    'field' => 'user_phone_numner_hash.keyword'
                                 ]
                             ]
                         ]

@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class ChannelVotes extends Aggregate
 {
 
-    protected $multiplier = 0;
+    protected $multiplier = 2;
 
     public function get()
     {
@@ -49,7 +49,7 @@ class ChannelVotes extends Aggregate
             'body' => [
                 'query' => [
                     'bool' => [
-                        'filter' => $filter,
+                        //'filter' => $filter,
                         'must' => $must
                     ]
                 ],
@@ -58,6 +58,14 @@ class ChannelVotes extends Aggregate
                         'terms' => [ 
                             'field' => 'entity_owner_guid.keyword',
                             'size' => $this->limit
+                        ],
+                        'aggs' => [
+                            'uniques' => [
+                                'cardinality' => [
+                                    'field' => 'user_phone_number_hash.keyword',
+                                    'precision_threshold' => 40000
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -71,7 +79,7 @@ class ChannelVotes extends Aggregate
 
         $entities = [];
         foreach ($result['aggregations']['entities']['buckets'] as $entity) {
-            $entities[$entity['key']] = $entity['doc_count'] * $this->multiplier;
+            $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
         }
         return $entities;
     }

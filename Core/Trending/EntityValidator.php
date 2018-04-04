@@ -8,7 +8,7 @@ class EntityValidator
 
     public function isValid($entity, $rating = 1)
     {
-        if (!$entity) {
+        if (!$entity || !method_exists($entity, 'getRating')) {
             return false;
         }
 
@@ -50,11 +50,10 @@ class EntityValidator
 
     protected function isOwnerEnabled($entity)
     {
-        if (!$entity) {
+        if (!$entity || $entity->type == 'user') {
             return true;
         }
         $entity = Entities\Factory::build($entity->guid);
-
         return $this->isEnabled($entity);
     }
 
