@@ -108,27 +108,37 @@ class Manager
         }
 
         $receipt = $this->eth->request('eth_getTransactionReceipt', [ $transaction->getTx() ]);
-        $topics = Dispatcher::trigger('blockchain:listen', 'all', [], []);        
-        $logs = $receipt['logs'];
 
-        if (!$logs) {
+        if (!$receipt || !isset($receipt['status'])) {
             //too soon? add back to queue
-            return $this->add($transaction);
+            $this->add($transaction);
+            return;
+        }
+
+        $topics = Dispatcher::trigger('blockchain:listen', 'all', [], []);
+
+        if ($receipt['status'] === '0x1') {
+            $logs = $receipt['logs'];
+        } else {
+            $logs = [[ 'topics' => [ 'blockchain:fail' ] ]];
         }
 
         foreach ($logs as $log) {
-
             if (!isset($log['topics'])) {
                 continue;
             }
 
             foreach ($log['topics'] as $topic) {
-                if (isset($topics[$topic])) {
+                if (!isset($topics[$topic])) {
+                    continue;
+                }
+
+                foreach ($topics[$topic] as $topicHandlerClass) {
                     try {
-                        (new $topics[$topic]())->event($topic, $log, $transaction);
+                        (new $topicHandlerClass())->event($topic, $log, $transaction);
+                        error_log("Tx[{$this->tx}][{$topicHandlerClass}] {$topic}... OK!");
                     } catch (\Exception $e) {
-                        error_log("Tx[{$this->tx}] {$topic} threw " . get_class($e) . ": {$e->getMessage()}");
-                        continue;
+                        error_log("Tx[{$this->tx}][{$topicHandlerClass}] {$topic} threw " . get_class($e) . ": {$e->getMessage()}");
                     }
                 }
             }

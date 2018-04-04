@@ -109,6 +109,7 @@ class Payment
                         $txData = [
                             'amount' => (string) $boost->getBid(),
                             'guid' => (string) $boost->getGuid(),
+                            'handler' => (string) $boost->getHandler(),
                         ];
 
                         if ($boost->getHandler() === 'peer') {

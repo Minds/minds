@@ -159,7 +159,7 @@ class PaymentSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->offchainTransactions);
 
-        $this->offchainTransactions->setData([ 'amount' => $bid, 'guid' => 1000 ])
+        $this->offchainTransactions->setData([ 'amount' => $bid, 'guid' => 1000, 'handler' => 'network' ])
             ->shouldBeCalled()
             ->willReturn($this->offchainTransactions);
 

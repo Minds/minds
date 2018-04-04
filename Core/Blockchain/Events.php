@@ -40,7 +40,11 @@ class Events
                 }
 
                 foreach ($topics as $topic) {
-                    $topicsMap[$topic] = $handlerClass;
+                    if (!isset($topicsMap[$topic])) {
+                        $topicsMap[$topic] = [];
+                    }
+
+                    $topicsMap[$topic][] = $handlerClass;
                 }
             }
 

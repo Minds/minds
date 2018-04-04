@@ -9,9 +9,8 @@
 namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Transactions\Transaction;
-use Minds\Core\Blockchain\Util;
+use Minds\Core\Data;
 use Minds\Core\Di\Di;
-use Minds\Core\Util\BigNumber;
 
 class BoostEvent implements BlockchainEventInterface
 {
@@ -20,7 +19,15 @@ class BoostEvent implements BlockchainEventInterface
         '0xd7ccb5dc8647fd89286a201b04b5e65fb7b5e281603e972695fd35f52bbd244b' => 'boostAccepted',
         '0xc43f9053be9f0ee374d3f8eb929d2e0aa990d33a7d4a51423cb715228d39ab89' => 'boostRejected',
         '0x0b869ea800008714ae430dc6c4e12a2c880d50fb92937d51a4b223af34040971' => 'boostRevoked',
+        'blockchain:fail' => 'boostFail',
     ];
+
+    protected $mongo;
+
+    public function __construct($mongo = null)
+    {
+        $this->mongo = $mongo ?: Data\Client::build('MongoDB');
+    }
 
     /**
      * @return array
@@ -44,6 +51,30 @@ class BoostEvent implements BlockchainEventInterface
         } else {
             throw new \Exception('Method not found');
         }
+    }
+
+    public function boostFail($log, $transaction) {
+        if ($transaction->getContract() !== 'boost') {
+            return;
+        }
+
+        $boost = Di::_()->get('Boost\Repository')
+            ->getEntity($transaction->getData()['handler'], $transaction->getData()['guid']);
+
+        $tx = (string) $transaction->getTx();
+
+        if (!$boost) {
+            throw new \Exception("No boost with hash ${$tx}");
+        }
+
+        if ($boost->getState() != 'pending') {
+            throw new \Exception("Boost with hash ${$tx} already processed. State: " . $boost->getState());
+        }
+
+        $boost->setState('failed')
+            ->save();
+
+        $this->mongo->remove("boost", [ '_id' => $boost->getId() ]);
     }
 
     public function boostSent($log, $transaction)
@@ -83,7 +114,6 @@ class BoostEvent implements BlockchainEventInterface
 
         $boost->setState('created')
             ->save();
-
     }
 
     public function boostAccepted($log)
