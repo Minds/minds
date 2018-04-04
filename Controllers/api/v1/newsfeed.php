@@ -548,6 +548,10 @@ class newsfeed implements Interfaces\Api
                     $attachment->title = $activity->message;
                     $attachment->access_id = 2;
 
+                    if (isset($_POST['attachment_license'])) {
+                        $attachment->license = $_POST['attachment_license'];
+                    }
+
                     if ($attachment instanceof Flaggable) {
                         $attachment->setFlag('mature', $activity->getMature());
                     }
