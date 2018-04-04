@@ -35,7 +35,7 @@ class Defaults
           'og:description' => $this->config->site_description,
           'og:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
-          'og:image' => $this->config->cdn_assets_url . 'assets/logos/medium-production.jpg',
+          'og:image' => $this->config->cdn_assets_url . 'assets/logos/placeholder.jpg',
           'og:image:width' => 471,
           'og:image:height' => 199,
           'twitter:site' => '@minds',
