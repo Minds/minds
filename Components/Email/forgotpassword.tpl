@@ -2,14 +2,6 @@
   <tbody>
     <tr>
       <td>
-        <b>Hello @<?php echo $vars['user']->username?></b>
-      </td>
-    </tr>
-    <tr>
-      <td height="20px"></td>
-    </tr>
-    <tr>
-      <td>
         Please click on the link below to reset your password.
       </td>
     </tr>

@@ -60,6 +60,7 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
             ->setTemplate()
             ->setBody('forgotpassword.tpl')
             ->set('user', $user)
+            ->set('username', $user->username)
             ->set('link', $link);
           $message->setTo($user)
             ->setSubject("Password Reset")
