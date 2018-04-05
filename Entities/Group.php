@@ -581,7 +581,7 @@ class Group extends NormalizedEntity
         $export['owner_guid'] = $this->getOwnerObj()->guid;
         $export['activity:count'] = $this->getActivityCount();
         $export['members:count'] = $this->getMembersCount();
-        //$export['requests:count'] = $this->getRequestsCount();
+        $export['requests:count'] = $this->getRequestsCount();
         $export['icontime'] = $export['icon_time'];
         $export['briefdescription'] = $export['brief_description'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
