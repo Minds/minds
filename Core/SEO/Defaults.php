@@ -267,6 +267,15 @@ class Defaults
             return $meta;
         });
 
+        /**
+         * Do not index search results
+         */
+        Manager::add('/search', function ($slugs = []) {
+            return [
+                'robots' => 'noindex'
+            ];
+        });
+
         Manager::add('/wallet/tokens/transactions', function ($slugs = []) {
             $meta = [
                 'title' => 'Transactions Ledger',
