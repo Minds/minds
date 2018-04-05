@@ -1,34 +1,3 @@
-<table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-  <tbody>
-    <tr>
-      <td style="text-align:center">
-        <b>Hello @<?php echo $vars['user']->username?></b>
-      </td>
-    </tr>
-    <tr>
-      <td height="8px"></td>
-    </tr>
-
-    <tr>
-      <td height="80px;" style="text-align:center">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>blog/featured?__e_ct_guid=<?= $vars['guid']?>&campaign=retention-<?= $vars['period'] ?>"
-          style="padding:16px 32px; background-color:#546e7a; color:#FFF; text-decoration:none; font-weight:bold; border-radius:3px;">
-          Check-in for 100 points!
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:center">
-        <span style="color:#999; font-size:11px; text-align:center">Clicking anywhere on this email and logging in gives a 100 point reward to boost your content</span>
-      </td>
-    </tr>
-    <tr>
-      <td height="20px"></td>
-    </tr>
-  </tbody>
-</table>
-
-
 
 <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
   <tbody>
