@@ -1,13 +1,6 @@
 <table cellspacing="8" cellpadding="8" border="0" width="558" align="center">
   <tbody>
     <tr>
-      <td style="text-align:left; 
-        font-size: 18px;
-        font-family: 'Lato', helvetica;">
-        <b>Hey @<?php echo $vars['user']->username?>,</b>
-      </td>
-    </tr>
-    <tr>
       <td style="font-size: 16px;
         line-height: 22px;
         letter-spacing: 0.2px;
@@ -58,16 +51,6 @@
         color: #444;
         ">
         Just go to their channel and click the “Wire Me” icon to send them points or USD to support their work and keep them independent!
-      </td>
-    </tr>
-    <tr>
-      <td style="font-size: 16px;
-        line-height: 22px;
-        letter-spacing: 0.2px;
-        font-family: 'Lato', helvetica;
-        color: #444;
-        ">
-       <a href="https://minds.com/?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']; ?>&validator=<?= $vars['validator'] ?>" style="text-decoration:none; color:inherit; font-weight:bold; font-style:italic;">The Minds Team</a>
       </td>
     </tr>
   </tbody>

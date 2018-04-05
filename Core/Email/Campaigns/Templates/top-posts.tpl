@@ -150,7 +150,7 @@
                                 <td></td>
                                 <td style="text-align:right">
                                     <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['topic']?>-<?= $vars['period'] ?>"
-                                            style="border:1px solid #4690d6; border-radius:340p; padding:8px 16px; letter-spacing: 0.75px; text-decoration:none; text-transform: uppercase; color:#4690d6">
+                                            style="border:1px solid #4690d6; border-radius:340p; padding:8px 16px; letter-spacing: 0.75px; text-decoration:none; text-transform: uppercase; color:#4690d6 !important">
                                         View
                                     </a>
                                 </td>

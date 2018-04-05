@@ -5,14 +5,6 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <b>Hey @<?php echo $vars['user']->username?>,</b>
-      </td>
-    </tr>
-    <tr>
-      <td style="font-size: 16px;
-        line-height: 22px;
-        letter-spacing: 0.2px;
-        font-family: 'Lato', helvetica;">
         <a href="https://www.minds.com/wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']; ?>&validator=<?= $vars['validator'] ?>">
             <img src="https://s3.amazonaws.com/mindsfs/emails/sept-5/Wire.png" width="550px">
         </a>
@@ -64,19 +56,6 @@
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
         <p>Give it a try and let us know what you think! </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table cellspacing="8" cellpadding="8" border="0" width="558" align="center">
-  <tbody>
-    <tr>
-      <td style="font-size: 16px;
-        line-height: 22px;
-        letter-spacing: 0.2px;
-        font-family: 'Lato', helvetica;">
-       <a href="https://minds.com/?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']; ?>&validator=<?= $vars['validator'] ?>" style="text-decoration:none; color:inherit; font-weight:bold; font-style:italic;">The Minds Team</a>
       </td>
     </tr>
   </tbody>
