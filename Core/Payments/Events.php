@@ -121,7 +121,7 @@ class Events
             }
 
             /** @var Subscriptions\Manager $manager */
-            $manager = Di::_()->get('Payments\Subscriptions\Manager');
+            /*$manager = Di::_()->get('Payments\Subscriptions\Manager');
 
             $manager
                 ->setUserGuid($user->guid)
@@ -133,7 +133,7 @@ class Events
 
             if ($exclusiveSubscription) {
                 return $event->setResponse($exclusiveSubscription['status'] == 'active');
-            }
+            }*/
 
             return $event->setResponse(false);
         });
