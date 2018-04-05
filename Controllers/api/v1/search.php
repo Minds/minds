@@ -70,7 +70,7 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         if (isset($_GET['mature']) && $_GET['mature']) {
-            $opts['mature'] = true;
+            $opts['mature'] = (bool) $_GET['mature'];
         }
 
         $guids = (new Documents())->query($_GET['q'], $opts);

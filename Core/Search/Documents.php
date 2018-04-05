@@ -35,7 +35,7 @@ class Documents
         'type' => null,
         'offset' => '',
         'flags' => [ ],
-        'mature' => false,
+        'mature' => null,
         'container' => ''
       ], $opts);
 
@@ -88,7 +88,9 @@ class Documents
           $flags .= " +public:true";
       }
 
-      $flags .= " +mature:" . ($opts['mature'] ? 'true' : 'false');
+      if (isset($opts['mature'])) {
+          $flags .= " +mature:" . ($opts['mature'] ? 'true' : 'false');
+      }
 
       // Setup parameters
       $params = [
