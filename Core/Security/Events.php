@@ -276,7 +276,17 @@ class Events
             'draesthetica.co.uk',
             'sphere.social',
             'saveabookmarks.xyz',
-            't.co',
+            '/t.co',
+            'samuelsconstruction.build',
+            'pmwares.com',
+            'watchesofwales.co.uk',
+            '.ru',
+            'zotero.org',
+            'speakerdeck.com',
+            'freesiteslike.com',
+            'pusha.se',
+            'vrootdownload.org',
+            'rubberwebshop.nl',
         ];
     }
 
