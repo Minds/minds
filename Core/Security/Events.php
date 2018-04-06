@@ -257,7 +257,26 @@ class Events
             'mobisony.ru',
             'dzeroki.ru',
             'slimkor.ru',
-            'kak-brosit-kyrit.ru'
+            'kak-brosit-kyrit.ru',
+            'jinyurl.com',
+            'urlin.us',
+            'capillus.com',
+            'siteprofissional.com',
+            'mitersawjudge.com',
+            'mohajreen-jeeda.com',
+            'jobberies.com',
+            'bestfilms.site',
+            'baystudios.ch',
+            'elvenarhack.bid',
+            'essencephskincare.com',
+            'blog2learn.com',
+            'superrugbyonline.net',
+            'superrugby18.livejournal.com',
+            'expertairco.com',
+            'draesthetica.co.uk',
+            'sphere.social',
+            'saveabookmarks.xyz',
+            't.co',
         ];
     }
 
