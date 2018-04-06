@@ -92,12 +92,15 @@ class Events
             $entity = $vote->getEntity();
             $actor = $vote->getActor();
 
+            $container_guid = $entity->type === 'comment' ? $entity->parent->container_guid : $entity->container_guid;
+
             $event = new Core\Analytics\Metrics\Event();
             $event->setType('action')
                 ->setProduct('platform')
                 ->setUserGuid((string) $actor->guid)
                 ->setUserPhoneNumberHash($actor->getPhoneNumberHash())
                 ->setEntityGuid((string) $entity->guid)
+                ->setEntityContainerGuid((string) $container_guid)
                 ->setEntityType($entity->type)
                 ->setEntitySubtype((string) $entity->subtype)
                 ->setEntityOwnerGuid((string) $entity->owner_guid)
@@ -123,6 +126,7 @@ class Events
                     ->setUserGuid((string) $actor->guid)
                     ->setUserPhoneNumberHash($actor->getPhoneNumberHash())
                     ->setEntityGuid($guid)
+                    ->setEntityContainerGuid((string) $container_guid)
                     ->setEntityType('object')
                     ->setEntitySubtype($subtype)
                     ->setEntityOwnerGuid((string) $entity->owner_guid)
@@ -139,12 +143,15 @@ class Events
             $entity = $vote->getEntity();
             $actor = $vote->getActor();
 
+            $container_guid = $entity->type === 'comment' ? $entity->parent->container_guid : $entity->container_guid;
+
             $event = new Core\Analytics\Metrics\Event();
             $event->setType('action')
                 ->setProduct('platform')
                 ->setUserGuid((string) $actor->guid)
                 ->setUserPhoneNumberHash($actor->getPhoneNumberHash())
                 ->setEntityGuid((string) $entity->guid)
+                ->setEntityContainerGuid((string) $container_guid)
                 ->setEntityType($entity->type)
                 ->setEntitySubtype((string) $entity->subtype)
                 ->setEntityOwnerGuid((string) $entity->owner_guid)

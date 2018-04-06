@@ -161,6 +161,7 @@ class comments implements Interfaces\Api
                     ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
                     ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
                     ->setEntityGuid((string) $parent->guid)
+                    ->setEntityContainerGuid((string) $parent->container_guid)
                     ->setEntityType($parent->type)
                     ->setEntitySubtype((string) $parent->subtype)
                     ->setEntityOwnerGuid((string) $parent->owner_guid)

@@ -402,6 +402,7 @@ class newsfeed implements Interfaces\Api
                     ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
                     ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
                     ->setEntityGuid((string) $embeded->guid)
+                    ->setEntityContainerGuid((string) $embeded->container_guid)
                     ->setEntityType($embeded->type)
                     ->setEntitySubtype((string) $embeded->subtype)
                     ->setEntityOwnerGuid((string) $embeded->ownerObj['guid'])

@@ -220,6 +220,16 @@ class membership implements Interfaces\Api
             try {
                 $joined = $membership->setActor($user)->join($pages[1]);
 
+                $event = new Core\Analytics\Metrics\Event();
+                $event->setType('action')
+                    ->setProduct('platform')
+                    ->setAction("join")
+                    ->setUserGuid((string) $user->guid)
+                    ->setUserPhoneNumberHash($user->getPhoneNumberHash())
+                    ->setEntityGuid((string) $group->guid)
+                    ->setEntityType($group->type)
+                    ->push();
+
                 return Factory::response([
                     'done' => $joined
                 ]);

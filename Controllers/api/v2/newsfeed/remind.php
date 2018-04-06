@@ -173,6 +173,7 @@ class remind implements Interfaces\Api
             ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
             ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $embedded->guid)
+            ->setEntityContainerGuid((string) $embedded->container_guid)
             ->setEntityType($embedded->type)
             ->setEntitySubtype((string) $embedded->subtype)
             ->setEntityOwnerGuid((string) $embedded->ownerObj['guid'])
