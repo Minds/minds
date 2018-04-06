@@ -53,6 +53,16 @@ class indexes
     }
 
     /**
+     * Pass other functions back to Call (its a hack)
+     * @param $name
+     * @param $args
+     * @return mixed
+     */
+    public function __call($name, $args) { 
+        return $this->db->$name(...$args);
+    }
+
+    /**
      * Static methods
      */
      public static function fetch($key, array $options = array('limit'=>12, 'offset'=>'','reversed'=>true))
