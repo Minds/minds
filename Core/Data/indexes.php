@@ -8,13 +8,14 @@ namespace Minds\Core\Data;
 
 use Minds\Core;
 
-class indexes extends Call
+class indexes
 {
+    private $db;
     private $namespace = '';
 
     public function __construct($namespace = null)
     {
-        parent::__construct('entities_by_time');
+        $this->db = new Call('entities_by_time');
 
         if ($namespace) {
             $this->setNamespace($namespace);
@@ -40,7 +41,7 @@ class indexes extends Call
     public function get($key_id, array $options = array('limit'=>12, 'offset'=>'','reversed'=>true))
     {
         try {
-            return $this->getRow($this->namespace.$key_id, $options);
+            return $this->db->getRow($this->namespace.$key_id, $options);
         } catch (\Exception $e) {
             return false;
         }
@@ -48,7 +49,7 @@ class indexes extends Call
 
     public function remove($key, array $guids = array())
     {
-        $this->removeAttributes($this->namespace.$key, $guids);
+        $this->db->removeAttributes($this->namespace.$key, $guids);
     }
 
     /**
