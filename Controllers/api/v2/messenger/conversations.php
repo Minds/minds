@@ -51,6 +51,14 @@ class conversations implements Interfaces\Api
 
         $conversation = (new Entities\Conversation())
           ->loadFromGuid($pages[0]);
+
+        if (!Security\ACL::_()->read($conversation)) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You do not have permissions to read this message'
+            ]);
+        }
+
         $messages = (new Messenger\Messages)
           ->setConversation($conversation);
 
@@ -163,12 +171,15 @@ class conversations implements Interfaces\Api
 
         //error_log("got a message to send");
         $conversation = new Entities\Conversation();
-        if (strpos($pages[0], ':') === false) { //legacy messages get confused here
-            $conversation->setParticipant(Core\Session::getLoggedInUserGuid())
-              ->setParticipant($pages[0]);
-        } else {
-            $conversation->setGuid($pages[0]);
+        $conversation->setGuid($pages[0]);
+
+        if (!Security\ACL::_()->read($conversation)) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You do not have permissions to post to this conversation'
+            ]);
         }
+
 
         $message = (new Entities\Message())
           ->setConversation($conversation);
@@ -316,11 +327,13 @@ class conversations implements Interfaces\Api
         $response = [];
 
         $conversation = new Entities\Conversation();
-        if (strpos($pages[0], ':') === false) { //legacy messages get confused here
-            $conversation->setParticipant($user)
-              ->setParticipant($pages[0]);
-        } else {
-            $conversation->setGuid($pages[0]);
+        $conversation->setGuid($pages[0]);
+
+        if (!Security\ACL::_()->read($conversation)) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You do not have permissions to delete this message'
+            ]);
         }
 
         $message = (new Entities\Message())

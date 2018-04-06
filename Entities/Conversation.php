@@ -10,9 +10,13 @@ use Minds\Core\Di\Di;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities;
 use Minds\Core\Messenger;
+use Minds\Traits;
 
 class Conversation extends DenormalizedEntity
 {
+
+    use Traits\MagicAttributes;
+
     protected $rowKey;
 
     protected $exportableDefaults = [
@@ -25,6 +29,7 @@ class Conversation extends DenormalizedEntity
     protected $unread = 0;
     protected $participants = [];
     protected $online = false;
+    protected $accessId = 0;
 
     public function __construct($db = null)
     {

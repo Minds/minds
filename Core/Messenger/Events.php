@@ -71,11 +71,18 @@ class Events
          */
         Core\Events\Dispatcher::register('acl:read', 'all', function ($event) {
             $params = $event->getParameters();
-            $message = $params['entity'];
+            $entity = $params['entity'];
             $user = $params['user'];
 
-            if ($message instanceof Entities\Message) {
-                if (in_array($user->guid, array_keys($message->getMessages()))) {
+            if ($entity instanceof Entities\Message) {
+                if (in_array($user->guid, array_keys($entity->getMessages()))) {
+                    $event->setResponse(true);
+                } else {
+                    $event->setResponse(false);
+                }
+            }
+            if ($entity instanceof Entities\Conversation) {
+                if (in_array($user->guid, $entity->getParticipants())) {
                     $event->setResponse(true);
                 } else {
                     $event->setResponse(false);
