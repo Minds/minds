@@ -40,7 +40,7 @@ class Retention
     public function send()
     {
         $template = "mass";
-        $subject = "Top 10 blogs and your boost bonus";
+        $subject = "Top 10 blogs";
 
         switch ($this->period) {
             case 3:
