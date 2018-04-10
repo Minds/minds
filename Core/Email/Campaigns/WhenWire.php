@@ -13,6 +13,17 @@ class WhenWire extends EmailCampaign
 {
     protected $template;
     protected $mailer;
+    protected $method;
+
+    /**
+     * @param mixed $method
+     * @return WhenWire
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        return $this;
+    }
 
     public function __construct(Template $template = null, Mailer $mailer = null)
     {
@@ -36,6 +47,10 @@ class WhenWire extends EmailCampaign
 
         $this->template->set('campaign', $this->campaign);
         $this->template->set('topic', $this->topic);
+
+        $contract = $this->method === 'onchain' ? 'wire' : 'offchain:wire';
+
+        $this->template->set('contract', $contract);
 
         $this->template->set('validator', $validatorHash);
 

@@ -333,7 +333,8 @@ class Manager
 
         // send wire email
         Dispatcher::trigger('wire:email', 'wire', [
-            'receiver' => $this->receiver
+            'receiver' => $this->receiver,
+            'method' => $this->payload['method']
         ]);
 
         return true;
