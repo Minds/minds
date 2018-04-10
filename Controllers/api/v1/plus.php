@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Entities\User;
 use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -167,8 +168,10 @@ class plus implements Interfaces\Api
                     $subscription->setMerchant($referrer->getMerchant());
                 }
 
-                $subscription = $stripe->cancelSubscription($subscription);
-                $plus->cancel();
+                if ($subscription) {
+                    $subscription = $stripe->cancelSubscription($subscription);
+                    $plus->cancel();
+                }
 
                 $user->plus = false;
                 $user->save();

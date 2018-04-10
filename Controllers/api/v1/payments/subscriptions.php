@@ -104,6 +104,12 @@ class subscriptions implements Interfaces\Api
             ->setSubscription($subscription)
             ->cancel();
 
+        if ($subscription->getPlanId() == 'plus') {
+            $user = Core\Session::getLoggedInUser();
+            $user->plus = false;
+            $user->save();
+        }
+
         return Factory::response([
             'done' => (bool) $success
         ]);
