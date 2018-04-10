@@ -17,7 +17,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Payments;
 
-class peer implements Interfaces\Api, Interfaces\ApiIgnorePam
+class peer implements Interfaces\Api
 {
     private $rate = 1;
 

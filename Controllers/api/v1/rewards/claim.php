@@ -16,7 +16,7 @@ use Minds\Core\FounderRewards\RewardType;
 use Minds\Helpers;
 use Minds\Interfaces;
 
-class claim implements Interfaces\Api, Interfaces\ApiIgnorePam
+class claim implements Interfaces\Api
 {
     public function get($pages)
     {
