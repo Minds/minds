@@ -162,6 +162,7 @@ class Factory
      * Returns the exportable form of the entities
      * @param array $entities - an array of entities
      * @return array - an array of the entities
+     * @deprecated
      */
     public static function exportable($entities, $exceptions = array(), $exportContext = false)
     {

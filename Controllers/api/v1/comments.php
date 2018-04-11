@@ -7,6 +7,7 @@
  */
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Exportable;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Entities;
@@ -53,9 +54,10 @@ class comments implements Interfaces\Api
             $owner = $comment->getOwnerEntity();
             $comments[$k]->ownerObj = $owner->export();
         }
-        $response['comments'] = factory::exportable($comments);
+        $response['comments'] = Exportable::_($comments);
         $response['load-next'] = (string) end($comments)->guid;
         $response['load-previous'] = (string) reset($comments)->guid;
+
         $response['socketRoomName'] = "comments:{$guid}";
 
         return Factory::response($response);

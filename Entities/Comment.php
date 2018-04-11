@@ -27,6 +27,7 @@ class Comment extends Entities\Entity
             'access_id' => 2,
             'mature' => false,
             'edited' => false,
+            'deleted' => false,
         ));
     }
 
@@ -80,6 +81,25 @@ class Comment extends Entities\Entity
     public function getEdited()
     {
         return (boolean) $this->edited;
+    }
+
+    /**
+     * Sets the deleted flag for this activity
+     * @param mixed $value
+     */
+    public function setDeleted($value)
+    {
+        $this->deleted = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the spam flag
+     * @return boolean
+     */
+    public function isDeleted()
+    {
+        return (bool) $this->deleted;
     }
 
     /**
@@ -273,6 +293,10 @@ class Comment extends Entities\Entity
         $export['thumbs:down:user_guids'] = $export['thumbs:down:user_guids'] ? (array) array_values($export['thumbs:down:user_guids']) : [];
 
         $export['mature'] = (bool) $export['mature'];
+
+        if (Helpers\Flags::shouldDiscloseStatus($this)) {
+            $export['deleted'] = $this->isDeleted();
+        }
 
         if ($this->custom_type == 'video' && $this->custom_data['guid']) {
             $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
