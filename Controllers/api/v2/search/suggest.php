@@ -38,6 +38,9 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         try {
             $entities = $search->suggest('user', $_GET['q'], $limit);
+            $entities = array_values(array_filter($entities, function ($entity) {
+                return isset($entity['guid']);
+            }));
 
             if ($entities && $hydrate) {
                 $guids = [];
