@@ -111,8 +111,8 @@ $CONFIG->set('facebook', [
 ]);
 
 $CONFIG->set('twitter', [
-    'app_id' => '{{twitter-app-id}}',
-    'app_secret' => '{{twitter-app-id}}'
+    'api_key' => '{{twitter-app-id}}',
+    'api_secret' => '{{twitter-app-id}}'
 ]);
 
 $CONFIG->set('twilio', [

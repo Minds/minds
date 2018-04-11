@@ -61,7 +61,7 @@ class Credentials
 
         $attrs = [];
         foreach ($data as $key => $value) {
-            $attrs[$socialNetwork . ':' . $key] = $value;
+            $attrs[$socialNetwork . ':' . $key] = (string) $value;
         }
 
         $this->db->insert($user . ":thirdpartynetworks:credentials", $attrs);
