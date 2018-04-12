@@ -190,6 +190,7 @@ class blog implements Interfaces\Api
         }
 
         $original_access = $blog->access_id;
+        $original_published = $blog->published;
         $allowed = array('title', 'description', 'access_id', 'status', 'license', 'mature', 'monetized', 'wire_threshold', 'category', 'categories', 'published');
 
         foreach ($allowed as $v) {
@@ -292,7 +293,7 @@ class blog implements Interfaces\Api
         $activity_post = false;
         if ((!isset($pages[0]) || $pages[0] == "new") && $blog->access_id == 2) {
             $activity_post = true;
-        } elseif ($original_access != 2 && $blog->access_id == 2) {
+        } elseif ($original_published !== $blog->published && !$original_published && $original_access != 2 && $blog->access_id == 2) {
             $activity_post = true;
         }
 
