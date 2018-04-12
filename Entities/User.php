@@ -39,6 +39,7 @@ class User extends \ElggUser
         $this->attributes['icontime'] = time();
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
+		$this->attributes['mature_channel'] = 0;
 
         parent::initializeAttributes();
     }
@@ -577,6 +578,17 @@ class User extends \ElggUser
         $this->save();
     }
 
+    public function getMatureChannel()
+    {
+        return $this->mature_channel;
+    }
+
+    public function setMatureChannel($value)
+    {
+        $this->mature_channel = $value ? 1 : 0;
+        return $this;
+    }
+
     /**
      * Exports to an array
      * @return array
@@ -617,6 +629,10 @@ class User extends \ElggUser
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];
+        }
+
+        if (isset($export['mature_channel'])) {
+            $export['mature_channel'] = (int) $export['mature_channel'];
         }
 
         if (is_string($export['social_profiles'])) {
@@ -765,7 +781,8 @@ class User extends \ElggUser
             'disabled_boost',
             'categories',
             'wire_rewards',
-            'pinned_posts'
+            'pinned_posts',
+            'mature_channel',
         ));
     }
 }

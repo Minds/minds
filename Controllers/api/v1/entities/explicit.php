@@ -7,11 +7,10 @@
  */
 namespace Minds\Controllers\api\v1\entities;
 
-use Minds\Core;
-use Minds\Entities;
-use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Events\Dispatcher;
+use Minds\Entities;
+use Minds\Interfaces;
 
 class explicit implements Interfaces\Api
 {
@@ -28,45 +27,49 @@ class explicit implements Interfaces\Api
      */
     public function post($pages)
     {
-        $activity = Entities\Factory::build($pages[0]);
+        $entity = Entities\Factory::build($pages[0]);
 
-        if (!$activity->canEdit()) {
+        if (!$entity->canEdit()) {
             return Factory::response(array('status' => 'error', 'message' => 'Can´t edit this Post'));
         }
-        
+
         $value = (bool) $_POST['value'];
 
-        if (method_exists($activity, 'setMature')) {
-            $activity->setMature($value);
-        } elseif (method_exists($activity, 'setFlag')) {
-            $activity->setFlag('mature', $value);
-        } 
-        if (isset($activity->mature)) {
-            $activity->mature = $value;
-        }
+        if ($entity->type === 'user') {
+            $entity->setMatureChannel(true);
+        } else {
+            if (method_exists($entity, 'setMature')) {
+                $entity->setMature($value);
+            } elseif (method_exists($entity, 'setFlag')) {
+                $entity->setFlag('mature', $value);
+            }
+            if (isset($entity->mature)) {
+                $entity->mature = $value;
+            }
 
-        if (isset($activity->custom_data['mature'])) {
-            $activity->custom_data['mature'] = $activity->getMature();
-        }
+            if (isset($entity->custom_data['mature'])) {
+                $entity->custom_data['mature'] = $entity->getMature();
+            }
 
-        if (isset($activity->custom_data[0]['mature'])) {
-            $activity->custom_data[0]['mature'] = $activity->getMature();
-        }
+            if (isset($entity->custom_data[0]['mature'])) {
+                $entity->custom_data[0]['mature'] = $entity->getMature();
+            }
 
-        if ($activity->entity_guid) {
-            $attachment = Entities\Factory::build($activity->entity_guid);
+            if ($entity->entity_guid) {
+                $attachment = Entities\Factory::build($entity->entity_guid);
 
-            if ($attachment && $attachment->guid && $attachment instanceof Interfaces\Flaggable) {
-                $attachment->setFlag('mature', $activity->getMature());
-                $attachment->save();
+                if ($attachment && $attachment->guid && $attachment instanceof Interfaces\Flaggable) {
+                    $attachment->setFlag('mature', $entity->getMature());
+                    $attachment->save();
+                }
             }
         }
 
         Dispatcher::trigger('search:index', 'all', [
-            'entity' => $activity
+            'entity' => $entity
         ]);
         
-        $response = [ 'done' => (bool) $activity->save() ];
+        $response = [ 'done' => (bool) $entity->save() ];
 
         return Factory::response($response);
     }

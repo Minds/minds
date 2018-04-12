@@ -89,6 +89,10 @@ class settings implements Interfaces\Api
             $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
         }
 
+        if (isset($_POST['mature_channel'])) {
+            $user->setMatureChannel(isset($_POST['mature_channel']) && (int) $_POST['mature_channel']);
+        }
+
         if (isset($_POST['monetized']) && $_POST['monetized']) {
             $user->monetized = $_POST['monetized'];
         }
