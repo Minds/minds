@@ -400,6 +400,13 @@ class boost implements Interfaces\Api
             ]);
         }
 
+        if ($boost->getState() != 'created') {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'This boost is in the ' . $boost->getState() . ' state and cannot be refunded'
+            ]);
+        }
+
         if ($action == 'revoke') {
             $review->setBoost($boost);
             try {
@@ -411,6 +418,7 @@ class boost implements Interfaces\Api
                     $response['status'] = 'error';
                 }
             } catch (\Exception $e) {
+                // $response['message'] = $e->getMessage();
                 $response['status'] = 'error';
             }
         }

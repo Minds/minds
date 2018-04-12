@@ -419,7 +419,7 @@ class Payment
                         $boostTransaction = $this->txRepository->get($boost->getOwner()->guid, $boost->getTransactionId());
 
                         //send the tokens back to the booster
-                        $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
+                        $txHash = $this->eth->sendRawTransaction($this->config->get('blockchain')['boost_wallet_pkey'], [
                             'from' => $this->config->get('blockchain')['boost_wallet_address'],
                             'to' => $this->config->get('blockchain')['boost_address'],
                             'gasLimit' => BigNumber::_(200000)->toHex(true),
@@ -433,14 +433,15 @@ class Payment
                             ->setUserGuid($boost->getOwner()->guid)
                             ->setWalletAddress($boostTransaction->getWalletAddress())
                             ->setContract('boost')
-                            ->setTx($boost->getTransactionId())
+                            ->setTx($txHash)
                             ->setAmount($boostTransaction->getAmount())
                             ->setTimestamp(time())
                             ->setCompleted(false)
                             ->setData([
                                 'amount' => (string) $boost->getBid(),
                                 'guid' => (string) $boost->getGuid(),
-                                'handler' => (string) $boost->getHandler()
+                                'handler' => (string) $boost->getHandler(),
+                                'refund' => true,
                             ]);
 
                         $this->txManager->add($refundTransaction);
