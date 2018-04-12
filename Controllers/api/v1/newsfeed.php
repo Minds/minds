@@ -468,6 +468,10 @@ class newsfeed implements Interfaces\Api
                         }
                     }
 
+                    if(isset($_POST['thumbnail'])) {
+                        $activity->setThumbnail($_POST['thumbnail']);
+                    }
+
                     if (isset($_POST['mature'])) {
                         $activity->setMature($_POST['mature']);
                     }
@@ -526,7 +530,7 @@ class newsfeed implements Interfaces\Api
                     $activity->setTitle(rawurldecode($_POST['title']))
                         ->setBlurb(rawurldecode($_POST['description']))
                         ->setURL(\elgg_normalize_url(rawurldecode($_POST['url'])))
-                        ->setThumbnail(rawurldecode($_POST['thumbnail']));
+                        ->setThumbnail($_POST['thumbnail']);
                 }
 
                 if(isset($_POST['wire_threshold']) && $_POST['wire_threshold']) {
