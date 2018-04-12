@@ -29,10 +29,21 @@ class thumbnails implements Interfaces\Api, Interfaces\ApiIgnorePam
             exit;
         }
 
+        $guid = $pages[0];
+
         Core\Security\ACL::$ignore = true;
 
         $size = isset($pages[1]) ? $pages[1] : null;
-        $thumbnail = Di::_()->get('Media\Thumbnails')->get($pages[0], $size);
+
+        $last_cache = isset($pages[2]) ? $pages[2] : time();
+
+        $etag = $last_cache . $guid;
+        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
+        }
+
+        $thumbnail = Di::_()->get('Media\Thumbnails')->get($guid, $size);
 
         if ($thumbnail instanceof \ElggFile) {
             $thumbnail->open('read');

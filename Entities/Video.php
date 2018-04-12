@@ -87,7 +87,7 @@ class Video extends Object
             $domain = $CONFIG->cdn_url;
         }
 
-        return $domain . 'api/v1/media/thumbnails/'.$this->guid;
+        return $domain . 'api/v1/media/thumbnails/' . $this->guid . '/' . $this->time_updated;
     }
 
     public function getURL()

@@ -1048,53 +1048,53 @@ abstract class ElggEntity extends ElggData implements
 	 * @throws IOException
 	 */
 	public function save($timebased = true) {
-		/*if(!$this->guid)
-			$this->guid = GUID::generate();*/
-		$new = true;
-        if($this->guid){
-            if (!$this->canEdit()) {
-                return false;
+
+            $new = true;
+            if($this->guid){
+                if (!$this->canEdit()) {
+                    return false;
+                }
+                $new = false;
+                $this->time_updated = time();
+                elgg_trigger_event('update', $this->type, $this);
+                //@todo review... memecache actually make us slower anyway.. do we need it?
+                if (is_memcache_available()) {
+                    $memcache = new ElggMemcache('new_entity_cache');
+                    $memcache->delete($this->guid);
+                }
+            } else {
+                $this->guid = Minds\Core\Guid::build();
+                elgg_trigger_event('create', $this->type, $this);
             }
-			$new = false;
-			elgg_trigger_event('update', $this->type, $this);
-			//@todo review... memecache actually make us slower anyway.. do we need it?
-			if (is_memcache_available()) {
-				$memcache = new ElggMemcache('new_entity_cache');
-				$memcache->delete($this->guid);
-			}
-		} else {
-			$this->guid = Minds\Core\Guid::build();
-			elgg_trigger_event('create', $this->type, $this);
-		}
 
-		$db = new Minds\Core\Data\Call('entities');
-		$result = $db->insert($this->guid, $this->toArray());
-		if($result && $timebased){
-			$db = new Minds\Core\Data\Call('entities_by_time');
-			$data =  array($result => $result);
+            $db = new Minds\Core\Data\Call('entities');
+            $result = $db->insert($this->guid, $this->toArray());
+            if ($result && $timebased) {
+                $db = new Minds\Core\Data\Call('entities_by_time');
+                $data =  array($result => $result);
 
-			foreach($this->getIndexKeys() as $index){
-				$db->insert($index, $data);
-			}
+                foreach ($this->getIndexKeys() as $index) {
+                    $db->insert($index, $data);
+                }
 
-			if(in_array($this->access_id, array(2, -2, 1))){
-					Minds\Core\Queue\Client::build()->setQueue("FeedDispatcher")
-							->send(array(
-									"guid" => $this->guid,
-									"owner_guid" => $this->owner_guid,
-									"type" => $this->type,
-									"subtype" => $this->subtype,
-									"super_subtype" => $this->super_subtype
-									));
-			}
+                if (in_array($this->access_id, array(2, -2, 1))) {
+                    Minds\Core\Queue\Client::build()->setQueue("FeedDispatcher")
+                        ->send(array(
+                            "guid" => $this->guid,
+                            "owner_guid" => $this->owner_guid,
+                            "type" => $this->type,
+                            "subtype" => $this->subtype,
+                            "super_subtype" => $this->super_subtype
+                        ));
+                 }
 
-			if(!$new && $this->access_id != ACCESS_PUBLIC){
-				$remove = array("$this->type", "$this->type:$this->subtype", "$this->type:$this->super_subtype");
+                 if(!$new && $this->access_id != ACCESS_PUBLIC){
+                     $remove = array("$this->type", "$this->type:$this->subtype", "$this->type:$this->super_subtype");
 			//	foreach($remove as $index)
 			//		$db->removeAttributes($index, array($this->guid), false);
-			}
-		}
-		return $this->guid;
+                 }
+            }
+            return $this->guid;
 	}
 
 	/**
