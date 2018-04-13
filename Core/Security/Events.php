@@ -280,7 +280,7 @@ class Events
             'samuelsconstruction.build',
             'pmwares.com',
             'watchesofwales.co.uk',
-            '.ru',
+            //'.ru',
             'zotero.org',
             'speakerdeck.com',
             'freesiteslike.com',
