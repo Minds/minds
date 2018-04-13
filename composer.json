@@ -26,7 +26,8 @@
         "abraham/twitteroauth": "^0.6.4",
         "google/apiclient": "^2.0",
         "aws/aws-php-sns-message-validator": "^1.4",
-        "giggsey/libphonenumber-for-php": "^8.8"
+        "giggsey/libphonenumber-for-php": "^8.8",
+        "php-ffmpeg/php-ffmpeg": "^0.11.1"
     },
     "repositories": [
         {

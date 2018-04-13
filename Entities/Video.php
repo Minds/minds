@@ -71,8 +71,8 @@ class Video extends Object
     {
         $this->generateGuid();
 
-        $aws = ServiceFactory::build('AWS');
-        $aws->setKey($this->getGuid())
+        $transcoder = ServiceFactory::build('FFMpeg');
+        $transcoder->setKey($this->getGuid())
           ->saveToFilestore($filepath)
           ->transcode();
 

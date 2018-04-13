@@ -69,6 +69,10 @@ RUN apk add --no-cache zeromq-dev && \
 
 RUN apk add --update --no-cache nodejs
 
+# Install ffmpeg (needed for video transcodes)
+
+RUN apk add --no-cache ffmpeg
+
 # PHP INI
 
 COPY php.ini /usr/local/etc/php/
