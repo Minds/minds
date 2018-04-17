@@ -281,20 +281,29 @@ class channel implements Interfaces\Api
     public function delete($pages)
     {
         if (!Core\Session::getLoggedinUser()) {
-            return Factory::response(array('status'=>'error', 'message'=>'not logged in'));
+            return Factory::response(array('status' => 'error', 'message' => 'not logged in'));
         }
 
         switch ($pages[0]) {
-          case "carousel":
-            $db = new Core\Data\Call('entities_by_time');
-          //  $db->removeAttributes("object:carousel:user:" . elgg_get_logged_in_user_guid());
-            $item = new \Minds\Entities\Object\Carousel($pages[1]);
-            $item->delete();
-            break;
-          default:
-            $channel = Core\Session::getLoggedinUser();
-            $channel->enabled = 'no';
-            $channel->save();
+            case "carousel":
+                $db = new Core\Data\Call('entities_by_time');
+                //  $db->removeAttributes("object:carousel:user:" . elgg_get_logged_in_user_guid());
+                $item = new \Minds\Entities\Object\Carousel($pages[1]);
+                $item->delete();
+                break;
+            default:
+                $channel = Core\Session::getLoggedinUser();
+                $channel->enabled = 'no';
+                $channel->save();
+
+                $customer = (new Core\Payments\Customer())
+                    ->setUser($channel);
+
+                $stripe = Core\Di\Di::_()->get('StripePayments');
+                $customer = $stripe->getCustomer($customer);
+                if ($customer) {
+                    $stripe->deleteCustomer($customer);
+                }
         }
 
         return Factory::response(array());

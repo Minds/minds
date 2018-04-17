@@ -19,9 +19,10 @@ class Webhooks
     protected $signingKey;
     protected $event;
     protected $aliases = [
-      'invoice.payment_succeeded' => 'onInvoicePaymentSuccess',
-      'customer.subscription.deleted' => 'onCancelled',
-      'payout.paid' => 'onPayoutPaid'
+        'invoice.payment_succeeded' => 'onInvoicePaymentSuccess',
+        'customer.subscription.deleted' => 'onCancelled',
+        'payout.paid' => 'onPayoutPaid',
+        'customer.deleted' => 'onCustomerDeleted',
     ];
     protected $hooks;
 
@@ -173,6 +174,20 @@ class Webhooks
         $this->hooks->onPayoutPaid($payoutObj, $customer, $bankAccount);
     }
 
+    protected function onCustomerDeleted()
+    {
+        $customerObj = $this->event->data->object;
+
+        $user = new Entities\User($customerObj->metadata->user_guid);
+
+        if ($user && $user->guid) {
+            /** @var Payments\Subscriptions\Manager $manager */
+            $manager = Core\Di\Di::_()->get('Payments\Subscriptions\Manager');
+
+            $manager->setUser($user)
+                ->cancelAllSubscriptions();
+        }
+    }
     /**
      * @return void
      */

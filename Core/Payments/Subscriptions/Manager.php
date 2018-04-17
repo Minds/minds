@@ -8,10 +8,12 @@
 
 namespace Minds\Core\Payments\Subscriptions;
 
+use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Guid;
 use Minds\Core\Payments;
 use Minds\Entities\Factory;
+use Minds\Entities\User;
 
 class Manager
 {
@@ -28,6 +30,9 @@ class Manager
     /** @var Subscription $subscription */
     protected $subscription;
 
+    /** @var User */
+    protected $user;
+
     public function __construct($repository = null)
     {
         $this->repository = $repository ?: Di::_()->get('Payments\Subscriptions\Repository');
@@ -35,6 +40,7 @@ class Manager
 
     /**
      * @param Subscription
+     * @return Manager
      */
     public function setSubscription($subscription)
     {
@@ -43,8 +49,17 @@ class Manager
     }
 
     /**
-     * @param array $data
-     * @return mixed
+     * @param User $user
+     * @return Manager
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return bool
      * @throws \Exception
      */
     public function create()
@@ -57,8 +72,6 @@ class Manager
     }
 
     /**
-     * @param $last_billing
-     * @param $recurring
      * @return bool
      * @throws \Exception
      */
@@ -84,8 +97,6 @@ class Manager
 
 
     /**
-     * @param \DateTime|int $last_billing
-     * @param string $recurring
      * @return int|null
      * @throws \Exception
      */
@@ -110,6 +121,41 @@ class Manager
         }
 
         return $date->getTimestamp();
+    }
+
+    /**
+     * Cancels all subscriptions from and to a User
+     * @return bool
+     * @throws \Exception
+     */
+    public function cancelAllSubscriptions()
+    {
+        if (!$this->user) {
+            return false;
+        }
+
+        //get user's own subscriptions
+        $ownSubscriptions = $this->repository
+            ->getList([
+                'user_guid' => $this->user->guid
+            ]);
+
+        $guid = $this->user->guid;
+
+        //get subscriptions TO the user
+        $othersSubscriptions = $this->repository->getList([
+            'entity_guid' => $guid,
+            'status' => 'active'
+        ]);
+
+        $subs = array_merge($ownSubscriptions, $othersSubscriptions);
+
+        // cancel subscriptions
+        foreach ($subs as $sub) {
+            $this->repository->delete($sub);
+        }
+
+        return true;
     }
 
 }

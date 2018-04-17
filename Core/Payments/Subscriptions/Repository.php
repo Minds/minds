@@ -37,7 +37,8 @@ class Repository
             'user_guid' => null,
             'limit' => null,
             'offset' => null,
-            'plan_id' => null
+            'plan_id' => null,
+            'entity_guid' => null,
         ], $options);
 
         $cqlOpts = [];
@@ -57,6 +58,12 @@ class Repository
         if ($options['plan_id']) {
             $where[] = 'plan_id = ?';
             $values[] = $options['plan_id'];
+        }
+
+        if ($options['entity_guid']) {
+            $where[] = 'entity_guid = ?';
+            $values[] = new Varint($options['entity_guid']);
+            $allowFiltering = true;
         }
 
         if ($options['status']) {

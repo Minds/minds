@@ -164,6 +164,60 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn($next);
     }
 
+    function it_should_return_false_if_cancelling_all_subscriptions_with_no_user_set()
+    {
+        $this->cancelAllSubscriptions()->shouldReturn(false);
+    }
+
+    function it_should_cancel_all_subscriptions_from_and_to_a_user(User $user)
+    {
+        $sub = new Subscription();
+        $sub->setId('1')
+            ->setPlanId('wire')
+            ->setPaymentMethod('money')
+            ->setUser('1234')
+            ->setEntity('4567')
+            ->setStatus('active');
+        $ownSubs[] = $sub;
+
+        $sub = new Subscription();
+        $sub->setId('2')
+            ->setPlanId('wire')
+            ->setPaymentMethod('tokens')
+            ->setEntity('1234')
+            ->setUser('4567')
+            ->setStatus('active');
+        $othersSubs[] = $sub;
+
+        $sub = new Subscription();
+        $sub->setId('3')
+            ->setPlanId('wire')
+            ->setPaymentMethod('tokens')
+            ->setEntity('1234')
+            ->setUser('891011')
+            ->setStatus('active');
+        $othersSubs[] = $sub;
+
+        $user->get('guid')
+            ->shouldBeCalled()
+            ->willReturn('1234');
+
+        $this->repository->getList(['user_guid' => '1234'])
+            ->shouldBeCalled()
+            ->willReturn($ownSubs);
+
+        $this->repository->getList(['entity_guid' => '1234', 'status' => 'active'])
+            ->shouldBeCalled()
+            ->willReturn($othersSubs);
+
+        $this->repository->delete(Argument::any())
+            ->shouldBeCalledTimes(count($ownSubs) + count($othersSubs))
+            ->willReturn(true);
+
+        $this->setUser($user);
+        $this->cancelAllSubscriptions()->shouldReturn(true);
+    }
+
     /*function it_should_get_next_billing_as_null_for_custom_recurring()
     {
         $last_billing = 10000000;

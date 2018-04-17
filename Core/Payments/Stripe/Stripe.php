@@ -772,6 +772,17 @@ class Stripe implements PaymentServiceInterface, SubscriptionPaymentServiceInter
         return $customer;
     }
 
+    public function deleteCustomer(Customer $customer)
+    {
+        try {
+            $customer = \Stripe\Customer::retrieve($customer->getId());
+            $customer->delete();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function createPaymentMethod(PaymentMethod $payment_method)
     {
     }
