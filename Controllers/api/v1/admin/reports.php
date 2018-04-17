@@ -62,21 +62,23 @@ class reports implements Interfaces\Api, Interfaces\ApiAdminPam
         $guid = $pages[0];
         $action = $pages[1];
 
+        $reason = $_POST['reason'] ?: null;
+
         switch ($action) {
             case 'archive':
-                $response['done'] = $actions->archive($guid);
+                $response['done'] = $actions->archive($guid, $reason);
                 break;
             case 'explicit':
-                $response['done'] = $actions->markAsExplicit($guid);
+                $response['done'] = $actions->markAsExplicit($guid, $reason);
                 break;
             case 'spam':
-                $response['done'] = $actions->markAsSpam($guid);
+                $response['done'] = $actions->markAsSpam($guid, $reason);
                 break;
             case 'spam':
-                $response['done'] = (new Core\Reports())->spam($guid);
+                $response['done'] = (new Core\Reports())->spam($guid, $reason);
                 break;
             case 'delete':
-                $response['done'] = $actions->delete($guid);
+                $response['done'] = $actions->delete($guid, $reason);
                 break;
         }
 

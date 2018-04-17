@@ -33,7 +33,7 @@ class Actions
      * @return bool
      * @throws \Exception
      */
-    public function markAsExplicit($guid)
+    public function markAsExplicit($guid, $reason = null)
     {
         if (!$guid) {
             return false;
@@ -47,7 +47,11 @@ class Actions
         if (!$report) {
             return false;
         }
-        
+
+        if ($reason) {
+            $report->setReason($reason);
+        }
+
         $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
 
         if (!$entity) {
@@ -90,7 +94,8 @@ class Actions
 
         $success = $repository->update($guid, [
             'state' => 'actioned',
-            'action' => 'explicit'
+            'action' => 'explicit',
+            'reason' => (string) $report->getReason(),
         ]);
 
         return (bool) $success;
@@ -101,7 +106,7 @@ class Actions
      * @return bool
      * @throws \Exception
      */
-    public function markAsSpam($guid)
+    public function markAsSpam($guid, $reason = null)
     {
         if (!$guid) {
             return false;
@@ -114,6 +119,10 @@ class Actions
 
         if (!$report) {
             return false;
+        }
+
+        if ($reason) {
+            $report->setReason($reason);
         }
 
         $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
@@ -158,7 +167,8 @@ class Actions
 
         $success = $repository->update($guid, [
             'state' => 'actioned',
-            'action' => 'spam'
+            'action' => 'spam',
+            'reason' => (string) $report->getReason(),
         ]);
 
         return (bool) $success;
@@ -169,7 +179,7 @@ class Actions
      * @return bool
      * @throws \Exception
      */
-    public function delete($guid)
+    public function delete($guid, $reason = null)
     {
         if (!$guid) {
             return false;
@@ -182,6 +192,10 @@ class Actions
 
         if (!$report) {
             return false;
+        }
+
+        if ($reason) {
+            $report->setReason($reason);
         }
 
         $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
@@ -226,7 +240,8 @@ class Actions
 
         $success = $repository->update($guid, [
             'state' => 'actioned',
-            'action' => 'delete'
+            'action' => 'delete',
+            'reason' => (string) $report->getReason(),
         ]);
 
         return (bool) $success;
