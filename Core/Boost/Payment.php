@@ -10,6 +10,7 @@ use Minds\Core\Payments;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
+use Minds\Core\Data\Locks\LockFailedException;
 
 class Payment
 {
@@ -28,18 +29,23 @@ class Payment
     /** @var Pending */
     protected $boostPending;
 
+    /** @var Lock */
+    protected $locks;
+
     public function __construct(
         $stripePayments = null,
         $eth = null,
         $txManager = null,
         $txRepository = null,
-        $config = null
+        $config = null,
+        $locks = null
     ) {
         $this->stripePayments = $stripePayments ?: Di::_()->get('StripePayments');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
         $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->config = $config ?: Di::_()->get('Config');
+        $this->locks = $locks ?: Di::_()->get('Database\Locks');
     }
 
     /**
@@ -448,6 +454,16 @@ class Payment
                         break;
 
                     case 'offchain':
+
+                        $this->locks->setKey("boost:refund:{$boost->getGuid}");
+                        if ($this->locks->isLocked()) {
+                            throw new LockFailedException();
+                        }
+
+                        $this->locks
+                            ->setTTL(86400) //lock for 1 day
+                            ->lock();
+
                         $txData = [
                             'amount' => (string) $boost->getBid(),
                             'guid' => (string) $boost->getGuid(),
