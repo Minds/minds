@@ -136,6 +136,7 @@ class Search
                 [ '@timestamp' => 'desc' ]
             ];
         } elseif ($options['sort'] == 'top') {
+            $match['fields'] = [ 'name^6', 'title^8', 'message^8', 'username^8', 'tags^64'  ];
             $prepared->setRange([
                 [ 
                     'interactions' => [

@@ -159,15 +159,15 @@ class EntityMapping implements MappingInterface
 
         $fullText = '';
 
-        foreach ($map as $key => $value) {
-            if (!is_string($value) || is_numeric($value)) {
-                continue;
-            }
-
-            $fullText .= ' ' . $value;
+        if (isset($map['title'])) {
+            $fullText .= ' ' . $map['title'];
         }
 
-        $htRe = '/(^|\s)#(\w*[a-zA-Z_]+\w*)/';
+        if (isset($map['message'])) {
+            $fullText .= ' ' . $map['message'];
+        }
+
+        $htRe = '/(^|\s||)#(\w*[a-zA-Z_]+\w*)/';
         $matches = [];
 
         preg_match_all($htRe, $fullText, $matches);
