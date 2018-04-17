@@ -9,7 +9,7 @@ use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Blockchain\Wallets\OffChain\Balance;
 use Minds\Core\Blockchain\Wallets\OffChain\Transactions;
 use Minds\Core\Config;
-use Minds\Core\Data\Cassandra\Locks\LockFailedException;
+use Minds\Core\Data\Locks\LockFailedException;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;

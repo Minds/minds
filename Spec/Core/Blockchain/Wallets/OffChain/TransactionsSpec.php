@@ -2,7 +2,7 @@
 
 namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
-use Minds\Core\Data\Cassandra\Locks\Locks;
+use Minds\Core\Data\Locks\Redis as Locks;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

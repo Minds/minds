@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Minds\Core\Data\Cassandra\Locks;
+namespace Minds\Core\Data\Locks;
 
 
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 
-class Locks
+class Cassandra
 {
     /** @var Client */
     protected $db;

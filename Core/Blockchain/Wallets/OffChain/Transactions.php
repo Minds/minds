@@ -9,8 +9,8 @@
 namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Core\Blockchain\Transactions\Repository;
-use Minds\Core\Data\Cassandra\Locks\LockFailedException;
-use Minds\Core\Data\Cassandra\Locks\Locks;
+use Minds\Core\Data\Locks\LockFailedException;
+use Minds\Core\Data\Locks\Locks;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 use Minds\Core\Di\Di;
@@ -47,7 +47,7 @@ class Transactions
     {
         $this->repository = $repository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->balance = $balance ?: Di::_()->get('Blockchain\Wallets\OffChain\Balance');
-        $this->locks = $locks ?: Di::_()->get('Database\Cassandra\Locks');
+        $this->locks = $locks ?: Di::_()->get('Database\Locks');
     }
 
     public function setUser(User $user)

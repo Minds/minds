@@ -1,17 +1,17 @@
 <?php
 
-namespace Spec\Minds\Core\Data\Cassandra\Locks;
+namespace Spec\Minds\Core\Data\Locks;
 
 use Minds\Core\Data\Cassandra\Client;
-use Minds\Core\Data\Cassandra\Locks\KeyNotSetupException;
+use Minds\Core\Data\Locks\KeyNotSetupException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class LocksSpec extends ObjectBehavior
+class CassandraSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Data\Cassandra\Locks\Locks');
+        $this->shouldHaveType('Minds\Core\Data\Locks\Cassandra');
     }
 
     function it_should_throw_if_calling_isLocked_but_no_key_is_set(Client $db)
