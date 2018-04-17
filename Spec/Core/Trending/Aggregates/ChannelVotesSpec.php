@@ -33,8 +33,8 @@ class ChannelVotesSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 100,
-            456 => 50
+            123 => 50,
+            456 => 25
         ]);
     }
 }

@@ -93,7 +93,7 @@ class ManagerSpec extends ObjectBehavior
         $agg->setSubtype('')->shouldBeCalled();
         $agg->setFrom(Argument::any())->shouldBeCalled();
         $agg->setTo(Argument::any())->shouldBeCalled();
-        $agg->setLimit(100)->shouldBeCalled();
+        $agg->setLimit(500)->shouldBeCalled();
 
         $agg->get()
             ->shouldBeCalled()
@@ -107,7 +107,7 @@ class ManagerSpec extends ObjectBehavior
         $aggImages->setSubtype('image')->shouldBeCalled();
         $aggImages->setFrom(Argument::any())->shouldBeCalled();
         $aggImages->setTo(Argument::any())->shouldBeCalled();
-        $aggImages->setLimit(100)->shouldBeCalled();
+        $aggImages->setLimit(500)->shouldBeCalled();
 
         $aggImages->get()
             ->shouldBeCalled()

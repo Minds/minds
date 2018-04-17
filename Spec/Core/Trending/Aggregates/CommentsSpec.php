@@ -45,8 +45,8 @@ class CommentsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 500,
-            456 => 250
+            123 => 100,
+            456 => 50
         ]);
     }
 }
