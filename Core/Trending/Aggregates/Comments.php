@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class Comments extends Aggregate
 {
 
-    protected $multiplier = 10;
+    protected $multiplier = 2;
 
     public function get()
     {

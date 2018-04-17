@@ -18,13 +18,16 @@ class EntityValidator
         }
         
         return $this->isEnabled($entity) 
-            && $this->isOwnerEnabled($entity->getOwnerEntity())
+            && ($entity->type == 'user' || $this->isOwnerEnabled($entity->getOwnerEntity()))
             && !$this->isMature($entity);
             //&& !$this->isMature($entity->getOwnerEntity());
     }
 
     protected function isMature($entity)
     {
+        if ($entity->type == 'user') {
+            return false;
+        }
         $mature = false;
         if (method_exists($entity, 'getMature')) {
             $mature = $entity->getMature();
@@ -45,12 +48,15 @@ class EntityValidator
             echo $entity->guid . "is not valid";
             return false;
         }
+        if (method_exists($entity, 'getFlag') && $entity->getFlag('paywall') ) {
+            return false;
+        }
         return true;
     }
 
     protected function isOwnerEnabled($entity)
     {
-        if (!$entity || $entity->type == 'user') {
+        if (!$entity) {
             return true;
         }
         $entity = Entities\Factory::build($entity->guid);

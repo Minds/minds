@@ -58,7 +58,7 @@ class Manager
                 }
                 foreach ($map['aggregates'] as $aggregate) {
                     $class = is_string($aggregate) ? new $aggregate : $aggregate;
-                    $class->setLimit(100);
+                    $class->setLimit(500);
                     $class->setType($map['type']);
                     $class->setSubtype($map['subtype']);
                     $class->setFrom($this->from);

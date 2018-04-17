@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class ChannelVotes extends Aggregate
 {
 
-    protected $multiplier = 2;
+    protected $multiplier = 1;
 
     public function get()
     {
@@ -30,7 +30,7 @@ class ChannelVotes extends Aggregate
             ]
         ];
 
-        if ($this->type) {
+        /*if ($this->type) {
             $must[]['match'] = [
                 'entity_type' => $this->type
             ];
@@ -40,7 +40,7 @@ class ChannelVotes extends Aggregate
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
             ];
-        }
+        }*/
 
         $query = [
             'index' => 'minds-metrics-*',
@@ -57,7 +57,10 @@ class ChannelVotes extends Aggregate
                     'entities' => [
                         'terms' => [ 
                             'field' => 'entity_owner_guid.keyword',
-                            'size' => $this->limit
+                            'size' => $this->limit,
+                            'order' => [
+                                'uniques' => 'desc'
+                            ]
                         ],
                         'aggs' => [
                             'uniques' => [
