@@ -16,6 +16,8 @@ use Minds\Core\Util\BigNumber;
 use Minds\Entities\Boost\Network;
 use Minds\Entities\Boost\Peer;
 use Minds\Entities\User;
+use Minds\Core\Data\Locks\Redis as Locks;
+ 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -42,6 +44,9 @@ class PaymentSpec extends ObjectBehavior
     /** @var Cap */
     protected $offchainCap;
 
+    /** @var Locks */
+    protected $locks;
+
     function let(
         Transactions $offchainTransactions,
         Stripe $stripePayments,
@@ -49,7 +54,8 @@ class PaymentSpec extends ObjectBehavior
         Manager $txManager,
         Repository $txRepository,
         Config $config,
-        Cap $offchainCap
+        Cap $offchainCap,
+        Locks $locks
     )
     {
         $this->offchainTransactions = $offchainTransactions;
@@ -59,6 +65,7 @@ class PaymentSpec extends ObjectBehavior
         $this->txRepository = $txRepository;
         $this->config = $config;
         $this->offchainCap = $offchainCap;
+        $this->locks = $locks;
 
         $this->beConstructedWith(
             $this->stripePayments,

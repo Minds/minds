@@ -10,13 +10,16 @@ class Client
     /** @var Redis */
     private $redis;
 
-    public function __construct()
+    public function __construct($redis = null)
     {
-        $this->redis = new \Redis;
+        $this->redis = $redis ?: class_exists('Redis') ? new \Redis : null;
     }
 
     public function connect(...$args)
     {
+        if (!$this->redis) {
+            return false;
+        }
         return $this->redis->connect(...$args);
     }
 
