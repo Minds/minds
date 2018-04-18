@@ -85,6 +85,10 @@ class settings implements Interfaces\Api
             $user->setBoostRating((int) $_POST['boost_rating']);
         }
 
+        if (isset($_POST['boost_autorotate'])) {
+            $user->setBoostAutorotate((bool) $_POST['boost_autorotate']);
+        }
+
         if (isset($_POST['mature'])) {
             $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
         }

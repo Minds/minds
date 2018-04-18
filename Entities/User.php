@@ -29,6 +29,7 @@ class User extends \ElggUser
         $this->attributes['verified'] = 0;
         $this->attributes['founder'] = 0;
         $this->attributes['disabled_boost'] = 0;
+        $this->attributes['boost_autorotate'] = 1;
         $this->attributes['categories'] = [];
         $this->attributes['wire_rewards'] = '';
         $this->attributes['pinned_posts'] = [];
@@ -439,6 +440,26 @@ class User extends \ElggUser
     }
 
     /**
+     * Sets the `boost autorotate` flag
+     * @param  bool $value
+     * @return $this
+     */
+    public function setBoostAutorotate($value)
+    {
+        $this->boost_autorotate = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the `boost autorotate` flag
+     * @return bool
+     */
+    public function getBoostAutorotate()
+    {
+        return (bool) $this->boost_autorotate;
+    }
+
+    /**
      * Subscribes user to another user
      * @param  mixed  $guid
      * @param  array  $data - metadata
@@ -623,6 +644,7 @@ class User extends \ElggUser
         $export['verified'] = (bool) $this->verified;
         $export['founder'] = (bool) $this->founder;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
+        $export['boost_autorotate'] = (bool) $this->getBoostAutorotate();
         $export['categories'] = $this->getCategories();
         $export['pinned_posts'] = $this->getPinnedPosts();
         $export['rewards'] = (bool)$this->getPhoneNumberHash();
@@ -779,6 +801,7 @@ class User extends \ElggUser
             'verified',
             'founder',
             'disabled_boost',
+            'boost_autorotate',
             'categories',
             'wire_rewards',
             'pinned_posts',
