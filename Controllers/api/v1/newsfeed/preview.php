@@ -22,10 +22,12 @@ class preview implements Interfaces\Api
      */
     public function get($pages)
     {
+        $config = Core\Di\Di::_()->get('Config');
+        $iframelyConfig = $config->get('iframely');
         $url = $_GET['url'];
         $response = array();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://open.iframe.ly/api/iframely?origin=minds&api_key=f4da1791510e9dd6ad63bc&url=".urlencode($url));
+        curl_setopt($ch, CURLOPT_URL, "http://open.iframe.ly/api/iframely?origin=".$iframelyConfig['origin']."&api_key=".$iframelyConfig['key']."=".urlencode($url));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);

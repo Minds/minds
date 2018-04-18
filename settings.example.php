@@ -262,6 +262,11 @@ $CONFIG->set('plus', [
     ]
 ]);
 
+$CONFIG>set('iframely' , [
+    'key' => 'f4da1791510e9dd6ad63bc',
+    'origin' => 'minds'
+]);
+
 $CONFIG->set('default_email_subscriptions', [
     [
         'campaign' => 'when',
