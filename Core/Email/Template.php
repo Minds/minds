@@ -15,7 +15,7 @@ class Template
      */
     public function __construct()
     {
-        $this->data['cdn_assets_url'] = 'https://d15u56mvtglc6v.cloudfront.net/front/public/';
+        $this->data['cdn_assets_url'] = 'https://cdn-assets.minds.com/front/dist/';
     }
 
     public function setTemplate($template = 'default')

@@ -61,6 +61,23 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $this->out('done');
     }
 
+    public function RetentionTips()
+    {
+        $this->out('Retention emails');
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        
+        $period = $this->getOpt('period');
+        $offset = '';
+
+        $batch = Core\Email\Batches\Factory::build('RetentionTips');
+
+        $batch->setPeriod($period)
+            ->setOffset($offset)
+            ->run();
+        $this->out('done');
+    }
+
     public function unreadNotifications()
     {
         $offset = $this->getOpt('offset') ?: '';
