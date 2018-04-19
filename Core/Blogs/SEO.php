@@ -139,6 +139,7 @@ class SEO
             'og:image:height' => 1000,
             'al:ios:url' => 'minds://blog/view/' . $blog->guid,
             'al:android:url' => 'minds://blog/view/' . $blog->guid,
+            'robots' => $blog->getRating() == 1 ? 'all' : 'noindex',
         );
     }
 

@@ -85,6 +85,7 @@ class Defaults
                 'al:ios:url' => 'minds://channel/' . $user->guid,
                 'al:android:url' => 'minds://minds/channel/' . $user->guid,
                 'al:ios:app_name' => 'Minds',
+                'robots' => $user->getRating() == 1 ? 'all' : 'noindex',
               ];
             }
         });
@@ -136,6 +137,7 @@ class Defaults
                   'twitter:card' => 'summary',
                   'al:ios:url' => 'minds://activity/' . $activity->guid,
                   'al:android:url' => 'minds://minds/activity/' . $activity->guid,
+                  'robots' => $activity->getRating() == 1 ? 'all' : 'noindex',
                 ];
 
                 if ($activity->custom_type == 'video') {

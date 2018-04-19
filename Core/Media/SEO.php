@@ -78,7 +78,8 @@ class SEO
             'og:url' => $entity->perma_url,
             'og:image' => $entity->getIconUrl('xlarge'),
             'og:image:width' => 2000,
-            'og:image:height' => 1000
+            'og:image:height' => 1000,
+            'robots' => $entity->getRating == 1 ? 'all' : 'noindex',
         ];
     }
 }
