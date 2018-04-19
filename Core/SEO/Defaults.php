@@ -361,6 +361,11 @@ class Defaults
                 'description' => 'Exchange tokens with other channels on Minds',
                 'image' => 'assets/photos/blown-bulb.jpg'
             ],
+            'branding' => [
+                'title' => 'Branding',
+                'description' => 'Logos, assets and styling guides',
+                'image' => 'assets/logos/placeholder.jpg',
+            ],
             'boost' => [
                 'title' => 'Boost',
                 'description' => 'Boost your channel or content to gain more views and reach new audiences',
