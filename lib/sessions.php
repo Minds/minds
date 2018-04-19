@@ -326,7 +326,8 @@ function login(ElggUser $user, $persistent = false) {
 		return false;
 	}
 
-  Minds\Core\Session::generateJWTCookie();
+	Minds\Core\Session::generateJWTCookie();
+	Minds\Core\Security\XSRF::setCookie(true);
 
 	return true;
 }
