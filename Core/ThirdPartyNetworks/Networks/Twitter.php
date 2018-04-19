@@ -5,6 +5,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Minds\Entities\Activity;
 
 class Twitter implements NetworkInterface
 {
@@ -121,7 +122,7 @@ class Twitter implements NetworkInterface
     public function post($entity)
     {
         if ($entity->remind_object) {
-            $entity = new Entities\Activity($entity->remind_object);
+            $entity = new Activity($entity->remind_object);
         }
 
         $tweet = '';
@@ -140,10 +141,10 @@ class Twitter implements NetworkInterface
             $url .= 'newsfeed/' . $entity->guid;
         }
 
-        $urlLength = 139 - strlen($url);
+        $maxTextLength = 257; // 279 - 22. urls always have a 22 character length in twitter
 
-        if (strlen($tweet) > $urlLength) {
-            $tweet = substr($tweet, 0, $urlLength - 1) . '…';
+        if (strlen($tweet) > $maxTextLength) {
+            $tweet = substr($tweet, 0, $maxTextLength - 1) . '…';
         }
 
         $tweet = trim($tweet . ' ' . $url);
