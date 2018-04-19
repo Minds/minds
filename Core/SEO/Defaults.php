@@ -30,6 +30,7 @@ class Defaults
         Manager::setDefaults([
           'title' =>  $this->config->site_name,
           'description' => $this->config->site_description,
+          'keywords' => $this->config->site_keywords,
           'og:title' => $this->config->site_name,
           'og:url' => $this->config->site_url,
           'og:description' => $this->config->site_description,
