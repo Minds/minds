@@ -96,7 +96,7 @@ class twofactor implements Interfaces\Api
                 } else {
                     header('HTTP/1.1 401 Unauthorized', true, 401);
                     $response['status'] = 'error';
-                    $response['message'] = 'Invalid token';
+                    $response['message'] = 'LoginException::InvalidToken';
                 }
 
                 if ($twofactor->verifyCode($secret, $_POST['code'], 1)) {
@@ -109,7 +109,7 @@ class twofactor implements Interfaces\Api
                 } else {
                     header('HTTP/1.1 401 Unauthorized', true, 401);
                     $response['status'] = 'error';
-                    $response['message'] = 'Could not verify.';
+                    $response['message'] = 'LoginException::CodeVerificationFailed';
                 }
                 break;
         }
