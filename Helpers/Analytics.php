@@ -42,10 +42,10 @@ class Analytics
         //skip if we've cached this hour
         $ts = static::buildTS("hour", time());
         $cacher = Core\Data\cache\factory::build('apcu');
-        if ($cacher->get("active:$ts:$user_guid") == true) {
+        if ($cacher->get("$metric:$ts:$user_guid") == true) {
             return;
         }
-        $cacher->set("active:$ts:$user_guid", true, 3600);
+        $cacher->set("$metric:$ts:$user_guid", true, 3600);
 
         /*$db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
