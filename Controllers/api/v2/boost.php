@@ -53,7 +53,9 @@ class boost implements Interfaces\Api
      */
     public function get($pages)
     {
-        $response = array();
+        Factory::isLoggedIn();
+
+        $response = [];
         $limit = isset($_GET['limit']) && $_GET['limit'] ? (int)$_GET['limit'] : 12;
         $offset = isset($_GET['offset']) && $_GET['offset'] ? $_GET['offset'] : '';
 
