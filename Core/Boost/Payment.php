@@ -455,7 +455,7 @@ class Payment
 
                     case 'offchain':
 
-                        $this->locks->setKey("boost:refund:{$boost->getGuid}");
+                        $this->locks->setKey("boost:refund:{$boost->getGuid()}");
                         if ($this->locks->isLocked()) {
                             throw new LockFailedException();
                         }
