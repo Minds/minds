@@ -7,6 +7,7 @@ namespace Minds\Core\Media\Services;
 
 use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
+use GuzzleHttp\Psr7\Stream;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 
@@ -19,7 +20,7 @@ class AWS implements ServiceInterface
     private $key;
     private $dir = 'cinemr_data';
 
-    public function __construct()
+    public function __construct($custom = [])
     {
         $awsConfig = Di::_()->get('Config')->get('aws');
         $opts = [
@@ -33,8 +34,19 @@ class AWS implements ServiceInterface
             ];
         }
 
-        $this->s3 = new S3Client(array_merge([ 'version' => '2006-03-01' ], $opts));
-        $this->et = new ElasticTranscoderClient(array_merge([ 'version' => '2012-09-25' ], $opts));
+        $s3Opts = $opts;
+        $etOpts = $opts;
+
+        if (isset($custom['s3'])) {
+            $s3Opts = array_merge($opts, $custom['s3']);
+        }
+
+        if (isset($custom['et'])) {
+            $etOpts = array_merge($opts, $custom['et']);
+        }
+
+        $this->s3 = new S3Client(array_merge([ 'version' => '2006-03-01' ], $s3Opts));
+        $this->et = new ElasticTranscoderClient(array_merge([ 'version' => '2012-09-25' ], $etOpts));
 
         $this->dir = $awsConfig['elastic_transcoder']['dir'];
     }
@@ -76,6 +88,19 @@ class AWS implements ServiceInterface
             var_dump($e->getMessage()); exit;
         }
         throw new \Exception('Sorry, only strings and stream resource are accepted');
+    }
+
+    public function getTorrent($file)
+    {
+        $objectTorrent = $this->s3->getObjectTorrent([
+            'Bucket' => 'cinemr',
+            'Key' => "{$this->dir}/{$this->key}/${file}"
+        ]);
+
+        /** @var Stream $body */
+        $body = $objectTorrent->get('Body');
+
+        return $body->getContents();
     }
 
     public function transcode()
