@@ -10,6 +10,7 @@ namespace Minds\Core\Torrent\TorrentBuilders;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Media\Services\AWS;
+use Minds\Core\Media\Services\Factory;
 
 class S3 implements TorrentBuilderInterface
 {
@@ -24,13 +25,7 @@ class S3 implements TorrentBuilderInterface
 
     public function __construct($aws = null)
     {
-        $this->aws = $aws ?: new AWS([
-            's3' => [
-                'endpoint' => Di::_()->get('Config')->get('cinemr_url'),
-                'force_path_style' => true,
-                'bucket_endpoint' => true,
-            ]
-        ]);
+        $this->aws = $aws ?: Factory::build('AWS');
     }
 
     /**
