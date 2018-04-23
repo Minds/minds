@@ -483,8 +483,6 @@ class Payment
                             ->setData($txData)
                             ->create();
 
-                        $this->locks->unlock();
-
                         break;
 
                     case 'creditcard':
