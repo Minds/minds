@@ -42,6 +42,13 @@ class group implements Interfaces\Api
 
             $response['group']['is:muted'] = $notifications->isMuted($user);
 
+            if (!$membership->isMember($user) && !$user->isAdmin()) {
+                $allowed = ['guid', 'name', 'membership', 'type'];
+                $response['group'] = array_filter($response['group'], function ($key) use ($allowed) {
+                    return in_array($key, $allowed);
+                }, ARRAY_FILTER_USE_KEY);
+            }
+
             if ($group->isOwner($user)) {
                 /** @var Core\Groups\Feeds $feeds */
                 $feeds = Core\Di\Di::_()->get('Groups\Feeds');
