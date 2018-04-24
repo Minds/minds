@@ -108,21 +108,22 @@ class Manager
 
         $amount = $this->contributions->getRewardsAmount();
  
-        if ($this->dryRun) {
-            return $this->transactions;
-        }
-
         $transaction = new Transaction(); 
         $transaction
             ->setUserGuid($this->user->guid)
             ->setWalletAddress('offchain')
-            ->setTimestamp($this->from / 1000)
+            ->setTimestamp(strtotime("+24 hours - 1 second", $this->from / 1000))
             ->setTx('oc:' . Guid::build())
             ->setAmount($amount)
             ->setContract('offchain:reward')
             ->setCompleted(true);
 
+        if ($this->dryRun) {
+            return $transaction;
+        }
+
         $this->txRepository->add($transaction);
+        //$this->txRepository->delete($this->user->guid, strtotime("+24 hours - 1 second", $this->from / 1000), 'offchain');
         return $transaction;
     }
 

@@ -72,10 +72,16 @@ class UsersIterator implements \Iterator
         $bool = [
             'must' => [
                 [
+                    'exists' => [
+                        'field' => 'user_phone_number_hash',
+                     ],
+                ],
+                [
                     'range' => [
                         '@timestamp' => [
                             'gte' => $this->from,
-                            'lte' => $this->to
+                            'lte' => $this->to,
+                            'format' =>  'epoch_millis'
                         ]
                     ]
                 ]
@@ -91,6 +97,22 @@ class UsersIterator implements \Iterator
             $field = 'entity_guid.keyword';
         }
 
+        if ($this->action == 'active') {
+            $bool['must'][] =
+                [
+                    'match_all' => (object) [],
+                    ];
+            $bool['must'][] =
+                [
+                    'match_phrase' => [
+                        'action' => [
+                            'query' => 'vote:up'
+                        ]
+                    ]
+                ];
+            $field = 'user_guid.keyword';
+        }
+
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
@@ -103,19 +125,12 @@ class UsersIterator implements \Iterator
                     'counts' => [
                         'terms' => [ 
                             'field' => $field,
-                            'size' => 50000, //5000 * 200 pages = 1,000,000 result
+                            'size' => 5000, //5000 * 200 pages = 1,000,000 result
                             'include' => [
                                 'partition' => $this->page,
                                 'num_partitions' => $this->partitions
                             ]
                         ]
-                        //'aggs' => [
-                        //    'uniques' => [
-                        //        'cardinality' => [
-                        //            'field' => 'user_guid.keyword'
-                        //        ]
-                        //    ]
-                        //]
                     ]
                 ]
             ]
@@ -123,17 +138,23 @@ class UsersIterator implements \Iterator
 
         $prepared = new ElasticSearch\Prepared\Search();
         $prepared->query($query);
-
+        
         try {
             $result = $this->client->request($prepared);
         } catch (\Exception $e) {
+            var_dump($e); exit;
+            return false;
         }
-
+        
         foreach ($result['aggregations']['counts']['buckets'] as $count) {
             if ($count['key'] == 0) {
                 continue;
             } 
             array_push($this->data, $count['key']);
+        }
+
+        if ($this->cursor >= count($this->data)) {
+            $this->getUsers();
         }
 
     }
