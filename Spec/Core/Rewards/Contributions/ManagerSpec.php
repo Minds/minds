@@ -136,9 +136,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1, 10);
 
-        $supply = BigNumber::toPlain('100000000', 18)->div(4)->div(365);
-
-        $this->getRewardsAmount()->shouldReturn((string) $supply->div(10));
+        $this->getRewardsAmount()->shouldReturn("15707963267949000");
     }
 
 }

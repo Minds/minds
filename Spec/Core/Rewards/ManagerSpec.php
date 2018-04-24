@@ -27,7 +27,8 @@ class ManagerSpec extends ObjectBehavior
     {
         $this->beConstructedWith($contributions, $transactions, $txRepository);
 
-        $timestamp = time() * 1000;
+        $from = strtotime('midnight tomorrow -24 hours', time()) * 1000;
+        $to = strtotime('midnight tomorrow', time()) * 1000;
         $user = new User;
         $user->guid = 123;
 
@@ -35,8 +36,8 @@ class ManagerSpec extends ObjectBehavior
             'user_guid' => 123,
             'wallet_address' => 'offchain',
             'timestamp' => [
-                'gte' => $timestamp,
-                'lte' => $timestamp,
+                'gte' => $from,
+                'lte' => $to,
                 'eq' => null,
             ],
             'contract' => 'offchain:reward',
@@ -45,12 +46,12 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(null);
 
         $contributions
-            ->setFrom($timestamp)
+            ->setFrom($from)
             ->shouldBeCalled()
             ->willReturn($contributions);
 
         $contributions
-            ->setTo(time() * 1000)
+            ->setTo($to)
             ->shouldBeCalled()
             ->willReturn($contributions);
         
@@ -69,12 +70,12 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->setUser($user)
-            ->setFrom($timestamp)
-            ->setTo(time() * 1000);
+            ->setFrom($from)
+            ->setTo($to);
 
         $this->sync()->getAmount()->shouldBe(20);
         $this->sync()->getContract()->shouldBe('offchain:reward');
-        $this->sync()->getTimestamp()->shouldBe($timestamp / 1000);
+        $this->sync()->getTimestamp()->shouldBe(strtotime('-1 second', $to / 1000));
     }
 
     function it_should_not_allow_duplicate_rewards_to_be_sent(
