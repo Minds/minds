@@ -9,6 +9,7 @@ use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
 use FFMpeg\FFMpeg as FFMpegClient;
 use FFMpeg\FFProbe as FFProbeClient;
+use FFMpeg\Filters\Video\ResizeFilter;
 use Minds\Core;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
@@ -176,9 +177,10 @@ class FFMpeg implements ServiceInterface
             ], $opts);
 
             $video->filters()
-                ->resize(new \FFMpeg\Coordinate\Dimension($opts['width'], $opts['height']))
+                ->resize(new \FFMpeg\Coordinate\Dimension($opts['width'], $opts['height']),
+                    ResizeFilter::RESIZEMODE_SCALE_WIDTH)
                 ->synchronize();
-            
+
             $formatMap = [
                 'mp4' => (new \FFMpeg\Format\Video\X264())
                     ->setAudioCodec("aac"),
@@ -195,11 +197,11 @@ class FFMpeg implements ServiceInterface
                         ->setAudioChannels(2)
                         ->setAudioKiloBitrate($opts['audio_bitrate']);
                     $video->save($formatMap[$format], $path);
-                
+
                     //now upload to s3
                     $this->uploadTranscodedFile($path, $pfx);
                     //cleanup tmp file
-                    @unlink($path);    
+                    @unlink($path);
                 } catch (\Exception $e) {
                     echo " failed {$e->getMessage()}";
                 }
