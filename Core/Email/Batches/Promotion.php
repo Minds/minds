@@ -22,6 +22,12 @@ class Promotion implements EmailBatchInterface
         return $this;
     }
 
+    public function setDryRun($bool)
+    {
+        return $this;
+    }
+
+
     /**
      * @param string $templateKey
      * @return Promotion

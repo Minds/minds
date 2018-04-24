@@ -24,13 +24,13 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
-        $campaign_id = $this->getOpt('campaign');
+        $batch = $this->getOpt('batch');
         $dry = $this->getOpt('dry-run') ?: false;
         $offset = $this->getOpt('offset') ?: '';
         $subject = $this->getOpt('subject') ?: '';
         $template = $this->getOpt('template') ?: '';
 
-        $campaign = Core\Email\Batches\Factory::build($campaign_id);
+        $campaign = Core\Email\Batches\Factory::build($batch);
         $campaign->setDryRun($dry)
             ->setOffset($offset)
             ->setSubject($subject)

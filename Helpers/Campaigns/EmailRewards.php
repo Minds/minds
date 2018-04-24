@@ -2,9 +2,12 @@
 namespace Minds\Helpers\Campaigns;
 
 use Minds\Core;
+use Minds\Core\Guid;
 use Minds\Core\Config;
 use Minds\Helpers;
 use Minds\Entities;
+use Minds\Core\Di\Di;
+use Minds\Core\Blockchain\Transactions\Transaction;
 
 /**
  * Helper for Email Rewards
@@ -48,13 +51,14 @@ class EmailRewards
                 echo "Validator failed"; exit;
             }
             break;
-          case "announcement-26-02-18":
-          case "announcement-27-02-18":
-          case "announcement-28-02-18":
+          case "global":
+              $topic = $_GET['topic'];
+              if ($topic != 'exclusive_promotions') {
+                  return;
+              }
               $validator = $_GET['validator'];
-              if ($validator == sha1($campaign . $user->guid . Config::_()->get('emails_secret'))) {
-                  $points = 1000;
-                  $wire = false;
+              if ($validator == sha1($campaign . $topic . $user->guid . Config::_()->get('emails_secret'))) {
+                  $tokens = 10 ** 18;
               } else {
                   echo "Validator failed"; exit;
               }
@@ -73,25 +77,17 @@ class EmailRewards
         if (!$row || key($row) != $user_guid) {
             $db->insert("analytics:rewarded:email:$campaign", [ $user_guid => time()]);
 
-            if ($wire) {
-                //@todo refactor this
-                //$plus = new Entities\User('730071191229833224');
-                //$service = Core\Wire\Methods\Factory::build('points');
-                //$service->setAmount($points)
-                //    ->setEntity($user)
-                //    ->setActor($plus)
-                //    ->create();
-                //Core\Queue\Client::build()->setQueue("WireNotification")
-                //  ->send(array(
-                //    "amount" => $points,
-                //    "sender" => serialize($plus),
-                //    "entity" => serialize($user),
-                //    "method" => 'points',
-                //    "subscribed" => false
-                //   ));
-            } else {
-                Helpers\Wallet::createTransaction($user_guid, $points, $user_guid, "Email Click ($label)");
-            }
+            $transaction = new Transaction(); 
+            $transaction
+                ->setUserGuid($user->guid)
+                ->setWalletAddress('offchain')
+                ->setTimestamp(time())
+                ->setTx('oc:' . Guid::build())
+                ->setAmount($tokens)
+                ->setContract('offchain:email')
+                ->setCompleted(true);
+            Di::_()->get('Blockchain\Transactions\Repository')->add($transaction);
+            echo 1; exit;
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }
