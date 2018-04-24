@@ -98,7 +98,7 @@ class Manager
     /**
      * Gather the entire site contribution score
      */
-    protected function getSiteContribtionScore()
+    public function getSiteContribtionScore()
     {
         if (isset($this->site_contribtion_score_cache[$this->from])) {
             return $this->site_contribtion_score_cache[$this->from];
@@ -113,7 +113,7 @@ class Manager
      * Gather the contribution score for the user
      * @return int
      */
-    protected function getUserContributionScore()
+    public function getUserContributionScore()
     {
         return $this->sums
             ->setTimestamp($this->from)
