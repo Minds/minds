@@ -60,7 +60,7 @@ class EmailRewards
               if ($validator == sha1($campaign . $topic . $user->guid . Config::_()->get('emails_secret'))) {
                   $tokens = 10 ** 18;
               } else {
-                  echo "Validator failed"; exit;
+                return;
               }
               break;
           default:
@@ -87,7 +87,6 @@ class EmailRewards
                 ->setContract('offchain:email')
                 ->setCompleted(true);
             Di::_()->get('Blockchain\Transactions\Repository')->add($transaction);
-            echo 1; exit;
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());
     }
