@@ -17,6 +17,13 @@ class Thresholds
             throw new \Exception('Entity cannot be paywalled');
         }
 
+        $isPaywall = false;
+        if (method_exists($entity, 'isPaywall') && $entity->isPaywall()) {
+            $isPaywall = true;
+        } elseif (method_exists($entity, 'getFlag') && $entity->getFlag('paywall')) {
+            $isPaywall = true;
+        }
+
         if (is_object($user)) {
             $user = $user->guid;
         }
@@ -24,10 +31,10 @@ class Thresholds
         $threshold = $entity->getWireThreshold();
 
         //make sure legacy posts can work
-        if (!$threshold && $entity->isPaywall()) {
+        if (!$threshold && $isPaywall) {
             $threshold = [
-              'type' => 'money',
-              'min' => $entity->getOwnerEntity()->getMerchant()['exclusive']['amount']
+                'type' => 'money',
+                'min' => $entity->getOwnerEntity()->getMerchant()['exclusive']['amount']
             ];
         }
 
