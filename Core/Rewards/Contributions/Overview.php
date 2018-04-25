@@ -166,6 +166,6 @@ class Overview
      */
     protected function getLastTimestamp()
     {
-        return strtotime('midnight -24 hours', $this->getNextPayout() + time());
+        return strtotime('midnight -24 hours', $this->getNextPayout() + time()) * 1000;
     }
 }
