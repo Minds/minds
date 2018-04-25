@@ -88,7 +88,9 @@ class subscriptions implements Interfaces\Api
 
         if ($subscription->getPaymentMethod() == "money") {
             if (strpos($subscription->getId(), 'sub_', 0) >= -1) {
-                if (Core\Session::getLoggedInUser()->referrer){
+                if ($subscription->getEntity()->guid) { //if a wire
+                    $subscription->setMerchant($subscription->getEntity()->getMerchant());
+                } elseif (Core\Session::getLoggedInUser()->referrer){
                     $referrer = new Entities\User(Core\Session::getLoggedInUser()->referrer);
                     $subscription->setMerchant($referrer->getMerchant());
                 }
