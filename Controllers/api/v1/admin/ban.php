@@ -67,19 +67,20 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
         \cache_entity($user);
 
         (new Core\Data\Sessions())->destroyAll($user->guid);
-        
-        try{
+
+        try {
             $params = [
                 'index' => Config::_()->elasticsearch['index'],
                 'type' => 'user',
                 'id' => $user->guid
             ];
-            
-            $elastic = $elastic ?: Di::_()->get('Database\ElasticSearch');
-    
+
+            /** @var Core\Data\ElasticSearch\Client $elastic */
+            $elastic = Di::_()->get('Database\ElasticSearch');
+
             $elastic->getClient()->delete($params);
-    
-        } catch(\Exception $e) {
+
+        } catch (\Exception $e) {
             error_log(print_r($e->getMessage()));
         }
 
