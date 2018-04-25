@@ -166,15 +166,6 @@ class Overview
      */
     protected function getLastTimestamp()
     {
-        $contributions = $this->repository->getList([
-            'user_guid' => $this->user->guid,
-            'limit' => 1,
-        ]);
-
-        if (!isset($contributions['contributions'][0])) {
-            return false;
-        }
-
-        return $contributions['contributions'][0]->getTimestamp();
+        return strtotime('midnight -24 hours', $this->getNextPayout() + time());
     }
 }
