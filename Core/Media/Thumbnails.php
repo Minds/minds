@@ -2,7 +2,6 @@
 namespace Minds\Core\Media;
 
 use Minds\Core;
-use Minds\Core\Di\Di;
 use Minds\Entities;
 
 class Thumbnails
@@ -18,14 +17,6 @@ class Thumbnails
     {
         $entity = Entities\Factory::build($guid);
         if (!$entity || !Core\Security\ACL::_()->read($entity)) {
-            return false;
-        }
-
-        $loggedInUser = Core\Session::getLoggedinUser();
-
-        if ($loggedInUser->guid !== $entity->getOwnerEntity()->guid
-            && !$loggedInUser->isAdmin()
-            && !Di::_()->get('Wire\Thresholds')->isAllowed($loggedInUser, $entity)) {
             return false;
         }
 

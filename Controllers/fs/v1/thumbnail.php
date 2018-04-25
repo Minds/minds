@@ -6,7 +6,6 @@ namespace Minds\Controllers\fs\v1;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Session;
 use Minds\Entities;
 use Minds\Interfaces;
 
@@ -20,7 +19,6 @@ class thumbnail extends Core\page implements Interfaces\page
 
         Core\Security\ACL::$ignore = true;
         $size = isset($pages[1]) ? $pages[1] : null;
-
         $thumbnail = Di::_()->get('Media\Thumbnails')->get($pages[0], $size);
 
         if ($thumbnail instanceof \ElggFile) {
