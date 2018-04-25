@@ -61,7 +61,7 @@ class SitemapTrending extends SitemapModule
                     break;
             }
 
-            $this->addOrUpdateRoute($route, $entity->getTimeCreated());
+            $this->addOrUpdateRoute($route, time());
         }
     }
 
