@@ -211,6 +211,8 @@ class blog implements Interfaces\Api
         if (!$_POST['published']) {
             $blog->access_id = 0;
             $blog->draft_access_id = $_POST['access_id'];
+        } elseif ($blog->getTimePublished() == '') {
+            $blog->time_published = time();
         }
         $blog->last_save = time();
 

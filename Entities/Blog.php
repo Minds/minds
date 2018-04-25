@@ -31,6 +31,7 @@ class Blog extends \ElggObject
         $this->attributes['slug'] = '';
         $this->attributes['custom_meta'] = [];
         $this->attributes['rating'] = 2;
+        $this->attributes['time_published'] = null;
     }
 
     /**
@@ -58,6 +59,7 @@ class Blog extends \ElggObject
             'slug',
             'perma_url',
             'rating',
+            'time_published',
         ));
     }
 
@@ -285,6 +287,11 @@ class Blog extends \ElggObject
         return "{$siteUrl}blog/view/{$this->guid}";
     }
 
+    public function getTimePublished()
+    {
+        return (string) $this->time_published;
+    }
+
     protected function getIndexKeys($ia = false)
     {
         $indexes = [
@@ -357,6 +364,7 @@ class Blog extends \ElggObject
         $export['categories'] = $this->getCategories();
         $export['wire_threshold'] = $this->getWireThreshold();
         $export['paywall'] = $this->isPaywall();
+        $export['time_published'] = $this->getTimePublished();
 
         if ($export['published'] != "") {
             $export['published'] = (bool) $export['published'];
