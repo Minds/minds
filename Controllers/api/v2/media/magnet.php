@@ -54,7 +54,9 @@ class magnet implements Interfaces\Api, Interfaces\ApiIgnorePam
 
             return Factory::response([
                 'httpSrc' => $src,
-                'magnet' => $torrentMeta->magnet()
+                'infoHash' => $torrentMeta->infoHash(),
+                'magnet' => $torrentMeta->magnet(),
+                'encodedTorrent' => $torrentMeta->encodedTorrent()
             ]);
         } catch (\Exception $e) {
             error_log("[magnet::get] {$e->getMessage()} : " . get_class($e));

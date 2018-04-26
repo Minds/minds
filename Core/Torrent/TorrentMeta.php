@@ -28,6 +28,9 @@ class TorrentMeta
     /** @var TorrentBuilderInterface */
     protected $torrentBuilder;
 
+    /** @var TorrentFile */
+    protected $torrent;
+
     protected static $trackers = [
         'wss://tracker.openwebtorrent.com',
         'wss://tracker.btorrent.xyz',
@@ -104,17 +107,29 @@ class TorrentMeta
      */
     public function getTorrent()
     {
-        $this->torrentBuilder
-            ->setKey($this->entity->guid)
-            ->setFile($this->file);
+        if (!$this->torrent) {
+            $this->torrentBuilder
+                ->setKey($this->entity->guid)
+                ->setFile($this->file);
 
-        $torrent = new TorrentFile($this->torrentBuilder->build());
+            $this->torrent = new TorrentFile($this->torrentBuilder->build());
 
-        $torrent->name($this->getName());
-        $torrent->httpseeds($this->source);
-        $torrent->announce(static::$trackers);
+            $this->torrent->name($this->getName());
+            $this->torrent->httpseeds($this->source);
+            $this->torrent->announce(static::$trackers);
+        }
 
-        return $torrent;
+        return $this->torrent;
+    }
+
+    /**
+     * Reads the info hash for the torrent
+     * @return string
+     */
+    public function infoHash()
+    {
+        $torrent = $this->getTorrent();
+        return $torrent->hash_info();
     }
 
     /**
@@ -140,6 +155,16 @@ class TorrentMeta
     {
         $torrent = $this->getTorrent();
         $torrent->send($this->getName() . '.torrent');
+    }
+
+    /**
+     * Generates torrent file metadata as a base64 string
+     * @return string
+     */
+    public function encodedTorrent()
+    {
+        $torrent = $this->getTorrent();
+        return base64_encode($torrent->encode($torrent));
     }
 }
 
