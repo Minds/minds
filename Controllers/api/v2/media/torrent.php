@@ -43,13 +43,18 @@ class torrent implements Interfaces\Api, Interfaces\ApiIgnorePam
         $corsQuery = str_replace('://', '_', trim(Di::_()->get('Config')->get('site_url'), ''));
         $src = $entity->getSourceUrl($filename) . '?' . $corsQuery;
 
-        $torrentMeta = new TorrentMeta();
-        $torrentMeta
-            ->setEntity($entity)
-            ->setFile($filename)
-            ->setSource($src);
+        try {
+            $torrentMeta = new TorrentMeta();
+            $torrentMeta
+                ->setEntity($entity)
+                ->setFile($filename)
+                ->setSource($src);
 
-        echo $torrentMeta->torrent();
+            echo $torrentMeta->torrent();
+        } catch (\Exception $e) {
+            error_log("[torrent::get] {$e->getMessage()} : " . get_class($e));
+        }
+
         exit;
     }
 

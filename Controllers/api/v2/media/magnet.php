@@ -44,17 +44,26 @@ class magnet implements Interfaces\Api, Interfaces\ApiIgnorePam
         $corsQuery = str_replace('://', '_', trim(Di::_()->get('Config')->get('site_url'), ''));
         $src = $entity->getSourceUrl($pages[1]) . '?' . $corsQuery;
 
-        $torrentMeta = new TorrentMeta();
-        $torrentMeta
-            ->setEntity($entity)
-            ->setFile($pages[1])
-            ->setSource($src)
-            ->setXs($config->get('site_url') . 'api/v2/media/torrent/' . $pages[0] . '/' . $pages[1] . '.torrent');
+        try {
+            $torrentMeta = new TorrentMeta();
+            $torrentMeta
+                ->setEntity($entity)
+                ->setFile($pages[1])
+                ->setSource($src)
+                ->setXs($config->get('site_url') . 'api/v2/media/torrent/' . $pages[0] . '/' . $pages[1] . '.torrent');
 
-        return Factory::response([
-            'httpSrc' => $src,
-            'magnet' => $torrentMeta->magnet()
-        ]);
+            return Factory::response([
+                'httpSrc' => $src,
+                'magnet' => $torrentMeta->magnet()
+            ]);
+        } catch (\Exception $e) {
+            error_log("[magnet::get] {$e->getMessage()} : " . get_class($e));
+
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Error generating torrent file'
+            ]);
+        }
     }
 
     /**
