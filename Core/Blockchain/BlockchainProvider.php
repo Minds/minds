@@ -73,5 +73,17 @@ class BlockchainProvider extends Provider
         $this->di->bind('Blockchain\Rates', function () {
             return new Services\CoinMarketCap();
         });
+
+        $this->di->bind('Blockchain\Pledges\Manager', function () {
+            return new Pledges\Manager();
+        });
+
+        $this->di->bind('Blockchain\Pledges\Repository', function () {
+            return new Pledges\Repository();
+        });
+
+        $this->di->bind('Blockchain\Pledges\Sums', function () {
+            return new Pledges\Sums();
+        });
     }
 }
