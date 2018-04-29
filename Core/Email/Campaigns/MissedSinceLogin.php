@@ -8,13 +8,14 @@ use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Message;
 use Minds\Core\Email\Template;
 
-class Catchup extends EmailCampaign
+class MissedSinceLogin extends EmailCampaign
 {
     protected $template;
     protected $mailer;
 
     protected $templateKey;
     protected $subject;
+    protected $entities;
 
     public function __construct(Template $template = null, Mailer $mailer = null)
     {
@@ -45,6 +46,12 @@ class Catchup extends EmailCampaign
 
     }
 
+    public function setEntities($entities)
+    {
+        $this->entities = $entities;
+        return $this;
+    }
+
     /**
      * @return void
      * @throws \Exception
@@ -61,10 +68,14 @@ class Catchup extends EmailCampaign
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
         $this->template->set('email', $this->user->getEmail());
+        $this->template->set('guid', $this->user->guid);
 
         $this->template->set('campaign', $this->campaign);
         $this->template->set('topic', $this->topic);
 
+        $this->template->set('entities', $this->entities);
+
+        $this->user = new \Minds\Entities\User('jack');
         $message = new Message();
         $message->setTo($this->user)
             ->setMessageId(implode('-',
@@ -73,7 +84,8 @@ class Catchup extends EmailCampaign
             ->setHtml($this->template);
 
         //send email
-        $this->mailer->queue($message);
+        $this->mailer->send($message);
+        exit;
     }
 
 }

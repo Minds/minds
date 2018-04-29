@@ -1,16 +1,21 @@
 <?php
-
-
 namespace Minds\Core\Email\Batches;
 
+use Minds\Core;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
 
-class Catchup implements EmailBatchInterface
+class MissedSinceLogin implements EmailBatchInterface
 {
     protected $offset;
     protected $templatePath;
     protected $subject;
+
+
+    public function setDryRun($dry)
+    {
+        return $this;
+    }
 
     /**
      * @param string $offset
@@ -26,9 +31,9 @@ class Catchup implements EmailBatchInterface
      * @param string $templatePath
      * @return Catchup
      */
-    public function setTemplatePath($templatePath)
+    public function setTemplateKey($template)
     {
-        $this->templatePath = $templatePath;
+        $this->templatePath = $template;
         return $this;
 
     }
@@ -61,14 +66,31 @@ class Catchup implements EmailBatchInterface
             ->setValue(true)
             ->setOffset($this->offset);
 
+        $entities = Core\Entities::get([
+            'guids' => [
+                826188573910073344,
+                836607056186159104,
+                836167299971796992,
+                742327794419113984,
+                829801531647447040,
+                831649915973378048,
+                798792752159326208,
+                721609138500542464,
+                813793227177394176,
+                823256224013205504,
+                817408411232890880
+            ]
+        ]);
+
         foreach ($iterator as $user) {
 
-            $campaign = new Campaigns\Catchup();
+            $campaign = new Campaigns\MissedSinceLogin();
 
             $campaign
                 ->setUser($user)
                 ->setTemplateKey($this->templatePath)
                 ->setSubject($this->subject)
+                ->setEntities($entities)
                 ->send();
         }
     }
