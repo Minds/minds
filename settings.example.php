@@ -262,7 +262,7 @@ $CONFIG->set('plus', [
     ]
 ]);
 
-$CONFIG>set('iframely' , [
+$CONFIG->set('iframely' , [
     'key' => 'f4da1791510e9dd6ad63bc',
     'origin' => 'minds'
 ]);
