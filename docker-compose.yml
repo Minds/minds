@@ -8,8 +8,9 @@ services:
       - CASSANDRA_START_RPC=true
     networks:
       - app
+    mem_limit: 4048MB
     volumes:
-      - "./cassandra:/var/lib/cassandra"
+      - "./cassandra:/var/lib/cassandra:cached"
       - "./logs:/var/log"
 
   mongo:
@@ -44,6 +45,7 @@ services:
     build:
       context: ./engine
       dockerfile: ./containers/php-fpm/Dockerfile
+    mem_limit: 2048MB
     depends_on:
       - cassandra
       #- mongo
@@ -54,11 +56,11 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front"
-      - "./plugins/:/var/www/Minds/plugins"
-      - "./languages/:/var/www/Minds/languages"
+      - "./front/:/var/www/Minds/front:cached"
+      - "./plugins/:/var/www/Minds/plugins:cached"
+      - "./languages/:/var/www/Minds/languages:cached"
       ## The following is for development environments only. Comment out on production. ##
-      - "./engine/:/var/www/Minds/engine"
+      - "./engine/:/var/www/Minds/engine:cached"
 
   runners:
     build:
@@ -73,7 +75,7 @@ services:
     networks:
       - app
     volumes:
-      - "./front/:/var/www/Minds/front"
+      - "./front/:/var/www/Minds/front:cached"
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
       - "./engine/:/var/www/Minds/engine"
@@ -81,6 +83,8 @@ services:
   nginx:
     build:
       context: ./containers/nginx
+      dockerfile: ./containers/nginx/Dockerfile.dev
+    mem_limit: 512MB
     depends_on:
       - php-fpm
     ports:
@@ -89,16 +93,28 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front"
+      - "./front/:/var/www/Minds/front:cached"
 
   installer:
     build:
       context: ./engine
       dockerfile: ./containers/installer/Dockerfile
-    depends_on:
-      - nginx #this will then load in everything else
+    networks:
+      - app
     volumes:
       - "./engine/:/var/www/Minds/engine"
+      - "./front/:/var/www/Minds/front"
+
+  front-build:
+    image: markharding/minds-front-base
+    networks:
+      - app
+    entrypoint: 
+      - sh
+      - -c
+      - "cd /var/www/Minds/front && npm install && npm rebuild node-sass && npm run build-dev"
+    volumes:
+      - "./front/:/var/www/Minds/front"
 
 networks:
   app:

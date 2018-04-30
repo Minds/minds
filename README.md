@@ -3,6 +3,7 @@ Minds
 Minds is an open-source, encrypted and reward-based social networking platform. https://minds.com
 
 ## Repositories
+
 Minds is split into multiple repositories:
 
 - [Engine](https://github.com/Minds/engine) - Backend code & APIs
@@ -11,30 +12,38 @@ Minds is split into multiple repositories:
 - [Mobile](https://github.com/Minds/mobile-native) - React Native mobile apps
 
 
-## Documentation
+## Development System Requirements
 
-The below do
+- > 10GB RAM
+- > 100GB Disk space
+- [Docker Compose](https://docs.docker.com/compose/)
 
-Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/docs)
-1. [Installation](https://www.minds.org/docs/install.html)
-  1. [Requirements](https://www.minds.org/docs/install/requirements.html)
-  2. [Download](https://www.minds.org/docs/install/download.html)
-  3. [Vagrant Development Environment](https://www.minds.org/docs/install/vagrant.html)
-  4. [Install & Build](https://www.minds.org/docs/install/preparation.html)
-    1. [Front End](https://www.minds.org/docs/install/preparation.html#front-end)
-    2. [Engine](https://www.minds.org/docs/install/preparation.html#engine-php)
-    3. [Install Script](https://www.minds.org/docs/install/installation.html)
-  5. [Troubleshooting](https://www.minds.org/docs/install/troubleshooting.html)
-2. [Testing](https://www.minds.org/docs/testing.html)
-3. [Contributing](https://www.minds.org/docs/contributing.html)
+## Development Installation
 
-## Docker setup
+1. Run `sh init.sh` in order to install the front and engine repositories
+2. Run `docker-compose up -d nginx`
+3. Run `docker-compose exec cassandra nodetool enablethrift`
+4. Run `docker-compose up installer` (one time only.. initial username: minds / password: password)
+5. Run `docker-compose up front-build` 
+6. Navigate to `http://localhost:8080`
 
-The Docker environment is currently a work in progress and we intend on streamlining the installation phase.
+### Troubleshooting
 
-1. Run `docker ps` and look for the minds_php-fpm container
-2. Run `docker exec -it CONTAINER_ID_HERE php /var/www/Minds/engine/cli.php install keys`
-3. Run `docker exec -it CONTAINER_ID_HERE php /var/www/Minds/engine/cli.php install --graceful-storage-provision --domain=dev.minds.io --username=minds     --password=password --email=minds@dev.minds.io --private-key=/.dev/minds.pem --public-key=/.dev/minds.pub --cassandra-server=cassandra`
+- Minds is already installed
+  - Ensure engine/settings.php does not exist and re-run `docker-compose up installer`
+
+- Cassandra will not boot
+  - Ensure thrift is enabled
+  - Cassandra requires at least 4GB of memory to operate. You can start Cassandra manually by running `docker-compose up cassandra`
+
+## Production System Requirements
+
+At this time it is not advisable to run Minds in production, however it is possible so long as you are aware of the risks.
+
+- 3 Cassandra Nodes (Min 30gb RAM, 1TB SSD, 8 CPU)
+- 1 ElasticSearch Node (Min 16GB RAM, 250GB SSD, 8 CPU) #2 nodes are recommended for failover
+- 1 Docker Machine (Min 60gb RAM, 50GB SSD, 32 CPU)
+
 
 ## Contributing
 If you'd like to contribute to the Minds project, check out the [Contribution](https://www.minds.org/docs/contributing.html) section of Minds.org or head right over to the [Minds Open Source Community](https://www.minds.com/groups/profile/365903183068794880).  If you've found or fixed a bug, let us know in the [Minds Help and Support Group](https://www.minds.com/groups/profile/100000000000000681/activity)!
