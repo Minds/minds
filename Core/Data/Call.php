@@ -234,7 +234,9 @@ class Call
                     $row = array_values($row);
                     $object[$row[1]] = $row[2];
                 }
-                $objects[$key] = $object;
+                if ($object) {
+                    $objects[$key] = $object;
+                }
             }
         }
         return $objects;
