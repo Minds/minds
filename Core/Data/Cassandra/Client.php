@@ -48,8 +48,10 @@ class Client implements Interfaces\ClientInterface
                   $request->getOpts()
                   ))
             );
-            if (!$silent) {
-              return $response = $future->get();
+            if ($silent) {
+                return $future;
+            } else {
+                return $response = $future->get();
             }
         }catch(\Exception $e){
             if ($this->debug) {

@@ -192,12 +192,12 @@ class Call
          try {
              $result = $this->client->request($query);
          } catch (\Exception $e) {
-	     return null;
+	        return null;
          }
 
-	 if (!$result) {
-	     return [];
-	 }
+        if (!$result) {
+            return [];
+        }
  
          $object = [];
          foreach ($result as $row){
@@ -215,13 +215,29 @@ class Call
      */
     public function getRows($keys, array $options = array())
     {
-        $rows = [];
+        $objects = [];
+        $requests = [];
+        
         foreach ($keys as $key) {
-	    if ($row = $this->getRow($key, $options)) {
-                $rows[$key] = $row;
+            $statement = "SELECT * FROM $this->cf_name WHERE key=?";
+            $values = [ (string) $key ];
+            $query = new Cassandra\Prepared\Custom();
+            $query->query($statement, $values);
+
+            $requests[$key] = $this->client->request($query, true);
+        }
+        
+        foreach ($requests as $key => $future) {
+            if ($result = $future->get()) {
+                $object = [];
+                foreach ($result as $row){
+                    $row = array_values($row);
+                    $object[$row[1]] = $row[2];
+                }
+                $objects[$key] = $object;
             }
         }
-        return $rows;
+        return $objects;
     }
 
     /**
