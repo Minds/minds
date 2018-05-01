@@ -20,9 +20,13 @@ class Client implements Interfaces\ClientInterface
     public function __construct(array $options = array())
     {
         $options = array_merge((array) Config::_()->cassandra, $options);
+        $retry_policy = new Driver\RetryPolicy\DowngradingConsistency();
 
         $this->cluster = Driver::cluster()
            ->withContactPoints(... $options['cql_servers'])
+           ->withLatencyAwareRouting(true)
+           ->withDefaultConsistency(Driver::CONSISTENCY_QUORUM)
+           ->withRetryPolicy(new Driver\RetryPolicy\Logging($retry_policy))
            ->withPort(9042)
            ->build();
         $this->session = $this->cluster->connect($options['keyspace']);

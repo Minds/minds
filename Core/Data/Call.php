@@ -27,15 +27,24 @@ class Call
     public static $counts = 0;
     private $pool;
     private $cf;
+    private $client;
 
-    public function __construct($cf = null, $keyspace = null, $servers = null, $sendTimeout = 800, $receiveTimeout = 2000, $pool = null)
+    public function __construct(
+        $cf = null,
+        $keyspace = null,
+        $servers = null,
+        $sendTimeout = 800,
+        $receiveTimeout = 2000,
+        $pool = null,
+        $cql = null
+    )
     {
         global $CONFIG;
 
         $this->servers = $servers ?: $CONFIG->cassandra->servers;
         $this->keyspace = $keyspace ?: $CONFIG->cassandra->keyspace;
         $this->cf_name = $cf;
-
+        $this->client = $cql ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
 
         if ($this->keyspace != 'phpspec') {
             $this->ini();
@@ -78,16 +87,31 @@ class Call
         self::$writes++;
         //unset guid, we don't want it twice
         unset($data['guid']);
-        try {
+
+        $requests = [];
+        $statement = "INSERT INTO $this->cf_name (key, column1, value) VALUES (?, ?, ?)";
+
+        foreach ($data as $column1 => $value) {
+            $values = [ (string) $guid, (string) $column1, (string) $value ];
+
             if ($ttl) {
-                $this->cf->insert($guid, $data, null, $ttl);
-            } else {
-                $this->cf->insert($guid, $data);
+                $statement .= " USING TTL ?";
+                $values[] = $ttl;
             }
+
+            $requests[] = [
+                'string' => $statement,
+                'values' => $values,
+            ];
+        }
+
+        try {
+            $this->client->batchRequest($requests, \Cassandra::BATCH_UNLOGGED);
         } catch (\Exception $e) {
-            error_log('DB Write failure:'.$e->getMessage());
+            error_log(print_r($e, true));
             return false;
         }
+
         return $guid;
     }
 
@@ -136,28 +160,46 @@ class Call
      {
          self::$reads++;
          array_push(self::$keys, $key);
-         $defaults = array(  'multi' => false,
-                            'offset' => "",
-                            'finish' => "",
-                            'limit' => 500,
-                            'reversed' => true
-                            );
-         $options = array_merge($defaults, $options);
-         $slice = new ColumnSlice($options['offset'], $options['finish'], $options['limit'], $options['reversed']);
 
-         if (!$this->cf) {
-             return false;
+         $options = array_merge(
+             [
+             'multi' => false,
+             'offset' => "",
+             'finish' => "",
+             'limit' => 500,
+             'reversed' => true
+            ], $options);
+
+         $query = new Cassandra\Prepared\Custom();
+
+         $statement = "SELECT * FROM";
+         $values = [];
+
+         $statement .= " $this->cf_name WHERE key=?";
+         $values = [ (string) $key ];
+
+         if ($options['offset'] && $options['reversed']) {
+            $statement .= " AND column1 <= ? AND column1 >= ?";
+            $values[] = $options['reversed'] ? (string) $options['offset'] : (string) $options['finish'];
+            $values[] = $options['reversed'] ? (string) $options['finish'] : (string) $options['offset'];
          }
-
+         $statement .= " ORDER BY column1 DESC";
+         $query->setOpts([
+             'page_size' => (int) $options['limit'],
+         ]);
+         $query->query($statement, $values);
+         
          try {
-             if ($options['multi']) {
-                 return $this->cf->multiget($key, $slice);
-             } else {
-                 return $this->cf->get($key, $slice);
-             }
+             $result = $this->client->request($query);
          } catch (\Exception $e) {
-             return false;
          }
+ 
+         $object = [];
+         foreach ($result as $row){
+            $row = array_values($row);
+            $object[$row[1]] = $row[2]; 
+         }
+         return $object;
      }
 
     /**
@@ -168,8 +210,11 @@ class Call
      */
     public function getRows($keys, array $options = array())
     {
-        $options['multi'] = true;
-        return $this->getRow($keys, $options);
+        $rows = [];
+        foreach ($keys as $key) {
+            $rows[$key] = $this->getRow($key, $options);
+        }
+        return $rows;
     }
 
     /**
@@ -186,7 +231,14 @@ class Call
         }
         try {
             self::$counts++;
-            return $this->cf->get_count($key);
+            $query = new Cassandra\Prepared\Custom();
+
+            $statement = "SELECT count(*) as count FROM $this->cf_name WHERE key=?";
+            $values = [ (string) $key ];
+            $query->query($statement, $values);
+
+            $result = $this->client->request($query);
+            return (int) $result[0]['count'];
         } catch (Exception $e) {
             return 0;
         }
@@ -203,10 +255,19 @@ class Call
             return false;
         }
         self::$deletes++;
-        if ($this->cf) {
-            return $this->cf->remove($key);
+
+        $statement = "DELETE FROM $this->cf_name WHERE key=?";
+        $values = [ (string) $key ];
+
+        $query = new Cassandra\Prepared\Custom();
+        $query->query($statement, $values);
+
+        try {
+            $this->client->request($query);
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -239,20 +300,27 @@ class Call
         if (empty($attributes)) {
             return false; // don't allow as this will delete the row!
         }
-        if ($verify) {
-            $count = $this->countRow($key);
-        }
-        $this->cf->remove($key, $attributes);
-        //the remove function doens't return a value, so we need to check.. far from ideal..
-        if ($verify && $this->countRow($key) == $count-count($attributes)) {
-            return true;
+
+        $requests = [];
+        $statement = "DELETE FROM $this->cf_name WHERE key=? and column1 = ?";
+        $values = [ (string) $key ];
+
+        foreach ($attributes as $column1) {
+            $values[] = (string) $column1;
+            $requests[] = [
+                'string' => $statement,
+                'values' => $values,
+            ];
         }
 
-        if (!$verify) {
-            return;
+        try {
+            $this->client->batchRequest($requests, \Cassandra::BATCH_UNLOGGED);
+        } catch (\Exception $e) {
+            error_log(print_r($e, true));
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
