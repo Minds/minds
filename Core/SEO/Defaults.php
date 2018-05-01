@@ -303,7 +303,7 @@ class Defaults
                 'og:title' => 'Login',
                 'og:description' => 'Keep track of your contributions to Minds',
                 'og:url' => $this->config->site_url . 'wallet/tokens/contributions',
-                'og:image' => $this->config->cdn_assets_url . 'assets/photos/graph.jpg',
+                'og:image' => $this->config->cdn_assets_url . 'assets/logos/placeholder-bulb.jpg',
                 'og:image:width' => 2000,
                 'og:image:height' => 1000,
                 'twitter:site' => '@minds',
