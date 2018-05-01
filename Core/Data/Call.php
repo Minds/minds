@@ -192,7 +192,12 @@ class Call
          try {
              $result = $this->client->request($query);
          } catch (\Exception $e) {
+	     return null;
          }
+
+	 if (!$result) {
+	     return [];
+	 }
  
          $object = [];
          foreach ($result as $row){
@@ -212,7 +217,9 @@ class Call
     {
         $rows = [];
         foreach ($keys as $key) {
-            $rows[$key] = $this->getRow($key, $options);
+	    if ($row = $this->getRow($key, $options)) {
+                $rows[$key] = $row;
+            }
         }
         return $rows;
     }
