@@ -83,7 +83,7 @@ services:
   nginx:
     build:
       context: ./containers/nginx
-      dockerfile: ./containers/nginx/Dockerfile.dev
+      dockerfile: ./Dockerfile.dev
     mem_limit: 512MB
     depends_on:
       - php-fpm
