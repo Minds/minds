@@ -24,7 +24,7 @@ Minds is split into multiple repositories:
 2. Run `docker-compose up -d nginx`
 3. Run `docker-compose exec cassandra nodetool enablethrift`
 4. Run `docker-compose up installer` (one time only.. initial username: minds / password: password)
-5. Run `docker-compose up front-build` 
+5. Run `docker-compose up front-build`
 6. Navigate to `http://localhost:8080`
 
 ### Troubleshooting
@@ -35,6 +35,10 @@ Minds is split into multiple repositories:
 - Cassandra will not boot
   - Ensure thrift is enabled
   - Cassandra requires at least 4GB of memory to operate. You can start Cassandra manually by running `docker-compose up cassandra`
+  - If `chown: cannot access '/var/log/cassandra': No such file or directory` create a `cassandra` folder in `logs`
+
+- Docker containers built
+  - Try re-building them with `docker-compose build`
 
 ## Production System Requirements
 
