@@ -89,9 +89,9 @@ class Call
         unset($data['guid']);
 
         $requests = [];
-        $statement = "INSERT INTO $this->cf_name (key, column1, value) VALUES (?, ?, ?)";
 
         foreach ($data as $column1 => $value) {
+            $statement = "INSERT INTO $this->cf_name (key, column1, value) VALUES (?, ?, ?)";
             $values = [ (string) $guid, (string) $column1, (string) $value ];
 
             if ($ttl) {
