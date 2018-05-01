@@ -123,7 +123,8 @@ class Overview
     {
         $hour = 2;
         $day = gmdate('G') >= $hour ? 'tomorrow' : 'today';
-        $timestamp = strtotime("{$day} {$hour}:00 +00");
+        $timestamp = strtotime($day);
+        $timestamp = strtotime("+2 hours", $timestamp);
 
         return $timestamp - time();
     }
