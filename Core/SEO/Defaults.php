@@ -300,7 +300,7 @@ class Defaults
             $meta = [
                 'title' => 'Contributions Ledger',
                 'description' => 'Keep track of your contributions to Minds',
-                'og:title' => 'Login',
+                'og:title' => 'Contributions Ledger',
                 'og:description' => 'Keep track of your contributions to Minds',
                 'og:url' => $this->config->site_url . 'wallet/tokens/contributions',
                 'og:image' => $this->config->cdn_assets_url . 'assets/logos/placeholder-bulb.jpg',
