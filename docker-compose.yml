@@ -50,7 +50,7 @@ services:
       - cassandra
       #- mongo
       #- elasticsearch
-      #- rabbitmq
+      - rabbitmq
       - redis
     networks:
       - app
