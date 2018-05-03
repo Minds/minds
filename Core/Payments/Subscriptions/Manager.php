@@ -12,6 +12,7 @@ use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Guid;
 use Minds\Core\Payments;
+use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Factory;
 use Minds\Entities\User;
 
@@ -47,6 +48,34 @@ class Manager
         $this->subscription = $subscription;
         return $this;
     }
+
+    /**
+     * Charge
+     * @return bool
+     */
+    public function charge()
+    {
+        try {
+            $result = Dispatcher::trigger('subscriptions:process', $this->subscription->getPlanId(), [
+                'subscription' => $this->subscription
+            ]);
+
+            $this->subscription->setLastBilling(time());
+            $this->subscription->setNextBilling($this->getNextBilling());
+        } catch (\Exception $e) {
+            error_log("Payment failed: " . $e->getMessage());
+            $this->subscription->setStatus('failed');
+        }
+
+        $this->repository->add($this->subscription);
+
+        return $result;
+    }
+
+
+    /////
+    /// BELOW NEEDS REFACTORING TO MATCH MANAGER STYLE /MH
+    /////
 
     /**
      * @param User $user

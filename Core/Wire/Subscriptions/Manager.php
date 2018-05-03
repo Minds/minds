@@ -18,6 +18,9 @@ class Manager
     /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
     protected $subscriptionsRepository;
 
+    /** @var Config */
+    protected $config;
+
     /** @var int $amount */
     protected $amount;
 
@@ -27,12 +30,17 @@ class Manager
     /** @var User $receiver */
     protected $receiver;
 
+    /** @var string $address */
+    protected $address = 'offchain';
+
     public function __construct(
         $subscriptionsManager = null,
-        $subscriptionsRepository = null
+        $subscriptionsRepository = null,
+        $config = null
     ) {
         $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Payments\Subscriptions\Manager');
         $this->subscriptionsRepository = $subscriptionsRepository ?: Di::_()->get('Payments\Subscriptions\Repository');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     public function setAmount($amount)
@@ -53,6 +61,12 @@ class Manager
         return $this;
     }
 
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
     /**
      * @return mixed
      * @throws WalletNotSetupException
@@ -63,6 +77,7 @@ class Manager
         $this->cancelSubscription();
 
         $subscription = (new Core\Payments\Subscriptions\Subscription())
+            ->setId($this->address)
             ->setPlanId('wire')
             ->setPaymentMethod('tokens')
             ->setAmount($this->amount)

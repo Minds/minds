@@ -6,6 +6,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Payments\Manager;
 use Minds\Core\Payments\Subscriptions\Repository;
 use Minds\Core\Payments\Subscriptions\Subscription;
+use Minds\Core\Events\Dispatcher;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -26,6 +27,38 @@ class ManagerSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Core\Payments\Subscriptions\Manager');
+    }
+
+    function it_should_charge_a_subscription(Subscription $subscription)
+    {
+        $this->setSubscription($subscription);
+
+        $subscription->getPlanId()
+            ->shouldBeCalled()
+            ->willReturn('spec');
+
+        $this->repository->add($subscription)
+            ->shouldBeCalled();
+
+        Dispatcher::register('subscriptions:process', 'spec', function($event) {
+            return $event->setResponse(true);
+        });
+
+        $subscription->setLastBilling(time())
+            ->shouldBeCalled();
+
+        $subscription->getLastBilling()
+            ->shouldBeCalled()
+            ->willReturn(time());
+
+        $subscription->getInterval()
+            ->shouldBeCalled()
+            ->willReturn('monthly');
+
+        $subscription->setNextBilling(strtotime('+1 month', time()))
+            ->shouldBeCalled();
+
+        $this->charge()->shouldReturn(true);
     }
 
     function it_should_create()

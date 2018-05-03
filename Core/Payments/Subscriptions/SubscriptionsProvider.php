@@ -16,10 +16,10 @@ class SubscriptionsProvider extends Provider
     {
         $this->di->bind('Payments\Subscriptions\Manager', function ($di) {
             return new Manager();
-        });
+        }, [ 'useFactory' => false ]);
 
-        $this->di->bind('Payments\Subscriptions\Queue', function ($di) {
-            return new Queue();
+        $this->di->bind('Payments\Subscriptions\Iterator', function ($di) {
+            return new SubscriptionsIterator();
         }, [ 'useFactory' => true ]);
 
         $this->di->bind('Payments\Subscriptions\Repository', function ($di) {

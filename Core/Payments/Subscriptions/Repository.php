@@ -32,6 +32,8 @@ class Repository
     public function getList(array $options = [])
     {
         $options = array_merge([
+            'plan_id' => null,
+            'payment_method' => null,
             'status' => null,
             'next_billing' => null,
             'user_guid' => null,
@@ -58,6 +60,11 @@ class Repository
         if ($options['plan_id']) {
             $where[] = 'plan_id = ?';
             $values[] = $options['plan_id'];
+        }
+
+        if ($options['payment_method']) {
+            $where[] = 'payment_method = ?';
+            $values[] = $options['payment_method'];
         }
 
         if ($options['entity_guid']) {
