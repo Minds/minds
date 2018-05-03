@@ -19,7 +19,10 @@ class deeplinks implements Interfaces\Api, Interfaces\ApiIgnorePam
                 [
                     'appID' => "35U3998VRZ.com.minds.mobile",
                     'paths' => [
-                        "*"
+                        '/groups/profile/*',
+                        '/newsfeed/*',
+                        '/blog/view/*',
+                        '/channels/*',
                     ]
                 ]
             ]
