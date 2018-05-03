@@ -27,8 +27,7 @@ class embed implements Interfaces\Api, Interfaces\ApiIgnorePam
                 $embedded_entity = $embedded_entity->export();
             }
         }
-
-        include dirname(__MINDS_ROOT__) . implode(DIRECTORY_SEPARATOR, [ '', 'front', 'public', 'index.php' ]);
+        include dirname(__MINDS_ROOT__) . implode(DIRECTORY_SEPARATOR, [ '', 'front', 'dist', 'index.php' ]);
     }
 
     public function post($pages)
