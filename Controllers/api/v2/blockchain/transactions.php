@@ -44,7 +44,7 @@ class transactions implements Interfaces\Api
                 $opts = [
                     'timestamp' => [
                         'gte' => $from,
-                        //'lte' => $to,
+                        'lte' => $to,
                     ],
                     'user_guid' => Session::getLoggedInUser()->guid,
                     'offset' => $offset,
