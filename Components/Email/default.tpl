@@ -74,13 +74,19 @@
               <tbody>
                 <tr>
                   <td height="20"></td>
+                  <td height="20"></td>
                 </tr>
                 <tr>
                   <td>
                     <a href="https://www.minds.com/emails/unsubscribe/<?= $vars['username']?>/<?= $vars['email']?>/<?= $vars['campaign']?><?= '/' . $vars['topic']?>?__e_ct_guid=<?= $vars['guid']?>" align="center" style="color:#888">
-                      un-subscribe
+                      Unsubscribe 
                     </a>
-                    from future emails.
+                    from this type of email. 
+                  </td>
+                  <td>
+                    <a href="https://www.minds.com/settings/emails" align="center" style="color:#888">
+                      Change my email settings
+                    </a>
                   </td>
                 </tr>
               </tbody>
