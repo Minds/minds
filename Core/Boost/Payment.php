@@ -151,7 +151,7 @@ class Payment
                             $source = $customer->getId();
                         }
 
-                        $currencyId = Di::_()->get('Config')->get('blockchain')['token_symbol'];
+                        $currencyId = $this->config->get('blockchain')['token_symbol'];
 
                         /** @var RatesInterface $rates */
                         $rates = Di::_()->get('Blockchain\Rates');
@@ -440,7 +440,7 @@ class Payment
                             ->setWalletAddress($boostTransaction->getWalletAddress())
                             ->setContract('boost')
                             ->setTx($txHash)
-                            ->setAmount($boostTransaction->getAmount())
+                            ->setAmount((string) BigNumber::_($boostTransaction->getAmount())->neg())
                             ->setTimestamp(time())
                             ->setCompleted(false)
                             ->setData([
