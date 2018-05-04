@@ -178,17 +178,28 @@ class Call
          $statement .= " $this->cf_name WHERE key=?";
          $values = [ (string) $key ];
 
-         if ($options['offset'] && $options['reversed']) {
-            $statement .= " AND column1 <= ? AND column1 >= ?";
-            $values[] = $options['reversed'] ? (string) $options['offset'] : (string) $options['finish'];
-            $values[] = $options['reversed'] ? (string) $options['finish'] : (string) $options['offset'];
+         if ($options['offset']) {
+             if ($options['reversed']) {
+                 $statement .= " AND column1 <= ? AND column1 >= ?";
+                 $values[] = (string) $options['offset'];
+                 $values[] = (string) $options['finish'];
+             } else {
+                 $statement .= ' AND column1 >= ?';
+                 $values[] = (string) $options['offset'];
+                 if ($options['finish']) {
+                     $statement .= ' AND column1 <= ?';
+                     $values[] = (string) $options['finish'];
+                 }
+             }
          }
-         $statement .= " ORDER BY column1 DESC";
+
+         $statement .= $options['reversed'] ? " ORDER BY column1 DESC" : " ORDER BY column1 ASC";
+
          $query->setOpts([
              'page_size' => (int) $options['limit'],
          ]);
          $query->query($statement, $values);
-         
+
          try {
              $result = $this->client->request($query);
          } catch (\Exception $e) {
@@ -198,11 +209,11 @@ class Call
         if (!$result) {
             return [];
         }
- 
+
          $object = [];
          foreach ($result as $row){
             $row = array_values($row);
-            $object[$row[1]] = $row[2]; 
+            $object[$row[1]] = $row[2];
          }
          return $object;
      }
@@ -217,7 +228,7 @@ class Call
     {
         $objects = [];
         $requests = [];
-        
+
         foreach ($keys as $key) {
             $statement = "SELECT * FROM $this->cf_name WHERE key=?";
             $values = [ (string) $key ];
@@ -226,7 +237,7 @@ class Call
 
             $requests[$key] = $this->client->request($query, true);
         }
-        
+
         foreach ($requests as $key => $future) {
             if ($result = $future->get()) {
                 $object = [];
