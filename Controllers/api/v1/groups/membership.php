@@ -29,6 +29,12 @@ class membership implements Interfaces\Api
           ->setGroup($group)
           ->setActor(Session::getLoggedInUser());
 
+        $loggedInUser = Core\Session::getLoggedinUser();
+
+        if (!$group->isPublic() && !$membership->isMember($loggedInUser) && !$loggedInUser->isAdmin()) {
+            return Factory::response([]);
+        }
+
         $options = [
             'limit' => isset($_GET['limit']) ? $_GET['limit'] : 12,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : ''
