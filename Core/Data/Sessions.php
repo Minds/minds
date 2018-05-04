@@ -194,6 +194,19 @@ class Sessions implements \SessionHandlerInterface
     }
 
     /**
+     * Returns the amount of opened sessions from a user
+     * @param string $guid
+     * @return int
+     */
+    public function count($guid)
+    {
+        return $this->db->countRow('user:' . $guid, [
+            'limit' => 99999,
+            'reversed' => false
+        ]);
+    }
+
+    /**
      * Creates an User<->SessionID index, if not exists
      * @param string $session_id
      * @param number $ttl

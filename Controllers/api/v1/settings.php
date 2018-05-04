@@ -43,6 +43,7 @@ class settings implements Interfaces\Api
         $response['channel']['boost_rating'] = $user->getBoostRating();
         $response['channel']['categories'] = $user->getCategories();
         $response['channel']['disabled_emails'] = $user->disabled_emails;
+        $response['channel']['open_sessions'] = (new Core\Data\Sessions())->count($user->guid) - 1;
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 

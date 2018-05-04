@@ -101,8 +101,14 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function delete($pages)
     {
+        $guid = Core\Session::getLoggedinUser()->guid;
+
         logout();
 
-        return Factory::response(array());
+        if (isset($pages[0]) && $pages[0] === 'all') {
+            (new Core\Data\Sessions())->destroyAll($guid);
+        }
+
+        return Factory::response([]);
     }
 }
