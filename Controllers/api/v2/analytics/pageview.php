@@ -29,7 +29,7 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
         if(!isset($_COOKIE['mwa'])) {
             //@TODO make this more unique
             $id = uniqid(true);
-            setcookie('mwa', $id, time() + (60 * 60 * 24 * 30 * 12), '/');
+            setcookie('mwa', $id, time() + (60 * 60 * 24 * 30 * 12), '/', '', true, true);
             $_COOKIE['mwa'] = $id;
         }
 
