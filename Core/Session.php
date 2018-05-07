@@ -49,15 +49,15 @@ class Session extends base
         }
 
         if (isset($_SESSION['user'])) {
-            setcookie('loggedin', 1, time() + (60 * 60 * 24 * 30), '/');
+            setcookie('loggedin', 1, time() + (60 * 60 * 24 * 30), '/', '', true, true);
             cache_entity($_SESSION['user']);
         } else {
-            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/');
+            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/', '', true, true);
         }
 
 
         if (!isset($_COOKIE['loggedin'])) {
-            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/');
+            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/', '', true, true);
             $_SESSION = array();
             unset($_COOKIE[session_name()]);
             session_destroy();
@@ -116,7 +116,7 @@ class Session extends base
               'guid' => (string) $_SESSION['user']->guid,
               'sessionId' => session_id()
             ], Config::_()->get('sockets-jwt-secret'));
-            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com', true);
+            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com', true, true);
         }
     }
 

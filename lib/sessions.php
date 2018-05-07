@@ -297,7 +297,7 @@ function login(ElggUser $user, $persistent = false) {
 		$code = (md5($user->name . $user->username . time() . rand()));
 		$expires = (time() + (86400 * 30));
 		$user->{'cookie:'.md5($code)} = $expires; //cookie_id => expires
-		setcookie("mindsperm", $code, $expires, "/");
+		setcookie("mindsperm", $code, $expires, "/", '', true, true);
 		//add to the user index cf
 		$db = new Minds\Core\Data\Call('user_index_to_guid');
 		$db->insert('cookie:'. md5($code), array($user->getGUID() => $expires));
@@ -309,7 +309,7 @@ function login(ElggUser $user, $persistent = false) {
 		unset($_SESSION['guid']);
 		unset($_SESSION['id']);
 		unset($_SESSION['user']);
-		setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
+		setcookie("mindsperm", "", (time() - (86400 * 30)), "/", '', true, true);
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
 
@@ -320,7 +320,7 @@ function login(ElggUser $user, $persistent = false) {
 	set_last_login($_SESSION['guid']);
 	//reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
-	 setcookie('loggedin', 1, time() + 3600, '/');
+	setcookie('loggedin', 1, time() + 3600, '/', '', true, true);
 
 	if(elgg_trigger_event('loggedin', 'user', $user) === FALSE){
 		return false;
@@ -367,7 +367,7 @@ function logout() {
 	unset($_SESSION['id']);
 	unset($_SESSION['user']);
 
-	setcookie("mindsperm", "", (time() - (86400 * 30)), "/");
+	setcookie("mindsperm", "", (time() - (86400 * 30)), "/", '', true, true);
 	setcookie("mindsSSO", "", (time() - (86400 * 30)), "/");
 
     if(session_id() !== ''){
@@ -375,7 +375,7 @@ function logout() {
         session_start();
         session_regenerate_id(true);
     }
-	setcookie(session_name(), '', (time() - (86400 * 30)), "/");
+	setcookie(session_name(), '', (time() - (86400 * 30)), "/", '', true, true);
 
 	elgg_trigger_event('loggedout', 'user', $user);
 

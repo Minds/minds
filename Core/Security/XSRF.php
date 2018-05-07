@@ -37,6 +37,6 @@ class XSRF
             return;
         }
         $token = self::buildToken();
-        setcookie('XSRF-TOKEN', $token, 0, '/', $_SERVER['HTTP_HOST'], true);
+        setcookie('XSRF-TOKEN', $token, 0, '/', '', true);
     }
 }
