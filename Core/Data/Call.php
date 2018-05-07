@@ -232,6 +232,17 @@ class Call
         foreach ($keys as $key) {
             $statement = "SELECT * FROM $this->cf_name WHERE key=?";
             $values = [ (string) $key ];
+
+            if (isset($options['offset'])) {
+                $statement .= " AND column1 >= ?";
+                $values[] = (string) $options['offset'];
+            }
+
+            if (isset($options['limit'])) {
+                $statement .= " LIMIT ?";
+                $values[] = (int) $options['limit'];
+            }
+
             $query = new Cassandra\Prepared\Custom();
             $query->query($statement, $values);
 

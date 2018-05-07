@@ -270,7 +270,10 @@ class Iterator implements \Iterator
             $keys[] = "thumbs:up:entity:$boost->guid";
         }
         $db = new Data\Call('entities_by_time');
-        $thumbs = $db->getRows($keys, ['offset' => Core\Session::getLoggedInUserGuid()]);
+        $thumbs = $db->getRows($keys, [
+            'offset' => Core\Session::getLoggedInUserGuid(),
+            'limit' => 1,
+        ]);
         foreach ($boosts as $k => $boost) {
             $key = "thumbs:up:entity:$boost->guid";
             if (isset($thumbs[$key])) {
