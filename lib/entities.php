@@ -889,7 +889,7 @@ function elgg_get_entities(array $options = array()) {
                 }
             }
         } catch(Exception $e){
-            var_dump($e);
+            //var_dump($e);
             //@todo report error to admin
         }
         return $entities;
