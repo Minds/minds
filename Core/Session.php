@@ -17,6 +17,8 @@ class Session extends base
         session_set_save_handler(new core\Data\Sessions());
 
         ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies - 30 days
+        ini_set('session.cookie_secure', 'on');
+        ini_set('session.cookie_httponly', 'on');
         session_name('minds');
         session_start();
 
@@ -114,7 +116,7 @@ class Session extends base
               'guid' => (string) $_SESSION['user']->guid,
               'sessionId' => session_id()
             ], Config::_()->get('sockets-jwt-secret'));
-            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com');
+            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com', true);
         }
     }
 
