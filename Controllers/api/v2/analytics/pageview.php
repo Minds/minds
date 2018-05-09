@@ -6,6 +6,7 @@ namespace Minds\Controllers\api\v2\analytics;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Common\Cookie;
 use Minds\Entities;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
@@ -29,7 +30,15 @@ class pageview implements Interfaces\Api, Interfaces\ApiIgnorePam
         if(!isset($_COOKIE['mwa'])) {
             //@TODO make this more unique
             $id = uniqid(true);
-            setcookie('mwa', $id, time() + (60 * 60 * 24 * 30 * 12), '/', '', true, true);
+
+            $cookie = new Cookie();
+            $cookie
+                ->setName('mwa')
+                ->setValue($id)
+                ->setExpire(time() + (60 * 60 * 24 * 30 * 12))
+                ->setPath('/')
+                ->create();
+
             $_COOKIE['mwa'] = $id;
         }
 

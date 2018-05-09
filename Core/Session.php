@@ -2,6 +2,8 @@
 namespace Minds\Core;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
+use Minds\Common\Cookie;
 use Minds\Entities\User;
 
 /**
@@ -12,12 +14,17 @@ class Session extends base
 {
     private $session_name = 'minds';
 
-    public function __construct($force = null)
+    /** @var Config $config */
+    private $config;
+
+    public function __construct($force = null, $config = null)
     {
+        $this->config = $config ?: Di::_()->get('Config');
+
         session_set_save_handler(new core\Data\Sessions());
 
         ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies - 30 days
-        ini_set('session.cookie_secure', 'on');
+        ini_set('session.cookie_secure', $this->config->disable_secure_cookies ? 'off' : 'on');
         ini_set('session.cookie_httponly', 'on');
         session_name('minds');
         session_start();
@@ -48,16 +55,26 @@ class Session extends base
             $_SESSION['__elgg_session'] = md5(microtime() . rand());
         }
 
+        $loggedInCookie = new Cookie();
+        $loggedInCookie
+            ->setName('loggedin')
+            ->setExpire(time() + (60 * 60 * 24 * 30))
+            ->setPath('/');
+            
         if (isset($_SESSION['user'])) {
-            setcookie('loggedin', 1, time() + (60 * 60 * 24 * 30), '/', '', true, true);
+            $loggedInCookie->setValue(1);
             cache_entity($_SESSION['user']);
         } else {
-            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/', '', true, true);
+            $loggedInCookie->setValue(0);
         }
+
+        $loggedInCookie->create();
 
 
         if (!isset($_COOKIE['loggedin'])) {
-            setcookie('loggedin', 0, time() + (60 * 60 * 24 * 30), '/', '', true, true);
+            $loggedInCookie
+                ->setValue(0)
+                ->create();
             $_SESSION = array();
             unset($_COOKIE[session_name()]);
             session_destroy();
@@ -116,7 +133,15 @@ class Session extends base
               'guid' => (string) $_SESSION['user']->guid,
               'sessionId' => session_id()
             ], Config::_()->get('sockets-jwt-secret'));
-            setcookie('socket_jwt', $jwt, 0, '/', Config::_()->get('sockets-jwt-domain') ?: 'minds.com', true, true);
+
+            $cookie = new Cookie();
+            $cookie
+                ->setName('socket_jwt')
+                ->setValue($jwt)
+                ->setExpire(0)
+                ->setPath('/')
+                ->setDomain(Config::_()->get('sockets-jwt-domain') ?: 'minds.com')
+                ->create();
         }
     }
 

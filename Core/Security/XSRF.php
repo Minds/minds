@@ -5,6 +5,7 @@
 namespace Minds\Core\Security;
 
 use Minds\Core;
+use Minds\Common\Cookie;
 
 class XSRF
 {
@@ -37,6 +38,14 @@ class XSRF
             return;
         }
         $token = self::buildToken();
-        setcookie('XSRF-TOKEN', $token, 0, '/', '', true);
+
+        $cookie = new Cookie();
+        $cookie
+            ->setName('XSRF-TOKEN')
+            ->setValue($token)
+            ->setExpire(0)
+            ->setPath('/')
+            ->setHttpOnly(false) //must be able to read in JS
+            ->create();
     }
 }

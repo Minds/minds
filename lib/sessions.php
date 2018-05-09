@@ -320,7 +320,13 @@ function login(ElggUser $user, $persistent = false) {
 	set_last_login($_SESSION['guid']);
 	//reset_login_failure_count($user->guid); // Reset any previous failed login attempts
 
-	setcookie('loggedin', 1, time() + 3600, '/', '', true, true);
+	$loggedInCookie = new Minds\Common\Cookie();
+	$loggedInCookie
+		->setName('loggedin')
+		->setValue(1)
+		->setExpire(time() + (60 * 60 * 24 * 30))
+		->setPath('/')
+		->create();
 
 	if(elgg_trigger_event('loggedin', 'user', $user) === FALSE){
 		return false;
