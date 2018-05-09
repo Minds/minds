@@ -40,6 +40,7 @@ class Sessions implements \SessionHandlerInterface
             }
 
             $result = $this->db->getRow($session_id);
+            $result['data'] = base64_decode($result['data']);
             $this->cache[$session_id] = $result;
             $this->session = $result;
 
@@ -67,7 +68,10 @@ class Sessions implements \SessionHandlerInterface
             $cacher = cache\factory::build();
             $cacher->set($session_id, $session_data, $params['lifetime']);
 
-            $result = $this->db->insert($session_id, array('ts'=>$time,'data'=>$session_data), $params['lifetime']);
+            $result = $this->db->insert($session_id, [
+                'ts' => $time,
+                'data' => base64_encode($session_data)
+            ], $params['lifetime']);
             $this->addIndex($session_id, $params['lifetime']);
 
             if ($result !== false) {
@@ -175,7 +179,7 @@ class Sessions implements \SessionHandlerInterface
         foreach ($result as $session_id => $ts) {
             $session_data = $this->db->getRow($session_id);
             //decode session_data to $_SESSION global
-            session_decode($session_data['data']);
+            session_decode(base64_decode($session_data['data']));
             //update the session
             $_SESSION['user'] = $user;
             $this->session = null;
