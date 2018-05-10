@@ -83,7 +83,7 @@ class Video extends Object
     {
         $domain = elgg_get_site_url();
         global $CONFIG;
-        if (isset($CONFIG->cdn_url) && !$this->getFlag('paywall') && !$this->getWireThreshold()) {
+        if (isset($CONFIG->cdn_url)) {
             $domain = $CONFIG->cdn_url;
         }
 
