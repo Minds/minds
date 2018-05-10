@@ -228,18 +228,17 @@ class Installer
 
     public function setupFirstAdmin()
     {
-        $guid = register_user(
+        $user = register_user(
             $this->options['username'],
             $this->options['password'],
             $this->options['username'],
             $this->options['email']
         );
 
-        if (!$guid) {
+        if (!$user) {
             throw new ProvisionException('Cannot create new User entity');
         }
 
-        $user = new User($guid);
         $user->admin = 'yes';
         $user->validated = true;
         $user->validated_method = 'admin_user';
@@ -252,7 +251,7 @@ class Installer
         Helpers\Wallet::createTransaction($user->guid, 750000000, $user->guid, 'Installed Minds');
 
         $activity = new Activity();
-        $activity->owner_guid = $guid;
+        $activity->owner_guid = $user->guid;
         $activity->setMessage('Hello Minds!');
         $activitySaved = $activity->save();
 
