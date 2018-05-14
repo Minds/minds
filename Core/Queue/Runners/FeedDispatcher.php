@@ -53,7 +53,7 @@ class FeedDispatcher implements Interfaces\QueueRunner
 
                            $followers = $guids;
 
-                           $ninetyDays = (60 * 60 * 24 * 60);
+                           $ninetyDays = (60 * 60 * 24 * 90);
 
                             foreach ($followers as $follower) {
                                 $db->insert("$entity->type:network:$follower", 
