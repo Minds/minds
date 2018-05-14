@@ -64,7 +64,7 @@ class Client implements Interfaces\ClientInterface
         return true;
     }
 
-    public function batchRequest($requests = array(), $batchType = Driver::BATCH_COUNTER)
+    public function batchRequest($requests = array(), $batchType = Driver::BATCH_COUNTER, $silent = false)
     {
         $batch = new Driver\BatchStatement($batchType);
 
@@ -72,6 +72,10 @@ class Client implements Interfaces\ClientInterface
             $cql = $request;
             $statement = $this->session->prepare($cql['string']);
             $batch->add($statement, $cql['values']);
+        }
+
+        if ($silent) {
+            return $this->session->executeAsync($batch);
         }
 
         return $this->session->execute($batch);

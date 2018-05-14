@@ -79,7 +79,7 @@ class Call
         return new ColumnFamily($this->pool, $cf);
     }
 
-    public function insert($guid = null, array $data = array(), $ttl = null)
+    public function insert($guid = null, array $data = array(), $ttl = null, $silent = false)
     {
         if (!$guid) {
             $guid = Core\Guid::build();
@@ -106,7 +106,7 @@ class Call
         }
 
         try {
-            $this->client->batchRequest($requests, \Cassandra::BATCH_UNLOGGED);
+            $this->client->batchRequest($requests, \Cassandra::BATCH_UNLOGGED, $silent);
         } catch (\Exception $e) {
             error_log(print_r($e, true));
             return false;

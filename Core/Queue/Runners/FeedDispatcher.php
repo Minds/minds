@@ -30,7 +30,7 @@ class FeedDispatcher implements Interfaces\QueueRunner
                    $offset = "";
                    while (true) {
                        try {
-                           $guids = $fof->getRow($entity->owner_guid, array('limit'=>2000, 'offset'=>$offset));
+                           $guids = $fof->getRow($entity->owner_guid, array('limit'=>500, 'offset'=>$offset));
                            if (!$guids) {
                                break;
                            }
@@ -53,13 +53,20 @@ class FeedDispatcher implements Interfaces\QueueRunner
 
                            $followers = $guids;
 
-                           foreach ($followers as $follower) {
-                               $db->insert("$entity->type:network:$follower", array($entity->guid => $entity->guid));
-                               if ($entity->subtype) {
-                                   $db->insert("$entity->type:$entity->subtype:network:$follower", array($entity->guid => $entity->guid));
-                               }
-                               if ($entity->super_subtype) {
-                                   $db->insert("$entity->type:$entity->super_subtype:network:$follower", array($entity->guid => $entity->guid));
+                           $ninetyDays = (60 * 60 * 24 * 60);
+
+                            foreach ($followers as $follower) {
+                                $db->insert("$entity->type:network:$follower", 
+                                    [ $entity->guid => $entity->guid ],
+                                    $ninetyDays, //ttl
+                                    true //async (silent)
+                                );
+                                if ($entity->subtype) {
+                                    $db->insert("$entity->type:$entity->subtype:network:$follower",
+                                        [ $entity->guid => $entity->guid ].
+                                        $ninetyDays, //ttl
+                                        true //async (silent)
+                                    );
                                }
                            }
 
