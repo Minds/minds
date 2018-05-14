@@ -63,7 +63,7 @@ class FeedDispatcher implements Interfaces\QueueRunner
                                 );
                                 if ($entity->subtype) {
                                     $db->insert("$entity->type:$entity->subtype:network:$follower",
-                                        [ $entity->guid => $entity->guid ].
+                                        [ $entity->guid => $entity->guid ],
                                         $ninetyDays, //ttl
                                         true //async (silent)
                                     );
