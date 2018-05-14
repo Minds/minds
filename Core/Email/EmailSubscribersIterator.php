@@ -14,8 +14,8 @@ class EmailSubscribersIterator implements \Iterator
     private $topic;
     private $value;
 
-    private $limit = 2000;
-    private $offset = "";
+    private $limit = 200;
+    public $offset = "";
     private $data = [];
     private $dryRun = false;
 
@@ -79,9 +79,9 @@ class EmailSubscribersIterator implements \Iterator
 
         $this->data = [
             new User('mark'),
-            new User('jack'),
-            new User('john'),
-            new User('ottman')
+            //new User('jack'),
+            //new User('john'),
+            //new User('ottman')
         ];
         return $this;
     }

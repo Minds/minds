@@ -3,7 +3,7 @@
     <tr>
       <td>
         <p>
-          Log in using the button below to claim your April token reward!
+          Log in using the button below to claim your May token reward!
         </p>
       </td>
     </tr>

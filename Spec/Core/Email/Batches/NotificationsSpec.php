@@ -55,7 +55,7 @@ class NotificationsSpec extends ObjectBehavior
             'campaign' => 'when',
             'topic' => 'unread_notifications',
             'value' => true,
-            'limit' => 2000,
+            'limit' => 200,
             'offset' => ''
         ])
             ->shouldBeCalled()
