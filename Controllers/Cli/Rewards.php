@@ -49,10 +49,10 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
         $this->out("Getting rewards for all users");
 
         $total = BigNumber::_(0);
+        $leaderboard = [];
         $i = 0;
         foreach ($users as $guid) {
             $i++;
-            $from = $this->getOpt('from') ?: (strtotime('-7 days') * 1000);
             if (!$guid) {
                 continue;
             }
@@ -63,10 +63,10 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
                 $user = new Entities\User();
                 $user->guid = (string) $guid;
                 $manager->setUser($user);
-    //            $manager->setDryRun(true);
+                $manager->setDryRun($this->getOpt('dry-run'));
                 $reward = $manager->sync();
                 $total = $total->add($reward->getAmount());
-
+                $leaderboard[$user->guid] = ($reward->getAmount() / (10**18));
                 /*Dispatcher::trigger('notification', 'contributions', [
                     'to' => [$user->guid],
                     'from' => 100000000000000519,
@@ -74,14 +74,41 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
                     'params' => [ 'amount' => (string) BigNumber::_($reward->getAmount()) ],
                     'message' => ''
                     ]);*/
-
-                echo "\r [$i][$guid]: synced past 48 hours. $total";
+                $amnt = (int) $reward->getAmount();
+                echo "\n [$i][$guid]: synced past 48 hours. {$amnt}/$total";
             } catch (\Exception $e) {
-                echo "\r [$i][$guid]: failed synced past 48 hours. $total";
+                var_dump($e);
+                echo "\n [$i][$guid]: failed synced past 48 hours. {$reward->getAmount()}/$total";
             }
         }
+        
+        $fp = fopen("contributions-{$timestamp}.csv", 'w');
+
+        foreach($leaderboard as $guid => $count) {
+            fputcsv($fp, [ $guid, $count ]);
+        }
+
+        fclose($fp);
     }
+
+    public function single()
+    {
+        $timestamp = $this->getOpt('timestamp') ?: (strtotime('midnight -24 hours') * 1000);
+        $to = strtotime("+24 hours", $timestamp / 1000) * 1000;
+
+        $manager = new Core\Rewards\Manager();
+        $manager->setFrom($timestamp)
+            ->setTo($to);
+        
+        $user = new Entities\User();
+        $user->guid = (string) $this->getOpt('guid');
+        $manager->setUser($user);
+        $manager->setDryRun(true);
+        $reward = $manager->sync();
     
+        var_dump($reward);
+    }
+
     public function issue()
     {
         $username = $this->getOpt('username');

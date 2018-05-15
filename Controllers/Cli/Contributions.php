@@ -32,7 +32,13 @@ class Contributions extends Cli\Controller implements Interfaces\CliControllerIn
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
-        $from = $this->getOpt('from') ?: (strtotime('midnight tomorrow -2 days') * 1000);
+        $from = $this->getOpt('from');
+
+        if (!$from && $this->getOpt('incremental')) {
+            $from = strtotime('midnight') * 1000; //run throughout the day, provides estimates
+        } else {
+            $from = strtotime('midnight -1 day') * 1000;
+        }
 
         $users = new UsersIterator;
         $users->setFrom($from);
@@ -65,6 +71,74 @@ class Contributions extends Cli\Controller implements Interfaces\CliControllerIn
             echo "\r [$i][$guid]: synced past 48 hours. $total";
         }
     }
+
+    public function syncCheckins()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        $from = $this->getOpt('from');
+
+        if (!$from && $this->getOpt('incremental')) {
+            $from = strtotime('midnight') * 1000; //run throughout the day, provides estimates
+        } else {
+            $from = strtotime('midnight -1 day') * 1000;
+        }
+
+        $hours = 24;
+        $checkins = []; //user_guid => $amount
+        
+        for ($h = 0; $h < $hours; $h++) {
+            $h_from = strtotime("+$h hours", $from / 1000) * 1000;
+            $h_to = strtotime("+1 hour", $h_from / 1000) * 1000;
+            
+            if ($h_to > time() * 1000) {
+                break; // skip
+            }
+
+            echo "\n$h $h_from -> $h_to\n";
+            $users = new UsersIterator;
+            $users->setFrom($h_from)
+                  ->setTo($h_to)
+                  ->setAction('active');
+
+            $hashes = [];
+            $total = 0;
+            $i = 0;
+            $duplicates = 0;
+            foreach ($users as $guid) {
+                $i++;
+                if (!$guid) {
+                    continue;
+                }
+                $user = new Entities\User((string) $guid);
+                $hash = $user->getPhoneNumberHash();
+
+                if (isset($hashes[$hash])) { //don't allow multiple phones to claim checkin
+                    $duplicates++; 
+                    continue;
+                }
+                $hashes[$hash] = true;
+                if (!isset($checkins[$user->guid])) {
+                    $checkins[$user->guid] = [
+                        'user' => $user,
+                        'amount' => 0,
+                    ];
+                }
+
+                $checkins[$user->guid]['amount']++;
+
+                echo "\r[$h][$i][$guid]: synced. duplicates: $duplicates";
+            }
+        }
+
+        foreach ($checkins as $checkin) {
+            $manager = new Core\Rewards\Contributions\Manager();
+            $manager->setFrom($from)
+                    ->setUser($checkin['user'])
+                    ->issueCheckins($checkin['amount']);
+        }
+    } 
 
     public function test()
     {
