@@ -55,6 +55,7 @@ class BoostEvent implements BlockchainEventInterface
 
     public function boostFail($log, $transaction) {
         if ($transaction->getContract() !== 'boost') {
+            throw new \Exception("Failed but not a boost");
             return;
         }
 
@@ -79,19 +80,7 @@ class BoostEvent implements BlockchainEventInterface
 
     public function boostSent($log, $transaction)
     {
-        try {
-            $this->resolve($transaction);
-        } catch (\Exception $e) {
-            // Catch race condition. Mining might be faster than /v1/boost or /v1/boost/peer request.
-            sleep(2);
-
-            try {
-                $this->resolve($transaction);
-            } catch (\Exception $e) {
-                error_log($e->getMessage());
-                // Log?
-            }
-        }
+        $this->resolve($transaction);
     }
 
     /**
@@ -114,6 +103,7 @@ class BoostEvent implements BlockchainEventInterface
 
         $boost->setState('created')
             ->save();
+        echo "{$boost->getGuid()} now marked completed";
     }
 
     public function boostAccepted($log)
