@@ -22,5 +22,9 @@ class RewardsProvider extends Provider
         $this->di->bind('Rewards\Withdraw\Repository', function ($di) {
             return new Withdraw\Repository();
         }, [ 'useFactory'=> true ]);
+
+        $this->di->bind('Rewards\ReferralValidator', function ($di) {
+            return new ReferralValidator();
+        }, [ 'useFactory'=> true ]);
     }
 }

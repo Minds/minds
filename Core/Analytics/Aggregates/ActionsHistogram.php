@@ -44,7 +44,7 @@ class ActionsHistogram extends Aggregate
 
         if ($this->user) {
             //nasty hack for subscribe... @todo: find a better solution
-            if ($this->action == 'subscribe') {
+            if ($this->action == 'subscribe' || $this->action == 'referral') {
                 $must[]['match'] = [
                     'entity_guid.keyword' => $this->user->guid
                 ];

@@ -1,8 +1,8 @@
 <?php
 namespace Minds\Core\Analytics;
 
-use Minds\Core\Di\Di;
 use Minds\Core\Analytics\Aggregates\ActionsHistogram;
+use Minds\Core\Di\Di;
 
 class Manager
 {
@@ -17,7 +17,8 @@ class Manager
         'subscribers' => 'subscribe',
         'comments' => 'comment',
         'reminds' => 'remind',
-        'votes' => 'vote:up'
+        'votes' => 'vote:up',
+        'referrals' => 'referral',
     ];
 
     public function __construct($client = null)

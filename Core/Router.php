@@ -69,6 +69,10 @@ class Router
             Helpers\Campaigns\EmailRewards::reward($_GET['campaign'], $_GET['__e_ct_guid']);
         }
 
+        if (isset($_GET['referrer'])) {
+            Helpers\Campaigns\Referrals::register($_GET['referrer']);
+        }
+
         $loop = count($segments);
         while ($loop >= 0) {
             $offset = $loop -1;

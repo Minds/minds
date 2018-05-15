@@ -5,6 +5,8 @@
 namespace Minds\Core\Rewards;
 
 use Minds\Core\Di\Di;
+use Minds\Core;
+use Minds\Entities\User;
 
 class Join
 {
@@ -31,18 +33,24 @@ class Join
     private $secret;
 
     /** @var Config $config */
+    private $config;
+
+    /** @var ReferralValidator */
+    private $validator;
 
     public function __construct(
         $twofactor = null,
         $sms = null,
         $libphonenumber = null,
-        $config = null
+        $config = null,
+        $validator = null
     )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
         $this->sms = $sms ?: Di::_()->get('SMS');
         $this->libphonenumber = $libphonenumber ?: \libphonenumber\PhoneNumberUtil::getInstance();
         $this->config = $config ?: Di::_()->get('Config');
+        $this->validator = $validator ?: Di::_()->get('Rewards\ReferralValidator');
     }
 
     public function setUser(&$user)
@@ -84,8 +92,25 @@ class Join
     {
         if ($this->twofactor->verifyCode($this->secret, $this->code, 8)) {
             //$this->user->setPhoneNumber($this->number);
-            $this->user->setPhoneNumberHash(hash('sha256', $this->number . $this->config->get('phone_number_hash_salt')));
+            $hash = hash('sha256', $this->number . $this->config->get('phone_number_hash_salt'));
+            $this->user->setPhoneNumberHash($hash);
             $this->user->save();
+
+            if ($this->user->referrer && $this->user->guid != $this->user->referrer) {
+                $this->validator->setHash($hash);
+
+                if ($this->validator->validate()) {
+                    $event = new Core\Analytics\Metrics\Event();
+                    $event->setType('action')
+                        ->setProduct('platform')
+                        ->setUserGuid((string) $this->user->guid)
+                        ->setUserPhoneNumberHash($hash)
+                        ->setEntityGuid((string) $this->user->referrer)
+                        ->setEntityType('user')
+                        ->setAction('referral')
+                        ->push();
+                } 
+            }
         } else {
             throw new \Exception('The confirmation failed');
         }

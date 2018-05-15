@@ -35,7 +35,6 @@ class Register
             if ($params['referrer']) {
                 $user = new Entities\User(strtolower(ltrim($params['referrer'], '@')));
                 if ($user->guid) {
-                    Helpers\Wallet::createTransaction($user->guid, 100, $guid, "Referred @" . $_POST['username']);
                     $params['user']->referrer = (string) $user->guid;
                     $params['user']->save();
                     $params['user']->subscribe($user->guid);

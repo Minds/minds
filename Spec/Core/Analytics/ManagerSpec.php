@@ -57,13 +57,15 @@ class ManagerSpec extends ObjectBehavior
                 'subscribers' => 62,
                 'comments' => 62,
                 'reminds' => 62,
-                'votes' => 62                
+                'votes' => 62,
+                'referrals' => 62,                
             ],
             1511654400000 => [
                 'subscribers' => 102,
                 'comments' => 102,
                 'reminds' => 102,                
                 'votes' => 102,
+                'referrals' => 102,
             ]
         ]);
     }
