@@ -72,7 +72,19 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                     Counters::increment($entity->owner_guid, "impression");
                 }
                 $response['load-next'] = $iterator->getOffset();
-                break;
+                
+                if (!$response['boosts']) {
+                    $result = Di::_()->get('Trending\Repository')->getList([
+                        'type' => 'images',
+                        'rating' => isset($rating) ? (int) $rating : 1,
+                        'limit' => $limit,
+                    ]);
+
+                    if ($result && isset($result['guids'])) {
+                        $entities = Core\Entities::get([ 'guids' => $result['guids'] ]);
+                        $response['boosts'] = Factory::exportable($entities);
+                    }
+                } 
             case 'newsfeed':
                 foreach ($iterator as $guid => $entity) {
                     $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string)$guid]);
