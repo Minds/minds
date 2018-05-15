@@ -16,7 +16,7 @@ class EntityValidator
             echo "..rating too high";
             return false;
         }
-        
+
         return $this->isEnabled($entity) 
             && ($entity->type == 'user' || $this->isOwnerEnabled($entity->getOwnerEntity()))
             && !$this->isMature($entity);
@@ -45,10 +45,14 @@ class EntityValidator
     protected function isEnabled($entity)
     {
         if ($entity->type == 'user' && ($entity->banned == 'yes' || $entity->enabled == 'no')) {
-            echo $entity->guid . "is not valid";
+            echo "\n$entity->guid is not valid [banned: $entity->banned] [enabled: $entity->enabled]\n";
             return false;
         }
         if (method_exists($entity, 'getFlag') && $entity->getFlag('paywall') ) {
+            echo "\n $entity->guid has a paywall flag"; 
+            return false;
+        }
+        if ($entity->type == 'object' && $entity->access_id != 2) {
             return false;
         }
         return true;

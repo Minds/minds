@@ -30,6 +30,8 @@ class Trending extends Cli\Controller implements Interfaces\CliControllerInterfa
 
     public function sync()
     {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         $this->out('Collecting trending items');
 
         $manager = new Core\Trending\Manager();
