@@ -67,21 +67,13 @@ class Retention implements AnalyticsMetric
             //echo "[$x]:: actives: " . date('d-m-Y', $endTs) . " signups: " . date('d-m-Y', $startTs) . "\n";
             $offset = "";
             echo "\n Gathering actives \n";
-            while (true) {
-                $actives = $this->db->getRow("analytics:active:day:$endTs", ['limit'=>200, 'offset' => $offset]);
-                if(count($actives) <= 1)
-                    break;
-
-                foreach ($signups as $signup => $ts) {
-                    if (isset($actives[$signup])) {
-                        $this->db->insert("{$this->namespace}:$x:$now", [$signup=>time()]);
-                        echo "\r $x: $signup (active) $offset"; 
-                    } else {
-                        echo "\r $x: $signup (not active) $offset";
-                    }
+            foreach ($signups as $signup => $ts) {
+                if ($this->wasActive($signup, $now)) {
+                    $this->db->insert("{$this->namespace}:$x:$now", [$signup=>time()]);
+                    echo "\r $x: $signup (active) $offset"; 
+                } else {
+                    echo "\r $x: $signup (not active) $offset";
                 }
-                end($actives);
-                $offset = key($actives);
             }
             echo "(done)";
 
@@ -132,6 +124,52 @@ class Retention implements AnalyticsMetric
             ];
         }
         return $data;
+    }
+
+    protected function wasActive($guid, $ts)
+    {
+        $query = [
+            'index' => 'minds-metrics-*',
+            'type' => 'action',
+            'size' => 5000,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            [
+                                'term' => [
+                                    'user_guid.keyword' => $guid
+                                ],
+                            ],
+                            [
+                                'range' => [
+                                    '@timestamp' => [
+                                        'lte' => strtotime('+24 hours', $ts) * 1000,
+                                        'gte' => $ts * 1000
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $prepared = new Core\Data\ElasticSearch\Prepared\Search();
+        $prepared->query($query);
+
+        try {
+            $result = Core\Di\Di::_()->get('Database\ElasticSearch')->request($prepared);
+        } catch (\Exception $e) {
+            var_dump($e); exit;
+            return [];
+        }
+
+        if ($result['hits']['total'] >= 1) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**
