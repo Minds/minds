@@ -59,7 +59,14 @@ class explicit implements Interfaces\Api
                 $attachment = Entities\Factory::build($entity->entity_guid);
 
                 if ($attachment && $attachment->guid && $attachment instanceof Interfaces\Flaggable) {
-                    $attachment->setFlag('mature', $entity->getMature());
+                    if (method_exists($attachment, 'setMature')) {
+                        $attachment->setMature($value);
+                    } elseif (method_exists($attachment, 'setFlag')) {
+                        $attachment->setFlag('mature', $value);
+                    }
+                    if (isset($attachment->mature)) {
+                        $attachment->mature = $value;
+                    }
                     $attachment->save();
                 }
             }
