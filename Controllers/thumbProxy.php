@@ -65,7 +65,7 @@ class thumbProxy extends core\page implements Interfaces\page
 
         if (!$image) {
             @unlink($filename);
-            $this->forward($src);
+            //$this->forward($src);
             return false;
         }
 
@@ -79,7 +79,7 @@ class thumbProxy extends core\page implements Interfaces\page
         $new_width = get_input('width', 400);
         if ($width == 0 || $height == 0) {
             @unlink($filename);
-            $this->forward($src);
+            //$this->forward($src);
             return;
         }
 
@@ -127,7 +127,7 @@ class thumbProxy extends core\page implements Interfaces\page
             //we couldn't get the images, just output directly
             //header('Content-type: image/jpeg');
             @unlink($filename);
-            $this->forward($src);
+            //$this->forward($src);
             return;
         }
         imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
