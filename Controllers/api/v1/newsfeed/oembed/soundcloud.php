@@ -36,7 +36,7 @@ class soundcloud implements Interfaces\Api
             $query['maxheight'] = (int) $_GET['maxheight'];
         }
 
-        $endpoint = 'http://soundcloud.com/oembed?' . http_build_query($query);
+        $endpoint = 'https://soundcloud.com/oembed?' . http_build_query($query);
         
         $result = $this->http->get($endpoint);
         return Factory::response($result);
