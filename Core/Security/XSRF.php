@@ -11,8 +11,8 @@ class XSRF
 {
     public static function buildToken()
     {
-        $user = Core\Session::getLoggedinUser();
-        return md5($_SESSION['__elgg_session'] . rand(1000, 9000));
+        $bytes = openssl_random_pseudo_bytes(128);
+        return hash('sha512', $_SESSION['__elgg_session'] . $bytes);
     }
 
     public static function validateRequest()

@@ -52,7 +52,8 @@ class Session extends base
 
         // Generate a simple token (private from potentially public session id)
         if (!isset($_SESSION['__elgg_session'])) {
-            $_SESSION['__elgg_session'] = md5(microtime() . rand());
+            $bytes = openssl_random_pseudo_bytes(128);
+            $_SESSION['__elgg_session'] = hash('sha512', microtime() . $bytes);
         }
 
         $loggedInCookie = new Cookie();
