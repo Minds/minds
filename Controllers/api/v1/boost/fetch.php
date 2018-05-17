@@ -85,7 +85,8 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
                         $entities = Core\Entities::get([ 'guids' => $result['guids'] ]);
                         $response['boosts'] = Factory::exportable($entities);
                     }
-                } 
+                }
+                break;
             case 'newsfeed':
                 foreach ($iterator as $guid => $entity) {
                     $response['boosts'][] = array_merge($entity->export(), ['boosted' => true, 'boosted_guid' => (string)$guid]);
