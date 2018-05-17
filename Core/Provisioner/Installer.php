@@ -45,10 +45,10 @@ class Installer
         ];
 
         usleep(mt_rand(1, 9999));
-        $this->defaults['site-secret'] = md5(microtime() . mt_rand());
+        $this->defaults['site-secret'] = hash('sha512', openssl_random_pseudo_bytes(128));
 
         usleep(mt_rand(1, 9999));
-        $this->defaults['jwt-secret'] = md5(microtime() . mt_rand());
+        $this->defaults['jwt-secret'] = hash('sha512', openssl_random_pseudo_bytes(128));
     }
 
     public function setApp($app)
