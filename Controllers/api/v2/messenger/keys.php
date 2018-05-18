@@ -7,6 +7,7 @@
  */
 namespace Minds\Controllers\api\v2\messenger;
 
+use Minds\Common\Cookie;
 use Minds\Core;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -53,6 +54,17 @@ class keys implements Interfaces\Api
         return Factory::response($response);
     }
 
+    private function createMessengerCookie($secret) {
+        $cookie = new Cookie();
+        $cookie
+            ->setName('messenger-secret')
+            ->setValue($secret)
+            ->setExpire(time() + 86400 * 30)
+            ->setPath("/")
+            ->setHttpOnly(true)
+            ->create();
+    }
+
     public function post($pages)
     {
         $openssl = new Messenger\Encryption\OpenSSL();
@@ -78,7 +90,9 @@ class keys implements Interfaces\Api
                     $unlockPassword = base64_encode(openssl_random_pseudo_bytes(128));
                     $keystore->unlockPrivateKey($_POST['password'], $unlockPassword);
                     $tmp = $keystore->getUnlockedPrivateKey();
-                    $response['password'] = urlencode($unlockPassword);
+
+                    //setcookie('messenger-secret', $unlockPassword, time() + 86400 * 30, "/");
+                    $this->createMessengerCookie($unlockPassword);
                 }
 
                 break;
@@ -89,7 +103,8 @@ class keys implements Interfaces\Api
                     $unlockPassword = base64_encode(openssl_random_pseudo_bytes(128));
                     $keystore->unlockPrivateKey($_POST['password'], $unlockPassword);
                     $tmp = $keystore->getUnlockedPrivateKey();
-                    $response['password'] = urlencode($unlockPassword);
+                    //setcookie('messenger-secret', $unlockPassword, time() + 86400 * 30, "/");
+                    $this->createMessengerCookie($unlockPassword);
                 } catch (\Exception $e) {
                     $response['status'] = 'error';
                     $response['message'] = $e->getMessage();

@@ -110,7 +110,7 @@ class conversations implements Interfaces\Api
                     $_GET['decrypt'] = true;
                 }
                 if (isset($_GET['decrypt']) && $_GET['decrypt']) {
-                    $messages[$k]->decrypt(Core\Session::getLoggedInUser(), urldecode($_GET['password']));
+                    $messages[$k]->decrypt(Core\Session::getLoggedInUser(), $_COOKIE['messenger-secret']);
                 } else {
                     //support legacy clients
                     $messages[$k]->message = $messages[$k]->getMessage(Core\Session::getLoggedInUserGuid());
