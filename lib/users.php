@@ -936,7 +936,25 @@ function validate_password($password) {
 	}
 
 	if (strlen($password) < $CONFIG->min_password_length) {
-		$msg = elgg_echo('registration:passwordtooshort', array($CONFIG->min_password_length));
+		$msg = "Passwords should be at least " . $CONFIG->min_password_length . " characters long";
+		throw new RegistrationException($msg);
+	}
+
+	//Check for a uppercase character
+	if (!preg_match('/[A-Z]/', $password)) {
+		$msg = "Passwords should have at least one uppercase character";
+		throw new RegistrationException($msg);
+	}
+
+	//Check for a numeric character
+	if (!preg_match('/\d/', $password)) {
+		$msg = "Passwords should have at least one number";
+		throw new RegistrationException($msg);
+	}
+
+	//Check for a special character
+	if (!preg_match('/[^a-zA-Z\d]/', $password)) {
+		$msg = "Passwords should have at least one special character (eg. @,&,!,=)";
 		throw new RegistrationException($msg);
 	}
 
