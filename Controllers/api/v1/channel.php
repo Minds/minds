@@ -304,6 +304,7 @@ class channel implements Interfaces\Api
                 if ($customer) {
                     $stripe->deleteCustomer($customer);
                 }
+                (new Core\Data\Sessions())->destroyAll($channel->guid);
         }
 
         return Factory::response(array());
