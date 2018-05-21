@@ -84,14 +84,14 @@ class ManagerSpec extends ObjectBehavior
                                 "key" => 1234,
                                 "doc_count" => 71,
                                 "uniques" => [
-                                    "value" => 1
+                                    "value" => 71
                                 ]
                             ],
                             [
                                 "key" => 5678,
                                 "doc_count" => 87,
                                 "uniques" => [
-                                    "value" => 1
+                                    "value" => 87
                                 ]
                             ]
                         ]
