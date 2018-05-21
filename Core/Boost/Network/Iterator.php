@@ -11,7 +11,7 @@ class Iterator implements \Iterator
 {
     protected $mongo;
 
-    protected $rating = 2;
+    protected $rating = 1;
     protected $quality = 0;
     protected $offset = null;
     protected $limit = 1;
