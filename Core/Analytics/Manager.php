@@ -15,6 +15,7 @@ class Manager
     private $to;
     private $interval = 'day';
     private $term = 'user_guid';
+    private $uniques = true;
     private $metric;
 
 
@@ -58,6 +59,12 @@ class Manager
     public function setTerm($term)
     {
         $this->term = $term;
+        return $this;
+    }
+
+    public function useUniques($bool)
+    {
+        $this->uniques = $bool;
         return $this;
     }
 
@@ -108,6 +115,7 @@ class Manager
             ->setFrom($this->from);
 
         $aggregate->setTerm($this->term);
+        $aggregate->useUniques($this->uniques);
         $result = $aggregate->get();
 
         return $result;

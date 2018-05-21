@@ -44,7 +44,8 @@ class leaderboard implements Interfaces\Api, Interfaces\ApiAdminPam
 
         switch($type) {
             case 'actors':
-                $manager->setTerm('user_guid');
+                $manager->setTerm('user_guid')
+                    ->useUniques(false);
                 break;
             case 'beneficiaries':
                 switch ($metric) {

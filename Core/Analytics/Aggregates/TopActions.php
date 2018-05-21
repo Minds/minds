@@ -8,11 +8,20 @@ use Minds\Core\Data\ElasticSearch\Prepared\Search;
 
 class TopActions extends Aggregate
 {
+    protected $uniques = true;
     protected $term;
 
-    function setTerm($term)
+
+    public function useUniques($bool)
+    {
+        $this->uniques = $bool;
+        return $this; 
+    }
+
+    public function setTerm($term)
     {
         $this->term = $term;
+        return $this;
     }
 
     public function get()
@@ -34,6 +43,28 @@ class TopActions extends Aggregate
             ]
         ];
 
+        $aggs = [
+            'counts' => [
+                'terms' => [
+                  'field' => "{$this->term}.keyword",
+                  'size' => 50,
+                ],
+            ]
+        ];
+
+        if ($this->uniques) {
+            $aggs['counts']['terms']['order'] = [
+                'uniques' => 'desc',
+            ];
+            $aggs['counts']['aggs'] = [
+                'uniques' => [
+                    'cardinality' => [
+                        'field' => 'user_phone_number_hash.keyword',
+                    ],
+                ]
+            ];
+        }
+
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
@@ -45,22 +76,7 @@ class TopActions extends Aggregate
                         'must' => $must
                     ]
                 ],
-                'aggs' => [
-                    'counts' => [
-                        'terms' => [
-                          'field' => "{$this->term}.keyword",
-                          'size' => 50,
-                        ],
-                        'aggs' => [
-                            'uniques' => [
-                                'cardinality' => [
-                                    'field' => 'user_guid.keyword',
-                                    'precision_threshold' => 40000
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                'aggs' => $aggs
             ]
         ];
 
@@ -74,7 +90,7 @@ class TopActions extends Aggregate
         foreach ($result['aggregations']['counts']['buckets'] as $count) {
             $counts[] = [
                 'user_guid' => $count['key'],
-                'value' => (int) $count['doc_count']
+                'value' => $this->uniques ? (int) $count['uniques']['value'] : (int) $count['doc_count']
             ];
         }
         return $counts;
