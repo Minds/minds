@@ -36,5 +36,9 @@ class SecurityProvider extends Provider
         $this->di->bind('Security\LoginAttempts', function ($di) {
             return new LoginAttempts();
         }, ['useFactory' => false]);
+
+        $this->di->bind('Security\Password', function ($di) {
+            return new Password();
+        }, ['useFactory' => false]);
     }
 }
