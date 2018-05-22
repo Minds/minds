@@ -7,10 +7,29 @@ use Minds\Core\Email\EmailSubscribersIterator;
 
 class MissedSinceLogin implements EmailBatchInterface
 {
-    protected $offset;
-    protected $templatePath;
-    protected $subject;
 
+    /** @var Manager */
+    protected $manager;
+    /** @var Repository */
+    protected $repository;
+    /** @var EntitiesBuilder */
+    protected $builder;
+
+    /** @var string $offset */
+    protected $offset;
+
+    /** @var string $offset */
+    protected $templatePath;
+
+    /** @var string $subject */
+    protected $subject;
+    
+    public function __construct($manager = null, $trendingRepository = null, $builder = null)
+    {
+        $this->manager = $manager ?: Di::_()->get('Email\Manager');
+        $this->repository = $trendingRepository ?: Di::_()->get('Trending\Repository');
+        $this->builder = $builder ?: Di::_()->get('EntitiesBuilder');
+    }
 
     public function setDryRun($dry)
     {
@@ -66,32 +85,46 @@ class MissedSinceLogin implements EmailBatchInterface
             ->setValue(true)
             ->setOffset($this->offset);
 
-        $entities = Core\Entities::get([
-            'guids' => [
-                826188573910073344,
-                836607056186159104,
-                836167299971796992,
-                742327794419113984,
-                829801531647447040,
-                831649915973378048,
-                798792752159326208,
-                721609138500542464,
-                813793227177394176,
-                823256224013205504,
-                817408411232890880
-            ]
-        ]);
+        $blogs = $this->getTrendingBlogs();
 
         foreach ($iterator as $user) {
 
-            $campaign = new Campaigns\MissedSinceLogin();
+            if ($user->getTimeCreated() > strtotime('-28 days ago')) {
+                echo "[done]";
+                return true;
+            }
+
+            $campaign = new Campaigns\WithBlogs();
 
             $campaign
                 ->setUser($user)
                 ->setTemplateKey($this->templatePath)
                 ->setSubject($this->subject)
-                ->setEntities($entities)
+                ->setBlogs($blogs)
                 ->send();
         }
     }
+
+    private function getTrendingBlogs()
+    {
+        ACL::$ignore = true;
+        $result = $this->repository->getList([
+            'type' => 'blogs',
+            'limit' => 10
+        ]);
+
+        if (!$result || !$result['guids'] || count($result['guids']) === 0) {
+            return [];
+        }
+
+        ksort($result['guids']);
+        $options['guids'] = $result['guids'];
+
+        $blogs = $this->builder->get(array_merge([
+            'subtype' => 'blog',
+        ], $options));
+
+        return $blogs;
+    }
+
 }
