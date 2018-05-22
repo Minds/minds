@@ -108,7 +108,7 @@ class Indexes
     protected function setEntityList($guid, $direction, array $value)
     {
         $prepared = new Custom();
-        $prepared->query("INSERT INTO entities (\"KEY\", column1, value) VALUES (?, ?, ?)", [
+        $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
             (string) $guid,
             "thumbs:{$direction}:user_guids",
             json_encode($value)
