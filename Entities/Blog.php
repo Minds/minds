@@ -68,6 +68,7 @@ class Blog extends \ElggObject
      */
     public function getIconURL($size = '')
     {
+        $image = null;
         if ($this->header_bg) {
             global $CONFIG;
             $base_url = Core\Config::build()->cdn_url ? Core\Config::build()->cdn_url : elgg_get_site_url();
@@ -86,9 +87,6 @@ class Blog extends \ElggObject
         }
         $base_url = Core\Config::build()->cdn_url ? Core\Config::build()->cdn_url: elgg_get_site_url();
         $image = $base_url . 'thumbProxy?src='. urlencode($image) . '&c=2708';
-        if ($width) {
-            $image .= '&width=' . $width;
-        }
         return $image;
     }
 

@@ -20,7 +20,7 @@ class RetentionTips implements EmailBatchInterface
 
     /**
      * @param string $offset
-     * @return ImprovementTips
+     * @return RetentionTips
      */
     public function setOffset($offset)
     {
@@ -31,7 +31,7 @@ class RetentionTips implements EmailBatchInterface
     /**
      * The retention period
      * @param int $period
-     * @return $this
+     * @return RetentionTips
      */
     public function setPeriod($period)
     {
