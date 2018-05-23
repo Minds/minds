@@ -2,6 +2,8 @@
 namespace Minds\Core\Email\Batches;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
+use Minds\Core\Security\ACL;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
 
@@ -73,10 +75,10 @@ class MissedSinceLogin implements EmailBatchInterface
     public function run()
     {
         if (!$this->templatePath || $this->templatePath == '') {
-            throw new \Exception('You must set the templatePath');
+        //    throw new \Exception('You must set the templatePath');
         }
         if (!$this->subject || $this->subject == '') {
-            throw new \Exception('You must set the subject');
+        //    throw new \Exception('You must set the subject');
         }
 
         $iterator = new EmailSubscribersIterator();
@@ -87,7 +89,10 @@ class MissedSinceLogin implements EmailBatchInterface
 
         $blogs = $this->getTrendingBlogs();
 
+        $i = 0;
         foreach ($iterator as $user) {
+            $i++;
+            echo "\n[$i]: $user->guid ($iterator->offset)";
 
             if ($user->getTimeCreated() > strtotime('-28 days ago')) {
                 echo "[done]";
@@ -98,10 +103,12 @@ class MissedSinceLogin implements EmailBatchInterface
 
             $campaign
                 ->setUser($user)
-                ->setTemplateKey($this->templatePath)
-                ->setSubject($this->subject)
+                //->setTemplateKey($this->templatePath)
+                //->setSubject($this->subject)
                 ->setBlogs($blogs)
                 ->send();
+
+            echo " sent";
         }
     }
 
