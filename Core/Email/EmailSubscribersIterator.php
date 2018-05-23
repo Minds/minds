@@ -77,12 +77,14 @@ class EmailSubscribersIterator implements \Iterator
     {
         $this->dryRun = $value;
 
-        $this->data = [
-            new User('mark'),
-            //new User('jack'),
-            //new User('john'),
-            //new User('ottman')
-        ];
+        if ($this->dryRun) {
+            $this->data = [
+                new User('mark'),
+                //new User('jack'),
+                //new User('john'),
+                //new User('ottman')
+            ];
+        }
         return $this;
     }
 

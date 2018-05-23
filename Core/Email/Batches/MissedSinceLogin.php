@@ -108,7 +108,7 @@ class MissedSinceLogin implements EmailBatchInterface
     private function getTrendingBlogs()
     {
         ACL::$ignore = true;
-        $result = $this->repository->getList([
+        /*$result = $this->repository->getList([
             'type' => 'blogs',
             'limit' => 10
         ]);
@@ -118,7 +118,20 @@ class MissedSinceLogin implements EmailBatchInterface
         }
 
         ksort($result['guids']);
-        $options['guids'] = $result['guids'];
+        $options['guids'] = $result['guids'];*/
+
+        $options['guids'] = [
+            '835202980980359168',
+            '830474920123518976',
+            '829173579273281536',
+            '843244085469986816',
+            '833486289467371520',
+            '832564175645118464',
+            '836606521873772544',
+            '834540240379695104',
+            '837814892017152000',
+            '826188573910073344',
+        ];
 
         $blogs = $this->builder->get(array_merge([
             'subtype' => 'blog',
