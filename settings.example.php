@@ -252,7 +252,8 @@ $CONFIG->set('blockchain', [
             'wire' => 30 * 24 * 60 * 60,
             'boost' => 30 * 24 * 60 * 60,
         ]
-    ]
+    ],
+    'sale' => false, // false | 'presale' | 'sale'
 ]);
 
 $CONFIG->set('plus', [
