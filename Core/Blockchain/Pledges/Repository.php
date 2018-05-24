@@ -104,8 +104,6 @@ class Repository
             'paging_state_token' => base64_decode($options['offset'])
         ]);
 
-        $transactions = [];
-
         try{
             $rows = $this->db->request($query);
         } catch(\Exception $e) {

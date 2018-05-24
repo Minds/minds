@@ -37,7 +37,7 @@ class Pledge
             'wallet_address' => $this->walletAddress,
             //'phone_number_hash' => $this->phone_number_hash,
             'amount' => $this->amount,
-            'timestamp' => $this->timestamp,
+            'timestamp' => $this->timestamp * 1000,
             'contract' => $this->contract
         ];
         return $export;
