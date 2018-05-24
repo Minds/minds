@@ -6,7 +6,6 @@ namespace Minds\Core\Blockchain\Pledges;
 
 use Cassandra;
 use Cassandra\Varint;
-use Cassandra\Decimal;
 use Cassandra\Timestamp;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
@@ -35,9 +34,10 @@ class Repository
             user_guid,
             wallet_address,
             timestamp,
-            amount
+            amount,
+            status
             ) 
-            VALUES (?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?)";
 
         foreach ($pledges as $pledge) {
             $requests[] = [
@@ -48,6 +48,7 @@ class Repository
                     $pledge->getWalletAddress(),
                     new Timestamp($pledge->getTimestamp()),
                     new Varint($pledge->getAmount()),
+                    (string) $pledge->getStatus()
                 ]
             ];
         }
@@ -63,6 +64,7 @@ class Repository
             'phone_number_hash' => null,
             'user_guid' => null,
             'wallet_address' => null,
+            'status' => null,
             'limit' => 12,
             'offset' => null,
             'allowFiltering' => false,
@@ -86,6 +88,12 @@ class Repository
         if ($options['wallet_address']) {
             $where[] = 'wallet_address = ?';
             $values[] = $options['wallet_address'];
+            $options['allowFiltering'] = true;
+        }
+
+        if ($options['status']) {
+            $where[] = 'status = ?';
+            $values[] = (string) $options['status'];
             $options['allowFiltering'] = true;
         }
 
@@ -119,14 +127,15 @@ class Repository
             $pledge = new Pledge();
             $pledge
                 ->setPhoneNumberHash($row['phone_number_hash'])
-                ->setUserGuid((int) $row['user_guid'])
+                ->setUserGuid($row['user_guid']->value())
                 ->setWalletAddress($row['wallet_address'])
                 ->setTimestamp((int) $row['timestamp']->time())
-                ->setAmount((string) BigNumber::_($row['amount']));
-                
+                ->setAmount((string) BigNumber::_($row['amount']->value()))
+                ->setStatus((string) $row['status']);
+
             $pledges[] = $pledge;
         }
-        
+
         return [
             'pledges' => $pledges,
             'token' => $rows->pagingStateToken()
@@ -146,11 +155,11 @@ class Repository
             $rows = $this->db->request($query);
         } catch(\Exception $e) {
             error_log($e->getMessage());
-            return [];
+            return null;
         }
 
         if (!$rows) {
-            return [];
+            return null;
         }
 
         $row = $rows[0];
@@ -158,11 +167,12 @@ class Repository
         $pledge = new Pledge();
         $pledge
             ->setPhoneNumberHash($row['phone_number_hash'])
-            ->setUserGuid((int) $row['user_guid'])
+            ->setUserGuid($row['user_guid']->value())
             ->setWalletAddress($row['wallet_address'])
             ->setTimestamp($row['timestamp'] ? (int) $row['timestamp']->time() : time())
-            ->setAmount((string) BigNumber::_((double) $row['amount']));
-            
+            ->setAmount((string) BigNumber::_($row['amount']->value()))
+            ->setStatus((string) $row['status']);
+
         return $pledge;
     }
 
@@ -173,12 +183,14 @@ class Repository
         $query = new Custom();
         $query->query($cql, $values);
 
-        try{
-            $rows = $this->db->request($query);
+        try {
+            $this->db->request($query);
         } catch(\Exception $e) {
             error_log($e->getMessage());
-            return [];
+            return false;
         }
+
+        return true;
     }
 
 }

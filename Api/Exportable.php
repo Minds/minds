@@ -19,6 +19,9 @@ class Exportable implements \JsonSerializable
     /** @var array */
     protected $exceptions = [];
 
+    /** @var array */
+    protected $exportArgs = [];
+
     /**
      * Sets the items to be exported
      * @param mixed $items
@@ -47,6 +50,16 @@ class Exportable implements \JsonSerializable
     public function setExceptions($exceptions)
     {
         $this->exceptions = $exceptions;
+        return $this;
+    }
+
+    /**
+     * @param array $exportArgs
+     * @return Exportable
+     */
+    public function setExportArgs(...$exportArgs)
+    {
+        $this->exportArgs = $exportArgs;
         return $this;
     }
 
@@ -85,7 +98,7 @@ class Exportable implements \JsonSerializable
                 $item->setExportContext($this->exportContext);
             }
 
-            $exported = $item->export();
+            $exported = $item->export(...$this->exportArgs);
 
             // Shims
             // TODO: Maybe allow customization via classes? i.e. JavascriptGuidShim, ExceptionShim, etc

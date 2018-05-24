@@ -14,9 +14,13 @@ class Manager
     /** @var Repository $repo */
     private $repo;
 
-    public function __construct($repo = null)
+    /** @var Delegates\Whitelist */
+    private $whitelist;
+
+    public function __construct($repo = null, $whitelist = null)
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Pledges\Repository');
+        $this->whitelist = $whitelist ?: new Delegates\Whitelist();
     }
 
     /**
@@ -41,4 +45,30 @@ class Manager
         $this->repo->add($pledge);
     }
 
+    /**
+     * @param Pledge $pledge
+     * @return bool
+     * @throws \Exception
+     */
+    public function approve(Pledge $pledge)
+    {
+        $this->whitelist->add($pledge);
+
+        $pledge->setStatus('approved');
+        $this->add($pledge);
+
+        return true;
+    }
+
+    /**
+     * @param Pledge $pledge
+     * @return bool
+     */
+    public function reject(Pledge $pledge)
+    {
+        $pledge->setStatus('rejected');
+        $this->add($pledge);
+
+        return true;
+    }
 }
