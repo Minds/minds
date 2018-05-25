@@ -10,9 +10,10 @@ namespace Minds\Core\Blockchain\Pledges\Delegates;
 
 use Minds\Core\Blockchain\Pledges\Pledge;
 use Minds\Core\Blockchain\Services\Ethereum;
+use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 
-class Whitelist
+class TokenSaleEventPledge
 {
     /** @var Ethereum */
     protected $ethereumClient;
@@ -21,8 +22,9 @@ class Whitelist
      * Whitelist constructor.
      * @param null $ethereumClient
      */
-    public function __construct($ethereumClient = null)
+    public function __construct($config = null, $ethereumClient = null)
     {
+        $this->config = $config ?: Di::_()->get('Config');
         $this->ethereumClient = $ethereumClient ?: Di::_()->get('Blockchain\Services\Ethereum');
     }
 
@@ -37,7 +39,7 @@ class Whitelist
             'from' => $this->config->get('blockchain')['wallet_address'],
             'to' => $this->config->get('blockchain')['token_distribution_event_address'],
             'gasLimit' => BigNumber::_(200000)->toHex(true),
-            'data' => $this->ethereumClient->encodeContractMethod('pledge(address, uint256)', [
+            'data' => $this->ethereumClient->encodeContractMethod('pledge(address,uint256)', [
                 $pledge->getWalletAddress(),
                 BigNumber::_($pledge->getAmount())->toHex(true),
             ])

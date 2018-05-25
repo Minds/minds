@@ -14,13 +14,13 @@ class Manager
     /** @var Repository $repo */
     private $repo;
 
-    /** @var Delegates\Whitelist */
-    private $whitelist;
+    /** @var Delegates\TokenSaleEventPledge */
+    private $tokenSaleEventPledge;
 
-    public function __construct($repo = null, $whitelist = null)
+    public function __construct($repo = null, $tokenSaleEventPledge = null)
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Pledges\Repository');
-        $this->whitelist = $whitelist ?: new Delegates\Whitelist();
+        $this->tokenSaleEventPledge = $tokenSaleEventPledge ?: new Delegates\TokenSaleEventPledge();
     }
 
     /**
@@ -52,7 +52,7 @@ class Manager
      */
     public function approve(Pledge $pledge)
     {
-        $this->whitelist->add($pledge);
+        $this->tokenSaleEventPledge->add($pledge);
 
         $pledge->setStatus('approved');
         $this->add($pledge);

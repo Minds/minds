@@ -53,11 +53,11 @@ class pledges implements Interfaces\Api, Interfaces\ApiAdminPam
             ]);
         }
 
-        if ($pledge->getStatus()) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'Pledge already actioned'
-            ]);
+        if ($pledge->getStatus() !== 'review') {
+            // return Factory::response([
+            //     'status' => 'error',
+            //     'message' => 'Pledge already actioned'
+            // ]);
         }
 
         /** @var Core\Blockchain\Pledges\Manager $manager */
@@ -97,7 +97,7 @@ class pledges implements Interfaces\Api, Interfaces\ApiAdminPam
             ]);
         }
 
-        if ($pledge->getStatus()) {
+        if ($pledge->getStatus() !== 'review') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'Pledge already actioned'
