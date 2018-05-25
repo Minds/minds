@@ -54,10 +54,10 @@ class pledges implements Interfaces\Api, Interfaces\ApiAdminPam
         }
 
         if ($pledge->getStatus() !== 'review') {
-            // return Factory::response([
-            //     'status' => 'error',
-            //     'message' => 'Pledge already actioned'
-            // ]);
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Pledge already actioned'
+            ]);
         }
 
         /** @var Core\Blockchain\Pledges\Manager $manager */
