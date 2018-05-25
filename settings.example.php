@@ -254,6 +254,8 @@ $CONFIG->set('blockchain', [
         ]
     ],
     'sale' => false, // false | 'presale' | 'sale'
+
+    'max_pledge_amount' => 1800, // 1800 ETH
 ]);
 
 $CONFIG->set('plus', [

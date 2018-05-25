@@ -9,6 +9,7 @@ namespace Minds\Controllers\api\v2\blockchain;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
+use Minds\Core\Util\BigNumber;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Blockchain\Pledges\Pledge;
@@ -23,8 +24,6 @@ class pledges implements Interfaces\Api
      */
     public function get($pages)
     {
-        $cacher = Di::_()->get('Cache');
-
         $manager = Di::_()->get('Blockchain\Pledges\Manager');
         $sums = Di::_()->get('Blockchain\Pledges\Sums');
 
@@ -47,7 +46,8 @@ class pledges implements Interfaces\Api
         Factory::isLoggedIn();
 
         $amount = isset($_POST['amount']) ? $_POST['amount'] : 0;
-        $wallet_address = isset($_POST['wallet_address']) ? $_POST['wallet_address'] : '';
+        $walletAddress = isset($_POST['wallet_address']) ? $_POST['wallet_address'] : '';
+        $maxAmount = Di::_()->get('Config')->get('blockchain')['max_pledge_amount'] ?: 1800;
 
         if (!Session::getLoggedInUser()->getPhoneNumberHash()) {
             return Factory::response([
@@ -56,25 +56,37 @@ class pledges implements Interfaces\Api
             ]);
         }
 
-        if ($amount < 0 || $amount > 1000000) {
+        if ($amount < 0.01 || $amount > $maxAmount) {
             return Factory::response([
                 'status' => 'error',
-                'message' => "Invalid amount sent",
+                'message' => "You must pledge between 0.01 and {$maxAmount} ETH",
             ]);
         }
+
+        if (!$walletAddress || stripos($walletAddress, '0x') !== 0) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Invalid wallet address',
+            ]);
+        }
+
+        $weiAmount = BigNumber::toPlain($amount, 18);
 
         $pledge = new Pledge();
         $pledge
             ->setPhoneNumberHash(Session::getLoggedInUser()->getPhoneNumberHash())
             ->setUserGuid(Session::getLoggedInUser()->guid)
-            ->setAmount($_POST['amount'])
+            ->setAmount((string) $weiAmount)
             ->setTimestamp(time())
-            ->setWalletAddress($wallet_address);
+            ->setWalletAddress($walletAddress)
+            ->setStatus('review');
 
         $manager = Di::_()->get('Blockchain\Pledges\Manager');
         $manager->add($pledge);
 
-        return Factory::response([]);
+        return Factory::response([
+            'pledge' => $pledge->export(),
+        ]);
     }
 
     /**
