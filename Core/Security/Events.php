@@ -333,7 +333,8 @@ class Events
 
             // create a lookup of a random key. The user can then use this key along side their twofactor code
             // to login. This temporary code should be removed within 2 minutes.
-            $key = md5($user->username . $user->salt . time() . rand(0, 63));
+            $bytes = openssl_random_pseudo_bytes(128);
+            $key = hash('sha512', $user->username . $user->salt . $bytes);
 
             $lookup = new \Minds\Core\Data\lookup('twofactor');
             $lookup->set($key, array('_guid' => $user->guid, 'ts' => time(), 'secret' => $secret));
