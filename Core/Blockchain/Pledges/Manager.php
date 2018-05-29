@@ -17,10 +17,23 @@ class Manager
     /** @var Delegates\TokenSaleEventPledge */
     private $tokenSaleEventPledge;
 
-    public function __construct($repo = null, $tokenSaleEventPledge = null)
+    /** @var Delegates\NewPledgeNotification */
+    private $newPledgeNotification;
+
+    /** @var Delegates\ApprovedPledgeNotification */
+    private $approvedPledgeNotification;
+
+    public function __construct(
+        $repo = null,
+        $tokenSaleEventPledge = null,
+        $newPledgeNotification = null,
+        $approvedPledgeNotification = null
+    )
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Pledges\Repository');
         $this->tokenSaleEventPledge = $tokenSaleEventPledge ?: new Delegates\TokenSaleEventPledge();
+        $this->newPledgeNotification = $newPledgeNotification ?: new Delegates\NewPledgeNotification();
+        $this->approvedPledgeNotification = $approvedPledgeNotification ?: new Delegates\ApprovedPledgeNotification();
     }
 
     public function getPledge($user)
@@ -54,6 +67,8 @@ class Manager
     public function add($pledge)
     {
         $this->repo->add($pledge);
+
+        $this->newPledgeNotification->notify($pledge);
     }
 
     /**
@@ -67,6 +82,8 @@ class Manager
 
         $pledge->setStatus('approved');
         $this->repo->add($pledge);
+
+        $this->approvedPledgeNotification->notify($pledge);
 
         return true;
     }
