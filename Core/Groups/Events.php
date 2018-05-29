@@ -85,7 +85,19 @@ class Events
             $group = $params['entity'];
             $user = $params['user'];
 
-            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
+            $isOwner = $group->isOwner($user->guid);
+            $isModerator = $group->isModerator($user->guid);
+            $isMember = $group->isMember($user->guid);
+
+            if ($isOwner && $isMember) {
+                $e->setResponse(true);
+                return;
+            } elseif ($isModerator && $isMember) {
+                $e->setResponse(true);
+                return;
+            }
+
+            $e->setResponse(false);
         });
 
         Dispatcher::register('acl:write:container', 'group', function ($e) {
