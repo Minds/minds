@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Blockchain\Pledges;
 
+use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 use Minds\Traits\MagicAttributes;
 
@@ -23,7 +24,7 @@ use Minds\Traits\MagicAttributes;
  * @method string getStatus()
  * @method Pledge setStatus(string $value)
  */
-class Pledge
+class Pledge implements \JsonSerializable
 {
     use MagicAttributes;
 
@@ -55,15 +56,27 @@ class Pledge
             'user' => (new User($this->userGuid))->export(),
             'wallet_address' => $this->walletAddress,
             'amount' => $this->amount,
+            'eth_amount' => (float) BigNumber::fromPlain($this->amount, 18)->toString(),
             'timestamp' => $this->timestamp * 1000,
+            'status' => $this->status,
         ];
 
         if ($pii) {
             $export['phone_number_hash'] = $this->phoneNumberHash;
-            $export['status'] = $this->status;
         }
 
         return $export;
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return $this->export(false);
+    }
 }

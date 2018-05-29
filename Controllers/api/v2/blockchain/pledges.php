@@ -24,14 +24,23 @@ class pledges implements Interfaces\Api
      */
     public function get($pages)
     {
+        $brief = isset($_GET['brief']) && $_GET['brief'];
+
         $manager = Di::_()->get('Blockchain\Pledges\Manager');
-        $sums = Di::_()->get('Blockchain\Pledges\Sums');
+
+        /** @var Pledge $pledge */
+        $pledge = $manager->getPledge(Session::getLoggedInUser());
 
         $response = [
-            'amount' => $sums->getTotalAmount(),
-            'count' => $sums->getTotalCount(),
-            'pledged' => $manager->getPledgedAmount(Session::getLoggedInUser()),
+            'pledge' => $pledge,
         ];
+
+        if (!$brief) {
+            $sums = Di::_()->get('Blockchain\Pledges\Sums');
+
+            $response['amount'] = $sums->getTotalAmount();
+            $response['count'] = $sums->getTotalCount();
+        }
 
         return Factory::response($response);
     }

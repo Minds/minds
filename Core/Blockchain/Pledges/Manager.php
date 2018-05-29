@@ -23,6 +23,15 @@ class Manager
         $this->tokenSaleEventPledge = $tokenSaleEventPledge ?: new Delegates\TokenSaleEventPledge();
     }
 
+    public function getPledge($user)
+    {
+        if (!$user || !($phone_number_hash = $user->getPhoneNumberHash())) {
+            return null;
+        }
+
+        return $this->repo->get($phone_number_hash);
+    }
+
     /**
      * Get the pledged amount from a user
      * @param User $user
@@ -30,10 +39,12 @@ class Manager
      */
     public function getPledgedAmount($user)
     {
-        if (!$user || !$phone_number_hash = $user->getPhoneNumberHash()) {
+        $pledge = $this->getPledge($user);
+
+        if (!$pledge) {
             return 0;
         }
-        $pledge = $this->repo->get($phone_number_hash);
+
         return (string) $pledge->getAmount();
     }
 
@@ -55,7 +66,7 @@ class Manager
         $this->tokenSaleEventPledge->add($pledge);
 
         $pledge->setStatus('approved');
-        $this->add($pledge);
+        $this->repo->add($pledge);
 
         return true;
     }
@@ -67,7 +78,7 @@ class Manager
     public function reject(Pledge $pledge)
     {
         $pledge->setStatus('rejected');
-        $this->add($pledge);
+        $this->repo->add($pledge);
 
         return true;
     }
