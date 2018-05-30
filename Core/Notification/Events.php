@@ -113,7 +113,7 @@ class Events
                         break;
                     }
                 }
-                
+
                 if ($to) {
                     Dispatcher::trigger('notification', 'all', [
                         'to' => $to,
@@ -177,19 +177,20 @@ class Events
                   ->setOwner($to_user)
                   ->save();
 
+                $counters->setUser($to_user)
+                  ->increaseCounter($to_user);
 
                 $params = $notification->getParams();
                 $params['notification_view']  = $notification->getNotificationView();
+
                 Push::_()->queue([
                     'uri' => 'notification',
                     'from' => $notification->getFrom(),
                     'to' => $notification->getTo(),
                     'notification' => $notification,
-                    'params' => $params
+                    'params' => $params,
+                    'count' => $counters->getCount()
                 ]);
-
-                $counters->setUser($to_user)
-                  ->increaseCounter($to_user);
 
                 try {
                     (new Sockets\Events())

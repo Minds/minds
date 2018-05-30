@@ -39,7 +39,6 @@ class Push implements Interfaces\NotificationExtensionInterface
         if ($notification['params']['notification_view'] == 'like' || $notification['params']['notification_view'] == 'downvote') {
             return false;
         }
-        error_log($notification['params']['notification_view']);
 
         $entity = $notification['notification']->getEntity();
 
@@ -81,19 +80,30 @@ class Push implements Interfaces\NotificationExtensionInterface
             $parent_guid = '';
         }
 
+        $push = [
+            'user_guid' => $notification['to']->guid,
+            'entity_guid' => $entity_guid,
+            'child_guid' => $child_guid,
+            'entity_type' => $entity_type,
+            'parent_guid' => $parent_guid,
+            'type' => $notification['params']['notification_view'],
+            'uri' => $notification['uri'],
+            'badge' => $notification['count']
+        ];
+
+        $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
+            Core\Session::getLoggedInUser();
+
+        $push['title'] = 'Minds';
+        $push['message'] = static::buildNotificationMessage($notification, $from_user, $entity);
+        $push['large_icon'] = static::getNotificationLargeIcon($notification, $from_user);
+        $push['big_picture'] = static::getNotificationBigPicture($notification, $from_user, $entity);
+        $push['group'] = static::getNotificaitonGroup($notification, $from_user, $entity);
+
         return QueueClient::build()
             ->setExchange($notification['exchange'])
             ->setQueue($notification['queue'])
-            ->send([
-                'user_guid' => $notification['to']->guid,
-                'entity_guid' => $entity_guid,
-                'child_guid' => $child_guid,
-                'entity_type' => $entity_type,
-                'parent_guid' => $parent_guid,
-                'type' => $notification['params']['notification_view'],
-                'message' => static::buildNotificationMesage($notification),
-                'uri' => $notification['uri']
-            ]);
+            ->send($push);
     }
 
     /**
@@ -116,88 +126,139 @@ class Push implements Interfaces\NotificationExtensionInterface
     }
 
     /**
-     * Creates a human-readable notification message
+     * Get the group for the notification
      * @param  array  $notification
+     * @param  mixed  $from_user
+     * @param  mixed  $entity
      * @return string
      */
-    protected static function buildNotificationMesage(array $notification = [])
+    protected static function getNotificaitonGroup(array $notification = [], $from_user, $entity)
     {
-        $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
-          Core\Session::getLoggedInUser();
+        return $notification['uri'];
+    }
 
+    /**
+     * Get the big picture for the notification
+     * @param  array  $notification
+     * @param  mixed  $from_user
+     * @param  mixed  $entity
+     * @return string
+     */
+    protected static function getNotificationBigPicture(array $notification = [], $from_user, $entity)
+    {
+        switch ($notification['params']['notification_view']) {
+            case 'tag':
+                if (!empty($entity->custom_data)) {
+                    return $entity->custom_data[0]['src'];
+                }
+            default:
+                return null;
+
+        }
+    }
+
+    /**
+     * Get the large icon for the notification
+     * @param  array  $notification
+     * @param  mixed  $from_user
+     * @return string
+     */
+    protected static function getNotificationLargeIcon(array $notification = [], $from_user)
+    {
+        switch ($notification['params']['notification_view']) {
+            case 'boost_request':
+            case 'boost_accepted':
+            case 'boost_rejected':
+            case 'boost_revoked':
+            case 'boost_completed':
+                return null;
+            default:
+                return $from_user->getIconURL('medium');
+
+        }
+    }
+
+
+    /**
+     * Creates a human-readable notification message
+     * @param  array  $notification
+     * @param  mixed  $from_user
+     * @param  mixed  $entity
+     * @return string
+     */
+    protected static function buildNotificationMessage(array $notification = [], $from_user, $entity)
+    {
         $message = '';
 
         if (!isset($notification['params']['notification_view'])) {
             return $message;
         }
 
-        $title = htmlspecialchars_decode($notification['params']['title']);
-        $description = htmlspecialchars_decode($notification['params']['description']);
+        $title = htmlspecialchars_decode($entity->title);
 
         $name = $from_user->name;
 
-        $title = $notification['params']['title'] ?: 'your post';
+        $isOwner = $notification['to']->getGuid() == $entity->owner_guid;
+        $prefix = $isOwner ? 'your ': $entity->ownerObj['name']."'s ";
+        $desc = ($entity->type == 'activity') ? 'activity': $entity->subtype;
+
+        $boostDescription = $entity->title ?: $entity->name ?: ($entity->type !== 'user' ? 'post' : 'channel');
 
         switch ($notification['params']['notification_view']) {
 
             case 'comment':
-                $message = sprintf('%s commented: %s', $name, $notification['params']['description']);
-                break;
+                return sprintf('%s commented on %s', $name, $prefix.$desc);
 
             case 'like':
-                $message = sprintf('%s voted up %s', $name, $title);
-                break;
+                switch ($entity->type) {
+                    case 'comment':
+                        $like = 'your comment';
+                        break;
+                    case 'activity':
+                        $like = $title ?: 'your activity';
+                        break;
+                    case 'object':
+                        $like = $title ?: 'your '.$entity->subtype;
+                        break;
+                }
+                return sprintf('%s voted up %s', $name, $like);
 
             case 'tag':
-                $message = sprintf('%s mentioned you in a post: %s', $name, $notification['params']['description']);
-                break;
+                return sprintf('%s mentioned you in a %s', $name, ($entity->type == 'comment') ? 'comment' : 'post');
 
             case 'friends':
-                $message = sprintf('%s subscribed to you', $name);
-                break;
+                return sprintf('%s subscribed to you', $name);
 
             case 'remind':
-                $message = sprintf('%s reminded %s', $name, $title);
-                break;
+                return sprintf('%s reminded your %s', $name, $desc);
 
             case 'boost_gift':
-                $message = sprintf('%s gifted you %d views', $name, $notification['params']['impressions']);
-                break;
+                return sprintf('%s gifted you %d views', $name, $notification['params']['impressions']);
 
             case 'boost_request':
-                $message = sprintf('%s has requested a boost of %d points', $name, $notification['params']['points']);
-                break;
+                return sprintf('%s has requested a boost of %d points', $name, $notification['params']['points']);
 
             case 'boost_accepted':
-                $message = sprintf('%d views for %s were accepted', $notification['params']['impressions'], $title);
-                break;
+                return sprintf('%d views for %s were accepted', $notification['params']['impressions'], $boostDescription);
 
             case 'boost_rejected':
-                $message = sprintf('Your boost request for %s was rejected', $title);
-                break;
+                return sprintf('Your boost request for %s was rejected', $boostDescription);
 
             case 'boost_revoked':
-                $message = sprintf('You revoked the boost request for %s', $title);
-                break;
+                return sprintf('You revoked the boost request for %s', $boostDescription);
 
             case 'boost_completed':
-                $message = sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $title);
-                break;
+                return sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $boostDescription);
 
             case 'group_invite':
-                $message = sprintf('%s invited you to %s', $name, $notification['params']['group']['name']);
-                break;
+                return sprintf('%s invited you to %s', $name, $notification['params']['group']['name']);
 
             case 'messenger_invite':
-                $message = sprintf('@%s wants to chat with you!', $notification['params']['username']);
-                break;
+                return sprintf('@%s wants to chat with you!', $name);
 
             default:
-                $message = "";
-
+                return "";
         }
-
-        return $message;
     }
 
     /**
