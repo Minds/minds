@@ -93,6 +93,9 @@ class EmailSubscribersIterator implements \Iterator
      */
     public function getSubscribers()
     {
+        $this->data = [];
+        $this->cursor = 0;
+
         if (!isset($this->offset) || $this->dryRun) {
             $this->valid = false;
             return;
