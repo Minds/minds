@@ -25,12 +25,6 @@ class ApprovedPledgeNotification
 
     public function notify(Pledge $pledge)
     {
-        $this->sendInternalNotification($pledge);
-        $this->sendEmail($pledge);
-    }
-
-    protected function sendInternalNotification(Pledge $pledge)
-    {
         $isPresale = $this->config->get('blockchain')['sale'] == 'presale';
         $action = $isPresale ? 'pledge' : 'reservation';
         $pledgeData = $pledge->export();
@@ -40,7 +34,7 @@ class ApprovedPledgeNotification
         if ($isPresale) {
             $message .= " You will be able to buy your tokens as soon as the sale starts.";
         } else {
-            $message .= " You can buy your tokens now at The Minds Token page.";
+            $message .= " You can buy your tokens now at the Minds Token page.";
         }
 
         Dispatcher::trigger('notification', 'all', [
@@ -50,10 +44,5 @@ class ApprovedPledgeNotification
             'params' => [ 'message' => $message, 'router_link' => '/token' ],
             'message' => $message,
         ]);
-    }
-
-    protected function sendEmail(Pledge $pledge)
-    {
-        // TODO: Send email
     }
 }

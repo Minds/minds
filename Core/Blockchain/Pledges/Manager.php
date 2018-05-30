@@ -7,6 +7,7 @@ namespace Minds\Core\Blockchain\Pledges;
 use Minds\Core\Queue;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Manager
 {
@@ -23,17 +24,22 @@ class Manager
     /** @var Delegates\ApprovedPledgeNotification */
     private $approvedPledgeNotification;
 
+    /** @var Delegates\ApprovedPledgeEmail */
+    private $approvedPledgeEmail;
+
     public function __construct(
         $repo = null,
         $tokenSaleEventPledge = null,
         $newPledgeNotification = null,
-        $approvedPledgeNotification = null
+        $approvedPledgeNotification = null,
+        $approvedPledgeEmail = null
     )
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Pledges\Repository');
         $this->tokenSaleEventPledge = $tokenSaleEventPledge ?: new Delegates\TokenSaleEventPledge();
         $this->newPledgeNotification = $newPledgeNotification ?: new Delegates\NewPledgeNotification();
         $this->approvedPledgeNotification = $approvedPledgeNotification ?: new Delegates\ApprovedPledgeNotification();
+        $this->approvedPledgeEmail = $approvedPledgeEmail ?: new Delegates\ApprovedPledgeEmail();
     }
 
     public function getPledge($user)
@@ -84,6 +90,7 @@ class Manager
         $this->repo->add($pledge);
 
         $this->approvedPledgeNotification->notify($pledge);
+        $this->approvedPledgeEmail->send($pledge);
 
         return true;
     }
