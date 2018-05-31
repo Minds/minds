@@ -39,13 +39,18 @@ class Analytics
             $phone_number_hash = Core\Session::getLoggedInUser()->getPhoneNumberHash();
         }
 
+        $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
+        if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports
+            $platform = $_REQUEST['platform'];
+        }
+
         //skip if we've cached this hour
         $ts = static::buildTS("hour", time());
         $cacher = Core\Data\cache\factory::build('apcu');
-        if ($cacher->get("$metric:$ts:$user_guid") == true) {
+        if ($cacher->get("$platform:$metric:$ts:$user_guid") == true) {
             return;
         }
-        $cacher->set("$metric:$ts:$user_guid", true, 3600);
+        $cacher->set("$platform:$metric:$ts:$user_guid", true, 3600);
 
         /*$db = new Core\Data\Call('entities_by_time');
         $ts = self::buildTS("day", $ts);
@@ -57,7 +62,8 @@ class Analytics
         $event->setType('action')
             ->setAction($metric)
             ->setProduct('platform')
-            ->setUserGuid((string) $user_guid);
+            ->setUserGuid((string) $user_guid)
+            ->setPlatform($platform);
 
         if ($phone_number_hash) {
             $event->setUserPhoneNumberHash($phone_number_hash);
