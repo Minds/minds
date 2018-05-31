@@ -32,7 +32,7 @@ class Event
         $this->data['@timestamp'] = (int) microtime(true) * 1000;
 
         if (!isset($this->data['platform'])) {
-            $platform = isset($_REQUEST['cb']) ? 'mobile' : 'desktop';
+            $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
             if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports
                 $platform = $_REQUEST['platform'];
             }
