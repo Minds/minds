@@ -31,6 +31,14 @@ class Event
     {
         $this->data['@timestamp'] = (int) microtime(true) * 1000;
 
+        if (!isset($this->data['platform'])) {
+            $platform = isset($_REQUEST['cb']) ? 'mobile' : 'desktop';
+            if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports
+                $platform = $_REQUEST['platform'];
+            }
+            $this->data['platform'] = $platform;
+        }
+
         $prepared = new Core\Data\ElasticSearch\Prepared\Index();
         $prepared->query([
             'body' => $this->data,
