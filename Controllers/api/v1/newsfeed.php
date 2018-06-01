@@ -17,6 +17,7 @@ use Minds\Helpers;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
 use Minds\Interfaces\Flaggable;
+use Minds\Core\Di\Di;
 
 class newsfeed implements Interfaces\Api
 {
@@ -610,6 +611,9 @@ class newsfeed implements Interfaces\Api
                         "activity:container:$activity->container_guid",
                         "activity:network:$activity->owner_guid"
                     ];
+
+                    $cache = Di::_()->get('Cache');
+                    $cache->destroy("activity:container:$activity->container_guid");
 
                     Core\Events\Dispatcher::trigger('activity:container:prepare', $container->type, [
                         'container' => $container,
