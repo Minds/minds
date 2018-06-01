@@ -35,7 +35,7 @@ class PointsSubscription implements HookInterface
                 ->setWalletAddress('offchain')
                 ->setTimestamp(time())
                 ->setTx('cc:' . $subscription->getId())
-                ->setAmount(($subscription->getPrice() * 1000) * 1.1 * 1000 * 10 ** 18)
+                ->setAmount(($subscription->getPrice()) * 1.1 * 10 ** 18)
                 ->setContract('offchain:points')
                 ->setCompleted(true);
 

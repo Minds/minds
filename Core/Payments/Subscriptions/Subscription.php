@@ -8,9 +8,13 @@ use Minds\Entities\User;
 use Minds\Entities\Entity;
 use Minds\Entities\Factory;
 use Minds\Core\Guid;
+use Minds\Traits\MagicAttributes;
 
 class Subscription
 {
+
+    use MagicAttributes;
+
     private $payment_method;
     private $id;
     private $customer;
