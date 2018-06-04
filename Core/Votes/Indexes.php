@@ -29,7 +29,7 @@ class Indexes
         $actor = $vote->getActor();
 
         $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
-        $userGuids[] = $actor->guid;
+        $userGuids[] = (string) $actor->guid;
 
         $this->setEntityList($entity->guid, $direction, array_values(array_unique($userGuids)));
 
@@ -58,7 +58,7 @@ class Indexes
         $actor = $vote->getActor();
 
         $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
-        $userGuids = array_diff($userGuids, [ $actor->guid ]);
+        $userGuids = array_diff($userGuids, [ (string) $actor->guid ]);
 
         $this->setEntityList($entity->guid, $direction, array_values($userGuids));
 

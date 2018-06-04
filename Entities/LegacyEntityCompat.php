@@ -15,7 +15,7 @@ abstract class LegacyEntityCompat
     /**
      * Getter
      * @param $name
-     * @return int|null
+     * @return mixed
      */
     public function __get($name)
     {
@@ -27,6 +27,10 @@ abstract class LegacyEntityCompat
             case 'container_guid':
                 $prop = Text::camel($name);
                 return isset($this->$prop) ? $this->$prop : null;
+            case 'thumbs:up:user_guids':
+                return isset($this->votesUp) ? $this->votesUp : [];
+            case 'thumbs:down:user_guids':
+                return isset($this->votesDown) ? $this->votesDown : [];
         }
 
         trigger_error("$name is not defined in " . get_class($this), E_USER_NOTICE);
