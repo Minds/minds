@@ -69,9 +69,6 @@ class Manager
                 $subscriptions[(string) $subscriberGuid] = true;
             }
         }
-
-        // Entity
-        $entity = new Entity($entity);
  
         // Owner should be subscribed regardless
 
@@ -79,7 +76,7 @@ class Manager
 
         // Apply mutes
 
-        $mutedSubscriberGuids = ($entity)->getMutedUsers();
+        $mutedSubscriberGuids = (new Entity($entity))->getMutedUsers();
 
         foreach ($mutedSubscriberGuids as $mutedSubscriberGuid) {
             $subscriptions[(string) $mutedSubscriberGuid] = false;
