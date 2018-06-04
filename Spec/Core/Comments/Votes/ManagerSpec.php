@@ -3,8 +3,10 @@
 namespace Spec\Minds\Core\Comments\Votes;
 
 use Minds\Core\Comments\Comment;
+use Minds\Core\Comments\Legacy\Repository as LegacyCommentsRepository;
 use Minds\Core\Comments\Votes\Repository;
 use Minds\Core\Votes\Vote;
+use Minds\Entities\Entity;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -14,12 +16,17 @@ class ManagerSpec extends ObjectBehavior
     /** @var Repository */
     protected $repository;
 
+    /** @var LegacyCommentsRepository */
+    protected $legacyRepository;
+
     function let(
-        Repository $repository
+        Repository $repository,
+        LegacyCommentsRepository $legacyRepository
     ) {
-        $this->beConstructedWith($repository);
+        $this->beConstructedWith($repository, $legacyRepository);
 
         $this->repository = $repository;
+        $this->legacyRepository = $legacyRepository;
     }
 
     function it_is_initializable()
@@ -168,8 +175,15 @@ class ManagerSpec extends ObjectBehavior
     }
 
     function it_should_cast(
-        Vote $vote
+        Vote $vote,
+        Entity $entity
     ) {
+        $entity->get('guid')->willReturn('5000');
+
+        $vote->getEntity()->willReturn($entity);
+
+        $this->legacyRepository->isLegacy('5000');
+
         $this->repository->add($vote)
             ->shouldBeCalled()
             ->willReturn(true);
@@ -181,8 +195,15 @@ class ManagerSpec extends ObjectBehavior
     }
 
     function it_should_cancel(
-        Vote $vote
+        Vote $vote,
+        Entity $entity
     ) {
+        $entity->get('guid')->willReturn('5000');
+
+        $vote->getEntity()->willReturn($entity);
+
+        $this->legacyRepository->isLegacy('5000');
+
         $this->repository->delete($vote)
             ->shouldBeCalled()
             ->willReturn(true);

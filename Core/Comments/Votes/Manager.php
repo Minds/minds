@@ -8,12 +8,16 @@
 
 namespace Minds\Core\Comments\Votes;
 
+use Minds\Core\Comments\Legacy\Repository as LegacyCommentsRepository;
 use Minds\Core\Votes\Vote;
 
 class Manager
 {
     /** @var Repository */
     protected $repository;
+
+    /** @var LegacyCommentsRepository */
+    protected $legacyRepository;
 
     /** @var Vote */
     protected $vote;
@@ -22,9 +26,10 @@ class Manager
      * Manager constructor.
      * @param null $repository
      */
-    public function __construct($repository = null)
+    public function __construct($repository = null, $legacyRepository = null)
     {
         $this->repository = $repository ?: new Repository();
+        $this->legacyRepository = $legacyRepository ?: new LegacyCommentsRepository();
     }
 
     /**
@@ -43,6 +48,10 @@ class Manager
      */
     public function has()
     {
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+            return null;
+        }
+
         $votes = [];
 
         switch ($this->vote->getDirection()) {
@@ -64,7 +73,13 @@ class Manager
      */
     public function cast()
     {
-        return $this->repository->add($this->vote);
+        $done = $this->repository->add($this->vote);
+
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+            return null;
+        }
+
+        return $done;
     }
 
     /**
@@ -73,6 +88,12 @@ class Manager
      */
     public function cancel()
     {
-        return $this->repository->delete($this->vote);
+        $done = $this->repository->delete($this->vote);
+
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+            return null;
+        }
+
+        return $done;
     }
 }

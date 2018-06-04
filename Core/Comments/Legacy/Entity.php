@@ -45,10 +45,9 @@ class Entity
             ->setEdited(isset($row['edited']) && $row['edited'])
             ->setSpam(isset($row['spam']) && $row['spam'])
             ->setDeleted(isset($row['deleted']) && $row['deleted'])
-            ->setOwnerObj(isset($row['owner_obj']) ? $row['owner_obj'] : null)
-            // TODO: Read votes?
-            // ->setVotesUp($row['votes_up'] ?: [])
-            // ->setVotesDown($row['votes_down'] ?: [])
+            ->setOwnerObj(isset($row['owner_obj']) ? $row['owner_obj'] : (isset($row['ownerObj']) ? $row['ownerObj'] : null))
+            ->setVotesUp(isset($row['thumbs:up:user_guids']) ? json_decode($row['thumbs:up:user_guids']) : [])
+            ->setVotesDown(isset($row['thumbs:down:user_guids']) ? json_decode($row['thumbs:down:user_guids']) : [])
             ->setEphemeral(false)
             ->markAllAsPristine();
 
