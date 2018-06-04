@@ -7,7 +7,18 @@ use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
 /**
- * Active Metric
+ * Class Event
+ * @package Minds\Core\Analytics\Metrics
+ * @method Event setType($value)
+ * @method Event setAction($value)
+ * @method Event setProduct($value)
+ * @method Event setUserPhoneNumberHash($value)
+ * @method Event setEntityGuid($value)
+ * @method Event setEntityContainerGuid($value)
+ * @method Event setEntityType($value)
+ * @method Event setEntitySubtype($value)
+ * @method Event setEntityOwnerGuid($value)
+ * @method Event setCommentGuid($value)
  */
 class Event
 {

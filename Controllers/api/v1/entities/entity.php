@@ -49,13 +49,15 @@ class entity implements Interfaces\Api
                     $response['entity']['perma_url'] = $entity->getURL();
 
                     $db = new Core\Data\Call('entities_by_time');
-                    $cacher = Core\Data\cache\factory::build();
+                    /** @var Core\Data\cache\abstractCacher $cacher */
+                    $cacher = Core\Di\Di::_()->get('Cache');
 
                     $cached = $cacher->get("comments:count:{$entity->guid}");
                     if ($cached !== false) {
                         $count = $cached;
                     } else {
-                        $count = $db->countRow("comments:{$entity->guid}");
+                        $manager = new Core\Comments\Manager();
+                        $count = $manager->count($entity->guid);
                         $cacher->set("comments:count:{$entity->guid}", $count);
                     }
 

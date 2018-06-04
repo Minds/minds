@@ -423,6 +423,12 @@ class newsfeed implements Interfaces\Api
                     Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
                 }
 
+                // Follow activity
+                (new Core\Notification\PostSubscriptions\Manager())
+                    ->setEntityGuid($activity->guid)
+                    ->setUserGuid(Core\Session::getLoggedInUserGuid())
+                    ->follow();
+
                 return Factory::response(array('guid' => $activity->guid));
                 break;
             case 'pin':
@@ -650,6 +656,20 @@ class newsfeed implements Interfaces\Api
                             'description' => isset($_POST['description']) ? rawurldecode($_POST['description']) : null
                         )
                     ));
+
+                    // Follow activity
+                    (new Core\Notification\PostSubscriptions\Manager())
+                        ->setEntityGuid($activity->guid)
+                        ->setUserGuid(Core\Session::getLoggedInUserGuid())
+                        ->follow();
+
+                    if (isset($attachment) && $attachment) {
+                        // Follow attachment
+                        (new Core\Notification\PostSubscriptions\Manager())
+                            ->setEntityGuid($attachment->guid)
+                            ->setUserGuid(Core\Session::getLoggedInUserGuid())
+                            ->follow();
+                    }
 
                     if ($container) {
                         Core\Events\Dispatcher::trigger('activity:container', $container->type, [

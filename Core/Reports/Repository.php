@@ -156,7 +156,7 @@ class Repository
             return false;
         }
 
-        if (is_numeric($entity)) {
+        if (is_numeric($entity) || Core\Luid::isValid($entity)) {
             $entity = Entities\Factory::build($entity);
         }
 
@@ -183,17 +183,19 @@ class Repository
             entity_guid,
             time_created,
             reporter_guid,
+            entity_luid,
             owner_guid,
             state,
             reason,
             reason_note
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $values = [
             new Cassandra\Varint($guid),
             new Cassandra\Varint($entity_guid),
             new Cassandra\Timestamp(time()),
             new Cassandra\Varint($reporter),
+            method_exists($entity, 'getLuid') ? (string) $entity->getLuid() : '',
             new Cassandra\Varint($owner_guid),
             'review',
             (string) $reason,

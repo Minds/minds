@@ -153,7 +153,7 @@ class Manager
             return false;
         }
 
-        $row = Cql::parseQueueRowTypes($this->repository->getByPaymentId($this->getPaymentId()));
+        $row = Cql::toPrimitiveType($this->repository->getByPaymentId($this->getPaymentId()));
 
         $this
             ->setType($row['type'])

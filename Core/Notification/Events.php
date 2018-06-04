@@ -78,7 +78,7 @@ class Events
             }
 
             if ($type == 'comment') {
-                $message = $params->description;
+                $message = $params->getBody();
             }
 
             if ($params->title) {
@@ -135,14 +135,10 @@ class Events
             }
 
             $entity = $notification->getEntity();
-            if ($params['to'] && $entity && in_array($entity->type, [ 'activity', 'object', 'comment' ])) {
-                $muted = array_map([ __CLASS__, 'toString' ], (new Entity($entity))->getMutedUsers());
-                $params['to'] = array_map([ __CLASS__, 'toString' ], $params['to']);
-                $params['to'] = array_diff($params['to'], $muted);
-            }
 
-            if ($entity->parent_guid) {
-                $parent = Entities\Factory::build($entity->parent_guid, [ 'cache' => false ]);
+            if ($entity->parent_guid || method_exists($entity, 'getEntityGuid')) {
+                $parentGuid = method_exists($entity, 'getEntityGuid') ? $entity->getEntityGuid() : $entity->parent_guid;
+                $parent = Entities\Factory::build($parentGuid, [ 'cache' => false ]);
 
                 if ($parent && method_exists($parent, 'export')) {
                     $notification->setParams(array_merge(

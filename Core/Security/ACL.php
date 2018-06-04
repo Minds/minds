@@ -96,7 +96,7 @@ class ACL
 
     /**
      * Checks access read rights to entity
-     * @param Entity $entity
+     * @param Entity|Entities\RepositoryEntity $entity
      * @param $user (optional)
      * @return boolean
      */

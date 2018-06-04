@@ -6,13 +6,14 @@
  * @version 1
  * @author Emi Balbuena
  */
+
 namespace Minds\Controllers\api\v1\entities;
 
+use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Notification;
 use Minds\Entities;
 use Minds\Interfaces;
-use Minds\Api\Factory;
-use Minds\Core\Notification;
 
 class notifications implements Interfaces\Api
 {
@@ -32,10 +33,22 @@ class notifications implements Interfaces\Api
             ]);
         }
 
-        $entity_notifications = new Notification\Entity($entity);
+        $manager = new Notification\PostSubscriptions\Manager();
+        $manager
+            ->setUserGuid($user->guid)
+            ->setEntityGuid($entity->guid);
+
+        $subscription = $manager->get();
+
+        $isMuted = !$subscription->isFollowing();
+
+        if ($subscription->isEphemeral()) {
+            $entity_notifications = new Notification\Entity($entity);
+            $isMuted = $entity_notifications->isMuted($user);
+        }
 
         return Factory::response([
-            'is:muted' => $entity_notifications->isMuted($user)
+            'is:muted' => $isMuted
         ]);
     }
 
@@ -58,22 +71,31 @@ class notifications implements Interfaces\Api
             ]);
         }
 
-        $entity_notifications = new Notification\Entity($entity);
+        $manager = new Notification\PostSubscriptions\Manager();
+        $manager
+            ->setEntityGuid($entity->guid)
+            ->setUserGuid($user->guid);
 
         switch ($action) {
             case 'mute':
-                $response['done'] = $entity_notifications->mute($user);
+                $response['done'] = $manager->unfollow();
 
                 if ($entity->entity_guid) {
-                    (new Notification\Entity($entity->entity_guid))->mute($user);
+                    $manager
+                        ->setEntityGuid($entity->entity_guid)
+                        ->setUserGuid($user->guid)
+                        ->unfollow();
                 }
                 break;
 
             case 'unmute':
-                $response['done'] = $entity_notifications->unmute($user);
+                $response['done'] = $manager->follow();
 
                 if ($entity->entity_guid) {
-                    (new Notification\Entity($entity->entity_guid))->unmute($user);
+                    $manager
+                        ->setEntityGuid($entity->guid)
+                        ->setUserGuid($user->guid)
+                        ->follow();
                 }
                 break;
         }

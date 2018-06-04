@@ -27,12 +27,12 @@ class Recover
 
     public function recover()
     {
+        $manager = (new Core\Comments\Manager());
         $user = $this->accused->getUser();
         foreach ($this->getComments() as $comment) {
-            if ($comment->guid && !$comment->deleted) {
-                $comment->deleted = true;
-                $comment->save();
-                $comment->removeFromIndexes();
+            if ($comment->getGuid() && !$comment->isDeleted()) {
+                $comment->setDeleted(true);
+                $manager->update($comment);
 
                 //and remove any attachments also
                 if ($comment->attachment_guid) {
@@ -66,6 +66,9 @@ class Recover
         return true;
     }
 
+    /**
+     * @return Core\Comments\Comment[]
+     */
     private function getComments()
     {
         $query = [
@@ -94,11 +97,13 @@ class Recover
 
         $result = $this->client->request($prepared);
 
+        $repository = new Core\Comments\Repository();
+
         $comments = [];
         if ($result) {
             foreach ($result['hits']['hits'] as $row) {
                 if (isset($row['_source']['comment_guid'])) {
-                    $comments[] = new Entities\Comment($row['_source']['comment_guid']);
+                    $comments[] = $repository->getByLuidOrGuid($row['_source']['comment_guid']);
                 }
             }
         }

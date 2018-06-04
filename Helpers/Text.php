@@ -41,4 +41,14 @@ class Text
 
         return $text;
     }
+
+    public static function camel($text)
+    {
+        return lcfirst(str_replace(['_', ':'], '', ucwords($text, '_:')));
+    }
+
+    public static function snake($text)
+    {
+        return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $text));
+    }
 }
