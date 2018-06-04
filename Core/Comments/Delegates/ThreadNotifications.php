@@ -73,7 +73,7 @@ class ThreadNotifications
 
         if ($entity && $entity->type !== 'group') {
             $this->eventsDispatcher->trigger('notification', 'all', array(
-                'to' => array_keys($subscribers),
+                'to' => $subscribers,
                 'entity' => (string) $comment->getEntityGuid(),
                 'description' => (string) $comment->getBody(),
                 'notification_view' => 'comment'
