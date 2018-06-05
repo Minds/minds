@@ -218,19 +218,6 @@ class channel implements Interfaces\Api
                 }*/
 
                 if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
-                    $allowedKeys = [
-                        'facebook',
-                        'github',
-                        'linkedin',
-                        'minds',
-                        'reddit',
-                        'soundcloud',
-                        'tumblr',
-                        'twitter',
-                        'youtube_channel',
-                        'youtube_user',
-                        'instagram',
-                    ];
                     $profiles = [];
 
                     foreach ($_POST['social_profiles'] as $profile) {
@@ -241,7 +228,7 @@ class channel implements Interfaces\Api
                         $key = $profile['key'];
                         $value = $profile['value'];
 
-                        if (!in_array($key, $allowedKeys) || !$value || !is_string($value)) {
+                        if (!$value || !is_string($value)) {
                             continue;
                         }
 
