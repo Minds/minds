@@ -36,7 +36,7 @@ class comments implements Interfaces\Api
         $comments = $repository->getList([
             'entity_guid' => $guid,
             'parent_guid' => 0,
-            'limit' => 5,
+            'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
             'descending' => true,
         ]);
