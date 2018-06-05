@@ -31,6 +31,7 @@ class Group extends NormalizedEntity
     protected $featured_id;
     protected $tags = '';
     protected $owner_guids = [];
+    protected $moderator_guids = [];
     protected $boost_rejection_reason = -1;
     protected $indexes = [ 'group' ];
     protected $mature = false;
@@ -85,6 +86,7 @@ class Group extends NormalizedEntity
             'featured_id' => $this->featured_id,
             'tags' => $this->tags,
             'owner_guids' => $this->owner_guids,
+            'moderator_guids' => $this->moderator_guids,
             'boost_rejection_reason' => $this->boost_rejection_reason,
         ]);
 
@@ -95,7 +97,7 @@ class Group extends NormalizedEntity
         $this->saveToIndex();
         \elgg_trigger_event($creation ? 'create' : 'update', $this->type, $this);
 
-        return $this;
+        return $saved;
     }
 
     /**
@@ -398,6 +400,47 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * Sets `moderator_guids`
+     * @param array $moderator_guids
+     * @return Group
+     */
+    public function setModeratorGuids(array $moderator_guids)
+    {
+        $this->moderator_guids = array_filter(array_unique($moderator_guids), [ $this, 'isValidOwnerGuid' ]);
+
+        return $this;
+    }
+
+    /**
+     * Gets `moderator_guids`
+     * @return array
+     */
+    public function getModeratorGuids()
+    {
+        return $this->moderator_guids;
+    }
+
+    /**
+     * Push a new GUID onto `owner_guids`
+     * @param mixed $guid
+     * @return Group
+     */
+    public function pushModeratorGuid($guid)
+    {
+        return $this->setModeratorGuids(array_merge($this->getModeratorGuids(), [ $guid ]));
+    }
+
+    /**
+     * Remove a GUID from `owner_guids`
+     * @param mixed $guid
+     * @return Group
+     */
+    public function removeModeratorGuid($guid)
+    {
+        return $this->setModeratorGuids(array_diff($this->getModeratorGuids(), [ $guid ]));
+    }
+
+    /**
      * Checks if a user is member of this group
      * @param  User    $user
      * @return boolean
@@ -462,6 +505,22 @@ class Group extends NormalizedEntity
         $user_guid = is_object($user) ? $user->guid : $user;
 
         return $this->isCreator($user) || in_array($user_guid, $this->getOwnerGuids());
+    }
+
+     /**
+     * Checks if a user is moderator
+     * @param  User    $user
+     * @return boolean
+     */
+    public function isModerator($user = null)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $user_guid = is_object($user) ? $user->guid : $user;
+
+        return in_array($user_guid, $this->getModeratorGuids());
     }
 
     /**
@@ -590,6 +649,7 @@ class Group extends NormalizedEntity
         $userIsAdmin = Core\Session::isAdmin();
 
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());
+        $export['is:moderator'] = $this->isModerator(Core\Session::getLoggedInUser());
         $export['is:member'] = $this->isMember(Core\Session::getLoggedInUser());
         $export['is:creator'] = $userIsAdmin || $this->isCreator(Core\Session::getLoggedInUser());
         $export['is:awaiting'] = $this->isAwaiting(Core\Session::getLoggedInUser());

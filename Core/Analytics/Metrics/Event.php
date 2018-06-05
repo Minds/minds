@@ -7,7 +7,18 @@ use Minds\Core\Analytics\Timestamps;
 use Minds\Interfaces\AnalyticsMetric;
 
 /**
- * Active Metric
+ * Class Event
+ * @package Minds\Core\Analytics\Metrics
+ * @method Event setType($value)
+ * @method Event setAction($value)
+ * @method Event setProduct($value)
+ * @method Event setUserPhoneNumberHash($value)
+ * @method Event setEntityGuid($value)
+ * @method Event setEntityContainerGuid($value)
+ * @method Event setEntityType($value)
+ * @method Event setEntitySubtype($value)
+ * @method Event setEntityOwnerGuid($value)
+ * @method Event setCommentGuid($value)
  */
 class Event
 {
@@ -30,6 +41,14 @@ class Event
     public function push()
     {
         $this->data['@timestamp'] = (int) microtime(true) * 1000;
+
+        if (!isset($this->data['platform'])) {
+            $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
+            if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports
+                $platform = $_REQUEST['platform'];
+            }
+            $this->data['platform'] = $platform;
+        }
 
         $prepared = new Core\Data\ElasticSearch\Prepared\Index();
         $prepared->query([

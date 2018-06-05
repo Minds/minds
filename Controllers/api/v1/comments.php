@@ -11,6 +11,7 @@ use Minds\Api\Exportable;
 use Minds\Core;
 use Minds\Core\Data;
 use Minds\Entities;
+use Minds\Exceptions\BlockedUserException;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
@@ -30,33 +31,23 @@ class comments implements Interfaces\Api
         $response = array();
         $guid = $pages[0];
 
-        $indexes = new Data\indexes('comments');
-        $limit = \get_input('limit', 3);
-        $guids = $indexes->get($guid, array('limit'=>$limit, 'offset'=>\get_input('offset', ''), 'reversed'=>\get_input('reversed', false)));
-        if (isset($guids[get_input('offset')]) && $limit > 1) {
-            unset($guids[get_input('offset')]);
+        $repository = new Core\Comments\Repository();
+
+        $comments = $repository->getList([
+            'entity_guid' => $guid,
+            'parent_guid' => 0,
+            'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
+            'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
+            'descending' => true,
+        ]);
+
+        if (!isset($_GET['reversed']) || $_GET['reversed'] || $_GET['reversed'] === 'false') {
+            // Reversed order output
+            $comments = $comments->reverse();
         }
 
-        if ($guids) {
-            $comments = \elgg_get_entities(array('guids'=>$guids));
-        } else {
-            $comments = array();
-        }
-
-        usort($comments, function ($a, $b) {
-            return $a->time_created - $b->time_created;
-        });
-        foreach ($comments as $k => $comment) {
-            if (!$comment->guid) {
-                unset($comments[$k]);
-                continue;
-            }
-            $owner = $comment->getOwnerEntity();
-            $comments[$k]->ownerObj = $owner->export();
-        }
         $response['comments'] = Exportable::_($comments);
-        $response['load-next'] = (string) end($comments)->guid;
-        $response['load-previous'] = (string) reset($comments)->guid;
+        $response['load-previous'] = (string) $comments->getPagingToken();
 
         $response['socketRoomName'] = "comments:{$guid}";
 
@@ -65,14 +56,16 @@ class comments implements Interfaces\Api
 
     public function post($pages)
     {
+        $manager = new Core\Comments\Manager();
+
         $response = array();
         $error = false;
         $emitToSocket = false;
 
         switch ($pages[0]) {
           case "update":
-            $comment = new Entities\Comment($pages[1]);
-            if (!$comment->canEdit()) {
+            $comment = $manager->getByLuid($pages[1]);
+            if (!$comment || !$comment->canEdit()) {
                 $response = array('status' => 'error', 'message' => 'This comment can not be edited');
                 break;
             }
@@ -91,106 +84,105 @@ class comments implements Interfaces\Api
               ]);
             }
 
-            $comment->description = rawurldecode($content);
+            $comment->setBody($content);
 
             if (isset($_POST['mature'])) {
-                $comment->setMature($_POST['mature']);
+                $comment->setMature(!!$_POST['mature']);
             }
 
+            $comment->setTimeUpdated(time());
             $comment->setEdited(true);
 
-            $error = !$comment->save();
+            try {
+                $saved = $manager->update($comment);
+                $error = !$saved;
+            } catch (\Exception $e) {
+                $error = true;
+            }
+
             break;
           case is_numeric($pages[0]):
           default:
-            $parent = new \Minds\Entities\Entity($pages[0]);
-            if ($parent instanceof Entities\Activity && $parent->remind_object) {
-                $parent = (object) $parent->remind_object;
+            $entity = new \Minds\Entities\Entity($pages[0]);
+
+            if ($entity instanceof Entities\Activity && $entity->remind_object) {
+                $entity = (object) $entity->remind_object;
             }
-            if (!$pages[0] || !$parent || $parent->type == 'comment') {
+
+            if (!$pages[0] || !$entity || $entity->type == 'comment') {
                 return Factory::response([
                   'status' => 'error',
                   'message' => 'We could not find that post'
                 ]); 
             }
+
             if (!$_POST['comment'] && !$_POST['attachment_guid']) {
                 return Factory::response([
                   'status' => 'error',
                   'message' => 'You must enter a message'
                 ]);
             }
-            if ($parent instanceof Entities\Activity && !$parent->commentsEnabled) {
+
+            if ($entity instanceof Entities\Activity && !$entity->commentsEnabled) {
                 return Factory::response([
                   'status' => 'error',
                   'message' => 'Comments are disabled for this post'
                 ]);
             }
 
-            $comment = new Entities\Comment();
-            $comment->description = rawurldecode($_POST['comment']);
-            $comment->setParent($parent);
-            $comment->setMature(isset($_POST['mature']) && !!$_POST['mature']);
+            $comment = new Core\Comments\Comment();
+            $comment
+                ->setEntityGuid($entity->guid)
+                ->setParentGuid(0)
+                ->setMature(isset($_POST['mature']) && $_POST['mature'])
+                ->setOwnerObj(Core\Session::getLoggedInUser())
+                ->setContainerGuid(Core\Session::getLoggedInUserGuid())
+                ->setTimeCreated(time())
+                ->setTimeUpdated(time())
+                ->setBody($_POST['comment']);
 
-            if ($comment->save()) {
-                $subscribers = Data\indexes::fetch('comments:subscriptions:'.$pages[0]) ?: array();
-                $subscribers[$parent->owner_guid] = $parent->owner_guid;
-                if (isset($subscribers[$comment->owner_guid])) {
-                    unset($subscribers[$comment->owner_guid]);
+            // TODO: setHasChildren (for threaded)
+
+            try {
+                $saved = $manager->add($comment);
+
+                if ($saved) {
+                    // Defer emitting after processing attachments
+                    $emitToSocket = true;
+                    $response['comment'] = $comment->export();
+                } else {
+                    throw new \Exception('The comment couldn\'t be saved');
                 }
-
-                if (($parent->type != 'group') && ($parent->owner_guid != Core\Session::getLoggedinUser()->guid)) {
-                    Helpers\Wallet::createTransaction($parent->owner_guid, 5, $pages[0], 'Comment');
-                }
-
-                if ($parent->type != 'group') {
-                    Core\Events\Dispatcher::trigger('notification', 'all', array(
-                        'to' => $subscribers,
-                        'entity'=>$pages[0],
-                        'description'=>$comment->description,
-                        'notification_view'=>'comment'
-                    ));
-                } // TODO: Group chat notifications? (might be heavy)
-
-                // Defer emitting after processing attachments
-                $emitToSocket = true;
-
-                \elgg_trigger_event('comment:create', 'comment', $data);
-
-                $event = new Core\Analytics\Metrics\Event();
-                $event->setType('action')
-                    ->setAction('comment')
-                    ->setProduct('platform')
-                    ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
-                    ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
-                    ->setEntityGuid((string) $parent->guid)
-                    ->setEntityContainerGuid((string) $parent->container_guid)
-                    ->setEntityType($parent->type)
-                    ->setEntitySubtype((string) $parent->subtype)
-                    ->setEntityOwnerGuid((string) $parent->owner_guid)
-                    ->setCommentGuid((string) $comment->guid)
-                    ->push();
-
-                $indexes = new data\indexes();
-                $indexes->set('comments:subscriptions:'.$parent->guid, array($comment->owner_guid => $comment->owner_guid));
-                $comment->ownerObj = Core\Session::getLoggedinUser()->export();
-                $response['comment'] = $comment->export();
-            } else {
+            } catch (BlockedUserException $e) {
                 $error = true;
 
-                $response = array(
-                  'status' => 'error',
-                  'message' => 'The comment couldn\'t be saved'
-                );
+                $parentOwnerUsername = '';
+
+                if (isset($entity->ownerObj['username'])) {
+                    $parentOwnerUsername = "@{$entity->ownerObj['username']}";
+                }
+
+                $response = [
+                    'status' => 'error',
+                    'message' => "The comment couldn't be saved because {$parentOwnerUsername} has blocked you."
+                ];
+            } catch (\Exception $e) {
+                $error = true;
+
+                $response = [
+                    'status' => 'error',
+                    'message' => "The comment couldn't be saved"
+                ];
             }
         }
 
         $modified = false;
 
         if (!$error && isset($_POST['title']) && $_POST['title']) {
-            $comment->setTitle(rawurldecode($_POST['title']))
-                ->setBlurb(rawurldecode($_POST['description']))
-                ->setURL(\elgg_normalize_url(rawurldecode($_POST['url'])))
-                ->setThumbnail(rawurldecode($_POST['thumbnail']));
+            $comment->setAttachment('title', $_POST['title']);
+            $comment->setAttachment('blurb', $_POST['description']);
+            $comment->setAttachment('perma_url', Helpers\Url::normalize($_POST['url']));
+            $comment->setAttachment('thumbnail_src', $_POST['thumbnail']);
 
             $modified = true;
         }
@@ -199,41 +191,53 @@ class comments implements Interfaces\Api
             $attachment = entities\Factory::build($_POST['attachment_guid']);
 
             if ($attachment) {
-                $attachment->title = $comment->description;
-                $attachment->access_id = 2;
+                $attachment->title = $comment->getBody();
+                $attachment->access_id = $comment->getAccessId();
+
+                $mature = false;
 
                 if ($attachment instanceof \Minds\Interfaces\Flaggable) {
-                    $attachment->setFlag('mature', $comment->getMature());
+                    $mature = !!$comment->isMature();
+
+                    $attachment->setFlag('mature', $mature);
                 }
 
                 $attachment->save();
 
+                $siteUrl = Core\Di\Di::_()->get('Config')->get('site_url');
+
                 switch ($attachment->subtype) {
-                  case "image":
-                    $comment->setCustom('batch', [[
-                      'src'=>elgg_get_site_url() . 'fs/v1/thumbnail/'.$attachment->guid,
-                      'href'=>elgg_get_site_url() . 'media/'.$attachment->container_guid.'/'.$attachment->guid,
-                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false,
-                      'width' => $attachment->width,
-                      'height' => $attachment->height,
-                    ]]);
-                    break;
-                  case "video":
-                    $comment->setCustom('video', [
-                      'thumbnail_src'=>$attachment->getIconUrl(),
-                      'guid'=>$attachment->guid,
-                      'mature'=>$attachment instanceof \Minds\Interfaces\Flaggable ? $attachment->getFlag('mature') : false
-                    ]);
-                    break;
+                    case "image":
+                        $comment->setAttachment('custom_type', 'image');
+                        $comment->setAttachment('custom_data', [
+                            'guid' => (string) $attachment->guid,
+                            'container_guid' => (string) $attachment->container_guid,
+                            'src'=> $siteUrl . 'fs/v1/thumbnail/' . $attachment->guid,
+                            'href'=> $siteUrl . 'media/' . $attachment->container_guid . '/' . $attachment->guid,
+                            'mature' => $mature,
+                            'width' => $attachment->width,
+                            'height' => $attachment->height,
+                        ]);
+                        break;
+
+                    case "video":
+                        $comment->setAttachment('custom_type', 'video');
+                        $comment->setAttachment('custom_data', [
+                            'guid' => (string) $attachment->guid,
+                            'container_guid' => (string) $attachment->container_guid,
+                            'thumbnail_src' => $attachment->getIconUrl(),
+                            'mature' => $mature
+                        ]);
+                        break;
                 }
 
-                $comment->setAttachmentGuid($attachment->guid);
+                $comment->setAttachment('attachment_guid', $attachment->guid);
                 $modified = true;
             }
         }
 
         if ($modified) {
-            $comment->save();
+            $manager->update($comment);
             $response['comment'] = $comment->export();
         }
 
@@ -241,10 +245,14 @@ class comments implements Interfaces\Api
         if ($emitToSocket) {
             try {
                 (new Sockets\Events())
-                ->setRoom("comments:{$pages[0]}")
-                ->emit('comment', $pages[0], (string) $comment->owner_guid, (string) $comment->guid);
-            } catch (\Exception $e) { /* TODO: To log or not to log */
-            }
+                ->setRoom("comments:{$comment->getEntityGuid()}")
+                ->emit(
+                    'comment',
+                    (string) $comment->getEntityGuid(),
+                    (string) $comment->getOwnerGuid(),
+                    (string) $comment->getLuid()
+                );
+            } catch (\Exception $e) { }
         }
 
         return Factory::response($response);
@@ -252,22 +260,18 @@ class comments implements Interfaces\Api
 
     public function put($pages)
     {
-        return Factory::response(array());
+        return Factory::response([]);
     }
 
     public function delete($pages)
     {
-        $comment = new Entities\Comment($pages[0]);
+        $manager = new Core\Comments\Manager();
+
+        $comment = $manager->getByLuid($pages[0]);
         if ($comment && $comment->canEdit()) {
-            $comment->delete();
-
-            $parent = new \Minds\Entities\Entity($comment->parent_guid);
-
-            if ($parent && ($parent->type != 'group') && ($parent->owner_guid != Core\Session::getLoggedinUser()->guid)) {
-                Helpers\Wallet::createTransaction($parent->owner_guid, -5, $comment->parent_guid, 'Comment Removed');
-            }
+            $manager->delete($comment);
         }
 
-        return Factory::response(array());
+        return Factory::response([]);
     }
 }

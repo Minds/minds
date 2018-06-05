@@ -80,7 +80,11 @@ class Push implements Interfaces\QueueRunner
                        ], $data['json']);
 
                        $message = Surge\Messages\Factory::build($user->surge_token)
-                          ->setTitle($data['message'])
+                          ->setTitle($data['title'])
+                          ->setBigPicture($data['big_picture'])
+                          ->setBadge($data['badge'])
+                          ->setLargeIcon($data['large_icon'])
+                          ->setGroup($data['group'])
                           ->setMessage($data['message'])
                           ->setURI(isset($data['uri']) ? $data['uri'] : 'chat')
                           ->setSound(isset($data['sound']) ? $data['sound'] : 'default')

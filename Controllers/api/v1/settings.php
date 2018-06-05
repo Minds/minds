@@ -117,6 +117,15 @@ class settings implements Interfaces\Api
             } catch (Core\Security\Exceptions\PasswordRequiresHashUpgradeException $e) {
 
             }
+
+            try {
+                validate_password($_POST['new_password']);
+            } catch (\Exception $e) {
+                $response = array('status'=>'error', 'message'=>$e->getMessage());
+
+                return Factory::response($response);
+            }
+
             //need to create a new salt and hash...
             //$user->salt = Core\Security\Password::salt();
             $user->password = Core\Security\Password::generate($user, $_POST['new_password']);

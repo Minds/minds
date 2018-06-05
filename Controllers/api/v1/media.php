@@ -273,6 +273,13 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
             throw new \Exception('Error saving media entity');
         }
 
+        // Follow activity
+        (new Core\Notification\PostSubscriptions\Manager())
+            ->setEntityGuid($entity->guid)
+            ->setUserGuid(Core\Session::getLoggedInUserGuid())
+            ->follow();
+
+
         // Mark user as mature, if needed
         if (!$user->getMatureContent() && $entity->getFlag('mature')) {
             $user->setMatureContent(true);

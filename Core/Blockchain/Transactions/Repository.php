@@ -38,9 +38,10 @@ class Repository
             contract,
             amount,
             completed,
+            failed,
             data
             ) 
-            VALUES (?,?,?,?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?,?,?,?)";
         foreach ($transactions as $transaction) {
             $requests[] = [
                 'string' => $template, 
@@ -52,6 +53,7 @@ class Repository
                     $transaction->getContract(),
                     new Varint($transaction->getAmount()),
                     $transaction->isCompleted(),
+                    $transaction->isFailed(),
                     json_encode($transaction->getData()),
                 ]
             ];
@@ -172,6 +174,7 @@ class Repository
                 ->setContract($row['contract'])            
                 ->setAmount((string) BigNumber::_($row['amount']))
                 ->setCompleted((bool) $row['completed'])
+                ->setFailed((bool) $row['failed'])
                 ->setData(json_decode($row['data'], true));
                 
             $transactions[] = $transaction;
@@ -214,10 +217,54 @@ class Repository
             ->setContract($row['contract'])            
             ->setAmount((string) BigNumber::_($row['amount']))
             ->setCompleted((bool) $row['completed'])
+            ->setFailed((bool) $row['failed'])
             ->setData(json_decode($row['data'], true));
             
         return $transaction;
 
+    }
+
+    public function update($transaction, array $dirty = [])
+    {
+        $template = "UPDATE blockchain_transactions";
+        $values = [];
+        $set = [];
+
+        foreach ($dirty as $key) {
+            $value = null;
+            switch ($key) {
+                case 'amount':
+                    $value = new Cassandra\Varint($transaction->getAmount());
+                    break;
+                case 'failed':
+                    $value = (bool) $transaction->isFailed();
+                    break;
+            }
+
+            $set[] = "{$key} = ?";
+            $values[] = $value;
+        }
+
+        if ($set) {
+            $template .= ' SET ';
+        }
+
+        $template .= implode(", ", $set);
+
+        $template .= " WHERE user_guid = ? AND timestamp = ?";
+        $values[] = new Varint($transaction->getUserGuid());
+        $values[] = new Timestamp($transaction->getTimestamp());
+
+        $query = new Custom();
+        $query->query($template, $values);
+
+        try {
+            $success = $this->db->request($query);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return (bool) $success;
     }
 
     public function delete($user_guid, $timestamp, $wallet_address) {

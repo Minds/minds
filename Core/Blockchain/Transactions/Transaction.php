@@ -32,6 +32,9 @@ class Transaction
     /** @var bool $completed */
     private $completed = false;
 
+    /** @var bool $failed */
+    private $failed = false;
+
     /** @var int $data */
     private $data;
 
@@ -46,6 +49,7 @@ class Transaction
             'wallet_address' => $this->walletAddress,
             'tx' => $this->tx,
             'amount' => $this->amount,
+            'failed' => $this->failed,
             'timestamp' => $this->timestamp,
             'contract' => $this->contract
         ];

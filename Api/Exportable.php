@@ -78,7 +78,7 @@ class Exportable implements \JsonSerializable
      */
     public function export()
     {
-        if (!is_array($this->items) || !$this->items) {
+        if (!$this->items || (!is_array($this->items) && !($this->items instanceof \Iterator))) {
             return [];
         }
 
@@ -103,7 +103,10 @@ class Exportable implements \JsonSerializable
             // Shims
             // TODO: Maybe allow customization via classes? i.e. JavascriptGuidShim, ExceptionShim, etc
 
-            if ($isSequential && method_exists($item, 'isDeleted') && $item->isDeleted()) {
+            if (
+                $isSequential &&
+                (method_exists($item, '_magicAttributes') || method_exists($item, 'isDeleted')) &&
+                $item->isDeleted()) {
                 continue;
             }
 

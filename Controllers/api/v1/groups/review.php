@@ -19,7 +19,7 @@ class review implements Interfaces\Api
         $group = Entities\Factory::build($pages[0]);
         $user = Core\Session::getLoggedInUser();
 
-        if (!$group->isOwner($user)) {
+        if (!$group->isOwner($user) && !$group->isModerator($user)) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'You don\'t have enough permissions'
@@ -63,7 +63,7 @@ class review implements Interfaces\Api
         $activity = Entities\Factory::build($pages[1]);
         $user = Core\Session::getLoggedInUser();
 
-        if (!$group->isOwner($user)) {
+        if (!$group->isOwner($user) && !$group->isModerator($user)) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'You don\'t have enough permissions'
@@ -94,7 +94,7 @@ class review implements Interfaces\Api
         $activity = Entities\Factory::build($pages[1]);
         $user = Core\Session::getLoggedInUser();
 
-        if (!$group->isOwner($user)) {
+        if (!$group->isOwner($user) && !$group->isModerator($user)) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'You don\'t have enough permissions'

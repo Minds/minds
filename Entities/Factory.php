@@ -21,9 +21,21 @@ class Factory
     {
         $options = array_merge([ 'cache'=> true ], $options);
 
+        $entity = null;
         $canBeCached = false;
 
-        if (is_numeric($value)) {
+        if (Core\Luid::isValid($value)) {
+            if ($options['cache'] && isset(self::$entitiesCache[$value])) {
+                return self::$entitiesCache[$value];
+            }
+
+            $canBeCached = true;
+
+            $luid = new Core\Luid($value);
+            $entity = Core\Events\Dispatcher::trigger('entity:resolve', $luid->getType(), [
+                'luid' => $luid
+            ], null);
+        } else if (is_numeric($value)) {
             if ($options['cache'] && isset(self::$entitiesCache[$value])) {
                 return self::$entitiesCache[$value];
             }
@@ -45,7 +57,9 @@ class Factory
             return false;
         }
 
-        $entity = Core\Di\Di::_()->get('Entities')->build((object) $row);
+        if (!$entity && isset($row)) {
+            $entity = Core\Di\Di::_()->get('Entities')->build((object) $row);
+        }
 
         if ($options['cache'] && $canBeCached && $entity) {
             self::$entitiesCache[$value] = $entity;

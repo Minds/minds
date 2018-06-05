@@ -154,6 +154,20 @@ class Mock
 
     }
 
+    public static function boolean()
+    {
+
+    }
+
+    public static function set()
+    {
+
+    }
+
+    public function add()
+    {
+
+    }
 }
 
 class_alias('Mock', 'Cassandra');
@@ -161,9 +175,13 @@ class_alias('Mock', 'Cassandra\ExecutionOptions');
 class_alias('Mock', 'Cassandra\Varint');
 class_alias('Mock', 'Cassandra\Timestamp');
 class_alias('Mock', 'Cassandra\Type');
+class_alias('Mock', 'Cassandra\Type\Set');
+class_alias('Mock', 'Cassandra\Type\Map');
 class_alias('Mock', 'Cassandra\Decimal');
 class_alias('Mock', 'Cassandra\Bigint');
 class_alias('Mock', 'Cassandra\Tinyint');
+class_alias('Mock', 'Cassandra\Set');
+class_alias('Mock', 'Cassandra\Map');
 class_alias('Mock', 'MongoDB\BSON\UTCDateTime');
 class_alias('Mock', 'Cassandra\RetryPolicy\Logging');
 class_alias('Mock', 'Cassandra\RetryPolicy\DowngradingConsistency');

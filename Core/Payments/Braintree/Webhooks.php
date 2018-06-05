@@ -149,8 +149,8 @@ class Webhooks
             ->setWalletAddress('offchain')
             ->setTimestamp(time())
             ->setTx('cc:bt-' . Guid::build())
-            ->setAmount(($subscription->getPrice() * 1000) * 1.1 * 1000 * 10 ** 18)
-            ->setContract('offchain:plus')
+            ->setAmount(($subscription->getPrice()) * 1.1 * 10 ** 18)
+            ->setContract('offchain:points')
             ->setCompleted(true);
 
         Di::_()->get('Blockchain\Transactions\Repository')

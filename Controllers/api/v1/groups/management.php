@@ -30,6 +30,7 @@ class management implements Interfaces\Api
     {
         Factory::isLoggedIn();
 
+        /** @var \Minds\Entities\Group $group */
         $group = EntitiesFactory::build($pages[0]);
         $actor = Session::getLoggedInUser();
 
@@ -60,13 +61,43 @@ class management implements Interfaces\Api
           ->setGroup($group)
           ->setActor($actor);
 
+        if (!$group->isOwner($actor->guid)) {
+            return Factory::response([
+                'done' => false,
+                'status' => 'error',
+                'error' => 'Only owners can make these changes',
+            ]);
+        }
+
         try {
-            $granted = $management->grant($member);
+            if (isset($pages[2]) && $pages[2] == 'moderator') {
+                $granted = $management->grantModerator($member);
+            } else {
+                $granted = $management->grantOwner($member);
+            }
         } catch (GroupOperationException $e) {
             return Factory::response([
                 'done' => false,
                 'error' => $e->getMessage()
             ]);
+        }
+
+        if ($granted && isset($pages[2]) && $pages[2] === 'owner') {
+            if ((string)$actor->guid !== (string)$group->owner_guid) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Only a group owner can pass ownership'
+                ]);
+            }
+
+            $saved = false;
+            $group->setOwnerObj($member);
+            try {
+                $saved = $group->save();
+            } catch (\Exception $e) {
+                error_log($e->getMessage());
+            }
+            return Factory::response(['done' => $saved]);
         }
 
         return Factory::response([
@@ -108,8 +139,20 @@ class management implements Interfaces\Api
           ->setGroup($group)
           ->setActor($actor);
 
+        if (!$group->isOwner($actor->guid)) {
+            return Factory::response([
+                'done' => false,
+                'status' => 'error',
+                'error' => 'Only owners can make these changes',
+            ]);
+        }
+
         try {
-            $revoked = $management->revoke($member);
+            if (isset($pages[2]) && $pages[2] == 'moderator') {
+                $revoked = $management->revokeModerator($member);
+            } else {
+                $revoked = $management->revokeOwner($member);
+            }
         } catch (GroupOperationException $e) {
             return Factory::response([
                 'done' => false,

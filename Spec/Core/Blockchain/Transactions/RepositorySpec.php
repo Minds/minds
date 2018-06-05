@@ -31,7 +31,8 @@ class RepositorySpec extends ObjectBehavior
                 && $requests[0]['values'][4] == 'spec'
                 && $requests[0]['values'][5] == new Varint(50)
                 && $requests[0]['values'][6] == false
-                && $requests[0]['values'][7] == json_encode([ 'foo' => 'bar']);
+                && $requests[0]['values'][7] == false
+                && $requests[0]['values'][8] == json_encode([ 'foo' => 'bar']);
             }), 1)
             ->shouldBeCalled();
 
@@ -65,7 +66,8 @@ class RepositorySpec extends ObjectBehavior
                     'tx' => '0xtid',
                     'contract' => 'spec',
                     'amount' => 50,                    
-                    'completed' => true,
+                    'completed' => true,                    
+                    'failed' => false,
                     'data' => json_encode([ 'foo' => 'bar' ])
                 ]
             ], ''));
@@ -143,6 +145,7 @@ class RepositorySpec extends ObjectBehavior
                     'contract' => 'spec',
                     'amount' => 50,                    
                     'completed' => true,
+                    'failed' => false,
                     'data' => json_encode([ 'foo' => 'bar' ])
                 ]
             ], ''));
@@ -176,6 +179,34 @@ class RepositorySpec extends ObjectBehavior
         $result
             ->getData()
             ->shouldBe([ 'foo' => 'bar' ]);
+    }
+
+    function it_should_update_transaction(Client $db)
+    {
+        $this->beConstructedWith($db);
+
+        $db->request(Argument::that(function($request) {
+            $request = $request->build();
+            return $request['values'][0] == true
+                && $request['values'][1] == new Varint(123)
+                && $request['values'][2] == new Timestamp(time());
+            }))
+            ->shouldBeCalled();
+
+        $transaction = new Transaction;
+        $transaction
+            ->setUserGuid(123)
+            ->setWalletAddress('0xWALLETADDR')
+            ->setTimestamp(time())
+            ->setTx('0xtid')
+            ->setContract('spec')
+            ->setAmount(50)
+            ->setFailed(true)
+            ->setData([
+                'foo' => 'bar'
+            ]);
+
+        $this->update($transaction, [ 'failed' ]);
     }
 
 }

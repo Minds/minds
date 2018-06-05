@@ -12,6 +12,7 @@ class Report extends DenormalizedEntity
     protected $entity_guid;
     protected $time_created;
     protected $reporter_guid;
+    protected $entity_luid;
     protected $owner_guid;
     protected $state;
     protected $action = '';
@@ -24,6 +25,7 @@ class Report extends DenormalizedEntity
         'entity_guid',
         'time_created',
         'reporter_guid',
+        'entity_luid',
         'owner_guid',
         'state',
         'action',
@@ -91,6 +93,11 @@ class Report extends DenormalizedEntity
         }
 
         $this->entity_guid = $entity_guid;
+    }
+
+    public function getEntityLuid()
+    {
+        return $this->entity_luid;
     }
 
     /**
@@ -260,8 +267,8 @@ class Report extends DenormalizedEntity
             unset($export[$key]);
         }
 
-        if (isset($export['entity_guid']) && $export['entity_guid']) {
-            $entity = Entities\Factory::build($export['entity_guid']);
+        if ($export['entity_luid'] || $export['entity_guid']) {
+            $entity = Entities\Factory::build($export['entity_luid'] ?: $export['entity_guid']);
 
             $export['entityObj'] = $entity ? $entity->export() : null;
 

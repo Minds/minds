@@ -8,6 +8,16 @@ use Minds\Core\Events\Dispatcher;
 
 class Actions
 {
+    /** @var Core\Entities\Actions\Save */
+    protected $saveAction;
+
+    public function __construct(
+        $saveAction = null
+    )
+    {
+        $this->saveAction = $saveAction ?: new Core\Entities\Actions\Save();
+    }
+
     /**
      * @param string|int $guid
      * @return bool
@@ -52,7 +62,8 @@ class Actions
             $report->setReason($reason);
         }
 
-        $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
+        $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
+        $entity = Entities\Factory::build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -62,7 +73,9 @@ class Actions
         $dirty = $this->setMatureFlag($entity, true);
 
         if ($dirty) {
-            $entity->save();
+            $this->saveAction
+                ->setEntity($entity)
+                ->save();
         }
 
         // Attachment and/or embedded entity
@@ -76,7 +89,9 @@ class Actions
                     $dirty = $this->setMatureFlag($rel, true);
 
                     if ($dirty) {
-                        $rel->save();
+                        $this->saveAction
+                            ->setEntity($rel)
+                            ->save();
                     }
                 }
             }
@@ -125,7 +140,8 @@ class Actions
             $report->setReason($reason);
         }
 
-        $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
+        $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
+        $entity = Entities\Factory::build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -135,7 +151,9 @@ class Actions
         $dirty = $this->setSpamFlag($entity, true);
 
         if ($dirty) {
-            $entity->save();
+            $this->saveAction
+                ->setEntity($entity)
+                ->save();
         }
 
         // Attachment and/or embedded entity
@@ -149,7 +167,9 @@ class Actions
                     $dirty = $this->setSpamFlag($rel, true);
 
                     if ($dirty) {
-                        $rel->save();
+                        $this->saveAction
+                            ->setEntity($rel)
+                            ->save();
                     }
                 }
             }
@@ -198,7 +218,8 @@ class Actions
             $report->setReason($reason);
         }
 
-        $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
+        $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
+        $entity = Entities\Factory::build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -208,7 +229,9 @@ class Actions
         $dirty = $this->setDeletedFlag($entity, true);
 
         if ($dirty) {
-            $entity->save();
+            $this->saveAction
+                ->setEntity($entity)
+                ->save();
         }
 
         // Attachment and/or embedded entity
@@ -222,7 +245,9 @@ class Actions
                     $dirty = $this->setDeletedFlag($rel, true);
 
                     if ($dirty) {
-                        $rel->save();
+                        $this->saveAction
+                            ->setEntity($rel)
+                            ->save();
                     }
                 }
             }
@@ -258,7 +283,8 @@ class Actions
             return false;
         }
 
-        $entity = Entities\Factory::build($report->getEntityGuid()); // Most updated version
+        $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
+        $entity = Entities\Factory::build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -270,7 +296,9 @@ class Actions
                 $dirty = $this->setMatureFlag($entity, false);
 
                 if ($dirty) {
-                    $entity->save();
+                    $this->saveAction
+                        ->setEntity($entity)
+                        ->save();
                 }
 
                 // Attachment and/or embedded entity
@@ -284,7 +312,9 @@ class Actions
                             $dirty = $this->setSpamFlag($rel, false);
 
                             if ($dirty) {
-                                $rel->save();
+                                $this->saveAction
+                                    ->setEntity($rel)
+                                    ->save();
                             }
                         }
                     }
@@ -296,7 +326,9 @@ class Actions
                 $dirty = $this->setSpamFlag($entity, false);
 
                 if ($dirty) {
-                    $entity->save();
+                    $this->saveAction
+                        ->setEntity($entity)
+                        ->save();
                 }
 
                 // Attachment and/or embedded entity
@@ -310,7 +342,9 @@ class Actions
                             $dirty = $this->setSpamFlag($rel, false);
 
                             if ($dirty) {
-                                $rel->save();
+                                $this->saveAction
+                                    ->setEntity($rel)
+                                    ->save();
                             }
                         }
                     }
@@ -322,7 +356,9 @@ class Actions
                 $dirty = $this->setDeletedFlag($entity, false);
 
                 if ($dirty) {
-                    $entity->save();
+                    $this->saveAction
+                        ->setEntity($entity)
+                        ->save();
                 }
 
                 // Attachment and/or embedded entity
@@ -336,7 +372,9 @@ class Actions
                             $dirty = $this->setDeletedFlag($rel, false);
 
                             if ($dirty) {
-                                $rel->save();
+                                $this->saveAction
+                                    ->setEntity($rel)
+                                    ->save();
                             }
                         }
                     }
@@ -364,7 +402,7 @@ class Actions
         $dirty = false;
 
         // Main mature flag
-        if (method_exists($entity, 'setMature')) {
+        if (method_exists($entity, '_magicAttributes') || method_exists($entity, 'setMature')) {
             $entity->setMature($value);
             $dirty = true;
         } elseif (method_exists($entity, 'setFlag')) {
@@ -409,7 +447,7 @@ class Actions
         $dirty = false;
 
         // Main mature flag
-        if (method_exists($entity, 'setSpam')) {
+        if (method_exists($entity, '_magicAttributes') || method_exists($entity, 'setSpam')) {
             $entity->setSpam($value);
             $dirty = true;
         } elseif (method_exists($entity, 'setFlag')) {
@@ -440,7 +478,7 @@ class Actions
         $dirty = false;
 
         // Main mature flag
-        if (method_exists($entity, 'setDeleted')) {
+        if (method_exists($entity, '_magicAttributes') || method_exists($entity, 'setDeleted')) {
             $entity->setDeleted($value);
             $dirty = true;
         } elseif (method_exists($entity, 'setFlag')) {

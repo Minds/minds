@@ -42,8 +42,8 @@ class Defaults
                 return false;
             }
 
-            $cacher = Core\Data\cache\factory::build();
-            $db = new Core\Data\Call('entities_by_time');
+            /** @var Core\Data\cache\abstractCacher $cacher */
+            $cacher = Core\Di\Di::_()->get('Cache');
 
             if (($params['entity']->type == 'activity') && $params['entity']->entity_guid) {
                 $guid = $params['entity']->entity_guid;
@@ -55,7 +55,8 @@ class Defaults
             if ($cached !== false) {
                 $count = $cached;
             } else {
-                $count = $db->countRow("comments:$guid");
+                $manager = new Core\Comments\Manager();
+                $count = $manager->count($guid);
                 $cacher->set("comments:count:$guid", $count);
             }
 
@@ -111,6 +112,9 @@ class Defaults
 
         // Boost events
         (new Core\Boost\Events())->register();
+
+        // Comments events
+        (new Core\Comments\Events())->register();
     }
 
     public static function _()

@@ -24,9 +24,20 @@ class BoostEvent implements BlockchainEventInterface
 
     protected $mongo;
 
-    public function __construct($mongo = null)
+    /** @var Repository $txRepository */
+    protected $txRepository;
+
+    /** @var Repository $boostRepository */
+
+    public function __construct(
+        $mongo = null,
+        $txRepository = null,
+        $boostRepository = null
+    )
     {
         $this->mongo = $mongo ?: Data\Client::build('MongoDB');
+        $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
+        $this->boostRepository = $boostRepository ?: Di::_()->get('Boost\Repository');
     }
 
     /**
@@ -59,18 +70,22 @@ class BoostEvent implements BlockchainEventInterface
             return;
         }
 
-        $boost = Di::_()->get('Boost\Repository')
+        $boost = $this->boostRepository
             ->getEntity($transaction->getData()['handler'], $transaction->getData()['guid']);
 
         $tx = (string) $transaction->getTx();
 
         if (!$boost) {
-            throw new \Exception("No boost with hash ${$tx}");
+            throw new \Exception("No boost with hash {$tx}");
         }
 
         if ($boost->getState() != 'pending') {
-            throw new \Exception("Boost with hash ${$tx} already processed. State: " . $boost->getState());
+            throw new \Exception("Boost with hash {$tx} already processed. State: " . $boost->getState());
         }
+
+        $transaction->setFailed(true);
+
+        $this->txRepository->update($transaction, [ 'failed' ]);
 
         $boost->setState('failed')
             ->save();

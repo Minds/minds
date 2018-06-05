@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Votes;
 
+use Minds\Core\Events\EventsDispatcher;
 use Minds\Core\Di\Di;
 use Minds\Core\Security\ACL;
 use Minds\Core\Votes\Counters;
@@ -14,20 +15,28 @@ use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
+    /** @var ACL */
     protected $acl;
+    /** @var Counters */
     protected $counters;
+    /** @var Indexes */
     protected $indexes;
+    /** @var EventsDispatcher */
+    protected $dispatcher;
 
     function let(
         ACL $acl,
         Counters $counters,
-        Indexes $indexes
+        Indexes $indexes,
+    EventsDispatcher $dispatcher
     )
     {
         $this->acl = $acl;
         $this->counters = $counters;
         $this->indexes = $indexes;
-        $this->beConstructedWith($counters, $indexes, $acl);
+        $this->dispatcher = $dispatcher;
+
+        $this->beConstructedWith($counters, $indexes, $acl, $dispatcher);
     }
 
     function it_is_initializable()
@@ -57,6 +66,31 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(true);
 
         $this->cast($vote, [ 'events' => false ])
+            ->shouldReturn(true);
+    }
+
+    function it_should_cast_and_send_a_vote_event(
+        Vote $vote,
+        Activity $entity,
+        User $user
+    ) {
+        $vote->getEntity()->willReturn($entity);
+        $vote->getActor()->willReturn($user);
+        $vote->getDirection()->willReturn('up');
+
+        $this->acl->interact($entity, $user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->dispatcher->trigger('vote:action:cast', Argument::any(), ['vote' => $vote], null)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->dispatcher->trigger('vote', 'up', ['vote' => $vote])
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->cast($vote, [ 'events' => true ])
             ->shouldReturn(true);
     }
 
@@ -101,6 +135,29 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(true);
 
         $this->cancel($vote, [ 'events' => false ])
+            ->shouldReturn(true);
+    }
+
+    function it_should_cancel_and_send_a_vote_cancel_event(
+        Vote $vote,
+        Activity $entity,
+        User $user
+    )
+    {
+        $vote->getEntity()->willReturn($entity);
+        $vote->getActor()->willReturn($user);
+        $vote->getDirection()->willReturn('up');
+
+
+        $this->dispatcher->trigger('vote:action:cancel', Argument::any(), ['vote' => $vote], null)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->dispatcher->trigger('vote:cancel', Argument::any(), ['vote' => $vote], null)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->cancel($vote, [ 'events' => true ])
             ->shouldReturn(true);
     }
 

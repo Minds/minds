@@ -12,7 +12,7 @@ class EventsProvider extends Provider
     public function register()
     {
         $this->di->bind('EventsDispatcher', function ($di) {
-            return new Dispatcher();
-        }, ['useFactory'=>true]);
+            return new EventsDispatcher();
+        }, ['useFactory' => true]);
     }
 }

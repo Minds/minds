@@ -48,7 +48,7 @@ class IndexesSpec extends ObjectBehavior
 
         $this->cql->request(Argument::that(function (Custom $prepared) {
             $query = $prepared->build();
-            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ 1000 ])];
+            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ "1000" ])];
         }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -74,7 +74,7 @@ class IndexesSpec extends ObjectBehavior
         $entity->get('type')->willReturn('activity');
         $entity->get('entity_guid')->willReturn(null);
         $entity->get('custom_data')->willReturn(null);
-        $entity->get('thumbs:up:user_guids')->willReturn([ 50 ]);
+        $entity->get('thumbs:up:user_guids')->willReturn([ "50" ]);
 
         $user->get('guid')->willReturn(1000);
         
@@ -84,7 +84,7 @@ class IndexesSpec extends ObjectBehavior
 
         $this->cql->request(Argument::that(function (Custom $prepared) {
             $query = $prepared->build();
-            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ 50, 1000 ])];
+            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ "50", "1000" ])];
         }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -120,7 +120,7 @@ class IndexesSpec extends ObjectBehavior
 
         $this->cql->request(Argument::that(function (Custom $prepared) {
             $query = $prepared->build();
-            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ 1000 ])];
+            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ "1000" ])];
         }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -156,7 +156,7 @@ class IndexesSpec extends ObjectBehavior
 
         $this->cql->request(Argument::that(function (Custom $prepared) {
             $query = $prepared->build();
-            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ 1000 ])];
+            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ "1000" ])];
         }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -218,9 +218,9 @@ class IndexesSpec extends ObjectBehavior
         $entity->get('type')->willReturn('activity');
         $entity->get('entity_guid')->willReturn(null);
         $entity->get('custom_data')->willReturn(null);
-        $entity->get('thumbs:up:user_guids')->willReturn([ 999, 1000 ]);
+        $entity->get('thumbs:up:user_guids')->willReturn([ "999", 1000 ]);
 
-        $user->get('guid')->willReturn(1000);
+        $user->get('guid')->willReturn("1000");
         
         $vote->getEntity()->willReturn($entity);
         $vote->getDirection()->willReturn('up');
@@ -228,7 +228,7 @@ class IndexesSpec extends ObjectBehavior
 
         $this->cql->request(Argument::that(function (Custom $prepared) {
             $query = $prepared->build();
-            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ 999 ])];
+            return $query['values'] == ['5000', 'thumbs:up:user_guids', json_encode([ "999" ])];
         }))
             ->shouldBeCalled()
             ->willReturn(true);

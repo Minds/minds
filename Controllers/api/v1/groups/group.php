@@ -53,7 +53,7 @@ class group implements Interfaces\Api
                 }, ARRAY_FILTER_USE_KEY);
             }
 
-            if ($group->isOwner($user)) {
+            if ($group->isOwner($user) || $group->isModerator($user) ) {
                 /** @var Core\Groups\Feeds $feeds */
                 $feeds = Core\Di\Di::_()->get('Groups\Feeds');
                 $count = (int) $feeds->setGroup($group)->count();

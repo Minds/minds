@@ -6,6 +6,7 @@
 namespace Minds\Core\Votes;
 
 use Minds\Entities\Factory;
+use Minds\Entities\User;
 
 class Vote
 {
@@ -15,8 +16,9 @@ class Vote
 
     /**
      * Sets the entity of the vote
-     * @param Entity $entity
+     * @param mixed $entity
      * @return $this
+     * @throws \Exception
      */
     public function setEntity($entity)
     {
@@ -31,7 +33,7 @@ class Vote
 
     /**
      * Returns the entity of the vote
-     * @return Entity
+     * @return mixed
      */
     public function getEntity()
     {
@@ -42,6 +44,7 @@ class Vote
      * Set the actor of the vote
      * @param User $actor
      * @return $this
+     * @throws \Exception
      */
     public function setActor($actor)
     {
@@ -67,6 +70,7 @@ class Vote
      * Sets the direction of the vote
      * @param string $direction
      * @return $this
+     * @throws \Exception
      */
     public function setDirection($direction)
     {

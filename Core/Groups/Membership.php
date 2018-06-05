@@ -91,6 +91,49 @@ class Membership
     }
 
     /**
+     * Fetch the group owners
+     * @param  array $opts
+     * @return array
+     */
+    public function getOwners(array $opts = [])
+    {
+        $opts = array_merge([
+            'limit' => 12,
+            'offset' => '',
+            'hydrate' => true
+        ], $opts);
+
+        $this->relDB->setGuid($this->group->getGuid());
+
+        $guids = $this->relDB->get('group:owner', [
+            'limit' => $opts['limit'],
+            'offset' => $opts['offset'],
+            'inverse' => true
+        ]);
+
+        // we add the original owner of the group
+        if ($this->group->owner_guid) {
+            $guids[] = $this->group->owner_guid;
+        }
+
+        if ($opts['offset']) {
+            array_shift($guids);
+        }
+
+        if (!$guids) {
+            return [];
+        }
+
+        if (!$opts['hydrate']) {
+            return $guids;
+        }
+
+        $users = Core\Entities::get([ 'guids' => $guids ]);
+
+        return $users;
+    }
+
+    /**
      * Count the group members
      * @return int
      */
