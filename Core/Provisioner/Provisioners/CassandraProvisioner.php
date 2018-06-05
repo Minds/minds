@@ -166,6 +166,42 @@ class CassandraProvisioner implements ProvisionerInterface
                     'compaction = {\'class\': \'org.apache.cassandra.db.compaction.LeveledCompactionStrategy\'}'
                 ]
             ],
+            'blockchain_transactions' => [
+                'schema' => [
+                    'user_guid' => 'varint',
+                    'timestamp' => 'timestamp',
+                    'wallet_address' => 'text',
+                    'tx' => 'text',
+                    'ammount' => 'varint',
+                    'completed' => 'boolean',
+                    'failed' => 'boolean',
+                    'contract' => 'text',
+                    'data' => 'text',
+                ],
+                'primaryKeys' => [
+                    'user_guid',
+                    'timestamp',
+                    'wallet_address',
+                    'tx'
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (timestamp DESC, wallet_address ASC, tx ASC)',
+                    'bloom_filter_fp_chance = 0.01',
+                    'caching = {\'keys\': \'ALL\', \'rows_per_partition\': \'NONE\'}',
+                    'comment = \'\'',
+                    'compaction = {\'class\': \'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy\', \'max_threshold\': \'32\', \'min_threshold\': \'4\'}',
+                    'compression = {\'chunk_length_in_kb\': \'64\', \'class\': \'org.apache.cassandra.io.compress.LZ4Compressor\'}',
+                    'crc_check_chance = 1.0',
+                    'dclocal_read_repair_chance = 0.1',
+                    'default_time_to_live = 0',
+                    'gc_grace_seconds = 864000',
+                    'max_index_interval = 2048',
+                    'memtable_flush_period_in_ms = 0',
+                    'min_index_interval = 128',
+                    'read_repair_chance = 0.0',
+                    'speculative_retry = \'99PERCENTILE\'',
+                ]
+            ],
             'withdrawals' => [
                 'schema' => [
                     'user_guid' => 'varint',
@@ -393,6 +429,48 @@ class CassandraProvisioner implements ProvisionerInterface
                 ],
                 'attributes' => [
                     'CLUSTERING ORDER BY (plan ASC, entity_guid ASC, status ASC)'
+                ]
+            ],
+            'blockchain_transactions_by_address' => [
+                'from' => 'blockchain_transactions',
+                'select' => [
+                    'wallet_address',
+                    'user_guid',
+                    'timestamp',
+                    'tx',
+                    'amount',
+                    'completed',
+                    'failed',
+                    'data',
+                ],
+                'conditions' => [
+                    'user_guid IS NOT NULL',
+                    'wallet_address IS NOT NULL',
+                    'timestamp IS NOT NULL',
+                    'tx IS NOT NULL'
+                ],
+                'primaryKeys' => [
+                    'wallet_address',
+                    'user_guid',
+                    'timestamp',
+                    'tx',
+                ],
+                'attributes' => [
+                    'CLUSTERING ORDER BY (user_guid DESC, timestamp DESC, tx ASC)',
+                    'bloom_filter_fp_chance = 0.01',
+                    'caching = {\'keys\': \'ALL\', \'rows_per_partition\': \'NONE\'}',
+                    'comment = \'\'',
+                    'compaction = {\'class\': \'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy\', \'max_threshold\': \'32\', \'min_threshold\': \'4\'}',
+                    'compression = {\'chunk_length_in_kb\': \'64\', \'class\': \'org.apache.cassandra.io.compress.LZ4Compressor\'}',
+                    'crc_check_chance = 1.0',
+                    'dclocal_read_repair_chance = 0.1',
+                    'default_time_to_live = 0',
+                    'gc_grace_seconds = 864000',
+                    'max_index_interval = 2048',
+                    'memtable_flush_period_in_ms = 0',
+                    'min_index_interval = 128',
+                    'read_repair_chance = 0.0',
+                    'speculative_retry = \'99PERCENTILE\'',
                 ]
             ],
             'reports_by_owner' => [

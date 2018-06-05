@@ -54,7 +54,8 @@ class TransactionsSpec extends ObjectBehavior
                 && $transaction->getWalletAddress() == 'offchain'
                 && $transaction->getAmount() == 5
                 && $transaction->getContract() == 'offchain:spec'
-                && $transaction->isCompleted() == true;
+                && $transaction->isCompleted() == true
+                && $transaction->isFailed() == false;
             }))
             ->shouldBeCalled()
             ->willReturn(true);

@@ -121,6 +121,7 @@ class Manager
             $logs = $receipt['logs'];
         } else {
             $logs = [[ 'topics' => [ 'blockchain:fail' ] ]];
+            $transaction->setFailed(true);
         }
 
         foreach ($logs as $log) {
