@@ -41,7 +41,7 @@ class comments implements Interfaces\Api
             'descending' => true,
         ]);
 
-        if (!isset($_GET['reversed']) || !$_GET['reversed'] || $_GET['reversed'] === 'false') {
+        if (!isset($_GET['reversed']) || $_GET['reversed'] || $_GET['reversed'] === 'false') {
             // Reversed order output
             $comments = $comments->reverse();
         }
