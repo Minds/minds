@@ -51,6 +51,21 @@ class EmailRewards
                 echo "Validator failed"; exit;
             }
             break;
+          case "when":
+            $topic = $_GET['topic'];
+            if ($topic != 'wire_received') {
+                return;
+            }
+            $validator = $_GET['validator'];
+            $key = 'june-18';
+            if ($validator == sha1($campaign . $key . $user->guid . Config::_()->get('emails_secret'))) {
+                $tokens = (10 ** 18) / 2;
+                $wire = true;
+                $campaign = $validator; //hack
+            } else {
+                return;
+            }
+            break;
           case "global":
               $topic = $_GET['topic'];
               if ($topic != 'exclusive_promotions') {
@@ -84,8 +99,15 @@ class EmailRewards
                 ->setTimestamp(time())
                 ->setTx('oc:' . Guid::build())
                 ->setAmount($tokens)
-                ->setContract('offchain:email')
-                ->setCompleted(true);
+                ->setContract('offchain:wire')
+                ->setCompleted(true)
+                ->setData([
+                    'amount' => (string) $tokens,
+                    'sender_guid' => "730071191229833224",
+                    'receiver_guid' => (string) $user->guid,
+                    'entity_guid' => (string) $user->guid,
+                    'promotion' => true,
+                ]);
             Di::_()->get('Blockchain\Transactions\Repository')->add($transaction);
         }
         $cacher->set("rewarded:email:$campaign:$user_guid", true, strtotime('tomorrow', time()) - time());

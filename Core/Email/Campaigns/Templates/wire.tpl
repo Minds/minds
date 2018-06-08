@@ -5,7 +5,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <a href="https://www.minds.com/wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']; ?>&validator=<?= $vars['validator'] ?>">
+        <a href="https://www.minds.com/wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']; ?>&topic=<?= $vars['topic']?>&validator=<?= $vars['validator'] ?>&key=<?= $vars['key']; ?>">
             <img src="https://s3.amazonaws.com/mindsfs/emails/sept-5/Wire.png" width="550px">
         </a>
       </td>
@@ -20,7 +20,7 @@
     </tr>
     <tr>
       <td height="50px" style="text-align:center;">
-        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wallet/tokens/transactions/<?php echo $vars['contract'] ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>"
+        <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wallet/tokens/transactions/<?php echo $vars['contract'] ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic']?>&validator=<?= $vars['validator'] ?>&key=<?= $vars['key']; ?>"
           style="padding:16px 32px; background-color:#4caf50; color:#ffffff !important; text-decoration:none; font-weight:bold; border-radius:3px;">
           See who wired you!
         </a>
@@ -39,7 +39,7 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-        <p> <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&validator=<?= $vars['validator'] ?>">Wire</a> is the peer-to-peer payment and crowdfunding system on Minds. Minds tokens are accepted through Wire. It makes it easier than ever to support other channels or earn rewards for sharing great content.</p>
+        <p> <a href="<?php echo Minds\Core\Config::_()->site_url; ?>wire?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic']?>&validator=<?= $vars['validator'] ?>&key=<?= $vars['key']; ?>">Wire</a> is the peer-to-peer payment and crowdfunding system on Minds. Minds tokens are accepted through Wire. It makes it easier than ever to support other channels or earn rewards for sharing great content.</p>
       </td>
     </tr>
     <tr>
