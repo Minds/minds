@@ -57,21 +57,39 @@ class Manager
 
     public function getPublicSettings()
     {
-        $blockchainConfig = $this->config->get('blockchain');
-
-        if (!$blockchainConfig) {
-            return [];
-        }
+        $blockchainConfig = $this->config->get('blockchain') ?: [];
 
         return array_merge([
+            'network_address' => $blockchainConfig['network_address'],
+            'client_network' => $blockchainConfig['client_network'],
+            'wallet_address' => $blockchainConfig['wallet_address'],
+            'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
+            'token_distribution_event_address' => $blockchainConfig['token_distribution_event_address'],
+            'default_gas_price' => $blockchainConfig['default_gas_price'],
+            'overrides' => $this->getOverrides(),
+        ], $this->contracts);
+    }
+
+    public function getOverrides()
+    {
+        $baseConfig = $this->config->get('blockchain') ?: [];
+        $overrides = $this->config->get('blockchain_override') ?: [];
+        $result = [];
+
+        foreach ($overrides as $key => $override) {
+            $blockchainConfig = array_merge($baseConfig, $override);
+
+            $result[$key] = [
                 'network_address' => $blockchainConfig['network_address'],
                 'client_network' => $blockchainConfig['client_network'],
                 'wallet_address' => $blockchainConfig['wallet_address'],
                 'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
                 'token_distribution_event_address' => $blockchainConfig['token_distribution_event_address'],
                 'default_gas_price' => $blockchainConfig['default_gas_price'],
-            ], $this->contracts
-        );
+            ];
+        }
+
+        return $result;
     }
 
     public function getRate()

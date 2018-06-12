@@ -258,6 +258,12 @@ $CONFIG->set('blockchain', [
     'max_pledge_amount' => 1800, // 1800 ETH
 ]);
 
+$CONFIG->set('blockchain_override', [
+    'pledge' => [
+        // ...
+    ],
+]);
+
 $CONFIG->set('plus', [
     'tokens' => [
         'month' => 5,

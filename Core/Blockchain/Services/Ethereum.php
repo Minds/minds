@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Blockchain\Services;
 
+use Minds\Core\Blockchain\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\JsonRpc;
 use Minds\Core\Util\BigNumber;
@@ -15,6 +16,7 @@ use MW3;
 
 class Ethereum
 {
+    /** @var Config */
     protected $config;
 
     /** @var JsonRpc\Client $jsonRpc */
@@ -37,18 +39,22 @@ class Ethereum
      */
     public function __construct($config = null, $jsonRpc = null, $sign = null, $sha3 = null)
     {
-        $this->config = $config ?: Di::_()->get('Config');
+        $this->config = $config ?: new Config();
         $this->jsonRpc = $jsonRpc ?: Di::_()->get('Http\JsonRpc');
 
-        $blockchainConfig = $this->config->get('blockchain');
-
-        //if (!$blockchainConfig || !isset($blockchainConfig['rpc_endpoints'])) {
-        //    throw new \Exception('No RPC endpoints set');
-        //}
-
-        $this->endpoints = $blockchainConfig['rpc_endpoints'];
         $this->sign = $sign ?: new MW3\Sign;
         $this->sha3 = $sha3 ?: new MW3\Sha3;
+    }
+
+    /**
+     * Sets the config key to be used
+     * @param $configKey
+     * @return $this
+     */
+    public function useConfig($configKey)
+    {
+        $this->config->setKey($configKey);
+        return $this;
     }
 
     /**
@@ -64,7 +70,7 @@ class Ethereum
             'method' => $method,
             'params' => $params
         ]);
-error_log(print_r($params, true));
+
         if (!$response) {
             throw new \Exception('Server did not respond');
         }
@@ -150,16 +156,19 @@ error_log(print_r($params, true));
      * Sends a raw transaction
      * @param string $privateKey
      * @param array $transaction
+     * @return mixed
      * @throws \Exception
      */
     public function sendRawTransaction($privateKey, array $transaction)
     {
+        $config = $this->config->get();
+
         if (!isset($transaction['from']) || !isset($transaction['gasLimit'])) {
             throw new \Exception('Transaction must have `from` and `gasLimit`');
         }
 
         if (!isset($transaction['gasPrice'])) {
-            $transaction['gasPrice'] = BigNumber::_(($this->config->get('blockchain')['server_gas_price'] ?: 1) * 1000000000)->toHex(true);
+            $transaction['gasPrice'] = BigNumber::_(($config['server_gas_price'] ?: 1) * 1000000000)->toHex(true);
         }
 
         if (!isset($transaction['nonce'])) {
@@ -182,10 +191,12 @@ error_log(print_r($params, true));
      */
     protected function getBestEndpoint()
     {
-        if (!$this->endpoints) {
+        $config = $this->config->get();
+
+        if (!$config['rpc_endpoints']) {
             throw new \Exception('No RPC endpoints available');
         }
 
-        return $this->endpoints[0];
+        return $config['rpc_endpoints'][0];
     }
 }

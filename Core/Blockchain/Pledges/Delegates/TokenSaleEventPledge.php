@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Blockchain\Pledges\Delegates;
 
+use Minds\Core\Blockchain\Config;
 use Minds\Core\Blockchain\Pledges\Pledge;
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Di\Di;
@@ -20,11 +21,12 @@ class TokenSaleEventPledge
 
     /**
      * Whitelist constructor.
+     * @param null $config
      * @param null $ethereumClient
      */
     public function __construct($config = null, $ethereumClient = null)
     {
-        $this->config = $config ?: Di::_()->get('Config');
+        $this->config = $config ?: new Config();
         $this->ethereumClient = $ethereumClient ?: Di::_()->get('Blockchain\Services\Ethereum');
     }
 
@@ -35,9 +37,14 @@ class TokenSaleEventPledge
      */
     public function add(Pledge $pledge)
     {
-        $txHash = $this->ethereumClient->sendRawTransaction($this->config->get('blockchain')['wallet_pkey'], [
-            'from' => $this->config->get('blockchain')['wallet_address'],
-            'to' => $this->config->get('blockchain')['token_distribution_event_address'],
+        $this->ethereumClient->useConfig('pledge');
+        $this->config->setKey('pledge');
+
+        $config = $this->config->get();
+
+        $txHash = $this->ethereumClient->sendRawTransaction($config['wallet_pkey'], [
+            'from' => $config['wallet_address'],
+            'to' => $config['token_distribution_event_address'],
             'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => $this->ethereumClient->encodeContractMethod('pledge(address,uint256)', [
                 $pledge->getWalletAddress(),
