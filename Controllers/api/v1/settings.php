@@ -75,7 +75,7 @@ class settings implements Interfaces\Api
         }
 
         if (isset($_POST['name']) && $_POST['name']) {
-            $user->name = $_POST['name'];
+            $user->name = trim($_POST['name']);
         }
 
         if (isset($_POST['email']) && $_POST['email']) {
