@@ -13,6 +13,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Notification\PostSubscriptions\Manager;
+use Minds\Core\Security\ACL\Block;
 
 class ThreadNotifications
 {
@@ -25,15 +26,19 @@ class ThreadNotifications
     /** @var Dispatcher */
     private $eventsDispatcher;
 
+    /** @var Block */
+    private $block;
+
     /**
      * ThreadNotifications constructor.
      * @param null $indexes
      */
-    public function __construct($postSubscriptionsManager = null, $entitiesBuilder = null, $eventsDispatcher = null)
+    public function __construct($postSubscriptionsManager = null, $entitiesBuilder = null, $eventsDispatcher = null, $block = null)
     {
         $this->postSubscriptionsManager = $postSubscriptionsManager ?: new Manager();
         $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
         $this->eventsDispatcher = $eventsDispatcher ?: Di::_()->get('EventsDispatcher');
+        $this->block = $block ?: Di::_()->get('Security\ACL\Block');
     }
 
     /**
@@ -64,6 +69,10 @@ class ThreadNotifications
                 return $userGuid != $comment->getOwnerGuid();
             }, false)
             ->toArray();
+
+        // filter out users blocked by the comment creator
+        $blocked = $this->block->isBlocked($subscribers, $comment->getOwnerGuid());
+        $subscribers = array_diff($subscribers, $blocked);
 
         if (!$subscribers) {
             return;
