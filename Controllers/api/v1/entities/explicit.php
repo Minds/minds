@@ -9,8 +9,10 @@ namespace Minds\Controllers\api\v1\entities;
 
 use Minds\Api\Factory;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Entities\Actions\Save;
 use Minds\Entities;
 use Minds\Interfaces;
+use Minds\Helpers;
 
 class explicit implements Interfaces\Api
 {
@@ -38,7 +40,7 @@ class explicit implements Interfaces\Api
         if ($entity->type === 'user') {
             $entity->setMatureChannel(true);
         } else {
-            if (method_exists($entity, 'setMature')) {
+            if (Helpers\MagicAttributes::setterExists($entity, 'setMature')) {
                 $entity->setMature($value);
             } elseif (method_exists($entity, 'setFlag')) {
                 $entity->setFlag('mature', $value);
@@ -75,8 +77,13 @@ class explicit implements Interfaces\Api
         Dispatcher::trigger('search:index', 'all', [
             'entity' => $entity
         ]);
-        
-        $response = [ 'done' => (bool) $entity->save() ];
+
+
+        $save = new Save();
+        $saved = $save->setEntity($entity)
+            ->save();
+
+        $response = [ 'done' => (bool) $saved ];
 
         return Factory::response($response);
     }

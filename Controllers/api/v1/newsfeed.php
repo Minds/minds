@@ -312,8 +312,9 @@ class newsfeed implements Interfaces\Api
                         switch ($embeded->subtype) {
                             case 'blog':
                                 if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                                    $activity->setTitle($embeded->title)
-                                        ->setBlurb(strip_tags($embeded->description))
+                                    /** @var Core\Blogs\Blog $embeded */
+                                    $activity->setTitle($embeded->getTitle())
+                                        ->setBlurb(strip_tags($embeded->getBody()))
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setFromEntity($embeded)

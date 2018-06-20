@@ -6,6 +6,7 @@ use Minds\Core;
 use Minds\Core\Data;
 use Minds\Entities\Boost\BoostEntityInterface;
 use Minds\Entities\Boost\Network;
+use Minds\Helpers\MagicAttributes;
 use Minds\Interfaces\BoostReviewInterface;
 use MongoDB\BSON;
 
@@ -174,7 +175,7 @@ class Review implements BoostReviewInterface
         $dirty = false;
 
         // Main boost rejection reason flag
-        if (method_exists($entity, 'setBoostRejectionReason')) {
+        if (MagicAttributes::setterExists($entity, 'setBoostRejectionReason')) {
             $entity->setBoostRejectionReason($reason);
             $dirty = true;
         } elseif (property_exists($entity, 'boost_rejection_reason')) {

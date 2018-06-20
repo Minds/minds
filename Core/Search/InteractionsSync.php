@@ -38,7 +38,11 @@ class InteractionsSync
                 break;
         }
 
-        $entity->interactions = $interactions;
+        if (Helpers\MagicAttributes::setterExists($entity, 'setInteractions')) {
+            $entity->setInteractions($interactions);
+        } else {
+            $entity->interactions = $interactions;
+        }
 
         $this->indexer->index($entity);
     }

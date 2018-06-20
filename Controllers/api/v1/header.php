@@ -9,6 +9,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Api\Factory;
+use Minds\Core;
 use Minds\Interfaces;
 
 class header implements Interfaces\Api, Interfaces\ApiIgnorePam
@@ -21,11 +22,12 @@ class header implements Interfaces\Api, Interfaces\ApiIgnorePam
      */
     public function get($pages)
     {
-        $blog = new \Minds\Entities\Blog($pages[0]);
-        $header = new \ElggFile();
-        $header->owner_guid = $blog->owner_guid;
-        $header->setFilename("blog/{$blog->guid}.jpg");
-        $header->open('read');
+        $manager = new Core\Blogs\Manager();
+        $headerManager = new Core\Blogs\Header();
+
+        $blog = $manager->get($pages[0]);
+        $header = $headerManager->read($blog);
+
         header('Content-Type: image/jpeg');
         header('Expires: ' . date('r', time() + 864000));
         header("Pragma: public");
@@ -33,8 +35,8 @@ class header implements Interfaces\Api, Interfaces\ApiIgnorePam
 
         try {
             echo $header->read();
-        } catch (\Exception $e) {
-        }
+        } catch (\Exception $e) { }
+
         exit;
     }
 

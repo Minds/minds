@@ -24,6 +24,11 @@ class Defaults
         //Channel object reserializer
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
+
+            if ($params['entity'] instanceof Core\Blogs\Blog) {
+                return;
+            }
+
             $export = $event->response() ?: [];
             if ($params['entity']->fullExport && $params['entity']->ownerObj && is_array($params['entity']->ownerObj)) {
                 $export['ownerObj'] = Entities\Factory::build($params['entity']->ownerObj)->export();
@@ -36,6 +41,11 @@ class Defaults
         //Comments count export extender
         Dispatcher::register('export:extender', 'all', function ($event) {
             $params = $event->getParameters();
+
+            if ($params['entity'] instanceof Core\Blogs\Blog) {
+                return;
+            }
+
             $export = $event->response() ?: [];
 
             if ($params['entity']->type != 'activity' && $params['entity']->type != 'group') {

@@ -36,6 +36,7 @@ class ActivityMappingSpec extends ObjectBehavior
         $activity->get('description')->willReturn('PHPSpec Description');
         $activity->get('paywall')->willReturn(false);
 
+        $activity->isPayWall()->willReturn(false);
         $activity->getMature()->willReturn(false);
 
         $this
