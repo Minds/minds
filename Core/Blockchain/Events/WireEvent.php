@@ -59,7 +59,7 @@ class WireEvent implements BlockchainEventInterface
         $token = MindsToken::at(Di::_()->get('Config')->get('blockchain')['token_address']);
 
         $tx = $log['transactionHash'];
-        list($sender, $receiver, $amount) = Util::parseData($log['data']);
+        list($sender, $receiver, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::ADDRESS, Util::NUMBER]);
         $amount = (string) BigNumber::fromHex($amount);
 
         $data = $transaction->getData();

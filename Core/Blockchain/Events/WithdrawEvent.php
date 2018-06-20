@@ -57,7 +57,7 @@ class WithdrawEvent implements BlockchainEventInterface
     public function onRequest($log, $transaction)
     {
         $tx = $log['transactionHash'];
-        list($address, $user_guid, $gas, $amount) = Util::parseData($log['data']);
+        list($address, $user_guid, $gas, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::NUMBER, Util::NUMBER, Util::NUMBER]);
         $user_guid = BigNumber::fromHex($user_guid)->toInt();
         $gas = (string) BigNumber::fromHex($gas);
         $amount = (string) BigNumber::fromHex($amount);
