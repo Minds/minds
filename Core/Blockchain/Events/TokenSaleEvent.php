@@ -43,7 +43,7 @@ class TokenSaleEvent implements BlockchainEventInterface
 
     protected function tokenPurchase($log)
     {
-        list($purchaser, $beneficiary, $value, $amount) = Util::parseData($log['data']);
+        list($purchaser, $beneficiary, $value, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::ADDRESS, Util::NUMBER, Util::NUMBER]);
         $value = (string) BigNumber::fromHex($value);
         $amount = (string) BigNumber::fromHex($amount);
 

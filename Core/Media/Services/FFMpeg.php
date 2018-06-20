@@ -82,7 +82,7 @@ class FFMpeg implements ServiceInterface
     {
         try {
             if (is_string($file)) {
-                
+
                 $result =  $this->s3->putObject([
                   'ACL' => 'public-read',
                   'Bucket' => 'cinemr',
@@ -142,10 +142,18 @@ class FFMpeg implements ServiceInterface
 
         $video = $this->ffmpeg->open($sourcePath);
 
+        $videostream = $this->ffprobe
+            ->streams($sourcePath)
+            ->videos()
+            ->first();
+
+        // get video metadata
+        $tags = $videostream->get('tags');
+
         try {
             $thumbnailsDir = $sourcePath . '-thumbnails';
             @mkdir($thumbnailsDir, 0600, true);
-            
+
             //create thumbnails
             $length = round((int) $this->ffprobe->format($sourcePath)->get('duration'));
             $secs = [ 0, 1, round($length/2), $length -1, $length ];
@@ -175,6 +183,13 @@ class FFMpeg implements ServiceInterface
                 'height' => '480',
                 'formats' => [ 'mp4', 'webm' ],
             ], $opts);
+
+            // fix rotated axis
+            if(in_array(@$tags['rotate'], [270,90])) {
+                $width = $opts['width'];
+                $opts['width'] = $opts['height'];
+                $opts['height'] = $width;
+            }
 
             $video->filters()
                 ->resize(new \FFMpeg\Coordinate\Dimension($opts['width'], $opts['height']),

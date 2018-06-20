@@ -53,7 +53,9 @@ class Push implements Interfaces\NotificationExtensionInterface
             $entity_guid = $entity->guid;
         }
 
-        if (isset($entity->parent_guid)) {
+        if ($entity->type === 'comment') {
+            $parent_guid = $entity->getEntityGuid();
+        } elseif (isset($entity->parent_guid)) {
             $parent_guid = $entity->parent_guid;
         }
 

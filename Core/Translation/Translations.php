@@ -9,6 +9,7 @@ namespace Minds\Core\Translation;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Core\Translation\Storage;
+use Minds\Helpers\MagicAttributes;
 
 class Translations
 {
@@ -40,7 +41,7 @@ class Translations
         $entity = null; // Lazily-loaded if needed
         $translation = [];
 
-        foreach ([ 'message', 'title', 'blurb', 'description' ] as $field) {
+        foreach ([ 'message', 'body', 'title', 'blurb', 'description' ] as $field) {
             $stored = $storage->get($guid, $field, $target);
 
             if ($stored !== false) {
@@ -61,22 +62,30 @@ class Translations
             }
 
             $content = '';
-
+            
             switch ($field) {
                 case 'message':
                     if (method_exists($entity, 'getMessage')) {
                         $content = $entity->getMessage();
                     } elseif (property_exists($entity, 'message') || isset($entity->message)) {
                         $content = $entity->message;
-                    }
+                    } 
                     break;
 
+                case 'body':
+                    if (MagicAttributes::getterExists($entity, 'getBody')) {
+                        $content = $entity->getBody();
+                    } elseif (property_exists($entity, 'body') || isset($entity->body)) {
+                        $content = $entity->body;
+                    } 
+                    break;
+                
                 case 'description':
                     if (method_exists($entity, 'getDescription')) {
                         $content = $entity->getDescription();
                     } elseif (property_exists($entity, 'description') || isset($entity->description)) {
                         $content = $entity->description;
-                    }
+                    } 
                     break;
 
                 case 'title':
@@ -98,7 +107,7 @@ class Translations
             if (strlen($content) > static::MAX_CONTENT_LENGTH) {
                 $content = substr($content, 0, static::MAX_CONTENT_LENGTH);
             }
-
+            
             $translation[$field] = $this->translateText($content, $target);
 
             if ($translation[$field]) {

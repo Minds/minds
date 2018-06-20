@@ -268,7 +268,14 @@ class comments implements Interfaces\Api
         $manager = new Core\Comments\Manager();
 
         $comment = $manager->getByLuid($pages[0]);
+
         if ($comment && $comment->canEdit()) {
+            $manager->delete($comment);
+            return Factory::response([]);
+        }
+        //check if owner of activity trying to remove
+        $entity = new \Minds\Entities\Entity($comment->getEntityGuid());
+        if ($entity->owner_guid === Core\Session::getLoggedInUserGuid()) {
             $manager->delete($comment);
         }
 

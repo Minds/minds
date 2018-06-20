@@ -56,7 +56,7 @@ class Block
      * Check if a user is blocked
      * @param mixed (Entities\User | array[Entities\User]) $user - check if this user is blocked
      * @param mixed (Entities\User | string) - from this user
-     * @return boolean
+     * @return array|boolean array of blocked users | true if single user passed is blocked
      */
     public function isBlocked($users, $from = null)
     {
@@ -103,7 +103,7 @@ class Block
             $list[] = $item['column1'];
         }
 
-        if (is_array($users) ){
+        if (is_array($users)) {
             return $list;
         }
 

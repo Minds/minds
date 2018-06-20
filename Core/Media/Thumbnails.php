@@ -49,7 +49,7 @@ class Thumbnails
                         $entity->batch_guid = $this->container_guid;
                     }
 
-                    $thumbnail->setFilename("/image/$entity->batch_guid/$entity->guid/$size.jpg");
+                    $thumbnail->setFilename("image/$entity->batch_guid/$entity->guid/$size.jpg");
                 } elseif ($entity->gif) {
                     $thumbnail->setFilename(str_replace('xlarge.jpg', 'master.jpg', $entity->filename));
                 }

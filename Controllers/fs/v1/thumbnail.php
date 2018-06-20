@@ -17,13 +17,23 @@ class thumbnail extends Core\page implements Interfaces\page
             exit;
         }
 
+        /** @var Core\Media\Thumbnails $mediaThumbnails */
+        $mediaThumbnails = Di::_()->get('Media\Thumbnails');
+
         Core\Security\ACL::$ignore = true;
         $size = isset($pages[1]) ? $pages[1] : null;
-        $thumbnail = Di::_()->get('Media\Thumbnails')->get($pages[0], $size);
+        $thumbnail = $mediaThumbnails->get($pages[0], $size);
 
         if ($thumbnail instanceof \ElggFile) {
             $thumbnail->open('read');
             $contents = $thumbnail->read();
+
+            if (!$contents && $size) {
+                // Size might not exist
+                $thumbnail = $mediaThumbnails->get($pages[0], null);
+                $thumbnail->open('read');
+                $contents = $thumbnail->read();
+            }
 
             header('Content-type: image/jpeg');
             header('Expires: ' . date('r', strtotime('today + 6 months')), true);

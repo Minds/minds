@@ -126,6 +126,7 @@ class ElggObject extends ElggEntity {
 			'featured_id',
 			'ownerObj',
 			'category',
+			'comments:count',
             'thumbs:up:count',
             'thumbs:up:user_guids',
             'thumbs:down:count',
