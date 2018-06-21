@@ -151,7 +151,7 @@ class newsfeed implements Interfaces\Api
             array_shift($activity);
         }
 
-        $loadPrevious = (string)current($activity)->guid;
+        $loadPrevious = $activity ? (string) current($activity)->guid : '';
 
         //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
