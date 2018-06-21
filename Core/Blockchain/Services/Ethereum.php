@@ -64,7 +64,7 @@ class Ethereum
             'method' => $method,
             'params' => $params
         ]);
-error_log(print_r($params, true));
+
         if (!$response) {
             throw new \Exception('Server did not respond');
         }
