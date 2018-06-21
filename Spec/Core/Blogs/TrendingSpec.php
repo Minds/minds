@@ -39,7 +39,8 @@ class TrendingSpec extends ObjectBehavior
         ])
             ->shouldBeCalled()
             ->willReturn([
-                'guids' => [ 5000, 5001 ]
+                'guids' => [ 5000, 5001 ],
+                'token' => 'oggabooga',
             ]);
 
         $this->repository->getList([
