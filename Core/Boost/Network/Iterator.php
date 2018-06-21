@@ -319,6 +319,9 @@ class Iterator implements \Iterator
 
     public function valid()
     {
+        if (!$this->list) {
+            return false;
+        }
         return key($this->list) !== null;
     }
 
