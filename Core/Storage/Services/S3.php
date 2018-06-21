@@ -79,10 +79,10 @@ class S3 implements ServiceInterface
         ]);
 
         //also write to disk until full migration
-        $disk = new Disk();
+        /*$disk = new Disk();
         $disk->open($this->filepath, 'write');
         $disk->write($data);
-        $disk->close();
+        $disk->close();*/
 
         return true;
     }
