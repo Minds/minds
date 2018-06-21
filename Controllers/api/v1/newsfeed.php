@@ -225,13 +225,15 @@ class newsfeed implements Interfaces\Api
             if ($pinned_guids) {
                 $response['pinned'] = [];
                 $entities = Core\Entities::get(['guids' => $pinned_guids]);
-                foreach ($entities as $entity) {
-                    $exported = $entity->export();
-                    $exported['pinned'] = true;
-                    $response['pinned'][] = $exported;
 
+                if ($entities) {
+                    foreach ($entities as $entity) {
+                        $exported = $entity->export();
+                        $exported['pinned'] = true;
+                        $response['pinned'][] = $exported;
+                    }
                 }
-//                $response['pinned'] = Factory::Exportable();
+                
             }
 
             $response['activity'] = factory::exportable($activity, ['boosted', 'boosted_guid'], true);
