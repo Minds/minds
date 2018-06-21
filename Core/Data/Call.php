@@ -269,9 +269,9 @@ class Call
      */
     public function countRow($key)
     {
-        if (!$this->cf) {
-            return 0;
-        }
+        //if (!$this->cf) {
+        //    return 0;
+        //}
         //return 10; //quick hack until wil figue this out!
         if (!$key) {
             return 0;
