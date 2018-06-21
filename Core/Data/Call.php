@@ -46,9 +46,9 @@ class Call
         $this->cf_name = $cf;
         $this->client = $cql ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
 
-        if ($this->keyspace != 'phpspec') {
+        /*if ($this->keyspace != 'phpspec') {
             $this->ini();
-        }
+        }*/
     }
 
     private function ini()
