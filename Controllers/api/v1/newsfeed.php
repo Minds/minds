@@ -147,7 +147,7 @@ class newsfeed implements Interfaces\Api
             'limit' => get_input('limit', 5),
             'offset' => get_input('offset', '')
         ), $options));
-        if (get_input('offset') && !get_input('prepend')) { // don't shift if we're prepending to newsfeed
+        if (get_input('offset') && !get_input('prepend') && $activity) { // don't shift if we're prepending to newsfeed
             array_shift($activity);
         }
 
