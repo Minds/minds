@@ -62,7 +62,7 @@ class rewards implements Interfaces\Api
         // Sums
         /** @var Sums $sums */
         $sums = Core\Di\Di::_()->get('Wire\Sums');
-        $sums->setFrom((new \DateTime('midnight'))->modify("-30 days"))
+        $sums->setFrom((new \DateTime('midnight'))->modify("-30 days")->getTimestamp())
             ->setReceiver($user)
             ->setSender(Core\Session::getLoggedInUser());
 
