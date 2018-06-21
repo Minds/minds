@@ -50,8 +50,10 @@ class Trending
             return new Response();
         }
 
-        return $this->repository->getList([
+        $blogs = $this->repository->getList([
             'guids' => $result['guids'],
         ]);
+        $blogs->setPagingToken(base64_encode($result['token']));
+        return $blogs;
     }
 }
