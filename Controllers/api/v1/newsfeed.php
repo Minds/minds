@@ -155,17 +155,10 @@ class newsfeed implements Interfaces\Api
 
         //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
-        //$disabledBoost = true;
-
-        if (get_input('platform') == 'ios') {
-            $disabledBoost = true;
-        }
-
-        if ($pages[0] == 'network' && !get_input('prepend') && !$disabledBoost && get_input('offset')) { // No boosts when prepending
+        if ($this->shouldPrependBoosts($pages)) {
             try {
-                //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
-                $limit = 2;
+                $limit = isset($_GET['access_token']) && $_GET['offset'] ? 2 : 1;
+                //$limit = 2;
                 $cacher = Core\Data\cache\factory::build('apcu');
                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');    
 
@@ -776,5 +769,41 @@ class newsfeed implements Interfaces\Api
         }
 
         return Factory::response(array('status' => 'error', 'message' => 'could not delete'));
+    }
+
+    /**
+     * To show boosts or not
+     * @param array $pages
+     * @return bool
+     */
+    protected function shouldPrependBoosts($pages = [])
+    {
+        //Plus Users -> NO
+        $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
+        if ($disabledBoost) {
+            return false;
+        }
+
+        //Prepending posts -> NO
+        if (isset($_GET['prepend'])) {
+            return false;
+        }
+
+        //Not a network feed -> NO
+        if ($pages[0] != 'network') {
+            return false;
+        }
+
+        //Offset - YES
+        if (isset($_GET['offset']) && $_GET['offset']) {
+            return true;
+        }
+
+        //Mobile - YES
+        if (isset($_GET['access_token'])) {
+            return true;
+        }
+
+        return false;
     }
 }
