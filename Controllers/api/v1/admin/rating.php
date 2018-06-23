@@ -13,7 +13,7 @@ use Minds\Core;
 use Minds\Core\Queue;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Interfaces;
-
+use Minds\Core\Entities\Actions\Save;
 
 class rating implements Interfaces\Api
 {
@@ -47,7 +47,10 @@ class rating implements Interfaces\Api
         }
 
         $entity->setRating($rating);
-        $entity->save();
+        
+        $save = new Save();
+        $save->setEntity($entity)
+            ->save();
 
         Queue\Client::Build()->setQueue("Trending")
             ->send(['a']);
