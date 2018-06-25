@@ -100,11 +100,23 @@ class Entity
         }
 
         if (isset($data['thumbs:up:user_guids'])) {
-            $blog->setVotesUp(json_decode($data['thumbs:up:user_guids'] ?: '[]'));
+            $user_guids = $data['thumbs:up:user_guids'] ?: [];
+
+            if (is_string($user_guids)) {
+                $user_guids = json_decode($user_guids, true);
+            }
+
+            $blog->setVotesUp($user_guids);
         }
 
         if (isset($data['thumbs:down:user_guids'])) {
-            $blog->setVotesDown(json_decode($data['thumbs:down:user_guids'] ?: '[]'));
+            $user_guids = $data['thumbs:down:user_guids'] ?: [];
+
+            if (is_string($user_guids)) {
+                $user_guids = json_decode($user_guids, true);
+            }
+
+            $blog->setVotesDown($user_guids);
         }
 
         $blog->markAllAsPristine();
