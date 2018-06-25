@@ -24,3 +24,4 @@ Desktop.ini
 node_modules
 # don't ignore travis config
 !/.travis.yml
+coverage
