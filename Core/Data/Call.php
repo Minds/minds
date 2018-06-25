@@ -337,7 +337,7 @@ class Call
      * @param bool $verify - return a count of true or false? (disable if doing batches as this can slow down)
      * @return mixed
      */
-    public function removeAttributes($key, array $attributes = array(), $verify= false)
+    public function removeAttributes($key, array $attributes = array(), $verify = false)
     {
         self::$deletes++;
         if (!$this->cf) {
@@ -350,10 +350,9 @@ class Call
 
         $requests = [];
         $statement = "DELETE FROM $this->cf_name WHERE key=? and column1 = ?";
-        $values = [ (string) $key ];
 
         foreach ($attributes as $column1) {
-            $values[] = (string) $column1;
+            $values = [(string) $key, (string) $column1];
             $requests[] = [
                 'string' => $statement,
                 'values' => $values,
