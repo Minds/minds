@@ -12,6 +12,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Util\BigNumber;
+use Minds\Entities\User;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Core\Rewards\Withdraw;
@@ -28,6 +29,25 @@ class transactions implements Interfaces\Api
     public function get($pages)
     {
         $cacher = Di::_()->get('Cache');
+        $user = Session::getLoggedInUser();
+
+        if (isset($_GET['remote']) && $_GET['remote']) {
+            if (!Session::isAdmin()) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Insufficient permissions'
+                ]);
+            }
+
+            $user = new User(strtolower($_GET['remote']));
+
+            if (!$user || !$user->guid) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'User not found'
+                ]);
+            }
+        }
 
         $from = isset($_GET['from']) ? $_GET['from'] : strtotime('midnight -7 days') * 1000;
         $to = isset($_GET['to']) ? $_GET['to'] : time() * 1000;
@@ -46,7 +66,7 @@ class transactions implements Interfaces\Api
                         'gte' => $from,
                         'lte' => $to,
                     ],
-                    'user_guid' => Session::getLoggedInUser()->guid,
+                    'user_guid' => $user->guid,
                     'offset' => $offset,
                 ];
 
@@ -62,7 +82,7 @@ class transactions implements Interfaces\Api
                 $result = $repo->getList($opts);
 
                 $response = [
-                    'addresses' => $addresses,
+                    // 'addresses' => $addresses,
                     'contract' => $contract,
                     'transactions' => Factory::exportable($result['transactions']),
                     'load-next' => base64_encode($result['token'])
@@ -71,7 +91,7 @@ class transactions implements Interfaces\Api
             case "withdrawals":
                 $repo = Di::_()->get('Rewards\Withdraw\Repository');
                 $result = $repo->getList([
-                    'user_guid' => Session::getLoggedInUser()->guid,
+                    'user_guid' => $user->guid,
                     'from' => $from,
                     'to' => $to,
                     'offset' => $offset

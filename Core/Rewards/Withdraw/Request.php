@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core\Rewards\Withdraw;
 
+use Minds\Entities\User;
 use Minds\Traits\MagicAttributes;
 
 class Request
@@ -45,6 +46,7 @@ class Request
             'timestamp' => $this->timestamp,
             'amount' => $this->amount,
             'user_guid' => $this->user_guid,
+            'tx' => $this->tx,
             'completed' => $this->completed
         ];
     }
