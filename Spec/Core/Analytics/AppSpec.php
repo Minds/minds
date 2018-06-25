@@ -23,8 +23,10 @@ class AppSpec extends ObjectBehavior
         $this->shouldThrow('\Exception')->during('setMetric', array('foobar'));
     }
 
-    public function it_should_set_a_metric_key()
+    public function it_should_set_a_metric_key(AnalyticsMetric $metric)
     {
+        $metric->setKey(Argument::any())->willReturn();
+        $this->setMetric($metric);
         $this->setKey("mykey");
     }
 
@@ -47,5 +49,14 @@ class AppSpec extends ObjectBehavior
 
         $this->setMetric($metric);
         $this->increment()->shouldReturn(true);
+    }
+
+    public function it_should_get_the_total(AnalyticsMetric $metric)
+    {
+        $metric->setKey(Argument::any())->willReturn();
+        $metric->total()->willReturn(10);
+
+        $this->setMetric($metric);
+        $this->total()->shouldReturn(10);
     }
 }

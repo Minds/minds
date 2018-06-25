@@ -27,6 +27,11 @@ class EventsIterator implements \Iterator
 
     private $valid = true;
 
+
+    private $elastic;
+    private $index;
+    private $position;
+
     public function __construct($elastic = null, $index = null)
     {
         $this->elastic = $elastic ?: Di::_()->get('Database\ElasticSearch');
@@ -99,7 +104,6 @@ class EventsIterator implements \Iterator
 
         $result = $this->elastic->request($prepared);
 
-        $return = [];
         if ($this->terms) {
             foreach ($this->terms as $term) {
                 foreach ($result['aggregations'][$term]['buckets'] as $item) {

@@ -14,16 +14,20 @@ use Minds\Interfaces\AnalyticsMetric;
  */
 class Active implements AnalyticsMetric
 {
+    /** @var Core\Data\Call */
     private $db;
     /** @var Core\Data\ElasticSearch\Client */
     private $client;
+    private $cacher;
+
     private $namespace = "analytics:";
     private $key;
 
-    public function __construct($db = null, $client = null)
+    public function __construct($db = null, $client = null, $cacher = null)
     {
         $this->db = $db ?: new Core\Data\Call('entities_by_time');
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
+        $this->cacher = Core\Data\cache\factory::build('apcu');
 
         if (Core\Session::getLoggedinUser()) {
             $this->key = Core\Session::getLoggedinUser()->guid;
@@ -54,12 +58,11 @@ class Active implements AnalyticsMetric
      */
     public function increment()
     {
-        $cacher = Core\Data\cache\factory::build('apcu');
-        if ($cacher->get("{$this->namespace}active:$p:$ts:$this->key") == true) {
+        if ($this->cacher->get("{$this->namespace}active:$p:$ts:$this->key") == true) {
             return;
         }
         $this->db->insert("{$this->namespace}active:$p:$ts", array($this->key => time()));
-        $cacher->set("{$this->namespace}active:$p:$ts:$this->key", time());
+        $this->cacher->set("{$this->namespace}active:$p:$ts:$this->key", time());
     }
 
     /**

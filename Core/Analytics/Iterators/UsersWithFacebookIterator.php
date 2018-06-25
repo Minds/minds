@@ -4,9 +4,7 @@
 namespace Minds\Core\Analytics\Iterators;
 
 use Minds\Core;
-use Minds\Core\Entities;
 use Minds\Core\Data;
-use Minds\Core\Analytics\Timestamps;
 use Minds\Core\Data\Cassandra;
 
 /**
@@ -21,12 +19,18 @@ class UsersWithFacebookIterator  implements \Iterator
     private $offset = "";
     private $data = [];
     private $valid = true;
+
     /** @var Cassandra\Client $db */
     protected $db;
+    /** @var Core\EntitiesBuilder */
+    protected $entitiesBuilder;
+
     protected $position;
-    public function __construct($db = null)
+
+    public function __construct($db = null, $entitiesBuilder = null)
     {
         $this->db = $db ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
+        $this->entitiesBuilder = $entitiesBuilder ?: Core\Di\Di::_()->get('EntitiesBuilder');
         $this->position = 0;
     }
     /**
@@ -46,7 +50,6 @@ class UsersWithFacebookIterator  implements \Iterator
 
     /**
      * Fetch all the users who signup through facebook
-     * @return array
      */
     protected function getUsers()
     {
@@ -67,7 +70,7 @@ class UsersWithFacebookIterator  implements \Iterator
             $guids[] = $row['key'];
         }
         $this->valid = true;
-        $users = Entities::get(['guids' => $guids ]);
+        $users = $this->entitiesBuilder->get(['guids' => $guids ]);
         $this->data = array_merge($this->data, $users);
 
         if ($rows->isLastPage()) {

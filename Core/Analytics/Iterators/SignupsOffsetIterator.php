@@ -1,10 +1,10 @@
 <?php
+
 namespace Minds\Core\Analytics\Iterators;
 
 use Minds\Core;
-use Minds\Core\Entities;
-use Minds\Core\Data;
 use Minds\Core\Analytics\Timestamps;
+use Minds\Core\Data;
 
 /**
  * Iterator that loops through all signups after a set period
@@ -14,19 +14,24 @@ class SignupsOffsetIterator implements \Iterator
     private $cursor = -1;
     private $period = 0;
 
-    private $item;
-
     private $limit = 400;
     private $token = "";
     private $offset = "";
-    private $rows;
     private $data = [];
 
     private $valid = true;
 
-    public function __construct($db = null)
+    /** @var Data\Cassandra\Client */
+    private $db;
+    /** @var Core\EntitiesBuilder */
+    private $entitiesBuilder;
+
+    private $position;
+
+    public function __construct($db = null, $entitiesBuilder = null)
     {
         $this->db = $db ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
+        $this->entitiesBuilder = $entitiesBuilder ?: Core\Di\Di::_()->get('EntitiesBuilder');
         $this->position = 0;
     }
 
@@ -45,7 +50,6 @@ class SignupsOffsetIterator implements \Iterator
         $this->offset = $offset;
         $this->getUsers();
     }
-    
 
     /**
      * Fetch all the users who signed up in a certain period
@@ -53,12 +57,12 @@ class SignupsOffsetIterator implements \Iterator
      */
     protected function getUsers()
     {
-        $timestamps = array_reverse(Timestamps::span($this->period+1, 'day'));
+        $timestamps = array_reverse(Timestamps::span($this->period + 1, 'day'));
 
         $prepared = new Data\Cassandra\Prepared\Custom;
-            $prepared->query("SELECT * from entities_by_time where key='user' and column1>?", [
-                (string) $this->offset
-            ]);
+        $prepared->query("SELECT * from entities_by_time where key='user' and column1>?", [
+            (string) $this->offset
+        ]);
         $prepared->setOpts([
             'page_size' => $this->limit,
             'paging_state_token' => $this->token
@@ -66,8 +70,8 @@ class SignupsOffsetIterator implements \Iterator
 
         $rows = $this->db->request($prepared);
         if (!$rows) {
-           $this->valid = false;
-           return;
+            $this->valid = false;
+            return;
         }
 
         $this->token = $rows->pagingStateToken();
@@ -78,7 +82,7 @@ class SignupsOffsetIterator implements \Iterator
         }
 
         $this->valid = true;
-        $users = Entities::get(['guids' => $guids]);
+        $users = $this->entitiesBuilder->get(['guids' => $guids]);
 
         $pushed = 0;
         foreach ($users as $user) {
@@ -88,10 +92,10 @@ class SignupsOffsetIterator implements \Iterator
             }
         }
 
-        if ($rows->isLastPage()) { 
+        if ($rows->isLastPage()) {
             $this->valid = false;
             return;
-        } 
+        }
 
         if (!$pushed) {
             error_log("no users past period " . date('d-m-Y', end($users)->time_created));

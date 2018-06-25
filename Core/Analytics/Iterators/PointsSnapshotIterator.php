@@ -14,19 +14,26 @@ class PointsSnapshotIterator implements \Iterator
     private $cursor = -1;
     private $period = 0;
 
-    private $item;
 
     private $limit = 400;
     private $token = "";
     private $offset = "";
-    private $rows;
     private $data = [];
 
     private $valid = true;
 
-    public function __construct($db = null)
+    /** @var Data\Cassandra\Client */
+    private $db;
+
+    /** @var Core\EntitiesBuilder */
+    private $entities;
+
+    private $position;
+
+    public function __construct($db = null, $entities = null)
     {
         $this->db = $db ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
+        $this->entities = $entities ?: Core\Di\Di::_()->get('EntitiesBuilder');
         $this->position = 0;
     }
 
@@ -54,7 +61,6 @@ class PointsSnapshotIterator implements \Iterator
     protected function getUsers()
     {
         $timestamps = array_reverse(Timestamps::span($this->period+1, 'day'));
-
         $prepared = new Data\Cassandra\Prepared\Custom;
         $prepared->query("SELECT * from entities_by_time where key='points:snapshot' and column1>?", [
             (string) $this->offset
@@ -78,7 +84,7 @@ class PointsSnapshotIterator implements \Iterator
         }
 
         $this->valid = true;
-        $users = Entities::get(['guids' => array_keys($guids) ]);
+        $users = $this->entities->get(['guids' => array_keys($guids) ]);
         
         $pushed = 0;
         foreach ($users as $user) {
