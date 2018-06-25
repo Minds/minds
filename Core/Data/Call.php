@@ -340,9 +340,6 @@ class Call
     public function removeAttributes($key, array $attributes = array(), $verify = false)
     {
         self::$deletes++;
-        if (!$this->cf) {
-            return false;
-        }
 
         if (empty($attributes)) {
             return false; // don't allow as this will delete the row!
