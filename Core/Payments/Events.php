@@ -6,6 +6,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Events\Event;
 use Minds\Core\Payments;
 use Minds\Core\Session;
 use Minds\Entities\User;
@@ -67,19 +68,18 @@ class Events
 
         });
 
-        Dispatcher::register('export:extender', 'blog', function($event) {
+        Dispatcher::register('export:extender', 'blog', function(Event $event) {
             $params = $event->getParameters();
+            /** @var Core\Blogs\Blog $blog */
             $blog = $params['entity'];
-            if($blog->subtype != 'blog'){
-                return;
-            }
             $export = $event->response() ?: [];
             $currentUser = Session::getLoggedInUserGuid();
 
             $dirty = false;
 
             if ($blog->isPaywall() && $blog->owner_guid != $currentUser) {
-                $export['description'] = null;
+                $export['description'] = '';
+                $export['body'] = '';
                 $dirty = true;
             }
 
@@ -90,7 +90,6 @@ class Events
             if (!$currentUser) {
                 return;
             }
-
         });
 
         Dispatcher::register('acl:read', 'object', function($event) {

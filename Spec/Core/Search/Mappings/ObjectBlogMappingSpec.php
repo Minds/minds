@@ -2,7 +2,7 @@
 
 namespace Spec\Minds\Core\Search\Mappings;
 
-use Minds\Entities\Blog;
+use Minds\Core\Blogs\Blog;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -19,24 +19,20 @@ class ObjectBlogMappingSpec extends ObjectBehavior
     {
         $now = time();
 
-        $blog->get('interactions')->willReturn(42);
-        $blog->get('guid')->willReturn(5000);
-        $blog->get('type')->willReturn('object');
-        $blog->get('subtype')->willReturn('blog');
-        $blog->get('time_created')->willReturn($now);
-        $blog->get('access_id')->willReturn(2);
-        $blog->get('owner_guid')->willReturn(1000);
-        $blog->get('container_guid')->willReturn(1000);
-        $blog->get('mature')->willReturn(false);
-        $blog->get('message')->willReturn('PHPSpec Message #test #hashtag');
-        $blog->get('name')->willReturn('PHPSpec Name');
-        $blog->get('title')->willReturn('PHPSpec Title');
-        $blog->get('blurb')->willReturn('PHPSpec Blurb');
-        $blog->get('description')->willReturn('PHPSpec Description');
-        $blog->get('paywall')->willReturn(false);
-        $blog->get('license')->willReturn('cc-test-lic');
-
-        $blog->getMature()->willReturn(false);
+        $blog->getInteractions()->willReturn(42);
+        $blog->getGuid()->willReturn(5000);
+        $blog->getType()->willReturn('object');
+        $blog->getSubtype()->willReturn('blog');
+        $blog->getTimeCreated()->willReturn($now);
+        $blog->getAccessId()->willReturn(2);
+        $blog->getOwnerGuid()->willReturn(1000);
+        $blog->getContainerGuid()->willReturn(1000);
+        $blog->isMature()->willReturn(false);
+        $blog->getTitle()->willReturn('PHPSpec Title #test #hashtag');
+        $blog->getBody()->willReturn('PHPSpec Description');
+        $blog->isPaywall()->willReturn(false);
+        $blog->getLicense()->willReturn('cc-test-lic');
+        $blog->isMature()->willReturn(false);
 
         $this
             ->setEntity($blog)
@@ -55,10 +51,7 @@ class ObjectBlogMappingSpec extends ObjectBehavior
                 'owner_guid' => '1000',
                 'container_guid' => '1000',
                 'mature' => false,
-                'message' => 'PHPSpec Message #test #hashtag',
-                'name' => 'PHPSpec Name',
-                'title' => 'PHPSpec Title',
-                'blurb' => 'PHPSpec Blurb',
+                'title' => 'PHPSpec Title #test #hashtag',
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
                 'license' => 'cc-test-lic',

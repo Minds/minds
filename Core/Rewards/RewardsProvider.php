@@ -26,5 +26,9 @@ class RewardsProvider extends Provider
         $this->di->bind('Rewards\ReferralValidator', function ($di) {
             return new ReferralValidator();
         }, [ 'useFactory'=> true ]);
+
+        $this->di->bind('Rewards\JoinedValidator', function ($di) {
+            return new JoinedValidator();
+        }, [ 'useFactory'=> true ]);
     }
 }

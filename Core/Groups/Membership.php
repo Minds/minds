@@ -321,7 +321,9 @@ class Membership
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
-        $this->notifications->unmute($user_guid);
+        try {
+            $this->notifications->unmute($user_guid);
+        } catch (\Exception $e) { }
 
         $done = $this->relDB->remove('member', $this->group->getGuid());
 

@@ -117,7 +117,7 @@ class Repository
 
         foreach($rows as $row) {
             $request = new Request();
-            $request->setUserGuid($row['user_guid']);
+            $request->setUserGuid((string) $row['user_guid']->value());
             $request->setTimestamp($row['timestamp']->time());
             $request->setAmount((string) BigNumber::_($row['amount']));
             $request->setTx($row['tx']);

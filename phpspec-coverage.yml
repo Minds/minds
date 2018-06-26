@@ -1,0 +1,20 @@
+suites:
+  main:
+    namespace: Minds
+    psr4_prefix: Minds
+    spec_prefix: Spec
+    src_path: engine
+    spec_path: ./
+
+bootstrap: Spec/bootstrap.php
+
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    whitelist:
+    - src
+    - Core
+    - Common
+    - Helpers
+    - Interfaces
+    blacklist:
+      vendor

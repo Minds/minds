@@ -141,8 +141,8 @@ class EntityMapping implements MappingInterface
 
         $paywall = isset($map['paywall']) && $map['paywall'];
 
-        if (method_exists($this->entity, 'getPaywall')) {
-            $paywall = !!$this->entity->getPaywall();
+        if (method_exists($this->entity, 'isPaywall')) {
+            $paywall = !!$this->entity->isPaywall();
         } elseif (method_exists($this->entity, 'getFlag')) {
             $paywall = !!$this->entity->getFlag('paywall');
         }

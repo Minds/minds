@@ -12,17 +12,25 @@ use Minds\Core\Analytics\Timestamps;
 class SignupsIterator implements \Iterator
 {
     private $cursor = -1;
-    private $item;
 
+    private $period;
     private $limit = 200;
     private $offset = "";
     private $data = [];
 
     private $valid = true;
 
-    public function __construct($db = null)
+    /** @var Data\Call */
+    private $db;
+    /** @var Core\EntitiesBuilder */
+    private $entitiesBuilder;
+
+    private $position;
+
+    public function __construct($db = null, $entitiesBuilder = null)
     {
         $this->db = $db ?: new Data\Call('entities_by_time');
+        $this->entitiesBuilder = $entitiesBuilder?: Core\Di\Di::_()->get('EntitiesBuilder');
         $this->position = 0;
     }
 
@@ -58,7 +66,7 @@ class SignupsIterator implements \Iterator
             return;
         }
         $this->valid = true;
-        $users = Entities::get(['guids' => $guids]);
+        $users = $this->entitiesBuilder->get(['guids' => $guids]);
 
         foreach ($users as $user) {
             array_push($this->data, $user);

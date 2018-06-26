@@ -271,6 +271,17 @@ class membership implements Interfaces\Api
                 $joined = $group->join($user);
             }
 
+            $event = new Core\Analytics\Metrics\Event();
+            $event->setType('action')
+                ->setProduct('platform')
+                ->setAction("join")
+                ->setEntityMembership(2)
+                ->setUserGuid((string) $user->guid)
+                ->setUserPhoneNumberHash($user->getPhoneNumberHash())
+                ->setEntityGuid((string) $group->guid)
+                ->setEntityType($group->type)
+                ->push();
+
             return Factory::response([
                 'done' => $joined
             ]);

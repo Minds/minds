@@ -20,7 +20,11 @@ class Text
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
         // transliterate
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $transliteratedText = @iconv('utf-8', 'us-ascii//TRANSLIT//IGNORE', $text);
+
+        if ($transliteratedText) {
+            $text = $transliteratedText;
+        }
 
         // remove unwanted characters
         $text = preg_replace('~[^-\w]+~', '', $text);

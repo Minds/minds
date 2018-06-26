@@ -8,6 +8,16 @@ use Minds\Helpers;
 
 class SEO
 {
+    /** @var Manager */
+    protected $manager;
+
+    public function __construct(
+        $manager = null
+    )
+    {
+        $this->manager = $manager ?: new Manager();
+    }
+
     public function setup()
     {
         Core\SEO\Manager::add('/blog/view', [$this, 'viewHandler']);
@@ -89,31 +99,18 @@ class SEO
             $guid = $slugs[0];
         }
 
-        if (strlen($guid) < 10) {
-            $guid = (new \GUID())->migrate($guid);
-        }
-
-        $blog = new Entities\Blog($guid);
-        if (!$blog->title || Helpers\Flags::shouldFail($blog) || !Core\Security\ACL::_()->read($blog)) {
+        $blog = $this->manager->get($guid);
+        if (!$blog || !$blog->getTitle() || Helpers\Flags::shouldFail($blog) || !Core\Security\ACL::_()->read($blog)) {
             header("HTTP/1.0 404 Not Found");
             return [
                 'robots' => 'noindex'
             ];
         }
 
-        /*if (!Core\Session::isLoggedIn() && !isset($_GET['lite'])) {
+        $body = strip_tags($blog->getBody());
 
-            $blog->description = (new Core\Security\XSS())->clean($blog->description);
-
-            $lite = new Lite\View();
-            $lite->setBlog($blog);
-            return die($lite->render());
-        }*/
-
-        $description = strip_tags($blog->description);
-
-        if (strlen($description) > 140) {
-            $description = substr($description, 0, 139) . '…';
+        if (strlen($body) > 140) {
+            $body = substr($body, 0, 139) . '…';
         }
 
         $url = $blog->getPermaURL();
@@ -127,32 +124,19 @@ class SEO
         $custom_meta = $blog->getCustomMeta();
 
         return $meta = array(
-            'title' => $custom_meta['title'] ?: $blog->title,
-            'description' => $custom_meta['description'] ?: $description,
-            'author' => $custom_meta['author'] ?: '@' . $blog->getOwnerEntity()->username,
-            'og:title' => $custom_meta['title'] ?: $blog->title,
-            'og:description' => $custom_meta['description'] ?: $description,
+            'title' => $custom_meta['title'] ?: $blog->getTitle(),
+            'description' => $custom_meta['description'] ?: $body,
+            'author' => $custom_meta['author'] ?: '@' . $blog->getOwnerObj()['username'],
+            'og:title' => $custom_meta['title'] ?: $blog->getTitle(),
+            'og:description' => $custom_meta['description'] ?: $body,
             'og:url' => $url,
             'og:type' => 'article',
             'og:image' => $blog->getIconUrl(800),
             'og:image:width' => 2000,
             'og:image:height' => 1000,
-            'al:ios:url' => 'minds://blog/view/' . $blog->guid,
-            'al:android:url' => 'minds://blog/view/' . $blog->guid,
+            'al:ios:url' => 'minds://blog/view/' . $blog->getGuid(),
+            'al:android:url' => 'minds://blog/view/' . $blog->getGuid(),
             'robots' => $blog->getRating() == 1 ? 'all' : 'noindex',
         );
-    }
-
-    private function getInfo($title, $description, $url) {
-        return [
-            'title' => $title,
-            'description' => $description,
-            'og:title' => $title,
-            'og:description' => $description,
-            'og:url' => $url,
-            'og:image' => Core\Di\Di::_()->get('Config')->site_url . 'assets/share/master.jpg',
-            'og:image:width' => 1024,
-            'og:image:height' => 681
-        ];
     }
 }

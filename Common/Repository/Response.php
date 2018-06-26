@@ -8,6 +8,8 @@
 
 namespace Minds\Common\Repository;
 
+use Exception;
+
 class Response implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
     /** @var array */
@@ -15,6 +17,12 @@ class Response implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 
     /** @var string */
     protected $pagingToken;
+
+    /** @var Exception */
+    protected $exception;
+
+    /** @var bool */
+    protected $lastPage = false;
 
     public function __construct(array $data = null, $pagingToken = null)
     {
@@ -45,6 +53,55 @@ class Response implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     public function getPagingToken()
     {
         return $this->pagingToken;
+    }
+
+    /**
+     * Sets the exception for a faulty result set
+     * @param Exception $exception
+     * @return Response
+     */
+    public function setException($exception)
+    {
+        $this->exception = $exception;
+        return $this;
+    }
+
+    /**
+     * Gets the exception for a faulty result set
+     * @return Exception
+     */
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    /**
+     * Sets the flag for a last page of a response
+     * @param bool $lastPage
+     * @return Response
+     */
+    public function setLastPage($lastPage)
+    {
+        $this->lastPage = $lastPage;
+        return $this;
+    }
+
+    /**
+     * Returns if it's the last page of a response
+     * @return bool
+     */
+    public function isLastPage()
+    {
+        return !!$this->lastPage;
+    }
+
+    /**
+     * Returns if the result set is fauly
+     * @return bool
+     */
+    public function hasFailed()
+    {
+        return !!$this->exception;
     }
 
     /**

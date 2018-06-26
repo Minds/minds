@@ -1,9 +1,12 @@
 <?php
+
 namespace Spec\Minds\Mocks\Cassandra;
 
-class Rows implements \IteratorAggregate, \ArrayAccess {
+class Rows implements \IteratorAggregate, \ArrayAccess
+{
     public $_items = [];
     public $_pagingStateToken = '';
+    public $_isLastPage = false;
 
     public function __construct(array $items, $pagingStateToken)
     {
@@ -14,7 +17,7 @@ class Rows implements \IteratorAggregate, \ArrayAccess {
     public function getIterator()
     {
         return call_user_func(function () {
-            while(list($key, $val) = each($this->_items)) {
+            while (list($key, $val) = each($this->_items)) {
                 yield $key => $val;
             }
         });
@@ -43,6 +46,11 @@ class Rows implements \IteratorAggregate, \ArrayAccess {
     public function offsetUnset($offset)
     {
         unset($this->_items[$offset]);
+    }
+
+    public function isLastPage()
+    {
+        return $this->_isLastPage;
     }
 
 }

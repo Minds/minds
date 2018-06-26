@@ -16,7 +16,7 @@ use Minds\Entities;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
 
-class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
+class fetch implements Interfaces\Api
 {
 
     /**
@@ -27,6 +27,13 @@ class fetch implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $response = [];
         $user = Core\Session::getLoggedinUser();
+
+        if (!$user) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must be loggedin to view boosts',
+            ]);
+        }
 
         if ($user->disabled_boost && $user->plus) {
             return Factory::response([]);

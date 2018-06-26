@@ -147,25 +147,18 @@ class newsfeed implements Interfaces\Api
             'limit' => get_input('limit', 5),
             'offset' => get_input('offset', '')
         ), $options));
-        if (get_input('offset') && !get_input('prepend')) { // don't shift if we're prepending to newsfeed
+        if (get_input('offset') && !get_input('prepend') && $activity) { // don't shift if we're prepending to newsfeed
             array_shift($activity);
         }
 
-        $loadPrevious = (string)current($activity)->guid;
+        $loadPrevious = $activity ? (string) current($activity)->guid : '';
 
         //   \Minds\Helpers\Counters::incrementBatch($activity, 'impression');
 
-        $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
-        //$disabledBoost = true;
-
-        if (get_input('platform') == 'ios') {
-            $disabledBoost = true;
-        }
-
-        if ($pages[0] == 'network' && !get_input('prepend') && !$disabledBoost && get_input('offset')) { // No boosts when prepending
+        if ($this->shouldPrependBoosts($pages)) {
             try {
-                //$limit = isset($_GET['access_token']) || $_GET['offset'] ? 2 : 1;
-                $limit = 2;
+                $limit = isset($_GET['access_token']) && $_GET['offset'] ? 2 : 1;
+                //$limit = 2;
                 $cacher = Core\Data\cache\factory::build('apcu');
                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');    
 
@@ -232,13 +225,15 @@ class newsfeed implements Interfaces\Api
             if ($pinned_guids) {
                 $response['pinned'] = [];
                 $entities = Core\Entities::get(['guids' => $pinned_guids]);
-                foreach ($entities as $entity) {
-                    $exported = $entity->export();
-                    $exported['pinned'] = true;
-                    $response['pinned'][] = $exported;
 
+                if ($entities) {
+                    foreach ($entities as $entity) {
+                        $exported = $entity->export();
+                        $exported['pinned'] = true;
+                        $response['pinned'][] = $exported;
+                    }
                 }
-//                $response['pinned'] = Factory::Exportable();
+                
             }
 
             $response['activity'] = factory::exportable($activity, ['boosted', 'boosted_guid'], true);
@@ -312,8 +307,9 @@ class newsfeed implements Interfaces\Api
                         switch ($embeded->subtype) {
                             case 'blog':
                                 if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                                    $activity->setTitle($embeded->title)
-                                        ->setBlurb(strip_tags($embeded->description))
+                                    /** @var Core\Blogs\Blog $embeded */
+                                    $activity->setTitle($embeded->getTitle())
+                                        ->setBlurb(strip_tags($embeded->getBody()))
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setFromEntity($embeded)
@@ -775,5 +771,41 @@ class newsfeed implements Interfaces\Api
         }
 
         return Factory::response(array('status' => 'error', 'message' => 'could not delete'));
+    }
+
+    /**
+     * To show boosts or not
+     * @param array $pages
+     * @return bool
+     */
+    protected function shouldPrependBoosts($pages = [])
+    {
+        //Plus Users -> NO
+        $disabledBoost = Core\Session::getLoggedinUser()->plus && Core\Session::getLoggedinUser()->disabled_boost;
+        if ($disabledBoost) {
+            return false;
+        }
+
+        //Prepending posts -> NO
+        if (isset($_GET['prepend'])) {
+            return false;
+        }
+
+        //Not a network feed -> NO
+        if ($pages[0] != 'network') {
+            return false;
+        }
+
+        //Offset - YES
+        if (isset($_GET['offset']) && $_GET['offset']) {
+            return true;
+        }
+
+        //Mobile - YES
+        if (isset($_GET['access_token'])) {
+            return true;
+        }
+
+        return false;
     }
 }

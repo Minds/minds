@@ -77,9 +77,10 @@ class remind implements Interfaces\Api
                  */
                 switch ($embedded->subtype) {
                     case 'blog':
-                        if ($embedded->owner_guid == Core\Session::getLoggedInUserGuid()) {
-                            $activity->setTitle($embedded->title)
-                                ->setBlurb(strip_tags($embedded->description))
+                        /** @var Core\Blogs\Blog $embedded */
+                        if ($embedded->getOwnerGUID() == Core\Session::getLoggedInUserGuid()) {
+                            $activity->setTitle($embedded->getTitle())
+                                ->setBlurb(strip_tags($embedded->getBody()))
                                 ->setURL($embedded->getURL())
                                 ->setThumbnail($embedded->getIconUrl())
                                 ->setFromEntity($embedded)
@@ -87,9 +88,9 @@ class remind implements Interfaces\Api
                                 ->save();
                         } else {
                             $activity->setRemind((new Activity())
-                                ->setTimeCreated($embedded->time_created)
-                                ->setTitle($embedded->title)
-                                ->setBlurb(strip_tags($embedded->description))
+                                ->setTimeCreated($embedded->getTimeCreated())
+                                ->setTitle($embedded->getTitle())
+                                ->setBlurb(strip_tags($embedded->getBody()))
                                 ->setURL($embedded->getURL())
                                 ->setThumbnail($embedded->getIconUrl())
                                 ->setFromEntity($embedded)

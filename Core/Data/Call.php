@@ -46,9 +46,9 @@ class Call
         $this->cf_name = $cf;
         $this->client = $cql ?: Core\Di\Di::_()->get('Database\Cassandra\Cql');
 
-        if ($this->keyspace != 'phpspec') {
+        /*if ($this->keyspace != 'phpspec') {
             $this->ini();
-        }
+        }*/
     }
 
     private function ini()
@@ -269,9 +269,9 @@ class Call
      */
     public function countRow($key)
     {
-        if (!$this->cf) {
-            return 0;
-        }
+        //if (!$this->cf) {
+        //    return 0;
+        //}
         //return 10; //quick hack until wil figue this out!
         if (!$key) {
             return 0;
@@ -337,12 +337,9 @@ class Call
      * @param bool $verify - return a count of true or false? (disable if doing batches as this can slow down)
      * @return mixed
      */
-    public function removeAttributes($key, array $attributes = array(), $verify= false)
+    public function removeAttributes($key, array $attributes = array(), $verify = false)
     {
         self::$deletes++;
-        if (!$this->cf) {
-            return false;
-        }
 
         if (empty($attributes)) {
             return false; // don't allow as this will delete the row!
@@ -350,10 +347,9 @@ class Call
 
         $requests = [];
         $statement = "DELETE FROM $this->cf_name WHERE key=? and column1 = ?";
-        $values = [ (string) $key ];
 
         foreach ($attributes as $column1) {
-            $values[] = (string) $column1;
+            $values = [(string) $key, (string) $column1];
             $requests[] = [
                 'string' => $statement,
                 'values' => $values,

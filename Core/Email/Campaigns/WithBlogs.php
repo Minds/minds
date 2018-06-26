@@ -3,18 +3,19 @@
 
 namespace Minds\Core\Email\Campaigns;
 
-
+use Minds\Core;
 use Minds\Core\Config;
 use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Message;
 use Minds\Core\Email\Template;
-use Minds\Entities\Blog;
+use Minds\Core\Blogs\Blog;
 
 class WithBlogs extends EmailCampaign
 {
     protected $template;
     protected $mailer;
 
+    /** @var Blog[] */
     protected $blogs;
 
     public function __construct(Template $template = null, Mailer $mailer = null)
@@ -26,7 +27,7 @@ class WithBlogs extends EmailCampaign
     }
 
     /**
-     * @param Activity[] $blogs
+     * @param Blog[] $blogs
      * @return $this
      */
     public function setBlogs($blogs)
@@ -48,9 +49,11 @@ class WithBlogs extends EmailCampaign
         $this->template->set('username', $this->user->username);
         $this->template->set('email', $this->user->getEmail());
 
-        $this->blogs = array_map(function ($blog) {
-            if (get_class($blog) !== 'Minds\Entities\Blog') {
-                return new Blog($blog->toArray());
+        $legacyEntity = new Core\Blogs\Legacy\Entity();
+
+        $this->blogs = array_map(function ($blog) use ($legacyEntity) {
+            if (get_class($blog) !== Blog::class) {
+                return $legacyEntity->build((array) $blog);
             }
             return $blog;
         }, $this->blogs);

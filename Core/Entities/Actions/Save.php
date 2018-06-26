@@ -57,7 +57,13 @@ class Save
             return $this->entity->save(...$args);
         }
 
-        return $this->eventsDispatcher->trigger('entity:save', $this->entity->type, [
+        $namespace = $this->entity->type;
+
+        if ($this->entity->subtype) {
+            $namespace .= ":{$this->entity->subtype}";
+        }
+
+        return $this->eventsDispatcher->trigger('entity:save', $namespace, [
             'entity' => $this->entity,
         ], false);
     }

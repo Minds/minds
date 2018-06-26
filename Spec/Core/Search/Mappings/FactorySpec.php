@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Search\Mappings;
 
+use Minds\Core\Blogs\Blog;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -18,15 +19,15 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_build_an_activity_mapping(Entities\Activity $activity)
     {
-        $activity->get('type')
+        $activity->getType()
             ->shouldBeCalled()
             ->willReturn('activity');
 
-        $activity->get('subtype')
+        $activity->getSubtype()
             ->shouldBeCalled()
             ->willReturn('');
 
-        $activity->get('guid')
+        $activity->getGUID()
             ->shouldBeCalled()
             ->willReturn(1000);
 
@@ -36,15 +37,15 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_build_a_generic_entity_mapping(Entities\Entity $entity)
     {
-        $entity->get('guid')
+        $entity->getGUID()
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $entity->get('type')
+        $entity->getType()
             ->shouldBeCalled()
             ->willReturn('something');
 
-        $entity->get('subtype')
+        $entity->getSubtype()
             ->shouldBeCalled()
             ->willReturn('');
 
@@ -66,17 +67,17 @@ class FactorySpec extends ObjectBehavior
             ->shouldBeAnInstanceOf(Mappings\GroupMapping::class);
     }
 
-    function it_should_build_an_object_blog_mapping(Entities\Blog $blog)
+    function it_should_build_an_object_blog_mapping(Blog $blog)
     {
-        $blog->get('guid')
+        $blog->getGuid()
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $blog->get('type')
+        $blog->getType()
             ->shouldBeCalled()
             ->willReturn('object');
 
-        $blog->get('subtype')
+        $blog->getSubtype()
             ->shouldBeCalled()
             ->willReturn('blog');
 
@@ -86,15 +87,15 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_build_an_object_image_mapping(Entities\Image $image)
     {
-        $image->get('guid')
+        $image->getGUID()
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $image->get('type')
+        $image->getType()
             ->shouldBeCalled()
             ->willReturn('object');
 
-        $image->get('subtype')
+        $image->getSubtype()
             ->shouldBeCalled()
             ->willReturn('image');
 
@@ -104,15 +105,15 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_build_an_object_video_mapping(Entities\Video $video)
     {
-        $video->get('guid')
+        $video->getGUID()
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $video->get('type')
+        $video->getType()
             ->shouldBeCalled()
             ->willReturn('object');
 
-        $video->get('subtype')
+        $video->getSubtype()
             ->shouldBeCalled()
             ->willReturn('video');
 
@@ -122,15 +123,15 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_build_an_user_mapping(Entities\User $user)
     {
-        $user->get('guid')
+        $user->getGUID()
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $user->get('type')
+        $user->getType()
             ->shouldBeCalled()
             ->willReturn('user');
 
-        $user->get('subtype')
+        $user->getSubtype()
             ->shouldBeCalled()
             ->willReturn('');
 

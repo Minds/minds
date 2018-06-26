@@ -7,6 +7,7 @@ namespace Minds\Core\Rewards;
 use Minds\Core\Di\Di;
 use Minds\Core;
 use Minds\Entities\User;
+use Minds\Core\Util\BigNumber;
 
 class Join
 {
@@ -43,7 +44,8 @@ class Join
         $sms = null,
         $libphonenumber = null,
         $config = null,
-        $validator = null
+        $validator = null,
+        $joinedValidator = null
     )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
@@ -51,6 +53,7 @@ class Join
         $this->libphonenumber = $libphonenumber ?: \libphonenumber\PhoneNumberUtil::getInstance();
         $this->config = $config ?: Di::_()->get('Config');
         $this->validator = $validator ?: Di::_()->get('Rewards\ReferralValidator');
+        $this->joinedValidator = $joinedValidator ?: Di::_()->get('Rewards\JoinedValidator');
     }
 
     public function setUser(&$user)
@@ -95,6 +98,25 @@ class Join
             $hash = hash('sha256', $this->number . $this->config->get('phone_number_hash_salt'));
             $this->user->setPhoneNumberHash($hash);
             $this->user->save();
+
+            $this->joinedValidator->setHash($hash);
+            if ($this->joinedValidator->validate()) {
+                $event = new Core\Analytics\Metrics\Event();
+                $event->setType('action')
+                    ->setProduct('platform')
+                    ->setUserGuid((string) $this->user->guid)
+                    ->setUserPhoneNumberHash($hash)
+                    ->setAction('joined')
+                    ->push();
+
+                $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
+                $transactions
+                    ->setUser($this->user)
+                    ->setType('joined')
+                    ->setAmount((string) BigNumber::toPlain(1, 18));
+
+                $transaction = $transactions->create();
+            }
 
             if ($this->user->referrer && $this->user->guid != $this->user->referrer) {
                 $this->validator->setHash($hash);
