@@ -153,9 +153,15 @@ class Events
                 $parent = Entities\Factory::build($parentGuid, [ 'cache' => false ]);
 
                 if ($parent && method_exists($parent, 'export')) {
+                    $exportedParent = $parent->export();
+
+                    if (isset($exportedParent['guid'])) {
+                        $exportedParent['guid'] = (string) $exportedParent['guid'];
+                    }
+
                     $notification->setParams(array_merge(
                         $notification->getParams() ?: [],
-                        [ 'parent' => $parent->export() ]
+                        [ 'parent' => $exportedParent ]
                     ));
                 }
             }
