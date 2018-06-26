@@ -58,6 +58,8 @@ class analytics implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function post($pages)
     {
+        Factory::isLoggedIn();
+
         $event = new Core\Analytics\Metrics\Event();
         if (!isset($_POST['type'])) {
             return Factory::response(['status' => 'error', 'message' => 'type not set']);
