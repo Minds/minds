@@ -7,7 +7,7 @@ class EmailSubscription
 {
     use MagicAttributes;
 
-    /** @var string $user_guid */
+    /** @var string $userGuid */
     protected $userGuid;
 
     /** @var string campaign */
