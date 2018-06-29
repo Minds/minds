@@ -17,6 +17,11 @@ class banners implements Interfaces\FS
     public function get($pages)
     {
         $entity = Entities\Factory::build($pages[0]);
+
+        if (!$entity) {
+            exit;
+        }
+
         $type = '';
         $filepath = "";
 

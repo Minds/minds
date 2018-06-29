@@ -39,12 +39,16 @@ class Join
     /** @var ReferralValidator */
     private $validator;
 
+    /** @var Call */
+    private $db;
+
     public function __construct(
         $twofactor = null,
         $sms = null,
         $libphonenumber = null,
         $config = null,
         $validator = null,
+        $db = null,
         $joinedValidator = null
     )
     {
@@ -53,6 +57,7 @@ class Join
         $this->libphonenumber = $libphonenumber ?: \libphonenumber\PhoneNumberUtil::getInstance();
         $this->config = $config ?: Di::_()->get('Config');
         $this->validator = $validator ?: Di::_()->get('Rewards\ReferralValidator');
+        $this->db = $db ?: new Core\Data\Call('entities_by_time');
         $this->joinedValidator = $joinedValidator ?: Di::_()->get('Rewards\JoinedValidator');
     }
 
@@ -86,9 +91,24 @@ class Join
         $secret = $this->twofactor->createSecret();
         $code = $this->twofactor->getCode($secret);
 
+        $user_guid = $this->user->guid;
+        $this->db->insert("rewards:verificationcode:$user_guid", compact('code', 'secret'));
+
         $this->sms->send($this->number, $code);
 
         return $secret;
+    }
+
+    public function resendCode() {
+
+        $user_guid = $this->user->guid;
+        $row = $this->db->getRow("rewards:verificationcode:$user_guid");
+
+        if (!empty($row)) {
+            $this->sms->send($this->number, $row['code']);
+
+            return $row['secret'];
+        }
     }
 
     public function confirm()
@@ -131,7 +151,7 @@ class Join
                         ->setEntityType('user')
                         ->setAction('referral')
                         ->push();
-                } 
+                }
             }
         } else {
             throw new \Exception('The confirmation failed');

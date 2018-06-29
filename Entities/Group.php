@@ -11,9 +11,13 @@ use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Groups\Membership;
 use Minds\Core\Groups\Invitations;
+use Minds\Traits\MagicAttributes;
 
 class Group extends NormalizedEntity
 {
+
+    use MagicAttributes;
+
     protected $type = 'group';
     protected $guid;
     protected $ownerObj;
@@ -35,6 +39,7 @@ class Group extends NormalizedEntity
     protected $boost_rejection_reason = -1;
     protected $indexes = [ 'group' ];
     protected $mature = false;
+    protected $rating = 1;
 
     protected $exportableDefaults = [
         'guid',
@@ -625,6 +630,11 @@ class Group extends NormalizedEntity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    public function getRating()
+    {
+        return $this->rating;
     }
 
     /**

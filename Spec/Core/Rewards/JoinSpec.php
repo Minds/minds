@@ -17,6 +17,7 @@ use Minds\Core\Security\TwoFactor;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumber;
 use Minds\Entities\User;
+use Minds\Core\Data\Call;
 
 class JoinSpec extends ObjectBehavior
 {
@@ -30,10 +31,14 @@ class JoinSpec extends ObjectBehavior
         TwoFactor $twofactor,
         SMSServiceInterface $sms,
         PhoneNumberUtil $libphonenumber,
-        PhoneNumber $phonenumberMock
+        PhoneNumber $phonenumberMock,
+        User $user,
+        Config $config,
+        ReferralValidator $validator,
+        Call $db
     )
     {
-        $this->beConstructedWith($twofactor, $sms, $libphonenumber);
+        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db);
 
         $libphonenumber->parse("+1 929 387 2643")
             ->shouldBeCalled()
@@ -53,7 +58,17 @@ class JoinSpec extends ObjectBehavior
         $sms->send('+19293872643', 123456)
             ->shouldBeCalled();
 
-        $this->setNumber("1 929 387 2643");
+        $user->get('guid')
+            ->shouldBeCalled()
+            ->willReturn('123');
+
+        $db->insert("rewards:verificationcode:123", ['code'=>'123456', 'secret'=>'secret'])
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $this->getWrappedObject()
+            ->setUser($user)
+            ->setNumber("1 929 387 2643");
         $this->verify()->shouldReturn('secret');
     }
 
@@ -133,14 +148,15 @@ class JoinSpec extends ObjectBehavior
         Config $config,
         ReferralValidator $validator,
         JoinedValidator $joinedValidator,
-        Client $esClient
+        Client $esClient,
+        Call $db
     )
     {
         Di::_()->bind('Database\ElasticSearch', function ($di) use ($esClient) {
             return $esClient->getWrappedObject();
         }, ['useFactory' => false]);
 
-        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $joinedValidator);
+        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db, $joinedValidator);
 
         $libphonenumber->parse("+1 929 387 2643")
             ->shouldBeCalled()
@@ -200,14 +216,15 @@ class JoinSpec extends ObjectBehavior
         Config $config,
         ReferralValidator $validator,
         JoinedValidator $joinedValidator,
-        Client $esClient
+        Client $esClient,
+        Call $db
     )
     {
         Di::_()->bind('Database\ElasticSearch', function ($di) use ($esClient) {
             return $esClient->getWrappedObject();
         }, ['useFactory' => false]);
 
-        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $joinedValidator);
+        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db, $joinedValidator);
 
         $libphonenumber->parse("+1 929 387 2643")
             ->shouldBeCalled()

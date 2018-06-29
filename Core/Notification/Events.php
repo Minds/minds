@@ -42,11 +42,23 @@ class Events
                 'cache' => true
             ]);
 
+            $entity = $params['entity'];
+            $description = isset($params['description']) ? $params['description'] : '';
+
+            if ($entity instanceof Core\Blogs\Blog) {
+                $entity = clone $entity;
+                $entity->setBody(substr($entity->getBody(), 0, 65535));
+            }
+
+            if (strlen($description) > 65535) {
+                $description = substr($description, 0, 65535);
+            }
+
             $notification = (new Entities\Notification())
-                ->setEntity($params['entity'])
+                ->setEntity($entity)
                 ->setFrom($from_user)
                 ->setNotificationView($params['notification_view'])
-                ->setDescription(isset($params['description']) ? $params['description'] : '')
+                ->setDescription($description)
                 ->setParams($params['params'])
                 ->setTimeCreated(time());
 
@@ -141,9 +153,15 @@ class Events
                 $parent = Entities\Factory::build($parentGuid, [ 'cache' => false ]);
 
                 if ($parent && method_exists($parent, 'export')) {
+                    $exportedParent = $parent->export();
+
+                    if (isset($exportedParent['guid'])) {
+                        $exportedParent['guid'] = (string) $exportedParent['guid'];
+                    }
+
                     $notification->setParams(array_merge(
                         $notification->getParams() ?: [],
-                        [ 'parent' => $parent->export() ]
+                        [ 'parent' => $exportedParent ]
                     ));
                 }
             }
