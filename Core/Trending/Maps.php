@@ -41,6 +41,13 @@ class Maps
                 Aggregates\Reminds::class
             ]
         ],
+        'groups' => [
+            'type' => 'group',
+            'subtype' => '',
+            'aggregates' => [
+                Aggregates\Joins::class,
+            ]
+        ],
         'channels' => [
             'type' => 'user',
             'subtype' => '',

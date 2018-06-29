@@ -1,74 +1,59 @@
 <?php
 /**
- * Reminds aggregates
+ * Membership aggregates
  */
 namespace Minds\Core\Trending\Aggregates;
 
 use Minds\Core\Data\ElasticSearch;
 
-class Reminds extends Aggregate
+class Joins extends Aggregate
 {
 
-    protected $multiplier = 4;
+    protected $multiplier = 1;
 
     public function get()
     {
-        $field = 'entity_guid';
-
-        $filter = [
-            'term' => ['action' => 'remind']
-        ];
-
-        $must = [
-            [
-                'range' => [
-                '@timestamp' => [
-                    'gte' => $this->from,
-                    'lte' => $this->to
-                    ]
-                ]
+        $filter = [ 
+            'term' => [
+                'action' => 'join',
+            ],
+            'term' => [
+                'entity_membership' => 2
             ]
         ];
-
-        if ($this->type) {
-            $must[]['match'] = [
-                'entity_type' => $this->type
-            ];
-        }
-
-        if ($this->subtype) {
-            $must[]['match'] = [
-                'entity_subtype' => $this->subtype
-            ];
-        }
-
-        //$must[]['match'] = [
-        //    'rating' => 1
-        //];
 
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
+            'size' => 1, //we want just the aggregates
             'body' => [
                 'query' => [
                     'bool' => [
                         'filter' => $filter,
-                        'must' => $must
+                        'must' => [
+                            'range' => [
+                                '@timestamp' => [
+                                    'gte' => $this->from,
+                                    'lte' => $this->to
+                                ]
+                            ]
+                        ]
                     ]
                 ],
                 'aggs' => [
                     'entities' => [
                         'terms' => [ 
-                            'field' => "$field.keyword",
+                            'field' => 'entity_guid.keyword',
                             'size' => $this->limit,
-                                'order' => [
-                                'uniques' => 'desc'
-                            ]
+                            'order' => [
+                                'uniques' => 'desc',
+                            ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_phone_number_hash.keyword'
+                                    'field' => 'user_guid.keyword',
+                                    'precision_threshold' => 40000,
                                 ]
                             ]
                         ]
