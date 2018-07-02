@@ -77,7 +77,10 @@ class Manager
     {
         $entity = $this->entitiesBuilder->single($comment->getEntityGuid());
 
-        if (!$this->acl->interact($entity)) {
+        if (
+            !$comment->getOwnerGuid() ||
+            !$this->acl->interact($entity, $comment->getOwnerEntity(true))
+        ) {
             throw new BlockedUserException();
         }
 

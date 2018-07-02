@@ -13,6 +13,7 @@ use Minds\Core\EntitiesBuilder;
 use Minds\Core\Luid;
 use Minds\Core\Security\ACL;
 use Minds\Entities\Entity;
+use Minds\Entities\User;
 use Minds\Exceptions\BlockedUserException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -81,9 +82,18 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_add(
         Comment $comment,
-        Entity $entity
+        Entity $entity,
+        User $owner
     )
     {
+        $comment->getOwnerEntity(true)
+            ->shouldBeCalled()
+            ->willReturn($owner);
+
+        $comment->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
         $comment->getEntityGuid()
             ->shouldBeCalled()
             ->willReturn(5000);
@@ -92,7 +102,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $this->acl->interact($entity)
+        $this->acl->interact($entity, $owner)
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -127,9 +137,18 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_throw_if_blocked_user_during_add(
         Comment $comment,
-        Entity $entity
+        Entity $entity,
+        User $owner
     )
     {
+        $comment->getOwnerEntity(true)
+            ->shouldBeCalled()
+            ->willReturn($owner);
+
+        $comment->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
         $comment->getEntityGuid()
             ->shouldBeCalled()
             ->willReturn(5000);
@@ -138,7 +157,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $this->acl->interact($entity)
+        $this->acl->interact($entity, $owner)
             ->shouldBeCalled()
             ->willReturn(false);
 
