@@ -671,7 +671,7 @@ class Group extends NormalizedEntity
         $export['briefdescription'] = $export['brief_description'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['mature'] = (bool) $this->getMature();
-        $export['rating'] = (bool) $this->getRating();
+        $export['rating'] = (int) $this->getRating();
         $userIsAdmin = Core\Session::isAdmin();
 
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());
