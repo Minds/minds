@@ -80,6 +80,7 @@ class plus implements Interfaces\Api
                   ->setPlanId('plus')
                   ->setPaymentMethod('money')
                   ->setQuantity(1)
+                  ->setCoupon('EZH8eAZy') //temporary $1 crypto onboarding
                   ->setStatus('active')
                   ->setUser(Core\Session::getLoggedInUser());
 
