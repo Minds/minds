@@ -8,9 +8,22 @@
           font-size: 18px;
           line-height: 1.5;
           color: #444 !important;
+          padding-bottom: 16px;
         }
         a {
           color: #4690df !important;
+        }
+        #body table {
+             width: 100%;
+        }
+        #actionBtn {
+          padding:16px 32px;
+          background-color:#4caf50;
+          color:#ffffff !important;
+          text-decoration:none;
+          font-weight:bold;
+          border-radius:3px;
+          text-align: center;
         }
       </style>
   </head>
@@ -48,7 +61,7 @@
             <!-- END HEADER -->
 
             <!-- START BODY -->
-            <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <table id="body" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
               <tbody>
                 <tr>
                   <td><?php echo $vars['body'] ?></td>
