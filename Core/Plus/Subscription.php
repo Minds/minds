@@ -13,9 +13,9 @@ class Subscription
     private $stripe;
     private $repo;
     protected $user;
-    /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
+    /** @var Payments\Manager $subscriptionsManager */
     protected $subscriptionsManager;
-    /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
+    /** @var Subscriptions\Repository $subscriptionsRepository */
     protected $subscriptionsRepository;
 
     public function __construct(

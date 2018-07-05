@@ -56,7 +56,8 @@ class Group extends NormalizedEntity
         'featured_id',
         'tags',
         'boost_rejection_reason',
-        'mature'
+        'mature',
+        'rating'
     ];
 
     /**
@@ -93,6 +94,7 @@ class Group extends NormalizedEntity
             'owner_guids' => $this->owner_guids,
             'moderator_guids' => $this->moderator_guids,
             'boost_rejection_reason' => $this->boost_rejection_reason,
+            'rating' => $this->rating
         ]);
 
         if (!$saved) {
@@ -632,6 +634,20 @@ class Group extends NormalizedEntity
         return (bool) $this->mature;
     }
 
+    /**
+     * Sets the rating value
+     * @param mixed $value
+     */
+    public function setRating($value)
+    {
+        $this->rating = $value;
+        return $this;
+    }
+
+    /**
+     * Gets the rating value
+     * @return boolean
+     */
     public function getRating()
     {
         return $this->rating;
@@ -655,7 +671,7 @@ class Group extends NormalizedEntity
         $export['briefdescription'] = $export['brief_description'];
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['mature'] = (bool) $this->getMature();
-
+        $export['rating'] = (int) $this->getRating();
         $userIsAdmin = Core\Session::isAdmin();
 
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());

@@ -1,10 +1,10 @@
 <?php
 
-namespace Spec\Minds\Core\Comments;
+namespace Spec\Minds\Core\Media;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Email\Mailer;
 use Minds\Core\Events\EventsDispatcher;
+use Minds\Core\Media\Events;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -13,31 +13,22 @@ class EventsSpec extends ObjectBehavior
     /** @var EventsDispatcher */
     protected $dispatcher;
 
-    /** @var Mailer */
-    protected $mailer;
-
-    function let(EventsDispatcher $dispatcher, Mailer $mailer)
+    function let(EventsDispatcher $dispatcher)
     {
         Di::_()->bind('EventsDispatcher', function ($di) use ($dispatcher) {
             return $dispatcher->getWrappedObject();
         });
-
-        Di::_()->bind('Mailer', function ($di) use ($mailer) {
-            return $mailer->getWrappedObject();
-        });
-
         $this->dispatcher = $dispatcher;
-        $this->mailer = $mailer;
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Comments\Events');
+        $this->shouldHaveType(Events::class);
     }
 
-    function it_should_register_the_ban_event()
+    function it_should_register()
     {
-        $this->dispatcher->register('ban', 'user', Argument::any())
+        $this->dispatcher->register('entities:map', 'all', Argument::any())
             ->shouldBeCalled();
 
         $this->register();

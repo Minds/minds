@@ -8,6 +8,7 @@ use Minds\Core\Security\ACL;
 use Minds\Entities\RepositoryEntity;
 use Minds\Entities\User;
 use Minds\Helpers\Flags;
+use Minds\Helpers\Unknown;
 
 /**
  * Comment Entity
@@ -270,6 +271,13 @@ class Comment extends RepositoryEntity
         // Legacy
         $output['ownerObj'] = $this->getOwnerObj();
         $output['description'] = $this->getBody();
+
+        if (!$output['ownerObj'] && !$this->getOwnerGuid()) {
+            $unknown = Unknown::user();
+
+            $output['ownerObj'] = $unknown->export();
+            $output['owner_guid'] = $unknown->guid;
+        }
 
         if ($export['attachments']) {
             foreach ($export['attachments'] as $key => $value) {

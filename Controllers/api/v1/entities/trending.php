@@ -84,7 +84,7 @@ class trending implements Interfaces\Api, Interfaces\ApiIgnorePam
                 break;
             case "group":
             case "groups":
-                $key = "group";
+                $key = "groups";
                 break;
             case "activity":
             case "activities":

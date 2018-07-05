@@ -15,7 +15,7 @@ class Events
 {
     public function register()
     {
-       Dispatcher::register('boost:completed', 'boost', function ($event) {
+        Di::_()->get('EventsDispatcher')->register('boost:completed', 'boost', function ($event) {
             $campaign = new Campaigns\WhenBoost();
             $params = $event->getParameters();
             $boost = $params['boost'];

@@ -1,30 +1,34 @@
 <?php
+
 namespace Minds\Core\Media;
 
 use Minds\Core;
-use Minds\Core\Di\Di;
 use Minds\Core\Data\Cassandra\Prepared;
-use Minds\Entities;
+use Minds\Core\Di\Di;
 
 class Recommended
 {
+    /** @var Core\Data\Cassandra\Client */
     protected $db;
+    /** @var Core\EntitiesBuilder */
+    protected $entitiesBuilder;
 
-    public function __construct($db = null)
+    public function __construct($db = null, $entitiesBuilder = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
     }
 
     public function getByOwner($limit, $user, $type)
     {
         $options = [
-            'owner_guids' => [ $user ],
+            'owner_guids' => [$user],
             'type' => 'object',
             'subtype' => $type,
             'limit' => $limit
         ];
 
-        $entities = Core\Entities::get($options);
+        $entities = $this->entitiesBuilder->get($options);
 
         return $entities;
     }
@@ -54,6 +58,6 @@ class Recommended
             return [];
         }
 
-        return Core\Entities::get([ 'guids' => $guids ]);
+        return $this->entitiesBuilder->get(['guids' => $guids]);
     }
 }
