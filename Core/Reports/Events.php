@@ -14,7 +14,7 @@ class Events
 {
     public function register()
     {
-        Dispatcher::register('ban', 'user', function ($event) {
+        Core\Di\Di::_()->get('EventsDispatcher')->register('ban', 'user', function ($event) {
             $user = $event->getParameters();
             //send ban email
             $template = new Core\Email\Template();
@@ -30,8 +30,7 @@ class Events
                 ->setMessageId(implode('-', [$user->guid, sha1($user->getEmail()), sha1('register-' . time())]))
                 ->setSubject("You are banned from Minds.")
                 ->setHtml($template);
-            $mailer = new Core\Email\Mailer();
-            $mailer->queue($message);
+            Core\Di\Di::_()->get('Mailer')->queue($message);
         });
     }
 }
