@@ -2,6 +2,8 @@
 
 namespace Minds\Core\Email;
 
+use Minds\Core\Markdown\Markdown;
+
 class Template
 {
     protected $template;
@@ -15,16 +17,16 @@ class Template
 
     protected $useMarkdown = false;
 
-    /** @var \Parsedown */
-    protected $parsedown;
+    /** @var Markdown */
+    protected $markdown;
 
     /**
      * Constructor
-     * @param \Parsedown $parsedown
+     * @param Markdown $markdown
      */
-    public function __construct($parsedown = null)
+    public function __construct($markdown = null)
     {
-        $this->parsedown = $parsedown ?: new \Parsedown();
+        $this->markdown = $markdown ?: new Markdown();
         $this->data['cdn_assets_url'] = 'https://cdn-assets.minds.com/front/dist/';
     }
 
@@ -115,7 +117,7 @@ class Template
     {
         $body = $this->loadFromFile ? $this->compile($this->body) : $this->body;
         if ($this->useMarkdown) {
-            $body = $this->parsedown->text($body);
+            $body = $this->markdown->text($body);
         }
         $template = $this->compile($this->template, ['body' => $body]);
         return $template;
