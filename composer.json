@@ -27,7 +27,8 @@
         "google/apiclient": "^2.0",
         "aws/aws-php-sns-message-validator": "^1.4",
         "giggsey/libphonenumber-for-php": "^8.8",
-        "php-ffmpeg/php-ffmpeg": "^0.11.1"
+        "php-ffmpeg/php-ffmpeg": "^0.11.1",
+        "erusev/parsedown": "^1.7"
     },
     "repositories": [
         {
