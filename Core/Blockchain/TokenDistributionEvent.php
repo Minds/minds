@@ -8,15 +8,12 @@
 
 namespace Minds\Core\Blockchain;
 
-use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 
 class TokenDistributionEvent
 {
-    /** @var Manager */
     protected $manager;
-    /** @var Ethereum */
     protected $client;
 
     protected $tokenDistributionEventAddress;

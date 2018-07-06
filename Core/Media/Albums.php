@@ -6,15 +6,11 @@ use Minds\Entities;
 
 class Albums
 {
-    /** @var Core\Data\Call */
     protected $db;
-    /** @var Core\EntitiesBuilder */
-    protected $entitiesBuilder;
 
-    public function __construct($db = null, $entitiesBuilder = null)
+    public function __construct($db = null)
     {
         $this->db = $db;
-        $this->entitiesBuilder = $entitiesBuilder ?: Core\Di\Di::_()->get('EntitiesBuilder');
     }
 
     public function getAll($ownerGuid, array $opts = [])
@@ -23,7 +19,7 @@ class Albums
             'createDefault' => false
         ], $opts);
 
-        $entities = $this->entitiesBuilder->get([
+        $entities = Core\Entities::get([
             'subtype' => 'album',
             'owner_guid' => $ownerGuid
         ]);
@@ -60,7 +56,7 @@ class Albums
             return [];
         }
 
-        $entities = $this->entitiesBuilder->get([
+        $entities = Core\Entities::get([
             'guids' => array_keys($guids)
         ]);
 
