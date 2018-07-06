@@ -109,7 +109,7 @@ class ManagerSpec extends ObjectBehavior
         $user = new User();
         $user->guid = 123;
         $offChainTransactions->setUser($user)->shouldBeCalled()->willReturn($offChainTransactions);
-        $offChainTransactions->setType('withdrawal')->shouldBeCalled()->willReturn($offChainTransactions);
+        $offChainTransactions->setType('withdraw')->shouldBeCalled()->willReturn($offChainTransactions);
         //$offChainTransactions->setTx('0xabc220393')->shouldBeCalled()->willReturn($offChainTransactions);
         $offChainTransactions->setAmount(-1000)->shouldBeCalled()->willReturn($offChainTransactions);
         $offChainTransactions->create()->shouldBeCalled();

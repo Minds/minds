@@ -8,6 +8,7 @@ use Prophecy\Argument;
 
 use Minds\Core\Rewards\Withdraw\Manager;
 use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Blockchain\Transactions\Repository;
 
 class WithdrawEventSpec extends ObjectBehavior
 {
@@ -17,9 +18,9 @@ class WithdrawEventSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Blockchain\Events\WithdrawEvent');
     }
 
-    function it_should_complete_withdrawal_on_event(Manager $manager)
+    function it_should_complete_withdrawal_on_event(Manager $manager, Repository $txRepo)
     {
-        $this->beConstructedWith($manager);
+        $this->beConstructedWith($manager, $txRepo);
 
         $manager->complete(Argument::that(function($request) {
             return $request->getTx() == '0x62a70ccf3b37b9368efa3dd4785e715139c994ba9957a125e299b14a8eccd00c'

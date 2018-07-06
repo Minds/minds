@@ -20,13 +20,16 @@ class WithdrawEvent implements BlockchainEventInterface
     /** @var array $eventsMap */
     public static $eventsMap = [
         '0x317c0f5ab60805d3e3fb6aaa61ccb77253bbb20deccbbe49c544de4baa4d7f8f' => 'onRequest',
+        'blockchain:fail' => 'withdrawFail',
     ];
 
     /** @var Manager $manager */
     private $manager;
+    protected $txRepository;
 
-    public function __construct($manager = null)
+    public function __construct($manager = null, $txRepository = null)
     {
+        $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->manager = $manager ?: Di::_()->get('Rewards\Withdraw\Manager');
     }
 
@@ -79,5 +82,16 @@ class WithdrawEvent implements BlockchainEventInterface
             error_log(print_r($e, true));
         }
 
+    }
+
+    public function withdrawFail($log, $transaction) {
+        if ($transaction->getContract() !== 'withdraw') {
+            throw new \Exception("Failed but not a withdrawal");
+            return;
+        }
+
+        $transaction->setFailed(true);
+
+        $this->txRepository->update($transaction, [ 'failed' ]);
     }
 }

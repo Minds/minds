@@ -141,7 +141,7 @@ class Manager
         try {
             $this->offChainTransactions
                 ->setUser($user)
-                ->setType('withdrawal')
+                ->setType('withdraw')
                 //->setTx($request->getTx())
                 ->setAmount((string) BigNumber::_($request->getAmount())->neg())
                 ->create();

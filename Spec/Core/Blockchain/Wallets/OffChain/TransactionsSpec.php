@@ -120,6 +120,7 @@ class TransactionsSpec extends ObjectBehavior
 
         $balance->setUser($user)->willReturn($balance);
         $balance->get()->willReturn(10);
+        //$balance->add()->lt(0)->willReturn(10);
 
         $repo->add(Argument::that(function ($transaction) use ($user) {
             return $transaction->getUserGuid() == $user->guid

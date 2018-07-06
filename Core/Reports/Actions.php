@@ -11,11 +11,25 @@ class Actions
     /** @var Core\Entities\Actions\Save */
     protected $saveAction;
 
+    /** @var Core\Reports\Repository */
+    protected $repository;
+
+    /** @var Entities\Factory */
+    protected $entitiesFactory;
+
+    /** @var Core\Events\EventsDispatcher */
+    protected $dispatcher;
+
     public function __construct(
-        $saveAction = null
-    )
-    {
+        $saveAction = null,
+        $repository = null,
+        $entitiesFactory = null,
+        $dispatcher = null
+    ) {
         $this->saveAction = $saveAction ?: new Core\Entities\Actions\Save();
+        $this->repository = $repository ?: Di::_()->get('Reports\Repository');
+        $this->entitiesFactory = $entitiesFactory ?: Di::_()->get('Entities\Factory');
+        $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     /**
@@ -28,10 +42,7 @@ class Actions
             return false;
         }
 
-        /** @var Core\Reports\Repository $repository */
-        $repository = Di::_()->get('Reports\Repository');
-
-        $done = $repository->update($guid, [
+        $done = $this->repository->update($guid, [
             'state' => 'archived'
         ]);
 
@@ -40,6 +51,7 @@ class Actions
 
     /**
      * @param string|int $guid
+     * @param string
      * @return bool
      * @throws \Exception
      */
@@ -49,10 +61,7 @@ class Actions
             return false;
         }
 
-        /** @var Core\Reports\Repository $repository */
-        $repository = Di::_()->get('Reports\Repository');
-
-        $report = $repository->getRow($guid);
+        $report = $this->repository->getRow($guid);
 
         if (!$report) {
             return false;
@@ -63,7 +72,7 @@ class Actions
         }
 
         $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
-        $entity = Entities\Factory::build($entityId); // Most updated version
+        $entity = $this->entitiesFactory->build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -83,7 +92,7 @@ class Actions
 
         foreach ($props as $prop) {
             if ($entity->{$prop}) {
-                $rel = Entities\Factory::build($entity->{$prop});
+                $rel = $this->entitiesFactory->build($entity->{$prop});
 
                 if ($rel) {
                     $dirty = $this->setMatureFlag($rel, true);
@@ -97,7 +106,7 @@ class Actions
             }
         }
 
-        Dispatcher::trigger('notification', 'all', [
+        $this->dispatcher->trigger('notification', 'all', [
             'to'=> [$entity->owner_guid],
             'from' => 100000000000000519,
             'notification_view' => 'report_actioned',
@@ -107,7 +116,7 @@ class Actions
             ]
         ]);
 
-        $success = $repository->update($guid, [
+        $success = $this->repository->update($guid, [
             'state' => 'actioned',
             'action' => 'explicit',
             'reason' => (string) $report->getReason(),
@@ -118,6 +127,7 @@ class Actions
 
     /**
      * @param string|int $guid
+     * @param string
      * @return bool
      * @throws \Exception
      */
@@ -127,10 +137,7 @@ class Actions
             return false;
         }
 
-        /** @var Core\Reports\Repository $repository */
-        $repository = Di::_()->get('Reports\Repository');
-
-        $report = $repository->getRow($guid);
+        $report = $this->repository->getRow($guid);
 
         if (!$report) {
             return false;
@@ -141,7 +148,7 @@ class Actions
         }
 
         $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
-        $entity = Entities\Factory::build($entityId); // Most updated version
+        $entity = $this->entitiesFactory->build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -161,7 +168,7 @@ class Actions
 
         foreach ($props as $prop) {
             if ($entity->{$prop}) {
-                $rel = Entities\Factory::build($entity->{$prop});
+                $rel = $this->entitiesFactory->build($entity->{$prop});
 
                 if ($rel) {
                     $dirty = $this->setSpamFlag($rel, true);
@@ -175,7 +182,7 @@ class Actions
             }
         }
 
-        Dispatcher::trigger('notification', 'all', [
+        $this->dispatcher->trigger('notification', 'all', [
             'to'=> [$entity->owner_guid],
             'from' => 100000000000000519,
             'notification_view' => 'report_actioned',
@@ -185,7 +192,7 @@ class Actions
             ]
         ]);
 
-        $success = $repository->update($guid, [
+        $success = $this->repository->update($guid, [
             'state' => 'actioned',
             'action' => 'spam',
             'reason' => (string) $report->getReason(),
@@ -196,6 +203,7 @@ class Actions
 
     /**
      * @param string|int $guid
+     * @param string
      * @return bool
      * @throws \Exception
      */
@@ -205,10 +213,7 @@ class Actions
             return false;
         }
 
-        /** @var Core\Reports\Repository $repository */
-        $repository = Di::_()->get('Reports\Repository');
-
-        $report = $repository->getRow($guid);
+        $report = $this->repository->getRow($guid);
 
         if (!$report) {
             return false;
@@ -219,7 +224,7 @@ class Actions
         }
 
         $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
-        $entity = Entities\Factory::build($entityId); // Most updated version
+        $entity = $this->entitiesFactory->build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -239,7 +244,7 @@ class Actions
 
         foreach ($props as $prop) {
             if ($entity->{$prop}) {
-                $rel = Entities\Factory::build($entity->{$prop});
+                $rel = $this->entitiesFactory->build($entity->{$prop});
 
                 if ($rel) {
                     $dirty = $this->setDeletedFlag($rel, true);
@@ -253,7 +258,7 @@ class Actions
             }
         }
 
-        Dispatcher::trigger('notification', 'all', [
+        $this->dispatcher->trigger('notification', 'all', [
             'to'=> [$entity->owner_guid],
             'from' => 100000000000000519,
             'notification_view' => 'report_actioned',
@@ -263,7 +268,7 @@ class Actions
             ]
         ]);
 
-        $success = $repository->update($guid, [
+        $success = $this->repository->update($guid, [
             'state' => 'actioned',
             'action' => 'delete',
             'reason' => (string) $report->getReason(),
@@ -284,7 +289,7 @@ class Actions
         }
 
         $entityId = $report->getEntityLuid() ?: $report->getEntityGuid();
-        $entity = Entities\Factory::build($entityId); // Most updated version
+        $entity = $this->entitiesFactory->build($entityId); // Most updated version
 
         if (!$entity) {
             throw new \Exception('Entity not found');
@@ -306,7 +311,7 @@ class Actions
 
                 foreach ($props as $prop) {
                     if ($entity->{$prop}) {
-                        $rel = Entities\Factory::build($entity->{$prop});
+                        $rel = $this->entitiesFactory->build($entity->{$prop});
 
                         if ($rel) {
                             $dirty = $this->setSpamFlag($rel, false);
@@ -336,7 +341,7 @@ class Actions
 
                 foreach ($props as $prop) {
                     if ($entity->{$prop}) {
-                        $rel = Entities\Factory::build($entity->{$prop});
+                        $rel = $this->entitiesFactory->build($entity->{$prop});
 
                         if ($rel) {
                             $dirty = $this->setSpamFlag($rel, false);
@@ -366,7 +371,7 @@ class Actions
 
                 foreach ($props as $prop) {
                     if ($entity->{$prop}) {
-                        $rel = Entities\Factory::build($entity->{$prop});
+                        $rel = $this->entitiesFactory->build($entity->{$prop});
 
                         if ($rel) {
                             $dirty = $this->setDeletedFlag($rel, false);

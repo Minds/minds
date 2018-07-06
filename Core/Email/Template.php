@@ -1,5 +1,8 @@
 <?php
+
 namespace Minds\Core\Email;
+
+use Minds\Core\Markdown\Markdown;
 
 class Template
 {
@@ -10,11 +13,20 @@ class Template
     protected $body;
     protected $partials = [];
 
+    protected $loadFromFile = true;
+
+    protected $useMarkdown = false;
+
+    /** @var Markdown */
+    protected $markdown;
+
     /**
      * Constructor
+     * @param Markdown $markdown
      */
-    public function __construct()
+    public function __construct($markdown = null)
     {
+        $this->markdown = $markdown ?: new Markdown();
         $this->data['cdn_assets_url'] = 'https://cdn-assets.minds.com/front/dist/';
     }
 
@@ -27,9 +39,20 @@ class Template
         return $this;
     }
 
-    public function setBody($template)
+    public function setBody($template, $fromFile = true)
     {
-        $this->body = $this->findTemplate($template);
+        $this->body = $fromFile ? $this->findTemplate($template) : $template;
+        $this->loadFromFile = (bool) $fromFile;
+        return $this;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function toggleMarkdown($value)
+    {
+        $this->useMarkdown = (bool) $value;
         return $this;
     }
 
@@ -37,6 +60,7 @@ class Template
      * Sets a data key to be used within templates
      * @param mixed $key
      * @param mixed $value
+     * @return $this
      */
     public function set($key, $value = null)
     {
@@ -55,7 +79,6 @@ class Template
     /**
      * Find a template from a path
      * @param  string $template
-     * @param  string $prefix
      * @return string
      */
     protected function findTemplate($template)
@@ -92,15 +115,18 @@ class Template
 
     public function render()
     {
-        $body = $this->compile($this->body);
-        $template = $this->compile($this->template, ['body'=>$body]);
+        $body = $this->loadFromFile ? $this->compile($this->body) : $this->body;
+        if ($this->useMarkdown) {
+            $body = $this->markdown->text($body);
+        }
+        $template = $this->compile($this->template, ['body' => $body]);
         return $template;
     }
 
     /**
      * Compiles a file by injecting variables and executing PHP code
      * @param  string $file
-     * @param  array  $localData
+     * @param  array $vars
      * @return string
      */
     protected function compile($file, $vars = [])
