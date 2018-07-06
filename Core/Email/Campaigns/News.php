@@ -55,7 +55,7 @@ class News extends EmailCampaign
         $this->template->setTemplate('default.tpl');
 
         $this->template->setBody("./Templates/$this->templateKey.tpl");
-    $this->template->toggleMarkdown(true);
+        $this->template->toggleMarkdown(true);
 
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
@@ -68,8 +68,6 @@ class News extends EmailCampaign
         //do not reward twice
         $validatorHash = sha1($this->campaign . $this->topic . $this->user->guid . Config::_()->get('emails_secret'));
         $this->template->set('validator', $validatorHash);
-
-        $this->user = new \Minds\Entities\User('jack');
 
         $message = new Message();
         $message->setTo($this->user)
