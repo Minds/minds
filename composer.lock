@@ -1496,22 +1496,22 @@
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.4.0",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "ae05e905dbb3ae5fac846a2906dd273d717708f2"
-            },
+	        "url": "https://github.com/mongodb/mongo-php-library.git",
+                "reference": "2f99156b29bc85582415d6a32bc31010d61a0a71"        
+	    },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/ae05e905dbb3ae5fac846a2906dd273d717708f2",
-                "reference": "ae05e905dbb3ae5fac846a2906dd273d717708f2",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/2f99156b29bc85582415d6a32bc31010d61a0a71",
+                "reference": "2f99156b29bc85582415d6a32bc31010d61a0a71",
                 "shasum": ""
             },
-            "require": {
+	    "require": {
                 "ext-hash": "*",
                 "ext-json": "*",
-                "ext-mongodb": "^1.5.0",
+                "ext-mongodb": "^1.1.0",
                 "php": ">=5.5"
             },
             "require-dev": {
