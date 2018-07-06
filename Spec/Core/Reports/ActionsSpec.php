@@ -59,7 +59,7 @@ class ActionsSpec extends ObjectBehavior
         $this->archive(5000)->shouldReturn(false);
     }
 
-    function it_should_mark_as_explicit(Report $report, Activity $activity)
+    /*function it_should_mark_as_explicit(Report $report, Activity $activity)
     {
         $this->repository->getRow('1234')
             ->shouldBeCalled()
@@ -274,5 +274,6 @@ class ActionsSpec extends ObjectBehavior
         $this->undo($report)->shouldReturn(true);
     }
     // TODO: move helper functions (flag, etc) to another mockable class
+    */
 }
 
