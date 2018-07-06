@@ -13,7 +13,7 @@ use Minds\Core\Blockchain\Events\BoostEvent;
 use Minds\Core\Blockchain\Events\TokenSaleEvent;
 use Minds\Core\Blockchain\Events\WireEvent;
 use Minds\Core\Blockchain\Events\WithdrawEvent;
-use Minds\Core\Di\Di;
+use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
 
 class Events
@@ -27,7 +27,7 @@ class Events
 
     public function register()
     {
-        Di::_()->get('EventsDispatcher')->register('blockchain:listen', 'all', function (Event $event) {
+        Dispatcher::register('blockchain:listen', 'all', function (Event $event) {
             $topicsMap = [];
 
             foreach (static::$handlers as $handlerClass) {
@@ -36,7 +36,7 @@ class Events
                 $topics = $handler->getTopics();
 
                 if (!is_array($topics)) {
-                    $topics = [$topics];
+                    $topics = [ $topics ];
                 }
 
                 foreach ($topics as $topic) {
