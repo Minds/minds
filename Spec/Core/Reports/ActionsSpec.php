@@ -4,7 +4,7 @@ namespace Spec\Minds\Core\Reports;
 
 use Minds\Core;
 use Minds\Entities\Activity;
-use Minds\Entities\Entities\Factory as EntitiesFactory;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\Report;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
