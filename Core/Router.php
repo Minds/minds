@@ -1,6 +1,7 @@
 <?php
 namespace Minds\Core;
 
+use Minds\Core\I18n\I18n;
 use Minds\Helpers;
 use Minds\Controllers;
 
@@ -35,7 +36,7 @@ class Router
      * (fallback to elgg page handler if we fail)
      * @param  string $uri
      * @param  string $method
-     * @return null
+     * @return null|mixed
      */
     public function route($uri = null, $method = null)
     {
@@ -95,8 +96,10 @@ class Router
         }
 
         if (!$this->legacyRoute($uri)) {
-            include(dirname(dirname(dirname((__FILE__)))) . '/front/dist/index.php');
+            (new I18n())->serveIndex();
         }
+
+        return null;
     }
 
     /**
