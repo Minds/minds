@@ -35,11 +35,23 @@ class EventsSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Comments\Events');
     }
 
-    /*function it_should_register_the_ban_event()
+    function it_should_register_the_ban_event()
     {
-        $this->dispatcher->register('ban', 'user', Argument::any())
+        $this->dispatcher->register('entity:resolve', 'comment', Argument::any())
+            ->shouldBeCalled();
+
+        $this->dispatcher->register('entity:save', 'comment', Argument::any())
+            ->shouldBeCalled();
+
+        $this->dispatcher->register('vote:action:has', 'comment', Argument::any())
+            ->shouldBeCalled();
+
+        $this->dispatcher->register('vote:action:cast', 'comment', Argument::any())
+            ->shouldBeCalled();
+
+        $this->dispatcher->register('vote:action:cancel', 'comment', Argument::any())
             ->shouldBeCalled();
 
         $this->register();
-    }*/
+    }
 }

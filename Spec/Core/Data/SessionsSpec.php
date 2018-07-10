@@ -8,7 +8,6 @@ use Minds\Core\Data\Sessions;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Spec\Minds\Mocks\Cassandra\Rows;
 
 class SessionsSpec extends ObjectBehavior
 {
@@ -17,14 +16,17 @@ class SessionsSpec extends ObjectBehavior
     /** @var Redis */
     protected $redis;
 
-    function let(Call $call, Redis $redis)
+    function let(Call $call, Redis $redis, User $user)
     {
         $this->beConstructedWith($call, $redis);
 
         $this->call = $call;
         $this->redis = $redis;
 
-        $_SESSION['guid'] = '123';
+        $user->get('guid')
+        ->willReturn('123');
+
+        $_SESSION['user'] = $user;
     }
 
     function it_is_initializable()
@@ -55,7 +57,7 @@ class SessionsSpec extends ObjectBehavior
         $this->read('1234')->shouldReturn('test');
     }
 
-    /*function it_should_write()
+    function it_should_write()
     {
         $this->redis->set('1234', 'test', Argument::any())
             ->shouldBeCalled()
@@ -88,7 +90,7 @@ class SessionsSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->destroy('1234');
-    }*/
+    }
 
     function it_should_destroy_all()
     {
