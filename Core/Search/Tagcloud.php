@@ -10,7 +10,7 @@ use Minds\Core\Data\Cassandra\Prepared;
 
 class Tagcloud
 {
-    const LIMIT = 10;
+    const LIMIT = 20;
     const CACHE_DURATION = 60 * 60;
 
     const CACHE_KEY = 'trending:hashtags';
