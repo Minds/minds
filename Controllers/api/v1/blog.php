@@ -128,8 +128,6 @@ class blog implements Interfaces\Api
 
                     if (
                         !$blog ||
-                        !$blog->getTitle() ||
-                        !$blog->getBody() ||
                         Helpers\Flags::shouldFail($blog) ||
                         !Core\Security\ACL::_()->read($blog)
                     ) break;
