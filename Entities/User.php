@@ -41,7 +41,7 @@ class User extends \ElggUser
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
 		$this->attributes['mature_channel'] = 0;
-		$this->attributes['p2p_media_enabled'] = false;
+		$this->attributes['p2p_media_disabled'] = 0;
 
         parent::initializeAttributes();
     }
