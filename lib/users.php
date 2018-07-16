@@ -940,21 +940,9 @@ function validate_password($password) {
 		throw new RegistrationException($msg);
 	}
 
-	//Check for a uppercase character
-	if (!preg_match('/[A-Z]/', $password)) {
-		$msg = "Passwords should have at least one uppercase character";
-		throw new RegistrationException($msg);
-	}
-
-	//Check for a numeric character
-	if (!preg_match('/\d/', $password)) {
-		$msg = "Passwords should have at least one number";
-		throw new RegistrationException($msg);
-	}
-
-	//Check for a special character
-	if (!preg_match('/[^a-zA-Z\d]/', $password)) {
-		$msg = "Passwords should have at least one special character (eg. @,&,!,=)";
+	//Check for a uppercase character, numeric character,special character 
+	if (!preg_match('/[A-Z]/', $password) || !preg_match('/\d/', $password) || !preg_match('/[^a-zA-Z\d]/', $password) || preg_match("/\\s/", $password)) {
+		$msg = "Your password must contain at least one capital letter, one special character, and one number. It must contain at least 10 characters and cannot have spaces.";
 		throw new RegistrationException($msg);
 	}
 
