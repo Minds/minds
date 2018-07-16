@@ -48,8 +48,14 @@ class awssns implements Interfaces\Api, Interfaces\ApiIgnorePam
         if ($message['Type'] === 'SubscriptionConfirmation') {
             // Dump to the error log
             error_log('[AWS-SES] Subscribed to URL: ' . $message['SubscribeURL']);
+
             // Subscribe
-            file_get_contents($message['SubscribeURL']);
+            if (stripos($message['SubscribeURL'], 'https:') === 0) {
+                /** @var Core\Http\Curl\Client $http */
+                $http = Di::_()->get('Http');
+
+                $http->get($message['SubscribeURL']);
+            }
 
             return Factory::response([ ]);
         }
