@@ -60,7 +60,8 @@ class Manager
     public function check($userGuid)
     {
 
-        if (in_array($userGuid, $this->config->get('blockchain')['withdraw_limit_exemptions'])) {
+        if (isset($this->config->get('blockchain')['withdraw_limit_exemptions']) 
+            && in_array($userGuid, $this->config->get('blockchain')['withdraw_limit_exemptions'])) {
             return true;
         }
 
