@@ -330,3 +330,11 @@ $CONFIG->set('default_email_subscriptions', [
         'value' => false
     ],
 ]);
+
+
+$CONFIG->set('i18n', [
+    'languages' => [
+        'en' => 'English',
+        'es' => 'Español',
+    ]
+]);

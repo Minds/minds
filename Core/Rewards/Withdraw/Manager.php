@@ -59,6 +59,12 @@ class Manager
      */
     public function check($userGuid)
     {
+
+        if (isset($this->config->get('blockchain')['withdraw_limit_exemptions']) 
+            && in_array($userGuid, $this->config->get('blockchain')['withdraw_limit_exemptions'])) {
+            return true;
+        }
+
         $previousRequests = $this->repo->getList([
             'user_guid' => $userGuid,
             'contract' => 'withdraw',

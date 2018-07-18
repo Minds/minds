@@ -12,15 +12,12 @@ class Review implements BoostReviewInterface
 {
     /** @var  Entities\Boost\Peer $boost */
     protected $boost;
-    /** @var Core\Boost\Repository $repository */
-    protected $repository;
     protected $mongo;
     protected $type;
 
-    public function __construct(Data\Interfaces\ClientInterface $mongo = null, Core\Boost\Repository $repository = null)
+    public function __construct(Data\Interfaces\ClientInterface $mongo = null)
     {
         $this->mongo = $mongo ?: Data\Client::build('MongoDB');
-        $this->repository = $repository ?: Core\Di\Di::_()->get('Boost\Repository');
     }
 
     /**
@@ -127,20 +124,25 @@ class Review implements BoostReviewInterface
      */
     public function getBoostEntity($guid)
     {
-        return $this->repository->getEntity('peer', $guid);
+        /** @var Core\Boost\Repository $repository */
+        $repository = Core\Di\Di::_()->get('Boost\Repository');
+        return $repository->getEntity('peer', $guid);
     }
 
     /**
      * Return all peer boosts
+     * @param string $destination_guid
      * @param  int $limit
      * @param  string $offset
+     * @param string $handler
      * @return array
      * @internal param string $peer
-     * @throws \Exception
      */
     public function getReviewQueue($limit, $offset = "")
     {
-        $boosts = $this->repository->getAll('peer', [
+        /** @var Core\Boost\Repository $repository */
+        $repository = Core\Di\Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll('peer', [
             'destination_guid' => $this->type,
             'limit' => $limit,
             'offset' => $offset,
@@ -156,11 +158,12 @@ class Review implements BoostReviewInterface
      * @param  int $limit
      * @param  string $offset
      * @return array
-     * @throws \Exception
      */
     public function getOutbox($guid, $limit, $offset = "")
     {
-        $boosts = $this->repository->getAll('peer', [
+        /** @var Core\Boost\Repository $repository */
+        $repository = Core\Di\Di::_()->get('Boost\Repository');
+        $boosts = $repository->getAll('peer', [
             'owner_guid' => $guid,
             'limit' => $limit,
             'offset' => $offset,

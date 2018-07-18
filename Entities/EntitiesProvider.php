@@ -21,7 +21,7 @@ class EntitiesProvider extends Provider
             return new EntitiesBuilder();
         }, ['useFactory' => true]);
         $this->di->bind('Entities\Factory', function ($di) {
-            return new Factory();
+            return new EntitiesFactory();
         }, ['useFactory' => true]);
     }
 }

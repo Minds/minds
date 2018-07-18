@@ -14,6 +14,7 @@ use Minds\Core\Security;
 use Minds\Entities;
 use Minds\Entities\Activity;
 use Minds\Helpers;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
 use Minds\Interfaces\Flaggable;
@@ -724,15 +725,13 @@ class newsfeed implements Interfaces\Api
     public function delete($pages)
     {
         $activity = new Activity($pages[0]);
-
         if (!$activity->guid) {
             return Factory::response(array('status' => 'error', 'message' => 'could not find activity post'));
         }
 
         if (!$activity->canEdit()) {
             return Factory::response(array('status' => 'error', 'message' => 'you don\'t have permission'));
-        }
-
+        } 
         /** @var Entities\User $owner */
         $owner = $activity->getOwnerEntity();
 

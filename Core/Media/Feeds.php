@@ -7,20 +7,15 @@ use Minds\Helpers;
 
 class Feeds
 {
-    /** @var Core\Data\Call */
     private $indexDb;
-    /** @var Core\Data\Call */
     private $entityDb;
-    /** @var Core\Events\EventsDispatcher */
-    private $dispatcher;
 
     protected $entity;
 
-    public function __construct($indexDb, $entityDb, $dispatcher = null)
+    public function __construct($indexDb, $entityDb)
     {
         $this->indexDb = $indexDb;
         $this->entityDb = $entityDb;
-        $this->dispatcher = $dispatcher ?: Core\Di\Di::_()->get('EventsDispatcher');
     }
 
     public function setEntity($entity)
@@ -73,7 +68,7 @@ class Feeds
             'twitter' => false
         ], $targets);
 
-        $this->dispatcher->trigger('social', 'dispatch', [
+        Core\Events\Dispatcher::trigger('social', 'dispatch', [
             'entity' => $this->entity,
             'services' => [
                 'facebook' => $targets['facebook'],

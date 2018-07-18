@@ -41,6 +41,7 @@ class User extends \ElggUser
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
 		$this->attributes['mature_channel'] = 0;
+		$this->attributes['p2p_media_disabled'] = 0;
 
         parent::initializeAttributes();
     }
@@ -610,6 +611,17 @@ class User extends \ElggUser
         return $this;
     }
 
+    public function isP2PMediaDisabled()
+    {
+        return (bool) $this->attributes['p2p_media_disabled'];
+    }
+
+    public function toggleP2PMediaDisabled($value)
+    {
+        $this->attributes['p2p_media_disabled'] = (bool) $value;
+        return $this;
+    }
+
     /**
      * Exports to an array
      * @return array
@@ -648,6 +660,7 @@ class User extends \ElggUser
         $export['categories'] = $this->getCategories();
         $export['pinned_posts'] = $this->getPinnedPosts();
         $export['rewards'] = (bool)$this->getPhoneNumberHash();
+        $export['p2p_media_disabled'] = $this->isP2PMediaDisabled();
 
         if (isset($export['mature'])) {
             $export['mature'] = (int) $export['mature'];

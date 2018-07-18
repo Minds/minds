@@ -101,11 +101,6 @@ class banners implements Interfaces\FS
             }
         }
 
-        if($_GET['testing']){
-            echo $f->getFilenameOnFilestore();
-            echo $content;exit;
-        }
-
         $finfo    = finfo_open(FILEINFO_MIME);
         $mimetype = finfo_buffer($finfo, $content);
         finfo_close($finfo);

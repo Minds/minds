@@ -50,7 +50,7 @@ class Events
                 return;
             }
 
-            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
+            $e->setResponse(($group->isOwner($user->guid) || $group->isModerator($user->guid)) && $group->isMember($user->guid));
         });
 
         Dispatcher::register('delete', 'activity', function ($e) {

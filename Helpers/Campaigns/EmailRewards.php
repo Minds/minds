@@ -68,12 +68,13 @@ class EmailRewards
             break;
           case "global":
               $topic = $_GET['topic'];
-              if ($topic != 'exclusive_promotions') {
+              if ($topic != 'minds_news') {
                   return;
               }
               $validator = $_GET['validator'];
               if ($validator == sha1($campaign . $topic . $user->guid . Config::_()->get('emails_secret'))) {
-                  $tokens = 10 ** 18;
+                  $tokens = (10 ** 18);
+                  $campaign = $validator; //hack
               } else {
                 return;
               }

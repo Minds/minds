@@ -27,7 +27,7 @@ class WithdrawEvent implements BlockchainEventInterface
     private $manager;
     protected $txRepository;
 
-    public function __construct($manager = null)
+    public function __construct($manager = null, $txRepository = null)
     {
         $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->manager = $manager ?: Di::_()->get('Rewards\Withdraw\Manager');
