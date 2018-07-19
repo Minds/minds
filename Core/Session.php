@@ -26,6 +26,11 @@ class Session extends base
         ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // Persistent cookies - 30 days
         ini_set('session.cookie_secure', $this->config->disable_secure_cookies ? 'off' : 'on');
         ini_set('session.cookie_httponly', 'on');
+
+        if (isset($_COOKIE['disable_cookies'])) {
+            ini_set('session.use_cookies', false);
+        }
+
         session_name('minds');
         session_start();
 
