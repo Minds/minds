@@ -53,6 +53,11 @@ class Cookie
             return false;
         }
 
+        if (isset($_COOKIE['disable_cookies']) && $this->name != 'disable_cookies') {
+            $this->expire = time() - 3600;
+            $this->value = '';
+        }
+
         setcookie($this->name, $this->value, $this->expire, $this->path, $this->domain, $this->secure, $this->httpOnly);
     }
 
