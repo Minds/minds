@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Pledge Whitelist Delegate
+ * Purchase Issue
  *
- * @author emi
+ * @author Mark
  */
 
-namespace Minds\Core\Blockchain\Pledges\Delegates;
+namespace Minds\Core\Blockchain\Purchase\Delegates;
 
 use Minds\Core\Blockchain\Config;
 use Minds\Core\Blockchain\Pledges\Pledge;
@@ -14,7 +14,7 @@ use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 
-class TokenSaleEventPledge
+class IssueTokens
 {
     /** @var Ethereum */
     protected $ethereumClient;
@@ -24,18 +24,19 @@ class TokenSaleEventPledge
      * @param null $config
      * @param null $ethereumClient
      */
-    public function __construct($config = null, $ethereumClient = null)
+    public function __construct($config = null, $ethereumClient = null, $txRepository = null)
     {
         $this->config = $config ?: new Config();
         $this->ethereumClient = $ethereumClient ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
     }
 
     /**
-     * @param Pledge $pledge
+     * @param Purchase $purchase
      * @return mixed
      * @throws \Exception
      */
-    public function add(Pledge $pledge)
+    public function issue(Pledge $purchase)
     {
         $this->ethereumClient->useConfig('pledge');
         $this->config->setKey('pledge');
@@ -46,9 +47,9 @@ class TokenSaleEventPledge
             'from' => $config['wallet_address'],
             'to' => $config['token_distribution_event_address'],
             'gasLimit' => BigNumber::_(200000)->toHex(true),
-            'data' => $this->ethereumClient->encodeContractMethod('pledge(address,uint256)', [
-                $pledge->getWalletAddress(),
-                BigNumber::_($pledge->getAmount())->toHex(true),
+            'data' => $this->ethereumClient->encodeContractMethod('issue(address,uint256)', [
+                $purchase->getWalletAddress(),
+                BigNumber::_($purchase->getAmount())->toHex(true),
             ])
         ]);
 
@@ -56,6 +57,17 @@ class TokenSaleEventPledge
             throw new \Exception('Cannot retrieve Blockchain Tx address');
         }
 
-        return $txHash;
+        $transaction = new Transaction(); 
+        $transaction
+            ->setUserGuid($purchase->getUserGuid())
+            ->setWalletAddress($purchase->getWalletAddress())
+            ->setTimestamp(time())
+            ->setTx($txHash)
+            ->setAmount($purchase->getAmount())
+            ->setContract('purchase')
+            ->setCompleted(true);
+    
+        $this->txRepository->add($transaction);
+        return $transaction;
     }
 }

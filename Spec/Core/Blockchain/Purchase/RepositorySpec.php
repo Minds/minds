@@ -1,6 +1,6 @@
 <?php
 
-namespace Spec\Minds\Core\Blockchain\Pledges;
+namespace Spec\Minds\Core\Blockchain\Purchase;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -8,18 +8,19 @@ use Prophecy\Argument;
 use Minds\Core\Data\Cassandra\Client;
 use Cassandra\Timestamp;
 use Cassandra\Varint;
-use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Purchase\Purchase;
 use Spec\Minds\Mocks;
+use Minds\Core\Util\BigNumber;
 
 class RepositorySpec extends ObjectBehavior
 {
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Blockchain\Pledges\Repository');
+        $this->shouldHaveType('Minds\Core\Blockchain\Purchase\Repository');
     }
 
-    function it_should_add_a_pledge(Client $db)
+    function it_should_add_a_purchase(Client $db)
     {
         $this->beConstructedWith($db);
 
@@ -28,35 +29,39 @@ class RepositorySpec extends ObjectBehavior
                 && $requests[0]['values'][1] == new Varint(123)
                 && $requests[0]['values'][2] == '0xWALLETADDR'
                 && $requests[0]['values'][3] == new Timestamp(time())
-                && $requests[0]['values'][4] == new Varint(50);
+                && $requests[0]['values'][4] == new Varint(50)
+                && $requests[0]['values'][5] == new Varint(1);
             }), 1)
             ->shouldBeCalled();
 
-        $pledge = new Pledge;
-        $pledge
+        $purchase = new Purchase;
+        $purchase
             ->setPhoneNumberHash('hash')
             ->setUserGuid(123)
             ->setWalletAddress('0xWALLETADDR')
             ->setTimestamp(time()) 
-            ->setAmount(50);
+            ->setRequestedAmount(50)
+            ->setIssuedAmount(1);
 
-        $this->add($pledge);
+        $this->add($purchase);
     }
 
-    function it_should_get_a_list_of_pledges(Client $db)
+    function it_should_get_a_list_of_purchases(Client $db)
     {
         $this->beConstructedWith($db);
 
-        $db->request(Argument::that(function($pledges) {
+        $db->request(Argument::that(function($purchases) {
             return true;
         }))
             ->willReturn(new Mocks\Cassandra\Rows([
                 [
                     'phone_number_hash' => 'hash',
-                    'user_guid' => 123,
+                    'user_guid' => new Varint(123),
                     'wallet_address' => '0xWALLETADDR',
                     'timestamp' => new Timestamp(time()),
-                    'amount' => 50,        
+                    'requested_amount' => new Varint(50),     
+                    'issued_amount' => new Varint(1), 
+                    'status' => 'approved',  
                 ]
             ], ''));
 
@@ -64,21 +69,30 @@ class RepositorySpec extends ObjectBehavior
             'phone_number_hash' => 'hash'
         ]);
   
-        $result['pledges'][0]
+        $result['purchases'][0]
             ->getPhoneNumberHash()
             ->shouldBe('hash');
 
-        $result['pledges'][0]
+        $result['purchases'][0]
             ->getUserGuid()
             ->shouldBe(123);
         
-        $result['pledges'][0]
+        $result['purchases'][0]
             ->getWalletAddress()
             ->shouldBe('0xWALLETADDR');
 
-        $result['pledges'][0]
-            ->getAmount()
+        $result['purchases'][0]
+            ->getRequestedAmount()
             ->shouldBe('50');
+
+        $result['purchases'][0]
+            ->getIssuedAmount()
+            ->shouldBe('1');
+
+        $result['purchases'][0]
+            ->getUnIssuedAmount()
+            ->toInt()
+            ->shouldBe(49);
     }
 
     function it_should_get_a_single_transaction(Client $db)
@@ -92,14 +106,16 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn(new Mocks\Cassandra\Rows([
                 [
                     'phone_number_hash' => 'hash',
-                    'user_guid' => 123,
+                    'user_guid' => new Varint(123),
                     'wallet_address' => '0xWALLETADDR',
                     'timestamp' => new Timestamp(time()),
                     'tx' => '0xtid',
                     'contract' => 'spec',
-                    'amount' => 50,                    
+                    'requested_amount' => new Varint(50),    
+                    'issued_amount' => new Varint(49),                
                     'completed' => true,
-                    'data' => json_encode([ 'foo' => 'bar' ])
+                    'data' => json_encode([ 'foo' => 'bar' ]),
+                    'status' => 'approved',
                 ]
             ], ''));
 
@@ -118,7 +134,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBe('0xWALLETADDR');
 
         $result
-            ->getAmount()
+            ->getRequestedAmount()
             ->shouldBe('50');
     }
 

@@ -6,14 +6,14 @@
  * @author emi
  */
 
-namespace Minds\Core\Blockchain\Pledges\Delegates;
+namespace Minds\Core\Blockchain\Purchase\Delegates;
 
-use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 
-class NewPledgeNotification
+class NewPurchaseNotification
 {
     /** @var Config */
     protected $config;
@@ -23,10 +23,10 @@ class NewPledgeNotification
         $this->config = $config ?: Di::_()->get('Config');
     }
 
-    public function notify(Pledge $pledge)
+    public function notify(Purchase $purchase)
     {
         $action = $this->config->get('blockchain')['sale'] == 'presale' ? 'pledge' : 'reservation';
-        $pledgeData = $pledge->export();
+        $pledgeData = $purchase->export();
 
         $message = "Your token {$action} for {$pledgeData['eth_amount']} ETH is awaiting review.";
 

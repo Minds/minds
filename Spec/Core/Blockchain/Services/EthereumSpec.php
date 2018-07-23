@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Minds\Core\Http\Curl\JsonRpc\Client as JsonRpc;
-use Minds\Core\Config;
+use Minds\Core\Blockchain\Config;
 use MW3\Sha3;
 
 class EthereumSpec extends ObjectBehavior
@@ -20,7 +20,7 @@ class EthereumSpec extends ObjectBehavior
     {
         $this->beConstructedWith($config, $jsonRpc);
 
-        $config->get('blockchain')->willReturn([
+        $config->get()->willReturn([
             'rpc_endpoints' => [ '127.0.0.1' ],
             'mw3' => '/dev/null'
         ]);
@@ -37,7 +37,7 @@ class EthereumSpec extends ObjectBehavior
     {
         $this->beConstructedWith($config, $jsonRpc);
 
-        $config->get('blockchain')->willReturn([
+        $config->get()->willReturn([
             'rpc_endpoints' => [ '127.0.0.1' ],
             'mw3' => '/dev/null'
         ]);
@@ -54,7 +54,7 @@ class EthereumSpec extends ObjectBehavior
     {
         $this->beConstructedWith($config, $jsonRpc, null, $sha3);
         
-        $config->get('blockchain')->willReturn([
+        $config->get()->willReturn([
             'rpc_endpoints' => [ '127.0.0.1' ],
             'mw3' => '/dev/null'
         ]);

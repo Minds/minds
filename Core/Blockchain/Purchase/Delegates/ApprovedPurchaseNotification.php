@@ -6,14 +6,14 @@
  * @author emi
  */
 
-namespace Minds\Core\Blockchain\Pledges\Delegates;
+namespace Minds\Core\Blockchain\Purchase\Delegates;
 
 use Minds\Core\Blockchain\Pledges\Pledge;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 
-class ApprovedPledgeNotification
+class ApprovedPurchaseNotification
 {
     /** @var Config */
     protected $config;
@@ -23,7 +23,7 @@ class ApprovedPledgeNotification
         $this->config = $config ?: Di::_()->get('Config');
     }
 
-    public function notify(Pledge $pledge)
+    public function notify(Purchase $pledge)
     {
         $isPresale = $this->config->get('blockchain')['sale'] == 'presale';
         $action = $isPresale ? 'pledge' : 'reservation';

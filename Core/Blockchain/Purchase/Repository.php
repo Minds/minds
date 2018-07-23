@@ -1,8 +1,8 @@
 <?php
 /**
- * Token Pledges Repository
+ * Token Purchase Repository
  */
-namespace Minds\Core\Blockchain\Pledges;
+namespace Minds\Core\Blockchain\Purchase;
 
 use Cassandra;
 use Cassandra\Varint;
@@ -22,33 +22,35 @@ class Repository
         $this->db = $db ? $db : Di::_()->get('Database\Cassandra\Cql');
     }
 
-    public function add($pledges)
+    public function add($purchases)
     {
-        if (!is_array($pledges)) {
-            $pledges = [ $pledges ];
+        if (!is_array($purchases)) {
+            $purchases = [ $purchases ];
         }
 
         $requests = [];
-        $template = "INSERT INTO pledges (
+        $template = "INSERT INTO token_purchases (
             phone_number_hash,
             user_guid,
             wallet_address,
             timestamp,
-            amount,
+            requested_amount,
+            issued_amount,
             status
             ) 
             VALUES (?,?,?,?,?,?)";
 
-        foreach ($pledges as $pledge) {
+        foreach ($purchases as $purchase) {
             $requests[] = [
                 'string' => $template, 
                 'values' => [
-                    $pledge->getPhoneNumberHash(),
-                    new Varint($pledge->getUserGuid()),
-                    $pledge->getWalletAddress(),
-                    new Timestamp($pledge->getTimestamp()),
-                    new Varint($pledge->getAmount()),
-                    (string) $pledge->getStatus()
+                    $purchase->getPhoneNumberHash(),
+                    new Varint($purchase->getUserGuid()),
+                    $purchase->getWalletAddress(),
+                    new Timestamp($purchase->getTimestamp()),
+                    new Varint($purchase->getRequestedAmount()),
+                    new Varint($purchase->getIssuedAmount()),
+                    (string) $purchase->getStatus()
                 ]
             ];
         }
@@ -70,7 +72,7 @@ class Repository
             'allowFiltering' => false,
         ], $options);
 
-        $cql = "SELECT * from pledges";
+        $cql = "SELECT * from token_purchases";
         $where = [];
         $values = [];
 
@@ -124,20 +126,21 @@ class Repository
         }
 
         foreach($rows as $row) {
-            $pledge = new Pledge();
-            $pledge
+            $purchase = new Purchase();
+            $purchase
                 ->setPhoneNumberHash($row['phone_number_hash'])
-                ->setUserGuid($row['user_guid']->value())
+                ->setUserGuid((int) $row['user_guid']->value())
                 ->setWalletAddress($row['wallet_address'])
                 ->setTimestamp((int) $row['timestamp']->time())
-                ->setAmount((string) BigNumber::_($row['amount']->value()))
+                ->setRequestedAmount((string) BigNumber::_($row['requested_amount']->value()))
+                ->setIssuedAmount((string) BigNumber::_($row['issued_amount']->value()))
                 ->setStatus((string) $row['status']);
 
-            $pledges[] = $pledge;
+            $purchases[] = $purchase;
         }
 
         return [
-            'pledges' => $pledges,
+            'purchases' => $purchases,
             'token' => $rows->pagingStateToken()
         ];
     }
@@ -145,7 +148,7 @@ class Repository
     public function get($phone_number_hash)
     {
 
-        $cql = "SELECT * from pledges WHERE phone_number_hash = ?";
+        $cql = "SELECT * from token_purchases WHERE phone_number_hash = ?";
         $values = [ (string) $phone_number_hash ];
 
         $query = new Custom();
@@ -164,16 +167,17 @@ class Repository
 
         $row = $rows[0];
 
-        $pledge = new Pledge();
-        $pledge
+        $purchase = new Purchase();
+        $purchase
             ->setPhoneNumberHash($row['phone_number_hash'])
-            ->setUserGuid($row['user_guid']->value())
+            ->setUserGuid((int) $row['user_guid']->value())
             ->setWalletAddress($row['wallet_address'])
             ->setTimestamp($row['timestamp'] ? (int) $row['timestamp']->time() : time())
-            ->setAmount((string) BigNumber::_($row['amount']->value()))
+            ->setRequestedAmount((string) BigNumber::_($row['requested_amount']->value()))
+            ->setIssuedAmount((string) BigNumber::_($row['issued_amount']->value()))
             ->setStatus((string) $row['status']);
 
-        return $pledge;
+        return $purchase;
     }
 
     public function delete($phone_number_hash) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spec\Minds\Core\Blockchain\Pledges;
+namespace Spec\Minds\Core\Blockchain\Purchase;
 
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
@@ -13,7 +13,7 @@ class SumsSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Blockchain\Pledges\Sums');
+        $this->shouldHaveType('Minds\Core\Blockchain\Purchase\Sums');
     }
 
     function it_sould_get_the_total_amount(Client $db)

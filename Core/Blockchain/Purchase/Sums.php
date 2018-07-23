@@ -1,8 +1,8 @@
 <?php
 /**
- * Token Pledges Sums
+ * Token Purhcase Sums
  */
-namespace Minds\Core\Blockchain\Pledges;
+namespace Minds\Core\Blockchain\Purchase;
 
 use Cassandra;
 use Cassandra\Varint;
@@ -31,7 +31,7 @@ class Sums
     {
         $query = new Custom();
 
-        $query->query("SELECT SUM(amount) as amount FROM pledges");
+        $query->query("SELECT SUM(amount) as amount FROM token_purchases");
     
         try {
             $rows = $this->db->request($query);
@@ -55,7 +55,7 @@ class Sums
     {
         $query = new Custom();
 
-        $query->query("SELECT count(*) as count FROM pledges");
+        $query->query("SELECT count(*) as count FROM token_purchases");
     
         try {
             $rows = $this->db->request($query);

@@ -1,16 +1,16 @@
 <?php
 /**
- * Pledge model
+ * Purchase model
  */
-namespace Minds\Core\Blockchain\Pledges;
+namespace Minds\Core\Blockchain\Purchase;
 
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 use Minds\Traits\MagicAttributes;
 
 /**
- * Class Pledge
- * @package Minds\Core\Blockchain\Pledges
+ * Class Purchase
+ * @package Minds\Core\Blockchain\Purchase
  * @method string getPhoneNumberHash()
  * @method Pledge setPhoneNumberHash(string $value)
  * @method int getUserGuid()
@@ -24,7 +24,7 @@ use Minds\Traits\MagicAttributes;
  * @method string getStatus()
  * @method Pledge setStatus(string $value)
  */
-class Pledge implements \JsonSerializable
+class Purchase implements \JsonSerializable
 {
     use MagicAttributes;
 
@@ -40,11 +40,24 @@ class Pledge implements \JsonSerializable
     /** @var int $timestamp */
     private $timestamp;
 
-    /** @var string $amount */
-    private $amount;
+    /** @var int $requestedAmount */
+    private $requestedAmount = 0;
+
+    /** @var int $issued */
+    private $issuedAmount = 0;
 
     /** @var string */
     private $status;
+
+    /**
+     * Return the amount of unissued tokens
+     * @return BigNumber
+     */
+    public function getUnissuedAmount()
+    {
+        return BigNumber::_($this->requestedAmount)
+            ->sub(BigNumber::_($this->issuedAmount));
+    }
 
     /**
      * Export

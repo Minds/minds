@@ -6,15 +6,15 @@
  * @author emi
  */
 
-namespace Minds\Core\Blockchain\Pledges\Delegates;
+namespace Minds\Core\Blockchain\Purchase\Delegates;
 
-use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Email\Campaigns\PledgeApproval;
 use Minds\Entities\User;
 
-class ApprovedPledgeEmail
+class ApprovedPurchaseEmail
 {
     /** @var Config */
     protected $config;
@@ -28,7 +28,7 @@ class ApprovedPledgeEmail
         $this->campaign = $campaign ?: new PledgeApproval();
     }
 
-    public function send(Pledge $pledge)
+    public function send(Purchase $pledge)
     {
         $isPresale = $this->config->get('blockchain')['sale'] == 'presale';
         $pledgeData = $pledge->export();
