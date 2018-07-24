@@ -622,6 +622,11 @@ class newsfeed implements Interfaces\Api
                         'container' => $container,
                         'activity' => $activity,
                     ]);
+
+                    if ($activity->getPending() && $attachment) {
+                        $attachment->access_id = 0;
+                        $attachment->save();
+                    }
                 }
 
                 try {

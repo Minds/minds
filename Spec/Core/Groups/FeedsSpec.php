@@ -18,11 +18,13 @@ class FeedsSpec extends ObjectBehavior
     protected $_adminQueue;
     protected $_entities;
     protected $_entitiesFactory;
+    protected $_entitiesBuilder;
 
     function let(
         AdminQueue $adminQueue,
         Mocks\Minds\Core\Entities $entities,
-        Mocks\Minds\Core\Entities\Factory $entitiesFactory
+        Mocks\Minds\Core\Entities\Factory $entitiesFactory,
+        Core\EntitiesBuilder $entitiesBuilder
     )
     {
         // AdminQueue
@@ -48,6 +50,10 @@ class FeedsSpec extends ObjectBehavior
         });
 
         $this->_entitiesFactory = $entitiesFactory;
+
+        $this->_entitiesBuilder = $entitiesBuilder;
+
+        $this->beConstructedWith($entitiesBuilder);
     }
 
     function it_is_initializable()
@@ -229,13 +235,15 @@ class FeedsSpec extends ObjectBehavior
 
     function it_should_approve(
         Group $group,
-        Activity $activity
+        Activity $activity,
+        Entities\Image $attachment
     )
     {
         $group->getGuid()->willReturn(1000);
         $activity->get('guid')->willReturn(5000);
         $activity->get('container_guid')->willReturn(1000);
         $activity->get('owner_guid')->willReturn(10000);
+        $activity->get('entity_guid')->willReturn(8888);
 
         $activity->setPending(false)
             ->shouldBeCalled();
@@ -244,6 +252,26 @@ class FeedsSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->_adminQueue->delete($group, $activity)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->_entitiesBuilder->single(8888)
+            ->shouldBeCalled()
+            ->willReturn($attachment);
+
+        $attachment->get('subtype')
+            ->shouldBeCalled()
+            ->willReturn('image');
+
+        $attachment->getWireThreshold()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $attachment->set('access_id', 2)
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $attachment->save()
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -373,7 +401,8 @@ class FeedsSpec extends ObjectBehavior
     function it_should_approve_all(
         Group $group,
         Activity $activity_1,
-        Activity $activity_2
+        Activity $activity_2,
+        Entities\Video $attachment_1
     )
     {
         $group->getGuid()->willReturn(1000);
@@ -381,10 +410,32 @@ class FeedsSpec extends ObjectBehavior
         $activity_1->get('guid')->willReturn(5001);
         $activity_1->get('container_guid')->willReturn(1000);
         $activity_1->get('owner_guid')->willReturn(10000);
+        $activity_1->get('entity_guid')->willReturn(8888);
 
         $activity_2->get('guid')->willReturn(5002);
         $activity_2->get('container_guid')->willReturn(1000);
         $activity_2->get('owner_guid')->willReturn(10000);
+        $activity_2->get('entity_guid')->willReturn(null);
+
+        $this->_entitiesBuilder->single(8888)
+            ->shouldBeCalled()
+            ->willReturn($attachment_1);
+
+        $attachment_1->get('subtype')
+            ->shouldBeCalled()
+            ->willReturn('video');
+
+        $attachment_1->getWireThreshold()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $attachment_1->set('access_id', 2)
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $attachment_1->save()
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->_adminQueue->getAll($group)
             ->shouldBeCalled()

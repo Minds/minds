@@ -18,6 +18,18 @@ class Feeds
     /** @var Entities\Group $group */
     protected $group;
 
+    /** @var Core\EntitiesBuilder */
+    protected $entitiesBuilder;
+
+    /**
+     * Feeds constructor.
+     * @param null $entitiesBuilder
+     */
+    public function __construct($entitiesBuilder = null)
+    {
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
+    }
+
     /**
      * @param Entities\Group $group
      * @return $this
@@ -148,6 +160,15 @@ class Feeds
 
         $activity->setPending(false);
         $activity->save(true);
+
+        if ($activity->entity_guid) {
+            $attachment = $this->entitiesBuilder->single($activity->entity_guid);
+
+            if ($attachment && ($attachment->subtype == 'image' || $attachment->subtype == 'video') && !$attachment->getWireThreshold()) {
+                $attachment->access_id = 2;
+                $attachment->save();
+            }
+        }
 
         /** @var AdminQueue $adminQueue */
         $adminQueue = Di::_()->get('Groups\AdminQueue');
