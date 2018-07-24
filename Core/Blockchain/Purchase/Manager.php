@@ -40,16 +40,16 @@ class Manager
         $config = null,
         $issueTokens = null,
         $newPurchaseNotification = null,
-        $approvedPurchaseNotification = null,
+        $issuedTokenNotification = null,
         $approvedPurchaseEmail = null
     )
     {
-        $this->repo = $repo ?: Di::_()->get('Blockchain\Purchases\Repository');
+        $this->repo = $repo ?: Di::_()->get('Blockchain\Purchase\Repository');
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
         $this->config = $config ?: Di::_()->get('Config');
-        //$this->issueTokens = $issueTokens ?: new Delegates\IssueTokens();
-        //$this->newPurchaseNotification = $newPurchaseNotification ?: new Delegates\NewPurchaseNotification();
-        //$this->approvedPurchaseNotification = $approvedPurchaseNotification ?: new Delegates\ApprovedPurchaseNotification();
+        $this->issueTokens = $issueTokens ?: new Delegates\IssueTokens();
+        $this->newPurchaseNotification = $newPurchaseNotification ?: new Delegates\NewPurchaseNotification();
+        $this->issuedTokenNotification = $issuedTokenNotification ?: new Delegates\IssuedTokenNotification();
         //$this->approvedPurchaseEmail = $approvedPurchaseEmail ?: new Delegates\ApprovedPurchaseEmail();
     }
 
@@ -59,16 +59,17 @@ class Manager
      */
     private function getContractAddress()
     {
-        return $this->config->get('blockchain')['token_distribution_event_address'];
+        return $this->config->get('blockchain')['contracts']['token_sale_event']['contract_address'];
     }
 
-    public function getPurchase($user)
+    public function getAutoIssueCap()
     {
-        if (!$user || !($phone_number_hash = $user->getPhoneNumberHash())) {
-            return null;
-        }
+        return $this->config->get('blockchain')['contracts']['token_sale_event']['auto_issue_cap'];
+    }
 
-        return $this->repo->get($phone_number_hash);
+    public function getPurchase($phone_number_hash, $tx)
+    {
+        return $this->repo->get($phone_number_hash, $tx);
     }
 
     /**
@@ -98,18 +99,20 @@ class Manager
         $transaction
             ->setTx($purchase->getTx())
             ->setContract('purchase')
-            ->setAmount($purchase->getAmount())
-            ->setWalletAddress($this->getContractAddress())
+            ->setAmount($purchase->getRequestedAmount())
+            ->setWalletAddress($purchase->getWalletAddress())
             ->setTimestamp($purchase->getTimestamp())
             ->setUserGuid($purchase->getUserGuid())
             ->setData([
-                'amount' => $purchase->getAmount(),
+                'amount' => $purchase->getRequestedAmount(),
                 'phone_number_hash' => $purchase->getPhoneNumberHash(),
                 'address' => $purchase->getWalletAddress(),
             ]);
 
         $this->txManager->add($transaction);
         $this->add($purchase);
+
+        $this->newPurchaseNotification->notify($purchase);
     }
 
     /**
@@ -119,7 +122,7 @@ class Manager
     {
         $this->repo->add($purchase);
 
-        $this->newPurchaseNotification->notify($purchase);
+        //$this->newPurchaseNotification->notify($purchase);
     }
 
     /**
@@ -131,11 +134,11 @@ class Manager
     {
         $this->issueTokens->issue($purchase);
 
-        $purchase->setStatus('approved');
+        $purchase->setIssuedAmount((string) $purchase->getUnissuedAmount());
+        $purchase->setStatus('issued');
         $this->repo->add($purchase);
 
-        $this->approvedPurchaseNotification->notify($purchase);
-        $this->approvedPurchaseEmail->send($purchase);
+        $this->issuedTokenNotification->notify($purchase);
 
         return true;
     }

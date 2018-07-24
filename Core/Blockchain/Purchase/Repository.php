@@ -31,6 +31,7 @@ class Repository
         $requests = [];
         $template = "INSERT INTO token_purchases (
             phone_number_hash,
+            tx,
             user_guid,
             wallet_address,
             timestamp,
@@ -38,13 +39,14 @@ class Repository
             issued_amount,
             status
             ) 
-            VALUES (?,?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?,?,?)";
 
         foreach ($purchases as $purchase) {
             $requests[] = [
                 'string' => $template, 
                 'values' => [
                     $purchase->getPhoneNumberHash(),
+                    $purchase->getTx(),    
                     new Varint($purchase->getUserGuid()),
                     $purchase->getWalletAddress(),
                     new Timestamp($purchase->getTimestamp()),
@@ -145,11 +147,11 @@ class Repository
         ];
     }
 
-    public function get($phone_number_hash)
+    public function get($phone_number_hash, $tx)
     {
 
-        $cql = "SELECT * from token_purchases WHERE phone_number_hash = ?";
-        $values = [ (string) $phone_number_hash ];
+        $cql = "SELECT * from token_purchases WHERE phone_number_hash = ? and tx= ?";
+        $values = [ (string) $phone_number_hash, (string) $tx ];
 
         $query = new Custom();
         $query->query($cql, $values);
@@ -170,6 +172,7 @@ class Repository
         $purchase = new Purchase();
         $purchase
             ->setPhoneNumberHash($row['phone_number_hash'])
+            ->setTx($row['tx'])
             ->setUserGuid((int) $row['user_guid']->value())
             ->setWalletAddress($row['wallet_address'])
             ->setTimestamp($row['timestamp'] ? (int) $row['timestamp']->time() : time())

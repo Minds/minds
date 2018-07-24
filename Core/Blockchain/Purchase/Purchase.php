@@ -47,6 +47,9 @@ class Purchase implements \JsonSerializable
     private $issuedAmount = 0;
 
     /** @var string */
+    private $tx;
+
+    /** @var string */
     private $status;
 
     /**
@@ -69,7 +72,7 @@ class Purchase implements \JsonSerializable
             'user' => (new User($this->userGuid))->export(),
             'wallet_address' => $this->walletAddress,
             'amount' => $this->amount,
-            'eth_amount' => (float) BigNumber::fromPlain($this->amount, 18)->toString(),
+            //'eth_amount' => (float) BigNumber::fromPlain($this->requested_amount, 18)->toString(),
             'timestamp' => $this->timestamp * 1000,
             'status' => $this->status,
         ];

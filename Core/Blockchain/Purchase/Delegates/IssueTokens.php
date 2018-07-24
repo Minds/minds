@@ -9,7 +9,8 @@
 namespace Minds\Core\Blockchain\Purchase\Delegates;
 
 use Minds\Core\Blockchain\Config;
-use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
@@ -36,20 +37,20 @@ class IssueTokens
      * @return mixed
      * @throws \Exception
      */
-    public function issue(Pledge $purchase)
+    public function issue(Purchase $purchase)
     {
         $this->ethereumClient->useConfig('pledge');
         $this->config->setKey('pledge');
 
         $config = $this->config->get();
 
-        $txHash = $this->ethereumClient->sendRawTransaction($config['wallet_pkey'], [
-            'from' => $config['wallet_address'],
-            'to' => $config['token_distribution_event_address'],
+        $txHash = $this->ethereumClient->sendRawTransaction($config['contracts']['token_sale_event']['wallet_pkey'], [
+            'from' => $config['contracts']['token_sale_event']['wallet_address'],
+            'to' => $config['contracts']['token_sale_event']['contract_address'],
             'gasLimit' => BigNumber::_(200000)->toHex(true),
             'data' => $this->ethereumClient->encodeContractMethod('issue(address,uint256)', [
                 $purchase->getWalletAddress(),
-                BigNumber::_($purchase->getAmount())->toHex(true),
+                BigNumber::_($purchase->getUnissuedAmount())->toHex(true),
             ])
         ]);
 
@@ -57,17 +58,17 @@ class IssueTokens
             throw new \Exception('Cannot retrieve Blockchain Tx address');
         }
 
-        $transaction = new Transaction(); 
+        /*$transaction = new Transaction(); 
         $transaction
             ->setUserGuid($purchase->getUserGuid())
             ->setWalletAddress($purchase->getWalletAddress())
             ->setTimestamp(time())
             ->setTx($txHash)
-            ->setAmount($purchase->getAmount())
-            ->setContract('purchase')
+            ->setAmount((string) $purchase->getUnIssuedAmount())
+            ->setContract('issued_purchase')
             ->setCompleted(true);
     
         $this->txRepository->add($transaction);
-        return $transaction;
+        return $transaction;*/
     }
 }

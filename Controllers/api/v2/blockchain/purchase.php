@@ -1,6 +1,6 @@
 <?php
 /**
- * Tokens Pledge
+ * Tokens Purchase
  *
  * @author mark
  */
@@ -12,9 +12,9 @@ use Minds\Core\Session;
 use Minds\Core\Util\BigNumber;
 use Minds\Interfaces;
 use Minds\Api\Factory;
-use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Purchase\Purchase as PurchaseModel;
 
-class pledges implements Interfaces\Api
+class purchase implements Interfaces\Api
 {
 
     /**
@@ -24,24 +24,6 @@ class pledges implements Interfaces\Api
      */
     public function get($pages)
     {
-        $brief = isset($_GET['brief']) && $_GET['brief'];
-
-        $manager = Di::_()->get('Blockchain\Pledges\Manager');
-
-        /** @var Pledge $pledge */
-        $pledge = $manager->getPledge(Session::getLoggedInUser());
-
-        $response = [
-            'pledge' => $pledge,
-        ];
-
-        if (!$brief) {
-            $sums = Di::_()->get('Blockchain\Pledges\Sums');
-
-            $response['amount'] = $sums->getTotalAmount();
-            $response['count'] = $sums->getTotalCount();
-        }
-
         return Factory::response($response);
     }
 
@@ -56,7 +38,7 @@ class pledges implements Interfaces\Api
 
         $amount = isset($_POST['amount']) ? $_POST['amount'] : 0;
         $walletAddress = isset($_POST['wallet_address']) ? $_POST['wallet_address'] : '';
-        $maxAmount = Di::_()->get('Config')->get('blockchain')['max_pledge_amount'] ?: 1800;
+        $tx = isset($_POST['tx']) ? $_POST['tx'] : '';
 
         if (!Session::getLoggedInUser()->getPhoneNumberHash()) {
             return Factory::response([
@@ -65,12 +47,12 @@ class pledges implements Interfaces\Api
             ]);
         }
 
-        if ($amount < 0.01 || $amount > $maxAmount) {
+        /*if ($amount < 0.01 || $amount > $maxAmount) {
             return Factory::response([
                 'status' => 'error',
                 'message' => "You must pledge between 0.01 and {$maxAmount} ETH",
             ]);
-        }
+        }*/
 
         if (!$walletAddress || stripos($walletAddress, '0x') !== 0) {
             return Factory::response([
@@ -79,22 +61,23 @@ class pledges implements Interfaces\Api
             ]);
         }
 
-        $weiAmount = BigNumber::toPlain($amount, 18);
+        $weiAmount = BigNumber::toPlain($amount, 18)->mul(350); //convert to tokens
 
-        $pledge = new Pledge();
-        $pledge
+        $purchase = new PurchaseModel();
+        $purchase
             ->setPhoneNumberHash(Session::getLoggedInUser()->getPhoneNumberHash())
             ->setUserGuid(Session::getLoggedInUser()->guid)
-            ->setAmount((string) $weiAmount)
+            ->setTx($tx)
+            ->setRequestedAmount((string) $weiAmount)
             ->setTimestamp(time())
             ->setWalletAddress($walletAddress)
-            ->setStatus('review');
+            ->setStatus('purchased');
 
-        $manager = Di::_()->get('Blockchain\Pledges\Manager');
-        $manager->add($pledge);
+        $manager = Di::_()->get('Blockchain\Purchase\Manager');
+        $manager->purchase($purchase);
 
         return Factory::response([
-            'pledge' => $pledge->export(),
+            'purchase' => $purchase->export(),
         ]);
     }
 

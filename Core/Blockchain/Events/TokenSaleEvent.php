@@ -10,6 +10,7 @@ namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Util\BigNumber;
+use Minds\Core\Blockchain\Purchase;
 
 class TokenSaleEvent implements BlockchainEventInterface
 {
@@ -44,20 +45,23 @@ class TokenSaleEvent implements BlockchainEventInterface
 
     protected function onTokenPurchase($log, $transaction)
     {
-        list($purchaser, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::ADDRESS, Util::NUMBER, Util::NUMBER]);
+        list($purchaser, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::NUMBER]);
         $amount = (string) BigNumber::fromHex($amount);
 
         if ($amount != (string) $transaction->getAmount()) {
+            echo "amount differs {$amount} {$transaction->getAmount()} \n";
             return; //backend amount does not equal event amount
         }
 
         $manager = new Purchase\Manager();
-        $purchase = $manager->getPurchase($transaction->getData()['phone_number_hash']);
-
+        $purchase = $manager->getPurchase($transaction->getData()['phone_number_hash'], $transaction->getTx());
+        
         if (!$purchase) {
+            echo "purchase not found";
             return; //purchase not found
         }
 
+var_dump($log);
         //is the requested amount below what has already been recorded
         if ($transaction->getAmount() > $purchase->getUnissuedAmount()) {
             return; //requested more than can issue
