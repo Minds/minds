@@ -24,6 +24,13 @@ class purchase implements Interfaces\Api
      */
     public function get($pages)
     {
+        $response = [];
+
+        $sums = Di::_()->get('Blockchain\Purchase\Sums');
+
+        $response['requested'] = $sums->getRequestedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
+        $response['issued'] = $sums->getIssuedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
+
         return Factory::response($response);
     }
 
