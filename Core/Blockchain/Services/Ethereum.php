@@ -31,6 +31,9 @@ class Ethereum
     /** @var MW3\Sha3 $sha3 */
     protected $sha3;
 
+    /** @var array $nonces */
+    private $nonces = [];
+
     /**
      * Ethereum constructor.
      * @param null|mixed $config
@@ -172,7 +175,13 @@ class Ethereum
         }
 
         if (!isset($transaction['nonce'])) {
-            $transaction['nonce'] = $this->request('eth_getTransactionCount', [ $transaction['from'], 'pending' ]);
+            if (isset($this->nonces[$transaction['from']])) {
+                $this->nonces[$transaction['from']] = $transaction['nonce'] = $this->nonces[$transaction['from']]++;
+            } else {
+                $nonce = $this->request('eth_getTransactionCount', [ $transaction['from'], 'pending' ]);
+                $this->nonces[$transaction['from']] = $transaction['nonce'] = (int) BigNumber::fromHex($nonce)->toString();
+            }
+            echo "\nnonce: {$this->nonces[$transaction['from']]}";
         }
 
         $signedTx = $this->sign($privateKey, $transaction);
