@@ -176,11 +176,12 @@ class Ethereum
 
         if (!isset($transaction['nonce'])) {
             if (isset($this->nonces[$transaction['from']])) {
-                $this->nonces[$transaction['from']] = $transaction['nonce'] = $this->nonces[$transaction['from']]++;
+                $this->nonces[$transaction['from']] = $transaction['nonce'] = $this->nonces[$transaction['from']];
             } else {
                 $nonce = $this->request('eth_getTransactionCount', [ $transaction['from'], 'pending' ]);
                 $this->nonces[$transaction['from']] = $transaction['nonce'] = (int) BigNumber::fromHex($nonce)->toString();
             }
+            $this->nonces[$transaction['from']]++; //increase future nonces
             echo "\nnonce: {$this->nonces[$transaction['from']]}";
         }
 
@@ -189,6 +190,7 @@ class Ethereum
         if (!$signedTx) {
             throw new \Exception('Error signing transaction');
         }
+
 
         return $this->request('eth_sendRawTransaction', [ $signedTx ]);
     }
