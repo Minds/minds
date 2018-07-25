@@ -56,7 +56,7 @@ class purchases implements Interfaces\Api, Interfaces\ApiAdminPam
             ]);
         }
 
-        if ($pledge->getStatus() !== 'review') {
+        if ($purchase->getStatus() !== 'purchased') {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'Pledge already actioned'
