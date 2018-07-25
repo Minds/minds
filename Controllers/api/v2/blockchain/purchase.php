@@ -27,6 +27,10 @@ class purchase implements Interfaces\Api
         $response = [];
 
         $sums = Di::_()->get('Blockchain\Purchase\Sums');
+        $manager = Di::_()->get('Blockchain\Purchase\Manager');
+
+        $response['cap'] = $manager->getAutoIssueCap();
+        $response['rate'] = $manager->getEthTokenRate();
 
         $response['requested'] = $sums->getRequestedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
         $response['issued'] = $sums->getIssuedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
@@ -68,7 +72,8 @@ class purchase implements Interfaces\Api
             ]);
         }
 
-        $weiAmount = BigNumber::toPlain($amount, 18)->mul(350); //convert to tokens
+        $manager = Di::_()->get('Blockchain\Purchase\Manager');
+        $weiAmount = BigNumber::toPlain($amount, 18)->mul($manager->getEthTokenRate()); //convert to tokens
 
         $purchase = new PurchaseModel();
         $purchase
@@ -80,7 +85,6 @@ class purchase implements Interfaces\Api
             ->setWalletAddress($walletAddress)
             ->setStatus('purchased');
 
-        $manager = Di::_()->get('Blockchain\Purchase\Manager');
         $manager->purchase($purchase);
 
         return Factory::response([
