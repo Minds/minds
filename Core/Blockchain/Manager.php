@@ -43,7 +43,7 @@ class Manager
         }
 
         if ($blockchainConfig['token_distribution_event_address']) {
-            $this->contracts['token_distribution_event'] = Contracts\MindsTokenSaleEvent::at($blockchainConfig['token_distribution_event_address']);
+            $this->contracts['token_distribution_event'] = Contracts\MindsTokenSaleEvent::at($blockchainConfig['contracts']['token_sale_event']['contract_address']);
         }
     }
 
@@ -64,7 +64,8 @@ class Manager
             'client_network' => $blockchainConfig['client_network'],
             'wallet_address' => $blockchainConfig['wallet_address'],
             'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
-            'token_distribution_event_address' => $blockchainConfig['token_distribution_event_address'],
+            'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
+            'rate' => $blockchainConfig['eth_rate'],
             'default_gas_price' => $blockchainConfig['default_gas_price'],
             'overrides' => $this->getOverrides(),
         ], $this->contracts);
@@ -84,7 +85,7 @@ class Manager
                 'client_network' => $blockchainConfig['client_network'],
                 'wallet_address' => $blockchainConfig['wallet_address'],
                 'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
-                'token_distribution_event_address' => $blockchainConfig['token_distribution_event_address'],
+                'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
                 'default_gas_price' => $blockchainConfig['default_gas_price'],
             ];
         }
