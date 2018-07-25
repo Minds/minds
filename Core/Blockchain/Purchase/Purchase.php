@@ -70,8 +70,10 @@ class Purchase implements \JsonSerializable
         $export = [
             'user_guid' => $this->userGuid,
             'user' => (new User($this->userGuid))->export(),
+            'tx' => $this->tx,
             'wallet_address' => $this->walletAddress,
-            'amount' => $this->amount,
+            'requested_amount' => $this->requestedAmount,
+            'issued_amount' => $this->issuedAmount,
             //'eth_amount' => (float) BigNumber::fromPlain($this->requested_amount, 18)->toString(),
             'timestamp' => $this->timestamp * 1000,
             'status' => $this->status,

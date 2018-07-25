@@ -67,6 +67,11 @@ class Manager
         return $this->config->get('blockchain')['contracts']['token_sale_event']['auto_issue_cap'];
     }
 
+    public function getEthTokenRate()
+    {
+        return $this->config->get('blockchain')['contracts']['token_sale_event']['eth_rate'];
+    }
+
     public function getPurchase($phone_number_hash, $tx)
     {
         return $this->repo->get($phone_number_hash, $tx);

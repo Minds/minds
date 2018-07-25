@@ -131,11 +131,12 @@ class Repository
             $purchase = new Purchase();
             $purchase
                 ->setPhoneNumberHash($row['phone_number_hash'])
+                ->setTx($row['tx'])
                 ->setUserGuid((int) $row['user_guid']->value())
                 ->setWalletAddress($row['wallet_address'])
                 ->setTimestamp((int) $row['timestamp']->time())
                 ->setRequestedAmount((string) BigNumber::_($row['requested_amount']->value()))
-                ->setIssuedAmount((string) BigNumber::_($row['issued_amount']->value()))
+                ->setIssuedAmount((string) $row['issued_amount']->value())
                 ->setStatus((string) $row['status']);
 
             $purchases[] = $purchase;
