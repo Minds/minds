@@ -26,17 +26,19 @@ class RepositorySpec extends ObjectBehavior
 
         $db->batchRequest(Argument::that(function($requests) {
             return $requests[0]['values'][0] == 'hash'
-                && $requests[0]['values'][1] == new Varint(123)
-                && $requests[0]['values'][2] == '0xWALLETADDR'
-                && $requests[0]['values'][3] == new Timestamp(time())
-                && $requests[0]['values'][4] == new Varint(50)
-                && $requests[0]['values'][5] == new Varint(1);
+                && $requests[0]['values'][1] == 'txHash'
+                && $requests[0]['values'][2] == new Varint(123)
+                && $requests[0]['values'][3] == '0xWALLETADDR'
+                && $requests[0]['values'][4] == new Timestamp(time())
+                && $requests[0]['values'][5] == new Varint(50)
+                && $requests[0]['values'][6] == new Varint(1);
             }), 1)
             ->shouldBeCalled();
 
         $purchase = new Purchase;
         $purchase
             ->setPhoneNumberHash('hash')
+            ->setTx('txHash')
             ->setUserGuid(123)
             ->setWalletAddress('0xWALLETADDR')
             ->setTimestamp(time()) 
@@ -56,6 +58,7 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn(new Mocks\Cassandra\Rows([
                 [
                     'phone_number_hash' => 'hash',
+                    'tx' => 'txHash',
                     'user_guid' => new Varint(123),
                     'wallet_address' => '0xWALLETADDR',
                     'timestamp' => new Timestamp(time()),
@@ -72,6 +75,10 @@ class RepositorySpec extends ObjectBehavior
         $result['purchases'][0]
             ->getPhoneNumberHash()
             ->shouldBe('hash');
+
+        $result['purchases'][0]
+            ->getTx()
+            ->shouldBe('txHash');
 
         $result['purchases'][0]
             ->getUserGuid()
@@ -119,7 +126,7 @@ class RepositorySpec extends ObjectBehavior
                 ]
             ], ''));
 
-        $result = $this->get('hash');
+        $result = $this->get('hash', 'txHash');
         
         $result
             ->getPhoneNumberHash()
