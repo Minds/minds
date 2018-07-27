@@ -140,6 +140,10 @@ class Manager
             throw new \Exception('The gas requested does not match the transaction');
         }
 
+        if (BigNumber::_($request->getAmount())->lt(0)) {
+            throw new \Exception('The withdraw amount must be positive');
+        }
+
         //debit the users balance
         $user = new User;
         $user->guid = (string) $request->getUserGuid();
