@@ -46,11 +46,18 @@ class conversations implements Interfaces\Api
     private function getConversation($pages)
     {
         $response = [];
+        $delimiter = ':';
 
         $me = Core\Session::getLoggedInUser();
 
+        if ($pages[0]) {
+            $split_guid = explode($delimiter, $pages[0]);
+            sort($split_guid);
+            $guids = join($delimiter, $split_guid);
+        }
+
         $conversation = (new Entities\Conversation())
-          ->loadFromGuid($pages[0]);
+          ->loadFromGuid($guids);
 
         if (!Security\ACL::_()->read($conversation)) {
             return Factory::response([
