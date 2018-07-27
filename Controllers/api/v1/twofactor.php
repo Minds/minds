@@ -113,6 +113,21 @@ class twofactor implements Interfaces\Api
                     $response['message'] = 'LoginException::CodeVerificationFailed';
                 }
                 break;
+            case "remove":
+                $validator = Di::_()->get('Security\Password');
+            
+                if (!$validator->check(Core\Session::getLoggedinUser(), $_POST['password'])) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'Password incorrect'
+                    ]);
+                }
+        
+                $user = Core\Session::getLoggedInUser();
+                $user->twofactor = false;
+                $user->telno = false;
+                $user->save();
+                break;
         }
 
         return Factory::response($response);
@@ -124,19 +139,6 @@ class twofactor implements Interfaces\Api
 
     public function delete($pages)
     {
-        $validator = Di::_()->get('Security\Password');
-
-        if (!$validator->check(Core\Session::getLoggedinUser(), $_POST['password'])) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'Password incorrect'
-            ]);
-        }
-
-        $user = Core\Session::getLoggedInUser();
-        $user->twofactor = false;
-        $user->telno = false;
-        $user->save();
-        return Factory::response([]);
+        
     }
 }
