@@ -847,9 +847,7 @@ function generate_random_cleartext_password() {
  * @return string
  */
 function generate_user_password(ElggUser $user, $password, $algo = 'sha256') {
-	if($algo == 'md5')
-			return md5($password . $user->salt);
-	return hash('sha256', $password . $user->salt);
+	throw new \Exception('Removed function called `generate_random_cleartext_password()`');
 }
 
 /**
