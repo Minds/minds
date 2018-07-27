@@ -25,7 +25,15 @@ class proxy implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
         $src = isset($_GET['src']) ? $_GET['src'] : null;
-        $size = isset($_GET['size']) ? (int) $_GET['size'] : 1024;
+
+        // thumbProxy polyfill
+        $width = isset($_GET['size']) ? (int) $_GET['size'] : null;
+
+        if ($width && is_numeric($width)) {
+            $size = $width;
+        } else {
+            $size = isset($_GET['size']) ? (int) $_GET['size'] : 1024;
+        }
 
         if ($src) {
             $siteUrl = Di::_()->get('Config')->get('site_url');

@@ -338,3 +338,6 @@ $CONFIG->set('i18n', [
         'es' => 'Español',
     ]
 ]);
+
+// blacklist of internal IPs / URLs to block from curl requests
+$CONFIG->set('internal_blacklist', []);
