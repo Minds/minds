@@ -10,6 +10,7 @@ namespace Minds\Controllers\api\v1;
 
 use Minds\Api\Factory;
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Core\Security;
 use Minds\Entities;
 use Minds\Interfaces;
@@ -123,6 +124,15 @@ class twofactor implements Interfaces\Api
 
     public function delete($pages)
     {
+        $validator = Di::_()->get('Security\Password');
+
+        if (!$validator->check(Core\Session::getLoggedinUser(), $_POST['password'])) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Password incorrect'
+            ]);
+        }
+
         $user = Core\Session::getLoggedInUser();
         $user->twofactor = false;
         $user->telno = false;
