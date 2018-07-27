@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Media\Proxy;
 
+use Minds\Core\Config\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\Client;
 
@@ -16,15 +17,19 @@ class Download
     /** @var Client $http*/
     protected $http;
 
+    /** @var array */
+    protected $blacklist;
+
     /** @var string $src */
     protected $src;
 
     /** @var int $timeout */
     protected $timeout = 2;
 
-    public function __construct($http = null)
+    public function __construct($http = null, $blacklist = null)
     {
         $this->http = $http ?: Di::_()->get('Http');
+        $this->blacklist = $blacklist ?: Di::_()->get('Config')->get('internal_blacklist');
     }
 
     /**
@@ -53,7 +58,36 @@ class Download
      */
     public function isValidSrc()
     {
-        return filter_var($this->src, FILTER_VALIDATE_URL) && strpos($this->src, 'http') === 0;
+        if (!filter_var($this->src, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $re = '/(http[s]?:\/\/)([\w\W]*)/';
+        $matches = [];
+        preg_match($re, $this->src, $matches);
+
+        if (!count($matches) > 0) { // this means it will use either http or https protocols
+            return false;
+        }
+
+        $url = $matches[2];
+
+        //check if internal subnet
+        if (strpos($url, '10.', 0) === 0 
+            || strpos($url, '192.168.', 0) === 0
+            || strpos($url, '172.16.', 0) === 0
+        ) {
+            return false;
+        }
+
+        //check if blacklisted
+        foreach ($this->blacklist as $domain) {
+            if (strpos($url, $domain, 0) !== FALSE) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function download()
