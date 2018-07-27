@@ -115,9 +115,13 @@ class ManagerSpec extends ObjectBehavior
         $offChainTransactions->create()->shouldBeCalled();
 
         $config->get('blockchain')->willReturn([
-            'rewards_wallet_pkey' => 'private-key-here',
-            'rewards_wallet_address' => '0xfunds-address',
-            'withdraw_address' => '0xwidthdraw-address',
+            'contracts' => [
+                'withdraw' => [
+                    'contract_address' => '0xwidthdraw-address',
+                    'wallet_pkey' => 'private-key-here',
+                    'wallet_address' => '0xfunds-address',
+                ]
+            ]
         ]);
 
         $eth->sendRawTransaction('private-key-here', [

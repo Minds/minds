@@ -25,12 +25,18 @@ class WithdrawEvent implements BlockchainEventInterface
 
     /** @var Manager $manager */
     private $manager;
+
+    /** @var Repository $repository **/
     protected $txRepository;
 
-    public function __construct($manager = null, $txRepository = null)
+    /** @var Config $config */
+    private $config;
+
+    public function __construct($manager = null, $txRepository = null, $config = null)
     {
         $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->manager = $manager ?: Di::_()->get('Rewards\Withdraw\Manager');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
@@ -59,6 +65,13 @@ class WithdrawEvent implements BlockchainEventInterface
 
     public function onRequest($log, $transaction)
     {
+        $address = $log['address'];
+
+        if ($address != $this->config->get('blockchain')['contracts']['withdraw']['contract_address']) {
+            $this->withdrawFail($log, $transaction);
+            throw new \Exception('Incorrect address sent the withdraw event');
+        }
+
         $tx = $log['transactionHash'];
         list($address, $user_guid, $gas, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::NUMBER, Util::NUMBER, Util::NUMBER]);
         $user_guid = BigNumber::fromHex($user_guid)->toInt();

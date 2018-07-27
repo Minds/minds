@@ -60,8 +60,8 @@ class Manager
     public function check($userGuid)
     {
 
-        if (isset($this->config->get('blockchain')['withdraw_limit_exemptions']) 
-            && in_array($userGuid, $this->config->get('blockchain')['withdraw_limit_exemptions'])) {
+        if (isset($this->config->get('blockchain')['contracts']['withdraw']['limit_exemptions']) 
+            && in_array($userGuid, $this->config->get('blockchain')['contracts']['withdraw']['limit_exemptions'])) {
             return true;
         }
 
@@ -160,9 +160,9 @@ class Manager
         $this->repo->add($request);
 
         //now issue the transaction
-        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['rewards_wallet_pkey'], [
-            'from' => $this->config->get('blockchain')['rewards_wallet_address'],
-            'to' => $this->config->get('blockchain')['withdraw_address'],
+        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['withdraw']['wallet_pkey'], [
+            'from' => $this->config->get('blockchain')['contracts']['withdraw']['wallet_address'],
+            'to' => $this->config->get('blockchain')['contracts']['withdraw']['contract_address'],
             'gasLimit' => BigNumber::_(4612388)->toHex(true),
             'gasPrice' => BigNumber::_(10000000000)->toHex(true),
             'data' => $this->eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
