@@ -1031,7 +1031,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	$user->setEmail($email);
 	$user->name = $name;
 	$user->access_id = ACCESS_PUBLIC;
-	$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
+	//$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
 	$user->password = generate_user_password($user, $password);
 	$user->owner_guid = 0; // Users aren't owned by anyone, even if they are admin created.
 	$user->container_guid = 0; // Users aren't contained by anyone, even if they are admin created.
