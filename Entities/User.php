@@ -588,17 +588,6 @@ class User extends \ElggUser
         return $this;
     }
 
-    /**
-     * Set the secret key for clusters to use
-     * @todo - should we use oauth2 instead. should this be stored in its own row rather than in the user object?
-     * @param string $host
-     */
-    public function setSecretKey($host)
-    {
-        $key = "secret:" . serialize($host);
-        $this->$key = core\clusters::generateSecret();
-        $this->save();
-    }
 
     public function getMatureChannel()
     {
