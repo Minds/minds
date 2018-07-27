@@ -30,8 +30,8 @@ class Manager
             $this->contracts['token'] = Contracts\MindsToken::at($blockchainConfig['token_address']);
         }
 
-        if ($blockchainConfig['wire_address']) {
-            $this->contracts['wire'] = Contracts\MindsWire::at($blockchainConfig['wire_address']);
+        if ($blockchainConfig['contracts']['wire']['contract_address']) {
+            $this->contracts['wire'] = Contracts\MindsWire::at($blockchainConfig['contracts']['wire']['contract_address']);
         }
 
         if ($blockchainConfig['boost_address']) {

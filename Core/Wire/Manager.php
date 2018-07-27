@@ -301,11 +301,11 @@ class Manager
             ]);
         } else { //onchain
             $token = Di::_()->get('Blockchain\Token');
-            $txHash = $client->sendRawTransaction($this->config->get('blockchain')['wallet_pkey'], [
-                'from' => $this->config->get('blockchain')['wallet_address'],
-                'to' => $this->config->get('blockchain')['wire_address'],
+            $txHash = $client->sendRawTransaction($this->config->get('blockchain')['contracts']['wire']['wallet_pkey'], [
+                'from' => $this->config->get('blockchain')['contracts']['wire']['wallet_address'],
+                'to' => $this->config->get('blockchain')['contracts']['wire']['contract_address'],
                 'gasLimit' => BigNumber::_(200000)->toHex(true),
-                'data' => $this->client->encodeContractMethod('wireFrom(address,address,uint256)', [
+                'data' => $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
                     $subscription->getId(),
                     $receiver->getEthWallet(),
                     BigNumber::_($token->toTokenUnit($amount))->toHex(true)
