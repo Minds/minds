@@ -106,6 +106,7 @@ class Conversation extends DenormalizedEntity
 
         if (strpos($guid, ':') !== false) {
             $participants = explode(':', $guid);
+            $participants = $this->permutateGuid($participants);
             foreach ($participants as $participant) {
                 $this->setParticipant($participant);
             }
