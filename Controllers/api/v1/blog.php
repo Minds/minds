@@ -288,7 +288,7 @@ class blog implements Interfaces\Api
         } catch (\Exception $e) {
             return Factory::response([
                 'status' => 'error',
-                'message' => $e->getMessage();
+                'message' => $e->getMessage(),
             ]);
         }
 
