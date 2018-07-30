@@ -279,10 +279,17 @@ class blog implements Interfaces\Api
             ]);
         }
 
-        if ($editing) {
-            $saved = $manager->update($blog);
-        } else {
-            $saved = $manager->add($blog);
+        try {
+            if ($editing) {
+                $saved = $manager->update($blog);
+            } else {
+                $saved = $manager->add($blog);
+            }
+        } catch (\Exception $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => $e->getMessage();
+            ]);
         }
 
         if ($saved && is_uploaded_file($_FILES['file']['tmp_name'])) {
