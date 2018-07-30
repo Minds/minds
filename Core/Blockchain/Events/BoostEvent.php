@@ -28,16 +28,22 @@ class BoostEvent implements BlockchainEventInterface
     protected $txRepository;
 
     /** @var Repository $boostRepository */
+    protected $boostRepository;
+    
+    /** @var Config $config */
+    protected $config;
 
     public function __construct(
         $mongo = null,
         $txRepository = null,
-        $boostRepository = null
+        $boostRepository = null,
+        $config = null
     )
     {
         $this->mongo = $mongo ?: Data\Client::build('MongoDB');
         $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->boostRepository = $boostRepository ?: Di::_()->get('Boost\Repository');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
@@ -56,6 +62,10 @@ class BoostEvent implements BlockchainEventInterface
     public function event($topic, array $log, $transaction)
     {
         $method = static::$eventsMap[$topic];
+
+        if ($log['address'] != $this->config->get('blockchain')['contracts']['boost']['contract_address']) {
+            throw new \Exception('Event does not match address');
+        }
 
         if (method_exists($this, $method)) {
             $this->{$method}($log, $transaction);

@@ -25,9 +25,13 @@ class WireEvent implements BlockchainEventInterface
     /** @var Manager $manager */
     private $manager;
 
-    public function __construct($manager = null)
+    /** @var Config $config */
+    private $config;
+
+    public function __construct($manager = null, $config = null)
     {
         $this->manager = $manager ?: Di::_()->get('Wire\Manager');
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
@@ -46,6 +50,10 @@ class WireEvent implements BlockchainEventInterface
     public function event($topic, array $log, $transaction)
     {
         $method = static::$eventsMap[$topic];
+
+        if ($log['address'] != $this->config->get('blockchain')['contracts']['wire']['contract_address']) {
+            throw new \Exception('Event does not match address');
+        }
 
         if (method_exists($this, $method)) {
             $this->{$method}($log, $transaction);

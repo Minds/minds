@@ -19,6 +19,14 @@ class TokenSaleEvent implements BlockchainEventInterface
         'blockchain:fail' => 'purchaseFail',
     ];
 
+    /** @var Config $config */
+    protected $config;
+
+    public function __construct($config = null)
+    {
+        $this->config = $config ?: Di::_()->get('Config');
+    }
+
     /**
      * @return array
      */
@@ -35,6 +43,10 @@ class TokenSaleEvent implements BlockchainEventInterface
     public function event($topic, array $log, $transaction)
     {
         $method = static::$eventsMap[$topic];
+
+        if ($log['address'] != $this->config->get('blockchain')['contracts']['token_sale_event']['contract_address']) {
+            throw new \Exception('Event does not match address');
+        }
 
         if (method_exists($this, $method)) {
             $this->{$method}($log, $transaction);

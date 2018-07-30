@@ -56,6 +56,10 @@ class WithdrawEvent implements BlockchainEventInterface
     {
         $method = static::$eventsMap[$topic];
 
+        if ($log['address'] != $this->config->get('blockchain')['contracts']['withdraw']['contract_address']) {
+            throw new \Exception('Event does not match address');
+        }
+
         if (method_exists($this, $method)) {
             $this->{$method}($log, $transaction);
         } else {
