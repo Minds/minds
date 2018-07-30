@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain\Events;
 
 use Minds\Core\Blockchain\Util;
+use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
 use Minds\Core\Blockchain\Purchase;
 
