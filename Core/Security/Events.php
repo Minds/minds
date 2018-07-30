@@ -314,7 +314,6 @@ class Events
     {
         $object = $params;
         if ($this->strposa($object->description, $this->prohibitedDomains()) || 
-            ($object->subtype == 'blog' && $this->strposa($object->getBody(), $this->prohibitedDomains())) ||
             $this->strposa($object->briefdescription, $this->prohibitedDomains()) ||
             $this->strposa($object->message, $this->prohibitedDomains()) ||
             $this->strposa($object->title, $this->prohibitedDomains())

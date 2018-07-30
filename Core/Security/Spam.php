@@ -12,20 +12,18 @@ class Spam
 
     public function check($entity)
     {
-        $spam = false;        
-
-        $spam = $this->strposa($entity->description, $this->prohibitedDomains()) ||
-            $this->strposa($entity->briefdescription,$this->prohibitedDomains());
-
-        if ($entity->type == 'group' && $this->strposa($entity->getBriefDescription(), $this->prohibitedDomains())) {
-            $spam = true;
-        }
-
-        if ($spam) {
+        if ($this->strposa($entity->getBody(), $this->prohibitedDomains())
+            || $this->strposa($entity->getDescription(), $this->prohibitedDomains())
+            || $this->strposa($entity->getBriefDescription, $this->prohibitedDomains())
+        ) {
             throw new \Exception('Sorry, you included a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
         }
 
-        return $spam;
+        if ($entity->type == 'group' 
+            && $this->strposa($entity->getBriefDescription(), $this->prohibitedDomains())
+        ) {
+            new \Exception('Sorry, you included a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again');
+        }
     }
 
     protected function strposa($haystack, $needles, $offset = 0)
@@ -253,7 +251,64 @@ class Spam
             'goo.gl',
             'getmooovie.com',
             'marketreportscenter.com',
-            'getsooft.com'
+            'getsooft.com',
+            'myowndom.ru',
+            'print-mgn.ru',
+            'wiki-data.ru',
+            'velobog.ru',
+            'mobisony.ru',
+            'dzeroki.ru',
+            'slimkor.ru',
+            'kak-brosit-kyrit.ru',
+            'jinyurl.com',
+            'urlin.us',
+            'capillus.com',
+            'siteprofissional.com',
+            'mitersawjudge.com',
+            'mohajreen-jeeda.com',
+            'jobberies.com',
+            'bestfilms.site',
+            'baystudios.ch',
+            'elvenarhack.bid',
+            'essencephskincare.com',
+            'blog2learn.com',
+            'superrugbyonline.net',
+            'superrugby18.livejournal.com',
+            'expertairco.com',
+            'draesthetica.co.uk',
+            'sphere.social',
+            'saveabookmarks.xyz',
+            '/t.co',
+            'samuelsconstruction.build',
+            'pmwares.com',
+            'watchesofwales.co.uk',
+            //'.ru',
+            'zotero.org',
+            'speakerdeck.com',
+            'freesiteslike.com',
+            'pusha.se',
+            'vrootdownload.org',
+            'rubberwebshop.nl',
+            'restaurerlecorps.info',
+            'discretthemes.info',
+            'bride-forever.com',
+            'simplesmetamorphoses.info',
+            'mp3gain.com',
+            'mp4gain.com',
+            'ttlink.com',
+            'onepost.cf',
+            'getmefunds.com',
+            'vikinail.pl',
+            'typesofbeauty.info',
+            'joie6portia93.bloglove.cc',
+            'htgtea.com',
+            'tblogz.com',
+            'liveinternet.ru',
+            '.diowebhost.com',
+            '/yoursite.com',
+            'reworkedgames.eu',
+            'mp3gain.sourceforge.net',
+            'pages10.com',
         ];
     }
 

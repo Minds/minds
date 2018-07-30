@@ -40,5 +40,9 @@ class SecurityProvider extends Provider
         $this->di->bind('Security\Password', function ($di) {
             return new Password();
         }, ['useFactory' => false]);
+
+        $this->di->bind('Security\Spam', function ($di) {
+            return new Spam();
+        }, ['useFactory' => true]);
     }
 }

@@ -8,6 +8,8 @@
 
 namespace Minds\Core\Blogs;
 
+use Minds\Core\Di\Di;
+
 class Manager
 {
     /** @var Repository */
@@ -22,6 +24,9 @@ class Manager
     /** @var Delegates\Feeds */
     protected $feeds;
 
+    /** @var Spam **/
+    protected $spam;
+
     /**
      * Manager constructor.
      * @param null $repository
@@ -34,13 +39,15 @@ class Manager
         $repository = null,
         $paywallReview = null,
         $slug = null,
-        $feeds = null
+        $feeds = null,
+        $spam = null
     )
     {
         $this->repository = $repository ?: new Repository();
         $this->paywallReview = $paywallReview ?: new Delegates\PaywallReview();
         $this->slug = $slug ?: new Delegates\Slug();
         $this->feeds = $feeds ?: new Delegates\Feeds();
+        $this->spam = $spam ?: Di::_()->get('Security\Spam');
     }
 
     /**
@@ -95,6 +102,10 @@ class Manager
      */
     public function add(Blog $blog)
     {
+        if ($this->spam->check($blog)) {
+            return false;
+        }
+
         $blog
             ->setTimeCreated(time())
             ->setTimeUpdated(time())
