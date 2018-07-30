@@ -272,6 +272,13 @@ class blog implements Interfaces\Api
             ]);
         }
 
+        if (!$blog->getBody()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Sorry, your blog must have some content'
+            ]);
+        }
+
         if ($editing) {
             $saved = $manager->update($blog);
         } else {
