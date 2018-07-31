@@ -39,6 +39,9 @@ class Join
     /** @var ReferralValidator */
     private $validator;
 
+    /** @var OfacBlacklist */
+    private $ofacBlacklist;
+
     /** @var Call */
     private $db;
 
@@ -49,7 +52,8 @@ class Join
         $config = null,
         $validator = null,
         $db = null,
-        $joinedValidator = null
+        $joinedValidator = null,
+        $ofacBlacklist = null
     )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
@@ -59,6 +63,7 @@ class Join
         $this->validator = $validator ?: Di::_()->get('Rewards\ReferralValidator');
         $this->db = $db ?: new Core\Data\Call('entities_by_time');
         $this->joinedValidator = $joinedValidator ?: Di::_()->get('Rewards\JoinedValidator');
+        $this->ofacBlacklist = $ofacBlacklist ?: Di::_()->get('Rewards\OfacBlacklist');
     }
 
     public function setUser(&$user)
@@ -69,6 +74,9 @@ class Join
 
     public function setNumber($number)
     {
+        if ($this->ofacBlacklist->isBlacklisted($number)) {
+            throw new \Exception('Because your country is currently listed on the OFAC sanctions list you are unable to earn rewards or purchase tokens');
+        }
         $proto = $this->libphonenumber->parse("+$number");
         $this->number = $this->libphonenumber->format($proto, \libphonenumber\PhoneNumberFormat::E164);
         return $this;

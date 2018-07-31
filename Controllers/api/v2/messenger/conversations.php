@@ -178,7 +178,14 @@ class conversations implements Interfaces\Api
 
         //error_log("got a message to send");
         $conversation = new Entities\Conversation();
-        $conversation->setGuid($pages[0]);
+
+        $guid = "";
+
+        $split_guid = explode(":", $pages[0]);
+        sort($split_guid);
+        $guid = join(":", $split_guid);
+
+        $conversation->setGuid($guid);
 
         if (!Security\ACL::_()->read($conversation)) {
             return Factory::response([

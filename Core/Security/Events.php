@@ -287,7 +287,27 @@ class Events
             'pusha.se',
             'vrootdownload.org',
             'rubberwebshop.nl',
-        ];
+            'restaurerlecorps.info',
+            'discretthemes.info',
+            'bride-forever.com',
+            'simplesmetamorphoses.info',
+            'mp3gain.com',
+            'mp4gain.com',
+            'ttlink.com',
+            'onepost.cf',
+            'getmefunds.com',
+            'vikinail.pl',
+            'typesofbeauty.info',
+            'joie6portia93.bloglove.cc',
+            'htgtea.com',
+            'tblogz.com',
+            'liveinternet.ru',
+            '.diowebhost.com',
+            '/yoursite.com',
+            'reworkedgames.eu',
+            'mp3gain.sourceforge.net',
+            'pages10.com',
+            ];
     }
 
     public function onCreateHook($hook, $type, $params, $return = null)

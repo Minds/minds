@@ -5,6 +5,8 @@ namespace Spec\Minds\Core\Blogs;
 use Minds\Core\Blogs\Blog;
 use Minds\Core\Blogs\Delegates;
 use Minds\Core\Blogs\Repository;
+use Minds\Core\Security\Spam;
+
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -128,7 +130,19 @@ class ManagerSpec extends ObjectBehavior
             ->duringGetNext($blog, 'notimplemented');
     }
 
-    function it_should_add(Blog $blog) {
+    function it_should_add(
+        Blog $blog,
+        Repository $repository,
+        Delegates\PaywallReview $paywallReview,
+        Delegates\Slug $slug,
+        Delegates\Feeds $feeds,
+        Spam $spam
+    ) {
+        $this->beConstructedWith($repository, $paywallReview, $slug, $feeds, $spam);
+
+        $spam->check($blog)
+            ->shouldBeCalled();
+
         $blog->setTimeCreated(Argument::type('int'))
             ->shouldBeCalled()
             ->willReturn($blog);
@@ -222,5 +236,15 @@ class ManagerSpec extends ObjectBehavior
         $this
             ->delete($blog)
             ->shouldReturn(true);
+    }
+
+    function it_should_abort_if_spam(Blog $blog)
+    {
+        $blog->getBody()
+            ->shouldBeCalled()
+            ->willReturn('movieblog.tumblr.com');
+
+        $this->shouldThrow(new \Exception('Sorry, you included a reference to a domain name linked to spam. You can not use short urls (eg. bit.ly). Please remove it and try again'))
+            ->duringAdd($blog);
     }
 }
