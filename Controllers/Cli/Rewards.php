@@ -57,11 +57,16 @@ class Rewards extends Cli\Controller implements Interfaces\CliControllerInterfac
                 continue;
             }
             try {
+                $user = new Entities\User((string) $guid, false);
+
+                if (!$user->getPhoneNumberHash()) {
+                    // Avoid users without a phone number hash
+                    continue;
+                }
+
                 $manager = new Core\Rewards\Manager();
                 $manager->setFrom($timestamp)
                     ->setTo($to);
-                $user = new Entities\User();
-                $user->guid = (string) $guid;
                 $manager->setUser($user);
                 $manager->setDryRun($this->getOpt('dry-run'));
                 $reward = $manager->sync();

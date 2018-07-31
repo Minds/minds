@@ -56,11 +56,16 @@ class Contributions extends Cli\Controller implements Interfaces\CliControllerIn
             if (!$guid) {
                 continue;
             }
+            $user = new Entities\User((string) $guid, false);
+
+            if (!$user->getPhoneNumberHash()) {
+                // Avoid users without a phone number hash
+                continue;
+            }
+
             $manager = new Core\Rewards\Contributions\Manager();
-            $manager->setFrom($from);
-            $user = new Entities\User();
-            $user->guid = (string) $guid;
-            $manager->setUser($user);
+            $manager->setFrom($from)
+                ->setUser($user);
             //$manager->setDryRun(true);
             $results = $manager->sync();
 
@@ -111,7 +116,7 @@ class Contributions extends Cli\Controller implements Interfaces\CliControllerIn
                 if (!$guid) {
                     continue;
                 }
-                $user = new Entities\User((string) $guid);
+                $user = new Entities\User((string) $guid, false);
                 $hash = $user->getPhoneNumberHash();
 
                 if (isset($hashes[$hash])) { //don't allow multiple phones to claim checkin
