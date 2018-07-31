@@ -30,5 +30,9 @@ class RewardsProvider extends Provider
         $this->di->bind('Rewards\JoinedValidator', function ($di) {
             return new JoinedValidator();
         }, [ 'useFactory'=> true ]);
+
+        $this->di->bind('Rewards\OfacBlacklist', function ($di) {
+            return new OfacBlacklist();
+        }, [ 'useFactory'=> true ]);
     }
 }

@@ -6,7 +6,7 @@ use Minds\Core\Config;
 use Minds\Core\Data\ElasticSearch\Client;
 use Minds\Core\Di\Di;
 use Minds\Core\Rewards\ReferralValidator;
-
+use Minds\Core\Rewards\OfacBlacklist;
 use Minds\Core\Rewards\JoinedValidator;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -35,10 +35,12 @@ class JoinSpec extends ObjectBehavior
         User $user,
         Config $config,
         ReferralValidator $validator,
+        JoinedValidator $joinedValidator,
+        OfacBlacklist $ofacBlacklist,
         Call $db
     )
     {
-        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db);
+        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db, $joinedValidator, $ofacBlacklist);
 
         $libphonenumber->parse("+1 929 387 2643")
             ->shouldBeCalled()
@@ -70,6 +72,28 @@ class JoinSpec extends ObjectBehavior
             ->setUser($user)
             ->setNumber("1 929 387 2643");
         $this->verify()->shouldReturn('secret');
+    }
+
+    function it_should_check_ofac_blacklist(
+        TwoFactor $twofactor,
+        SMSServiceInterface $sms,
+        PhoneNumberUtil $libphonenumber,
+        PhoneNumber $phonenumberMock,
+        User $user,
+        Config $config,
+        ReferralValidator $validator,
+        JoinedValidator $joinedValidator,
+        OfacBlacklist $ofacBlacklist,
+        Call $db
+    )
+    {
+        $this->beConstructedWith($twofactor, $sms, $libphonenumber, $config, $validator, $db, $joinedValidator, $ofacBlacklist);
+
+        $ofacBlacklist->isBlacklisted("53 8363564")
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->shouldThrow('\Exception')->duringSetNumber("53 8363564");
     }
 
     function it_should_confirm_a_number(
