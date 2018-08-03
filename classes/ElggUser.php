@@ -178,7 +178,7 @@ class ElggUser extends ElggEntity
             //error_log('allowing password save!');
         }
 
-        if(!$this->merchant || !is_array($this->merchant) || $this->merchant['service'] != 'stripe'){
+        if (!$this->merchant || !is_array($this->merchant)) {
             unset($array['merchant']); //HACK: only allow updating of merchant if it's an array
         }
 
