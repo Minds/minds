@@ -10,6 +10,7 @@ use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Di\Di;
 use Minds\Entities\User;
 use Minds\Core\Guid;
+use Minds\Core\Util\BigNumber;
 
 class Manager
 {
@@ -22,6 +23,12 @@ class Manager
 
     /** @var Repository $txTransactions */
     protected $txRepository;
+
+    /** @var Ethereum $eth */
+    protected $eth;
+
+    /** @var Config $config */
+    protected $config;
 
     /** @var User $user */
     protected $user;
@@ -38,12 +45,16 @@ class Manager
     public function __construct(
         $contributions = null,
         $transactions = null,
-        $txRepository = null
+        $txRepository = null,
+        $eth = null,
+        $config = null
     )
     {
         $this->contributions = $contributions ?: new Contributions\Manager;
         $this->transactions = $transactions ?: Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
         $this->txRepository = $txRepository ?: Di::_()->get('Blockchain\Transactions\Repository');
+        $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->config = $config ?: Di::_()->get('Config');
         $this->from = strtotime('-7 days') * 1000;
         $this->to = time() * 1000;
     }
@@ -123,8 +134,57 @@ class Manager
         }
 
         $this->txRepository->add($transaction);
+
+        try {
+            $this->bonus();
+        } catch (\Exception $e) { }
+
         //$this->txRepository->delete($this->user->guid, strtotime("+24 hours - 1 second", $this->from / 1000), 'offchain');
         return $transaction;
     }
 
+    public function bonus()
+    {
+        $this->contributions
+            ->setFrom($this->from)
+            ->setTo($this->to)
+            ->setUser($this->user);
+
+        if (!$this->user || !$this->user->eth_wallet) { 
+            return;
+        }
+
+        $amount = $this->contributions->getRewardsAmount();
+
+        if ($amount <= 0) {
+            return;
+        } 
+
+        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['withdraw']['wallet_pkey'], [
+            'from' => $this->config->get('blockchain')['contracts']['withdraw']['wallet_address'],
+            'to' => $this->config->get('blockchain')['token_address'],
+            'gasLimit' => BigNumber::_(4612388)->toHex(true),
+            'gasPrice' => BigNumber::_(10000000000)->toHex(true),
+            //'nonce' => (int) microtime(true),
+            'data' => $this->eth->encodeContractMethod('transfer(address,uint256)', [
+                $this->user->eth_wallet,
+                BigNumber::_($amount)->mul(0.25)->toHex(true),
+            ])
+        ]);
+        
+        $transaction = new Transaction(); 
+        $transaction
+            ->setUserGuid($this->user->guid)
+            ->setWalletAddress($this->user->eth_wallet)
+            ->setTimestamp(time())
+            ->setTx($res)
+            ->setAmount((string) BigNumber::_($amount)->mul(0.25))
+            ->setContract('bonus')
+            ->setCompleted(true);
+    
+        $this->txRepository->add($transaction);
+        return $transaction;
+    }
+
 }
+
