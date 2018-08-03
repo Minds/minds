@@ -69,8 +69,8 @@ class Repository
             'user_guid' => null,
             'wallet_address' => null,
             'status' => null,
-            'limit' => 12,
-            'offset' => null,
+            'limit' => 50,
+            'offset' => '',
             'allowFiltering' => false,
         ], $options);
 
