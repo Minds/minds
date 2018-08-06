@@ -7,6 +7,28 @@ namespace Minds\Core\Blockchain\Transactions;
 use Minds\Entities\User;
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Class Transaction
+ * @package Minds\Core\Blockchain\Transactions
+ * @method string getTx()
+ * @method Transaction setTx(string $value)
+ * @method int getUserGuid()
+ * @method Transaction setUserGuid(int $value)
+ * @method string getWalletAddress()
+ * @method Transaction setWalletAddress(string $value)
+ * @method int getTimestamp()
+ * @method Transaction setTimestamp(int $value)
+ * @method string getContract()
+ * @method Transaction setContract(string $value)
+ * @method string getAmount()
+ * @method Transaction setAmount(string)
+ * @method bool getCompleted()
+ * @method Transaction setCompleted(bool $value)
+ * @method bool getFailed()
+ * @method Transaction setFailed(bool $value)
+ * @method array getData()
+ * @method Transaction setData(array $value)
+ */
 class Transaction
 {
     use MagicAttributes;

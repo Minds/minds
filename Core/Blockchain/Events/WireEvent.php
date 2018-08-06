@@ -8,7 +8,6 @@
 
 namespace Minds\Core\Blockchain\Events;
 
-use Minds\Core\Blockchain\Contracts\MindsToken;
 use Minds\Core\Blockchain\Util;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
@@ -64,9 +63,9 @@ class WireEvent implements BlockchainEventInterface
 
     public function wireSent($log, $transaction)
     {
-        $token = MindsToken::at(Di::_()->get('Config')->get('blockchain')['token_address']);
+        // $token = MindsToken::at(Di::_()->get('Config')->get('blockchain')['token_address']);
 
-        $tx = $log['transactionHash'];
+        // $tx = $log['transactionHash'];
         list($sender, $receiver, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::ADDRESS, Util::NUMBER]);
         $amount = (string) BigNumber::fromHex($amount);
 

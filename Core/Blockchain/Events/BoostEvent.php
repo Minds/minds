@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Blockchain\Events;
 
+use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Transactions\Transaction;
 use Minds\Core\Data;
 use Minds\Core\Di\Di;
@@ -27,7 +28,7 @@ class BoostEvent implements BlockchainEventInterface
     /** @var Repository $txRepository */
     protected $txRepository;
 
-    /** @var Repository $boostRepository */
+    /** @var \Minds\Core\Boost\Repository $boostRepository */
     protected $boostRepository;
     
     /** @var Config $config */
@@ -112,18 +113,17 @@ class BoostEvent implements BlockchainEventInterface
      * @param Transaction $transaction
      */
     private function resolve($transaction) {
-        $repo = Di::_()->get('Boost\Repository');
 
-        $boost = $repo->getEntity($transaction->getData()['handler'], $transaction->getData()['guid']);
+        $boost = $this->boostRepository->getEntity($transaction->getData()['handler'], $transaction->getData()['guid']);
 
         $tx = (string) $transaction->getTx();
 
         if(!$boost) {
-            throw new \Exception("No boost with hash ${$tx}");
+            throw new \Exception("No boost with hash {$tx}");
         }
 
         if($boost->getState() != 'pending') {
-            throw new \Exception("Boost with hash ${$tx} already processed. State: " . $boost->getState());
+            throw new \Exception("Boost with hash {$tx} already processed. State: " . $boost->getState());
         }
 
         $boost->setState('created')
