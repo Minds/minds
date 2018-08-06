@@ -182,7 +182,6 @@ class Ethereum
                 $this->nonces[$transaction['from']] = $transaction['nonce'] = (int) BigNumber::fromHex($nonce)->toString();
             }
             $this->nonces[$transaction['from']]++; //increase future nonces
-            echo "\nnonce: {$this->nonces[$transaction['from']]}";
         }
 
         $signedTx = $this->sign($privateKey, $transaction);
