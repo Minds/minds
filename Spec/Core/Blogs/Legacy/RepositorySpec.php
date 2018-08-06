@@ -7,6 +7,7 @@ use Minds\Core\Blogs\Blog;
 use Minds\Core\Blogs\Legacy;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
+use Minds\Core\Security\ACL;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Spec\Minds\Mocks\Cassandra\FutureRow;
@@ -22,19 +23,24 @@ class RepositorySpec extends ObjectBehavior
     /** @var Legacy\Entity */
     protected $entity;
 
-    /** @var Feeds\Legacy\Repository */
+    /** @var FeedsRepository */
     protected $feedsRepo;
+
+    /** @var ACL */
+    protected $acl;
 
     function let(
         Client $cql,
         Legacy\Entity $legacyEntity,
-        FeedsRepository $feedsRepo
+        FeedsRepository $feedsRepo,
+        ACL $acl
     ) {
-        $this->beConstructedWith($cql, $legacyEntity, $feedsRepo);
+        $this->beConstructedWith($cql, $legacyEntity, $feedsRepo, $acl);
 
         $this->cql = $cql;
         $this->entity = $legacyEntity;
         $this->feedsRepo = $feedsRepo;
+        $this->acl = $acl;
     }
 
     function it_is_initializable()

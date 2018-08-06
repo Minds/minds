@@ -17,6 +17,7 @@ use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Feeds\Legacy\Repository as FeedsRepository;
 use Minds\Core\Feeds\FeedItem;
+use Minds\Core\Security\ACL;
 
 class Repository
 {
@@ -26,19 +27,23 @@ class Repository
     /** @var Legacy\Entity */
     protected $entity;
 
-    /** @var Feeds\Legacy\Repository */
+    /** @var FeedsRepository */
     protected $feedsRepo;
+
+    /** @var ACL */
+    protected $acl;
 
     /**
      * Repository constructor.
      * @param null $cql
      * @param null $legacyEntity
      */
-    public function __construct($cql = null, $legacyEntity = null, $feedsRepo = null)
+    public function __construct($cql = null, $legacyEntity = null, $feedsRepo = null, $acl = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->entity = $legacyEntity ?: new Entity();
         $this->feedsRepo = $feedsRepo ?: new FeedsRepository();
+        $this->acl = $acl ?: ACL::_();
     }
 
     /**
@@ -116,7 +121,9 @@ class Repository
                     $blog = $this->entity->build($data);
                     $blog->setEphemeral(false);
 
-                    $blogs[] = $blog;
+                    if ($this->acl->read($blog)) {
+                        $blogs[] = $blog;
+                    }
                 }
             }
         }
