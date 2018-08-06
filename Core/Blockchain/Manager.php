@@ -14,6 +14,7 @@ class Manager
 {
     protected $config;
     protected $contracts = [];
+    protected static $infuraProxyEndpoint = 'api/v2/blockchain/proxy/';
 
     public function __construct($config = null)
     {
@@ -60,7 +61,7 @@ class Manager
         $blockchainConfig = $this->config->get('blockchain') ?: [];
 
         return array_merge([
-            'network_address' => $blockchainConfig['network_address'],
+            'network_address' => $this->config->get('site_url') . self::$infuraProxyEndpoint,
             'client_network' => $blockchainConfig['client_network'],
             'wallet_address' => $blockchainConfig['wallet_address'],
             'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
