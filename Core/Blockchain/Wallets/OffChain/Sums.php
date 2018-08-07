@@ -39,7 +39,7 @@ class Sums
     }
 
     /**
-     * Get the nalance
+     * Get the balance
      */
     public function getBalance()
     {
@@ -48,7 +48,7 @@ class Sums
         if ($this->user) {
             $query->query("SELECT 
                 SUM(amount) as balance 
-                FROM blockchain_transactions_by_address
+                FROM blockchain_transactions_mainnet_by_address
                 WHERE user_guid = ?
                 AND wallet_address = 'offchain'", 
                 [
@@ -74,6 +74,7 @@ class Sums
         
         return (string) BigNumber::_($rows[0]['balance']);
     }
+
 
     public function getContractBalance($contract = '', $onlySpend = false)
     {

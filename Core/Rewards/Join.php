@@ -41,6 +41,9 @@ class Join
 
     /** @var OfacBlacklist */
     private $ofacBlacklist;
+    
+    /** @var TestnetBalance */
+    private $testnetBalance;
 
     /** @var Call */
     private $db;
@@ -53,7 +56,8 @@ class Join
         $validator = null,
         $db = null,
         $joinedValidator = null,
-        $ofacBlacklist = null
+        $ofacBlacklist = null,
+        $testnetBalance = null
     )
     {
         $this->twofactor = $twofactor ?: Di::_()->get('Security\TwoFactor');
@@ -64,6 +68,7 @@ class Join
         $this->db = $db ?: new Core\Data\Call('entities_by_time');
         $this->joinedValidator = $joinedValidator ?: Di::_()->get('Rewards\JoinedValidator');
         $this->ofacBlacklist = $ofacBlacklist ?: Di::_()->get('Rewards\OfacBlacklist');
+        $this->testnetBalance = $testnetBalance ?: Di::_()->get('Blockchain\Wallets\OffChain\TestnetBalance');
     }
 
     public function setUser(&$user)
@@ -121,8 +126,12 @@ class Join
 
     public function confirm()
     {
+
+        if ($this->user->getPhoneNumberHash()) {
+            return false; //already joined
+        }
+ 
         if ($this->twofactor->verifyCode($this->secret, $this->code, 8)) {
-            //$this->user->setPhoneNumber($this->number);
             $hash = hash('sha256', $this->number . $this->config->get('phone_number_hash_salt'));
             $this->user->setPhoneNumberHash($hash);
             $this->user->save();
@@ -137,11 +146,18 @@ class Join
                     ->setAction('joined')
                     ->push();
 
+                $this->testnetBalance->setUser($this->user);
+                $testnetBalanceVal = BigNumber::_($this->testnetBalance->get());
+               
+                if ($testnetBalanceVal->lt(0)) { 
+                    return false; //balance negative
+                }
+                
                 $transactions = Di::_()->get('Blockchain\Wallets\OffChain\Transactions');
                 $transactions
                     ->setUser($this->user)
                     ->setType('joined')
-                    ->setAmount((string) BigNumber::toPlain(1, 18));
+                    ->setAmount((string) $testnetBalanceVal);
 
                 $transaction = $transactions->create();
             }

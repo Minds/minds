@@ -50,6 +50,10 @@ class BlockchainProvider extends Provider
             return new Wallets\OffChain\Balance();
         });
 
+        $this->di->bind('Blockchain\Wallets\OffChain\TestnetBalance', function () {
+            return new Wallets\OffChain\TestnetBalance();
+        });
+
         $this->di->bind('Blockchain\Wallets\OffChain\Transactions', function () {
             return new Wallets\OffChain\Transactions();
         }, [ 'useFactory' => false ]);
