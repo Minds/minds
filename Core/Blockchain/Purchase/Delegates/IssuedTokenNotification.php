@@ -8,6 +8,7 @@
 namespace Minds\Core\Blockchain\Purchase\Delegates;
 
 use Minds\Core\Blockchain\Pledges\Pledge;
+use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;

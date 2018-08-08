@@ -12,17 +12,21 @@ use Minds\Traits\MagicAttributes;
  * Class Purchase
  * @package Minds\Core\Blockchain\Purchase
  * @method string getPhoneNumberHash()
- * @method Pledge setPhoneNumberHash(string $value)
+ * @method Purchase setPhoneNumberHash(string $value)
  * @method int getUserGuid()
- * @method Pledge setUserGuid(int $value)
+ * @method Purchase setUserGuid(int $value)
  * @method string getWalletAddress()
- * @method Pledge setWalletAddress(string $value)
+ * @method Purchase setWalletAddress(string $value)
  * @method int getTimestamp()
- * @method Pledge setTimestamp(int $value)
+ * @method Purchase setTimestamp(int $value)
  * @method string getAmount()
- * @method Pledge setAmount(string $value)
+ * @method Purchase setAmount(string $value)
  * @method string getStatus()
- * @method Pledge setStatus(string $value)
+ * @method Purchase setStatus(string $value)
+ * @method string getTx()
+ * @method Purchase setTx(string $value)
+ * @method string getRequestedAmount()
+ * @method Purchase setRequestedAmount(BigNumber $value)
  */
 class Purchase implements \JsonSerializable
 {

@@ -10,12 +10,13 @@ use Minds\Core;
 
 class lookup
 {
+    /** @var Call */
     private $call;
     private $namespace = '';
     
     public function __construct($namespace = null)
     {
-        $this->call = new Call('user_index_to_guid');
+        $this->call = Core\Di\Di::_()->get('Database\Cassandra\UserIndexes');
         
         if ($namespace) {
             $this->setNamespace($namespace);

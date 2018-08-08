@@ -7,6 +7,7 @@
 
 namespace Minds\Controllers\api\v2\blockchain;
 
+use Minds\Core\Blockchain\Purchase\Manager;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Util\BigNumber;
@@ -72,6 +73,7 @@ class purchase implements Interfaces\Api
             ]);
         }
 
+        /** @var Manager $manager */
         $manager = Di::_()->get('Blockchain\Purchase\Manager');
         $weiAmount = BigNumber::toPlain($amount, 18)->mul($manager->getEthTokenRate()); //convert to tokens
 

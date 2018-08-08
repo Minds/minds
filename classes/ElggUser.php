@@ -120,7 +120,8 @@ class ElggUser extends ElggEntity
 			return true;
 		}
 
-		$db = new Minds\Core\Data\Call('entities');
+		/** @var \Minds\Core\Data\Call $db */
+		$db = Minds\Core\Di\Di::_()->get('Database\Cassandra\Entities');
 		$data = $db->getRow($guid, array('limit'=>500));
 		$data['guid'] = $guid;
 		if($data)

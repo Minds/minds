@@ -7,13 +7,13 @@
 namespace Minds\Core\Wire;
 
 use Minds\Core;
-use Minds\Core\Blockchain\Services\RatesInterface;
-use Minds\Core\Guid;
 use Minds\Core\Data;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Guid;
 use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Exceptions\WalletNotSetupException;
+use Minds\Core\Wire\Subscriptions\Manager as SubscriptionsManager;
 use Minds\Entities;
 use Minds\Entities\User;
 
@@ -56,6 +56,20 @@ class Manager
     /** @var Core\Config */
     protected $config;
 
+    /** @var Core\Queue\Client */
+    protected $queue;
+
+    /** @var Core\Blockchain\Services\Ethereum */
+    protected $client;
+
+    /** @var Core\Blockchain\Token */
+    protected $token;
+
+    /** @var Core\Blockchain\Wallets\OffChain\Cap $cap */
+    protected $cap;
+
+    /** @var Core\Events\EventsDispatcher */
+    protected $dispatcher;
 
     public function __construct(
         $cache = null,
@@ -63,18 +77,24 @@ class Manager
         $subscriptionsManager = null,
         $txManager = null,
         $txRepo = null,
-        $stripe = null,
         $config = null,
-        $queue = null
+        $queue = null,
+        $client = null,
+        $token = null,
+        $cap = null,
+        $dispatcher = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
         $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Wire\Subscriptions\Manager');
         $this->txManager = $txManager ?: Di::_()->get('Blockchain\Transactions\Manager');
         $this->txRepo = $txRepo ?: Di::_()->get('Blockchain\Transactions\Repository');
-        $this->stripe = $stripe ?: Di::_()->get('StripePayments');
         $this->config = $config ?: Di::_()->get('Config');
         $this->queue = $queue ?: Core\Queue\Client::build();
+        $this->client = $client ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->token = $token ?: Di::_()->get('Blockchain\Token');
+        $this->cap = $cap ?: Di::_()->get('Blockchain\Wallets\OffChain\Cap');
+        $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     /**
@@ -179,11 +199,11 @@ class Manager
                 break;
             case 'offchain':
                 /** @var Core\Blockchain\Wallets\OffChain\Cap $cap */
-                $cap = Di::_()->get('Blockchain\Wallets\OffChain\Cap')
+                $this->cap
                     ->setUser($this->sender)
-                    ->setContract('boost');
+                    ->setContract('wire');
 
-                if (!$cap->isAllowed($this->amount)) {
+                if (!$this->cap->isAllowed($this->amount)) {
                     throw new \Exception('You are not allowed to spend that amount of coins.');
                 }
 
@@ -234,14 +254,14 @@ class Manager
         }
 
         // send wire email
-        Dispatcher::trigger('wire:email', 'wire', [
+        $this->dispatcher->trigger('wire:email', 'wire', [
             'receiver' => $this->receiver,
             'method' => $this->payload['method']
         ]);
 
         return true;
     }
-    
+
     /**
      * Confirmationof wire from the blockchain
      * @param Wire $wire
@@ -286,7 +306,7 @@ class Manager
 
     /**
      * Call when a recurring wire is triggered
-     * @param Subscription $subscription
+     * @param Core\Payments\Subscriptions\Subscription $subscription
      * @return void
      */
     public function onRecurring($subscription)
@@ -295,22 +315,22 @@ class Manager
         $receiver = new User($subscription->getEntity()->guid);
         $amount = $subscription->getAmount();
 
-        if ($subscription->getId('offchain')) {
+        if ($subscription->getId() === 'offchain') {
             $this->setPayload([
                 'method' => 'offchain',
             ]);
         } else { //onchain
-            $token = Di::_()->get('Blockchain\Token');
-            $txHash = $client->sendRawTransaction($this->config->get('blockchain')['contracts']['wire']['wallet_pkey'], [
-                'from' => $this->config->get('blockchain')['contracts']['wire']['wallet_address'],
-                'to' => $this->config->get('blockchain')['contracts']['wire']['contract_address'],
-                'gasLimit' => BigNumber::_(200000)->toHex(true),
-                'data' => $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
-                    $subscription->getId(),
-                    $receiver->getEthWallet(),
-                    BigNumber::_($token->toTokenUnit($amount))->toHex(true)
-                ])
-            ]);
+            $txHash = $this->client->sendRawTransaction($this->config->get('blockchain')['contracts']['wire']['wallet_pkey'],
+                [
+                    'from' => $this->config->get('blockchain')['contracts']['wire']['wallet_address'],
+                    'to' => $this->config->get('blockchain')['contracts']['wire']['contract_address'],
+                    'gasLimit' => BigNumber::_(200000)->toHex(true),
+                    'data' => $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
+                        $subscription->getId(),
+                        $receiver->getEthWallet(),
+                        BigNumber::_($this->token->toTokenUnit($amount))->toHex(true)
+                    ])
+                ]);
             $this->setPayload([
                 'method' => 'onchain',
                 'address' => $subscription->getId(), //sender address
@@ -322,7 +342,7 @@ class Manager
         $this->setSender($sender)
             ->setEntity($receiver)
             ->setAmount($subscription->getAmount());
-        
+
         $this->create();
     }
 
