@@ -166,7 +166,7 @@ class CassandraProvisioner implements ProvisionerInterface
                     'compaction = {\'class\': \'org.apache.cassandra.db.compaction.LeveledCompactionStrategy\'}'
                 ]
             ],
-            'blockchain_transactions' => [
+            'blockchain_transactions_mainnet' => [
                 'schema' => [
                     'user_guid' => 'varint',
                     'timestamp' => 'timestamp',
@@ -432,7 +432,7 @@ class CassandraProvisioner implements ProvisionerInterface
                 ]
             ],
             'blockchain_transactions_by_address' => [
-                'from' => 'blockchain_transactions',
+                'from' => 'blockchain_transactions_mainnet',
                 'select' => [
                     'wallet_address',
                     'user_guid',

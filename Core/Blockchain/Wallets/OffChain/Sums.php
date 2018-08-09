@@ -77,7 +77,7 @@ class Sums
 
     public function getContractBalance($contract = '', $onlySpend = false)
     {
-        $cql = "SELECT SUM(amount) as balance from blockchain_transactions WHERE user_guid = ? AND wallet_address = ?";
+        $cql = "SELECT SUM(amount) as balance from blockchain_transactions_mainnet WHERE user_guid = ? AND wallet_address = ?";
         $values = [
             new Varint($this->user->guid),
             'offchain',

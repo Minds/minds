@@ -112,7 +112,7 @@ class RepositorySpec extends ObjectBehavior
         $db->request(Argument::that(function($query) {
             $values = $query->build()['values'];
             $string = $query->build()['string'];
-            return $string == "SELECT * from blockchain_transactions WHERE user_guid = ? AND wallet_address IN (?, ?)"
+            return $string == "SELECT * from blockchain_transactions_mainnet WHERE user_guid = ? AND wallet_address IN (?, ?)"
                 && $values[0] == new Varint(123)
                 && $values[1] == 'offchain'
                 && $values[2] == '0xWALLETADDR';

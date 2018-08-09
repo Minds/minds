@@ -31,7 +31,7 @@ class Repository
         }
 
         $requests = [];
-        $template = "INSERT INTO blockchain_transactions (
+        $template = "INSERT INTO blockchain_transactions_mainnet (
             user_guid,
             wallet_address,
             timestamp,
@@ -83,7 +83,7 @@ class Repository
             'allowFiltering' => false,
         ], $options);
 
-        $cql = "SELECT * from blockchain_transactions";
+        $cql = "SELECT * from blockchain_transactions_mainnet";
         $where = [];
         $values = [];
 
@@ -190,7 +190,7 @@ class Repository
     public function get($user_guid, $tx)
     {
 
-        $cql = "SELECT * from blockchain_transactions_by_tx WHERE tx = ? AND user_guid = ?";
+        $cql = "SELECT * from blockchain_transactions_mainnet_by_tx WHERE tx = ? AND user_guid = ?";
         $values = [ (string) $tx, new Varint($user_guid) ];
 
         $query = new Custom();
@@ -227,7 +227,7 @@ class Repository
 
     public function update($transaction, array $dirty = [])
     {
-        $template = "UPDATE blockchain_transactions";
+        $template = "UPDATE blockchain_transactions_mainnet";
         $values = [];
         $set = [];
 
@@ -269,7 +269,7 @@ class Repository
     }
 
     public function delete($user_guid, $timestamp, $wallet_address) {
-        $cql = "DELETE FROM blockchain_transactions where user_guid = ? AND timestamp = ?";
+        $cql = "DELETE FROM blockchain_transactions_mainnet where user_guid = ? AND timestamp = ?";
         $values = [ new Varint($user_guid), new Timestamp($timestamp) ];
 
         $query = new Custom();
