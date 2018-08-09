@@ -51,6 +51,9 @@ class ManagerSpec extends ObjectBehavior
         $user->guid = '1234';
         $user->admin = true;
 
+        //remove ip whitelist check
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.56.0.1';
+
         $_SESSION['user'] = $user->toArray();
         $_SESSION['username'] = 'minds';
         $_SESSION['guid'] = '1234';
@@ -58,6 +61,10 @@ class ManagerSpec extends ObjectBehavior
         $this->config->get('features')
             ->shouldBeCalled()
             ->willReturn(['plus' => true, 'wire' => 'admin']);
+
+        $this->config->get('admin_ip_whitelist')
+            ->shouldBeCalled()
+            ->willReturn([ '10.56.0.1' ]);
 
         $this->has('wire')->shouldReturn(true);
     }

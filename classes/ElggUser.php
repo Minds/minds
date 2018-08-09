@@ -338,6 +338,18 @@ class ElggUser extends ElggEntity
 	 */
 	public function isAdmin() {
 
+		$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
+
+		if (!$ip) {
+			return false;
+		}
+
+		$whitelist = Minds\Core\Di\Di::_()->get('Config')->get('admin_ip_whitelist');
+
+		if (!$whitelist || !in_array($ip, $whitelist)) {
+			return false;
+		}
+
 		// for backward compatibility we need to pull this directly
 		// from the attributes instead of using the magic methods.
 		// this can be removed in 1.9
