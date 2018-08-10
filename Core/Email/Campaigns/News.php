@@ -49,6 +49,9 @@ class News extends EmailCampaign
      */
     public function send()
     {
+        if (!method_exists($this->user, 'getEmail')) {
+            return;
+        }
         if (!$this->templateKey || $this->templateKey == '') {
             throw new \Exception('You must set a templatePath');
         }

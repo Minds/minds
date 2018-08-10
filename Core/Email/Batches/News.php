@@ -67,7 +67,13 @@ class News implements EmailBatchInterface
             ->setValue(true)
             ->setOffset($this->offset);
 
+        $i = 0;
         foreach ($iterator as $user) {
+            $user = new \Minds\Entities\User('ottman');
+            if ($user->bonuced) {
+                continue;
+            }
+            $i++;
             $campaign = new Campaigns\News();
 
             $campaign
@@ -75,6 +81,8 @@ class News implements EmailBatchInterface
                 ->setTemplateKey($this->templateKey)
                 ->setSubject($this->subject)
                 ->send();
+            echo "\n[$i]: $user->guid ($iterator->offset)";
+            exit;
         }
     }
 }
