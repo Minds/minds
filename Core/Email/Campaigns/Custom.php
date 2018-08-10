@@ -20,17 +20,23 @@ class Custom
     protected $template;
     protected $mailer;
 
+    protected $user;
     protected $subject = "";
     protected $templateKey = "";
+    protected $topic = "";
     protected $campaign = "";
-
-    protected $period = 0;
 
     public function __construct(Call $db = null, Template $template = null, Mailer $mailer = null)
     {
         $this->db = $db ?: new Call('entities_by_time');
         $this->template = $template ?: new Template();
         $this->mailer = $mailer ?: new Mailer();
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function setSubject($subject)
@@ -45,63 +51,51 @@ class Custom
         return $this;
     }
 
+    public function setTopic($topic)
+    {
+        $this->topic = $topic;
+        return $this;
+    }
+
     public function setCampaign($campaign)
     {
         $this->campaign = $campaign;
         return $this;
     }
 
+    public function setVars($vars)
+    {
+        $this->vars = $vars;
+        return $this;
+    }
+
     public function send()
     {
-        $featured_guids = (new Call('entities_by_time'))->getRow("object:blog:featured", ['limit' => 10]);
-        $featured = Entities::get(['guids' => $featured_guids]);
-        $this->template->set('featured', $featured);
-
         $this->template->setTemplate('default.tpl');
         $this->template->setBody("./Templates/$this->templateKey.tpl");
 
-        $queued = 0;
-        $skipped = 0;
-        foreach ($this->getUsers() as $user) {
+        $validatorHash = sha1($this->campaign . $user->guid . Config::_()->get('emails_secret'));
 
-            //$user->email = 'john@minds.com';
+        $this->template->set('username', $this->user->username);
+        $this->template->set('email', $this->user->getEmail());
+        $this->template->set('guid', $this->user->guid);
+        $this->template->set('user', $this->user);
+        $this->template->set('topic', $this->topic);
+        $this->template->set('campaign', $this->campaign);
+        $this->template->set('validator', $validatorHash);
 
-            if (!$user instanceof \Minds\Entities\User || !$user->guid || $user->disabled_emails || $user->enabled != "yes") {
-                $skipped++;
-                echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
-                continue;
-            }
-
-            $queued++;
-
-            $validatorHash = sha1($this->campaign . $user->guid . Config::_()->get('emails_secret'));
-
-            $this->template->set('username', $user->username);
-            $this->template->set('email', $user->getEmail());
-            $this->template->set('guid', $user->guid);
-            $this->template->set('user', $user);
-            $this->template->set('campaign', $this->campaign);
-            $this->template->set('validator', $validatorHash);
-
-            $message = new Message();
-            $message->setTo($user)
-              ->setMessageId(implode('-', [ $user->guid, sha1($user->getEmail()), $validatorHash ]))
-              ->setSubject($this->subject)
-              ->setHtml($this->template);
-
-            //send email
-            $this->mailer->queue($message);
-            //exit;
-            echo "\r [emails]: $queued queued | $skipped skipped | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
+        foreach ($this->vars as $key => $var) {
+            $this->template->set($key, $var);
         }
-        echo "[emails]: Completed ($queued queued | $skipped skipped) \n";
+
+        $message = new Message();
+        $message->setTo($this->user)
+            ->setMessageId(implode('-', [ $this->user->guid, sha1($this->user->getEmail()), $validatorHash ]))
+            ->setSubject($this->subject)
+            ->setHtml($this->template);
+
+        //send email
+        $this->mailer->queue($message);
     }
 
-    protected function getUsers()
-    {
-        //scan all users and return past 30 day period
-        $users = new Iterators\SignupsOffsetIterator;
-        $users->setPeriod($this->period);
-        return $users;
-    }
 }

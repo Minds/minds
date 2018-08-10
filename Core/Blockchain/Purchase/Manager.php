@@ -41,7 +41,8 @@ class Manager
         $issueTokens = null,
         $newPurchaseNotification = null,
         $issuedTokenNotification = null,
-        $approvedPurchaseEmail = null
+        $issuedTokenEmail = null,
+        $newPurchaseEmail = null
     )
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Purchase\Repository');
@@ -50,7 +51,8 @@ class Manager
         $this->issueTokens = $issueTokens ?: new Delegates\IssueTokens();
         $this->newPurchaseNotification = $newPurchaseNotification ?: new Delegates\NewPurchaseNotification();
         $this->issuedTokenNotification = $issuedTokenNotification ?: new Delegates\IssuedTokenNotification();
-        //$this->approvedPurchaseEmail = $approvedPurchaseEmail ?: new Delegates\ApprovedPurchaseEmail();
+        $this->newPurchaseEmail = $newPurchaseEmail ?: new Delegates\NewPurchaseEmail();
+        $this->issuedTokenEmail = $issuedTokenEmail ?: new Delegates\IssuedTokenEmail();
     }
 
     /**
@@ -117,7 +119,11 @@ class Manager
         $this->txManager->add($transaction);
         $this->add($purchase);
 
+        //send a notification
         $this->newPurchaseNotification->notify($purchase);
+
+        //send an email
+        $this->newPurchaseEmail->send($purchase);
     }
 
     /**
@@ -143,7 +149,11 @@ class Manager
         $purchase->setStatus('issued');
         $this->repo->add($purchase);
 
+        //send notification
         $this->issuedTokenNotification->notify($purchase);
+
+        //send an email
+        $this->issuedTokenEmail->send($purchase);
 
         return true;
     }

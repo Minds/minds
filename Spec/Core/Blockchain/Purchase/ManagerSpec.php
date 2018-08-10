@@ -3,8 +3,10 @@
 namespace Spec\Minds\Core\Blockchain\Purchase;
 
 use Minds\Core\Blockchain\Purchase\Delegates\IssuedTokenNotification;
+use Minds\Core\Blockchain\Purchase\Delegates\IssuedTokenEmail;
 use Minds\Core\Blockchain\Purchase\Delegates\IssueTokens;
 use Minds\Core\Blockchain\Purchase\Delegates\NewPurchaseNotification;
+use Minds\Core\Blockchain\Purchase\Delegates\NewPurchaseEmail;
 use Minds\Core\Blockchain\Purchase\Purchase as PurchaseModel;
 use Minds\Core\Blockchain\Purchase\Repository;
 use Minds\Core\Blockchain\Transactions\Manager;
@@ -24,7 +26,9 @@ class ManagerSpec extends ObjectBehavior
     protected $config;
     protected $issueTokens;
     protected $newPurchaseNotification;
+    protected $newPurchaseEmail;
     protected $issuedTokenNotification;
+    protected $issuedTokenEmail;
 
     function let(
         Repository $repo,
@@ -32,10 +36,20 @@ class ManagerSpec extends ObjectBehavior
         Config $config,
         IssueTokens $issueTokens,
         NewPurchaseNotification $newPurchaseNotification,
-        IssuedTokenNotification $issuedTokenNotification
+        IssuedTokenNotification $issuedTokenNotification,
+        IssuedTokenEmail $issuedTokenEmail,
+        NewPurchaseEmail $newPurchaseEmail
     ) {
-        $this->beConstructedWith($repo, $txManager, $config, $issueTokens, $newPurchaseNotification,
-            $issuedTokenNotification);
+        $this->beConstructedWith(
+            $repo,
+            $txManager,
+            $config,
+            $issueTokens,
+            $newPurchaseNotification,
+            $issuedTokenNotification,
+            $issuedTokenEmail,
+            $newPurchaseEmail
+        );
 
         $this->repo = $repo;
         $this->txManager = $txManager;
@@ -43,6 +57,8 @@ class ManagerSpec extends ObjectBehavior
         $this->issueTokens = $issueTokens;
         $this->newPurchaseNotification = $newPurchaseNotification;
         $this->issuedTokenNotification = $issuedTokenNotification;
+        $this->issuedTokenEmail = $issuedTokenEmail;
+        $this->newPurchaseEmail = $newPurchaseEmail;
 
         $this->config->get('blockchain')
             ->willReturn([

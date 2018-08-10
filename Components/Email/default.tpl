@@ -15,6 +15,7 @@
         }
         #body table {
              width: 100%;
+             padding-bottom: 16px;
         }
         #actionBtn {
           padding:16px 32px;
