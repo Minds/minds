@@ -1,11 +1,12 @@
-*Thank you for your purchase!*
+**Thank you for your purchase!**
 
 Your tokens have now been issued.
 
-| Purchase Date                | Amount                                |
-| ____________________________ | _____________________________________ |
-| <?php echo $vars['date']; ?> | <?php echo $vars['amount']; ?> Tokens |
-| ____________________________ | _____________________________________ |
+## DATE
+<?php echo $vars['date']; ?>
+
+## AMOUNT
+<?php echo $vars['amount']; ?> Tokens
 
 [View Wallet](<?php echo Minds\Core\Config::_()->site_url; ?>tokens/wallet){#actionBtn}
 

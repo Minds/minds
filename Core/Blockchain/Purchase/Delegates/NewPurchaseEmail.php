@@ -14,6 +14,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Util\BigNumber;
 use Minds\Core\Email\Campaigns\Custom;
+use Minds\Entities\User;
 
 class NewPurchaseEmail
 {
