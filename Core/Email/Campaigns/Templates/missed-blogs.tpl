@@ -27,7 +27,7 @@
                                         <?= $postOwner['name'] ?>
                                     </strong>
                                     <span style="display:block; line-height:18px; text-decoration:none; color: #888; font-size:11px; letter-spacing: 0.75px">
-                                            <?= strtoupper(date('M d, Y, g:i:s a', $obj['time_created'])) ?>
+                                            <?= strtoupper(date('M d, Y, g:i:s a', $obj->time_created)) ?>
                                     </span>
                                 </td>
                             </tr>
