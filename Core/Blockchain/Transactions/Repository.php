@@ -88,7 +88,7 @@ class Repository
         $values = [];
 
         if ($options['wallet_address'] && $options['user_guid'] && ($options['timestamp']['gte'] || $options['timestamp']['lte'])) {
-            $cql = "SELECT * from blockchain_transactions_by_address";
+            $cql = "SELECT * from blockchain_transactions_mainnet_by_address";
         }
 
         if ($options['user_guid']) {
