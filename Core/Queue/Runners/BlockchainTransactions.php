@@ -17,9 +17,10 @@ class BlockchainTransactions implements Interfaces\QueueRunner
         $client = Queue\Client::Build();
         $client->setQueue("BlockchainTransactions")
             ->receive(function ($msg) {
-                echo "Received a new blockchain transaction \n";
 
                 $data = $msg->getData();
+
+                echo "Received a new blockchain transaction. Tx: {$data['tx']} User: {$data['user_guid']}\n";
 
                 $manager = Di::_()->get('Blockchain\Transactions\Manager');
                 $manager
