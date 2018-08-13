@@ -96,6 +96,7 @@ class WithdrawEvent implements BlockchainEventInterface
         try {        
             $this->manager->complete($request, $transaction);
         } catch (\Exception $e) {
+            var_dump($e);
             error_log(print_r($e, true));
         }
 
