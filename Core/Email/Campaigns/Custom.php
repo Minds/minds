@@ -73,6 +73,7 @@ class Custom
     {
         $this->template->setTemplate('default.tpl');
         $this->template->setBody("./Templates/$this->templateKey.tpl");
+        $this->template->toggleMarkdown(true);
 
         $validatorHash = sha1($this->campaign . $user->guid . Config::_()->get('emails_secret'));
 
@@ -95,7 +96,7 @@ class Custom
             ->setHtml($this->template);
 
         //send email
-        $this->mailer->queue($message);
+        $this->mailer->send($message);
     }
 
 }
