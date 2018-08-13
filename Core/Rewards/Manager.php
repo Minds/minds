@@ -160,8 +160,8 @@ class Manager
             return;
         } 
 
-        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['withdraw']['wallet_pkey'], [
-            'from' => $this->config->get('blockchain')['contracts']['withdraw']['wallet_address'],
+        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['bonus']['wallet_pkey'], [
+            'from' => $this->config->get('blockchain')['contracts']['bonus']['wallet_address'],
             'to' => $this->config->get('blockchain')['token_address'],
             'gasLimit' => BigNumber::_(4612388)->toHex(true),
             'gasPrice' => BigNumber::_(10000000000)->toHex(true),
