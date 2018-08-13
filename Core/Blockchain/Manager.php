@@ -64,7 +64,7 @@ class Manager
             'network_address' => $this->config->get('site_url') . self::$infuraProxyEndpoint,
             'client_network' => $blockchainConfig['client_network'],
             'wallet_address' => $blockchainConfig['wallet_address'],
-            'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
+            'boost_wallet_address' => $blockchainConfig['contracts']['boost']['wallet_address'],
             'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
             'rate' => $blockchainConfig['eth_rate'],
             'default_gas_price' => $blockchainConfig['default_gas_price'],
@@ -85,7 +85,7 @@ class Manager
                 'network_address' => $blockchainConfig['network_address'],
                 'client_network' => $blockchainConfig['client_network'],
                 'wallet_address' => $blockchainConfig['wallet_address'],
-                'boost_wallet_address' => $blockchainConfig['boost_wallet_address'],
+                'boost_wallet_address' => $blockchainConfig['contracts']['boost']['wallet_address'],
                 'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
                 'default_gas_price' => $blockchainConfig['default_gas_price'],
             ];
