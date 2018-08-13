@@ -79,6 +79,12 @@ class wallet implements Interfaces\Api
                     'boostCap' => (string) $boostCap
                 ];
 
+                if (!Session::getLoggedinUser()->getPhoneNumberHash()) {
+                    $testnetBalance = Di::_()->get('Blockchain\Wallets\OffChain\TestnetBalance');
+                    $testnetBalance->setUser(Session::getLoggedinUser());
+                    $response['testnetBalance'] = $testnetBalance->get();
+                }
+
                 break;
         }
 
