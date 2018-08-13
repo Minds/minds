@@ -35,8 +35,8 @@ class Manager
             $this->contracts['wire'] = Contracts\MindsWire::at($blockchainConfig['contracts']['wire']['contract_address']);
         }
 
-        if ($blockchainConfig['boost_address']) {
-            $this->contracts['boost'] = Contracts\MindsBoost::at($blockchainConfig['boost_address']);
+        if ($blockchainConfig['contracts']['boost']['contract_address']) {
+            $this->contracts['boost'] = Contracts\MindsBoost::at($blockchainConfig['contracts']['boost']['contract_address']);
         }
 
         if ($blockchainConfig['contracts']['withdraw']['contract_address']) {
