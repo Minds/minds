@@ -94,7 +94,7 @@ class Notifications
         $from_user = $notification->getFrom();
 
         while (true) {
-            echo "[notification]: Running from $offset \n";
+            echo "[notification][group][$activity->container_guid]: Running from $offset \n";
 
             $guids = $this->getRecipients([
                 'exclude' => $params['exclude'] ?: [],
