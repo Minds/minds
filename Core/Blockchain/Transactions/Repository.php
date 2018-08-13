@@ -25,7 +25,6 @@ class Repository
 
     public function add($transactions)
     {
-        throw new \Exception("This service has been temporarily disabled while we transition to the Ethereum Main Net. Service will be restored as soon the transition is complete.");
         if (!is_array($transactions)) {
             $transactions = [ $transactions ];
         }
