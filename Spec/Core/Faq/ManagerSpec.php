@@ -16,7 +16,7 @@ class ManagerSpec extends ObjectBehavior
     function it_should_read_the_csv()
     {
         $this->get()->shouldBeArray();
-        $this->get()->shouldHaveCount(20);
+        $this->get()->shouldHaveCount(17);
     }
 
 }
