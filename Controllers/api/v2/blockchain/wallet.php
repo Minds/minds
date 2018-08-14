@@ -116,14 +116,6 @@ class wallet implements Interfaces\Api
         $user->setEthWallet($_POST['address']);
         $user->save();
 
-        try {
-            (new Incentive())
-                ->setUser($user)
-                ->send();
-        } catch (\Exception $e) {
-            error_log('[OnChain/Incentive] ' . $e->getMessage());
-        }
-
         return Factory::response([]);
     }
 
