@@ -74,6 +74,7 @@ class Notifications
      */
     public function send($params)
     {
+        return false; //do not send group notifs
         $activity = Entities\Factory::build($params['activity']);
         if (!$activity) {
             return false;
