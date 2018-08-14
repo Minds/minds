@@ -113,17 +113,20 @@ class remind implements Interfaces\Api
                                 ->save();
                         } else {
                             $activity = new Activity();
-                            $activity->setRemind((new Activity())
-                                ->setTimeCreated($embedded->time_created)
-                                ->setFromEntity($embedded)
-                                ->setCustom('video', [
-                                    'thumbnail_src' => $embedded->getIconUrl(),
-                                    'guid' => $embedded->guid,
-                                    'mature' => $embedded instanceof Flaggable ? $embedded->getFlag('mature') : false
-                                ])
-                                ->setTitle($embedded->title)
-                                ->setBlurb($embedded->description)
-                                ->export())
+                            $activity->setRemind(
+                                (new Activity())
+                                    ->setTimeCreated($embedded->time_created)
+                                    ->setFromEntity($embedded)
+                                    ->setCustom('video', [
+                                        'thumbnail_src' => $embedded->getIconUrl(),
+                                        'guid' => $embedded->guid,
+                                        'mature' => $embedded instanceof Flaggable ? $embedded->getFlag('mature') : false
+                                    ])
+                                    ->setMature($embedded instanceof Flaggable ? $embedded->getFlag('mature') : false)
+                                    ->setTitle($embedded->title)
+                                    ->setBlurb($embedded->description)
+                                    ->export()
+                                )
                                 ->setMessage($message)
                                 ->save();
                         }
@@ -145,21 +148,24 @@ class remind implements Interfaces\Api
                                 ->setMessage($message)
                                 ->save();
                         } else {
-                            $activity->setRemind((new Activity())
-                                ->setTimeCreated($embedded->time_created)
-                                ->setCustom('batch', [
-                                    [
-                                        'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embedded->guid,
-                                        'href' => elgg_get_site_url() . 'media/' . $embedded->container_guid . '/' . $embedded->guid,
-                                        'mature' => $embedded instanceof Flaggable ? $embedded->getFlag('mature') : false,
-                                        'width' => $embedded->width,
-                                        'height' => $embedded->height,
-                                    ]
-                                ])
-                                ->setFromEntity($embedded)
-                                ->setTitle($embedded->title)
-                                ->setBlurb($embedded->description)
-                                ->export())
+                            $activity->setRemind(
+                                (new Activity())
+                                    ->setTimeCreated($embedded->time_created)
+                                    ->setCustom('batch', [
+                                        [
+                                            'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embedded->guid,
+                                            'href' => elgg_get_site_url() . 'media/' . $embedded->container_guid . '/' . $embedded->guid,
+                                            'mature' => $embedded instanceof Flaggable ? $embedded->getFlag('mature') : false,
+                                            'width' => $embedded->width,
+                                            'height' => $embedded->height,
+                                        ]
+                                    ])
+                                    ->setMature($embedded instanceof Flaggable ? $embedded->getFlag('mature') : false)
+                                    ->setFromEntity($embedded)
+                                    ->setTitle($embedded->title)
+                                    ->setBlurb($embedded->description)
+                                    ->export()
+                                )
                                 ->setMessage($message)
                                 ->save();
                         }

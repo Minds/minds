@@ -161,7 +161,7 @@ class newsfeed implements Interfaces\Api
                 $limit = isset($_GET['access_token']) && $_GET['offset'] ? 2 : 1;
                 //$limit = 2;
                 $cacher = Core\Data\cache\factory::build('apcu');
-                $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');    
+                $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');
 
                 /** @var Core\Boost\Network\Iterator $iterator */
                 $iterator = Core\Di\Di::_()->get('Boost\Network\Iterator');
@@ -234,7 +234,7 @@ class newsfeed implements Interfaces\Api
                         $response['pinned'][] = $exported;
                     }
                 }
-                
+
             }
 
             $response['activity'] = factory::exportable($activity, ['boosted', 'boosted_guid'], true);
@@ -343,17 +343,20 @@ class newsfeed implements Interfaces\Api
                                         ->save();
                                 } else {
                                     $activity = new Activity();
-                                    $activity->setRemind((new Activity())
-                                        ->setTimeCreated($embeded->time_created)
-                                        ->setFromEntity($embeded)
-                                        ->setCustom('video', [
-                                            'thumbnail_src' => $embeded->getIconUrl(),
-                                            'guid' => $embeded->guid,
-                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
-                                        ])
-                                        ->setTitle($embeded->title)
-                                        ->setBlurb($embeded->description)
-                                        ->export())
+                                    $activity->setRemind(
+                                        (new Activity())
+                                            ->setTimeCreated($embeded->time_created)
+                                            ->setFromEntity($embeded)
+                                            ->setCustom('video', [
+                                                'thumbnail_src' => $embeded->getIconUrl(),
+                                                'guid' => $embeded->guid,
+                                                'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false
+                                            ])
+                                            ->setMature($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false)
+                                            ->setTitle($embeded->title)
+                                            ->setBlurb($embeded->description)
+                                            ->export()
+                                        )
                                         ->setMessage($message)
                                         ->save();
                                 }
@@ -373,25 +376,28 @@ class newsfeed implements Interfaces\Api
                                         ->setMessage($message)
                                         ->save();
                                 } else {
-                                    $activity->setRemind((new Activity())
-                                        ->setTimeCreated($embeded->time_created)
-                                        ->setCustom('batch', [[
-                                            'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
-                                            'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
-                                            'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
-                                            'width' => $embeded->width,
-                                            'height' => $embeded->height,
-                                        ]])
-                                        ->setFromEntity($embeded)
-                                        ->setTitle($embeded->title)
-                                        ->setBlurb($embeded->description)
-                                        ->export())
+                                    $activity->setRemind(
+                                        (new Activity())
+                                            ->setTimeCreated($embeded->time_created)
+                                            ->setCustom('batch', [[
+                                                'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $embeded->guid,
+                                                'href' => elgg_get_site_url() . 'media/' . $embeded->container_guid . '/' . $embeded->guid,
+                                                'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
+                                                'width' => $embeded->width,
+                                                'height' => $embeded->height,
+                                            ]])
+                                            ->setMature($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false)
+                                            ->setFromEntity($embeded)
+                                            ->setTitle($embeded->title)
+                                            ->setBlurb($embeded->description)
+                                            ->export()
+                                        )
                                         ->setMessage($message)
                                         ->save();
                                 }
                                 break;
                         }
-                }   
+                }
 
                 $event = new Core\Analytics\Metrics\Event();
                 $event->setType('action')
@@ -736,7 +742,7 @@ class newsfeed implements Interfaces\Api
 
         if (!$activity->canEdit()) {
             return Factory::response(array('status' => 'error', 'message' => 'you don\'t have permission'));
-        } 
+        }
         /** @var Entities\User $owner */
         $owner = $activity->getOwnerEntity();
 
