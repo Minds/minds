@@ -665,7 +665,7 @@ class Group extends NormalizedEntity
 
         // Compatibility keys
         $export['owner_guid'] = $this->getOwnerObj()->guid;
-        $export['activity:count'] = $this->getActivityCount();
+        //$export['activity:count'] = $this->getActivityCount();
         $export['members:count'] = $this->getMembersCount();
         $export['requests:count'] = $this->getRequestsCount();
         $export['icontime'] = $export['icon_time'];
