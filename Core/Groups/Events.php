@@ -142,17 +142,6 @@ class Events
             }
         });
 
-        Dispatcher::register('notification:dispatch', 'group', function ($e) {
-            $params = $e->getParameters();
-
-            $group = new GroupEntity();
-            $group->loadFromGuid($params['entity']);
-
-            $notifications = (new Notifications)->setGroup($group);
-            $e->setResponse($notifications->send($params['params']));
-            echo "[]: sent to $group->guid \n";
-        });
-
         Dispatcher::register('cleanup:dispatch', 'group', function ($e) {
             $params = $e->getParameters();
             $e->setResponse(Membership::cleanup($params['group']));

@@ -56,16 +56,15 @@ class Notifications
         $me = $activity['ownerObj']['guid'];
 
         return Queue\Client::build()
-        ->setExchange('mindsqueue')
-        ->setQueue('NotificationDispatcher')
-        ->send([
-            'type' => 'group',
-            'entity' => $this->group->getGuid(),
-            'params' => [
-                'activity' => is_object($activity) ? $activity->guid : $activity['guid'],
-                'exclude' => [ $me ]
-            ]
-        ]);
+            ->setExchange('mindsqueue')
+            ->setQueue('GroupsNotificationDispatcher')
+            ->send([
+                'entity' => $this->group->getGuid(),
+                'params' => [
+                    'activity' => is_object($activity) ? $activity->guid : $activity['guid'],
+                    'exclude' => [ $me ]
+                ]
+            ]);
     }
 
     /**
@@ -74,7 +73,6 @@ class Notifications
      */
     public function send($params)
     {
-        return false; //do not send group notifs
         $activity = Entities\Factory::build($params['activity']);
         if (!$activity) {
             return false;
