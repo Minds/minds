@@ -31,33 +31,36 @@ class MatureBatch implements Interfaces\QueueRunner
 
                 $offset = '';
 
-                $options = [
-                    'owner_guid' => $user_guid
-                ];
+                foreach (['image', 'video', 'activity'] as $type) {
 
-                $namespace = Core\Entities::buildNamespace(array_merge([
-                    'type' => 'activity'
-                ], $options));
+                    $options = [
+                      'owner_guid' => $user_guid
+                    ];
 
-                $activities = Core\Entities::get(array_merge([
-                    'type' => 'activity',
-                    'limit' => 1000,
-                    'offset' => $offset,
-                ], $options));
+                    if ($type == 'image' || $type == 'video') {
+                        $options['subtype'] = $type;
+                        $type = 'object';
+                    }
 
-                foreach ($activities as $activity) {
-                    try {
-                        $this->setExplicit($activity, $value);
+                    $entities = Core\Entities::get(array_merge([
+                        'type' => $type,
+                        'limit' => 1000,
+                        'offset' => $offset,
+                    ], $options));
 
-                        echo "Updated mature flag ($value) for {$activity->guid} \n";
-                    } catch (\Exception $e) {
-                        error_log($e);
-                        echo "Skipped {$activity->guid} because of exception \n";
+                    foreach ($entities as $entity) {
+                        try {
+                            $this->setExplicit($entity, $value);
+
+                            echo "Updated mature flag ($value) for $type:{$entity->guid} \n";
+                        } catch (\Exception $e) {
+                            error_log($e);
+                            echo "Skipped {$entity->guid} because of exception \n";
+                        }
                     }
                 }
 
-
-                echo "Finished updating @{$user->name}'s activities' mature status";
+                echo "Finished updating @{$user->name}'s entities mature status";
             });
     }
 
