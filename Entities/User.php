@@ -40,8 +40,9 @@ class User extends \ElggUser
         $this->attributes['icontime'] = time();
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
-		$this->attributes['mature_channel'] = 0;
 		$this->attributes['p2p_media_disabled'] = 0;
+		$this->attributes['is_mature'] = 0;
+		$this->attributes['mature_lock'] = 0;
 
         parent::initializeAttributes();
     }
@@ -67,23 +68,12 @@ class User extends \ElggUser
     }
 
     /**
-     * Sets the `mature` flag
-     * @param  bool|int $value
-     * @return $this
-     */
-    public function setMature($value)
-    {
-        $this->mature = $value ? 1 : 0;
-        return $this;
-    }
-
-    /**
      * Gets the `mature` flag
      * @return bool|int
      */
     public function getMature()
     {
-      return $this->mature;
+      return $this->isMature();
     }
 
     /**
@@ -589,17 +579,6 @@ class User extends \ElggUser
     }
 
 
-    public function getMatureChannel()
-    {
-        return $this->mature_channel;
-    }
-
-    public function setMatureChannel($value)
-    {
-        $this->mature_channel = $value ? 1 : 0;
-        return $this;
-    }
-
     public function isP2PMediaDisabled()
     {
         return (bool) $this->attributes['p2p_media_disabled'];
@@ -648,15 +627,13 @@ class User extends \ElggUser
         $export['boost_autorotate'] = (bool) $this->getBoostAutorotate();
         $export['categories'] = $this->getCategories();
         $export['pinned_posts'] = $this->getPinnedPosts();
-        $export['rewards'] = (bool)$this->getPhoneNumberHash();
+        $export['rewards'] = (bool) $this->getPhoneNumberHash();
         $export['p2p_media_disabled'] = $this->isP2PMediaDisabled();
+        $export['is_mature'] = $this->isMature();
+        $export['mature_lock'] = $this->getMatureLock();
 
-        if (isset($export['mature'])) {
+        if (isset($export['mature'])) { //note: this is to VIEW explicit not be mature. See is_mature for that.
             $export['mature'] = (int) $export['mature'];
-        }
-
-        if (isset($export['mature_channel'])) {
-            $export['mature_channel'] = (int) $export['mature_channel'];
         }
 
         if (is_string($export['social_profiles'])) {
@@ -778,6 +755,42 @@ class User extends \ElggUser
     }
 
     /**
+     * @return bool
+     */
+    public function isMature()
+    {
+        return (bool) $this->is_mature;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setMature($value)
+    {
+        $this->is_mature = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getMatureLock()
+    {
+        return (bool) $this->mature_lock;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setMatureLock($value)
+    {
+        $this->mature_lock = $value;
+        return $this;
+    }
+
+    /**
      * Returns an array of which Entity attributes are exportable
      * @return array
      */
@@ -807,7 +820,8 @@ class User extends \ElggUser
             'categories',
             'wire_rewards',
             'pinned_posts',
-            'mature_channel',
+            'is_mature',
+            'mature_lock',
         ));
     }
 }

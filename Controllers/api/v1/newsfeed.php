@@ -415,13 +415,7 @@ class newsfeed implements Interfaces\Api
                 $mature_remind =
                     ($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false) ||
                     (isset($embeded->remind_object['mature']) && $embeded->remind_object['mature']);
-
-                $user = Core\Session::getLoggedInUser();
-                if (!$user->getMatureContent() && $mature_remind) {
-                    $user->setMatureContent(true);
-                    $user->save();
-                }
-
+                
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
                 }
@@ -487,9 +481,8 @@ class newsfeed implements Interfaces\Api
                     }
 
                     $user = Core\Session::getLoggedInUser();
-                    if (!$user->getMatureContent() && isset($_POST['mature']) && $_POST['mature']) {
-                        $user->setMatureContent(true);
-                        $user->save();
+                    if ($user->isMature()) {
+                        $activity->setMature(true);
                     }
 
                     if (isset($_POST['wire_threshold'])) {
@@ -523,9 +516,8 @@ class newsfeed implements Interfaces\Api
                 $activity->setMature(isset($_POST['mature']) && !!$_POST['mature']);
 
                 $user = Core\Session::getLoggedInUser();
-                if (!$user->getMatureContent() && isset($_POST['mature']) && $_POST['mature']) {
-                    $user->setMatureContent(true);
-                    $user->save();
+                if ($user->isMature()) {
+                    $activity->setMature(true);
                 }
 
                 if (isset($_POST['access_id'])) {

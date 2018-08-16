@@ -10,9 +10,11 @@ namespace Minds\Controllers\api\v1\entities;
 use Minds\Api\Factory;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Entities\Actions\Save;
+use Minds\Core\Session;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Helpers;
+use Minds\Core\Queue\Client as Queue;
 
 class explicit implements Interfaces\Api
 {
@@ -38,7 +40,26 @@ class explicit implements Interfaces\Api
         $value = (bool) $_POST['value'];
 
         if ($entity->type === 'user') {
-            $entity->setMatureChannel(true);
+            $matureLock = $entity->getMatureLock();
+            $isAdmin = Session::isAdmin();
+
+            if ($matureLock && !$isAdmin) {
+                 return Factory::response([
+                     'status' => 'error', 
+                     'message' => 'You can not remove the mature flag from your channel',
+                 ]);
+            }
+
+            $entity->setMature($value);
+            if ($isAdmin) {
+                $entity->setMatureLock($value);
+                Queue::build()
+                    ->setQueue('MatureBatch')
+                    ->send([
+                        "user_guid" => $entity->guid,
+                        "value" => $value
+                    ]);
+            }
         } else {
             if (Helpers\MagicAttributes::setterExists($entity, 'setMature')) {
                 $entity->setMature($value);

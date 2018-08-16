@@ -11,6 +11,7 @@ use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
+use Minds\Core\Queue\Client as Queue;
 use Minds\Entities;
 use Minds\Interfaces;
 
@@ -92,10 +93,6 @@ class settings implements Interfaces\Api
 
         if (isset($_POST['mature'])) {
             $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
-        }
-
-        if (isset($_POST['mature_channel'])) {
-            $user->setMatureChannel(isset($_POST['mature_channel']) && (int) $_POST['mature_channel']);
         }
 
         if (isset($_POST['monetized']) && $_POST['monetized']) {
