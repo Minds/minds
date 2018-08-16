@@ -1,8 +1,10 @@
 <?php
 namespace Minds\Core\Blockchain\Wallets\OnChain;
 
-use Minds\Entities\User;
+use Minds\Core\Blockchain\Token;
+use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Balance
 {
@@ -10,7 +12,7 @@ class Balance
     /** @var Token */
     private $token;
 
-    /** @var Cache */
+    /** @var abstractCacher */
     private $cache;
 
     /** @var User */

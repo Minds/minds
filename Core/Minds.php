@@ -1,6 +1,8 @@
 <?php
 namespace Minds\Core;
 
+use Minds\Core\Di\Di;
+
 /**
  * Core Minds Engine
  */
@@ -25,6 +27,10 @@ class Minds extends base
      */
     public function initProviders()
     {
+        Di::_()->bind('Guid', function ($di) {
+            return new GuidBuilder();
+        }, ['useFactory' => true]);
+
         (new \Minds\Entities\EntitiesProvider())->register();
         (new Config\ConfigProvider())->register();
         (new Boost\BoostProvider())->register();

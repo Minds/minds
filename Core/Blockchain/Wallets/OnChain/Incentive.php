@@ -12,6 +12,7 @@ use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Events\EventsDispatcher;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 
@@ -26,10 +27,14 @@ class Incentive
     /** @var User */
     protected $user;
 
-    public function __construct($config = null, $eth = null)
+    /** @var EventsDispatcher */
+    protected $dispatcher;
+
+    public function __construct($config = null, $eth = null, $dispatcher = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
         $this->eth = $eth ?: Di::_()->get('Blockchain\Services\Ethereum');
+        $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     /**
@@ -81,7 +86,7 @@ class Incentive
             $address = substr($this->user->getEthWallet(), 0, 5) . '...' . substr($this->user->getEthWallet(), -5);
             $message = 'Hey! We\'ve sent you 0.002 ETH to your wallet ' . $address . '. It might take some minutes to arrive.';
 
-            Dispatcher::trigger('notification', 'onchain:incentive', [
+            $this->dispatcher->trigger('notification', 'onchain:incentive', [
                 'to' => [ $this->user->guid ],
                 'from' => 100000000000000519,
                 'notification_view' => 'custom_message',

@@ -2,11 +2,12 @@
 /**
  * Token Purchase Repository
  */
+
 namespace Minds\Core\Blockchain\Purchase;
 
 use Cassandra;
-use Cassandra\Varint;
 use Cassandra\Timestamp;
+use Cassandra\Varint;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
@@ -25,7 +26,7 @@ class Repository
     public function add($purchases)
     {
         if (!is_array($purchases)) {
-            $purchases = [ $purchases ];
+            $purchases = [$purchases];
         }
 
         $requests = [];
@@ -43,10 +44,10 @@ class Repository
 
         foreach ($purchases as $purchase) {
             $requests[] = [
-                'string' => $template, 
+                'string' => $template,
                 'values' => [
                     $purchase->getPhoneNumberHash(),
-                    $purchase->getTx(),    
+                    $purchase->getTx(),
                     new Varint($purchase->getUserGuid()),
                     $purchase->getWalletAddress(),
                     new Timestamp($purchase->getTimestamp()),
@@ -80,7 +81,7 @@ class Repository
 
         if ($options['user_guid']) {
             $where[] = 'phone_number_hash = ?';
-            $values[] = new Varint($options['phone_number_hash']);
+            $values[] = $options['phone_number_hash'];
         }
 
         if ($options['user_guid']) {
@@ -116,9 +117,9 @@ class Repository
             'paging_state_token' => base64_decode($options['offset'])
         ]);
 
-        try{
+        try {
             $rows = $this->db->request($query);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
             return [];
         }
@@ -127,7 +128,7 @@ class Repository
             return [];
         }
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $purchase = new Purchase();
             $purchase
                 ->setPhoneNumberHash($row['phone_number_hash'])
@@ -152,14 +153,14 @@ class Repository
     {
 
         $cql = "SELECT * from token_purchases WHERE phone_number_hash = ? and tx= ?";
-        $values = [ (string) $phone_number_hash, (string) $tx ];
+        $values = [(string) $phone_number_hash, (string) $tx];
 
         $query = new Custom();
         $query->query($cql, $values);
 
-        try{
+        try {
             $rows = $this->db->request($query);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
             return null;
         }
@@ -184,16 +185,17 @@ class Repository
         return $purchase;
     }
 
-    public function delete($phone_number_hash) {
+    public function delete($phone_number_hash)
+    {
         $cql = "DELETE FROM blockchain_transactions where phone_number_hash = ?";
-        $values = [ $phone_number_hash ];
+        $values = [$phone_number_hash];
 
         $query = new Custom();
         $query->query($cql, $values);
 
         try {
             $this->db->request($query);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
             return false;
         }

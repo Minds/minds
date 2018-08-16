@@ -113,7 +113,7 @@ class Ethereum
         foreach ($params as $param) {
             if (strpos($param, '0x') !== 0) {
                 // TODO: Implement parameter types, etc
-                throw new \Exception('Ethereum::call only support raw hex parameters');
+                throw new \Exception('Ethereum::call only supports raw hex parameters');
             }
 
             $hex = substr($param, 2);
@@ -206,7 +206,6 @@ class Ethereum
         if (!$config['rpc_endpoints']) {
             throw new \Exception('No RPC endpoints available');
         }
-
         return $config['rpc_endpoints'][0];
     }
 }

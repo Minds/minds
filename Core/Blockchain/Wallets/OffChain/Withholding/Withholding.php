@@ -10,6 +10,22 @@ namespace Minds\Core\Blockchain\Wallets\OffChain\Withholding;
 
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Class Withholding
+ * @package Minds\Core\Blockchain\Wallets\OffChain\Withholding
+ * @method int getTimestamp()
+ * @method Withholding setTimestamp(int $value)
+ * @method string getTx()
+ * @method Withholding setTx(string $value)
+ * @method string getType()
+ * @method Withholding setType(string $value)
+ * @method string getWalletAddress()
+ * @method Withholding setWalletAddress(string $value)
+ * @method int getAmount()
+ * @method Withholding setAmount(int $value)
+ * @method int getTtl()
+ * @method Withholding setTtl(int $value)
+ */
 class Withholding
 {
     use MagicAttributes;

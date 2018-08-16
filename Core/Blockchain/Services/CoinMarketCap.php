@@ -18,6 +18,9 @@ class CoinMarketCap implements RatesInterface
     /** @var Client $http */
     protected $http;
 
+    /** @var abstractCacher */
+    protected $cacher;
+
     /** @var string $currency */
     protected $currency;
 
@@ -25,9 +28,10 @@ class CoinMarketCap implements RatesInterface
      * CoinMarketCap constructor.
      * @param null $http
      */
-    public function __construct($http = null)
+    public function __construct($http = null, $cacher = null)
     {
         $this->http = $http ?: Di::_()->get('Http\Json');
+        $this->cacher = $cacher ?: Di::_()->get('Cache');
     }
 
     /**
@@ -64,17 +68,14 @@ class CoinMarketCap implements RatesInterface
 
         $cacheKey = "blockchain:cmc:rate:{$this->currency}";
 
-        /** @var abstractCacher $cacher */
-        $cacher = CacheFactory::build();
-
-        if ($rate = $cacher->get($cacheKey)) {
+        if ($rate = $this->cacher->get($cacheKey)) {
             return unserialize($rate);
         }
 
         $rates = $this->request("v1/ticker/{$this->currency}");
         $rate = (double) $rates['price_usd'];
 
-        $cacher->set($cacheKey, serialize($rate), 15 * 60);
+        $this->cacher->set($cacheKey, serialize($rate), 15 * 60);
 
         return $rate;
     }
@@ -88,7 +89,7 @@ class CoinMarketCap implements RatesInterface
     {
         $response = $this->http->get("https://api.coinmarketcap.com/{$endpoint}", [
             'curl' => [
-                CURLOPT_FOLLOWLOCATION => true
+                'CURLOPT_FOLLOWLOCATION' => true
             ]
         ]);
 

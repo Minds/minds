@@ -21,6 +21,9 @@ class NewPurchaseEmail
     /** @var Config */
     protected $config;
 
+    /** @var Custom */
+    protected $campaign;
+
     public function __construct($config = null, $campaign = null)
     {
         $this->config = $config ?: Di::_()->get('Config');

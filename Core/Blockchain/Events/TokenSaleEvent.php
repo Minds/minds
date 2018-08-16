@@ -8,10 +8,11 @@
 
 namespace Minds\Core\Blockchain\Events;
 
+use Minds\Core\Blockchain\Purchase;
 use Minds\Core\Blockchain\Util;
+use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\BigNumber;
-use Minds\Core\Blockchain\Purchase;
 
 class TokenSaleEvent implements BlockchainEventInterface
 {
@@ -23,9 +24,13 @@ class TokenSaleEvent implements BlockchainEventInterface
     /** @var Config $config */
     protected $config;
 
-    public function __construct($config = null)
+    /** @var Purchase\Manager */
+    protected $manager;
+
+    public function __construct($config = null, $manager = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
+        $this->manager = $manager ?: new Purchase\Manager();
     }
 
     /**
@@ -66,30 +71,30 @@ class TokenSaleEvent implements BlockchainEventInterface
             return; //backend amount does not equal event amount
         }
 
-        $manager = new Purchase\Manager();
-        $purchase = $manager->getPurchase($transaction->getData()['phone_number_hash'], $transaction->getTx());
-        
+        $purchase = $this->manager->getPurchase($transaction->getData()['phone_number_hash'], $transaction->getTx());
+
         if (!$purchase) {
             echo "purchase not found";
             return; //purchase not found
         }
 
-var_dump($log);
+        var_dump($log);
         //is the requested amount below what has already been recorded
         if ($transaction->getAmount() > $purchase->getUnissuedAmount()) {
             return; //requested more than can issue
         }
 
         //is the request below the threshold?
-        if ($purchase->getUnissuedAmount() > $manager->getAutoIssueCap()) {
+        if ($purchase->getUnissuedAmount() > $this->manager->getAutoIssueCap()) {
             return; //mark as failed
         }
 
         //issue the tokens
-        $manager->issue($purchase);
+        $this->manager->issue($purchase);
     }
 
-    public function purchaseFail($log, $transaction) {
+    public function purchaseFail($log, $transaction)
+    {
         if ($transaction->getContract() !== 'purchase') {
             throw new \Exception("Failed but not a purchase");
             return;
@@ -97,6 +102,6 @@ var_dump($log);
 
         $transaction->setFailed(true);
 
-        $this->txRepository->update($transaction, [ 'failed' ]);
+        $this->txRepository->update($transaction, ['failed']);
     }
 }

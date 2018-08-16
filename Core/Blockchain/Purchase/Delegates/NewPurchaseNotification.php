@@ -12,6 +12,7 @@ use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Events\EventsDispatcher;
 use Minds\Core\Util\BigNumber;
 
 class NewPurchaseNotification
@@ -19,9 +20,13 @@ class NewPurchaseNotification
     /** @var Config */
     protected $config;
 
-    public function __construct($config = null)
+    /** @var EventsDispatcher */
+    protected $dispatcher;
+
+    public function __construct($config = null, $dispatcher = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
+        $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     public function notify(Purchase $purchase)
@@ -30,7 +35,7 @@ class NewPurchaseNotification
 
         $message = "Your purchase of $amount Tokens is being processed.";
 
-        Dispatcher::trigger('notification', 'all', [
+        $this->dispatcher->trigger('notification', 'all', [
             'to' => [ $purchase->getUserGuid() ],
             'from' => 100000000000000519,
             'notification_view' => 'custom_message',

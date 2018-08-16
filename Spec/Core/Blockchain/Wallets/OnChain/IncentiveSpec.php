@@ -4,6 +4,7 @@ namespace Spec\Minds\Core\Blockchain\Wallets\OnChain;
 
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Config;
+use Minds\Core\Events\EventsDispatcher;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
@@ -13,16 +14,18 @@ class IncentiveSpec extends ObjectBehavior
 {
     protected $config;
     protected $eth;
+    protected $dispatcher;
 
     function let(
         Config $config,
-        Ethereum $eth
-    )
-    {
+        Ethereum $eth,
+        EventsDispatcher $dispatcher
+    ) {
         $this->config = $config;
         $this->eth = $eth;
+        $this->dispatcher = $dispatcher;
 
-        $this->beConstructedWith($config, $eth);
+        $this->beConstructedWith($config, $eth, $dispatcher);
     }
 
     function it_is_initializable()
@@ -66,9 +69,26 @@ class IncentiveSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $user->get('guid')
+            ->shouldBeCalled()
+            ->willReturn('123');
+
+        $address = substr('0xTEST', 0, 5) . '...' . substr('0xTEST', -5);
+
+        $message = 'Hey! We\'ve sent you 0.002 ETH to your wallet ' . $address . '. It might take some minutes to arrive.';
+
+        $this->dispatcher->trigger('notification', 'onchain:incentive', [
+            'to' => ['123'],
+            'from' => 100000000000000519,
+            'notification_view' => 'custom_message',
+            'params' => ['message' => $message],
+            'message' => $message,
+        ])
+            ->shouldBeCalled();
+
         $this
             ->setUser($user)
-            ->send(['notification' => false])
+            ->send(['notification' => true])
             ->shouldReturn(true);
     }
 

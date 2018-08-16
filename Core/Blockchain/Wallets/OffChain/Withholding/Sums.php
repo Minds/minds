@@ -21,11 +21,11 @@ class Sums
     /** @var Client */
     protected $db;
 
-    /** @var int */
-    protected $user_guid;
-
     /** @var Config */
     protected $config;
+
+    /** @var int */
+    protected $user_guid;
 
     public function __construct($db = null, $config = null)
     {

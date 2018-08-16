@@ -22,6 +22,7 @@ use Minds\Traits\MagicAttributes;
  * @method Transaction setContract(string $value)
  * @method string getAmount()
  * @method Transaction setAmount(string)
+ * @method bool isCompleted()
  * @method bool getCompleted()
  * @method Transaction setCompleted(bool $value)
  * @method bool getFailed()

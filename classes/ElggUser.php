@@ -136,7 +136,8 @@ class ElggUser extends ElggEntity
         //    return $this->loadFromGUID(key($guid));
         //}
 
-        $lookup = new Minds\Core\Data\lookup();
+        /** @var \Minds\Core\Data\lookup $lookup */
+        $lookup = Minds\Core\Di\Di::_()->get('Database\Cassandra\Data\Lookup');
 		$guid = $lookup->get($string);
 		if(!$guid)
 			return false;
@@ -336,27 +337,27 @@ class ElggUser extends ElggEntity
 	 *
 	 * @return bool
 	 */
-	public function isAdmin() {
+    public function isAdmin() {
 
-		$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
 
-		if (!$ip) {
-			return false;
-		}
+        if (!$ip) {
+            return false;
+        }
 
-		$whitelist = Minds\Core\Di\Di::_()->get('Config')->get('admin_ip_whitelist');
+        $whitelist = Minds\Core\Di\Di::_()->get('Config')->get('admin_ip_whitelist');
 
-		if (!$whitelist || !in_array($ip, $whitelist)) {
-			return false;
-		}
+        if (!$whitelist || !in_array($ip, $whitelist)) {
+            return false;
+        }
 
-		// for backward compatibility we need to pull this directly
-		// from the attributes instead of using the magic methods.
-		// this can be removed in 1.9
-		//var_dump($this->admin);
-		//return $this->admin == 'yes';
-		return $this->attributes['admin'] == 'yes';
-	}
+        // for backward compatibility we need to pull this directly
+        // from the attributes instead of using the magic methods.
+        // this can be removed in 1.9
+        //var_dump($this->admin);
+        //return $this->admin == 'yes';
+        return $this->attributes['admin'] == 'yes';
+    }
 
 	/**
 	 * Make the user an admin

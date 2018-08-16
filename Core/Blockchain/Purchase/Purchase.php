@@ -2,6 +2,7 @@
 /**
  * Purchase model
  */
+
 namespace Minds\Core\Blockchain\Purchase;
 
 use Minds\Core\Util\BigNumber;
@@ -25,14 +26,16 @@ use Minds\Traits\MagicAttributes;
  * @method Purchase setStatus(string $value)
  * @method string getTx()
  * @method Purchase setTx(string $value)
- * @method string getRequestedAmount()
+ * @method int getRequestedAmount()
  * @method Purchase setRequestedAmount(BigNumber $value)
+ * @method int getIssuedAmount()
+ * @method Purchase setIssuedAmount(int $value)
  */
 class Purchase implements \JsonSerializable
 {
     use MagicAttributes;
 
-    /** @var string $tx (PRIMARY KEY)*/
+    /** @var string $tx (PRIMARY KEY) */
     private $phoneNumberHash;
 
     /** @var int $userGuid */
@@ -59,6 +62,7 @@ class Purchase implements \JsonSerializable
     /**
      * Return the amount of unissued tokens
      * @return BigNumber
+     * @throws \Exception
      */
     public function getUnissuedAmount()
     {
@@ -68,6 +72,9 @@ class Purchase implements \JsonSerializable
 
     /**
      * Export
+     * @param bool $pii
+     * @return array
+     * @throws \Exception
      */
     public function export($pii = false)
     {
@@ -96,6 +103,7 @@ class Purchase implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws \Exception
      */
     public function jsonSerialize()
     {

@@ -48,6 +48,9 @@ class DataProvider extends Provider
         $this->di->bind('Database\Cassandra\Lookup', function ($di) {
             return new Cassandra\Thrift\Lookup(new Call('user_index_to_guid'));
         }, ['useFactory'=>false]);
+        $this->di->bind('Database\Cassandra\Data\Lookup', function ($di) {
+            return new lookup();
+        }, ['useFactory'=>false]);
         $this->di->bind('Database\Cassandra\Relationships', function ($di) {
             return new Cassandra\Thrift\Relationships(new Call('relationships'));
         }, ['useFactory'=>false]);

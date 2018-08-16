@@ -9,13 +9,13 @@
 namespace Minds\Core\Blockchain\Wallets\OffChain;
 
 use Minds\Core\Blockchain\Transactions\Repository;
+use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Data\Locks;
 use Minds\Core\Data\Locks\LockFailedException;
-use Minds\Core\Data\Locks\Locks;
+use Minds\Core\Di\Di;
+use Minds\Core\GuidBuilder;
 use Minds\Core\Util\BigNumber;
 use Minds\Entities\User;
-use Minds\Core\Di\Di;
-use Minds\Core\Blockchain\Transactions\Transaction;
-use Minds\Core\Guid;
 
 class Transactions
 {
@@ -25,8 +25,11 @@ class Transactions
     /** @var Balance $balance */
     protected $balance;
 
-    /** @var Locks locks */
+    /** @var Locks\Redis */
     protected $locks;
+
+    /** @var GuidBuilder */
+    protected $guid;
 
     /** @var User $user */
     protected $user;
@@ -43,11 +46,12 @@ class Transactions
     /** @var array|null $data */
     protected $data;
 
-    public function __construct($repository = null, $balance = null, $locks = null)
+    public function __construct($repository = null, $balance = null, $locks = null, $guid = null)
     {
         $this->repository = $repository ?: Di::_()->get('Blockchain\Transactions\Repository');
         $this->balance = $balance ?: Di::_()->get('Blockchain\Wallets\OffChain\Balance');
         $this->locks = $locks ?: Di::_()->get('Database\Locks');
+        $this->guid = $guid ?: Di::_()->get('Guid');
     }
 
     public function setUser(User $user)
@@ -91,18 +95,20 @@ class Transactions
         }
 
         $balance = BigNumber::_($this->balance->setUser($this->user)->get());
-        
+
         if ($balance->add($this->amount)->lt(0)) {
             throw new \Exception('Not enough funds');
         }
 
         $transaction = new Transaction();
 
+        $guid = $this->guid->build();
+
         $transaction
             ->setUserGuid($this->user->guid)
             ->setWalletAddress('offchain')
             ->setTimestamp(time())
-            ->setTx('oc:' . Guid::build())
+            ->setTx('oc:' . $guid)
             ->setAmount($this->amount)
             ->setContract('offchain:' . $this->type)
             ->setCompleted(true);

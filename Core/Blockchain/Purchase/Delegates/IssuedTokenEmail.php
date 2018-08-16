@@ -21,6 +21,9 @@ class IssuedTokenEmail
     /** @var Config */
     protected $config;
 
+    /** @var Custom */
+    protected $campaign;
+
     public function __construct($config = null, $campaign = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
@@ -33,7 +36,7 @@ class IssuedTokenEmail
 
         $this->campaign
             ->setUser(new User($purchase->getUserGuid()))
-            ->setSubject("Your purchase of $amount Tokens have now been issued.")
+            ->setSubject("Your purchase of $amount Tokens has now been issued.")
             ->setTemplate('issued-token-purchase.md')
             ->setTopic('billing')
             ->setCampaign('tokens')

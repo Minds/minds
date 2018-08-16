@@ -2,33 +2,41 @@
 
 namespace Spec\Minds\Core\Blockchain\Wallets\OffChain;
 
-use Minds\Core\Util\BigNumber;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
-
-use Minds\Entities\User;
 use Minds\Core\Blockchain\Wallets\OffChain\Sums;
 use Minds\Core\Blockchain\Wallets\OffChain\Withholding\Sums as WithholdingSums;
+use Minds\Core\Util\BigNumber;
+use Minds\Entities\User;
+use PhpSpec\ObjectBehavior;
 
 class BalanceSpec extends ObjectBehavior
 {
+    /** @var Sums */
+    private $sums;
+    /** @var WithholdingSums */
+    private $withholdingSums;
+
+    function let(Sums $sums, WithholdingSums $withholdingSums)
+    {
+        $this->sums = $sums;
+        $this->withholdingSums = $withholdingSums;
+
+        $this->beConstructedWith($sums, $withholdingSums);
+    }
 
     function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Core\Blockchain\Wallets\OffChain\Balance');
     }
 
-    function it_should_return_the_balance(Sums $sums)
+    function it_should_return_the_balance()
     {
-        $this->beConstructedWith($sums);
-
         $user = new User;
         $user->guid = 123;
 
-        $sums->setUser($user)
+        $this->sums->setUser($user)
             ->shouldBeCalled()
-            ->willReturn($sums);
-        $sums->getBalance()
+            ->willReturn($this->sums);
+        $this->sums->getBalance()
             ->shouldBeCalled()
             ->willReturn('50');
 
@@ -36,26 +44,24 @@ class BalanceSpec extends ObjectBehavior
         $this->get()->shouldReturn('50');
     }
 
-    function it_should_return_the_available(Sums $sums, WithholdingSums $withholdingSums)
+    function it_should_return_the_available()
     {
-        $this->beConstructedWith($sums, $withholdingSums);
-
         $user = new User;
         $user->guid = 123;
 
-        $withholdingSums->setUserGuid($user)
+        $this->withholdingSums->setUserGuid($user)
             ->shouldBeCalled()
-            ->willReturn($withholdingSums);
+            ->willReturn($this->withholdingSums);
 
-        $withholdingSums->get()
+        $this->withholdingSums->get()
             ->shouldBeCalled()
             ->willReturn((string) BigNumber::toPlain(10, 18));
 
-        $sums->setUser($user)
+        $this->sums->setUser($user)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->sums);
 
-        $sums->getBalance()
+        $this->sums->getBalance()
             ->shouldBeCalled()
             ->willReturn((string) BigNumber::toPlain(50, 18));
 
@@ -63,22 +69,45 @@ class BalanceSpec extends ObjectBehavior
         $this->getAvailable()->shouldReturn((string) BigNumber::toPlain(40, 18));
     }
 
-    function it_should_return_the_balance_by_contract(Sums $sums)
+    function it_should_return_0_when_getting_available()
     {
-        $this->beConstructedWith($sums);
-
         $user = new User;
         $user->guid = 123;
 
-        $sums->setTimestamp(null)
+        $this->withholdingSums->setUserGuid($user)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->withholdingSums);
 
-        $sums->setUser($user)
+        $this->withholdingSums->get()
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn((string) BigNumber::toPlain(50, 18));
 
-        $sums->getContractBalance('spec', false)
+        $this->sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($this->sums);
+
+        $this->sums->getBalance()
+            ->shouldBeCalled()
+            ->willReturn((string) BigNumber::toPlain(10, 18));
+
+        $this->setUser($user);
+        $this->getAvailable()->shouldReturn('0');
+    }
+
+    function it_should_return_the_balance_by_contract()
+    {
+        $user = new User;
+        $user->guid = 123;
+
+        $this->sums->setTimestamp(null)
+            ->shouldBeCalled()
+            ->willReturn($this->sums);
+
+        $this->sums->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($this->sums);
+
+        $this->sums->getContractBalance('spec', false)
             ->shouldBeCalled()
             ->willReturn('50');
 
@@ -86,22 +115,20 @@ class BalanceSpec extends ObjectBehavior
         $this->getByContract('spec')->shouldReturn('50');
     }
 
-    function it_should_return_the_balance_by_contract_with_timestamp(Sums $sums)
+    function it_should_return_the_balance_by_contract_with_timestamp()
     {
-        $this->beConstructedWith($sums);
-
         $user = new User;
         $user->guid = 123;
 
-        $sums->setTimestamp(1000000)
+        $this->sums->setTimestamp(1000000)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->sums);
 
-        $sums->setUser($user)
+        $this->sums->setUser($user)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->sums);
 
-        $sums->getContractBalance('spec', false)
+        $this->sums->getContractBalance('spec', false)
             ->shouldBeCalled()
             ->willReturn('50');
 
@@ -110,28 +137,25 @@ class BalanceSpec extends ObjectBehavior
     }
 
 
-    function it_should_return_the_negative_balance_by_contract_with_timestamp(Sums $sums)
+    function it_should_return_the_negative_balance_by_contract_with_timestamp()
     {
-        $this->beConstructedWith($sums);
-
         $user = new User;
         $user->guid = 123;
 
-        $sums->setTimestamp(1000000)
+        $this->sums->setTimestamp(1000000)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->sums);
 
-        $sums->setUser($user)
+        $this->sums->setUser($user)
             ->shouldBeCalled()
-            ->willReturn($sums);
+            ->willReturn($this->sums);
 
-        $sums->getContractBalance('spec', true)
+        $this->sums->getContractBalance('spec', true)
             ->shouldBeCalled()
             ->willReturn('50');
 
         $this->setUser($user);
         $this->getByContract('spec', 1000000, true)->shouldReturn('50');
     }
-
 
 }

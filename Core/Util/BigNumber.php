@@ -100,7 +100,7 @@ class BigNumber implements JsonSerializable
     }
 
     /**
-     * Substracts value to another.
+     * Subtracts value to another.
      * @param $rightOperand
      * @return BigNumber
      * @throws \Exception

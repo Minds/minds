@@ -2,6 +2,7 @@
 /**
  *  Token Purchase Manager
  */
+
 namespace Minds\Core\Blockchain\Purchase;
 
 use Minds\Core\Queue;
@@ -28,11 +29,14 @@ class Manager
     /** @var Delegates\NewPurchaseNotification */
     private $newPurchaseNotification;
 
-    /** @var Delegates\ApprovedPurchaseNotification */
-    private $approvedPurchaseNotification;
+    /** @var Delegates\NewPurchaseEmail */
+    private $newPurchaseEmail;
 
-    /** @var Delegates\ApprovedPurchaseEmail */
-    private $approvedPurchaseEmail;
+    /** @var Delegates\IssuedTokenEmail */
+    private $issuedTokenEmail;
+
+    /** @var Delegates\IssuedTokenNotification */
+    private $issuedTokenNotification;
 
     public function __construct(
         $repo = null,
@@ -51,29 +55,40 @@ class Manager
         $this->issueTokens = $issueTokens ?: new Delegates\IssueTokens();
         $this->newPurchaseNotification = $newPurchaseNotification ?: new Delegates\NewPurchaseNotification();
         $this->issuedTokenNotification = $issuedTokenNotification ?: new Delegates\IssuedTokenNotification();
-        $this->newPurchaseEmail = $newPurchaseEmail ?: new Delegates\NewPurchaseEmail();
         $this->issuedTokenEmail = $issuedTokenEmail ?: new Delegates\IssuedTokenEmail();
+        $this->newPurchaseEmail = $newPurchaseEmail ?: new Delegates\NewPurchaseEmail();
     }
 
     /**
      * Returns the contract address of the token sale event
-     * @return 
+     * @return string
      */
     private function getContractAddress()
     {
         return $this->config->get('blockchain')['contracts']['token_sale_event']['contract_address'];
     }
 
+    /**
+     * @return string
+     */
     public function getAutoIssueCap()
     {
         return $this->config->get('blockchain')['contracts']['token_sale_event']['auto_issue_cap'];
     }
 
+    /**
+     * @return string
+     */
     public function getEthTokenRate()
     {
         return $this->config->get('blockchain')['contracts']['token_sale_event']['eth_rate'];
     }
 
+    /**
+     * @param $phone_number_hash
+     * @param $tx
+     * @return Purchase|null
+     */
     public function getPurchase($phone_number_hash, $tx)
     {
         return $this->repo->get($phone_number_hash, $tx);
@@ -84,16 +99,16 @@ class Manager
      * @param User $user
      * @return string
      */
-    public function getPurchasedAmount($user)
-    {
-        $purchase = $this->getPurchase($user);
-
-        if (!$purchase) {
-            return 0;
-        }
-
-        return (string) $purchase->getRequestedAmount();
-    }
+    //public function getPurchasedAmount($user)
+    //{
+    //    $purchase = $this->getPurchase($user);
+    //
+    //    if (!$purchase) {
+    //        return 0;
+    //    }
+    //
+    //    return (string) $purchase->getRequestedAmount();
+    //}
 
     /**
      * Register a purchase transaction
@@ -168,10 +183,5 @@ class Manager
         $this->repo->add($purchase);
 
         return true;
-    }
-
-    public function test()
-    {
-        return 10;
     }
 }
