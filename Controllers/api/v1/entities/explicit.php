@@ -53,12 +53,17 @@ class explicit implements Interfaces\Api
             $entity->setMature($value);
             if ($isAdmin) {
                 $entity->setMatureLock($value);
+
                 Queue::build()
                     ->setQueue('MatureBatch')
                     ->send([
                         "user_guid" => $entity->guid,
                         "value" => $value
                     ]);
+
+                //update all sessions for this user
+                (new Core\Data\Sessions())
+                    ->syncRemote($entity->guid, $entity);
             }
         } else {
             if (Helpers\MagicAttributes::setterExists($entity, 'setMature')) {
