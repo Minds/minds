@@ -73,7 +73,7 @@ class User extends \ElggUser
      */
     public function getMature()
     {
-      return $this->isMature();
+      return $this->attributes['mature'];
     }
 
     /**
