@@ -642,10 +642,7 @@ class User extends \ElggUser
         $export['p2p_media_disabled'] = $this->isP2PMediaDisabled();
         $export['is_mature'] = $this->isMature();
         $export['mature_lock'] = $this->getMatureLock();
-
-        if (isset($export['mature'])) { //note: this is to VIEW explicit not be mature. See is_mature for that.
-            $export['mature'] = (int) $export['mature'];
-        }
+        $export['mature'] = (int) $this->getViewMature();
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
