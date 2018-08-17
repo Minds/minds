@@ -15,6 +15,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Core\Queue\Client as Queue;
+use Minds\Core;
 
 class explicit implements Interfaces\Api
 {
