@@ -3,6 +3,7 @@
 namespace Spec\Minds\Core\Blockchain\Services;
 
 use Minds\Core\Blockchain\Config;
+use Minds\Core\Blockchain\GasPrice;
 use Minds\Core\Http\Curl\JsonRpc\Client as JsonRpc;
 use Minds\Core\Util\BigNumber;
 use MW3\Sha3;
@@ -16,15 +17,17 @@ class EthereumSpec extends ObjectBehavior
     private $_jsonRpc;
     private $_sign;
     private $_sha3;
+    private $_gasPrice;
 
-    function let(Config $config, JsonRpc $jsonRpc, Sign $sign, Sha3 $sha)
+    function let(Config $config, JsonRpc $jsonRpc, Sign $sign, Sha3 $sha, GasPrice $gasPrice)
     {
         $this->_config = $config;
         $this->_jsonRpc = $jsonRpc;
         $this->_sign = $sign;
         $this->_sha3 = $sha;
+        $this->_gasPrice = $gasPrice;
 
-        $this->beConstructedWith($config, $jsonRpc, $sign, $sha);
+        $this->beConstructedWith($config, $jsonRpc, $sign, $sha, $gasPrice);
     }
 
     function it_is_initializable()
@@ -190,6 +193,10 @@ class EthereumSpec extends ObjectBehavior
             'nonce' => 'nonce'
         ];
 
+        $this->_gasPrice->getLatestGasPrice(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn('0x2540be400');
+
         $this->_config->get()->willReturn([
             'rpc_endpoints' => ['127.0.0.1'],
             'mw3' => '/dev/null',
@@ -200,7 +207,7 @@ class EthereumSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->_sign);
 
-        $this->_sign->setTx(json_encode(array_merge($transaction, ['gasPrice' => '0x174876e800'])))
+        $this->_sign->setTx(json_encode(array_merge($transaction, ['gasPrice' => '0x2540be400'])))
             ->shouldBeCalled()
             ->willReturn($this->_sign);
 
@@ -268,7 +275,11 @@ class EthereumSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->_sign);
 
-        $this->_sign->setTx(json_encode(array_merge($transaction, ['gasPrice' => '0x174876e800'])))
+        $this->_gasPrice->getLatestGasPrice(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn('0x2540be400');
+
+        $this->_sign->setTx(json_encode(array_merge($transaction, ['gasPrice' => '0x2540be400'])))
             ->shouldBeCalled()
             ->willReturn($this->_sign);
 
