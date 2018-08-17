@@ -71,9 +71,20 @@ class User extends \ElggUser
      * Gets the `mature` flag
      * @return bool|int
      */
-    public function getMature()
+    public function getViewMature()
     {
       return $this->attributes['mature'];
+    }
+
+    /**
+     * Sets the `mature` flag
+     * @param  bool|int $value
+     * @return $this
+     */
+    public function setViewContent($value)
+    {
+        $this->mature = $value ? 1 : 0;
+        return $this;
     }
 
     /**

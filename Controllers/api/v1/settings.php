@@ -92,7 +92,7 @@ class settings implements Interfaces\Api
         }
 
         if (isset($_POST['mature'])) {
-            $user->setMature(isset($_POST['mature']) && (int) $_POST['mature']);
+            $user->setViewMature(isset($_POST['mature']) && (int) $_POST['mature']);
         }
 
         if (isset($_POST['monetized']) && $_POST['monetized']) {
