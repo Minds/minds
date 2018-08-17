@@ -38,7 +38,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
         $user->isBanned()->willReturn(false);
 
-        $user->getMature()->willReturn(true);
+        $user->isMature()->willReturn(true);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
 
@@ -98,7 +98,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
         $user->isBanned()->willReturn(true);
 
-        $user->getMature()->willReturn(true);
+        $user->isMature()->willReturn(true);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
 
