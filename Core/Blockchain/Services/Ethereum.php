@@ -9,6 +9,7 @@
 namespace Minds\Core\Blockchain\Services;
 
 use Minds\Core\Blockchain\Config;
+use Minds\Core\Blockchain\GasPrice;
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\JsonRpc;
 use Minds\Core\Util\BigNumber;
@@ -31,6 +32,9 @@ class Ethereum
     /** @var MW3\Sha3 $sha3 */
     protected $sha3;
 
+    /** @var GasPrice */
+    protected $gasPrice;
+
     /** @var array $nonces */
     private $nonces = [];
 
@@ -40,13 +44,14 @@ class Ethereum
      * @param null|mixed $jsonRpc
      * @throws \Exception
      */
-    public function __construct($config = null, $jsonRpc = null, $sign = null, $sha3 = null)
+    public function __construct($config = null, $jsonRpc = null, $sign = null, $sha3 = null, $gasPrice = null)
     {
         $this->config = $config ?: new Config();
         $this->jsonRpc = $jsonRpc ?: Di::_()->get('Http\JsonRpc');
 
         $this->sign = $sign ?: new MW3\Sign;
         $this->sha3 = $sha3 ?: new MW3\Sha3;
+        $this->gasPrice = $gasPrice ?: Di::_()->get('Blockchain\GasPrice');
     }
 
     /**
@@ -171,7 +176,7 @@ class Ethereum
         }
 
         if (!isset($transaction['gasPrice'])) {
-            $transaction['gasPrice'] = BigNumber::_(($config['server_gas_price'] ?: 1) * 1000000000)->toHex(true);
+            $transaction['gasPrice'] = $this->gasPrice->getLatestGasPrice($config['server_gas_price'] ?: 1);
         }
 
         if (!isset($transaction['nonce'])) {
