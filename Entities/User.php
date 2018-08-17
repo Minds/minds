@@ -81,7 +81,7 @@ class User extends \ElggUser
      * @param  bool|int $value
      * @return $this
      */
-    public function setViewContent($value)
+    public function setViewMature($value)
     {
         $this->mature = $value ? 1 : 0;
         return $this;
