@@ -57,39 +57,8 @@ class Defaults
         /**
          * Channel default SEO roots
          */
-        Manager::add('/', function ($slugs = array()) {
-            if (isset($slugs[0]) && is_string($slugs[0])) {
-                $user = new Entities\User(strtolower($slugs[0]));
-                if (!$user->guid) {
-                    return array();
-                }
-
-                if (!$user->enabled || $user->banned == 'yes' || Helpers\Flags::shouldFail($user)) {
-                    header("HTTP/1.0 404 Not Found");
-                    return [
-                        'robots' => 'noindex'
-                    ];
-                }
-
-                return $meta = [
-                'title' => $user->name . ' | ' . $this->config->site_name,
-                'og:title' =>  $user->name . ' | ' . $this->config->site_name,
-                'og:type' => 'website',
-                'description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
-                'og:description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
-                'og:url' => $this->config->site_url . $user->username,
-                'og:image' => $user->getIconUrl('master'),
-                'og:image:width' => 2000,
-                'og:image:height' => 1000,
-                'twitter:site' => '@minds',
-                'twitter:card' => 'summary',
-                'al:ios:url' => 'minds://channel/' . $user->guid,
-                'al:android:url' => 'minds://minds/channel/' . $user->guid,
-                'al:ios:app_name' => 'Minds',
-                'robots' => $user->getRating() == 1 ? 'all' : 'noindex',
-              ];
-            }
-        });
+        Manager::add('/blog', [$this, 'channelHandler']);
+        Manager::add('/', [$this, 'channelHandler']);
 
         Manager::add('/crypto', function ($slugs = []) {
             return [
@@ -417,6 +386,42 @@ class Defaults
                 ];
                 return $meta;
             });
+        }
+    }
+
+    public function channelHandler($slugs = []) 
+    {
+        $username = ($slugs[0] == 'blog') ? $slugs[1]: $slugs[0];
+        if (isset($username) && is_string($username)) {
+            $user = new Entities\User(strtolower($username));
+            if (!$user->guid) {
+                return array();
+            }
+
+            if (!$user->enabled || $user->banned == 'yes' || Helpers\Flags::shouldFail($user)) {
+                header("HTTP/1.0 404 Not Found");
+                return [
+                    'robots' => 'noindex'
+                ];
+            }
+
+            return $meta = [
+                'title' => $user->name . ' | ' . $this->config->site_name,
+                'og:title' =>  $user->name . ' | ' . $this->config->site_name,
+                'og:type' => 'website',
+                'description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
+                'og:description' => "Subscribe to @$user->username on {$this->config->site_name}. " . strip_tags($user->briefdescription),
+                'og:url' => $this->config->site_url . $user->username,
+                'og:image' => $user->getIconUrl('master'),
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+                'al:ios:url' => 'minds://channel/' . $user->guid,
+                'al:android:url' => 'minds://minds/channel/' . $user->guid,
+                'al:ios:app_name' => 'Minds',
+                'robots' => $user->getRating() == 1 ? 'all' : 'noindex',
+            ];
         }
     }
 
