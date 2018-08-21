@@ -46,7 +46,7 @@ class explicit implements Interfaces\Api
 
             if ($matureLock && !$isAdmin) {
                  return Factory::response([
-                     'status' => 'error', 
+                     'status' => 'error',
                      'message' => 'You can not remove the mature flag from your channel',
                  ]);
             }
@@ -67,6 +67,11 @@ class explicit implements Interfaces\Api
                     ->syncRemote($entity->guid, $entity);
             }
         } else {
+            // mature locked channels are not allowed to remove explicit
+            if ($value === false && Session::getLoggedInUser()->getMatureLock()) {
+                return Factory::response(array('status' => 'error', 'message' => 'You can not remove the explit flag'));
+            }
+
             if (Helpers\MagicAttributes::setterExists($entity, 'setMature')) {
                 $entity->setMature($value);
             } elseif (method_exists($entity, 'setFlag')) {
