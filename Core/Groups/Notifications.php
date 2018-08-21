@@ -121,9 +121,9 @@ class Notifications
                 $pct = ($i / count($guids)) * 100;
                 echo "[notification]: $i / " . count($guids) . " ($pct%) ";
 
-                if ($from_user->guid && Security\ACL\Block::_()->isBlocked($from_user, $recipient)) {
-                    continue;
-                }
+                //if ($from_user->guid && Security\ACL\Block::_()->isBlocked($from_user, $recipient)) {
+                //    continue;
+                //}
 
                 $this->notifications->setOwner($recipient);
                 $this->notifications->store($notification->export());
