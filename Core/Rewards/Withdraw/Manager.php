@@ -160,11 +160,8 @@ class Manager
             return;
         }
 
-        $request->setCompleted(true);
-        $this->repo->add($request);
-
         //now issue the transaction
-        $res = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['withdraw']['wallet_pkey'], [
+        $txHash = $this->eth->sendRawTransaction($this->config->get('blockchain')['contracts']['withdraw']['wallet_pkey'], [
             'from' => $this->config->get('blockchain')['contracts']['withdraw']['wallet_address'],
             'to' => $this->config->get('blockchain')['contracts']['withdraw']['contract_address'],
             'gasLimit' => BigNumber::_(4612388)->toHex(true),
@@ -175,7 +172,13 @@ class Manager
                 BigNumber::_($request->getGas())->toHex(true),
                 BigNumber::_($request->getAmount())->toHex(true),
             ])
-         ]);
+        ]);
+
+        $request
+            ->setCompletedTx($txHash)
+            ->setCompleted(true);
+            
+        $this->repo->add($request);
     }
 
 }

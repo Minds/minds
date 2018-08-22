@@ -113,7 +113,6 @@ class ManagerSpec extends ObjectBehavior
         //$offChainTransactions->setTx('0xabc220393')->shouldBeCalled()->willReturn($offChainTransactions);
         $offChainTransactions->setAmount(-1000)->shouldBeCalled()->willReturn($offChainTransactions);
         $offChainTransactions->create()->shouldBeCalled();
-
         $config->get('blockchain')->willReturn([
             'contracts' => [
                 'withdraw' => [
@@ -130,7 +129,8 @@ class ManagerSpec extends ObjectBehavior
             'gasLimit' => BigNumber::_(4612388)->toHex(true),
             'gasPrice' => BigNumber::_(10000000000)->toHex(true),
             'data' => '0xRESULT'
-        ])->shouldBeCalled();
+        ])->shouldBeCalled()
+        ->willReturn('0xRESULTRawTransaction');
 
         $eth->encodeContractMethod('complete(address,uint256,uint256,uint256)', [
             '0xRequesterAddr',
@@ -158,6 +158,10 @@ class ManagerSpec extends ObjectBehavior
                 'gas' => 50,
                 'address' => '0xRequesterAddr'
             ]);
+        $addRequest = $request;
+        $addRequest->setCompletedTx('0xRESULTRawTransaction');
+
+        $repository->add($addRequest)->shouldBeCalled();
 
         $this->complete($request, $transaction);
     }

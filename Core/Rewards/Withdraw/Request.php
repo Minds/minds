@@ -12,6 +12,9 @@ class Request
     /** @var string $tx **/
     private $tx;
 
+    /** @var string $completed_tx **/
+    private $completed_tx;
+
     /** @var string $address **/
     private $address;
 
@@ -41,13 +44,25 @@ class Request
         return $this->user_guid;
     }
 
+    public function setCompletedTx($completed_tx)
+    {
+        $this->completed_tx = $completed_tx;
+        return $this;
+    }
+
+    public function getCompletedTx()
+    {
+        return $this->completed_tx;
+    }
+
     public function export() {
         return [
             'timestamp' => $this->timestamp,
             'amount' => $this->amount,
             'user_guid' => $this->user_guid,
             'tx' => $this->tx,
-            'completed' => $this->completed
+            'completed' => $this->completed,
+            'completed_tx' => $this->completed_tx
         ];
     }
 }
