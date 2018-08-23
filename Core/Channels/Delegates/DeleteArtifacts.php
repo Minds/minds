@@ -120,6 +120,7 @@ class DeleteArtifacts
 
             foreach ($rows as $guid => $ts) {
                 $this->subscribers->removeAttributes($guid, [ $user_guid ]);
+                $this->subscriptions->removeAttributes($user_guid, [ $guid ]);
                 $offset = $guid;
             }
         }
@@ -146,6 +147,7 @@ class DeleteArtifacts
 
             foreach ($rows as $guid => $ts) {
                 $this->subscriptions->removeAttributes($guid, [ $user_guid ]);
+                $this->subscribers->removeAttributes($user_guid, [ $guid ]);
                 $offset = $guid;
             }
         }

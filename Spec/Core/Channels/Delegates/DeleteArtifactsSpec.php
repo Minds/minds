@@ -140,6 +140,9 @@ class DeleteArtifactsSpec extends ObjectBehavior
         $subscribers->removeAttributes(20001, [ 123 ])
             ->shouldBeCalled();
 
+        $subscriptions->removeAttributes(123, [ 20001 ])
+            ->shouldBeCalled();
+
         $subscriptions->removeRow(123)
             ->shouldBeCalled();
 
@@ -164,6 +167,9 @@ class DeleteArtifactsSpec extends ObjectBehavior
             ->willReturn([ ]);
 
         $subscriptions->removeAttributes(30001, [ 123 ])
+            ->shouldBeCalled();
+
+        $subscribers->removeAttributes(123, [ 30001 ])
             ->shouldBeCalled();
 
         $subscribers->removeRow(123)
