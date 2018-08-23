@@ -189,73 +189,63 @@ $CONFIG->set('sandbox', [
 $CONFIG->set('sns_secret', '{{sns-secret}}');
 
 $CONFIG->set('blockchain', [
-    // Are we on the testnet?
-    'testnet' => true,
+    'sale' => 'sale',
+    'testnet' => false,
 
-    // Our network address
-    'network_address' => 'http://localhost:9545',
+    'rpc_endpoints' => [
+        'https://mainnet.infura.io/v3/708b51690a43476092936f9818f8c4fa',
+    ],
+    
+    //'network_address' => 'https://rinkeby.infura.io/',
+    'proxy_rpc_endpoint' => 'https://mainnet.infura.io/v3/708b51690a43476092936f9818f8c4fa',
 
-    // Endpoints to connect to the blockchain
-    'rpc_endpoints' => [ 'http://10.0.2.2:8545' ],
+    'client_network' => 1, // 1 = main ethereum network; 4 = test rinkeby; 1337 coin repo's testserver.sh
 
-    // Client network (1 = main eth network; 4 = rinkeby, 1337 Minds/coin repo's testserver.sh)
-    'client_network' => 1,
+    'default_gas_price' => 40,
+    'server_gas_price' => 40,
+    'token_symbol' => 'status',
 
-    // Escrow wallet
-    'wallet_address' => '0x0000000000000000000000000000000000000000',
+    'token_address' => '0xb26631c6dda06ad89b93c71400d25692de89c068',
+    'contracts' => [
+        'token_sale_event' => [
+            'contract_address' => '0xf3c9dbb9598c21fe64a67d0586adb5d6eb66bc63',
+            'wallet_address' => '0x1820fFAD63fD64d7077Da4355e9641dfFf4DAD0d',
+            'wallet_pkey' => '',
+            'eth_rate' => 2000, //1 ETH = 2,000 TOKENS
+            'auto_issue_cap' => "120000000000000000000000", //60ETH (120,000 tokens) $30,000 USD
+        ],
+        'withdraw' => [
+            'contract_address' => '0xdd10ccb3100980ecfdcbb1175033f0c8fa40548c',
+            'wallet_address' => '0x14E421986C5ff2951979987Cdd82Fa3C0637D569',
+            'wallet_pkey' => '',
+            'limit_exemptions' => [
+            ],
+        ],
+        'bonus' => [
+            'wallet_address' => '0x461f1C5768cDB7E567A84E22b19db0eABa069BaD',
+            'wallet_pkey' => '',
+        ],
+        'boost' => [
+            'contract_address' => '0x112ca67c8e9a6ac65e1a2753613d37b89ab7436b',
+            'wallet_address' => '0xdd04D9636F1944FE24f1b4E51Ba77a6CD23b6fE3',
+            'wallet_pkey' => '',
+        ],
+        'wire' => [
+            'contract_address' => '0x4b637bba81d24657d4c6acc173275f3e11a8d5d7',
+            'wallet_address' => '0x4CDc1C1fd1A3F4DD63231afF8c16501BcC11Df95',
+            'wallet_pkey' => '',
+        ],
+     ],
 
-    // Escrow wallet private key
-    'wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
+    'eth_rate' => 2000, //1 ETH = 2,000 TOKENS
 
-    // Incentive funds wallet
-    'incentive_wallet_address' => '0x0000000000000000000000000000000000000000',
-
-    // Incentive funds wallet private key
-    'incentive_wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
-
-    // Boost escrow wallet
-    'boost_wallet_address' => '0x0000000000000000000000000000000000000000',
-
-    // Boost escrow wallet private key
-    'boost_wallet_pkey' => '0x0000000000000000000000000000000000000000000000000000000000000000',
-
-    // Default gas price in Gwei
-    'default_gas_price' => 1,
-
-    // Default gas price in Gwei used for server-side transactions
-    'server_gas_price' => 1,
-
-    // Token
-    'token_address' => '0x0000000000000000000000000000000000000000',
-
-    // Wire
-    'wire_address' => '0x0000000000000000000000000000000000000000',
-
-    // Peer Boost
-    'peer_boost_address' => '0x0000000000000000000000000000000000000000',
-
-    // Token Distribution Event
-    'token_distribution_event_address' => '0x0000000000000000000000000000000000000000',
-
-    // Web3 Interface binary
-    'mw3' => '/usr/bin/env node /path/to/mw3/index.js',
-
-    'token_name' => '',
-
-    'token_symbol' => '',
-
-    'disable_creditcards' => false,
+    'disable_creditcards' => true,
 
     'offchain' => [
-        'cap' => 10,
-        'withholding' => [
-            'wire' => 30 * 24 * 60 * 60,
-            'boost' => 30 * 24 * 60 * 60,
-        ]
+        'cap' => 1000
     ],
-    'sale' => false, // false | 'presale' | 'sale'
 
-    'max_pledge_amount' => 1800, // 1800 ETH
+    'mw3' => '/usr/bin/env node ' . __MINDS_ROOT__ . '/../mw3/index.js'
 ]);
 
 $CONFIG->set('blockchain_override', [
