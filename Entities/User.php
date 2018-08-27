@@ -44,6 +44,7 @@ class User extends \ElggUser
 		$this->attributes['p2p_media_disabled'] = 0;
 		$this->attributes['is_mature'] = 0;
 		$this->attributes['mature_lock'] = 0;
+		$this->attributes['last_accepted_tos'] = 0;
 
         parent::initializeAttributes();
     }
@@ -644,6 +645,7 @@ class User extends \ElggUser
         $export['is_mature'] = $this->isMature();
         $export['mature_lock'] = $this->getMatureLock();
         $export['mature'] = (int) $this->getViewMature();
+        $export['last_accepted_tos'] = (int) $this->getLastAcceptedTOS();
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
@@ -819,6 +821,24 @@ class User extends \ElggUser
     }
 
     /**
+     * @return int
+     */
+    public function getLastAcceptedTOS()
+    {
+        return $this->last_accepted_tos ?: 0;
+    }
+
+    /**
+     * @param int $value
+     * @return $this
+     */
+    public function setLastAcceptedTOS($value)
+    {
+        $this->last_accepted_tos = $value;
+        return $this;
+    }
+
+    /**
      * Returns an array of which Entity attributes are exportable
      * @return array
      */
@@ -850,6 +870,7 @@ class User extends \ElggUser
             'pinned_posts',
             'is_mature',
             'mature_lock',
+            'last_accepted_tos',
         ));
     }
 }
