@@ -19,7 +19,7 @@ class Webhook implements HookInterface
             
             //save the plus flag to the user
             $user = $subscription->getCustomer()->getUser();
-            $user->setPlusExpires(strtotime('+30 days', $wire->getTimestamp()));
+            $user->setPlusExpires(strtotime('+30 days', time()));
             $user->save();
             
             /** @var Core\Payments\Manager $manager */
