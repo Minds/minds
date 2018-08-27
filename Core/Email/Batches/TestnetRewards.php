@@ -6,7 +6,7 @@ namespace Minds\Core\Email\Batches;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
 
-class News implements EmailBatchInterface
+class TestnetRewards implements EmailBatchInterface
 {
     protected $offset;
     protected $templateKey;
@@ -54,13 +54,6 @@ class News implements EmailBatchInterface
      */
     public function run()
     {
-        if (!$this->templateKey || $this->templateKey == '') {
-            throw new \Exception('You must set the templatePath');
-        }
-        if (!$this->subject || $this->subject == '') {
-            throw new \Exception('You must set the subject');
-        }
-
         $iterator = new EmailSubscribersIterator();
         $iterator->setCampaign('global')
             ->setTopic('minds_news')
@@ -69,17 +62,15 @@ class News implements EmailBatchInterface
 
         $i = 0;
         foreach ($iterator as $user) {
-            $user = new \Minds\Entities\User('mark');
+            $user = new \Minds\Entities\User('ottman');
             if ($user->bounced && false) {
                 continue;
             }
             $i++;
-            $campaign = new Campaigns\News();
+            $campaign = new Campaigns\TestnetRewards();
 
             $campaign
                 ->setUser($user)
-                ->setTemplateKey($this->templateKey)
-                ->setSubject($this->subject)
                 ->send();
             echo "\n[$i]: $user->guid ($iterator->offset)";
             exit;
