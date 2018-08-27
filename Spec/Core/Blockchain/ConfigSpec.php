@@ -30,7 +30,11 @@ class ConfigSpec extends ObjectBehavior
             ->willReturn([
                 'token_address' => '0x123',
                 'contracts' => [
-                    'wire' => ['contract_address' => '0x456'],
+                    'wire' => [
+                        'contract_address' => '0x456',
+                        'plus_address' => '0xPLUS',
+                        'plus_guid' => 123,
+                    ],
                     'withdraw' => ['contract_address' => '0x789'],
                     'token_sale_event' => ['contract_address' => '0x987']
                 ],
@@ -59,8 +63,9 @@ class ConfigSpec extends ObjectBehavior
                 'token_address' => '0x123',
                 'contracts' => [
                     'wire' => [
-
-                        'contract_address' => '0x456'
+                        'contract_address' => '0x456',
+                        'plus_address' => '0xPLUS',
+                        'plus_guid' => 123,
                     ],
                     'withdraw' => [
 

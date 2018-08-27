@@ -66,6 +66,7 @@ class Minds extends base
         (new Faq\FaqProvider())->register();
         (new Rewards\RewardsProvider())->register();
         (new Email\EmailProvider())->register();
+        (new Plus\PlusProvider())->register();
     }
 
     /**

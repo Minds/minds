@@ -35,7 +35,7 @@ class fetch implements Interfaces\Api
             ]);
         }
 
-        if ($user->disabled_boost && $user->plus) {
+        if ($user->disabled_boost && $user->isPlus()) {
             return Factory::response([]);
         }
 

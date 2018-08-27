@@ -174,7 +174,7 @@ class plus implements Interfaces\Api
                     $plus->cancel();
                 }
 
-                $user->plus = false;
+                $user->plus_expires = 0;
                 $user->save();
                 break;
             case "boost":

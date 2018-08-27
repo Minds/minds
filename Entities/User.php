@@ -25,7 +25,8 @@ class User extends \ElggUser
         $this->attributes['programs'] = [];
         $this->attributes['monetization_settings'] = [];
         $this->attributes['group_membership'] = [];
-        $this->attributes['plus'] = 0;
+        $this->attributes['plus'] = 0; //TODO: REMOVE
+        $this->attributes['plus_expires'] = 0;
         $this->attributes['verified'] = 0;
         $this->attributes['founder'] = 0;
         $this->attributes['disabled_boost'] = 0;
@@ -631,7 +632,7 @@ class User extends \ElggUser
 
         $export['merchant'] = $this->getMerchant() ?: false;
         $export['programs'] = $this->getPrograms();
-        $export['plus'] = $this->getPlus();
+        $export['plus'] = (bool) $this->isPlus();
         $export['verified'] = (bool) $this->verified;
         $export['founder'] = (bool) $this->founder;
         $export['disabled_boost'] = (bool) $this->disabled_boost;
@@ -689,7 +690,26 @@ class User extends \ElggUser
      */
     public function getPlus()
     {
-        return (bool) $this->plus;
+        return $this->isPlus();
+    }
+
+    /**
+     * Is the user a plus user
+     * @return int
+     */
+    public function isPlus()
+    {
+        return (bool) ((int) $this->plus_expires > time());
+    }
+
+    /**
+     * Set plus expires
+     * @var int $expires
+     */
+    public function setPlusExpires($expires)
+    {
+        $this->plus_expires = $expires;
+        return $this;
     }
 
     /**

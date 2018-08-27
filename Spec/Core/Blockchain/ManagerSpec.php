@@ -22,7 +22,11 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn([
                 'token_address' => '0x123',
                 'contracts' => [
-                    'wire' => ['contract_address' => '0x456'],
+                    'wire' => [
+                        'contract_address' => '0x456',
+                        'plus_address' => '0xPLUS',
+                        'plus_guid' => 123,
+                    ],
                     'withdraw' => ['contract_address' => '0x789'],
                     'token_sale_event' => ['contract_address' => '0x987'],
                     'boost' => ['contract_address' => '0x002', 'wallet_address' => '0x003']
@@ -88,6 +92,7 @@ class ManagerSpec extends ObjectBehavior
                     'wallet_address' => "0x132",
                     'boost_wallet_address' => "0x003",
                     'token_distribution_event_address' => "0x987",
+                    'plus_address' => '0xPLUS',
                     'default_gas_price' => 1,
                 ]
             ]);

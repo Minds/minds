@@ -71,6 +71,9 @@ class Manager
     /** @var Core\Events\EventsDispatcher */
     protected $dispatcher;
 
+    /** @var Delegates\Plus $plusDelegate */
+    protected $plusDelegate;
+
     public function __construct(
         $cache = null,
         $repository = null,
@@ -82,7 +85,8 @@ class Manager
         $client = null,
         $token = null,
         $cap = null,
-        $dispatcher = null
+        $dispatcher = null,
+        $plusDelegate = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
@@ -95,6 +99,7 @@ class Manager
         $this->token = $token ?: Di::_()->get('Blockchain\Token');
         $this->cap = $cap ?: Di::_()->get('Blockchain\Wallets\OffChain\Cap');
         $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
+        $this->plusDelegate = $plusDelegate ?: new Delegates\Plus;
     }
 
     /**
@@ -239,6 +244,9 @@ class Manager
                     ->setTimestamp(time());
                 $this->repository->add($wire);
 
+                $this->plusDelegate
+                    ->onWire($wire, 'offchain');
+
                 $this->sendNotification($wire);
 
                 $this->clearWireCache($wire);
@@ -296,6 +304,9 @@ class Manager
             'description' => 'Wire',
             'user' => $wire->getReceiver(),
         ]);*/
+
+        $this->plusDelegate
+            ->onWire($wire, $data['receiver_address']);
 
         $this->sendNotification($wire);
 

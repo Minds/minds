@@ -16,23 +16,12 @@ class Webhook implements HookInterface
     public function onCharged($subscription)
     {
         if ($subscription->getPlanId() == 'plus') {
+            
+            //save the plus flag to the user
             $user = $subscription->getCustomer()->getUser();
-            //WalletHelper::createTransaction($user->guid, 1000, null, "Plus Points");
-
-            $transaction = new Transaction(); 
-            $transaction
-                ->setUserGuid($user->guid)
-                ->setWalletAddress('offchain')
-                ->setTimestamp(time())
-                ->setTx('cc:' . $subscription->getId())
-                ->setAmount(10 ** 18) //1 token
-                ->setContract('offchain:plus')
-                ->setCompleted(true);
-
-            Di::_()->get('Blockchain\Transactions\Repository')
-                ->add($transaction);
-
-
+            $user->setPlusExpires(strtotime('+30 days', $wire->getTimestamp()));
+            $user->save();
+            
             /** @var Core\Payments\Manager $manager */
             $manager = Di::_()->get('Payments\Manager');
             $manager
@@ -65,14 +54,14 @@ class Webhook implements HookInterface
     public function onCanceled($subscription)
     {
         error_log("[webhook]:: canceled");
-        $user = $subscription->getCustomer()->getUser();
+        /*$user = $subscription->getCustomer()->getUser();
 
         $plus = new Subscription();
         $plus->setUser($user);
         $plus->cancel();
 
         $user->plus = 0;
-        $user->save();
+        $user->save();*/
     }
 
     public function onPayoutPaid($payout, $customer, $account)

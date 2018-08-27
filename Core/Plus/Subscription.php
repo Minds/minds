@@ -6,6 +6,9 @@ use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Core\Payments\Subscriptions;
 use Minds\Entities\User;
+use Minds\Core\Payments\Subscriptions\Manager;
+use Minds\Core\Payments\Subscriptions\Repository;
+
 
 class Subscription
 {
@@ -13,9 +16,9 @@ class Subscription
     private $stripe;
     private $repo;
     protected $user;
-    /** @var Core\Payments\Subscriptions\Manager $subscriptionsManager */
+    /** @var Manager $subscriptionsManager */
     protected $subscriptionsManager;
-    /** @var Core\Payments\Subscriptions\Repository $subscriptionsRepository */
+    /** @var Repository $subscriptionsRepository */
     protected $subscriptionsRepository;
 
     public function __construct(
@@ -54,7 +57,7 @@ class Subscription
     }
 
     /**
-     * @param $subscription_id
+     * @param $subscription
      * @return $this
      * @throws \Exception
      */

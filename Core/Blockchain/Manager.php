@@ -67,6 +67,7 @@ class Manager
             'boost_wallet_address' => $blockchainConfig['contracts']['boost']['wallet_address'],
             'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
             'rate' => $blockchainConfig['eth_rate'],
+            'plus_address' => $blockchainConfig['contracts']['wire']['plus_address'],
             'default_gas_price' => $blockchainConfig['default_gas_price'],
             'overrides' => $this->getOverrides(),
         ], $this->contracts);
@@ -87,6 +88,7 @@ class Manager
                 'wallet_address' => $blockchainConfig['wallet_address'],
                 'boost_wallet_address' => $blockchainConfig['contracts']['boost']['wallet_address'],
                 'token_distribution_event_address' => $blockchainConfig['contracts']['token_sale_event']['contract_address'],
+                'plus_address' => $blockchainConfig['contracts']['wire']['plus_address'],
                 'default_gas_price' => $blockchainConfig['default_gas_price'],
             ];
         }
