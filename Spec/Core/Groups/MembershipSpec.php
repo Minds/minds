@@ -130,6 +130,7 @@ class MembershipSpec extends ObjectBehavior
         $db->setGuid(1)->shouldBeCalled();
         $db->check('member', 50)->shouldBeCalled()->willReturn(false);
         $db->check('group:banned', 50)->shouldBeCalled()->willReturn(false);
+        $db->check('membership_request', 50)->shouldBeCalled()->willReturn(false);
         $db->create('membership_request', 50)->shouldBeCalled()->willReturn(true);
 
         $acl->write($group, $user)->shouldBeCalled()->willReturn(false);

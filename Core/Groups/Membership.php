@@ -143,7 +143,7 @@ class Membership
             return $count;
         }
         $this->relDB->setGuid($this->group->getGuid());
-        
+
         $count = $this->relDB->countInverse('member');
         $this->cache->set("group:{$this->group->getGuid()}:members:count", $count);
         return $count;
@@ -286,6 +286,9 @@ class Membership
             $done = $this->relDB->create('member', $this->group->getGuid());
             $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", true);
         } else {
+            if ($this->isAwaiting($user_guid)) {
+                throw new GroupOperationException('you have already requested to join');
+            }
             $done = $this->relDB->create('membership_request', $this->group->getGuid());
         }
 
@@ -371,7 +374,7 @@ class Membership
         if (!$user) {
             return false;
         }
- 
+
         $user_guid = is_object($user) ? $user->guid : $user;
 
         if ($cache && isset($this->memberCache[$user->guid])) {
@@ -382,7 +385,7 @@ class Membership
             $this->memberCache[$user->guid] = (bool) $is;
             return (bool) $is;
         }
-        
+
         $this->relDB->setGuid($user_guid);
 
         $is = $this->relDB->check('member', $this->group->getGuid());
@@ -509,7 +512,7 @@ class Membership
         if (!$user) {
             return false;
         }
-        
+
         $user_guid = is_object($user) ? $user->guid : $user;
         $this->relDB->setGuid($user_guid);
 
@@ -587,7 +590,7 @@ class Membership
         return $done;
     }
 
-    // 
+    //
 
     public function refreshUserMembership($user, array $addGroupGuids = [], array $removeGroupGuids = [])
     {
@@ -610,7 +613,7 @@ class Membership
         $membership = $user->getGroupMembership();
         $membership = array_merge($membership, $addGroupGuids); // add
         $membership = array_diff($membership, $removeGroupGuids); // remove
-        
+
         $user->context('search');
         $user->setGroupMembership(array_values($membership));
         $user->save();
