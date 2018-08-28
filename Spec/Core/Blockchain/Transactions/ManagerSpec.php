@@ -6,6 +6,7 @@ use Minds\Core\Blockchain\Events\WireEvent;
 use Minds\Core\Blockchain\Services\Ethereum;
 use Minds\Core\Blockchain\Transactions\Repository;
 use Minds\Core\Blockchain\Transactions\Transaction;
+use Minds\Core\Data\cache\Redis;
 use Minds\Core\Events\EventsDispatcher;
 use PhpSpec\ObjectBehavior;
 
@@ -17,6 +18,8 @@ class ManagerSpec extends ObjectBehavior
     private $eth;
     /** @var \Minds\Core\Queue\RabbitMQ\Client */
     private $rabbit;
+    /** @var Redis */
+    private $cacher;
     /** @var EventsDispatcher */
     private $dispatcher;
 
@@ -24,14 +27,16 @@ class ManagerSpec extends ObjectBehavior
         Repository $repo,
         Ethereum $eth,
         \Minds\Core\Queue\RabbitMQ\Client $rabbit,
+        Redis $cacher,
         EventsDispatcher $dispatcher
     ) {
         $this->repo = $repo;
         $this->eth = $eth;
         $this->rabbit = $rabbit;
+        $this->cacher = $cacher;
         $this->dispatcher = $dispatcher;
 
-        $this->beConstructedWith($repo, $eth, $rabbit, $dispatcher);
+        $this->beConstructedWith($repo, $eth, $rabbit, $cacher, $dispatcher);
     }
 
     function it_is_initializable()
@@ -39,7 +44,7 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Blockchain\Transactions\Manager');
     }
 
-    function it_should_addd_a_transaction_to_the_queue(Transaction $transaction)
+    function it_should_add_a_transaction_to_the_queue(Transaction $transaction)
     {
         $transaction->getUserGuid()
             ->shouldBeCalled()
@@ -225,6 +230,13 @@ class ManagerSpec extends ObjectBehavior
                 'blockchain:fail' => []
             ]);
 
+        $transaction->getWalletAddress()
+            ->shouldBeCalled()
+            ->willReturn('0x123123');
+
+        $this->cacher->destroy('blockchain:balance:0x123123')
+            ->shouldBeCalled();
+
         $transaction->setCompleted(true)
             ->shouldBeCalled();
         $this->repo->add($transaction)
@@ -273,6 +285,13 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn([
                 '0x317c0f5ab60805d3e3fb6aaa61ccb77253bbb20deccbbe49c544de4baa4d7f8f' => []
             ]);
+
+        $transaction->getWalletAddress()
+            ->shouldBeCalled()
+            ->willReturn('0x123123');
+
+        $this->cacher->destroy('blockchain:balance:0x123123')
+            ->shouldBeCalled();
 
         $transaction->setCompleted(true)
             ->shouldBeCalled();
