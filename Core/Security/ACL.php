@@ -6,14 +6,19 @@ namespace Minds\Core\Security;
 
 use Minds\Core;
 use Minds\Entities;
+use Minds\Core\Security\RateLimits\Manager as RateLimitsManager;
 
 class ACL
 {
     private static $_;
     public static $ignore = false;
 
-    public function __construct()
+    /** @var RateLimitsManager $rateLimits */
+    private $rateLimits;
+
+    public function __construct($rateLimits = null)
     {
+        $this->rateLimits = $rateLimits ?: new RateLimitsManager;
     }
 
     /**
@@ -165,43 +170,59 @@ class ACL
      * @param (optional) $user
      * @return boolean
      */
-    public function interact($entity, $user = null)
+    public function interact($entity, $user = null, $interaction = null)
     {
         if (!$user || !is_object($user)) {
             $user = Core\Session::getLoggedinUser();
         }
 
-      /**
-       * Logged out users can not interact
-       */
-      if (!$user) {
-          return false;
-      }
+        /**
+         * Logged out users can not interact
+         */
+        if (!$user) {
+            return false;
+        }
 
-      /**
-       * Check if we are the owner
-       */
-      if (
-          ($entity->owner_guid && $entity->owner_guid == $user->guid) ||
-          ($entity->container_guid && $entity->container_guid == $user->guid) ||
-          ($entity->guid && $entity->guid == $user->guid)
-      ) {
-          return true;
-      }
+        /**
+         * Check if we are the owner
+         */
+        if (
+            ($entity->owner_guid && $entity->owner_guid == $user->guid) ||
+            ($entity->container_guid && $entity->container_guid == $user->guid) ||
+            ($entity->guid && $entity->guid == $user->guid)
+        ) {
+            return true;
+        }
 
-      /**
-       * Is this user an admin?
-       */
-      if ($user->isAdmin()) {
-          return true;
-      }
+        /**
+         * Is this user an admin?
+         */
+        if ($user->isAdmin()) {
+            return true;
+        }
 
-      /**
-       * Allow plugins to extend the ACL check
-       */
-      if (Core\Events\Dispatcher::trigger('acl:interact', $entity->type, array('entity'=>$entity, 'user'=>$user), null) === false) {
-          return false;
-      }
+        $rateLimited = $this->rateLimits
+            ->setUser($user)
+            ->setEntity($entity)
+            ->setInteraction($interaction)
+            ->isLimited();
+
+        if ($rateLimited) {
+            return false;
+        }
+
+        /**
+         * Allow plugins to extend the ACL check
+         */
+        $event = Core\Events\Dispatcher::trigger('acl:interact', $entity->type, [
+                    'entity'=>$entity,
+                    'user'=>$user,
+                    'interaction' => $interaction,
+                ], null);
+                
+        if ($event === false) {
+            return false;
+        }
 
         return true;
     }
