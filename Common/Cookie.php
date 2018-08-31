@@ -59,6 +59,7 @@ class Cookie
         }
 
         setcookie($this->name, $this->value, $this->expire, $this->path, $this->domain, $this->secure, $this->httpOnly);
+        $_COOKIE[$this->name] = $this->value; //set the global cookie
     }
 
 }

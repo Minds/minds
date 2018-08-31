@@ -99,6 +99,14 @@ class Session extends base
      */
     public function shutdown()
     {
+        //double check no loggedin cookie ensures session destroy
+        if (!isset($_COOKIE['loggedin']) || $_COOKIE['loggedin'] == 0) {
+            $_SESSION = [];
+            if (session_status() == PHP_SESSION_ACTIVE) {
+                session_destroy();
+            }
+        }
+
         if (isset($_COOKIE[session_name()]) && !isset($_SESSION['user']) && !isset($_SESSION['force'])) {
             //clear session from disk
             $params = session_get_cookie_params();
