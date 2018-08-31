@@ -65,6 +65,10 @@ class MetricsSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1000);
 
+        $entity->get('access_id')
+            ->shouldBeCalled()
+            ->willReturn(2);
+
         $entity->get('type')
             ->shouldBeCalled()
             ->willReturn('test');
@@ -110,6 +114,10 @@ class MetricsSpec extends ObjectBehavior
             ->willReturn($this->metricsEvent);
 
         $this->metricsEvent->setEntityContainerGuid('1000')
+            ->shouldBeCalled()
+            ->willReturn($this->metricsEvent);
+
+        $this->metricsEvent->setEntityAccessId(2)
             ->shouldBeCalled()
             ->willReturn($this->metricsEvent);
 

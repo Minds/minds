@@ -51,6 +51,7 @@ class Metrics
             ->setUserPhoneNumberHash($owner->getPhoneNumberHash())
             ->setEntityGuid((string) $entity->guid)
             ->setEntityContainerGuid((string) $entity->container_guid)
+            ->setEntityAccessId($entity->access_id)
             ->setEntityType($entity->type)
             ->setEntitySubtype((string) $entity->subtype)
             ->setEntityOwnerGuid((string) $entity->owner_guid)

@@ -15,6 +15,7 @@ use Minds\Interfaces\AnalyticsMetric;
  * @method Event setUserPhoneNumberHash($value)
  * @method Event setEntityGuid($value)
  * @method Event setEntityContainerGuid($value)
+ * @method Event setEntityAccessId($value)
  * @method Event setEntityType($value)
  * @method Event setEntitySubtype($value)
  * @method Event setEntityOwnerGuid($value)
