@@ -179,6 +179,9 @@ class Conversation extends DenormalizedEntity
         foreach ($this->participants as $user_guid) {
             if ($user_guid != Session::getLoggedinUser()->guid) {
                 $user = new User($user_guid);
+                if (!$user->username) {
+                    continue; //bad user, probably deleted
+                }
                 $export['participants'][$user_guid] = $user->export();
                 //$export['guid'] = (string) $user_guid; //for legacy support
                 $export['name'] = $user->name;
