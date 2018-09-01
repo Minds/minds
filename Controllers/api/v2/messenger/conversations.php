@@ -163,7 +163,15 @@ class conversations implements Interfaces\Api
             foreach ($response['conversations'] as $k => $v) {
                 $response['conversations'][$k]['subscribed'] = true;
                 $response['conversations'][$k]['subscriber'] = true;
+
+                //if no username, user has vanished
+                if (!$response['conversations'][$k]['username']) {
+                    unset($response['conversations'][$k]);
+                }
             }
+
+            //order needs reseting due to possible deletes
+            $response['conversations'] = array_values($response['conversations']);
 
             end($conversations);
             $response['load-next'] = (int) $_GET['offset'] + count($conversations);
