@@ -30,7 +30,7 @@ class Votes extends Aggregate
             ]
         ];
         
-        if ($this->type) {
+        if ($this->type && $this->type != 'group') {
             $must[]['match'] = [
                 'entity_type' => $this->type
             ];
@@ -39,6 +39,20 @@ class Votes extends Aggregate
         if ($this->subtype) {
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
+            ];
+        }
+        
+        $field = 'entity_guid';
+        $cardinality_field = 'user_phone_number_hash';
+
+        if ($this->type == 'group') {
+            $field = 'entity_container_guid';
+            $this->multiplier = 4;
+            $must[]['range'] = [
+                'entity_access_id' => [
+                  'gte' => 3, //would be group
+                  'lt' => null,
+                ]
             ];
         }
 
@@ -60,14 +74,14 @@ class Votes extends Aggregate
                 'aggs' => [
                     'entities' => [
                         'terms' => [ 
-                            'field' => 'entity_guid.keyword',
+                            'field' => "$field.keyword",
                             'size' => $this->limit,
                             'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_phone_number_hash.keyword'
+                                    'field' => "$cardinality_field.keyword"
                                 ]
                             ]
                         ]

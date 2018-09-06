@@ -50,6 +50,7 @@ class Manager
     {
         \Minds\Core\Security\ACL::$ignore = true;
         $ratings = [1, 2];
+        //$ratings = [ 2 ];
         $scores = [];
         foreach ($ratings as $rating) {
             foreach ($this->maps as $key => $map) {

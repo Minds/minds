@@ -14,6 +14,7 @@ class Comments extends Aggregate
     public function get()
     {
         $field = 'entity_guid';
+        $cardinality_field = 'user_phone_number_hash';
 
         $filter = [
             'term' => ['action' => 'comment']
@@ -30,7 +31,7 @@ class Comments extends Aggregate
             ]
         ];
 
-        if ($this->type) {
+        if ($this->type && $this->type != 'group') {
             $must[]['match'] = [
                 'entity_type' => $this->type
             ];
@@ -40,6 +41,16 @@ class Comments extends Aggregate
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
             ];
+        }
+
+        if ($this->type == 'group') {
+            $must[]['range'] = [
+                'entity_access_id' => [
+                    'gt' => 2, //would be group
+                ]
+            ];
+            $field = 'entity_container_guid';
+            $this->multiplier = 4;
         }
 
         //$must[]['match'] = [
@@ -68,7 +79,8 @@ class Comments extends Aggregate
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_phone_number_hash.keyword'
+                                    'field' => "$cardinality_field.keyword",
+                                    'precision_threshold' => 40000,
                                 ]
                             ]
                         ]          

@@ -9,6 +9,8 @@ class EntityValidator
     public function isValid($entity, $rating = 1)
     {
         if (!$entity || !method_exists($entity, 'getRating')) {
+//            var_dump($entity);exit;
+            echo " .. no entity or getRating method";
             return false;
         }
 
@@ -36,6 +38,7 @@ class EntityValidator
         }
 
         if ($mature) {
+            echo " mature";
             return true;
         }
 
@@ -64,7 +67,16 @@ class EntityValidator
             return true;
         }
         $entity = Entities\Factory::build($entity->guid);
-        return $this->isEnabled($entity);
+        if (!$this->isEnabled($entity)) {
+            echo " disabled owner";
+            return false;
+        }
+        if (method_exists($entity, 'isMature') && $entity->isMature()) {
+            echo " mature owner";
+           return $entity->isMature();
+        }
+
+        return true;
     }
 
 }

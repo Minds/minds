@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class Joins extends Aggregate
 {
 
-    protected $multiplier = 1;
+    protected $multiplier = 0.5;
 
     public function get()
     {

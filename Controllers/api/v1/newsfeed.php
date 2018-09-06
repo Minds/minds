@@ -599,6 +599,7 @@ class newsfeed implements Interfaces\Api
                                 ->setTitle($attachment->message);
                             break;
                     }
+                    
                 }
 
                 $container = null;

@@ -46,6 +46,10 @@ class Maps
             'subtype' => '',
             'aggregates' => [
                 Aggregates\Joins::class,
+                Aggregates\Comments::class,
+                //Aggregates\Posts::class,
+                Aggregates\Reminds::class,
+                Aggregates\Votes::class,
             ]
         ],
         'channels' => [
