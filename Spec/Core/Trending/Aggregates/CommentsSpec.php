@@ -83,10 +83,12 @@ class CommentsSpec extends ObjectBehavior
 
                             ],
                             [
-                                'match' => [
-                                    'entity_type' => 'group'
+                                'range' => [
+                                    'entity_access_id' => [
+                                        'gt' => 2,
+                                    ]
                                 ]
-                            ]
+                            ],
                         ]
                     ]
                 ],
@@ -136,8 +138,8 @@ class CommentsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 100,
-            456 => 50
+            123 => 200,
+            456 => 100,
         ]);
     }
 

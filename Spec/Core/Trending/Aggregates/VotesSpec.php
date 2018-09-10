@@ -16,41 +16,6 @@ class VotesSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Trending\Aggregates\Votes');
     }
 
-    function it_should_return_comments_with_new_score(Client $client)
-    {
-        $this->beConstructedWith($client);
-        $this->setType('group');
-        $client->request(Argument::type('Minds\\Core\\Data\\ElasticSearch\\Prepared\\Search'))
-            ->shouldBeCalled()
-            ->willReturn([
-                'aggregations' => [
-                    'entities' => [
-                        'buckets' => [
-                            [ 
-                                'key' => 123,
-                                'doc_count' => 50,
-                                'uniques' => [
-                                    'value' => 50,
-                                ],
-                            ],
-                            [ 
-                                'key' => 456,
-                                'doc_count' => 25,
-                                'uniques' => [
-                                    'value' => 25,
-                                ],
-                            ],
-                        ]
-                    ]
-                ]
-            ]);
-
-        $this->get()->shouldReturn([
-            123 => 50,
-            456 => 25
-        ]);
-    }
-
     function it_should_return_votes_in_groups(Client $client)
     {
         $this->beConstructedWith($client);
@@ -82,8 +47,11 @@ class VotesSpec extends ObjectBehavior
 
                             ],
                             [
-                                'match' => [
-                                    'entity_type' => 'group'
+                                'range' => [
+                                    'entity_access_id' => [
+                                        'gte' => 3,
+                                        'lt' => null,
+                                    ]
                                 ]
                             ]
                         ]
@@ -134,8 +102,8 @@ class VotesSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 50,
-            456 => 25
+            123 => 200,
+            456 => 100,
         ]);
     }
 

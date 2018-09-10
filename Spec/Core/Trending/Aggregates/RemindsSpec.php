@@ -82,8 +82,11 @@ class RemindsSpec extends ObjectBehavior
 
                             ],
                             [
-                                'match' => [
-                                    'entity_type' => 'group'
+                                'range' => [
+                                    'entity_access_id' => [
+                                        'gte' => 3,
+                                        'lt' => null,
+                                    ]
                                 ]
                             ]
                         ]
