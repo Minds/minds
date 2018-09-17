@@ -8,7 +8,7 @@
     </tr>
 
     <?php foreach($vars['entities'] as $object){ 
-        $postOwner = $object->ownerObj;
+        $postOwner = $object->getOwnerObj();
         $obj = $object; 
     ?>
     <tr>
@@ -27,7 +27,7 @@
                                         <?= $postOwner['name'] ?>
                                     </strong>
                                     <span style="display:block; line-height:18px; text-decoration:none; color: #888; font-size:11px; letter-spacing: 0.75px">
-                                            <?= strtoupper(date('M d, Y, g:i:s a', $obj->time_created)) ?>
+                                            <?= strtoupper(date('M d, Y, g:i:s a', $obj->getTimeCreated())) ?>
                                     </span>
                                 </td>
                             </tr>
@@ -36,41 +36,37 @@
                     </td>
                 </tr>
                 <?php
-                //if a thumbnail exists
-                $src = $object->getIconUrl(600);
-
-                if ($src && $object->header_bg) {
+                $src = 'https://cdn.minds.com/fs/v1/banners/' . $obj->getGuid() . '/' . $obj->getHeaderTop();
                 ?>
                 <tr>
                     <td>
                         <table cellspacing="0" cellpadding="0" border="0" width="600" align="left">
                             <tr>
                                 <td>
-                                    <a href="<?= $obj->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign'];?>&topic=<?= $vars['topic']?>&type=missed-blogs">
-                                        <img src="<?php echo $src ?>" width="600px" alt="<?php echo $obj->title ?>">
+                                    <a href="<?= $obj->getUrl() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign'];?>&topic=<?= $vars['topic']?>&type=missed-blogs">
+                                        <img src="<?php echo $src ?>" width="600px" alt="<?php echo $obj->getTitle() ?>">
                                     </a>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
-                <?php } ?>
                 <tr>
                     <td>
                         <table cellspacing="0" cellpadding="0" border="0" width="600" align="left"
                                 style="padding:16px;">
                             <tr>
                             <?php
-                            if (isset($obj->title) && $obj->title) {
+                            if ($obj->getTitle()) {
                             ?>
-                                <td>
+                                <td width="500">
                                     <h3 style="font-size:16px; color: #444; margin: 0;">
-                                        <?php echo htmlspecialchars_decode($obj->title, ENT_QUOTES);?>
+                                        <?php echo htmlspecialchars_decode($obj->getTitle(), ENT_QUOTES);?>
                                     </h3>
                                 </td>
                             <?php } ?>
                                 <td style="text-align:right" width="100">
-                                    <a href="<?= $object->getURL() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign'];?>&topic=<?= $vars['topic']?>&type=missed-blogs"
+                                    <a href="<?= $object->getUrl() ?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign'];?>&topic=<?= $vars['topic']?>&type=missed-blogs"
                                             style="border:1px solid #4690d6; border-radius:340p; padding:8px 16px; letter-spacing: 0.75px; text-decoration:none; text-transform: uppercase; color:#4690d6 !important">
                                         View
                                     </a>

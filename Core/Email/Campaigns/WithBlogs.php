@@ -53,7 +53,7 @@ class WithBlogs extends EmailCampaign
 
         $this->blogs = array_map(function ($blog) use ($legacyEntity) {
             if (get_class($blog) !== Blog::class) {
-                return $legacyEntity->build((array) $blog);
+                return $legacyEntity->build((array) $blog->export());
             }
             return $blog;
         }, $this->blogs);
@@ -65,7 +65,7 @@ class WithBlogs extends EmailCampaign
 
         $this->template->set('validator', $validatorHash);
 
-        $subject = 'Top 10 blogs today';
+        $subject = "Here's 10 fascinating top articles";
 
         $message = new Message();
         $message->setTo($this->user)
@@ -75,6 +75,6 @@ class WithBlogs extends EmailCampaign
             ->setHtml($this->template);
 
         //send email
-        $this->mailer->queue($message);
+        $this->mailer->send($message);
     }
 }

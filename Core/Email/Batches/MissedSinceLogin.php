@@ -91,13 +91,14 @@ class MissedSinceLogin implements EmailBatchInterface
 
         $i = 0;
         foreach ($iterator as $user) {
+            $user = new \Minds\Entities\User('ottman');
             $i++;
             echo "\n[$i]: $user->guid ($iterator->offset)";
 
-            if ($user->getTimeCreated() > strtotime('-28 days ago')) {
-                echo "[done]";
-                return true;
-            }
+            //if ($user->getTimeCreated() > strtotime('-28 days ago')) {
+            //    echo "[done]";
+            //    return true;
+            //}
 
             $campaign = new Campaigns\WithBlogs();
 
@@ -109,6 +110,7 @@ class MissedSinceLogin implements EmailBatchInterface
                 ->send();
 
             echo " sent";
+            exit;
         }
     }
 
@@ -128,16 +130,16 @@ class MissedSinceLogin implements EmailBatchInterface
         $options['guids'] = $result['guids'];*/
 
         $options['guids'] = [
-            '835202980980359168',
-            '830474920123518976',
-            '829173579273281536',
-            '843244085469986816',
-            '833486289467371520',
-            '832564175645118464',
-            '836606521873772544',
-            '834540240379695104',
-            '837814892017152000',
-            '826188573910073344',
+            '880970672283844608',
+            '886529858748329984',
+            '881623515733680128',
+            '884623991146180608',
+            '877783800359723008',
+            '877996271888207872',
+            '813867825399005184',
+            '880311397572509696',
+            '875862074170073088',
+            '871791809876131840',
         ];
 
         $blogs = $this->builder->get(array_merge([
