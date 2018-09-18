@@ -415,7 +415,7 @@ class newsfeed implements Interfaces\Api
                 $mature_remind =
                     ($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false) ||
                     (isset($embeded->remind_object['mature']) && $embeded->remind_object['mature']);
-                
+
                 if ($embeded->owner_guid != Core\Session::getLoggedinUser()->guid) {
                     Helpers\Wallet::createTransaction($embeded->owner_guid, 5, $activity->guid, 'Remind');
                 }
@@ -552,6 +552,14 @@ class newsfeed implements Interfaces\Api
                     if (!$attachment) {
                         break;
                     }
+
+                    if ($attachment->getOwner() !== Core\Session::getLoggedinUser()->guid) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => 'You are not the owner of this attachment'
+                        ]);
+                    }
+
                     $attachment->title = $activity->message;
                     $attachment->access_id = 2;
 
@@ -599,7 +607,7 @@ class newsfeed implements Interfaces\Api
                                 ->setTitle($attachment->message);
                             break;
                     }
-                    
+
                 }
 
                 $container = null;
