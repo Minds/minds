@@ -553,7 +553,7 @@ class newsfeed implements Interfaces\Api
                         break;
                     }
 
-                    if ($attachment->owner_guid !== Core\Session::getLoggedinUser()->guid) {
+                    if ((string) $attachment->owner_guid !== (string) Core\Session::getLoggedinUser()->guid) {
                         return Factory::response([
                             'status' => 'error',
                             'message' => 'You are not the owner of this attachment'
