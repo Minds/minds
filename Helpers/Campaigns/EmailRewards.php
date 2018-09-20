@@ -57,7 +57,7 @@ class EmailRewards
                 return;
             }
             $validator = $_GET['validator'];
-            $key = 'june-18';
+            $key = 'sept-20';
             if ($validator == sha1($campaign . $key . $user->guid . Config::_()->get('emails_secret'))) {
                 $tokens = (10 ** 18) / 2;
                 $wire = true;

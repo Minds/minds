@@ -88,20 +88,35 @@ class WirePromotions implements EmailBatchInterface
             ->setOffset($this->offset);
 
         $i = 0;
+        $bounced = 0;
         foreach ($iterator as $user) {
             $i++;
+
+            $user = new \Minds\Entities\User('mark');
+            $user->bounced = false;
+
+            if ($user->bounced) {
+                echo "\n[$i]: $user->guid ($iterator->offset) bounced:$bounced";
+                continue;
+            }
+
+            if (!method_exists($user, 'getEmail')) {
+                continue;
+            }
+
             echo "\n[$i]: $user->guid ($iterator->offset)";
 
-            $campaign = new Campaigns\WhenWire();
+            $campaign = new Campaigns\WirePromotions();
 
             $campaign
                 ->setUser($user)
                 //->setTemplateKey($this->templatePath)
-                ->setSubject("You've received a wire!")
-                ->setPromotionKey('june-18')
+                ->setSubject("You’ve received a token reward!")
+                ->setPromotionKey('sept-20')
                 ->send();
 
             echo " sent";
+            exit;
         }
     }
 
