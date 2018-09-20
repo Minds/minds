@@ -1,7 +1,7 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.1-fpm-alpine3.4
 
 # Required extensions
-RUN apk update && apk add --no-cache \
+RUN apk update && apk add --no-cache --update \
     coreutils \
     libmcrypt-dev \
     zlib-dev \
@@ -11,12 +11,15 @@ RUN apk update && apk add --no-cache \
     libpng-dev \
     $PHPIZE_DEPS \
     openssl-dev \
+    postgresql-dev \
     && docker-php-ext-install -j$(nproc) bcmath \
     && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) exif \
-    && docker-php-ext-install -j$(nproc) mbstring
+    && docker-php-ext-install -j$(nproc) mbstring \
+    && docker-php-ext-install -j$(nproc) pdo \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql
 
 # Cassandra extension
 
