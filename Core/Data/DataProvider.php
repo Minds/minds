@@ -7,6 +7,7 @@ namespace Minds\Core\Data;
 
 use Minds\Core\Data\Locks;
 use Minds\Core\Di\Provider;
+use PDO;
 
 class DataProvider extends Provider
 {
@@ -62,6 +63,15 @@ class DataProvider extends Provider
         }, ['useFactory'=>true]);
         $this->di->bind('Database\ElasticSearch', function ($di) {
             return new ElasticSearch\Client();
+        }, ['useFactory'=>true]);
+        $this->di->bind('Database\PDO', function ($di) {
+            return new PDO('pgsql:host=cockroachdb;port=26257;dbname=minds;sslmode=disable',
+                'maxroach',
+                null, 
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_EMULATE_PREPARES => true,
+                ]);
         }, ['useFactory'=>true]);
         /**
          * Locks
