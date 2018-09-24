@@ -15,7 +15,7 @@ class SignupsOffsetIterator implements \Iterator
     private $period = 0;
 
     private $limit = 400;
-    private $token = "";
+    public $token = "";
     private $offset = "";
     private $data = [];
 
@@ -65,7 +65,7 @@ class SignupsOffsetIterator implements \Iterator
         ]);
         $prepared->setOpts([
             'page_size' => $this->limit,
-            'paging_state_token' => $this->token
+            'paging_state_token' => base64_decode($this->token)
         ]);
 
         $rows = $this->db->request($prepared);
@@ -74,7 +74,7 @@ class SignupsOffsetIterator implements \Iterator
             return;
         }
 
-        $this->token = $rows->pagingStateToken();
+        $this->token = base64_encode($rows->pagingStateToken());
 
         $guids = [];
         foreach ($rows as $row) {
