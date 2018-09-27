@@ -77,7 +77,7 @@ class TestnetRewards
         $this->template->toggleMarkdown(true);
 
         if ($this->user->getPhoneNumberHash()) {
-//            return;
+        //    return;
         }
 
         $balance = Di::_()->get('Blockchain\Wallets\OffChain\TestnetBalance');
@@ -89,7 +89,7 @@ class TestnetRewards
             return;
         }
 
-        $this->subject = "You have $balanceVal tokens waiting to be claimed";
+        $this->subject = "Action needed to keep your $balanceVal tokens";
 
         $validatorHash = sha1($this->campaign . $this->user->guid . Config::_()->get('emails_secret'));
 

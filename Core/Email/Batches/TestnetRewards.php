@@ -62,8 +62,11 @@ class TestnetRewards implements EmailBatchInterface
 
         $i = 0;
         foreach ($iterator as $user) {
-            $user = new \Minds\Entities\User('ottman');
+            $user = new \Minds\Entities\User('jack');
             if ($user->bounced && false) {
+                continue;
+            }
+            if (!method_exists($user, 'getEmail')) {
                 continue;
             }
             $i++;

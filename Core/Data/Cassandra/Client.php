@@ -41,7 +41,7 @@ class Client implements Interfaces\ClientInterface
             $statement = $this->session->prepare($cql['string']);
             $future = $this->session->executeAsync(
               $statement,
-              new Driver\ExecutionOptions(array_merge(
+              @new Driver\ExecutionOptions(array_merge(
                   [
                     'arguments' => $cql['values']
                   ],
