@@ -32,7 +32,7 @@ class Spam
             $needles = array($needles);
         }
         foreach ($needles as $query) {
-            if (strpos($haystack, $query, $offset) !== false) {
+            if (stripos($haystack, $query, $offset) !== false) {
                 return true;
             } // stop on first true result
         }
@@ -358,6 +358,40 @@ class Spam
             'www.rsstop10.com',
             'www.cheapjerseys91.com',
             '.blogcountry.net',
+            '/renewableenergyworld.com',
+            '/www.anobii.com',
+            '/atreointernational.com',
+            '/thoushallnotwhine.com',
+            '/boldwap.net',
+            '/images16.fotki.com',
+            '/www.mirrorcreator.com',
+            '/ipaymu.com',
+            '/www.deerasa.com',
+            '/lp-distributors.com',
+            '/www.radyoharunyahya.com',
+            '/dominoqiu.co/',
+            '/rejuvabrains.org/',
+            '/images108.fotki.com',
+            '/www.wizhez.com',
+            'www.iamsport.org',
+            '/justinbravo.com',
+            '/alix92irina.blog5.net',
+            '/usachinatraining.com',
+            'prodid3gizi.poltekkes-malang.ac.id',
+            '/www.getjealous.com',
+            '/www.gdaca.com',
+            '/bxxlacy864398.wordpress.com',
+            '/vip126.cafe24.com',
+            '/treltistconsi1972.wordpress.com',
+            '/dansmoke.com/',
+            '/www.boostmedia.in',
+            'www.thechubbybuddy.com',
+            '/anewwellnessspa.com',
+            '/mercer82rios.wordpress.com',
+            '/cadcamoffices.co.uk',
+            '/carpetexperts.net',
+            '/media4.picsearch.com',
+            'slotsbonus777.com'
         ];
     }
 
