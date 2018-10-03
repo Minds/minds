@@ -40,7 +40,7 @@ class EthRate
         $query->query($cql, $values);
 
         try {
-            $rows = $this->db->request($query);
+            $rows = $this->cql->request($query);
         } catch (\Exception $e) {
             return null;
         }
@@ -59,13 +59,13 @@ class EthRate
     public function set($value)
     {
         $cql = "INSERT INTO config (key, value) VALUES (?,?)";
-        $values = ['token_rate', $value];
+        $values = ['token_rate', (string) $value];
 
         $query = new Custom();
         $query->query($cql, $values);
 
         try {
-            $rows = $this->db->request($query);
+            $rows = $this->cql->request($query);
         } catch (\Exception $e) {
             return null;
         }  

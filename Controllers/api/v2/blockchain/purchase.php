@@ -33,8 +33,10 @@ class purchase implements Interfaces\Api
         $response['cap'] = $manager->getAutoIssueCap();
         $response['rate'] = $manager->getEthTokenRate();
 
-        $response['requested'] = $sums->getRequestedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
-        $response['issued'] = $sums->getIssuedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
+        if (Session::getLoggedInUser()) {
+            $response['requested'] = $sums->getRequestedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
+            $response['issued'] = $sums->getIssuedAmount(Session::getLoggedInUser()->getPhoneNumberHash());
+        }
 
         return Factory::response($response);
     }
