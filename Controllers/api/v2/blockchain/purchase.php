@@ -85,7 +85,8 @@ class purchase implements Interfaces\Api
             ->setRequestedAmount((string) $weiAmount)
             ->setTimestamp(time())
             ->setWalletAddress($walletAddress)
-            ->setStatus('purchased');
+            ->setStatus('purchased')
+            ->setRate($manager->getEthTokenRate());
 
         $manager->purchase($purchase);
 

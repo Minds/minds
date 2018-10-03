@@ -38,6 +38,9 @@ class Manager
     /** @var Delegates\IssuedTokenNotification */
     private $issuedTokenNotification;
 
+    /** @var Delegates\EthRate */
+    private $ethRate;
+
     public function __construct(
         $repo = null,
         $txManager = null,
@@ -46,7 +49,8 @@ class Manager
         $newPurchaseNotification = null,
         $issuedTokenNotification = null,
         $issuedTokenEmail = null,
-        $newPurchaseEmail = null
+        $newPurchaseEmail = null,
+        $ethRate = null
     )
     {
         $this->repo = $repo ?: Di::_()->get('Blockchain\Purchase\Repository');
@@ -57,6 +61,7 @@ class Manager
         $this->issuedTokenNotification = $issuedTokenNotification ?: new Delegates\IssuedTokenNotification();
         $this->issuedTokenEmail = $issuedTokenEmail ?: new Delegates\IssuedTokenEmail();
         $this->newPurchaseEmail = $newPurchaseEmail ?: new Delegates\NewPurchaseEmail();
+        $this->ethRate = $ethRate ?: new Delegates\EthRate();
     }
 
     /**
@@ -81,7 +86,8 @@ class Manager
      */
     public function getEthTokenRate()
     {
-        return $this->config->get('blockchain')['contracts']['token_sale_event']['eth_rate'];
+        return $this->ethRate->get();
+        //return $this->config->get('blockchain')['contracts']['token_sale_event']['eth_rate'];
     }
 
     /**
@@ -129,6 +135,7 @@ class Manager
                 'amount' => $purchase->getRequestedAmount(),
                 'phone_number_hash' => $purchase->getPhoneNumberHash(),
                 'address' => $purchase->getWalletAddress(),
+                'rate' => $purchase->getRate(),
             ]);
 
         $this->txManager->add($transaction);

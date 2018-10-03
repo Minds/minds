@@ -30,6 +30,8 @@ use Minds\Traits\MagicAttributes;
  * @method Purchase setRequestedAmount(BigNumber $value)
  * @method int getIssuedAmount()
  * @method Purchase setIssuedAmount(int $value)
+ * @method int getRate()
+ * @method Purchase setRate(int $value)
  */
 class Purchase implements \JsonSerializable
 {
@@ -58,6 +60,9 @@ class Purchase implements \JsonSerializable
 
     /** @var string */
     private $status;
+
+    /** @var int $rate */
+    private $rate;
 
     /**
      * Return the amount of unissued tokens
@@ -88,6 +93,7 @@ class Purchase implements \JsonSerializable
             //'eth_amount' => (float) BigNumber::fromPlain($this->requested_amount, 18)->toString(),
             'timestamp' => $this->timestamp * 1000,
             'status' => $this->status,
+            'rate' => $this->rate,
         ];
 
         if ($pii) {

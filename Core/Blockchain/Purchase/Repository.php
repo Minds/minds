@@ -38,9 +38,10 @@ class Repository
             timestamp,
             requested_amount,
             issued_amount,
-            status
+            status,
+            rate
             ) 
-            VALUES (?,?,?,?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?,?,?,?)";
 
         foreach ($purchases as $purchase) {
             $requests[] = [
@@ -53,7 +54,8 @@ class Repository
                     new Timestamp($purchase->getTimestamp()),
                     new Varint($purchase->getRequestedAmount()),
                     new Varint($purchase->getIssuedAmount()),
-                    (string) $purchase->getStatus()
+                    (string) $purchase->getStatus(),
+                    new Varint($purchase->getRate()),
                 ]
             ];
         }
@@ -138,7 +140,8 @@ class Repository
                 ->setTimestamp((int) $row['timestamp']->time())
                 ->setRequestedAmount((string) BigNumber::_($row['requested_amount']->value()))
                 ->setIssuedAmount((string) $row['issued_amount']->value())
-                ->setStatus((string) $row['status']);
+                ->setStatus((string) $row['status'])
+                ->setRate((string) $row['rate']->value());
 
             $purchases[] = $purchase;
         }
@@ -180,7 +183,8 @@ class Repository
             ->setTimestamp($row['timestamp'] ? (int) $row['timestamp']->time() : time())
             ->setRequestedAmount((string) BigNumber::_($row['requested_amount']->value()))
             ->setIssuedAmount((string) BigNumber::_($row['issued_amount']->value()))
-            ->setStatus((string) $row['status']);
+            ->setStatus((string) $row['status'])
+            ->setRate((string) $row['rate']->value());
 
         return $purchase;
     }

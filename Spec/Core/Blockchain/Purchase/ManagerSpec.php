@@ -6,6 +6,7 @@ use Minds\Core\Blockchain\Purchase\Delegates;
 use Minds\Core\Blockchain\Purchase\Purchase;
 use Minds\Core\Blockchain\Purchase\Repository;
 use Minds\Core\Config\Config;
+use Minds\Core\Blockchain\Purchase\Delegates\EthRate;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -37,6 +38,9 @@ class ManagerSpec extends ObjectBehavior
     /** @var Delegates\NewPurchaseEmail */
     private $newPurchaseEmail;
 
+    /** @var Delegates\EthRate */
+    private $ethRate;
+
     function let(
         Repository $repo,
         \Minds\Core\Blockchain\Transactions\Manager $txManager,
@@ -45,10 +49,11 @@ class ManagerSpec extends ObjectBehavior
         Delegates\NewPurchaseNotification $newPurchaseNotification,
         Delegates\IssuedTokenNotification $issuedTokenNotification,
         Delegates\IssuedTokenEmail $issuedTokenEmail,
-        Delegates\NewPurchaseEmail $newPurchaseEmail
+        Delegates\NewPurchaseEmail $newPurchaseEmail,
+        Delegates\EthRate $ethRate
     ) {
         $this->beConstructedWith($repo, $txManager, $config, $issueTokens, $newPurchaseNotification,
-            $issuedTokenNotification, $issuedTokenEmail, $newPurchaseEmail);
+            $issuedTokenNotification, $issuedTokenEmail, $newPurchaseEmail, $ethRate);
 
         $this->repo = $repo;
         $this->txManager = $txManager;
@@ -58,6 +63,7 @@ class ManagerSpec extends ObjectBehavior
         $this->issuedTokenNotification = $issuedTokenNotification;
         $this->issuedTokenEmail = $issuedTokenEmail;
         $this->newPurchaseEmail = $newPurchaseEmail;
+        $this->ethRate = $ethRate;
 
         $this->config->get('blockchain')
             ->willReturn([
@@ -83,6 +89,9 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_get_eth_token_rate()
     {
+        $this->ethRate->get()
+            ->shouldBeCalled()
+            ->willReturn(1);
         $this->getEthTokenRate()->shouldReturn(1);
     }
 
@@ -115,6 +124,9 @@ class ManagerSpec extends ObjectBehavior
         $purchase->getPhoneNumberHash()
             ->shouldBeCalled()
             ->willReturn('hash');
+        $purchase->getRate()
+            ->shouldBeCalled()
+            ->willReturn(4000);
 
         $this->txManager->add(Argument::type('Minds\Core\Blockchain\Transactions\Transaction'))
             ->shouldBeCalled()
