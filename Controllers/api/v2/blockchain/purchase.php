@@ -77,7 +77,7 @@ class purchase implements Interfaces\Api
 
         /** @var Manager $manager */
         $manager = Di::_()->get('Blockchain\Purchase\Manager');
-        $weiAmount = BigNumber::toPlain($amount, 18)->mul($manager->getEthTokenRate()); //convert to tokens
+        $weiAmount = BigNumber::toPlain((string) $amount, 18)->mul($manager->getEthTokenRate()); //convert to tokens
 
         $purchase = new PurchaseModel();
         $purchase
