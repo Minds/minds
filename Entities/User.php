@@ -44,7 +44,7 @@ class User extends \ElggUser
 		$this->attributes['p2p_media_disabled'] = 0;
 		$this->attributes['is_mature'] = 0;
 		$this->attributes['mature_lock'] = 0;
-		$this->attributes['last_accepted_tos'] = 0;
+		$this->attributes['last_accepted_tos'] = Core\Config::_()->get('last_tos_update');
 
         parent::initializeAttributes();
     }

@@ -62,6 +62,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(['plus' => true, 'wire' => 'admin']);
 
+        $this->config->get('last_tos_update')
+            ->shouldBeCalled()
+            ->willReturn(123456);
+
         $this->config->get('admin_ip_whitelist')
             ->shouldBeCalled()
             ->willReturn([ '10.56.0.1' ]);
@@ -77,6 +81,10 @@ class ManagerSpec extends ObjectBehavior
         $_SESSION['user'] = $user->toArray();
         $_SESSION['username'] = 'minds';
         $_SESSION['guid'] = '1234';
+
+        $this->config->get('last_tos_update')
+            ->shouldBeCalled()
+            ->willReturn(123456);
 
         $this->config->get('features')
             ->shouldBeCalled()
