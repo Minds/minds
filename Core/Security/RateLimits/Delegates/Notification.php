@@ -28,6 +28,14 @@ class Notification
                 $message = "Your channel has been rate limited due to a high number of subscribes. 
                             Please try again in 5 minutes";
                 break;
+            case "ratelimited_interaction:subscribehour":
+                $message = "Your channel has been rate limited due to a high number of subscribes. 
+                            Please try again in an hour";
+                break;
+            case "ratelimited_interaction:subscribeday":
+                $message = "Your channel has been rate limited due to a high number of subscribes. 
+                            Please try again in 24 hours";
+                break;
         }
 
         $response = $this->dispatcher->trigger('notification', 'all', [

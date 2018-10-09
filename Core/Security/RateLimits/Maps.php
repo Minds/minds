@@ -17,6 +17,20 @@ class Maps
                 Aggregates\Subscribe::class,
             ],
         ],
+        'interaction:subscribehour' => [
+            'period' => 3600, //1 hour
+            'threshold' => 200,
+            'aggregates' => [
+                Aggregates\Subscribe::class,
+            ],
+        ],
+        'interaction:subscribeday' => [
+            'period' => 86400, //1 day
+            'threshold' => 400,
+            'aggregates' => [
+                Aggregates\Subscribe::class,
+            ],
+        ],
     ];
 
 }
