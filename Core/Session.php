@@ -143,8 +143,10 @@ class Session extends base
     public static function generateJWTCookie()
     {
         if (isset($_SESSION['user'])) {
+            $expires = time() + (60 * 60); // expire in 1 hour
             $jwt = \Firebase\JWT\JWT::encode([
               'guid' => (string) $_SESSION['user']->guid,
+              'expires' => $expires,
               'sessionId' => session_id()
             ], Config::_()->get('sockets-jwt-secret'));
 
@@ -152,7 +154,7 @@ class Session extends base
             $cookie
                 ->setName('socket_jwt')
                 ->setValue($jwt)
-                ->setExpire(0)
+                ->setExpire($expires)
                 ->setPath('/')
                 ->setDomain(Config::_()->get('sockets-jwt-domain') ?: 'minds.com')
                 ->create();
