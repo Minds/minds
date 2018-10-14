@@ -11,15 +11,21 @@ namespace Minds\Core\Votes;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Helpdesk\Entities\Question;
+use Minds\Core\Helpdesk\Question\Repository;
 
 class Indexes
 {
     /** @var Client $cql */
     protected $cql;
 
-    public function __construct($cql = null)
+    /** @var Repository $repository */
+    protected $repository;
+
+    public function __construct($cql = null, $repository = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->repository = $repository ?: Di::_()->get('Helpdesk\Question\Repository');
     }
 
     public function insert($vote)
@@ -31,11 +37,22 @@ class Indexes
         $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
         $userGuids[] = (string) $actor->guid;
 
-        $this->setEntityList($entity->guid, $direction, array_values(array_unique($userGuids)));
+        $entity_id = null;
+        $entity_type = null;
+
+        if ($entity instanceof Question) {
+            $entity_id = $entity->getUuid();
+            $entity_type = 'question';
+        } else {
+            $entity_id = $entity->guid;
+            $entity_type = $entity->type;
+        }
+
+        $this->setEntityList($entity, $direction, array_values(array_unique($userGuids)));
 
         // Add to entity based indexes
 
-        $this->addIndex("thumbs:{$direction}:entity:{$entity->guid}", $actor->guid);
+        $this->addIndex("thumbs:{$direction}:entity:{$entity_id}", $actor->guid);
 
         if ($entity->entity_guid) {
             $this->addIndex("thumbs:{$direction}:entity:{$entity->entity_guid}", $actor->guid);
@@ -45,8 +62,8 @@ class Indexes
 
         // Add to actor based indexes
 
-        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}", $entity->guid);
-        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity->type}", $entity->guid);
+        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}", $entity_id);
+        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity_type}", $entity_id);
 
         return true;
     }
@@ -57,14 +74,29 @@ class Indexes
         $direction = $vote->getDirection();
         $actor = $vote->getActor();
 
-        $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
+        $entity_id = null;
+        $entity_type = null;
+        $userGuids = null;
+        if ($entity instanceof Question) {
+            $entity_id = $entity->getUuid();
+            $entity_type = 'question';
+            $userGuids = $entity->getUserGuids() ?: [];
+
+        } else {
+            $entity_id = $entity->guid;
+            $entity_type = $entity->type;
+            $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
+        }
+
         $userGuids = array_diff($userGuids, [ (string) $actor->guid ]);
+
+
 
         $this->setEntityList($entity->guid, $direction, array_values($userGuids));
 
         // Remove from entity based indexes
 
-        $this->removeIndex("thumbs:{$direction}:entity:{$entity->guid}", $actor->guid);
+        $this->removeIndex("thumbs:{$direction}:entity:{$entity_id}", $actor->guid);
 
         if ($entity->entity_guid) {
             $this->removeIndex("thumbs:{$direction}:entity:{$entity->entity_guid}", $actor->guid);
@@ -74,8 +106,8 @@ class Indexes
 
         // Remove from actor based indexes
 
-        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}", $entity->guid);
-        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity->type}", $entity->guid);
+        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}", $entity_id);
+        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity_type}", $entity->guid);
 
         return true;
     }
@@ -95,26 +127,30 @@ class Indexes
          $direction = $vote->getDirection();
 
          $guids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
- 
+
          return in_array($actor->guid, $guids);
      }
 
     /**
-     * @param int|string $guid
+     * @param $entity
      * @param string $direction
      * @param array $value
      * @return bool|mixed
      */
-    protected function setEntityList($guid, $direction, array $value)
+    protected function setEntityList($entity, $direction, array $value)
     {
-        $prepared = new Custom();
-        $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-            (string) $guid,
-            "thumbs:{$direction}:user_guids",
-            json_encode($value)
-        ]);
+        if ($entity instanceof Question) {
+            return $this->repository->update($entity->getUuid(), ['user_guids' => $value]);
+        } else {
+            $prepared = new Custom();
+            $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
+                (string) $entity->guid,
+                "thumbs:{$direction}:user_guids",
+                json_encode($value)
+            ]);
 
-        return $this->cql->request($prepared);
+            return $this->cql->request($prepared);
+        }
     }
 
     /**

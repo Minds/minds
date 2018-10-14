@@ -12,21 +12,27 @@ use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Helpdesk\Entities\Question;
+use Minds\Core\Helpdesk\Question\Repository;
 use Minds\Helpers;
 
 class Counters
 {
-    public static $validDirections = [ 'up', 'down' ];
+    public static $validDirections = ['up', 'down'];
 
     /** @var Client $cql */
     protected $cql;
 
+    /** @var Repository $repository */
+    protected $repository;
+
     /** @var abstractCacher $cacher */
     protected $cacher;
 
-    public function __construct($cql = null, $cacher = null)
+    public function __construct($cql = null, $pdo = null, $cacher = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->pdo = $pdo ?: Di::_()->get('Helpdesk\Question\Repository');
         $this->cacher = $cacher ?: Di::_()->get('Cache');
     }
 
@@ -42,11 +48,21 @@ class Counters
         $entity = $vote->getEntity();
         $direction = $vote->getDirection();
 
+        $entity_id = null;
+        $count = null;
+        if ($entity instanceof Question) {
+            $entity_id = $entity->getUuid();
+            $count = $value; // only the diff, as we update in a SQL query
+        } else {
+            $entity_id = $entity->guid;
+            $count = $entity->{"thumbs:{$direction}:count"};
+        }
+
         // Direct entity modification
-        $this->updateEntity($entity->guid, $direction, $entity->{"thumbs:{$direction}:count"} + $value);
+        $this->updateEntity($entity, $direction, $entity instanceof Question ? $value : $count + $value);
 
         // Modify entity counters
-        $this->updateCounter($entity->guid, $direction, $value);
+        $this->updateCounter($entity_id, $direction, $value);
 
         // If there's a remind, modify its counters
         if ($entity->remind_object) {
@@ -78,25 +94,34 @@ class Counters
             throw new \Exception('Invalid direction');
         }
 
+        if ($entity instanceof Question) {
+            $direction = ucfirst($direction);
+            return (int) call_user_func_array([$entity, "getThumbs{$direction}Count"], []);
+        }
+
         return (int) $entity->{"thumbs:{$direction}:count"};
     }
 
     /**
-     * @param int|string $guid
+     * @param $entity
      * @param string $direction
      * @param int $value
      * @return bool|mixed
      */
-    protected function updateEntity($guid, $direction, $value)
+    protected function updateEntity($entity, $direction, $value)
     {
-        $prepared = new Custom();
-        $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-            (string) $guid,
-            "thumbs:{$direction}:count",
-            (string) $value
-        ]);
+        if ($entity instanceof Question) {
+            return $this->repository->registerThumbs($entity, $direction, $value);
+        } else {
+            $prepared = new Custom();
+            $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
+                (string) $entity->guid,
+                "thumbs:{$direction}:count",
+                (string) $value
+            ]);
 
-        return $this->cql->request($prepared);
+            return $this->cql->request($prepared);
+        }
     }
 
     /**
