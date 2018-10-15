@@ -41,9 +41,10 @@ class token implements Interfaces\Api, Interfaces\ApiIgnorePam
         } catch (\Exception $exception) {
             $body = [
                 'status' => 'error',
+                'error' => $exception->getMessage(),
                 'message' => $exception->getMessage(),
             ];
-            $response = new JsonResponse($body, 500);
+            $response = new JsonResponse($body);
         }
         
         $emitter = new SapiEmitter();
