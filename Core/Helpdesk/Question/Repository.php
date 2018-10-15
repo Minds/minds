@@ -25,6 +25,15 @@ class Repository
         'DESC',
     ];
 
+    private static $questionFields = [
+        'question',
+        'answer',
+        'thumbs_up_count',
+        'thumbs_down_count',
+        'thumbs_user_guids_count',
+        'thumbs_user_guids_count',
+    ];
+
     public function __construct(\PDO $db, Category\Repository $categoryRepository = null)
     {
         $this->db = $db ?: Di::_()->get('Database\PDO');
@@ -178,23 +187,19 @@ class Repository
 
     public function update(string $question_uuid, array $fields)
     {
-        $validFields = [
-            'question',
-            'answer',
-            'thumbs_up_count',
-            'thumbs_down_count',
-            'user_guids'
-        ];
 
         $query = "UPDATE helpdesk_faq SET ";
 
         $columns = [];
         $values = [];
 
-        foreach ($validFields as $field) {
+        foreach (self::$questionFields as $field) {
             if ($fields[$field] !== null) {
                 $columns[] = "{$field} = ?";
-                $values[] = $field == 'user_guids' ? json_encode($fields[$field]) : $fields[$field];
+                $values[] = in_array($field, [
+                    'thumbs_up_user_guids',
+                    'thumbs_down_user_guids'
+                ]) ? json_encode($fields[$field]) : $fields[$field];
             }
         }
 

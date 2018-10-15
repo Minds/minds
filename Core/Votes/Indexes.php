@@ -140,7 +140,7 @@ class Indexes
     protected function setEntityList($entity, $direction, array $value)
     {
         if ($entity instanceof Question) {
-            return $this->repository->update($entity->getUuid(), ['user_guids' => $value]);
+            return $this->repository->update($entity->getUuid(), ["thumbs_{$direction}_user_guids" => $value]);
         } else {
             $prepared = new Custom();
             $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
