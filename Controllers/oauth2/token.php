@@ -20,6 +20,7 @@ class token extends core\page implements Interfaces\page
 
     public function post($pages)
     {
+        header("HTTP/1.1 401 Unauthorized");
         return Factory::response([
             'status' => 'error',
             'message' => 'Please upgrade your app',
