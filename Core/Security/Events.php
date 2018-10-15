@@ -21,7 +21,6 @@ class Events
         Dispatcher::register('create', 'elgg/event/object', [$this, 'onCreateHook']);
         Dispatcher::register('create', 'elgg/event/activity', [$this, 'onCreateHook']);
         Dispatcher::register('update', 'elgg/event/object', [$this, 'onCreateHook']);
-        Dispatcher::register('login', 'elgg/event/user', [$this, 'onLoginHook']);
     }
 
     protected function strposa($haystack, $needles, $offset = 0)
@@ -335,7 +334,7 @@ class Events
     /**
      * Twofactor authentication login hook
      */
-    public function onLoginHook($event, $type, $user)
+    public function onLogin($user)
     {
         global $TWOFACTOR_SUCCESS;
 

@@ -7,17 +7,29 @@ namespace Minds\Core\Messenger;
 
 use Minds\Entities;
 use Minds\Core\Messenger;
+use Minds\Core\Di\Di;
 
 class Keystore
 {
     public static $tmpPrivateKey;
 
+    /** @var OpenSSL $handler **/
     private $handler;
+
+    /** @var Cache $cache **/
+    private $cache;
+
+    /** @var Session $sessions **/
+    private $sessions;
+
+    /** @var User $user **/
     private $user;
 
-    public function __construct($handler = null)
+    public function __construct($handler = null, $cache = null, $sessions = null)
     {
         $this->handler = $handler ?: new Messenger\Encryption\OpenSSL();
+        $this->cache = $cache ?: Di::_()->get('Cache');
+        $this->sessions = $sessions ?: Di::_()->get('Sessions\Manager');
     }
 
     public function setUser($user)
@@ -47,12 +59,16 @@ class Keystore
 
     public function getUnlockedPrivateKey()
     {
+        $session = $this->sessions->getSession();
+        if (!$session && self::$tmpPrivateKey) {
+            return self::$tmpPrivateKey;
+        }
         if (self::$tmpPrivateKey) {
-            $_SESSION['tmpPrivateKey'] = self::$tmpPrivateKey;
+            $this->cache->set($session->getId() . ':tmpPrivateKey', self::$tmpPrivateKey); 
             return self::$tmpPrivateKey;
         }
         //tmp key is stored in the session
-        self::$tmpPrivateKey = $_SESSION['tmpPrivateKey'];
+        self::$tmpPrivateKey = $this->cache->get($session->getId() . ':tmpPrivateKey');
         return self::$tmpPrivateKey;
     }
 

@@ -5,6 +5,7 @@ namespace Spec\Minds\Core\Security;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Minds\Core;
+use Minds\Entities\User;
 use Minds\Entities\Entity;
 use Minds\Entities\Object;
 
@@ -13,12 +14,13 @@ class ACLSpec extends ObjectBehavior
     public function mock_session($on = true)
     {
         if ($on) {
-            $_SESSION['user'] = new \Minds\Entities\User(array('guid'=>time(), 'username' => 'mark', 'name' => 'mark'));
-            $_SESSION['guid'] =$_SESSION['user']->guid;
-            $_SESSION['username'] = $_SESSION['user']->username;
+            $user = new User;
+            $user->guid = 123;
+            $user->username = 'minds';
         } else {
-            unset($_SESSION);
+            $user = null;
         }
+        Core\Session::setUser($user);
     }
 
     public function it_is_initializable()
@@ -67,7 +69,8 @@ class ACLSpec extends ObjectBehavior
     {
         $this->mock_session(true);
 
-        $entity->get('owner_guid')->willReturn($_SESSION['user']->guid);
+        $entity->get('owner_guid')
+            ->willReturn(123);
 
         $this->write($entity)->shouldReturn(true);
         $this->mock_session(false);

@@ -35,7 +35,6 @@ class translate implements Interfaces\Api
 
         if ($changed) {
             $user->save();
-            $_SESSION['user'] = $user;
         }
 
         return Factory::response([

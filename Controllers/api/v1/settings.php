@@ -44,7 +44,10 @@ class settings implements Interfaces\Api
         $response['channel']['boost_rating'] = $user->getBoostRating();
         $response['channel']['categories'] = $user->getCategories();
         $response['channel']['disabled_emails'] = $user->disabled_emails;
-        $response['channel']['open_sessions'] = (new Core\Data\Sessions())->count($user->guid) - 1;
+
+        $sessionsManager = Di::_()->get('Sessions\Manager');
+        $sessionsManager->setUser($user);
+        $response['channel']['open_sessions'] = $sessionsManager->getActiveCount();
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 
@@ -156,11 +159,6 @@ class settings implements Interfaces\Api
 
         $response = [];
         if (!$user->save()) {
-            //update or session
-            if ($user->getGuid() == Core\Session::getLoggedInUser()->getGuid()) {
-                $_SESSION['user'] = $user;
-            }
-
             $response['status'] = 'error';
         }
 

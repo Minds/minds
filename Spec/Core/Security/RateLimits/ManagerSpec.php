@@ -24,15 +24,8 @@ class ManagerSpec extends ObjectBehavior
 
         $user->set('ratelimited_interaction:subscribe', time() + 300)
             ->shouldBeCalled();
-
-        $user->get('guid')
-            ->shouldbeCalled()
-            ->willReturn(10001);
     
         $user->save()
-            ->shouldBeCalled();
-
-        $sessions->syncRemote(10001, $user)
             ->shouldBeCalled();
 
         $notification->notify($user, 'ratelimited_interaction:subscribe')
@@ -49,15 +42,8 @@ class ManagerSpec extends ObjectBehavior
 
         $user->set('ratelimited_interaction:subscribe', time() + 600)
             ->shouldBeCalled();
-
-        $user->get('guid')
-            ->shouldbeCalled()
-            ->willReturn(10002);
     
         $user->save()
-            ->shouldBeCalled();
-
-        $sessions->syncRemote(10002, $user)
             ->shouldBeCalled();
 
         $notification->notify($user, 'ratelimited_interaction:subscribe')

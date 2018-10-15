@@ -8,6 +8,9 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Security;
+use Minds\Core\Session;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -73,24 +76,31 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
             $user->save();
         }
 
-        
-        if ($user->last_login < 1514764800) {
-            $user->boost_rating = 1;
-            $user->save();
-        }
+        $attempts->resetFailuresCount(); // Reset any previous failed login attempts
 
         try {
-            if (login($user) && Core\Session::isLoggedIn()) {
-                $attempts->resetFailuresCount(); // Reset any previous failed login attempts
-                $response['status'] = 'success';
-                $response['user'] = $user->export();
-            }
+            Di::_()->get('Security\Events')
+                ->onLogin($user);
         } catch (TwoFactorRequired $e) {
             header('HTTP/1.1 ' + $e->getCode(), true, $e->getCode());
             $response['status'] = "error";
             $response['code'] = $e->getCode();
             $response['message'] = $e->getMessage();
-        }
+            return Factory::response($response);
+        } 
+
+        $sessions = Di::_()->get('Sessions\Manager');
+        $sessions->setUser($user);
+        $sessions->createSession();
+        $sessions->save(); //save to db and cookie
+
+        \set_last_login($user); // TODO: Refactor this
+
+        Session::generateJWTCookie($sessions->getSession()); 
+        Security\XSRF::setCookie(true);
+
+        $response['status'] = 'success';
+        $response['user'] = $user->export();
 
         return Factory::response($response);
     }
@@ -101,12 +111,12 @@ class authenticate implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     public function delete($pages)
     {
-        $guid = Core\Session::getLoggedinUser()->guid;
-
-        logout();
-
+        $sessions = Di::_()->get('Sessions\Manager');
+        
         if (isset($pages[0]) && $pages[0] === 'all') {
-            (new Core\Data\Sessions())->destroyAll($guid);
+            $sessions->destroy(true);
+        } else {
+            $sessions->destroy(false);
         }
 
         return Factory::response([]);

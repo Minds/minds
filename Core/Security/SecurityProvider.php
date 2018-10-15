@@ -44,5 +44,9 @@ class SecurityProvider extends Provider
         $this->di->bind('Security\Spam', function ($di) {
             return new Spam();
         }, ['useFactory' => true]);
+
+        $this->di->bind('Security\Events', function ($di) {
+            return new Events();
+        }, ['useFactory' => true]);
     }
 }

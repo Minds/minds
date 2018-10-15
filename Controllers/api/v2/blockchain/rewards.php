@@ -79,9 +79,6 @@ class rewards implements Interfaces\Api
 
                     $response['phone_number_hash'] = $user->getPhoneNumberHash();
 
-                    Session::regenerate(false, $user);
-                    //sync our change to our other sessions
-                    (new Core\Data\Sessions())->syncAll($user->guid);
                 } catch (\Exception $e) {
                     $response = [
                         'status' => 'error',

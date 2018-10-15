@@ -5,6 +5,16 @@ namespace Minds\Common;
 use Minds\Core\Di\Di;
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Class Cookie
+ * @method Cookie setName(string $name)
+ * @method Cookie setValue(string $value) 
+ * @method Cookie setExpire(int $value)
+ * @method Cookie setPath(string $path)
+ * @method Cookie setDomain(string $domain) 
+ * @method Cookie setSecure(bool $secure)
+ * @method Cookie setHttpOnly(bool $httpOnly)
+ */
 class Cookie
 {
 

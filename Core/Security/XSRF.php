@@ -12,7 +12,7 @@ class XSRF
     public static function buildToken()
     {
         $bytes = openssl_random_pseudo_bytes(128);
-        return hash('sha512', $_SESSION['__elgg_session'] . $bytes);
+        return hash('sha512', $bytes);
     }
 
     public static function validateRequest()

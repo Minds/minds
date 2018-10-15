@@ -19,7 +19,7 @@ class Factory
      * @param string $segments - String representing a route
      * @return mixed|null
      */
-    public static function build($segments)
+    public static function build($segments, $request, $response)
     {
         //try {
         //    Helpers\RequestMetrics::increment('api');
@@ -48,7 +48,7 @@ class Factory
                         self::adminCheck();
                     }
                     if (!$handler instanceof Interfaces\ApiIgnorePam) {
-                        self::pamCheck();
+                        self::pamCheck($request, $response);
                     }
                     $pages = array_splice($segments, $loop) ?: array();
                     return $handler->$method($pages);
@@ -63,7 +63,7 @@ class Factory
                     self::adminCheck();
                 }
                 if (!$handler instanceof Interfaces\ApiIgnorePam) {
-                    self::pamCheck();
+                    self::pamCheck($request, $response);
                 }
                 $pages = array_splice($segments, $loop) ?: array();
                 return $handler->$method($pages);
@@ -76,13 +76,11 @@ class Factory
      * Terminates an API response based on PAM policies for current user
      * @return bool|null
      */
-    public static function pamCheck()
+    public static function pamCheck($request, $response)
     {
-        //error_log("checking pam");
-        $user_pam = new \ElggPAM('user');
-        $api_pam = new \ElggPAM('api');
-        $user_auth_result = $user_pam->authenticate();
-        if ($user_auth_result && $api_pam->authenticate() || Security\XSRF::validateRequest()) {
+        if ( $request->getAttribute('oauth_user_id') 
+            || Security\XSRF::validateRequest()
+        ) {
             return true;
         } else {
             //error_log('failed authentication:: OAUTH via API');

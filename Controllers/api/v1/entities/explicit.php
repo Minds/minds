@@ -63,10 +63,6 @@ class explicit implements Interfaces\Api
                             "value" => $value
                         ]);
                 }
-
-                //update all sessions for this user
-                (new Core\Data\Sessions())
-                    ->syncRemote($entity->guid, $entity);
             }
         } else {
             // mature locked channels are not allowed to remove explicit

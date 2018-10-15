@@ -37,7 +37,6 @@ class PushSettings
     public function __construct($db = null)
     {
         $this->db = $db ?: new Data\Call('entities_by_time');
-        $this->userGuid = Session::getLoggedInUser()->guid;
     }
 
     /**

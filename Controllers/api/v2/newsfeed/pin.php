@@ -27,9 +27,6 @@ class pin implements Interfaces\Api
         $user->addPinned($activity->guid);
         $user->save();
 
-        Core\Session::regenerate(false);
-        //sync our changes to other sessions
-        (new Core\Data\Sessions())->syncAll($user->guid);
         return Factory::response([]);
     }
 
@@ -49,9 +46,6 @@ class pin implements Interfaces\Api
         $user->removePinned($activity->guid);
         $user->save();
 
-        Core\Session::regenerate(false);
-        //sync our changes to other sessions
-        (new Core\Data\Sessions())->syncAll($user->guid);
         return Factory::response([]);
     }
 

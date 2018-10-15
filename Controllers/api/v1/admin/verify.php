@@ -82,8 +82,6 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
 
         \cache_entity($user);
 
-        (new Core\Data\Sessions())->syncRemote($user->guid, $user);
-
         $db->removeAttributes('verify:requests', [ $user->guid ]);
 
         return Factory::response([

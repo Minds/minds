@@ -87,8 +87,6 @@ class Manager
         $this->user->set($this->key, time() + $this->limitLength);
         $this->user->save(); //TODO: update to new repo system soon
 
-        $this->sessions->syncRemote($this->user->guid, $this->user);
-
         //Send a notification
         $this->notificationDelegate->notify($this->user, $this->key);
     }

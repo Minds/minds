@@ -45,23 +45,42 @@ use Minds\Api\Factory;
 
 class api implements Interfaces\Api
 {
+
+    /** @var Request $request **/
+    private $request;
+
+    /** @var Response $response **/
+    private $response;
+
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    public function setResponse($response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+
     public function get($pages)
     {
-        return Factory::build($pages);
+        return Factory::build($pages, $this->request, $this->response);
     }
     
     public function post($pages)
     {
-        return Factory::build($pages);
+        return Factory::build($pages, $this->request, $this->response);
     }
     
     public function put($pages)
     {
-        return Factory::build($pages);
+        return Factory::build($pages, $this->request, $this->response);
     }
     
     public function delete($pages)
     {
-        return Factory::build($pages);
+        return Factory::build($pages, $this->request, $this->response);
     }
 }

@@ -13,6 +13,21 @@ use Minds\Core\Session;
 
 class Manager
 {
+
+    /** @var User $user */
+    private $user;
+
+    /**
+     * Set the user
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     /**
      * Checks if a featured is enabled
      * @param $feature
@@ -28,7 +43,7 @@ class Manager
             return true;
         }
 
-        if ($features[$feature] === 'admin' && Session::isAdmin()) {
+        if ($features[$feature] === 'admin' && $this->user->isAdmin()) {
             return true;
         }
 

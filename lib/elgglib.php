@@ -119,8 +119,6 @@ function forward($location = "", $reason = 'system') {
 			$location = $_SERVER['HTTP_REFERER'];
 		}
 
-		$location = elgg_normalize_url($location);
-
 		// return new forward location or false to stop the forward or empty string to exit
 		$current_page = current_page_url();
 		$params = array('current_url' => $current_page, 'forward_url' => $location);
@@ -2008,8 +2006,6 @@ function elgg_walled_garden() {
 	elgg_register_css('elgg.walled_garden', '/css/walled_garden.css');
 	elgg_register_js('elgg.walled_garden', '/js/walled_garden.js');
 
-	elgg_register_page_handler('walled_garden', '_elgg_walled_garden_ajax_handler');
-
 	// check for external page view
 	if (isset($CONFIG->site) && $CONFIG->site instanceof ElggSite) {
 		$CONFIG->site->checkWalledGarden();
@@ -2171,7 +2167,4 @@ define('REFERER', -1);
 
 elgg_register_event_handler('init', 'system', 'elgg_init');
 elgg_register_event_handler('boot', 'system', '_elgg_engine_boot', 1);
-elgg_register_plugin_hook_handler('unit_test', 'system', 'elgg_api_test');
 
-elgg_register_event_handler('init', 'system', 'add_custom_menu_items', 1000);
-elgg_register_event_handler('init', 'system', 'elgg_walled_garden', 1000);
