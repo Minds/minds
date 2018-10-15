@@ -113,7 +113,7 @@ class conversations implements Interfaces\Api
 
         if ($messages) {
             foreach ($messages as $k => $message) {
-                if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                if (!(isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION'])) {
                     $_GET['decrypt'] = true;
                 }
                 if (isset($_GET['decrypt']) && $_GET['decrypt']) {
