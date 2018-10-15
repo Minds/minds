@@ -32,10 +32,11 @@ class top implements Api
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $questions = $repo->getTop([
+        $questions = $repo->getAll([
             'limit' => $limit,
             'offset' => $offset,
-            'category' => $category
+            'category' => $category,
+            'orderBy' => 'thumbs_up_count'
         ]);
 
         return Factory::response([

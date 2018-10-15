@@ -13,6 +13,18 @@ class Repository
     /** @var Category\Repository */
     protected $repository;
 
+    private static $orderByFields = [
+        'question',
+        'answer',
+        'thumbs_up_count',
+        'thumbs_down_count',
+    ];
+
+    private static $orderDirections = [
+        'ASC',
+        'DESC',
+    ];
+
     public function __construct(\PDO $db, Category\Repository $categoryRepository = null)
     {
         $this->db = $db ?: Di::_()->get('Database\PDO');
@@ -25,7 +37,8 @@ class Repository
             'limit' => 10,
             'offset' => 0,
             'category_uuid' => '',
-            'orderBy' => null // has to be a valid field
+            'orderBy' => null, // has to be a valid field
+            'orderDirection' => 'DESC'
         ], $opts);
 
         $query = 'SELECT * FROM helpdesk_faq';
@@ -39,13 +52,22 @@ class Repository
 
         $query .= ' WHERE' . implode(' AND ', $where);
 
+        if ($opts['orderBy'] && in_array($opts['orderBy'], self::$orderByFields)) {
+            $query .= ' ORDER BY ?';
+            $values[] = $opts['orderBy'];
+
+            if ($opts['orderDirection'] && in_array(strtoupper($opts['orderDirection']), self::$orderDirections)) {
+                $query .= $opts['orderDirection'];
+            }
+        }
+
         if ($opts['limit']) {
-            $query .= " LIMIT = ?";
+            $query .= ' LIMIT = ?';
             $values[] = $opts['limit'];
         }
 
         if ($opts['offset']) {
-            $query .= " OFFSET = ?";
+            $query .= ' OFFSET = ?';
             $values[] = $opts['offsaet'];
         }
 
