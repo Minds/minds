@@ -20,6 +20,8 @@ class Router
       '/archive/thumbnail' => "Minds\\Controllers\\fs\\v1\\thumbnail",
       '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
 
+      '/oauth2/token' => "Minds\\Controllers\\oauth2\\token",
+
       '/icon' => "Minds\\Controllers\\icon",
       '//icon' => "Minds\\Controllers\\icon",
       '/api' => "Minds\\Controllers\\api\\api",
