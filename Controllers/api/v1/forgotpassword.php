@@ -102,7 +102,10 @@ class forgotpassword implements Interfaces\Api, Interfaces\ApiIgnorePam
 
           (new \Minds\Core\Data\Sessions())->destroyAll($user->guid);
 
-          login($user);
+          $sessions = Core\Di\Di::_()->get('Sessions\Manager');
+          $sessions->setUser($user);
+          $sessions->createSession();
+          $sessions->save(); // save to db and cookie
 
           $response['user'] = $user->export();
 

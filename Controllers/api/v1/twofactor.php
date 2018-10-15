@@ -103,7 +103,13 @@ class twofactor implements Interfaces\Api
                 if ($twofactor->verifyCode($secret, $_POST['code'], 1)) {
                     global $TWOFACTOR_SUCCESS;
                     $TWOFACTOR_SUCCESS = true;
-                    \login($user, true);
+                    
+                    $sessions = Core\Di\Di::_()->get('Sessions\Manager');
+                    $sessions->setUser($user);
+                    $sessions->createSession();
+                    $sessions->save(); // save to db and cookie
+                    
+                    //\login($user, true);
 
                     $response['status'] = 'success';
                     $response['user'] = $user->export();
