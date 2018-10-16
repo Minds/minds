@@ -45,7 +45,8 @@ class Repository
         $opts = array_merge([
             'limit' => 10,
             'offset' => 0,
-            'category_uuid' => '',
+            'category_uuid' => null,
+            'question_uuid' => null,
             'orderBy' => null, // has to be a valid field
             'orderDirection' => 'DESC'
         ], $opts);
@@ -53,6 +54,11 @@ class Repository
         $query = 'SELECT * FROM helpdesk_faq';
         $where = [];
         $values = [];
+
+        if($opts['question_uuid']) {
+            $where[] = "uuid = ?";
+            $values[] = $opts['question_uuid'];
+        }
 
         if ($opts['category_uuid']) {
             $where[] = "category_uuid = ?";
