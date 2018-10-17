@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Controllers\api\v2\helpdesk;
+namespace Minds\Controllers\api\v2\helpdesk\questions;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
@@ -16,12 +16,11 @@ class question implements Api
         }
 
         $uuid = $pages[0];
-
         // get a single question
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $result = $repo->getAll(['question_uuid' => $uuid])[0];
+        $result = $repo->getAll(['question_uuid' => $uuid]);
 
         $question = null;
 
@@ -31,7 +30,7 @@ class question implements Api
 
         return Factory::response([
             'status' => 'success',
-            'question' => $question
+            'question' => $question->export()
         ]);
     }
 

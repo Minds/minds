@@ -23,24 +23,17 @@ class categories implements Api
             $offset = intval($_GET['offset']);
         }
 
-        $category = null;
-
-        if (isset($_GET['category']) && trim($_GET['category']) !== '') {
-            $category = trim($_GET['category']);
-        }
-
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Category\Repository');
 
-        $questions = $repo->getAll([
+        $categories = $repo->getAll([
             'limit' => $limit,
             'offset' => $offset,
-            'category' => $category
         ]);
 
         return Factory::response([
             'status' => 'success',
-            'questions' => $questions
+            'categories' => Factory::exportable($categories)
         ]);
     }
 

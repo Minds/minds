@@ -34,12 +34,16 @@ class Repository
         'thumbs_user_guids_count',
     ];
 
-    public function __construct(\PDO $db, Category\Repository $categoryRepository = null)
+    public function __construct(\PDO $db = null, Category\Repository $categoryRepository = null)
     {
         $this->db = $db ?: Di::_()->get('Database\PDO');
         $this->repository = $categoryRepository ?: Di::_()->get('Helpdesk\Category\Repository');
     }
 
+    /**
+     * @param array $opts
+     * @return Question[]
+     */
     public function getAll(array $opts = [])
     {
         $opts = array_merge([
@@ -48,14 +52,15 @@ class Repository
             'category_uuid' => null,
             'question_uuid' => null,
             'orderBy' => null, // has to be a valid field
-            'orderDirection' => 'DESC'
+            'orderDirection' => 'DESC',
+            'hydrateCategory' => false,
         ], $opts);
 
-        $query = 'SELECT * FROM helpdesk_faq';
+        $query = 'SELECT * FROM helpdesk_faq ';
         $where = [];
         $values = [];
 
-        if($opts['question_uuid']) {
+        if ($opts['question_uuid']) {
             $where[] = "uuid = ?";
             $values[] = $opts['question_uuid'];
         }
@@ -65,11 +70,13 @@ class Repository
             $values[] = $opts['category_uuid'];
         }
 
-        $query .= ' WHERE' . implode(' AND ', $where);
+        if (count($where) > 0) {
+            $query .= 'WHERE ' . implode(' AND ', $where);
+        }
+
 
         if ($opts['orderBy'] && in_array($opts['orderBy'], self::$orderByFields)) {
-            $query .= ' ORDER BY ?';
-            $values[] = $opts['orderBy'];
+            $query .= " ORDER BY {$opts['orderBy']} ";
 
             if ($opts['orderDirection'] && in_array(strtoupper($opts['orderDirection']), self::$orderDirections)) {
                 $query .= $opts['orderDirection'];
@@ -77,13 +84,13 @@ class Repository
         }
 
         if ($opts['limit']) {
-            $query .= ' LIMIT = ?';
+            $query .= ' LIMIT ?';
             $values[] = $opts['limit'];
         }
 
         if ($opts['offset']) {
-            $query .= ' OFFSET = ?';
-            $values[] = $opts['offsaet'];
+            $query .= ' OFFSET ?';
+            $values[] = $opts['offset'];
         }
 
         $statement = $this->db->prepare($query);
@@ -96,16 +103,20 @@ class Repository
 
         foreach ($data as $row) {
             $question = new Question();
-            $question->setQuestion($row['question'])
+            $question->setUuid($row['uuid'])
+                ->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
                 ->setCategoryUuid($row['category_uuid'])
-                ->setCategory($this->repository->getAll([
-                    'uuid' => $row['category_uuid'],
-                    'recursive' => true,
-                ]))[0]
                 ->setUserGuids(json_decode($row['user_guids']))
                 ->setThumbsUpCount($row['thumbs_up_count'])
                 ->setThumbsDownCount($row['thumbs_down_count']);
+
+            if ($opts['hydrateCategory']) {
+                $question->setCategory($this->repository->getAll([
+                    'uuid' => $row['category_uuid'],
+                    'recursive' => false,
+                ])[0]);
+            }
 
             $result[] = $question;
         }
@@ -131,7 +142,7 @@ class Repository
             $values[] = $opts['q'];
         }
 
-        $query .= ' WHERE' . implode(' AND ', $where);
+        $query .= ' WHERE ' . implode(' AND ', $where);
 
         if ($opts['limit']) {
             $query .= " LIMIT = ?";

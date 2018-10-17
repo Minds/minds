@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Controllers\api\v2\helpdesk;
+namespace Minds\Controllers\api\v2\helpdesk\questions;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
@@ -41,7 +41,7 @@ class top implements Api
 
         return Factory::response([
             'status' => 'success',
-            'questions' => $questions
+            'questions' => Factory::exportable($questions)
         ]);
     }
 

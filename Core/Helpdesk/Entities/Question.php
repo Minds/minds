@@ -21,8 +21,10 @@ use Minds\Traits\MagicAttributes;
  * @method Question setThumbsUpCount(int $value)
  * @method int getThumbsDownCount()
  * @method Question setThumbsDownCount(int $value)
- * @method array getUserGuids()
- * @method Question setUserGuids(array $value)
+ * @method array getThumbsUpUserGuids()
+ * @method Question setThumbsUpUserGuids(array $value)
+ * @method array getThumbsDownUserGuids()
+ * @method Question setThumbsDownUserGuids(array $value)
  */
 class Question
 {
@@ -37,5 +39,24 @@ class Question
     protected $thumbsUpCount;
     protected $thumbsDownCount;
     /** @var array */
-    protected $userGuids;
+    protected $thumbsUpUserGuids;
+    /** @var array */
+    protected $thumbsDownUserGuids;
+
+    public function export()
+    {
+        $export = [];
+
+        $export['uuid'] = $this->getUuid();
+        $export['question'] = $this->getQuestion();
+        $export['answer'] = $this->getAnswer();
+        $export['category_uuid'] = $this->getCategoryUuid();
+        $export['category'] = $this->getCategory() ? $this->getCategory()->export() : null;
+        $export['thumbsUpCount'] = $this->getThumbsUpCount() ?: 0;
+        $export['thumbsDownCount'] = $this->getThumbsDownCount() ?: 0;
+        $export['thumbsUpUserGuids'] = $this->getThumbsUpUserGuids() ?: 0;
+        $export['thumbsDownUserGuids'] = $this->getThumbsDownUserGuids() ?: 0;
+
+        return $export;
+    }
 }

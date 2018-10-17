@@ -2,7 +2,6 @@
 
 namespace Minds\Core\Helpdesk\Category;
 
-use Minds\Controllers\Cli\PDO;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Entities\Category;
 use Minds\Core\Util\UUIDGenerator;
@@ -46,11 +45,13 @@ class Repository
         $values = [];
 
         if ($opts['uuid']) {
-            $where = 'uuid = ?';
+            $where[] = 'uuid = ?';
             $values[] = $opts['uuid'];
         }
 
-        $query .= ' ' . implode('AND', $where);
+        if (count($where) > 0) {
+            $query .= ' WHERE ' . implode('AND', $where);
+        }
 
         $statement = $this->db->prepare($query);
 
