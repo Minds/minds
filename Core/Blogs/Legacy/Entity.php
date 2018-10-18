@@ -36,6 +36,7 @@ class Entity
         'license' => 'license',
         'timePublished' => 'time_published',
         'categories' => 'categories',
+        'tags' => 'tags',
         'customMeta' => 'custom_meta',
         'rating' => 'rating',
         'draftAccessId' => 'draft_access_id',
@@ -51,6 +52,7 @@ class Entity
 
     static $jsonEncodedFields = [
         'categories',
+        'tags',
         'custom_meta',
         'wire_threshold',
         'ownerObj',

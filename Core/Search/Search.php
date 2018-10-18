@@ -20,6 +20,9 @@ class Search
     /** @var string $esIndex */
     protected $esIndex;
 
+    /** @var string $tagsIndex */
+    protected $tagsIndex;
+
     /** @var array $allowedTypes */
     protected $allowedTypes = [
         'activity',
@@ -40,6 +43,7 @@ class Search
     {
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
         $this->esIndex = $index ?: Di::_()->get('Config')->elasticsearch['index'];
+        $this->tagsIndex = $index ?: Di::_()->get('Config')->elasticsearch['tags_index'];
     }
 
     /**
@@ -182,9 +186,13 @@ class Search
         ];
 
         // TODO: implement $taxonomy
+        $index = $this->esIndex;
+        if ($taxonomy === 'tags') {
+            $index = $this->tagsIndex;
+        }
 
         $prepared = new Prepared\Suggest();
-        $prepared->query($this->esIndex, $query, $params);
+        $prepared->query($index, $query, $params);
 
         $results = $this->client->request($prepared);
 

@@ -65,6 +65,7 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['time_updated'] = time();
 		$this->attributes['last_action'] = NULL;
 		$this->attributes['enabled'] = "yes";
+		$this->attributes['tags'] = null;
 
 	}
 
@@ -1367,7 +1368,8 @@ abstract class ElggEntity extends ElggData implements
 			'container_guid',
 			'owner_guid',
 			'site_guid',
-			'access_id'
+			'access_id',
+            'tags',
 		);
 	}
 
@@ -1458,41 +1460,21 @@ abstract class ElggEntity extends ElggData implements
 		return get_entity($id);
 	}
 
-	/**
-	 * Returns tags for this entity.
-	 *
-	 * @warning Tags must be registered by {@link elgg_register_tag_metadata_name()}.
-	 *
-	 * @param array $tag_names Optionally restrict by tag metadata names.
-	 *
-	 * @return array
-	 */
-	public function getTags($tag_names = NULL) {
-		if ($tag_names && !is_array($tag_names)) {
-			$tag_names = array($tag_names);
-		}
-
-		$valid_tags = elgg_get_registered_tag_metadata_names();
-		$entity_tags = array();
-
-		foreach ($valid_tags as $tag_name) {
-			if (is_array($tag_names) && !in_array($tag_name, $tag_names)) {
-				continue;
-			}
-
-			if ($tags = $this->$tag_name) {
-				// if a single tag, metadata returns a string.
-				// if multiple tags, metadata returns an array.
-				if (is_array($tags)) {
-					$entity_tags = array_merge($entity_tags, $tags);
-				} else {
-					$entity_tags[] = $tags;
-				}
-			}
-		}
-
-		return $entity_tags;
+    /**
+     * @return array
+     */
+	public function getTags() {
+		return $this->tags ?: [];
 	}
+
+    /**
+     * @param array $value
+     * @return $this
+     */
+	public function setTags(array $value) {
+	    $this->tags = $value;
+	    return $this;
+    }
 
 	/**
 	 * Feature

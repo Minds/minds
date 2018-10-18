@@ -49,6 +49,13 @@ $CONFIG->elasticsearch_server = '{{elasticsearch-server}}';
 //namespace
 $CONFIG->elasticsearch_prefix = '{{elasticsearch-prefix}}';
 
+$CONFIG->elasticsearch = [
+    'hosts' => ['elasticsearch'],
+    'index' => 'minds_badger',
+    'metrics_index' => 'minds-metrics',
+    'tags_index' => 'minds-trending-hashtags',
+];
+
 /**
  * Memcache setup (optional)
  * This is where you may optionally set up memcache.
@@ -331,3 +338,7 @@ $CONFIG->set('i18n', [
 
 // blacklist of internal IPs / URLs to block from curl requests
 $CONFIG->set('internal_blacklist', []);
+
+$CONFIG->set('tags', [
+    'art', 'music', 'journalism', 'blockchain', 'freespeech', 'news', 'gaming', 'myphoto', 'nature', 'photography', 'politics', 'top', 'bitcoin', 'technology', 'food', 'animals', 'health', 'science', 'philosophy', 'comedy', 'film', 'minds'
+]);

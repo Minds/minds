@@ -30,7 +30,7 @@ class tagcloud implements Interfaces\Api, Interfaces\ApiAdminPam
 
         if ($hiddenRows) {
             foreach ($hiddenRows as $row) {
-                $hidden[] = $row['column1'];
+                $hidden[] = $row['hashtag'];
             }
         }
 

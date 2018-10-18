@@ -68,6 +68,8 @@ class Minds extends base
         (new Rewards\RewardsProvider())->register();
         (new Email\EmailProvider())->register();
         (new Plus\PlusProvider())->register();
+        (new Hashtags\HashtagsProvider())->register();
+        (new Feeds\FeedsProvider())->register();
     }
 
     /**

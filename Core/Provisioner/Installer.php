@@ -202,10 +202,13 @@ class Installer
         }
     }
 
-    public function setupStorage(Provisioners\ProvisionerInterface $storage = null)
+    public function setupStorage(Provisioners\ProvisionerInterface $cassandraStorage = null, Provisioners\ProvisionerInterface $cockroachProvisioner = null)
     {
-        $storage = $storage ?: new Provisioners\CassandraProvisioner();
-        $storage->provision();
+        $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
+        $cassandraStorage->provision();
+
+        $cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
+        $cockroachProvisioner->provision();
     }
 
     public function reloadStorage()

@@ -11,6 +11,15 @@ use Minds\Entities\Object;
 
 class ACLSpec extends ObjectBehavior
 {
+    /** @var Core\Security\RateLimits\Manager */
+    private $rateLimits;
+
+    function let(Core\Security\RateLimits\Manager $rateLimits) {
+        $this->rateLimits = $rateLimits;
+
+        $this->beConstructedWith($rateLimits);
+    }
+
     public function mock_session($on = true)
     {
         if ($on) {
@@ -97,6 +106,22 @@ class ACLSpec extends ObjectBehavior
     {
         $this->mock_session(true);
 
+        $this->rateLimits->setUser(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->setEntity($entity)
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->setInteraction(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->isLimited()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
         $this->interact($entity)->shouldReturn(true);
         $this->mock_session(false);
     }
@@ -104,6 +129,22 @@ class ACLSpec extends ObjectBehavior
     public function it_should_return_false_on_acl_interact_event(Object $entity)
     {
         $this->mock_session(true);
+
+        $this->rateLimits->setUser(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->setEntity($entity)
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->setInteraction(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn($this->rateLimits);
+
+        $this->rateLimits->isLimited()
+            ->shouldBeCalled()
+            ->willReturn(false);
 
         Core\Events\Dispatcher::register('acl:interact', 'all', function ($event) {
         $event->setResponse(false);

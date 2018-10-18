@@ -474,6 +474,10 @@ class newsfeed implements Interfaces\Api
                         $activity->setMature($_POST['mature']);
                     }
 
+                    if (isset($_POST['tags'])) {
+                        $activity->setTags($_POST['tags']);
+                    }
+
                     $user = Core\Session::getLoggedInUser();
                     if ($user->isMature()) {
                         $activity->setMature(true);
@@ -628,6 +632,10 @@ class newsfeed implements Interfaces\Api
                         $attachment->access_id = 0;
                         $attachment->save();
                     }
+                }
+
+                if (isset($_POST['tags'])) {
+                    $activity->setTags($_POST['tags']);
                 }
 
                 try {

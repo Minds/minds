@@ -210,6 +210,12 @@ class channel implements Interfaces\Api
                     }
                 }
 
+
+                if (isset($_POST['tags']) && $_POST['tags']) {
+                    $update['tags'] = json_encode($_POST['tags']);
+                    $owner->$field = $update['tags'];
+                }
+
                 /*try {
                     $spam = new Core\Security\Spam();
                     $spam->check($owner);

@@ -1,10 +1,7 @@
 <?php
+
 namespace Minds\Core\Trending;
 
-use Cassandra;
-use Cassandra\Varint;
-use Minds\Core\Data\Cassandra\Client;
-use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
 
@@ -23,8 +20,7 @@ class Manager
         $validator = null,
         $maps = null,
         $entitiesBuilder = null
-    )
-    {
+    ) {
         $this->repository = $repository ?: Di::_()->get('Trending\Repository');
         $this->validator = $validator ?: new EntityValidator;
         $this->maps = $maps ?: Maps::$maps;
@@ -46,14 +42,39 @@ class Manager
         return $this;
     }
 
-    public function run()
+    public function run(string $type)
     {
         \Minds\Core\Security\ACL::$ignore = true;
         $ratings = [1, 2];
-        //$ratings = [ 2 ];
         $scores = [];
+
+        $maps = null;
+        switch ($type) {
+            case 'all':
+                $maps = $this->maps;
+                break;
+            case 'newsfeed':
+                $maps = ['newsfeed' => $this->maps['newsfeed']];
+                break;
+            case 'images':
+                $maps = ['images' => $this->maps['images']];
+                break;
+            case 'videos':
+                $maps = ['videos' => $this->maps['videos']];
+                break;
+            case 'groups':
+                $maps = ['groups' => $this->maps['groups']];
+                break;
+            case 'blogs':
+                $maps = ['blogs' => $this->maps['blogs']];
+                break;
+            case 'default':
+                throw new \Exception("Invalid type. Valid values are: 'newsfeed', 'images', 'videos', 'groups' and 'blogs'");
+                break;
+        }
+
         foreach ($ratings as $rating) {
-            foreach ($this->maps as $key => $map) {
+            foreach ($maps as $key => $map) {
                 if (!isset($scores[$key])) {
                     $scores[$key] = [];
                 }
@@ -87,7 +108,7 @@ class Manager
                                 $scores['videos'][$entity->entity_guid] = 0;
                             }
                             $guids['videos'][$entity->entity_guid] += $score;
-                        } elseif(strpos($entity->perma_url, 'blog/view/') !== FALSE &&  $entity->entity_guid) {
+                        } elseif (strpos($entity->perma_url, 'blog/view/') !== false && $entity->entity_guid) {
                             if (!isset($scores['blogs'][$entity->entity_guid])) {
                                 $scores['blogs'][$entity->entity_guid] = 0;
                             }
@@ -103,7 +124,7 @@ class Manager
 
                 arsort($scores[$key]);
                 $guids = [];
-                foreach($scores[$key] as $guid => $score) {
+                foreach ($scores[$key] as $guid => $score) {
                     $guids[] = $guid;
                     echo "\n[$rating] $key: $guid ($score)";
                 }
