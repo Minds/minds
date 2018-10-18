@@ -27,10 +27,10 @@ class Notification
                 $message = "Your channel has been rate limited due to a high number of subscribes.";
                 break;
             case "ratelimited_interaction:voteup":
-                $message = "Your channel has been rate limited due to a high number up votes.";
+                $message = "Your channel has been rate limited due to a high number of up votes.";
                 break;
             case "ratelimited_interaction:votedown":
-                $message = "Your channel has been rate limited due to a high number down votes.";
+                $message = "Your channel has been rate limited due to a high number of down votes.";
                 break;
             case "ratelimited_interaction:comment":
                 $message = "Your channel has been rate limited due to a high number of comments.";

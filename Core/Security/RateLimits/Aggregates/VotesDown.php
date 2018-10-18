@@ -12,7 +12,7 @@ class VotesDown extends Aggregate
         $cardinality_field = 'user_phone_number_hash';
 
         $filter = [
-            'term' => ['action' => 'vote:up']
+            'term' => ['action' => 'vote:down']
         ];
 
         $must = [
