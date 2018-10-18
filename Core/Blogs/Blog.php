@@ -413,11 +413,11 @@ class Blog extends RepositoryEntity
 
     /**
      * @param array $value
-     * @return $this|array
+     * @return $this
      */
-    public function setTags(array $value)
+    public function setTags($value)
     {
-        return $this->_tags = $value;
+        $this->_tags = $value ?: [];
         return $this;
     }
 
