@@ -17,7 +17,7 @@ aws s3 cp $S3_BUCKET/var/secure/sessions-priv.key /var/secure/sessions-priv.key
 aws s3 cp $S3_BUCKET/var/secure/sessions-pub.key /var/secure/sessions-pub.key
 
 # Cockroach
-aws s3 cp -R $S3_BUCKET/var/secure/cockroachdb /var/secure/cockroachdb --recursive
+aws s3 cp $S3_BUCKET/var/secure/cockroachdb /var/secure/cockroachdb --recursive
 
 aws s3 cp $S3_BUCKET/var/secure/google.sheets.key.json /var/secure/google.sheets.key.json
 
