@@ -33,7 +33,7 @@ class Scanner
                 }
 
                 $this->manager
-                    ->setKey($key)
+                    ->setInteraction($opts['interaction'])
                     ->setUser($user)
                     ->setLimitLength($opts['period']);
 

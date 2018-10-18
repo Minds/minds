@@ -12,6 +12,8 @@ use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Luid;
 use Minds\Core\Security\ACL;
+use Minds\Core\Session;
+use Minds\Entities\User;
 use Minds\Exceptions\BlockedUserException;
 use Minds\Exceptions\InvalidLuidException;
 
@@ -77,9 +79,15 @@ class Manager
     {
         $entity = $this->entitiesBuilder->single($comment->getEntityGuid());
 
+        $owner = $comment->getOwnerEntity(false);
+
+        if (!$this->acl->interact($entity->guid, $owner, "comment")) {
+            throw new \Exception();
+        }
+
         if (
             !$comment->getOwnerGuid() ||
-            !$this->acl->interact($entity, $comment->getOwnerEntity(true))
+            !$this->acl->interact($entity, $owner)
         ) {
             throw new BlockedUserException();
         }

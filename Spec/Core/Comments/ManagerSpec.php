@@ -86,7 +86,7 @@ class ManagerSpec extends ObjectBehavior
         User $owner
     )
     {
-        $comment->getOwnerEntity(true)
+        $comment->getOwnerEntity(false)
             ->shouldBeCalled()
             ->willReturn($owner);
 
@@ -101,6 +101,14 @@ class ManagerSpec extends ObjectBehavior
         $this->entitiesBuilder->single(5000)
             ->shouldBeCalled()
             ->willReturn($entity);
+
+        $entity->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $this->acl->interact(5000, $owner, 'comment')
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->acl->interact($entity, $owner)
             ->shouldBeCalled()
@@ -135,13 +143,44 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
+    function it_should_throw_if_rate_limited_user_during_add(
+        Comment $comment,
+        Entity $entity,
+        User $owner
+    )
+    {
+        $comment->getOwnerEntity(false)
+            ->shouldBeCalled()
+            ->willReturn($owner);
+
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $this->entitiesBuilder->single(5000)
+            ->shouldBeCalled()
+            ->willReturn($entity);
+
+        $entity->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(100);
+
+        $this->acl->interact(100, $owner, "comment")
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->shouldThrow(\Exception::class)
+            ->duringAdd($comment);
+    }
+
     function it_should_throw_if_blocked_user_during_add(
         Comment $comment,
         Entity $entity,
         User $owner
     )
     {
-        $comment->getOwnerEntity(true)
+        $comment->getOwnerEntity(false)
             ->shouldBeCalled()
             ->willReturn($owner);
 
@@ -156,6 +195,14 @@ class ManagerSpec extends ObjectBehavior
         $this->entitiesBuilder->single(5000)
             ->shouldBeCalled()
             ->willReturn($entity);
+
+        $entity->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(100);
+
+        $this->acl->interact(100, $owner, "comment")
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->acl->interact($entity, $owner)
             ->shouldBeCalled()

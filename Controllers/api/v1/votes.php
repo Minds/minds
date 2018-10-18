@@ -7,6 +7,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Security\ACL;
 use Minds\Core\Session;
 use Minds\Core\Votes\Counters;
 use Minds\Core\Votes\Manager;

@@ -26,6 +26,7 @@ class ScannerSpec extends ObjectBehavior
     {
         $maps = [
             'interaction:subscribe' => [
+                'interaction' => 'subscribe',
                 'period' => 300, //5 minutes
                 'threshold' => 50, //50 per 5 minutes, 10 per minute
                 'aggregates' => [
@@ -52,7 +53,7 @@ class ScannerSpec extends ObjectBehavior
                 10003 => 100
             ]);
 
-        $manager->setKey('interaction:subscribe')
+        $manager->setInteraction('subscribe')
             ->shouldBeCalled()
             ->willReturn($manager);
 
@@ -81,6 +82,7 @@ class ScannerSpec extends ObjectBehavior
     {
         $maps = [
             'interaction:subscribe' => [
+                'interaction' => 'subscribe',
                 'period' => 300, //5 minutes
                 'threshold' => 50, //50 per 5 minutes, 10 per minute
                 'aggregates' => [
@@ -107,7 +109,7 @@ class ScannerSpec extends ObjectBehavior
                 10003 => 100
             ]);
 
-        $manager->setKey('interaction:subscribe')
+        $manager->setInteraction('subscribe')
             ->shouldBeCalled()
             ->willReturn($manager);
 

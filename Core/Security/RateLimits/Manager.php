@@ -3,20 +3,32 @@
  * RateLimits Manager
  * @author Mark
  */
+
 namespace Minds\Core\Security\RateLimits;
 
 use Minds\Core\Data\Sessions;
+use Minds\Entities\Entity;
+use Minds\Entities\User;
 
 class Manager
 {
+    /** @var Sessions */
+    private $sessions;
+
+    /** @var Delegates\Notification */
+    private $notificationDelegate;
+
+    /** @var User */
+    private $user;
+
+    /** @var Entity */
+    private $entity;
 
     /** @var string $key */
     private $key;
 
     /** @var int $limitLength */
     private $limitLength = 300; //5 minutes
-
-    /** @var Sessions $sessions */
 
     public function __construct($sessions = null, $notificationDelegate = null)
     {
@@ -34,7 +46,7 @@ class Manager
         $this->user = $user;
         return $this;
     }
-    
+
     /**
      * Set entity
      * @param Entity $entity
@@ -45,10 +57,10 @@ class Manager
         $this->entity = $entity;
         return $this;
     }
-    
+
     /**
      * Set the interaction
-     * @param User $user
+     * @param string $key
      * @return $this
      */
     public function setInteraction($key)
@@ -58,7 +70,7 @@ class Manager
 
     /**
      * Set the key
-     * @param User $user
+     * @param string $key
      * @return $this
      */
     public function setKey($key)
@@ -88,9 +100,9 @@ class Manager
         $this->user->save(); //TODO: update to new repo system soon
 
         //Send a notification
-        $this->notificationDelegate->notify($this->user, $this->key);
+        $this->notificationDelegate->notify($this->user, $this->key, $this->limitLength);
     }
-    
+
     /**
      * Return if a rate limit is imposed
      * @param User $user
