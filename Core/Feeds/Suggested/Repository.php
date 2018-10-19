@@ -63,8 +63,6 @@ class Repository
             if ($opts['all']) {
                 $query = "SELECT DISTINCT suggested.guid as guid
                   FROM suggested
-                  JOIN entity_hashtags
-                    ON suggested.guid = entity_hashtags.guid
                   WHERE type = ?
                     AND rating <= ?
                   ORDER BY lastSynced DESC, score DESC

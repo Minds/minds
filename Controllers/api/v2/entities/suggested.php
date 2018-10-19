@@ -23,17 +23,21 @@ class suggested implements Interfaces\Api
             case 'activities':
                 $type = 'newsfeed';
                 break;
+            case 'channels':
+                $type = 'user';
+                break;
             case 'images':
-                $type = 'object:image';
+                $type = 'image';
                 break;
             case 'videos':
-                $type = 'object:video';
+                $type = 'video';
                 break;
             case 'groups':
                 $type = 'group';
                 break;
             case 'blogs':
-                $type = 'object:blog';
+                $type = 'blog';
+                break;
         }
 
         $all = isset($pages[1]) && $pages[1] === 'all';
@@ -53,6 +57,10 @@ class suggested implements Interfaces\Api
         $rating = 1;
         if (isset($_GET['rating'])) {
             $rating = intval($_GET['rating']);
+        }
+
+        if ($type == 'user') {
+            $rating = 1;
         }
 
         $hashtag = null;
