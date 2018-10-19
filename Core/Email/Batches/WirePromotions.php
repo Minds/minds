@@ -112,7 +112,7 @@ class WirePromotions implements EmailBatchInterface
                 ->setUser($user)
                 //->setTemplateKey($this->templatePath)
                 ->setSubject("You’ve received a token reward!")
-                ->setPromotionKey('sept-20')
+                ->setPromotionKey('oct-19')
                 ->send();
 
             echo " sent";
