@@ -112,7 +112,7 @@ class Repository
             $uuid,
             $category->getTitle(),
             $category->getParentUuid(),
-            $parent ? $parent->getBranch() . ':' . $uuid : $uuid
+            $parent && $parent->getBranch() ? $parent->getBranch() . ':' . $uuid : $uuid
         ];
 
         $statement = $this->db->prepare($query);
