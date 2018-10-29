@@ -144,7 +144,7 @@ class Indexes
         } else {
             $prepared = new Custom();
             $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-                (string) $entity->guid,
+                (string) is_numeric($entity) ? $entity : $entity->guid,
                 "thumbs:{$direction}:user_guids",
                 json_encode($value)
             ]);
