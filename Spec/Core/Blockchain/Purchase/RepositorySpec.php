@@ -67,6 +67,7 @@ class RepositorySpec extends ObjectBehavior
                     'requested_amount' => new Varint(50),
                     'issued_amount' => new Varint(1),
                     'status' => 'approved',
+                    'rate' =>  new Varint(4000),
                 ]
             ], ''));
 
@@ -169,6 +170,7 @@ class RepositorySpec extends ObjectBehavior
                     'completed' => true,
                     'data' => json_encode(['foo' => 'bar']),
                     'status' => 'approved',
+                    'rate' =>  new Varint(4000),
                 ]
             ], ''));
 

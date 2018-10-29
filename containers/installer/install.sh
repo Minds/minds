@@ -14,7 +14,7 @@ echo "Running install"
 php /var/www/Minds/engine/cli.php install \
     --domain=localhost:8080 \
     --username=minds \
-    --password=password \
+    --password="Pa\$\$w0rd" \
     --email=minds@minds.com \
     --email-private-key=/.dev/minds.pem \
     --email-public-key=/.dev/minds.pub \

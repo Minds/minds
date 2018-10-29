@@ -41,7 +41,7 @@ class Client implements Interfaces\ClientInterface
             $statement = $this->session->prepare($cql['string']);
             $future = $this->session->executeAsync(
               $statement,
-              new Driver\ExecutionOptions(array_merge(
+              @new Driver\ExecutionOptions(array_merge(
                   [
                     'arguments' => $cql['values']
                   ],
@@ -62,6 +62,16 @@ class Client implements Interfaces\ClientInterface
         }
 
         return true;
+    }
+
+    /**
+     * Run a synchronous query
+     * @param string $statement
+     * @return mixed
+     */
+    public function execute($statement)
+    {
+        return $this->session->execute($statement);
     }
 
     public function batchRequest($requests = array(), $batchType = Driver::BATCH_COUNTER, $silent = false)

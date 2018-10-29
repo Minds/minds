@@ -5,6 +5,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Core\Util\BigNumber;
+use Minds\Helpers\MagicAttributes;
 
 class Thresholds
 {
@@ -13,7 +14,7 @@ class Thresholds
      */
     public function isAllowed($user, $entity)
     {
-        if (!is_object($entity) || !method_exists($entity, 'getWireThreshold')) {
+        if (!is_object($entity) || !(MagicAttributes::getterExists($entity, 'getWireThreshold') || method_exists($entity, 'getWireThreshold'))) {
             throw new \Exception('Entity cannot be paywalled');
         }
 

@@ -51,7 +51,7 @@ class Manager
             'events' => true
         ], $options);
 
-        if (!$this->acl->interact($vote->getEntity(), $vote->getActor())) {
+        if (!$this->acl->interact($vote->getEntity(), $vote->getActor(), "vote{$vote->getDirection()}")) {
             throw new \Exception('Actor cannot interact with entity');
         }
 

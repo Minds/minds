@@ -63,7 +63,7 @@ class TokenSaleEvent implements BlockchainEventInterface
 
     protected function onTokenPurchase($log, $transaction)
     {
-        list($purchaser, $amount) = Util::parseData($log['data'], [Util::ADDRESS, Util::NUMBER]);
+        list($purchaser, $amount, $weiAmount, $rate) = Util::parseData($log['data'], [Util::ADDRESS, Util::NUMBER, Util::NUMBER, Util::NUMBER]);
         $amount = (string) BigNumber::fromHex($amount);
 
         if ($amount != (string) $transaction->getAmount()) {

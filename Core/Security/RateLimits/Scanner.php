@@ -33,7 +33,7 @@ class Scanner
                 }
 
                 $this->manager
-                    ->setKey($key)
+                    ->setInteraction($opts['interaction'])
                     ->setUser($user)
                     ->setLimitLength($opts['period']);
 
@@ -42,6 +42,7 @@ class Scanner
                 }
 
                 $this->manager->impose();
+                echo "\n$user->guid is now rate limited for {$opts['period']} seconds";
             }
 
         }

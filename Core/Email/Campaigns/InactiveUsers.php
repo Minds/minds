@@ -19,7 +19,7 @@ class InactiveUsers extends EmailCampaign
         $this->template = $template ?: new Template();
         $this->mailer = $mailer ?: new Mailer();
         $this->campaign = 'global';
-        $this->topic = 'minds_news';
+        $this->topic = 'inactive';
     }
 
     /**
@@ -49,17 +49,14 @@ class InactiveUsers extends EmailCampaign
      */
     public function send()
     {
-        if (!$this->templateKey || $this->templateKey == '') {
-            throw new \Exception('You must set a templatePath');
-        }
 
         if (!method_exists($this->user, 'getEmail')) {
             return;
         }
 
         $this->template->setTemplate('default.tpl');
-
-        $this->template->setBody("./Templates/$this->templateKey.tpl");
+        $this->template->toggleMarkdown(true);
+        $this->template->setBody("./Templates/inactive-users.tpl");
 
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
@@ -81,7 +78,7 @@ class InactiveUsers extends EmailCampaign
             ->setHtml($this->template);
 
         //send email
-        $this->mailer->queue($message);
+        $this->mailer->send($message);
     }
 
 }

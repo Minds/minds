@@ -113,7 +113,7 @@ class comments implements Interfaces\Api
                 return Factory::response([
                   'status' => 'error',
                   'message' => 'We could not find that post'
-                ]); 
+                ]);
             }
 
             if (!$_POST['comment'] && !$_POST['attachment_guid']) {
@@ -275,7 +275,8 @@ class comments implements Interfaces\Api
         }
         //check if owner of activity trying to remove
         $entity = new \Minds\Entities\Entity($comment->getEntityGuid());
-        if ($entity->owner_guid === Core\Session::getLoggedInUserGuid()) {
+
+        if ($entity->owner_guid == Core\Session::getLoggedInUserGuid()) {
             $manager->delete($comment);
         }
 

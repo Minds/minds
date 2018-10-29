@@ -210,6 +210,12 @@ class channel implements Interfaces\Api
                     }
                 }
 
+
+                if (isset($_POST['tags']) && $_POST['tags']) {
+                    $update['tags'] = json_encode($_POST['tags']);
+                    $owner->$field = $update['tags'];
+                }
+
                 /*try {
                     $spam = new Core\Security\Spam();
                     $spam->check($owner);
@@ -248,10 +254,6 @@ class channel implements Interfaces\Api
 
                 $db = new Core\Data\Call('entities');
                 $db->insert($owner->guid, $update);
-                //update session also
-                Core\Session::regenerate(false, $owner);
-                //sync our change to our other sessions
-                (new Core\Data\Sessions())->syncAll($owner->guid);
        }
 
         return Factory::response($response);

@@ -341,33 +341,7 @@ class ElggSite extends ElggEntity {
 	 * @since 1.8.0
 	 */
 	public function checkWalledGarden() {
-		global $CONFIG;
-
-		// command line calls should not invoke the walled garden check
-		if (PHP_SAPI === 'cli') {
-			return;
-		}
-		if (isset($CONFIG->walled_garden) && $CONFIG->walled_garden) {
-			if ($CONFIG->default_access == ACCESS_PUBLIC) {
-				$CONFIG->default_access = ACCESS_LOGGED_IN;
-			}
-			elgg_register_plugin_hook_handler(
-					'access:collections:write',
-					'user',
-					'_elgg_walled_garden_remove_public_access');
-
-			if (!elgg_is_logged_in()) {
-				// hook into the index system call at the highest priority
-				elgg_register_plugin_hook_handler('index', 'system', 'elgg_walled_garden_index', 1);
-
-				if (!$this->isPublicPage()) {
-					$_SESSION['last_forward_from'] = current_page_url();
-					register_error(elgg_echo('loggedinrequired'));
-					forward();
-				}
-			}
-		}
-	}
+    }
 
 	/**
 	 * Returns if a URL is public for this site when in Walled Garden mode.

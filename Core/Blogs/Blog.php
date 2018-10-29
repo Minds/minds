@@ -217,6 +217,8 @@ class Blog extends RepositoryEntity
     /** @var ACL */
     protected $_acl;
 
+    protected $_tags = [];
+
     /**
      * Blog constructor.
      * @param null $eventsDispatcher
@@ -402,6 +404,24 @@ class Blog extends RepositoryEntity
     }
 
     /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->_tags ?: [];
+    }
+
+    /**
+     * @param array $value
+     * @return $this
+     */
+    public function setTags($value)
+    {
+        $this->_tags = $value ?: [];
+        return $this;
+    }
+
+    /**
      * Defines the exportable members
      * @return array
      */
@@ -441,6 +461,7 @@ class Blog extends RepositoryEntity
             'deleted',
             'boostRejectionReason',
             'ownerObj',
+            'tags',
             function ($export) {
                 return $this->_extendExport($export);
             }
@@ -464,6 +485,7 @@ class Blog extends RepositoryEntity
         $output['description'] = $output['body'];
         $output['excerpt'] = $this->getExcerpt();
         $output['category'] = $this->getCategories() ? $this->getCategories()[0] : '';
+        $output['tags'] = $this->getTags();
         $output['header_bg'] = $export['has_header_bg'];
 
         if (!$this->isEphemeral()) {

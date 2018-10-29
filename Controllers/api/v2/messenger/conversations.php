@@ -113,7 +113,7 @@ class conversations implements Interfaces\Api
 
         if ($messages) {
             foreach ($messages as $k => $message) {
-                if (!isset($_GET['access_token'])) {
+                if (!(isset($_SERVER['HTTP_AUTHORIZATION']) && $_SERVER['HTTP_AUTHORIZATION'])) {
                     $_GET['decrypt'] = true;
                 }
                 if (isset($_GET['decrypt']) && $_GET['decrypt']) {
@@ -134,7 +134,7 @@ class conversations implements Interfaces\Api
 
         $keystore = new Messenger\Keystore();
 
-        if (!$offset || isset($_GET['access_token'])) {
+        if (!$offset || isset($_SERVER['HTTP_AUTHORIZATION'])) {
             //return the public keys
             $response['publickeys'] = [];
             $response['publickeys'][Session::getLoggedInUserGuid()] = $keystore->setUser(Core\Session::getLoggedInUser())->getPublicKey();

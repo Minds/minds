@@ -436,9 +436,6 @@ class newsfeed implements Interfaces\Api
                     $user->addPinned($activity->guid);
                     $user->save();
 
-                    Core\Session::regenerate(false);
-                    //sync our changes to other sessions
-                    (new Core\Data\Sessions())->syncAll($user->guid);
                     return Factory::response([]);
                 }
                 break;
@@ -450,9 +447,6 @@ class newsfeed implements Interfaces\Api
                     $user->removePinned($activity->guid);
                     $user->save();
 
-                    Core\Session::regenerate(false);
-                    //sync our changes to other sessions
-                    (new Core\Data\Sessions())->syncAll($user->guid);
                     return Factory::response([]);
                 }
                 break;
@@ -478,6 +472,10 @@ class newsfeed implements Interfaces\Api
 
                     if (isset($_POST['mature'])) {
                         $activity->setMature($_POST['mature']);
+                    }
+
+                    if (isset($_POST['tags'])) {
+                        $activity->setTags($_POST['tags']);
                     }
 
                     $user = Core\Session::getLoggedInUser();
@@ -531,7 +529,7 @@ class newsfeed implements Interfaces\Api
                 if (isset($_POST['title']) && $_POST['title']) {
                     $activity->setTitle(rawurldecode($_POST['title']))
                         ->setBlurb(rawurldecode($_POST['description']))
-                        ->setURL(\elgg_normalize_url(rawurldecode($_POST['url'])))
+                        ->setURL(rawurldecode($_POST['url']))
                         ->setThumbnail($_POST['thumbnail']);
                 }
 
@@ -636,6 +634,10 @@ class newsfeed implements Interfaces\Api
                     }
                 }
 
+                if (isset($_POST['tags'])) {
+                    $activity->setTags($_POST['tags']);
+                }
+
                 try {
                     $guid = $activity->save();
                 } catch (\Exception $e) {
@@ -660,7 +662,7 @@ class newsfeed implements Interfaces\Api
                         ),
                         'data' => array(
                             'message' => rawurldecode($_POST['message']),
-                            'perma_url' => isset($_POST['url']) ? \elgg_normalize_url(rawurldecode($_POST['url'])) : \elgg_normalize_url($activity->getURL()),
+                            'perma_url' => isset($_POST['url']) ? rawurldecode($_POST['url']) : $activity->getURL(),
                             'thumbnail_src' => isset($_POST['thumbnail']) ? rawurldecode($_POST['thumbnail']) : null,
                             'description' => isset($_POST['description']) ? rawurldecode($_POST['description']) : null
                         )

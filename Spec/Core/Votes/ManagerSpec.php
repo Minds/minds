@@ -52,8 +52,9 @@ class ManagerSpec extends ObjectBehavior
     {
         $vote->getEntity()->willReturn($entity);
         $vote->getActor()->willReturn($user);
+        $vote->getDirection()->willReturn('up');
 
-        $this->acl->interact($entity, $user)
+        $this->acl->interact($entity, $user, 'voteup')
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -78,7 +79,7 @@ class ManagerSpec extends ObjectBehavior
         $vote->getActor()->willReturn($user);
         $vote->getDirection()->willReturn('up');
 
-        $this->acl->interact($entity, $user)
+        $this->acl->interact($entity, $user, 'voteup')
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -102,8 +103,9 @@ class ManagerSpec extends ObjectBehavior
     {
         $vote->getEntity()->willReturn($entity);
         $vote->getActor()->willReturn($user);
+        $vote->getDirection()->willReturn('up');
 
-        $this->acl->interact($entity, $user)
+        $this->acl->interact($entity, $user, 'voteup')
             ->shouldBeCalled()
             ->willReturn(false);
 
@@ -203,8 +205,9 @@ class ManagerSpec extends ObjectBehavior
     {
         $vote->getEntity()->willReturn($entity);
         $vote->getActor()->willReturn($user);
+        $vote->getDirection()->willReturn('up');
 
-        $this->acl->interact($entity, $user)
+        $this->acl->interact($entity, $user, 'voteup')
             ->shouldBeCalled()
             ->willReturn(true);
 

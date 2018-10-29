@@ -127,6 +127,6 @@ class ManagerSpec extends ObjectBehavior
         $repo->add('images', [ 10 ], 2)
             ->shouldBeCalled();
         
-        $this->run();
+        $this->run('all');
     }
 }

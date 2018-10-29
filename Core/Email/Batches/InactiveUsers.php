@@ -5,6 +5,7 @@ namespace Minds\Core\Email\Batches;
 
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
+use Minds\Core\Analytics\Iterators\SignupsOffsetIterator;
 
 class InactiveUsers implements EmailBatchInterface
 {
@@ -66,30 +67,33 @@ class InactiveUsers implements EmailBatchInterface
      */
     public function run()
     {
-        if (!$this->templateKey || $this->templateKey == '') {
-            throw new \Exception('You must set the templatePath');
-        }
+        
         if (!$this->subject || $this->subject == '') {
             throw new \Exception('You must set the subject');
         }
 
-        $iterator = new EmailSubscribersIterator();
-        $iterator
-            ->setDryRun($this->dryRun)
-            ->setCampaign('global')
-            ->setTopic('minds_news')
-            ->setValue(true)
-            ->setOffset($this->offset);
+        // These emails go to the entire userbase
+        $iterator = new SignupsOffsetIterator();
+
+        if ($this->offset) {
+            $iterator->token = $this->offset;
+        }
 
         $i = 0;
         foreach ($iterator as $user) {
-            if ($user->last_login > strtotime('1 year ago')) {
-                echo "\n[$i]:$user->guid ($iterator->offset) (active)";
+      
+            if ($user->bounced) {
                 continue;
             }
-            
+
+            if ($user->last_login > strtotime('1 year ago')) {
+                echo "\n[$i]:$user->guid ($iterator->token) (active)";
+                continue;
+            }
+           
             $i++;
-            echo "\n[$i]:$user->guid ($iterator->offset)";
+
+            echo "\n[$i]:$user->guid ($iterator->token)";
 
             $campaign = new Campaigns\InactiveUsers();
 

@@ -178,7 +178,11 @@ class EntityMapping implements MappingInterface
             $tags = array_values(array_unique($matches[2]));
         }
 
-        $map['tags'] = array_map('strtolower', $tags);
+        if (!isset($map['tags'])) {
+            $map['tags'] = [];
+        }
+
+        $map['tags'] = array_unique(array_merge($map['tags'], array_map('strtolower', $tags)));
 
         //
 

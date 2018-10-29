@@ -2,40 +2,39 @@
 
 namespace Spec\Minds\Core\Security\RateLimits;
 
-use Minds\Core\Security\RateLimits\Manager;
-use Minds\Core\Security\RateLimits\Delegates\Notification;
-use Minds\Entities\User;
 use Minds\Core\Data\Sessions;
-
+use Minds\Core\Security\RateLimits\Delegates\Notification;
+use Minds\Core\Security\RateLimits\Manager;
+use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
+    private $sessions;
+    private $notification;
+
+    function let(Sessions $sessions, Notification $notification)
+    {
+        $this->sessions = $sessions;
+        $this->notification = $notification;
+
+        $this->beConstructedWith($sessions, $notification);
+    }
 
     function it_is_initializable()
     {
         $this->shouldHaveType(Manager::class);
     }
 
-    function it_should_impose_a_rate_limit(User $user, Sessions $sessions, Notification $notification)
+    function it_should_impose_a_rate_limit(User $user)
     {
-        $this->beConstructedWith($sessions, $notification);
-
         $user->set('ratelimited_interaction:subscribe', time() + 300)
             ->shouldBeCalled();
 
-        $user->get('guid')
-            ->shouldbeCalled()
-            ->willReturn(10001);
-    
         $user->save()
             ->shouldBeCalled();
 
-        $sessions->syncRemote(10001, $user)
-            ->shouldBeCalled();
-
-        $notification->notify($user, 'ratelimited_interaction:subscribe')
+        $this->notification->notify($user, 'ratelimited_interaction:subscribe', 300)
             ->shouldBeCalled();
 
         $this->setUser($user)
@@ -43,29 +42,20 @@ class ManagerSpec extends ObjectBehavior
             ->impose();
     }
 
-    function it_should_impose_a_rate_limit_with_a_custom_limit_period(User $user, Sessions $sessions, Notification $notification)
+    function it_should_impose_a_rate_limit_with_a_custom_limit_period(User $user)
     {
-        $this->beConstructedWith($sessions, $notification);
-
         $user->set('ratelimited_interaction:subscribe', time() + 600)
             ->shouldBeCalled();
 
-        $user->get('guid')
-            ->shouldbeCalled()
-            ->willReturn(10002);
-    
         $user->save()
             ->shouldBeCalled();
 
-        $sessions->syncRemote(10002, $user)
-            ->shouldBeCalled();
-
-        $notification->notify($user, 'ratelimited_interaction:subscribe')
+        $this->notification->notify($user, 'ratelimited_interaction:subscribe', 600)
             ->shouldBeCalled();
 
         $this->setUser($user)
             ->setInteraction('subscribe')
-            ->setLimitLength(600) //10 minutes
+            ->setLimitLength(600)//10 minutes
             ->impose();
     }
 
@@ -73,7 +63,7 @@ class ManagerSpec extends ObjectBehavior
     {
         $this->setUser($user)
             ->setInteraction('subscribe');
-        
+
         $this->isLimited()
             ->shouldBe(false);
     }
@@ -82,7 +72,7 @@ class ManagerSpec extends ObjectBehavior
     {
         $this->setUser($user)
             ->setInteraction('subscribe');
-        
+
         $this->isLimited()
             ->shouldBe(false);
     }
@@ -95,7 +85,7 @@ class ManagerSpec extends ObjectBehavior
 
         $this->setUser($user)
             ->setInteraction('subscribe');
-    
+
         $this->isLimited()
             ->shouldBe(true);
     }

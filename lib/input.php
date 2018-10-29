@@ -30,8 +30,6 @@ function get_input($variable, $default = NULL, $filter_result = TRUE) {
 
 	$result = $default;
 
-	elgg_push_context('input');
-
 	if (isset($CONFIG->input[$variable])) {
 		$result = $CONFIG->input[$variable];
 
@@ -49,8 +47,6 @@ function get_input($variable, $default = NULL, $filter_result = TRUE) {
 			$result = filter_tags($result);
 		}
 	}
-
-	elgg_pop_context();
 
 	return $result;
 }
@@ -455,89 +451,5 @@ function input_livesearch_page_handler($page) {
 	ksort($results);
 	header("Content-Type: application/json");
 	echo json_encode(array_values($results));
-	exit;
+    exit;
 }
-
-/**
- * Register input functions and sanitize input
- *
- * @return void
- * @access private
- */
-function input_init() {
-	// register an endpoint for live search / autocomplete.
-	elgg_register_page_handler('livesearch', 'input_livesearch_page_handler');
-
-	if (ini_get_bool('magic_quotes_gpc')) {
-
-		/**
-		 * do keys as well, cos array_map ignores them
-		 *
-		 * @param array $array Array of values
-		 *
-		 * @return array Sanitized array
-		 */
-		function stripslashes_arraykeys($array) {
-			if (is_array($array)) {
-				$array2 = array();
-				foreach ($array as $key => $data) {
-					if ($key != stripslashes($key)) {
-						$array2[stripslashes($key)] = $data;
-					} else {
-						$array2[$key] = $data;
-					}
-				}
-				return $array2;
-			} else {
-				return $array;
-			}
-		}
-
-		/**
-		 * Strip slashes on everything
-		 *
-		 * @param mixed $value The value to remove slashes from
-		 *
-		 * @return mixed
-		 */
-		function stripslashes_deep($value) {
-			if (is_array($value)) {
-				$value = stripslashes_arraykeys($value);
-				$value = array_map('stripslashes_deep', $value);
-			} else {
-				$value = stripslashes($value);
-			}
-			return $value;
-		}
-
-		$_POST = stripslashes_arraykeys($_POST);
-		$_GET = stripslashes_arraykeys($_GET);
-		$_COOKIE = stripslashes_arraykeys($_COOKIE);
-		$_REQUEST = stripslashes_arraykeys($_REQUEST);
-
-		$_POST = array_map('stripslashes_deep', $_POST);
-		$_GET = array_map('stripslashes_deep', $_GET);
-		$_COOKIE = array_map('stripslashes_deep', $_COOKIE);
-		$_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-		if (!empty($_SERVER['REQUEST_URI'])) {
-			$_SERVER['REQUEST_URI'] = stripslashes($_SERVER['REQUEST_URI']);
-		}
-		if (!empty($_SERVER['QUERY_STRING'])) {
-			$_SERVER['QUERY_STRING'] = stripslashes($_SERVER['QUERY_STRING']);
-		}
-		if (!empty($_SERVER['HTTP_REFERER'])) {
-			$_SERVER['HTTP_REFERER'] = stripslashes($_SERVER['HTTP_REFERER']);
-		}
-		if (!empty($_SERVER['PATH_INFO'])) {
-			$_SERVER['PATH_INFO'] = stripslashes($_SERVER['PATH_INFO']);
-		}
-		if (!empty($_SERVER['PHP_SELF'])) {
-			$_SERVER['PHP_SELF'] = stripslashes($_SERVER['PHP_SELF']);
-		}
-		if (!empty($_SERVER['PATH_TRANSLATED'])) {
-			$_SERVER['PATH_TRANSLATED'] = stripslashes($_SERVER['PATH_TRANSLATED']);
-		}
-	}
-}
-
-elgg_register_event_handler('init', 'system', 'input_init');

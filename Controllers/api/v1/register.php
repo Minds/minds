@@ -8,6 +8,7 @@
 namespace Minds\Controllers\api\v1;
 
 use Minds\Core;
+use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
@@ -61,15 +62,20 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'referrer' => isset($_COOKIE['referrer']) ? $_COOKIE['referrer'] : ''
             ];
 
+            // TODO: Move full reguster flow to the core
             elgg_trigger_plugin_hook('register', 'user', $params, true);
             Core\Events\Dispatcher::trigger('register', 'user', $params);
             Core\Events\Dispatcher::trigger('register/complete', 'user', $params);
 
-            login($params['user']);
-            $response = array(
+            $sessions = Di::_()->get('Sessions\Manager');
+            $sessions->setUser($user);
+            $sessions->createSession();
+            $sessions->save(); // Save to db and cookie
+
+            $response = [
               'guid' => $guid,
-              'user' => $params['user']->export()
-            );
+              'user' => $user->export()
+            ];
         } catch (\Exception $e) {
             $response = array('status'=>'error', 'message'=>$e->getMessage());
         }

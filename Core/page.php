@@ -16,7 +16,6 @@ class page extends base
      */
     public function init()
     {
-        \elgg_set_context($this->context);
         $this->setup();
 
         if ($this->csrf) {
@@ -84,8 +83,6 @@ class page extends base
             if ($location === REFERER) {
                 $location = $_SERVER['HTTP_REFERER'];
             }
-
-            $location = \elgg_normalize_url($location);
 
             // return new forward location or false to stop the forward or empty string to exit
             $current_page = \current_page_url();

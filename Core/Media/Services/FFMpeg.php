@@ -82,7 +82,7 @@ class FFMpeg implements ServiceInterface
     {
         try {
             if (is_string($file)) {
-                
+
                 $result =  $this->s3->putObject([
                   'ACL' => 'public-read',
                   'Bucket' => 'cinemr',
@@ -142,10 +142,24 @@ class FFMpeg implements ServiceInterface
 
         $video = $this->ffmpeg->open($sourcePath);
 
+        $tags = null;
+
+        try {
+            $videostream = $this->ffprobe
+                ->streams($sourcePath)
+                ->videos()
+                ->first();
+
+            // get video metadata
+            $tags = $videostream->get('tags');
+        } catch (\Exception $e)  {
+            error_log('Error getting videostream information');
+        }
+
         try {
             $thumbnailsDir = $sourcePath . '-thumbnails';
             @mkdir($thumbnailsDir, 0600, true);
-            
+
             //create thumbnails
             $length = round((int) $this->ffprobe->format($sourcePath)->get('duration'));
             $secs = [ 0, 1, round($length/2), $length -1, $length ];
@@ -164,6 +178,8 @@ class FFMpeg implements ServiceInterface
         } catch (\Exception $e)  {
         }
 
+        $rotated = isset($tags['rotate']) && in_array($tags['rotate'], [270,90]);
+
         $outputs = [];
         $presets = $this->config->get('transcoder')['presets'];
         foreach ($presets as $prefix => $opts) {
@@ -176,9 +192,16 @@ class FFMpeg implements ServiceInterface
                 'formats' => [ 'mp4', 'webm' ],
             ], $opts);
 
+            if ($rotated) {
+                $ratio = $videostream->get('width') / $videostream->get('height');
+                $width = round($opts['height'] * $ratio);
+                $opts['width']  = $opts['height'];
+                $opts['height'] = $width;
+            }
+
             $video->filters()
                 ->resize(new \FFMpeg\Coordinate\Dimension($opts['width'], $opts['height']),
-                    ResizeFilter::RESIZEMODE_SCALE_WIDTH)
+                    $rotated ? ResizeFilter::RESIZEMODE_FIT : ResizeFilter::RESIZEMODE_SCALE_WIDTH)
                 ->synchronize();
 
             $formatMap = [
@@ -188,7 +211,7 @@ class FFMpeg implements ServiceInterface
             ];
 
             foreach ($opts['formats'] as $format) {
-                $pfx = $opts['height'] . "." . $format;
+                $pfx = ($rotated ? $opts['width'] : $opts['height']) . "." . $format;
                 $path = $sourcePath . '-' . $pfx;
                 try {
                     echo "\nTranscoding: $path ($this->key)";

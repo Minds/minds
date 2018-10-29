@@ -37,7 +37,7 @@ class EthPrice
      */
     public function __construct(Poloniex $service = null)
     {
-        $this->service = $service;
+        $this->service = $service ?: new Poloniex;
     }
 
     /**
@@ -96,7 +96,7 @@ class EthPrice
             'weightedAverage',
             'date'
         );
-
+        
         $this->firstDate = key($this->data);
         end($this->data);
         $this->lastDate = key($this->data);

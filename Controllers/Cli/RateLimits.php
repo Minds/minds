@@ -35,8 +35,6 @@ class RateLimits extends Cli\Controller implements Interfaces\CliControllerInter
 
     public function manual()
     {
-        session_start();
-
         Core\Security\ACL::$ignore = true;
         \Minds\Core\Events\Defaults::_();
 

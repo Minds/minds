@@ -67,7 +67,7 @@ class Repository
         foreach($rows as $row) {
             $result[] = (string) $row['guid'];
         }
-        
+
         if (!$result) {
             return [];
         }

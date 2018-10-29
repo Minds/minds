@@ -15,9 +15,6 @@ class NewsfeedSpec extends ObjectBehavior
 {
     public function let(Client $mongo, Call $db, User $user)
     {
-        $_SESSION['user'] = $user;
-        $_SESSION['username'] = "test";
-        $_SESSION['guid'] = "test";
         $mongo->insert(Argument::type('string'), Argument::type('array'))
           ->willReturn("boost_id");
 

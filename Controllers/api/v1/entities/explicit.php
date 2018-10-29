@@ -55,21 +55,19 @@ class explicit implements Interfaces\Api
             if ($isAdmin) {
                 $entity->setMatureLock($value);
 
-                Queue::build()
-                    ->setQueue('MatureBatch')
-                    ->send([
-                        "user_guid" => $entity->guid,
-                        "value" => $value
-                    ]);
-
-                //update all sessions for this user
-                (new Core\Data\Sessions())
-                    ->syncRemote($entity->guid, $entity);
+                if ($value) {
+                    Queue::build()
+                        ->setQueue('MatureBatch')
+                        ->send([
+                            "user_guid" => $entity->guid,
+                            "value" => $value
+                        ]);
+                }
             }
         } else {
             // mature locked channels are not allowed to remove explicit
             if ($value === false && Session::getLoggedInUser()->getMatureLock()) {
-                return Factory::response(array('status' => 'error', 'message' => 'You can not remove the explit flag'));
+                return Factory::response(array('status' => 'error', 'message' => 'You can not remove the explicit flag'));
             }
 
             if (Helpers\MagicAttributes::setterExists($entity, 'setMature')) {

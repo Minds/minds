@@ -4,6 +4,11 @@ namespace Minds\Core;
 use Minds\Core\I18n\I18n;
 use Minds\Helpers;
 use Minds\Controllers;
+use Minds\Core\Di\Di;
+use Zend\Diactoros\ServerRequestFactory;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\Response\SapiEmitter;
 
 /**
  * Minds Core Router
@@ -14,6 +19,8 @@ class Router
     public static $routes = array(
       '/archive/thumbnail' => "Minds\\Controllers\\fs\\v1\\thumbnail",
       '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
+
+      '/oauth2/token' => "Minds\\Controllers\\oauth2\\token",
 
       '/icon' => "Minds\\Controllers\\icon",
       '//icon' => "Minds\\Controllers\\icon",
@@ -60,6 +67,26 @@ class Router
             $this->postDataFix();
         }
 
+        $request = ServerRequestFactory::fromGlobals();
+        $response = new JsonResponse([]);
+
+        // Sessions
+        // TODO: Support middleware
+        $session = Di::_()->get('Sessions\Manager');
+        $session->withRouterRequest($request);
+
+        // OAuth Middleware
+        // TODO: allow interface to bypass
+        // TODO: Support middleware
+        if (!Session::isLoggedIn()) { // Middleware will resolve this
+            Session::withRouterRequest($request, $response);
+        }
+                
+        // XSRF Cookie - may be able to remove now with OAuth flow
+        Security\XSRF::setCookie();
+
+        new SEO\Defaults(Di::_()->get('Config'));
+
         if (Session::isLoggedin()) {
             Helpers\Analytics::increment("active");
         }
@@ -87,6 +114,14 @@ class Router
                 $handler = new self::$routes[$route]();
                 $pages = array_splice($segments, $loop) ?: array();
                 if (method_exists($handler, $method)) {
+                    // Set the request
+                    if (method_exists($handler, 'setRequest')) {
+                        $handler->setRequest($request);
+                    }
+                    // Set the response
+                    if (method_exists($handler, 'setResponse')) {
+                        $handler->setResponse($response);
+                    }
                     return $handler->$method($pages);
                 } else {
                     exit;
@@ -115,11 +150,7 @@ class Router
 
         new page(false); //just to load init etc
 
-        if (!\page_handler($handler, $page)) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     /**

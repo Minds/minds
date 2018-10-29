@@ -68,6 +68,8 @@ class TokenSaleEventSpec extends ObjectBehavior
             'data' => [
                 '0xp123',
                 '0xFF',
+                '0xWEI',
+                '0xRATE',
             ]
         ];
 
@@ -107,6 +109,8 @@ class TokenSaleEventSpec extends ObjectBehavior
             'data' => [
                 '0xp123',
                 '0xFA',
+                '0xWEI',
+                '0xRATE',
             ]
         ];
 
@@ -127,6 +131,8 @@ class TokenSaleEventSpec extends ObjectBehavior
             'data' => [
                 '0xp123',
                 '0xFF',
+                '0xWEI',
+                '0xRATE',
             ]
         ];
 
@@ -160,6 +166,8 @@ class TokenSaleEventSpec extends ObjectBehavior
             'data' => [
                 '0xp123',
                 '0xFF',
+                '0xWEI',
+                '0xRATE',
             ]
         ];
 
@@ -197,6 +205,8 @@ class TokenSaleEventSpec extends ObjectBehavior
             'data' => [
                 '0xp123',
                 '0xFF',
+                '0xWEI',
+                '0xRATE',
             ]
         ];
 

@@ -33,8 +33,7 @@ class GroupMapping extends EntityMapping implements MappingInterface
         $map['membership'] = (int) $this->entity->getMembership();
         $map['public'] = $map['membership'] == ACCESS_PUBLIC;
 
-        //$map['tags'] = array_unique(array_merge($map['tags'], $this->entity->getTags()));
-        $map['tags'] = [];
+        $map['tags'] = array_unique(array_merge($map['tags'], $this->entity->getTags()));
 
         return $map;
     }

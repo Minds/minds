@@ -1,7 +1,7 @@
 <?php
 $CONFIG = Minds\Core\Di\Di::_()->get('Config');
 
-$CONFIG->minds_debug = false;
+$CONFIG->minds_debug = true;
 
 /*
  * Cassandra configuration
@@ -12,10 +12,36 @@ $CONFIG->cassandra = (object) [
     'cql_servers' => [ '{{cassandra-server}}' ]
 ];
 
+$CONFIG->database = [
+    'host' => 'cockroachdb',
+    'user' => 'php',
+    'sslmode' => 'disable',
+];
+
 $CONFIG->redis = [
     'master' => 'redis',
     'slave' => 'redis'
 ];
+
+$CONFIG->rabbitmq = [
+    'host' => 'rabbitmq',
+];
+
+$CONFIG->disable_secure_cookies = true;
+
+$CONFIG->set('sessions', [
+    'private_key' => 'file:///.dev/minds.pem',
+    'public_key' => 'file:///.dev/minds.pub',
+]);
+
+$CONFIG->set('oauth', [
+    'clients' => [
+        'mobile' => [
+            'secret' => '',
+        ],
+    ],
+    'encryption_key' => '{{ jwt-secret }}',
+]);
 
 /**
  * Other Elgg Settings
@@ -48,6 +74,13 @@ $CONFIG->system_cache_path = '{{cache-path}}';
 $CONFIG->elasticsearch_server = '{{elasticsearch-server}}';
 //namespace
 $CONFIG->elasticsearch_prefix = '{{elasticsearch-prefix}}';
+
+$CONFIG->elasticsearch = [
+    'hosts' => ['elasticsearch'],
+    'index' => 'minds_badger',
+    'metrics_index' => 'minds-metrics',
+    'tags_index' => 'minds-trending-hashtags',
+];
 
 /**
  * Memcache setup (optional)
@@ -331,3 +364,7 @@ $CONFIG->set('i18n', [
 
 // blacklist of internal IPs / URLs to block from curl requests
 $CONFIG->set('internal_blacklist', []);
+
+$CONFIG->set('tags', [
+    'art', 'music', 'journalism', 'blockchain', 'freespeech', 'news', 'gaming', 'myphoto', 'nature', 'photography', 'politics', 'top', 'bitcoin', 'technology', 'food', 'animals', 'health', 'science', 'philosophy', 'comedy', 'film', 'minds'
+]);

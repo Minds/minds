@@ -42,9 +42,11 @@ class settings implements Interfaces\Api
         $response['channel'] = $user->export();
         $response['channel']['email'] = $user->getEmail();
         $response['channel']['boost_rating'] = $user->getBoostRating();
-        $response['channel']['categories'] = $user->getCategories();
         $response['channel']['disabled_emails'] = $user->disabled_emails;
-        $response['channel']['open_sessions'] = (new Core\Data\Sessions())->count($user->guid) - 1;
+
+        $sessionsManager = Di::_()->get('Sessions\Manager');
+        $sessionsManager->setUser($user);
+        $response['channel']['open_sessions'] = $sessionsManager->getActiveCount();
 
         $response['thirdpartynetworks'] = Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->status();
 
@@ -138,42 +140,9 @@ class settings implements Interfaces\Api
             $user->setLanguage($_POST['language']);
         }
 
-        $allowedCategories = array_keys(Config::_()->get('categories'));
-        $repository = Di::_()->get('Categories\Repository');
-        $removedCategories = [];
-        $newCategories = [];
-
-        if (isset($_POST['categories'])) {
-            $categories = $_POST['categories'];
-            foreach ($categories as $category) {
-                if (in_array($category, $allowedCategories)) {
-                    $newCategories[] = $category;
-                }
-            }
-            $removedCategories = array_diff($user->getCategories(), $newCategories);
-            $user->setCategories($newCategories);
-        }
-
         $response = [];
         if (!$user->save()) {
-            //update or session
-            if ($user->getGuid() == Core\Session::getLoggedInUser()->getGuid()) {
-                $_SESSION['user'] = $user;
-            }
-
             $response['status'] = 'error';
-        }
-
-        // if the user was saved correctly, also update categories table
-        if (isset($_POST['categories'])) {
-            $repository->setFilter('opt-in')
-                ->setCategories($removedCategories)
-                ->setType('user')
-                ->remove($user->guid);
-
-            $repository->reset()
-                ->setCategories($newCategories)
-                ->add($user->guid);
         }
 
         return Factory::response($response);

@@ -34,7 +34,7 @@ class Defaults
           'og:title' => $this->config->site_name,
           'og:url' => $this->config->site_url,
           'og:description' => $this->config->site_description,
-          'og:app_id' => $this->config->site_fbAppId,
+          'fb:app_id' => $this->config->site_fbAppId,
           'og:type' => 'website',
           'og:image' => $this->config->cdn_assets_url . 'assets/logos/placeholder.jpg',
           'og:image:width' => 471,

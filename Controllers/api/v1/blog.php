@@ -186,6 +186,10 @@ class blog implements Interfaces\Api
             $blog->setCategories($_POST['categories']);
         }
 
+        if (isset($_POST['tags'])) {
+            $blog->setTags($_POST['tags']);
+        }
+
         if (isset($_POST['mature'])) {
             $blog->setMature(!!$_POST['mature']);
         }

@@ -14,10 +14,10 @@ class EntityValidator
             return false;
         }
 
-        if ($entity->getRating() > $rating) {
-            echo "..rating too high";
-            return false;
-        }
+        //if ($entity->getRating() > $rating) {
+        //    echo "..rating too high";
+        //    return false;
+        //}
 
         return $this->isEnabled($entity) 
             && ($entity->type == 'user' || $this->isOwnerEnabled($entity->getOwnerEntity()))

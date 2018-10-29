@@ -105,6 +105,7 @@ class EntityMappingSpec extends ObjectBehavior
         $entity->get('blurb')->willReturn('PHPSpec Blurb');
         $entity->get('description')->willReturn('PHPSpec Description');
         $entity->get('paywall')->willReturn(false);
+        $entity->get('tags')->willReturn(['test', 'hashtag']);
 
         $this
             ->setEntity($entity)

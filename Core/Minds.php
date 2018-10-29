@@ -33,8 +33,9 @@ class Minds extends base
 
         (new \Minds\Entities\EntitiesProvider())->register();
         (new Config\ConfigProvider())->register();
+        (new OAuth\OAuthProvider())->register();
+        (new Sessions\SessionsProvider())->register();
         (new Boost\BoostProvider())->register();
-        (new Plugins\PluginsProvider())->register();
         (new Data\DataProvider())->register();
         (new Email\EmailProvider())->register();
         (new Events\EventsProvider())->register();
@@ -67,6 +68,8 @@ class Minds extends base
         (new Rewards\RewardsProvider())->register();
         (new Email\EmailProvider())->register();
         (new Plus\PlusProvider())->register();
+        (new Hashtags\HashtagsProvider())->register();
+        (new Feeds\FeedsProvider())->register();
         (new Helpdesk\HelpdeskProvider())->register();
     }
 
@@ -88,25 +91,12 @@ class Minds extends base
             new multisite();
         }
 
-        /**
-         * Load session info
-         */
-        new Session();
-
-        Security\XSRF::setCookie();
-
         Events\Defaults::_();
-        new SEO\Defaults(static::$di->get('Config'));
 
         /**
          * Boot the system, @todo this should be oop?
          */
         \elgg_trigger_event('boot', 'system');
-
-        /**
-         * Load the plugins
-         */
-        static::$di->get('Plugins\Manager')->init();
 
         /**
          * Complete the boot process for both engine and plugins
@@ -154,19 +144,31 @@ class Minds extends base
      */
     public function loadLegacy()
     {
-        // load the rest of the library files from engine/lib/
+        // TODO: Remove when no longer needed
         $lib_files = array(
-            'elgglib.php', 'access.php',
-            'configuration.php', 'cron.php',
-            'entities.php', 'extender.php', 'filestore.php', 'group.php',
-            'input.php', 'languages.php', 'location.php',
+            'elgglib.php',
+            'access.php',
+            'configuration.php',
+            'entities.php',
+            'extender.php',
+            'filestore.php',
+            //'group.php',
+            'input.php',
+            'languages.php',
             'memcache.php',
-            'notification.php', 'objects.php', 'output.php',
-            'pagehandler.php', 'pageowner.php', 'pam.php', 'plugins.php',
-            'private_settings.php', 'sessions.php',
-            'sites.php', 'statistics.php',
-            'user_settings.php', 'users.php', 'views.php',
-            'widgets.php', 'xml.php', 'xml-rpc.php'
+            //'notification.php',
+            'objects.php', 
+            //'pagehandler.php',
+            //'pageowner.php',
+            'pam.php',
+            //'plugins.php',
+            'private_settings.php',
+            'sessions.php',
+            'sites.php', 
+            'user_settings.php',
+            'users.php', 
+            //'xml.php',
+            //'xml-rpc.php'
         );
 
         foreach ($lib_files as $file) {
