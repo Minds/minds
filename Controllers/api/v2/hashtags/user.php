@@ -34,7 +34,7 @@ class user implements Interfaces\Api
             ]);
         }
 
-        $hashtag = $pages[0];
+        $hashtag = strtolower($pages[0]);
         if ($hashtag[0] === '#') {
             $hashtag = substr($hashtag, 1);
         }
