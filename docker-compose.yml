@@ -6,12 +6,26 @@ services:
     image: cassandra:3.11.1
     environment:
       - CASSANDRA_START_RPC=true
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=32M
     networks:
       - app
-    mem_limit: 4048MB
+    mem_limit: 1024MB
     volumes:
-      - "./cassandra:/var/lib/cassandra:cached"
-      - "./logs:/var/log"
+      - "./.data/cassandra:/var/lib/cassandra:cached"
+    healthcheck:
+      test: "cqlsh -e 'DESC TABLE system.batches'"
+      retries: 10
+      timeout: 5s
+      interval: 15s
+
+  cockroachdb:
+    image: cockroachdb/cockroach
+    command: start --insecure
+    networks:
+        - app
+    volumes:
+      - ./.data/cockroachdb:/cockroach/cockroach-data
 
   mongo:
     image: mongo:3.4
@@ -44,13 +58,14 @@ services:
   php-fpm:
     build:
       context: ./engine
-      dockerfile: ./containers/php-fpm/Dockerfile
-    mem_limit: 2048MB
+      dockerfile: ./containers/php-fpm/Dockerfile.dev
+    mem_limit: 512MB
     depends_on:
       - cassandra
+      - cockroachdb
       #- mongo
       #- elasticsearch
-      #- rabbitmq
+      - rabbitmq
       - redis
     networks:
       - app
@@ -61,6 +76,7 @@ services:
       - "./languages/:/var/www/Minds/languages:cached"
       ## The following is for development environments only. Comment out on production. ##
       - "./engine/:/var/www/Minds/engine:cached"
+      - "./.dev/:/.dev/"
 
   runners:
     build:
@@ -104,6 +120,10 @@ services:
     volumes:
       - "./engine/:/var/www/Minds/engine"
       - "./front/:/var/www/Minds/front"
+      - "./.dev/:/.dev/"
+    depends_on:
+      cassandra:
+        condition: service_healthy
 
   front-build:
     image: markharding/minds-front-base
