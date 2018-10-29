@@ -132,17 +132,18 @@ class Repository
             'q' => ''
         ], $opts);
 
-        $query = 'SELECT * FROM helpdesk_faq';
+        $query = 'SELECT q.*, c.branch FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid';
         $where = [];
         $values = [];
 
         if ($opts['q']) {
-            $where[] = "question ILIKE ? OR answer ILIKE ?";
+            $where[] = "q.question ILIKE ? OR q.answer ILIKE ?";
             $values[] = '%'.$opts['q'].'%';
             $values[] = '%'.$opts['q'].'%';
         }
 
         $query .= ' WHERE ' . implode(' AND ', $where);
+        $query .= ' ORDER BY c.branch';
 
         if ($opts['limit']) {
             $query .= " LIMIT ". intval($opts['limit']);
@@ -152,6 +153,7 @@ class Repository
             $query .= " OFFSET = ?";
             $values[] = $opts['offset'];
         }
+
 
         $statement = $this->db->prepare($query);
 
