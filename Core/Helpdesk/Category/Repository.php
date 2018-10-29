@@ -118,16 +118,12 @@ class Repository
         $query = "INSERT INTO helpdesk_categories(uuid, title, parent, branch) VALUES (?,?,?,?)";
         $uuid = UUIDGenerator::generate();
 
-        // we need to do this as cockroachdb doesn't yet support triggers
-        $parent = $category->getParent();
-        if (!$parent && $category->getParentUuid() !== null) {
-            $parent = $this->getAll(['uuid' => $category->getParentUuid()])[0];
-        }
         $values = [
             $uuid,
             $category->getTitle(),
             $category->getParentUuid(),
-            $parent && $parent->getBranch() ? $parent->getBranch() . ':' . $uuid : $uuid
+            // we need to do this as cockroachdb doesn't yet support triggers
+            $category->getParentUuid() ? $this->getBranch($uuid, $category->getParentUuid()) : $uuid
         ];
 
         $statement = $this->db->prepare($query);
@@ -137,5 +133,30 @@ class Repository
         }
 
         return $uuid;
+    }
+
+    public function delete(string $category_uuid)
+    {
+        $query = "DELETE FROM helpdesk_categories WHERE uuid = ?";
+
+        $values = [$category_uuid];
+
+        try {
+            $statement = $this->db->prepare($query);
+
+            return $statement->execute($values);
+        } catch (\Exception $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+    protected function getBranch($uuid, $parent_uuid)
+    {
+        $statement = $this->db->prepare('SELECT branch FROM helpdesk_categories WHERE uuid = ?');
+
+        $statement->execute([$parent_uuid]);
+
+        return $statement->fetchColumn().':'.$uuid;
     }
 }
