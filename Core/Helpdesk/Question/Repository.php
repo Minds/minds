@@ -137,21 +137,20 @@ class Repository
         $values = [];
 
         if ($opts['q']) {
-            $where[] = "question ILIKE '%?%' OR answer ILIKE '%?%'";
-            $values[] = $opts['q'];
-            $values[] = $opts['q'];
+            $where[] = "question ILIKE ? OR answer ILIKE ?";
+            $values[] = '%'.$opts['q'].'%';
+            $values[] = '%'.$opts['q'].'%';
         }
 
         $query .= ' WHERE ' . implode(' AND ', $where);
 
         if ($opts['limit']) {
-            $query .= " LIMIT = ?";
-            $values[] = $opts['limit'];
+            $query .= " LIMIT ". intval($opts['limit']);
         }
 
         if ($opts['offset']) {
             $query .= " OFFSET = ?";
-            $values[] = $opts['offsaet'];
+            $values[] = $opts['offset'];
         }
 
         $statement = $this->db->prepare($query);
@@ -167,11 +166,9 @@ class Repository
             $question->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
                 ->setCategoryUuid($row['category_uuid'])
-                ->setCategory($this->repository->getAll([
-                    'uuid' => $row['category_uuid'],
-                    'recursive' => true
-                ]))[0]
+                ->setCategory($this->repository->getBranch($row['category_uuid']))
                 ->setUserGuids(json_decode($row['user_guids']))
+                ->setUuid($row['uuid'])
                 ->setThumbsUpCount($row['thumbs_up_count'])
                 ->setThumbsDownCount($row['thumbs_down_count']);
 
@@ -233,7 +230,7 @@ class Repository
     public function registerThumbs(Question $entity, string $direction, int $value)
     {
         $query = "UPDATE helpdesk_faq
-                      SET thumbs_{$direction}_count = 
+                      SET thumbs_{$direction}_count =
                         (SELECT SUM(thumbs_{$direction}_count) + ? FROM helpdesk_faq WHERE uuid = ?)
                       WHERE uuid = ?";
         $values = [$value, $entity->getUuid(), $entity->getUuid()];

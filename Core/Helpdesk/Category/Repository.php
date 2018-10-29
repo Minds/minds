@@ -5,6 +5,7 @@ namespace Minds\Core\Helpdesk\Category;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Entities\Category;
 use Minds\Core\Util\UUIDGenerator;
+use Minds\Controllers\api\v2\notifications\follow;
 
 class Repository
 {
@@ -26,26 +27,15 @@ class Repository
             'limit' => 10,
             'offset' => 0,
             'uuid' => '',
-            'recursive' => false,
         ], $opts);
 
-        // gets all categories, with parents
-
-        $query = null;
-        if ($opts['recursive']) {
-            $query = "SELECT cats1.uuid parent_uuid, cats1.title parent_title, cats1.parent parent_parent,
-                    cats2.uuid child_uuid, cats2.title child_title, cats2.parent child_parent
-                  FROM helpdesk_categories cats1
-	              LEFT JOIN helpdesk_categories as cats2 ON cats2.parent = cats1.uuid";
-        } else {
-            $query = "SELECT * FROM helpdesk_categories";
-        }
+        $query = "SELECT * FROM helpdesk_categories as cats1";
 
         $where = [];
         $values = [];
 
         if ($opts['uuid']) {
-            $where[] = 'uuid = ?';
+            $where[] = 'cats1.uuid = ?';
             $values[] = $opts['uuid'];
         }
 
@@ -71,31 +61,56 @@ class Repository
             $result[] = $category;
         }
 
-        if ($opts['recursive']) {
-            $roots = [];
-            for ($i = 0; $i < count($result); $i++) {
-                $category1 = $result[$i];
+        return $result;
+    }
 
-                if (!$category1->getParentUuid()) {
-                    $roots[] = $category1;
-                    continue;
-                }
+    /**
+     * Get ona category by uuid
+     *
+     * @param string $uuid
+     * @return Category
+     */
+    public function getOne($uuid)
+    {
+        $query = "SELECT * FROM helpdesk_categories WHERE uuid = ?";
 
-                // get the parent.
-                $filtered = array_filter($result, function ($cat) use ($category1) {
-                    return $cat->getUuid() === $category1->getParentUuid();
-                });
+        $statement = $this->db->prepare($query);
+        $statement->execute([$uuid]);
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
-                // the length will be either 0 or 1
-                if (count($filtered) > 0) {
-                    $category1->setParent($filtered[0]);
-                }
-            }
+        if (!$row) return null;
 
-            return $roots;
+        $category = new Category();
+        $category->setUuid($row['uuid'])
+            ->setTitle($row['title'])
+            ->setParentUuid($row['parent'])
+            ->setBranch($row['branch']);
+
+        return $category;
+    }
+
+    /**
+     * Get the categories branch given an uuid
+     *
+     * @param string $uuid
+     * @return Catergory
+     */
+    public function getBranch($uuid) {
+        $leaf = $this->getOne($uuid);
+
+        if (!$leaf) return null;
+
+        $branch = explode(':', $leaf->getBranch());
+        array_pop($branch);
+
+        $child = $leaf;
+        foreach (array_reverse($branch) as $parent_uuid) {
+            $parent = $this->getOne($parent_uuid);
+            $child->setParent($parent);
+            $child = $parent;
         }
 
-        return $result;
+        return $leaf;
     }
 
     public function add(Category $category)

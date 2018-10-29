@@ -32,7 +32,7 @@ class search implements Api
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $questions = $repo->getAll([
+        $questions = $repo->suggest([
             'limit' => $limit,
             'offset' => $offset,
             'q' => $q
@@ -40,7 +40,7 @@ class search implements Api
 
         return Factory::response([
             'status' => 'success',
-            'questions' => $questions
+            'entities' => Factory::exportable($questions)
         ]);
     }
 
