@@ -64,6 +64,16 @@ class Client implements Interfaces\ClientInterface
         return true;
     }
 
+    /**
+     * Run a synchronous query
+     * @param string $statement
+     * @return mixed
+     */
+    public function execute($statement)
+    {
+        return $this->session->execute($statement);
+    }
+
     public function batchRequest($requests = array(), $batchType = Driver::BATCH_COUNTER, $silent = false)
     {
         $batch = new Driver\BatchStatement($batchType);

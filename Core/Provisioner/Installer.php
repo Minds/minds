@@ -207,8 +207,8 @@ class Installer
         $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
         $cassandraStorage->provision();
 
-        $cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
-        $cockroachProvisioner->provision();
+        //$cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
+        //$cockroachProvisioner->provision();
     }
 
     public function reloadStorage()
