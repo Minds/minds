@@ -123,7 +123,7 @@ class Repository
             $category->getTitle(),
             $category->getParentUuid(),
             // we need to do this as cockroachdb doesn't yet support triggers
-            $category->getParentUuid() ? $this->getBranch($uuid, $category->getParentUuid()) : $uuid
+            $category->getParentUuid() ? $this->generateBranch($uuid, $category->getParentUuid()) : $uuid
         ];
 
         $statement = $this->db->prepare($query);
@@ -151,7 +151,7 @@ class Repository
         }
     }
 
-    protected function getBranch($uuid, $parent_uuid)
+    protected function generateBranch($uuid, $parent_uuid)
     {
         $statement = $this->db->prepare('SELECT branch FROM helpdesk_categories WHERE uuid = ?');
 
