@@ -40,7 +40,8 @@ class Repository
         }
 
         if ($opts['hashtag']) {
-            $query = "SELECT DISTINCT suggested.guid as guid
+            $query = "SELECT DISTINCT suggested.guid as guid,
+                        lastSynced, score
                       FROM suggested
                       JOIN entity_hashtags
                         ON suggested.guid = entity_hashtags.guid
@@ -61,7 +62,8 @@ class Repository
 
             // ignore user selected hashtags if all is true
             if ($opts['all']) {
-                $query = "SELECT DISTINCT suggested.guid as guid
+                $query = "SELECT DISTINCT suggested.guid as guid,
+                    lastSynced, score
                   FROM suggested
                   WHERE type = ?
                     AND rating <= ?
@@ -75,7 +77,8 @@ class Repository
                     $opts['offset']
                 ];
             } else {
-                $query = "SELECT DISTINCT suggested.guid as guid
+                $query = "SELECT DISTINCT suggested.guid as guid,
+                    lastSynced, score
                   FROM suggested
                   JOIN entity_hashtags
                     ON suggested.guid = entity_hashtags.guid
