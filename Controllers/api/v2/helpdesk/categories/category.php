@@ -36,6 +36,11 @@ class category implements Api
 
             $questions = $questionsRepo->getAll(['category_uuid' => $category->getUuid()]);
             $category->setQuestions($questions);
+
+            if ($category->getParentUuid()) {
+                $branch = $repo->getBranch($category->getParentUuid());
+                $category->setParent($branch);
+            }
         }
 
         return Factory::response([
