@@ -79,11 +79,11 @@ class Repository
             } else {
                 $query = "SELECT DISTINCT suggested.guid as guid,
                     lastSynced, score
-                  FROM suggested
-                  JOIN entity_hashtags
-                    ON suggested.guid = entity_hashtags.guid
-                  JOIN user_hashtags
-                    ON entity_hashtags.hashtag = user_hashtags.hashtag
+                  FROM user_hashtags
+                  INNER JOIN entity_hashtags
+                    ON user_hashtags.hashtag = entity_hashtags.hashtag
+  	              INNER JOIN suggested
+                    ON entity_hashtags.guid = suggested.guid
                   WHERE user_hashtags.guid = ?
                     AND type = ?
                     AND rating <= ?
