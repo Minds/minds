@@ -78,16 +78,14 @@ class questions implements Api
 
         $vote_direction = $pages[1];
 
-        // TODO: record vote here. Use something like the Core/Votes/Manager structure, but SQL only?
+        $manager = new Manager();
 
-        //$manager = new Manager();
-        //
-        //$vote = new Vote();
-        //$vote->setEntity($pages[0])
-        //    ->setDirection($vote_direction)
-        //    ->setActor(Session::getLoggedinUser());
-        //
-        //$done = $manager->toggle($vote);
+        $vote = new Vote();
+        $vote->setEntity($question_uuid)
+            ->setDirection($vote_direction)
+            ->setActor(Session::getLoggedinUser());
+
+        $done = $manager->toggle($vote);
 
         return Factory::response([
             'status' => 'success',
