@@ -57,9 +57,10 @@ class Manager
             'all' => false,
         ], $opts);
 
-        $guids = array_map(function ($item) {
-            return $item['guid'];
-        }, $this->feedsRepository->getFeed($opts));
+        $guids = [];
+        foreach ($this->feedsRepository->getFeed($opts) as $item) {
+            $guids[] = $item['guid'];
+        }
 
         $entities = [];
         if (count($guids) > 0) {
@@ -79,20 +80,23 @@ class Manager
             case 'all':
                 $maps = $this->maps;
                 break;
+            case 'channels':
+                $maps = ['user' => $this->maps['channels']];
+                break;
             case 'newsfeed':
                 $maps = ['newsfeed' => $this->maps['newsfeed']];
                 break;
             case 'images':
-                $maps = ['images' => $this->maps['images']];
+                $maps = ['image' => $this->maps['images']];
                 break;
             case 'videos':
-                $maps = ['videos' => $this->maps['videos']];
+                $maps = ['video' => $this->maps['videos']];
                 break;
             case 'groups':
-                $maps = ['groups' => $this->maps['groups']];
+                $maps = ['group' => $this->maps['groups']];
                 break;
             case 'blogs':
-                $maps = ['blogs' => $this->maps['blogs']];
+                $maps = ['blog' => $this->maps['blogs']];
                 break;
             case 'default':
                 throw new \Exception("Invalid type. Valid values are: 'newsfeed', 'images', 'videos', 'groups' and 'blogs'");
@@ -117,34 +121,19 @@ class Manager
                     //collect the entity
                     $entity = $this->entitiesBuilder->single($guid);
 
-                    // add hashtags to db
-                    $matches = [];
-                    preg_match_all("/(#\w+)/", $entity->message, $matches);
-
-                    $tags = $matches[1];
-
-                    if (!$tags) {
+                    if (!$entity->guid) {
                         continue;
                     }
 
-                    $hashtagEntities = [];
-                    foreach ($tags as $tag) {
-                        $hashtagEntity = new Core\Hashtags\HashtagEntity();
-                        $hashtagEntity->setGuid($entity->guid);
-                        $hashtagEntity->setHashtag(strtolower(substr($tag, 1)));
-                        $hashtagEntities[] = $hashtagEntity;
+                    $tags = $entity->getTags();
+
+                    if ($entity->container_guid != 0 && $entity->container_guid != $entity->owner_guid && $key == 'newsfeed') {
+                        echo " skipping because group post";
+                        continue; // skip groups
                     }
 
-                    if (count($hashtagEntities) >= 5) {
-                        continue;
-                    }
-
-                    foreach ($hashtagEntities as $hashtagEntity) {
-                        $this->entityHashtagsRepository->add([$hashtagEntity]);
-                    }
-
-                    echo "\nSaved to repo";
-
+                    $this->saveTags($entity->guid, $tags);
+                                        
                     $ratings[$entity->guid] = $entity->getRating();
 
                     //validate this entity is ok
@@ -156,20 +145,27 @@ class Manager
                     //is this an activity entity?
                     //if so, let add it the guids for this key
                     if ($entity->custom_type == 'batch' && $entity->entity_guid) {
-                        if (!isset($scores['images'][$entity->entity_guid])) {
-                            $scores['images'][$entity->entity_guid] = 0;
+                        if (!isset($scores['image'][$entity->entity_guid])) {
+                            $scores['image'][$entity->entity_guid] = 0;
                         }
-                        $scores['images'][$entity->entity_guid] += $score;
+                        $scores['image'][$entity->entity_guid] += $score;
+                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        $this->saveTags($entity->entity_guid, $tags);
                     } elseif ($entity->custom_type == 'video' && $entity->entity_guid) {
-                        if (!isset($scores['videos'][$entity->entity_guid])) {
-                            $scores['videos'][$entity->entity_guid] = 0;
+                        if (!isset($scores['video'][$entity->entity_guid])) {
+                            $scores['video'][$entity->entity_guid] = 0;
                         }
-                        $guids['videos'][$entity->entity_guid] += $score;
-                    } elseif (strpos($entity->perma_url, 'blog/view/') !== false && $entity->entity_guid) {
-                        if (!isset($scores['blogs'][$entity->entity_guid])) {
-                            $scores['blogs'][$entity->entity_guid] = 0;
+                        $scores['video'][$entity->entity_guid] += $score;
+                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        $this->saveTags($entity->entity_guid, $tags);
+                    } elseif (strpos($entity->perma_url, '/blog') !== false && $entity->entity_guid) {
+                        if (!isset($scores['blog'][$entity->entity_guid])) {
+                            $scores['blog'][$entity->entity_guid] = 0;
                         }
-                        $guids['blogs'][$entity->entity_guid] += $score;
+                        $scores['blog'][$entity->entity_guid] += $score;
+                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        $this->saveTags($entity->entity_guid, $tags);
+                        echo "\n\tblog here $entity->entity_guid";
                     }
 
                     if (!isset($scores[$key][$guid])) {
@@ -182,21 +178,53 @@ class Manager
             //arsort($scores[$key]);
 
             $sync = time();
-            foreach ($scores[$key] as $guid => $score) {
-                if (!$score) {
-                    continue;
-                }
-                $this->feedsRepository->add([
-                    'entity_guid' => $guid,
-                    'score' => $score,
-                    'type' => $key,
-                    'rating' => $ratings[$guid],
-                    'lastSynced' => $sync,
-                ]);
+            foreach ($scores as $_key => $_scores) {
+                foreach ($_scores as $guid => $score) {
+                    if (! (int) $score || !$guid) {
+                        continue;
+                    }
+                    $this->feedsRepository->add([
+                        'entity_guid' => $guid,
+                        'score' => (int) $score,
+                        'type' => $_key,
+                        'rating' => $ratings[$guid],
+                        'lastSynced' => $sync,
+                    ]);
 
-                echo "\n[{$ratings[$guid]}] $key: $guid ($score)";
+                    echo "\n[{$ratings[$guid]}] $_key: $guid ($score)";
+                }
             }
         }
         \Minds\Core\Security\ACL::$ignore = false;
+    }
+
+    private function saveTags($guid, $tags)
+    {
+        if (!$tags) {
+            echo " no tags";
+            return;
+        }
+        $hashtagEntities = [];
+        foreach ($tags as $tag) {
+            if (strpos($tag, '#', 0) === 0) {
+                $tag = substr($tag, 1);
+            }
+            echo "\n\t#$tag";
+            $hashtagEntity = new Core\Hashtags\HashtagEntity();
+            $hashtagEntity->setGuid($guid);
+            $hashtagEntity->setHashtag(strtolower($tag));
+            $hashtagEntities[] = $hashtagEntity;
+        }
+
+
+        //if ($key == 'newsfeed' && count($hashtagEntities) >= 5) {
+        //    continue;
+        //}
+
+        foreach ($hashtagEntities as $hashtagEntity) {
+            $this->entityHashtagsRepository->add([$hashtagEntity]);
+        }
+
+        echo "\nSaved tags to repo";
     }
 }
