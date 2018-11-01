@@ -36,12 +36,8 @@ class Question
     protected $category_uuid;
     /** @var Category */
     protected $category;
-    protected $thumbsUpCount;
-    protected $thumbsDownCount;
-    /** @var array */
-    protected $thumbsUpUserGuids;
-    /** @var array */
-    protected $thumbsDownUserGuids;
+    protected $thumbsUp;
+    protected $thumbsDown;
 
     public function export()
     {
@@ -52,10 +48,8 @@ class Question
         $export['answer'] = $this->getAnswer();
         $export['category_uuid'] = $this->getCategoryUuid();
         $export['category'] = $this->getCategory() ? $this->getCategory()->export() : null;
-        $export['thumbsUpCount'] = $this->getThumbsUpCount() ?: 0;
-        $export['thumbsDownCount'] = $this->getThumbsDownCount() ?: 0;
-        $export['thumbsUpUserGuids'] = $this->getThumbsUpUserGuids() ?: 0;
-        $export['thumbsDownUserGuids'] = $this->getThumbsDownUserGuids() ?: 0;
+        $export['thumbUp'] = $this->getThumbUp();
+        $export['thumbDown'] = $this->getThumbDown();
 
         return $export;
     }

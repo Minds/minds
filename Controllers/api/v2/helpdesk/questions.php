@@ -69,7 +69,7 @@ class questions implements Api
             return Factory::response(['status' => 'error', 'message' => 'vote direction must be provided']);
         }
 
-        if (!(in_array($pages[1], ['up', 'down']))) {
+        if (!(in_array($pages[1], ['up', 'down', 'delete']))) {
             return Factory::response([
                 'status' => 'error',
                 'message' => "vote direction can only be either 'up' or 'down'"
@@ -78,14 +78,21 @@ class questions implements Api
 
         $vote_direction = $pages[1];
 
-        $manager = new Manager();
+        /** @var Repository $repo */
+        $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $vote = new Vote();
-        $vote->setEntity($question_uuid)
-            ->setDirection($vote_direction)
-            ->setActor(Session::getLoggedinUser());
+        if ($vote_direction === 'delete') {
+            $result = $repo->unvote($question_uuid);
+        } else {
+            $result = $repo->vote($question_uuid, $vote_direction);
+        }
 
-        $done = $manager->toggle($vote);
+        if ($result === false) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => "Error saving your vote"
+            ]);
+        }
 
         return Factory::response([
             'status' => 'success',

@@ -5,6 +5,7 @@ namespace Minds\Core\Helpdesk\Question;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Category;
 use Minds\Core\Helpdesk\Entities\Question;
+use Minds\Core;
 
 class Repository
 {
@@ -15,9 +16,7 @@ class Repository
 
     private static $orderByFields = [
         'question',
-        'answer',
-        'thumbs_up_count',
-        'thumbs_down_count',
+        'answer'
     ];
 
     private static $orderDirections = [
@@ -28,10 +27,6 @@ class Repository
     private static $questionFields = [
         'question',
         'answer',
-        'thumbs_up_count',
-        'thumbs_down_count',
-        'thumbs_user_guids_count',
-        'thumbs_user_guids_count',
     ];
 
     public function __construct(\PDO $db = null, Category\Repository $categoryRepository = null)
@@ -106,10 +101,7 @@ class Repository
             $question->setUuid($row['uuid'])
                 ->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
-                ->setCategoryUuid($row['category_uuid'])
-                ->setUserGuids(json_decode($row['user_guids']))
-                ->setThumbsUpCount($row['thumbs_up_count'])
-                ->setThumbsDownCount($row['thumbs_down_count']);
+                ->setCategoryUuid($row['category_uuid']);
 
             if ($opts['hydrateCategory']) {
                 $question->setCategory($this->repository->getAll([
@@ -124,6 +116,64 @@ class Repository
         return $result;
     }
 
+    public function top(array $opts = [])
+    {
+        $opts = array_merge([
+            'limit' => 8,
+        ], $opts);
+        $limit = intval($opts['limit']);
+
+
+        $query = "SELECT question_uuid, count(user_guid) as votes FROM helpdesk_votes WHERE type = true GROUP BY question_uuid ORDER BY votes desc LIMIT $limit";
+
+        $statement = $this->db->prepare($query);
+        $statement->execute();
+        // TODO: CACHE!
+        $questions_uuids = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $result = [];
+
+        if (count($questions_uuids)) {
+            $column = array_column($questions_uuids, 'question_uuid');
+
+            $q = implode(',',array_fill(0, count($column),'?'));
+
+            $query = "SELECT q.*, c.branch, v.type as voted
+                FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid
+                LEFT JOIN helpdesk_votes v on v.question_uuid = q.uuid and v.user_guid = ?
+                WHERE q.uuid in ($q)";
+
+            $values[] = Core\Session::getLoggedinUser()->guid;
+            array_push($values, ...$column);
+
+            $statement = $this->db->prepare($query);
+            $statement->execute($values);
+            $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($data as $row) {
+                $question = new Question();
+                $question->setQuestion($row['question'])
+                    ->setAnswer($row['answer'])
+                    ->setCategoryUuid($row['category_uuid'])
+                    ->setCategory($this->repository->getBranch($row['category_uuid']))
+                    ->setUuid($row['uuid'])
+                    ->setThumbUp($row['voted'] === true)
+                    ->setThumbDown($row['voted'] === false);
+
+                $result[] = $question;
+            }
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Suggested questions
+     *
+     * @param array $opts
+     * @return void
+     */
     public function suggest(array $opts = [])
     {
         $opts = array_merge([
@@ -132,9 +182,13 @@ class Repository
             'q' => ''
         ], $opts);
 
-        $query = 'SELECT q.*, c.branch FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid';
+        $query = "SELECT q.*, c.branch, v.type as voted
+            FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid
+            LEFT JOIN helpdesk_votes v on v.question_uuid = q.uuid and v.user_guid = ?";
         $where = [];
         $values = [];
+
+        $values[] = Core\Session::getLoggedinUser()->guid;
 
         if ($opts['q']) {
             $where[] = "q.question ILIKE ? OR q.answer ILIKE ?";
@@ -154,7 +208,6 @@ class Repository
             $values[] = $opts['offset'];
         }
 
-
         $statement = $this->db->prepare($query);
 
         $statement->execute($values);
@@ -169,10 +222,9 @@ class Repository
                 ->setAnswer($row['answer'])
                 ->setCategoryUuid($row['category_uuid'])
                 ->setCategory($this->repository->getBranch($row['category_uuid']))
-                ->setUserGuids(json_decode($row['user_guids']))
                 ->setUuid($row['uuid'])
-                ->setThumbsUpCount($row['thumbs_up_count'])
-                ->setThumbsDownCount($row['thumbs_down_count']);
+                ->setThumbUp($row['voted'] === true)
+                ->setThumbDown($row['voted'] === false);
 
             $result[] = $question;
         }
@@ -212,10 +264,7 @@ class Repository
         foreach (self::$questionFields as $field) {
             if ($fields[$field] !== null) {
                 $columns[] = "{$field} = ?";
-                $values[] = in_array($field, [
-                    'thumbs_up_user_guids',
-                    'thumbs_down_user_guids'
-                ]) ? json_encode($fields[$field]) : $fields[$field];
+                $values[] = $fields[$field];
             }
         }
 
@@ -229,17 +278,56 @@ class Repository
         return $statement->execute($values);
     }
 
+    public function vote($uuid, $direction)
+    {
+        // because driver fails to prepare a value of false
+        $d = $direction === 'up' ? 'true' : 'false';
+
+        $query = "INSERT INTO helpdesk_votes (question_uuid, user_guid, type) VALUES(?,?,$d) ON CONFLICT (question_uuid, user_guid) DO UPDATE SET type = excluded.type;";
+
+        $values = [
+            $uuid,
+            Core\Session::getLoggedinUser()->guid
+        ];
+
+        try {
+            $statement = $this->db->prepare($query);
+
+            return $statement->execute($values);
+        } catch (\Exception $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
+    public function unvote($uuid)
+    {
+        $query = "DELETE FROM helpdesk_votes WHERE question_uuid = ? AND user_guid = ?";
+
+        $values = [$uuid, Core\Session::getLoggedinUser()->guid];
+
+        try {
+            $statement = $this->db->prepare($query);
+            return $statement->execute($values);
+        } catch (\Exception $e) {
+            error_log($e);
+            return false;
+        }
+    }
+
     public function registerThumbs(Question $entity, string $direction, int $value)
     {
-        $query = "UPDATE helpdesk_faq
-                      SET thumbs_{$direction}_count =
-                        (SELECT SUM(thumbs_{$direction}_count) + ? FROM helpdesk_faq WHERE uuid = ?)
-                      WHERE uuid = ?";
-        $values = [$value, $entity->getUuid(), $entity->getUuid()];
+        // TODO: IMPLEMENT NEW
 
-        $statement = $this->db->prepare($query);
+        // $query = "UPDATE helpdesk_faq
+        //               SET thumbs_{$direction}_count =
+        //                 (SELECT SUM(thumbs_{$direction}_count) + ? FROM helpdesk_faq WHERE uuid = ?)
+        //               WHERE uuid = ?";
+        // $values = [$value, $entity->getUuid(), $entity->getUuid()];
 
-        return $statement->execute($values);
+        // $statement = $this->db->prepare($query);
+
+        // return $statement->execute($values);
     }
 
     public function delete(string $question_uuid)

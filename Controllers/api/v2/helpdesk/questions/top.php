@@ -11,16 +11,10 @@ class top implements Api
 {
     public function get($pages)
     {
-        $limit = 30;
+        $limit = 8;
 
         if (isset($_GET['limit'])) {
             $limit = intval($_GET['limit']);
-        }
-
-        $offset = 0;
-
-        if (isset($_GET['offset'])) {
-            $offset = intval($_GET['offset']);
         }
 
         $category = null;
@@ -32,11 +26,9 @@ class top implements Api
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $questions = $repo->getAll([
+        $questions = $repo->top([
             'limit' => $limit,
-            'offset' => $offset,
-            'category' => $category,
-            'orderBy' => 'thumbs_up_count'
+            'category' => $category
         ]);
 
         return Factory::response([
