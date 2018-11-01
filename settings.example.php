@@ -57,6 +57,8 @@ $CONFIG->site_name = '{{site-name}}';
 $CONFIG->__site_secret__ = '{{site-secret}}';
 // $CONFIG->cdn_url = 'http://{{domain}}/';
 $CONFIG->site_url = 'http://{{domain}}/';
+$CONFIG->cdn_url = 'http://{{domain}}/en/';
+$CONFIG->cdn_assets_url = 'http://{{domain}}/en/';
 $CONFIG->zmq_server = 'localhost';
 
 /**
