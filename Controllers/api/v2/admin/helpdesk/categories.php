@@ -24,7 +24,7 @@ class categories implements Api, ApiAdminPam
 
         try {
             $title = $this->getParam('title', 'title must be provided');
-            $parent_uuid = $this->getParam('parent_uuid', 'parent uuid must be provided');
+            $parent_uuid = $this->getParam('parent_uuid');
 
             $entity = new Category();
             $entity->setTitle($title)
@@ -32,7 +32,7 @@ class categories implements Api, ApiAdminPam
 
             $repo->add($entity);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return Factory::response(['status' => 'error', 'message' => $e->getMessage()]);
         }
 
@@ -63,8 +63,11 @@ class categories implements Api, ApiAdminPam
         ]);
     }
 
-    protected function getParam($param, $error) {
-        if (!isset($_POST[$param])) throw new \Exception($error);
+    protected function getParam($param, $error = null)
+    {
+        if (!isset($_POST[$param]) && $error) {
+            throw new \Exception($error);
+        }
         return $_POST[$param] ?: null;
     }
 
