@@ -14,7 +14,7 @@ use Minds\Traits\MagicAttributes;
  * @method string getAnswer()
  * @method Question setAnswer(string $value)
  * @method string getCategoryUuid()
- * @method Question setCategoryUuid()
+ * @method Question setCategoryUuid(string $value)
  * @method Category getCategory()
  * @method Question setCategory()
  * @method int getThumbsUpCount()

@@ -27,6 +27,7 @@ class Repository
             'limit' => 10,
             'offset' => 0,
             'uuid' => '',
+            'recursive' => false,
         ], $opts);
 
         $query = "SELECT * FROM helpdesk_categories as cats1";
@@ -57,6 +58,13 @@ class Repository
                 ->setTitle($row['title'])
                 ->setParentUuid($row['parent'])
                 ->setBranch($row['branch']);
+
+            if ($opts['recursive']) {
+                if ($category->getParentUuid()) {
+                    $branch = $this->getBranch($category->getParentUuid());
+                    $category->setParent($branch);
+                }
+            }
 
             $result[] = $category;
         }
@@ -93,7 +101,7 @@ class Repository
      * Get the categories branch given an uuid
      *
      * @param string $uuid
-     * @return Catergory
+     * @return Category
      */
     public function getBranch($uuid) {
         $leaf = $this->getOne($uuid);

@@ -45,14 +45,15 @@ class questions implements Api, ApiAdminPam
             ->setAnswer($answer)
             ->setCategoryUuid($category_uuid);
 
-        /** @var Repository $repo */
+        /** @var \Minds\Core\Helpdesk\Question\Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $done = $repo->add($entity);
+        $uuid = $repo->add($entity);
 
         return Factory::response([
             'status' => 'success',
-            'done' => $done
+            'uuid' => $uuid,
+
         ]);
     }
 
@@ -71,7 +72,7 @@ class questions implements Api, ApiAdminPam
 
         $question_uuid = $_POST['question_uuid'];
 
-        /** @var Repository $repo */
+        /** @var \Minds\Core\Helpdesk\Question\Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
         $done = $repo->delete($question_uuid);

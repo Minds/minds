@@ -23,12 +23,19 @@ class categories implements Api
             $offset = intval($_GET['offset']);
         }
 
+        $recursive = false;
+
+        if (isset($_GET['recursive'])) {
+            $recursive = boolval($_GET['recursive']);
+        }
+
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Category\Repository');
 
         $categories = $repo->getAll([
             'limit' => $limit,
             'offset' => $offset,
+            'recursive' => $recursive,
         ]);
 
         return Factory::response([

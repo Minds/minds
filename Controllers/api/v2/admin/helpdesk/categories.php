@@ -19,7 +19,7 @@ class categories implements Api, ApiAdminPam
 
     public function post($pages)
     {
-        /** @var Repository $repo */
+        /** @var \Minds\Core\Helpdesk\Category\Repository $repo */
         $repo = Di::_()->get('Helpdesk\Category\Repository');
 
         try {
@@ -52,7 +52,7 @@ class categories implements Api, ApiAdminPam
             return Factory::response(['status' => 'error', 'message' => 'category_uuid must be provided']);
         }
 
-        /** @var Repository $repo */
+        /** @var \Minds\Core\Helpdesk\Category\Repository $repo */
         $repo = Di::_()->get('Helpdesk\Category\Repository');
 
         $done = $repo->delete($category_uuid);

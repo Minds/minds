@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Helpdesk\Question;
 
+use Minds\Controllers\Cli\PDO;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Category;
 use Minds\Core\Helpdesk\Entities\Question;
@@ -236,14 +237,16 @@ class Repository
      * Add a question
      *
      * @param Question $entity
-     * @return void
+     * @return string|false
      */
     public function add(Question $entity)
     {
-        $query = "UPSERT INTO helpdesk_faq (uuid, question, answer, category_id) VALUES(?,?,?,?)";
+        $uuid = $entity->getUuid() ?: Core\Util\UUIDGenerator::generate();
+
+        $query = "UPSERT INTO helpdesk_faq (uuid, question, answer, category_uuid) VALUES(?,?,?,?) RETURNING uuid";
 
         $values = [
-            $entity->getUuid(),
+            $uuid,
             $entity->getQuestion(),
             $entity->getAnswer(),
             $entity->getCategoryUuid()
@@ -252,7 +255,9 @@ class Repository
         try {
             $statement = $this->db->prepare($query);
 
-            return $statement->execute($values);
+            $statement->execute($values);
+
+            return $statement->fetch(\PDO::FETCH_ASSOC)['uuid'];
         } catch (\Exception $e) {
             error_log($e);
             return false;
