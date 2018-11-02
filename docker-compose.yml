@@ -3,11 +3,29 @@ version: "2.2"
 
 services:
   cassandra:
-    image: cassandra:3.11
+    image: cassandra:3.11.1
     environment:
       - CASSANDRA_START_RPC=true
+      - MAX_HEAP_SIZE=256M
+      - HEAP_NEWSIZE=32M
     networks:
       - app
+    mem_limit: 1024MB
+    volumes:
+      - "./.data/cassandra:/var/lib/cassandra:cached"
+    healthcheck:
+      test: "cqlsh -e 'DESC TABLE system.batches'"
+      retries: 10
+      timeout: 5s
+      interval: 15s
+
+  cockroachdb:
+    image: cockroachdb/cockroach
+    command: start --insecure
+    networks:
+        - app
+    volumes:
+      - ./.data/cockroachdb:/cockroach/cockroach-data
 
   mongo:
     image: mongo:3.4
@@ -28,7 +46,7 @@ services:
 
   redis:
     image: redis:4.0-alpine
-    mem_limit: 256MB # keep an eye
+    mem_limit: 100MB # keep an eye
     networks:
       - app
 
@@ -40,22 +58,25 @@ services:
   php-fpm:
     build:
       context: ./engine
-      dockerfile: ./containers/php-fpm/Dockerfile
+      dockerfile: ./containers/php-fpm/Dockerfile.dev
+    mem_limit: 512MB
     depends_on:
       - cassandra
-      - mongo
-      - elasticsearch
+      - cockroachdb
+      #- mongo
+      #- elasticsearch
       - rabbitmq
       - redis
     networks:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front"
-      - "./plugins/:/var/www/Minds/plugins"
-      - "./languages/:/var/www/Minds/languages"
+      - "./front/:/var/www/Minds/front:cached"
+      - "./plugins/:/var/www/Minds/plugins:cached"
+      - "./languages/:/var/www/Minds/languages:cached"
       ## The following is for development environments only. Comment out on production. ##
-      - "./engine/:/var/www/Minds/engine"
+      - "./engine/:/var/www/Minds/engine:cached"
+      - "./.dev/:/.dev/"
 
   runners:
     build:
@@ -70,7 +91,7 @@ services:
     networks:
       - app
     volumes:
-      - "./front/:/var/www/Minds/front"
+      - "./front/:/var/www/Minds/front:cached"
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
       - "./engine/:/var/www/Minds/engine"
@@ -78,6 +99,8 @@ services:
   nginx:
     build:
       context: ./containers/nginx
+      dockerfile: ./Dockerfile.dev
+    mem_limit: 512MB
     depends_on:
       - php-fpm
     ports:
@@ -86,6 +109,31 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
+      - "./front/:/var/www/Minds/front:cached"
+
+  installer:
+    build:
+      context: ./engine
+      dockerfile: ./containers/installer/Dockerfile
+    networks:
+      - app
+    volumes:
+      - "./engine/:/var/www/Minds/engine"
+      - "./front/:/var/www/Minds/front"
+      - "./.dev/:/.dev/"
+    depends_on:
+      cassandra:
+        condition: service_healthy
+
+  front-build:
+    image: markharding/minds-front-base
+    networks:
+      - app
+    entrypoint: 
+      - sh
+      - -c
+      - "cd /var/www/Minds/front && npm install && npm rebuild node-sass && npm run build-dev"
+    volumes:
       - "./front/:/var/www/Minds/front"
 
 networks:

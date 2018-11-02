@@ -25,9 +25,8 @@ class start extends \ElggPlugin
         
         $user_pam = new \ElggPAM('user');
         $user_auth_result = $user_pam->authenticate();
-    //    var_dump( $user_auth_result ); exit;
     
-        elgg_register_plugin_hook_handler('logged_in_user', 'user', array($this, 'loggedInUserEntity'));
+        elgg_register_plugin_hook_handler('logged_in_user', 'user', [$this, 'loggedInUserEntity']);
         
         
         core\Router::registerRoutes(array(
@@ -36,17 +35,38 @@ class start extends \ElggPlugin
             '/oauth2/authorize' => "\\minds\\plugin\\oauth2\\pages\\authorize",
             '/oauth2/applications' => "\\minds\\plugin\\oauth2\\pages\\applications",
         ));
+
+        register_shutdown_function([$this, 'onShutdown']);
     }
 
-    public static function loggedInUserEntity()
+    public function onShutdown()
+    {
+        $storage = new storage();
+        $server = new \OAuth2\Server($storage);
+
+        if (!$server->verifyResourceRequest(\OAuth2\Request::createFromGlobals())) {
+            return false;
+        }
+
+        static::ensureNoSession();
+    }
+
+    public function loggedInUserEntity()
     {
         $bearer = new \OAuth2\TokenType\Bearer();
         $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
  
+        if (isset($_SESSION['user'])) {
+            return false; // already logged in, let someone else figure this out
+        }
+
         // Get the token data
         $token = get_input('access_token', $access_token);
 
         if ($token) {
+
+            static::ensureNoSession();
+
             static $OAUTH2_LOGGED_IN;
             if ($OAUTH2_LOGGED_IN) {
                 return $OAUTH2_LOGGED_IN;
@@ -59,6 +79,8 @@ class start extends \ElggPlugin
             $token = $storage->getAccessToken($token);
             $user = new \ElggUser($token['user_id']);
             $OAUTH2_LOGGED_IN = $user;
+
+            static::ensureNoSession();
             return $user;
         }
         
@@ -79,15 +101,12 @@ class start extends \ElggPlugin
             return false;
         }
         
-       //can not have a session too
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
-
+        //can not have a session too
+        static::ensureNoSession();
 
         $bearer = new \OAuth2\TokenType\Bearer();
         $access_token = $bearer->getAccessTokenParameter(\OAuth2\Request::createFromGlobals(), new \minds\plugin\oauth2\response());
- 
+
         // Get the token data
         $token = $storage->getAccessToken(get_input('access_token', $access_token));
 
@@ -99,10 +118,25 @@ class start extends \ElggPlugin
 
         if ($user->guid && !$user->isBanned()) {
             $OAUTH2_LOGGED_IN = $user;
+            static::ensureNoSession();
             return true;
         }
+
+        static::ensureNoSession();
   
         return false;
+    }
+
+    /**
+     * A sanity/safe check to ensure that OAuth2 can never be confused with
+     * sessions
+     */
+    private static function ensureNoSession()
+    {
+        $_SESSION = [];
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
     }
     
     public static function generateSecret()

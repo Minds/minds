@@ -6,6 +6,8 @@ namespace minds\plugin\oauth2;
 
 use OAuth2;
 use Minds\Core\data;
+use Minds\Entities\User;
+use Minds\Core\Security\Password;
 
 class storage implements
 OAuth2\Storage\AccessTokenInterface,
@@ -392,7 +394,17 @@ OAuth2\Storage\AuthorizationCodeInterface
     public function checkUserCredentials($username, $password)
     {
         $username = strtolower($username);
-        $result = elgg_authenticate($username, $password);
+        $user = new User(strtolower($username));
+
+        if (!$user->username) {
+            return false;
+        }
+
+        try {
+            $result = Password::check($user, $password);
+        } catch (\Minds\Core\Security\Exceptions\PasswordRequiresHashUpgradeException $e) {
+            $result = true;
+        }
 
         if ($result !== true) {
             return false;
