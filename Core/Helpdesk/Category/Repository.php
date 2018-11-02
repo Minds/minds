@@ -113,6 +113,12 @@ class Repository
         return $leaf;
     }
 
+    /**
+     * Add a new category
+     *
+     * @param Category $category
+     * @return void
+     */
     public function add(Category $category)
     {
         $query = "INSERT INTO helpdesk_categories(uuid, title, parent, branch) VALUES (?,?,?,?)";
@@ -135,6 +141,12 @@ class Repository
         return $uuid;
     }
 
+    /**
+     * Delete a category
+     *
+     * @param string $category_uuid
+     * @return void
+     */
     public function delete(string $category_uuid)
     {
         $query = "DELETE FROM helpdesk_categories WHERE uuid = ?";
@@ -151,6 +163,13 @@ class Repository
         }
     }
 
+    /**
+     * Generate the brach field for a category
+     *
+     * @param string $uuid
+     * @param string $parent_uuid
+     * @return string
+     */
     protected function generateBranch($uuid, $parent_uuid)
     {
         $statement = $this->db->prepare('SELECT branch FROM helpdesk_categories WHERE uuid = ?');

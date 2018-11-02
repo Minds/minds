@@ -11,21 +11,16 @@ namespace Minds\Core\Votes;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Entities\Question;
-use Minds\Core\Helpdesk\Question\Repository;
 
 class Indexes
 {
     /** @var Client $cql */
     protected $cql;
 
-    /** @var Repository $repository */
-    protected $repository;
 
-    public function __construct($cql = null, $repository = null)
+    public function __construct($cql = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
-        $this->repository = $repository ?: Di::_()->get('Helpdesk\Question\Repository');
     }
 
     public function insert($vote)
@@ -40,13 +35,8 @@ class Indexes
         $entity_id = null;
         $entity_type = null;
 
-        if ($entity instanceof Question) {
-            $entity_id = $entity->getUuid();
-            $entity_type = 'question';
-        } else {
-            $entity_id = $entity->guid;
-            $entity_type = $entity->type;
-        }
+        $entity_id = $entity->guid;
+        $entity_type = $entity->type;
 
         $this->setEntityList($entity, $direction, array_values(array_unique($userGuids)));
 
@@ -77,20 +67,12 @@ class Indexes
         $entity_id = null;
         $entity_type = null;
         $userGuids = null;
-        if ($entity instanceof Question) {
-            $entity_id = $entity->getUuid();
-            $entity_type = 'question';
-            $userGuids = $entity->getUserGuids() ?: [];
 
-        } else {
-            $entity_id = $entity->guid;
-            $entity_type = $entity->type;
-            $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
-        }
+        $entity_id = $entity->guid;
+        $entity_type = $entity->type;
+        $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
 
         $userGuids = array_diff($userGuids, [ (string) $actor->guid ]);
-
-
 
         $this->setEntityList($entity->guid, $direction, array_values($userGuids));
 
@@ -139,18 +121,14 @@ class Indexes
      */
     protected function setEntityList($entity, $direction, array $value)
     {
-        if ($entity instanceof Question) {
-            return $this->repository->update($entity->getUuid(), ["thumbs_{$direction}_user_guids" => $value]);
-        } else {
-            $prepared = new Custom();
-            $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-                (string) is_numeric($entity) ? $entity : $entity->guid,
-                "thumbs:{$direction}:user_guids",
-                json_encode($value)
-            ]);
+        $prepared = new Custom();
+        $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
+            (string) is_numeric($entity) ? $entity : $entity->guid,
+            "thumbs:{$direction}:user_guids",
+            json_encode($value)
+        ]);
 
-            return $this->cql->request($prepared);
-        }
+        return $this->cql->request($prepared);
     }
 
     /**

@@ -13,7 +13,6 @@ use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Entities\Question;
-use Minds\Core\Helpdesk\Question\Repository;
 use Minds\Helpers;
 
 class Counters
@@ -23,16 +22,13 @@ class Counters
     /** @var Client $cql */
     protected $cql;
 
-    /** @var Repository $repository */
-    protected $repository;
 
     /** @var abstractCacher $cacher */
     protected $cacher;
 
-    public function __construct($cql = null, $pdo = null, $cacher = null)
+    public function __construct($cql = null, $cacher = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
-        $this->pdo = $pdo ?: Di::_()->get('Helpdesk\Question\Repository');
         $this->cacher = $cacher ?: Di::_()->get('Cache');
     }
 
@@ -110,18 +106,14 @@ class Counters
      */
     protected function updateEntity($entity, $direction, $value)
     {
-        if ($entity instanceof Question) {
-            return $this->repository->registerThumbs($entity, $direction, $value);
-        } else {
-            $prepared = new Custom();
-            $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-                (string) $entity->guid,
-                "thumbs:{$direction}:count",
-                (string) $value
-            ]);
+        $prepared = new Custom();
+        $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
+            (string) $entity->guid,
+            "thumbs:{$direction}:count",
+            (string) $value
+        ]);
 
-            return $this->cql->request($prepared);
-        }
+        return $this->cql->request($prepared);
     }
 
     /**

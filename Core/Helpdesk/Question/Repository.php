@@ -36,6 +36,7 @@ class Repository
     }
 
     /**
+     * Get questions
      * @param array $opts
      * @return Question[]
      */
@@ -116,6 +117,12 @@ class Repository
         return $result;
     }
 
+    /**
+     * Return the TOP questions by up votes
+     *
+     * @param array $opts
+     * @return void
+     */
     public function top(array $opts = [])
     {
         $opts = array_merge([
@@ -123,46 +130,39 @@ class Repository
         ], $opts);
         $limit = intval($opts['limit']);
 
-
-        $query = "SELECT question_uuid, count(user_guid) as votes FROM helpdesk_votes WHERE type = true GROUP BY question_uuid ORDER BY votes desc LIMIT $limit";
+        $query = "SELECT q.question,q.answer,q.uuid,count(user_guid)AS votes
+            FROM helpdesk_votes v
+            JOIN helpdesk_faq q ON q.uuid=v.question_uuid
+            WHERE TYPE=TRUE
+            GROUP BY uuid,question,answer
+            ORDER BY votes DESC
+            LIMIT $limit";
 
         $statement = $this->db->prepare($query);
         $statement->execute();
-        // TODO: CACHE!
-        $questions_uuids = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        // TODO: CACHE THIS RESULT!
+        $topQuestions = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
         $result = [];
 
-        if (count($questions_uuids)) {
-            $column = array_column($questions_uuids, 'question_uuid');
+        if (count($topQuestions)) {
 
-            $q = implode(',',array_fill(0, count($column),'?'));
+            $userGuid = Core\Session::getLoggedinUser()->guid;
 
-            $query = "SELECT q.*, c.branch, v.type as voted
-                FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid
-                LEFT JOIN helpdesk_votes v on v.question_uuid = q.uuid and v.user_guid = ?
-                WHERE q.uuid in ($q)";
-
-            $values[] = Core\Session::getLoggedinUser()->guid;
-            array_push($values, ...$column);
-
-            $statement = $this->db->prepare($query);
-            $statement->execute($values);
-            $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-            foreach ($data as $row) {
+            foreach ($topQuestions as $row) {
                 $question = new Question();
+                $voted = $this->getVote($row['uuid'], $userGuid);
+
                 $question->setQuestion($row['question'])
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'])
-                    ->setCategory($this->repository->getBranch($row['category_uuid']))
+                    //->setCategory($this->repository->getBranch($row['category_uuid']))
                     ->setUuid($row['uuid'])
-                    ->setThumbUp($row['voted'] === true)
-                    ->setThumbDown($row['voted'] === false);
+                    ->setThumbUp($voted === true)
+                    ->setThumbDown($voted === false);
 
                 $result[] = $question;
             }
-
         }
 
         return $result;
@@ -232,6 +232,12 @@ class Repository
         return $result;
     }
 
+    /**
+     * Add a question
+     *
+     * @param Question $entity
+     * @return void
+     */
     public function add(Question $entity)
     {
         $query = "UPSERT INTO helpdesk_faq (uuid, question, answer, category_id) VALUES(?,?,?,?)";
@@ -253,6 +259,13 @@ class Repository
         }
     }
 
+    /**
+     * Update a question
+     *
+     * @param string $question_uuid
+     * @param array $fields
+     * @return void
+     */
     public function update(string $question_uuid, array $fields)
     {
 
@@ -278,6 +291,13 @@ class Repository
         return $statement->execute($values);
     }
 
+    /**
+     * Vote a question for the current user
+     *
+     * @param string $uuid
+     * @param string $direction
+     * @return void
+     */
     public function vote($uuid, $direction)
     {
         // because driver fails to prepare a value of false
@@ -300,6 +320,12 @@ class Repository
         }
     }
 
+    /**
+     * Delete a vote for the given question for the current user
+     *
+     * @param string $uuid
+     * @return void
+     */
     public function unvote($uuid)
     {
         $query = "DELETE FROM helpdesk_votes WHERE question_uuid = ? AND user_guid = ?";
@@ -315,21 +341,30 @@ class Repository
         }
     }
 
-    public function registerThumbs(Question $entity, string $direction, int $value)
+    /**
+     * Get vote for a given question/user
+     *
+     * @param string $uuid
+     * @param string $userGuid
+     * @return boolean|null true thumbUp, false thumbDown, null not voted
+     */
+    public function getVote($uuid, $userGuid)
     {
-        // TODO: IMPLEMENT NEW
+        $statement = $this->db->prepare("SELECT type FROM helpdesk_votes WHERE question_uuid = ? AND user_guid = ?");
 
-        // $query = "UPDATE helpdesk_faq
-        //               SET thumbs_{$direction}_count =
-        //                 (SELECT SUM(thumbs_{$direction}_count) + ? FROM helpdesk_faq WHERE uuid = ?)
-        //               WHERE uuid = ?";
-        // $values = [$value, $entity->getUuid(), $entity->getUuid()];
+        $statement->execute([$uuid, $userGuid]);
 
-        // $statement = $this->db->prepare($query);
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
 
-        // return $statement->execute($values);
+        return ($result) ? $result['type'] : null;
     }
 
+    /**
+     * Delete a question
+     *
+     * @param string $question_uuid
+     * @return void
+     */
     public function delete(string $question_uuid)
     {
         $query = "DELETE FROM helpdesk_faq WHERE uuid = ?";
