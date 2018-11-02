@@ -43,10 +43,6 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_add(\PDOStatement $statement, Category $category)
     {
-        $category->getParent()
-            ->shouldBeCalled()
-            ->willReturn(null);
-
         $category->getParentUuid()
             ->shouldBeCalled()
             ->willReturn(null);
