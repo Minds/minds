@@ -461,6 +461,7 @@ class Notification extends DenormalizedEntity
 
         if ($export['entity']) {
             $export['entityObj'] = $export['entity'];
+            $export['entityObj']['guid'] = (string) $export['entity']['guid'];
         }
 
         return $export;
