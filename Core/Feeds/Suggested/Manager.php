@@ -72,7 +72,7 @@ class Manager
 
     public function run(string $type)
     {
-        \Minds\Core\Security\ACL::$ignore = true;
+        //\Minds\Core\Security\ACL::$ignore = true;
         $scores = [];
 
         $maps = null;
@@ -195,7 +195,7 @@ class Manager
                 }
             }
         }
-        \Minds\Core\Security\ACL::$ignore = false;
+        //\Minds\Core\Security\ACL::$ignore = false;
     }
 
     private function saveTags($guid, $tags)
