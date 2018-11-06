@@ -12,7 +12,7 @@ services:
       - app
     mem_limit: 1024MB
     volumes:
-      - "./.data/cassandra:/var/lib/cassandra:cached"
+      - "./.data/cassandra:/var/lib/cassandra"
     healthcheck:
       test: "cqlsh -e 'DESC TABLE system.batches'"
       retries: 10
@@ -71,11 +71,8 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front:cached"
-      - "./plugins/:/var/www/Minds/plugins:cached"
-      - "./languages/:/var/www/Minds/languages:cached"
-      ## The following is for development environments only. Comment out on production. ##
-      - "./engine/:/var/www/Minds/engine:cached"
+      - "./front/:/var/www/Minds/front"
+      - "./engine/:/var/www/Minds/engine"
       - "./.dev/:/.dev/"
 
   runners:
@@ -109,7 +106,7 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front:cached"
+      - "./front/:/var/www/Minds/front"
 
   installer:
     build:
@@ -132,7 +129,7 @@ services:
     entrypoint: 
       - sh
       - -c
-      - "cd /var/www/Minds/front && npm install && npm rebuild node-sass && npm run build-dev"
+      - "cd /var/www/Minds/front && echo 'Building frontend, please wait...(this can take a long time)' && npm install && npm rebuild node-sass && npm run build-dev && touch /var/www/Minds/front/dist/index.php"
     volumes:
       - "./front/:/var/www/Minds/front"
 
