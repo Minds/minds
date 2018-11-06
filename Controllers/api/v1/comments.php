@@ -16,6 +16,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
 use Minds\Core\Sockets;
+use Minds\Core\Security;
 
 class comments implements Interfaces\Api
 {
@@ -30,6 +31,15 @@ class comments implements Interfaces\Api
         //Factory::isLoggedIn();
         $response = array();
         $guid = $pages[0];
+
+        $entity = new \Minds\Entities\Factory::build($guid);
+
+        if (!Security\ACL::_()->read($entity)) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You do not have permission to view this post'
+            ]);
+        }
 
         $repository = new Core\Comments\Repository();
 
@@ -127,6 +137,13 @@ class comments implements Interfaces\Api
                 return Factory::response([
                   'status' => 'error',
                   'message' => 'Comments are disabled for this post'
+                ]);
+            }
+
+            if (!Security\ACL::_()->write($entity)) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'You do not have permission to comment on this post'
                 ]);
             }
 
