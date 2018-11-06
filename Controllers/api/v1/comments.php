@@ -32,7 +32,7 @@ class comments implements Interfaces\Api
         $response = array();
         $guid = $pages[0];
 
-        $entity = Minds\Entities\Factory::build($guid);
+        $entity = Entities\Factory::build($guid);
 
         if (!Security\ACL::_()->read($entity)) {
             return Factory::response([
