@@ -183,6 +183,9 @@ class Manager
                     if (! (int) $score || !$guid) {
                         continue;
                     }
+                    if (!isset($ratings[$guid])) {
+                        $ratings[$guid] = 2;
+                    }
                     $this->feedsRepository->add([
                         'entity_guid' => $guid,
                         'score' => (int) $score,

@@ -110,10 +110,12 @@ class ManagerSpec extends ObjectBehavior
                 ->setRating(1),
             2 => (new Entity)
                 ->set('guid', 20)
+                ->set('type', 'activity')
                 ->set('message', '#hashtag')
                 ->setRating(1),
             3 => (new Entity)
                 ->set('guid', 30)
+                ->set('type', 'activity')
                 ->set('message', '#hashtag')
                 ->setRating(1),
         ];
@@ -150,7 +152,7 @@ class ManagerSpec extends ObjectBehavior
                 10 => 5,
             ]);
         $this->repo->add(Argument::any())
-            ->shouldBeCalledTimes(4);
+            ->shouldBeCalledTimes(7);
 
         $this->run('all');
     }
