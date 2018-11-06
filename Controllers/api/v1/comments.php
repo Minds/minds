@@ -140,12 +140,12 @@ class comments implements Interfaces\Api
                 ]);
             }
 
-            if (!Security\ACL::_()->write($entity)) {
+            /*if (!Security\ACL::_()->write($entity)) {
                 return Factory::response([
                     'status' => 'error',
                     'message' => 'You do not have permission to comment on this post'
                 ]);
-            }
+            }*/
 
             $comment = new Core\Comments\Comment();
             $comment
