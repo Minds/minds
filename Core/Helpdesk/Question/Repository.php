@@ -2,11 +2,10 @@
 
 namespace Minds\Core\Helpdesk\Question;
 
-use Minds\Controllers\Cli\PDO;
+use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Category;
 use Minds\Core\Helpdesk\Entities\Question;
-use Minds\Core;
 
 class Repository
 {
@@ -48,6 +47,7 @@ class Repository
             'offset' => 0,
             'category_uuid' => null,
             'question_uuid' => null,
+            'user_guid' => null, // for thumbs
             'orderBy' => null, // has to be a valid field
             'orderDirection' => 'DESC',
             'hydrateCategory' => false,
@@ -56,6 +56,12 @@ class Repository
         $query = 'SELECT * FROM helpdesk_faq ';
         $where = [];
         $values = [];
+
+        if ($opts['user_guid']) {
+            $query = 'SELECT q.*, v.type AS voted FROM helpdesk_faq q 
+                      LEFT JOIN helpdesk_votes v ON v.question_uuid = q.uuid AND v.user_guid = ? ';
+            $values[] = $opts['user_guid'];
+        }
 
         if ($opts['question_uuid']) {
             $where[] = "uuid = ?";
@@ -103,7 +109,9 @@ class Repository
             $question->setUuid($row['uuid'])
                 ->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
-                ->setCategoryUuid($row['category_uuid']);
+                ->setCategoryUuid($row['category_uuid'])
+                ->setThumbUp($row['voted'] === true)
+                ->setThumbDown($row['voted'] === false);
 
             if ($opts['hydrateCategory']) {
                 $question->setCategory($this->repository->getAll([
@@ -157,7 +165,6 @@ class Repository
                 $question->setQuestion($row['question'])
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'])
-                    //->setCategory($this->repository->getBranch($row['category_uuid']))
                     ->setUuid($row['uuid'])
                     ->setThumbUp($voted === true)
                     ->setThumbDown($voted === false);
@@ -183,9 +190,9 @@ class Repository
             'q' => ''
         ], $opts);
 
-        $query = "SELECT q.*, c.branch, v.type as voted
-            FROM helpdesk_faq q JOIN helpdesk_categories c on c.uuid = q.category_uuid
-            LEFT JOIN helpdesk_votes v on v.question_uuid = q.uuid and v.user_guid = ?";
+        $query = "SELECT q.*, c.branch, v.type AS voted
+            FROM helpdesk_faq q JOIN helpdesk_categories c ON c.uuid = q.category_uuid
+            LEFT JOIN helpdesk_votes v ON v.question_uuid = q.uuid AND v.user_guid = ?";
         $where = [];
         $values = [];
 
@@ -193,15 +200,15 @@ class Repository
 
         if ($opts['q']) {
             $where[] = "q.question ILIKE ? OR q.answer ILIKE ?";
-            $values[] = '%'.$opts['q'].'%';
-            $values[] = '%'.$opts['q'].'%';
+            $values[] = '%' . $opts['q'] . '%';
+            $values[] = '%' . $opts['q'] . '%';
         }
 
         $query .= ' WHERE ' . implode(' AND ', $where);
         $query .= ' ORDER BY c.branch';
 
         if ($opts['limit']) {
-            $query .= " LIMIT ". intval($opts['limit']);
+            $query .= " LIMIT " . intval($opts['limit']);
         }
 
         if ($opts['offset']) {
@@ -308,7 +315,9 @@ class Repository
         // because driver fails to prepare a value of false
         $d = $direction === 'up' ? 'true' : 'false';
 
-        $query = "INSERT INTO helpdesk_votes (question_uuid, user_guid, type) VALUES(?,?,$d) ON CONFLICT (question_uuid, user_guid) DO UPDATE SET type = excluded.type;";
+        $query = "INSERT INTO helpdesk_votes (question_uuid, user_guid, type)
+                    VALUES(?,?,$d)
+                  ON CONFLICT (question_uuid, user_guid) DO UPDATE SET type = excluded.type;";
 
         $values = [
             $uuid,

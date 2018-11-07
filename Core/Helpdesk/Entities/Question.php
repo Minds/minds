@@ -17,14 +17,10 @@ use Minds\Traits\MagicAttributes;
  * @method Question setCategoryUuid(string $value)
  * @method Category getCategory()
  * @method Question setCategory()
- * @method int getThumbsUpCount()
- * @method Question setThumbsUpCount(int $value)
- * @method int getThumbsDownCount()
- * @method Question setThumbsDownCount(int $value)
- * @method array getThumbsUpUserGuids()
- * @method Question setThumbsUpUserGuids(array $value)
- * @method array getThumbsDownUserGuids()
- * @method Question setThumbsDownUserGuids(array $value)
+ * @method bool getThumbUp()
+ * @method Question setThumbUp(bool $value)
+ * @method bool getThumbDown()
+ * @method Question setThumbDown(bool $value)
  */
 class Question
 {
@@ -48,8 +44,8 @@ class Question
         $export['answer'] = $this->getAnswer();
         $export['category_uuid'] = $this->getCategoryUuid();
         $export['category'] = $this->getCategory() ? $this->getCategory()->export() : null;
-        $export['thumbUp'] = $this->getThumbUp();
-        $export['thumbDown'] = $this->getThumbDown();
+        $export['thumb_up'] = $this->getThumbUp();
+        $export['thumb_down'] = $this->getThumbDown();
 
         return $export;
     }

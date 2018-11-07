@@ -5,6 +5,7 @@ namespace Minds\Controllers\api\v2\helpdesk\questions;
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Question\Repository;
+use Minds\Core\Session;
 use Minds\Interfaces\Api;
 
 class question implements Api
@@ -20,7 +21,13 @@ class question implements Api
         /** @var Repository $repo */
         $repo = Di::_()->get('Helpdesk\Question\Repository');
 
-        $result = $repo->getAll(['question_uuid' => $uuid]);
+        $opts = ['question_uuid' => $uuid];
+
+        if (Session::isLoggedin()) {
+            $opts['user_guid'] = Session::getLoggedInUserGuid();
+        }
+
+        $result = $repo->getAll($opts);
 
         $question = null;
 
