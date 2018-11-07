@@ -24,7 +24,7 @@ class Events
             }
         });
 
-        Dispatcher::register('acl:read', 'activity', function ($e) {
+        Dispatcher::register('acl:read', 'all', function ($e) {
             $params = $e->getParameters();
             $entity = $params['entity'];
             $access_id = $entity->access_id;
@@ -39,7 +39,7 @@ class Events
             }
         });
 
-        Dispatcher::register('acl:write', 'activity', function ($e) {
+        Dispatcher::register('acl:write', 'all', function ($e) {
             $params = $e->getParameters();
             $entity = $params['entity'];
             $user = $params['user'];

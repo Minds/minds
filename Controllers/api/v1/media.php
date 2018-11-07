@@ -30,7 +30,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
         $response = [];
 
         if (isset($pages[0]) && is_numeric($pages[0])) {
-            Security\ACL::$ignore = true;
+
             $entity = Di::_()->get('Media\Repository')->getEntity($pages[0]);
 
             if (!$entity || Helpers\Flags::shouldFail($entity)) {
