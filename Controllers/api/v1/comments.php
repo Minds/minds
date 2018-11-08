@@ -32,7 +32,7 @@ class comments implements Interfaces\Api
         $response = array();
         $guid = $pages[0];
 
-        $entity = Entities\Factory::build($guid);
+        /*$entity = Entities\Factory::build($guid);
 
         if (!Security\ACL::_()->read($entity)) {
             $subtype = $entity->subtype ?: $entity->type;
@@ -40,7 +40,7 @@ class comments implements Interfaces\Api
                 'status' => 'error',
                 'message' => "You don't have permission to view these comments as the owner has made the $subtype viewable only to themselves."
             ]);
-        }
+        }*/
 
         $repository = new Core\Comments\Repository();
 
