@@ -35,9 +35,10 @@ class comments implements Interfaces\Api
         $entity = Entities\Factory::build($guid);
 
         if (!Security\ACL::_()->read($entity)) {
+            $subtype = $entity->subtype ?: $entity->type;
             return Factory::response([
                 'status' => 'error',
-                'message' => 'You do not have permission to view this post'
+                'message' => "You don't have permission to view these comments as the owner has made the $subtype viewable only to themselves."
             ]);
         }
 
