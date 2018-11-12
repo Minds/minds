@@ -130,7 +130,7 @@ class Repository
      * Return the TOP questions by up votes
      *
      * @param array $opts
-     * @return void
+     * @return array
      */
     public function top(array $opts = [])
     {
@@ -180,7 +180,7 @@ class Repository
      * Suggested questions
      *
      * @param array $opts
-     * @return void
+     * @return array
      */
     public function suggest(array $opts = [])
     {

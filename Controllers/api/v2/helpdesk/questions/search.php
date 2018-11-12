@@ -4,7 +4,7 @@ namespace Minds\Controllers\api\v2\helpdesk\questions;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Question\Repository;
+use Minds\Core\Helpdesk\Question\Manager;
 use Minds\Interfaces\Api;
 
 class search implements Api
@@ -29,10 +29,10 @@ class search implements Api
             $q = trim($_GET['q']);
         }
 
-        /** @var Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $questions = $repo->suggest([
+        $questions = $manager->suggest([
             'limit' => $limit,
             'offset' => $offset,
             'q' => $q

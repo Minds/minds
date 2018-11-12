@@ -4,7 +4,7 @@ namespace Minds\Controllers\api\v2\helpdesk\categories;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Category\Repository;
+use Minds\Core\Helpdesk\Category\Manager;
 use Minds\Interfaces\Api;
 
 class category implements Api
@@ -16,10 +16,10 @@ class category implements Api
         }
         $uuid = $pages[0];
 
-        /** @var Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Category\Repository');
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Category\Manager');
 
-        $result = $repo->getAll([
+        $result = $manager->getAll([
             'uuid' => $uuid
         ]);
 
@@ -30,15 +30,17 @@ class category implements Api
             $category = $result[0];
         }
 
-        if($category) {
-            /** @var \Minds\Core\Helpdesk\Question\Repository $questionsRepo */
-            $questionsRepo = Di::_()->get('Helpdesk\Question\Repository');
+        if ($category) {
+            /** @var \Minds\Core\Helpdesk\Question\Manager $questionsManager */
+            $questionsManager = Di::_()->get('Helpdesk\Question\Manager');
 
-            $questions = $questionsRepo->getAll(['category_uuid' => $category->getUuid()]);
+            $questions = $questionsManager->getAll([
+                'category_uuid' => $category->getUuid()
+            ]);
             $category->setQuestions($questions);
 
             if ($category->getParentUuid()) {
-                $branch = $repo->getBranch($category->getParentUuid());
+                $branch = $manager->getBranch($category->getParentUuid());
                 $category->setParent($branch);
             }
         }

@@ -4,6 +4,7 @@ namespace Minds\Controllers\api\v2\helpdesk\questions;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
+use Minds\Core\Helpdesk\Question\Manager;
 use Minds\Core\Helpdesk\Question\Repository;
 use Minds\Interfaces\Api;
 
@@ -23,10 +24,10 @@ class top implements Api
             $category = trim($_GET['category']);
         }
 
-        /** @var Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $questions = $repo->top([
+        $questions = $manager->getTop([
             'limit' => $limit,
             'category' => $category
         ]);

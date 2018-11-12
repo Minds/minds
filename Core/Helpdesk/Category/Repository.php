@@ -125,7 +125,7 @@ class Repository
      * Add a new category
      *
      * @param Category $category
-     * @return void
+     * @return string|false
      */
     public function add(Category $category)
     {
@@ -153,7 +153,7 @@ class Repository
      * Delete a category
      *
      * @param string $category_uuid
-     * @return void
+     * @return bool
      */
     public function delete(string $category_uuid)
     {
@@ -172,7 +172,7 @@ class Repository
     }
 
     /**
-     * Generate the brach field for a category
+     * Generate the branch field for a category
      *
      * @param string $uuid
      * @param string $parent_uuid

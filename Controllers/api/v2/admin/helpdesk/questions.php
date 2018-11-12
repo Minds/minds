@@ -45,10 +45,10 @@ class questions implements Api, ApiAdminPam
             ->setAnswer($answer)
             ->setCategoryUuid($category_uuid);
 
-        /** @var \Minds\Core\Helpdesk\Question\Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $uuid = $repo->add($entity);
+        $uuid = $manager->add($entity);
 
         return Factory::response([
             'status' => 'success',
@@ -72,10 +72,10 @@ class questions implements Api, ApiAdminPam
 
         $question_uuid = $_POST['question_uuid'];
 
-        /** @var \Minds\Core\Helpdesk\Question\Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $done = $repo->delete($question_uuid);
+        $done = $manager->delete($question_uuid);
 
         return Factory::response([
             'status' => 'success',

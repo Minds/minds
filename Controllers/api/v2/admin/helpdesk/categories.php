@@ -3,12 +3,12 @@
 
 namespace Minds\Controllers\api\v2\admin\helpdesk;
 
-use Minds\Interfaces\Api;
-use Minds\Interfaces\ApiAdminPam;
-use Minds\Core\Helpdesk\Entities\Category;
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
+use Minds\Core\Helpdesk\Entities\Category;
 use Minds\Core\Helpdesk\Repository;
+use Minds\Interfaces\Api;
+use Minds\Interfaces\ApiAdminPam;
 
 class categories implements Api, ApiAdminPam
 {
@@ -19,8 +19,8 @@ class categories implements Api, ApiAdminPam
 
     public function post($pages)
     {
-        /** @var \Minds\Core\Helpdesk\Category\Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Category\Repository');
+        /** @var \Minds\Core\Helpdesk\Category\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Category\Manager');
 
         try {
             $title = $this->getParam('title', 'title must be provided');
@@ -30,7 +30,7 @@ class categories implements Api, ApiAdminPam
             $entity->setTitle($title)
                 ->setParentUuid($parent_uuid);
 
-            $repo->add($entity);
+            $manager->add($entity);
 
         } catch (\Exception $e) {
             return Factory::response(['status' => 'error', 'message' => $e->getMessage()]);
@@ -52,10 +52,10 @@ class categories implements Api, ApiAdminPam
             return Factory::response(['status' => 'error', 'message' => 'category_uuid must be provided']);
         }
 
-        /** @var \Minds\Core\Helpdesk\Category\Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Category\Repository');
+        /** @var \Minds\Core\Helpdesk\Category\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Category\Manager');
 
-        $done = $repo->delete($category_uuid);
+        $done = $manager->delete($category_uuid);
 
         return Factory::response([
             'status' => 'success',

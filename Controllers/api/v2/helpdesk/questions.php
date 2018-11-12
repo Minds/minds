@@ -4,10 +4,6 @@ namespace Minds\Controllers\api\v2\helpdesk;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Question\Repository;
-use Minds\Core\Session;
-use Minds\Core\Votes\Manager;
-use Minds\Core\Votes\Vote;
 use Minds\Interfaces\Api;
 
 class questions implements Api
@@ -32,10 +28,10 @@ class questions implements Api
             $category_uuid = trim($_GET['category_uuid']);
         }
 
-        /** @var Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $questions = $repo->getAll([
+        $questions = $manager->getAll([
             'limit' => $limit,
             'offset' => $offset,
             'category_uuid' => $category_uuid
@@ -78,13 +74,13 @@ class questions implements Api
 
         $vote_direction = $pages[1];
 
-        /** @var Repository $repo */
-        $repo = Di::_()->get('Helpdesk\Question\Repository');
+        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
 
         if ($vote_direction === 'delete') {
-            $result = $repo->unvote($question_uuid);
+            $result = $manager->unvote($question_uuid);
         } else {
-            $result = $repo->vote($question_uuid, $vote_direction);
+            $result = $manager->vote($question_uuid, $vote_direction);
         }
 
         if ($result === false) {
@@ -96,7 +92,6 @@ class questions implements Api
 
         return Factory::response([
             'status' => 'success',
-            'done' => $done,
         ]);
     }
 
