@@ -54,12 +54,17 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
 
+            if (isset($_POST['Homepage121118'])) {
+                $user->expHomepage121818 = $_POST['Homepage121118'];
+                $user->save();
+            }
+
             $params = [
                 'user' => $user,
                 'password' => $_POST['password'],
                 'friend_guid' => "",
                 'invitecode' => "",
-                'referrer' => isset($_COOKIE['referrer']) ? $_COOKIE['referrer'] : ''
+                'referrer' => isset($_COOKIE['referrer']) ? $_COOKIE['referrer'] : '',
             ];
 
             // TODO: Move full reguster flow to the core
