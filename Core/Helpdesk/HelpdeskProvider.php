@@ -23,5 +23,9 @@ class HelpdeskProvider extends Provider
         $this->di->bind('Helpdesk\Category\Manager', function ($di) {
             return new Category\Manager();
         }, ['useFactory' => false]);
+
+        $this->di->bind('Helpdesk\Search', function ($di) {
+            return new Search();
+        }, ['useFactory' => false]);
     }
 }
