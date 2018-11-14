@@ -36,6 +36,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('paywall')->willReturn(false);
         $user->get('username')->willReturn('phpspec');
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(false);
 
         $user->isMature()->willReturn(true);
@@ -65,12 +66,13 @@ class UserMappingSpec extends ObjectBehavior
                 'blurb' => 'PHPSpec Blurb',
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
+                'rating' => 1,
                 'username' => 'phpspec',
                 'briefdescription' => 'PHPSpec Brief Description #invalidhashtag',
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'user',
                 'public' => true,
-                'group_membership' => [ 2000 ]
+                'group_membership' => [ 2000 ],
             ]);
     }
 
@@ -96,6 +98,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('paywall')->willReturn(false);
         $user->get('username')->willReturn('phpspec');
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(true);
 
         $user->isMature()->willReturn(true);
