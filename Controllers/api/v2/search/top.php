@@ -132,7 +132,7 @@ class top implements Interfaces\Api, Interfaces\ApiIgnorePam
                     }
                 }
 
-                $response['entities'][$topTaxonomy] = Factory::exportable($entities);
+                $response['entities'][$topTaxonomy] = Factory::exportable(array_values($entities));
             }
 
             return Factory::response($response);
