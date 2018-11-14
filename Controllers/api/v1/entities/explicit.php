@@ -52,6 +52,7 @@ class explicit implements Interfaces\Api
             }
 
             $entity->setMature($value);
+            $entity->setRating($value ? 3 : 2);
             if ($isAdmin) {
                 $entity->setMatureLock($value);
 

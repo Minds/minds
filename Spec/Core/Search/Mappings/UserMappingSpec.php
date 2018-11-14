@@ -39,7 +39,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(false);
 
-        $user->isMature()->willReturn(true);
+        $user->isMature()->willReturn(false);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
 
@@ -90,6 +90,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('owner_guid')->willReturn(false);
         $user->get('container_guid')->willReturn(1000);
         $user->get('mature')->willReturn(false);
+        $user->get('is_mature')->willReturn(false);
         $user->get('message')->willReturn('PHPSpec Message #test #hashtag');
         $user->get('name')->willReturn('PHPSpec Name');
         $user->get('title')->willReturn('PHPSpec Title');

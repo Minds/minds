@@ -41,8 +41,8 @@ class UserMapping extends EntityMapping implements MappingInterface
             throw new BannedException('User is banned');
         }
 
-        if (method_exists($this->entity, 'getMatureContent')) {
-            $map['mature'] = !!$this->entity->getMatureContent();
+        if (method_exists($this->entity, 'isMature')) {
+            $map['mature'] = $this->entity->isMature();
         } else {
             $map['mature'] = false;
         }
