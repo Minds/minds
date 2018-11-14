@@ -31,6 +31,7 @@ class EntityMapping implements MappingInterface
         'description' => [ 'type' => 'text', '$exportField' => 'description' ],
         'tags' => [ 'type' => 'text' ],
         'paywall' => [ 'type' => 'boolean', '$exportField' => 'paywall' ],
+        'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
     ];
 
     /** @var mixed $entity */
