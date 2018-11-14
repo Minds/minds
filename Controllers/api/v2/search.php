@@ -50,6 +50,7 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
         $paywall = isset($_GET['paywall']) ? !!$_GET['paywall'] : null;
         $license = isset($_GET['license']) ? $_GET['license'] : null;
         $sort = isset($_GET['sort']) && $_GET['sort'] ? $_GET['sort'] : 'latest';
+        $rating = isset($_GET['rating']) && $_GET['rating'] ? $_GET['rating'] : 1;
 
         $options = [
             'text' => $_GET['q'],
@@ -59,6 +60,7 @@ class search implements Interfaces\Api, Interfaces\ApiIgnorePam
             'paywall' => $paywall,
             'license' => $license,
             'sort' => $sort,
+            'rating' => $rating,
         ];
 
         try {

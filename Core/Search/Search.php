@@ -66,7 +66,8 @@ class Search
             'mature' => false,
             'paywall' => null,
             'license' => null,
-            'sort' => null
+            'sort' => null,
+            'rating' => 1,
         ], $options);
 
         // Initial parameters
@@ -130,6 +131,10 @@ class Search
         if ($options['license'] !== null) {
             $filters['license'] = $options['license'];
         }
+
+        // Rating
+
+        $filters['rating'] = $options['rating'];
 
         // Sorting
 

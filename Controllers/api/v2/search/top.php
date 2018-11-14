@@ -43,6 +43,7 @@ class top implements Interfaces\Api, Interfaces\ApiIgnorePam
         $paywall = isset($_GET['paywall']) ? !!$_GET['paywall'] : null;
         $license = isset($_GET['license']) ? $_GET['license'] : null;
         $sort = isset($_GET['sort']) && $_GET['sort'] ? $_GET['sort'] : 'top';
+        $rating = isset($_GET['rating']) && $_GET['rating'] ? $_GET['rating'] : 1;
 
         $topLimits = isset($_GET['topLimits']) ? $_GET['topLimits'] : 6;
 
@@ -68,7 +69,8 @@ class top implements Interfaces\Api, Interfaces\ApiIgnorePam
                 'paywall' => $paywall,
                 'license' => $license,
                 'sort' => $sort,
-                'container' => $container
+                'container' => $container,
+                'rating' => $rating,
             ], $limit, $offset);
 
             $posts = [];
@@ -113,7 +115,8 @@ class top implements Interfaces\Api, Interfaces\ApiIgnorePam
                             'mature' => $mature,
                             'paywall' => $paywall,
                             'license' => $license,
-                            'sort' => $sort
+                            'sort' => $sort,
+                            'rating' => $rating,
                         ], $topLimit);
 	                }
 
