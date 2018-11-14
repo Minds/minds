@@ -37,7 +37,7 @@ class reindex implements Interfaces\Api, Interfaces\ApiAdminPam
 
         $entity = Entities\Factory::build($guid);
 
-        if ($entity) {
+        if (!$entity) {
             return Factory::response(['status' => 'error', 'message' => 'Entity not found.']);
         }
 
