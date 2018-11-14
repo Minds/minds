@@ -14,6 +14,7 @@ use Minds\Core\Queue;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Interfaces;
 use Minds\Core\Entities\Actions\Save;
+use Minds\Core\Di\Di;
 
 class rating implements Interfaces\Api
 {
@@ -51,6 +52,13 @@ class rating implements Interfaces\Api
         $save = new Save();
         $save->setEntity($entity)
             ->save();
+
+        /** @var Core\Events\Dispatcher $dispatcher */
+        $dispatcher = Di::_()->get('EventsDispatcher');
+        $dispatcher->trigger('search:index', 'all', [
+            'entity' => $entity,
+            'immediate' => true
+        ]);
 
         Queue\Client::Build()->setQueue("Trending")
             ->send(['a']);
