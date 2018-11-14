@@ -31,6 +31,7 @@ class ObjectBlogMapping extends EntityMapping implements MappingInterface
         'paywall' => [ 'type' => 'boolean', '$exportGetter' => 'isPaywall' ],
         'tags' => [ 'type' => 'text' ],
         'license' => [ 'type' => 'text', '$exportGetter' => 'getLicense' ],
+        'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
     ];
 
     /** @var Blog $entity */

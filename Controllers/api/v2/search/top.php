@@ -125,6 +125,13 @@ class top implements Interfaces\Api, Interfaces\ApiIgnorePam
                     }
                 }
 
+                // Filter out by rating TODO: index should handle this
+                foreach ($entities as $k => $entity) {
+                    if ($entity->getRating() > $rating) {
+                        unset($entities[$k]);
+                    }
+                }
+
                 $response['entities'][$topTaxonomy] = Factory::exportable($entities);
             }
 
