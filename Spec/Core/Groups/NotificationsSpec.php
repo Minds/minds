@@ -10,6 +10,7 @@ use Minds\Core\Data\Cassandra;
 use Minds\Core\Data\Cassandra\Thrift\Relationships;
 use Minds\Core\Data\Cassandra\Thrift\Indexes;
 use Minds\Entities\Group as GroupEntity;
+use Minds\Core\Notification\Manager as NotificationManager;
 
 class NotificationsSpec extends ObjectBehavior
 {
@@ -18,9 +19,15 @@ class NotificationsSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Groups\Notifications');
     }
 
-    public function it_should_get_recipients(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql)
+    public function it_should_get_recipients(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $db->setGuid(50)->shouldBeCalled();
         $db->get('member', Argument::any())->shouldBeCalled()->willReturn([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -40,9 +47,15 @@ class NotificationsSpec extends ObjectBehavior
         $this->getRecipients([ 'exclude' => [ 1 ] ])->shouldReturn(['2', '3', '4', '5', '8']);
     }
 
-    public function it_should_get_muted_members(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql)
+    public function it_should_get_muted_members(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $cql->request(Argument::that(function($prepared) {
             $statement = $prepared->build();
@@ -62,9 +75,15 @@ class NotificationsSpec extends ObjectBehavior
         ]);
     }
 
-    public function it_should_check_muted_members_in_batch(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql)
+    public function it_should_check_muted_members_in_batch(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $group->getGuid()->willReturn(50);
         $this->setGroup($group);
@@ -81,9 +100,16 @@ class NotificationsSpec extends ObjectBehavior
         $this->isMutedBatch([11, 12, 14])->shouldReturn([11 => true, 12 => true, 14 => false]);
     }
 
-    public function it_should_check_if_its_muted(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql, User $user)
+    public function it_should_check_if_its_muted(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        User $user,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $user->get('guid')->willReturn(1);
         $group->getGuid()->willReturn(50);
@@ -95,9 +121,16 @@ class NotificationsSpec extends ObjectBehavior
         $this->isMuted($user)->shouldReturn(true);
     }
 
-    public function it_should_mute(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql, User $user)
+    public function it_should_mute(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        User $user,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $user->get('guid')->willReturn(1);
         $group->getGuid()->willReturn(50);
@@ -109,9 +142,16 @@ class NotificationsSpec extends ObjectBehavior
         $this->mute($user)->shouldReturn(true);
     }
 
-    public function it_should_unmute(GroupEntity $group, Relationships $db, Indexes $indexesDb, Cassandra\Client $cql, User $user)
+    public function it_should_unmute(
+        GroupEntity $group,
+        Relationships $db,
+        Indexes $indexesDb,
+        Cassandra\Client $cql,
+        User $user,
+        NotificationManager $notifications
+    )
     {
-        $this->beConstructedWith($db, $indexesDb, $cql);
+        $this->beConstructedWith($db, $indexesDb, $cql, $notifications);
 
         $user->get('guid')->willReturn(1);
         $group->getGuid()->willReturn(50);

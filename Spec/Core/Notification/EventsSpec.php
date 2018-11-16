@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities\User;
-use Minds\Entities\Notification;
+use Minds\Core\Notification\Notification as NotificationEntity;
 use Minds\Entities\Entity;
 
 class EventsSpec extends ObjectBehavior
@@ -26,6 +26,7 @@ class EventsSpec extends ObjectBehavior
 
         expect(Dispatcher::trigger('notification', 'mock', [
             'to' => [ $to_user_a->guid, $to_user_b->guid ],
+            'from' => $from_user,
             'entity' => $entity,
             'notification_view' => 'mock_test',
             'description' => 'I am a mock',
@@ -44,7 +45,7 @@ class EventsSpec extends ObjectBehavior
                 }
 
                 foreach ($array as $item) {
-                    if (!($item instanceof Notification)) {
+                    if (!($item instanceof NotificationEntity)) {
                         return false;
                     }
                 }

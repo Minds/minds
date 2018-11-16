@@ -14,6 +14,7 @@ use Minds\Core\Notification\Settings;
 use Minds\Interfaces;
 use Minds\Helpers;
 use Minds\Api\Factory;
+use Minds\Entities;
 use Minds\Entities\Notification as NotificationEntity;
 
 /**
@@ -47,8 +48,8 @@ class notifications implements Interfaces\Api
             $pages = ['list'];
         }
 
-        $repository = Di::_()->get('Notification\Repository');
-        $repository->setOwner(Core\Session::getLoggedInUserGuid());
+        $repository = Di::_()->get('Notification\Manager');
+        $repository->setUser(Core\Session::getLoggedInUser());
 
         $counters = new Notification\Counters();
 
@@ -63,13 +64,13 @@ class notifications implements Interfaces\Api
                 $response['toggles'] = $toggles;
                 break;
             case 'single':
-                $notification = $repository->getEntity($pages[1]);
+                /*$notification = $repository->getEntity($pages[1]);
 
                 if (!$notification) {
                     return Factory::response([]);
                 }
 
-                $response['notification'] = $notification->export();
+                $response['notification'] = $notification->export();*/
                 break;
             case 'list':
             default:
@@ -91,7 +92,10 @@ class notifications implements Interfaces\Api
                     $limit = static::MAX_NOTIFICATIONS_PER_PAGE;
                 }
 
-                $notifications = $repository->getAll($filter, [
+                $manager = Di::_()->get('Notification\Manager');
+                $manager->setUser(Core\Session::getLoggedinUser());
+                $notifications = $manager->getList([
+                    'type' => $filter,
                     'limit' => $limit,
                     'offset' => $offset
                 ]);
@@ -100,8 +104,8 @@ class notifications implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $response['notifications'] = $this->polyfillResponse(Factory::exportable($notifications['notifications']));
-                $response['load-next'] = (string) $notifications['token'];
+                $response['notifications'] = $this->polyfillResponse($notifications);
+                $response['load-next'] = (string) $notifications->getPagingToken();
                 //$response['load-previous'] = (string) key($notifications)->getGuid();
 
                 break;
@@ -165,42 +169,59 @@ class notifications implements Interfaces\Api
      */
     protected function polyfillResponse($notifications)
     {
-        if (!is_array($notifications)) {
-            return $notifications;
-        }
-
+        //if (!is_array($notifications)) {
+        //    return $notifications;
+       // }
+        $return = [];
         // Formatting for legacy notification handling in frontend
-        foreach ($notifications as $key => $data) {
+        foreach ($notifications as $key => $entity) {
+            $entityObj = Entities\Factory::build($entity->getEntityGuid());
+            $fromObj = Entities\Factory::build($entity->getFromGuid());
+            $toObj = Core\Session::getLoggedInUser();
+            $data = $entity->getData();
 
-            //temp mobile move
-            //if (isset($_GET['access_token']) && $data['notification_view'] == 'boost_peer_request') {
-            //    unset($notifications[$key]);
-            //}
-            //if (isset($_GET['access_token']) && $data['notification_view'] == 'group_activity') {
-            //    $notifications[$key]['notification_view'] = 'custom_message';
-            //    $notifications[$key]['params']['message'] = "@{$data['from']['username']} posted in {$data['params']['group']['name']}";
-            //}
-            if (isset($_GET['access_token']) && $data['notification_view'] == 'messenger_invite') {
-               $notifications[$key]['notification_view'] = 'custom_message';
-               $notifications[$key]['params']['message'] = "@{$data['params']['username']} wants to chat with you!";
+            if ($entity->getEntityGuid() && !$entityObj) {
+                unset($notifications[$key]);
+                continue;
             }
 
-            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_add') {
-               $notifications[$key]['notification_view'] = 'custom_message';
-               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} is awaiting approval from group administrators.";
+            if ($entity->getFromGuid() && !$fromObj) {
+                unset($notifications[$key]);
+                continue;
             }
 
-            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_approve') {
-               $notifications[$key]['notification_view'] = 'custom_message';
-               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} was approved.";
+            $notification = [
+                'guid' => $entity->getUUID(),
+                'uuid' => $entity->getUUID(),
+                'description' => $data['desription'],
+                'entityObj' => $entityObj ? $entityObj->export() : null,
+                'filter' => $entity->getType(),
+                'fromObj' => $fromObj ? $fromObj->export() : null,
+                'from_guid' => $entity->getFromGuid(),
+                'to' => $toObj ? $toObj->export() : null,
+                'guid' => $entity->getUUID(),
+                'notification_view' => $entity->getType(),
+                'params' => $data, // possibly some deeper polyfilling needed here,
+                'time_created' => $entity->getCreatedTimestamp(),
+            ];
+
+            $notification['entity'] = $notification['entityObj'];
+
+            $notification['owner'] = 
+            $notification['ownerObj'] =
+            $notification['from'] = 
+            $notification['fromObj'];
+
+            if ($entityObj && $entityObj->getType() == 'comment') {
+                $parent = Entities\Factory::build($data['parent_guid']);
+                if ($parent) {
+                    $notification['params']['parent'] = $parent->export();
+                }
             }
 
-            if (isset($_GET['access_token']) && $data['notification_view'] == 'group_queue_reject') {
-               $notifications[$key]['notification_view'] = 'custom_message';
-               $notifications[$key]['params']['message'] = "Your post for {$data['params']['group']['name']} was rejected.";
-            }
+            $return[$key] = $notification;
         }
 
-        return $notifications;
+        return array_values($return);
     }
 }

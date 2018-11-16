@@ -10,6 +10,7 @@ use Minds\Core\Queue;
 use Minds\Entities;
 use Minds\Helpers\Counters;
 use Minds\Core\Data\Cassandra\Prepared;
+use Minds\Core\Notification\Notification;
 
 use Minds\Behaviors\Actorable;
 
@@ -32,7 +33,7 @@ class Notifications
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
-        $this->notifications = $notifications ?: Di::_()->get('Notification\Repository');
+        $this->notifications = $notifications ?: Di::_()->get('Notification\Manager');
     }
 
     /**
@@ -78,16 +79,16 @@ class Notifications
             return false;
         }
         //generate only one notification, because it's quicker that way
-        $notification = (new Entities\Notification())
-            ->setTo($activity->getOwner())
-            ->setEntity($activity)
-            ->setFrom($activity->getOwner())
-            ->setOwner($activity->getOwner())
-            ->setNotificationView('group_activity')
+        $notification = (new Notification())
+            ->setToGuid($activity->getOwner())
+            ->setEntityGuid($activity->getGuid())
+            ->setFromGuid($activity->getOwner()->getGuid())
+            ->setType('group_activity')
             ->setDescription($activity->message)
-            ->setParams(['group' => $this->group->export() ])
-            ->setTimeCreated(time());
-        $serialized = json_encode($notification->export());
+            ->setData([
+                'group_guid' => $this->group->getGuid() 
+            ])
+            ->setCreatedTimestamp(time());
 
         $offset = "";
         $from_user = $notification->getFrom();
@@ -125,8 +126,7 @@ class Notifications
                 //    continue;
                 //}
 
-                $this->notifications->setOwner($recipient);
-                $this->notifications->store($notification->export());
+                $this->notifications->add($notification);
 
                 echo " (dispatched) \r";
             }
