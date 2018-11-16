@@ -7,6 +7,7 @@ namespace Minds\Core\Blockchain\Transactions;
 use Minds\Entities\User;
 use Minds\Entities\Factory as EntityFactory;
 use Minds\Traits\MagicAttributes;
+use Minds\Helpers\Unknown;
 
 /**
  * Class Transaction
