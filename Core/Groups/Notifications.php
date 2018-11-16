@@ -80,7 +80,7 @@ class Notifications
         }
         //generate only one notification, because it's quicker that way
         $notification = (new Notification())
-            ->setToGuid($activity->getOwner())
+            ->setToGuid($activity->getOwner()->getGuid())
             ->setEntityGuid($activity->getGuid())
             ->setFromGuid($activity->getOwner()->getGuid())
             ->setType('group_activity')
@@ -91,7 +91,7 @@ class Notifications
             ->setCreatedTimestamp(time());
 
         $offset = "";
-        $from_user = $notification->getFrom();
+        //$from_user = $notification->getFrom();
 
         while (true) {
             echo "[notification][group][$activity->container_guid]: Running from $offset \n";
