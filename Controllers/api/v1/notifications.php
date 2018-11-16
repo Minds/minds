@@ -219,6 +219,15 @@ class notifications implements Interfaces\Api
                 }
             }
 
+            if ($notification['params']['group_guid']) {
+                $group = Entities\Factory::build($notification['params']['group_guid']);
+                if (!$group) {
+                    unset($notifications[$key]);
+                    continue;
+                }
+                $notification['params']['group'] = $group->export(); 
+            }
+
             $return[$key] = $notification;
         }
 
