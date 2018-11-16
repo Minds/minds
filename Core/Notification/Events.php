@@ -43,6 +43,10 @@ class Events
                 'cache' => true
             ]);
 
+            if (!$from_user) {
+                return; //Must be from a user
+            }
+
             $entity = $params['entity'];
             $description = isset($params['description']) ? $params['description'] : '';
 
