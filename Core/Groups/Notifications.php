@@ -80,9 +80,8 @@ class Notifications
         }
         //generate only one notification, because it's quicker that way
         $notification = (new Notification())
-            ->setToGuid($activity->getOwner()->getGuid())
             ->setEntityGuid($activity->getGuid())
-            ->setFromGuid($activity->getOwner()->getGuid())
+            ->setFromGuid($activity->getOwner())
             ->setType('group_activity')
             ->setDescription($activity->message)
             ->setData([
@@ -126,6 +125,7 @@ class Notifications
                 //    continue;
                 //}
 
+                $notification->setToGuid($recipient);
                 $this->notifications->add($notification);
 
                 echo " (dispatched) \r";
