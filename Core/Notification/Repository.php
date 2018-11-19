@@ -77,6 +77,7 @@ class Repository
 
             $response[] = $notification;
         }
+        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
 
         return $response;
     }
