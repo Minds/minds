@@ -112,20 +112,7 @@ class Manager
                 break;
         }
 
-        if ($this->config->get('use_sql_notifications')) {
-            return $this->repository->getList($opts);
-        }
-
-        $this->legacyRepository->setOwner($this->user);        
-        $legacy = $this->legacyRepository->getAll($opts['type'], $opts);
-        $response = new Response();
-        $response->setPagingToken($legacy['token']);
-
-        foreach ($legacy['notifications'] as $row) {
-            $response[] = $row;
-        }
-        
-        return $response;
+        return $this->repository->getList($opts);
     }
 
     /**
@@ -138,67 +125,6 @@ class Manager
         try {
             $this->repository->add($notification);
         } catch (\Exception $e) { }
-
-        $entity = Factory::build($notification->getEntityGuid());
-        $to = Factory::build($notification->getToGuid());
-        $from = Factory::build($notification->getFromGuid());
-        $filter = 'other';
-        switch ($notification->getType()) {
-            case 'friends':
-            case 'missed_call':
-            case 'welcome_chat':
-            case 'welcome_discover':
-                $filter = 'subscriptions';
-                break;
-            case 'group_invite':
-            case 'group_kick':
-            case 'group_activity':
-                $filter = 'groups';
-                break;
-                break;
-            case 'comment':
-                $filter = 'comments';
-                break;
-            case 'like':
-            case 'downvote':
-                $filter = 'votes';
-                break;
-            case 'remind':
-                $filter = 'reminds';
-                break;
-            case 'tag':
-                $filter = 'tags';
-                break;
-            case 'boost_gift':
-            case 'boost_submitted':
-            case 'boost_submitted_p2p':
-            case 'boost_request':
-            case 'boost_rejected':
-            case 'boost_revoked':
-            case 'boost_accepted':
-            case 'boost_completed':
-            case 'boost_peer_request':
-            case 'boost_peer_accepted':
-            case 'boost_peer_rejected':
-            case 'welcome_points':
-            case 'welcome_boost':
-                $filter = 'boosts';
-        }
-        
-        $data = [
-            'guid' => Guid::build(),
-            'filter' => $filter,
-            'type' => $notification->getType(),
-            'notification_view' => $notification->getType(),
-            'description' => $this->description,
-            'params' => $notification->getData(),
-            'time_created' => time(),
-            'entity' => $entity ? $entity->export() : null,
-            'from' => $from ? $from->export() : null,
-        ];
-        // Remove soon!
-        $this->legacyRepository->setOwner($to);
-        $this->legacyRepository->store($data);
     }
 
 }
