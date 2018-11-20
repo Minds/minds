@@ -200,7 +200,7 @@ class Push implements Interfaces\NotificationExtensionInterface
 
         $name = $from_user->name;
 
-        $isOwner = $notification['to']->getGuid() == $entity->owner_guid;
+        $isOwner = $notification['to'] == $entity->owner_guid;
         $prefix = $isOwner ? 'your ': $entity->ownerObj['name']."'s ";
         $desc = ($entity->type == 'activity') ? 'activity': $entity->subtype;
 
