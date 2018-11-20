@@ -198,8 +198,8 @@ class Events
 
                 Push::_()->queue([
                     'uri' => 'notification',
-                    'from' => $notification->getFrom(),
-                    'to' => $notification->getTo(),
+                    'from' => $notification->getFromGuid(),
+                    'to' => $notification->getToGuid(),
                     'notification' => $notification,
                     'params' => $params,
                     'count' => $counters->getCount()

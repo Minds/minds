@@ -40,9 +40,9 @@ class Push implements Interfaces\NotificationExtensionInterface
             return false;
         }
 
-        $entity = $notification['notification']->getEntity();
+        $entity_guid = $notification['notification']->getEntityGuid();
+        $entity = EntitiesFactory::build($entity_guid);
 
-        $entity_guid = '';
         $entity_type = 'object';
         $child_guid = '';
         $parent_guid = '';
@@ -83,7 +83,7 @@ class Push implements Interfaces\NotificationExtensionInterface
         }
 
         $push = [
-            'user_guid' => $notification['to']->guid,
+            'user_guid' => $notification['to'],
             'entity_guid' => $entity_guid,
             'child_guid' => $child_guid,
             'entity_type' => $entity_type,
