@@ -96,6 +96,10 @@ class Push implements Interfaces\NotificationExtensionInterface
         $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
             Core\Session::getLoggedInUser();
 
+        if (!$from_user) {
+            return;
+        }
+
         $push['title'] = 'Minds';
         $push['message'] = static::buildNotificationMessage($notification, $from_user, $entity);
         $push['large_icon'] = static::getNotificationLargeIcon($notification, $from_user);
