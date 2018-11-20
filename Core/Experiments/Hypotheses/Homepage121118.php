@@ -29,7 +29,7 @@ class Homepage121118 implements HypothesisInterface
                 ->setId('base')
                 ->setWeight(75),
             (new Bucket)
-                ->setId('variant1')
+                ->setId('variant2')
                 ->setWeight(25), //25 pct of users will be in this bucket
         ];
     }
