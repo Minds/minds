@@ -64,9 +64,12 @@ class UserMapping extends EntityMapping implements MappingInterface
     {
         $map = parent::suggestMap($defaultValues);
 
-        $inputs = [ $this->entity->username, $this->entity->name ];
+        $name = preg_replace('[0-9]*', '', $this->entity->name);
+        $username = preg_replace('[0-9]*', '', $this->entity->username);
+
+        $inputs = [ $username, $name ];
         //split out the name based on CamelCase
-        $nameParts = preg_split('/([\s])?(?=[A-Z])/', $this->entity->name, -1, PREG_SPLIT_NO_EMPTY);
+        $nameParts = preg_split('/([\s])?(?=[A-Z])/', $name, -1, PREG_SPLIT_NO_EMPTY);
         $inputs = array_unique(array_merge($inputs, $this->permutateInputs($nameParts)));
 
         $map = array_merge($map, [
