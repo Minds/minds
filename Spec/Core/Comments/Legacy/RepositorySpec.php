@@ -121,7 +121,8 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn($comment2);
 
         $return = $this->getList([
-            'entity_guid' => 5000
+            'entity_guid' => 5000,
+            'limit' => 2,
         ]);
 
         $return
