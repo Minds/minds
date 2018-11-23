@@ -112,8 +112,8 @@ class Repository
             ]);
         }
 
-        $query .= implode(',', array_fill(0, count($values), '(?,?,?,?,?)'));
-
+        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?)'));
+        
         $statement = $this->sql->prepare($query);
 
         return $statement->execute($values);
