@@ -8,17 +8,21 @@ namespace Minds\Core\Notification;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
+use Minds\Core\Di\Di;
 
 class Counters
 {
     use \Minds\Traits\CurrentUser;
 
-    protected $db;
-    protected $user;
+    /** @var $sql */
+    private $sql;
 
-    public function __construct($db = null)
+    /** @var User $user */
+    private $user;
+
+    public function __construct($sql = null)
     {
-        $this->db = $db ?: new Core\Data\Call('entities_by_time');
+        $this->sql = $sql ?: Di::_()->get('Database\PDO');
         $this->user = Core\Session::getLoggedInUser();
     }
 
@@ -41,7 +45,21 @@ class Counters
      */
     public function getCount(array $options = [])
     {
-        return Helpers\Counters::get($this->user, 'notifications:count', false);
+        $query = "SELECT count(*) FROM notifications
+                    WHERE to_guid = ?
+                    AND read_timestamp IS NULL";
+        
+        $params = [
+            (int) $this->user->getGuid(),
+        ];
+
+        $statement = $this->sql->prepare($query);
+        
+        $statement->execute($params);
+
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+       
+        return (int) $result[0]['count'];
     }
 
     /**
@@ -51,16 +69,27 @@ class Counters
      */
     public function increaseCounter()
     {
-        Helpers\Counters::increment($this->user, 'notifications:count');
+        //Helpers\Counters::increment($this->user, 'notifications:count');
     }
 
     /**
      * Sets the notifications counter value to 0 for an user
      * @param  User   $user
-     * @return null
+     * @return void
      */
     public function resetCounter()
     {
-        Helpers\Counters::clear($this->user, 'notifications:count');
+        $query = "UPDATE notifications
+                    SET read_timestamp = NOW()
+                    WHERE to_guid = ?
+                    AND read_timestamp IS NULL";
+        
+        $params = [
+            (int) $this->user->getGuid(),
+        ];
+
+        $statement = $this->sql->prepare($query);
+        
+        $statement->execute($params);
     }
 }
