@@ -115,30 +115,14 @@ class Notifications
 
             $offset = end($guids);
 
-            $i = 0;
             $notifications = [];
             foreach ($guids as $recipient) {
-                $i++;
-                $pct = ($i / count($guids)) * 100;
-                //echo "[notification]: $i / " . count($guids) . " ($pct%) ";
-
-                //if ($from_user->guid && Security\ACL\Block::_()->isBlocked($from_user, $recipient)) {
-                //    continue;
-                //}
-
                 $notifications[] = $notification->setToGuid($recipient);
-
-                //echo " (dispatched) \r";
             }
 
             echo "dispatching ...";
             $this->notifications->add($notifications);
-            echo " (dispatched)";
-
-            //now update the counters for each user
-            echo "\n[notification]: incrementing counters ";
-            Counters::incrementBatch($guids, 'notifications:count');
-            echo " (done) \n";
+            echo " (dispatched) \n";
 
             if (!$offset) {
                 break;
