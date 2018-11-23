@@ -33,6 +33,11 @@ class Counters
      */
     public function setUser($user)
     {
+        if (is_numeric($user)) {
+            $guid = $user;
+            $user = (new Entities\User);
+            $user->guid = $guid;
+        }
         $this->user = $user;
         return $this;
     }
