@@ -45,10 +45,10 @@ class Counters
      */
     public function getCount(array $options = [])
     {
-        return 0;
-        /*$query = "SELECT count(*) FROM notifications
+        $query = "SELECT uuid, read_timestamp FROM notifications
                     WHERE to_guid = ?
-                    AND read_timestamp IS NULL";
+                    ORDER BY created_timestamp DESC
+                    LIMIT 1";
         
         $params = [
             (int) $this->user->getGuid(),
@@ -60,7 +60,11 @@ class Counters
 
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
        
-        return (int) $result[0]['count'];*/
+        if (!$result[0]['read_timestamp']) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
@@ -80,11 +84,11 @@ class Counters
      */
     public function resetCounter()
     {
-        return;
         $query = "UPDATE notifications
                     SET read_timestamp = NOW()
                     WHERE to_guid = ?
-                    AND read_timestamp IS NULL";
+                    ORDER BY created_timestamp DESC
+                    LIMIT 10";
         
         $params = [
             (int) $this->user->getGuid(),
