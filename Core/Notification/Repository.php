@@ -84,10 +84,10 @@ class Repository
 
     /**
      * Add a notification to the database
-     * @param Notification $notification
+     * @param Notification[] $notification
      * @return bool
      */
-    public function add($notification)
+    public function add($notifications)
     {
         $query = "INSERT INTO notifications (
             to_guid,
@@ -95,14 +95,20 @@ class Repository
             entity_guid,
             notification_type,
             data
-            ) VALUES (?,?,?,?,?)";
-        $values = [
-            $notification->getToGuid(),
-            $notification->getFromGuid(),
-            $notification->getEntityGuid(),
-            $notification->getType(),
-            json_encode($notification->getData()),
-        ];
+            ) VALUES ";
+
+        $values = [];
+        foreach ($notifications as $notification) {
+            $values = array_merge($values, [
+                $notification->getToGuid(),
+                $notification->getFromGuid(),
+                $notification->getEntityGuid(),
+                $notification->getType(),
+                json_encode($notification->getData()),
+            ]);
+        }
+
+        $query .= implode(',', array_fill(0, count($values), '(?,?,?,?,?)'));
 
         $statement = $this->sql->prepare($query);
 

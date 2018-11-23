@@ -97,7 +97,7 @@ class Notifications
 
             $guids = $this->getRecipients([
                 'exclude' => $params['exclude'] ?: [],
-                'limit' => 500,
+                'limit' => 1000,
                 'offset' => $offset
             ]);
 
@@ -116,20 +116,24 @@ class Notifications
             $offset = end($guids);
 
             $i = 0;
+            $notifications = [];
             foreach ($guids as $recipient) {
                 $i++;
                 $pct = ($i / count($guids)) * 100;
-                echo "[notification]: $i / " . count($guids) . " ($pct%) ";
+                //echo "[notification]: $i / " . count($guids) . " ($pct%) ";
 
                 //if ($from_user->guid && Security\ACL\Block::_()->isBlocked($from_user, $recipient)) {
                 //    continue;
                 //}
 
-                $notification->setToGuid($recipient);
-                $this->notifications->add($notification);
+                $notifications[] = $notification->setToGuid($recipient);
 
-                echo " (dispatched) \r";
+                //echo " (dispatched) \r";
             }
+
+            echo "dispatching ...";
+            $this->notifications->add($notifications);
+            echo " (dispatched)";
 
             //now update the counters for each user
             echo "\n[notification]: incrementing counters ";
