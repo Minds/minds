@@ -89,11 +89,14 @@ class Counters
      */
     public function resetCounter()
     {
-        $query = "UPDATE notifications
-                    SET read_timestamp = NOW()
-                    WHERE to_guid = ?
-                    ORDER BY created_timestamp DESC
-                    LIMIT 10";
+        $query = "BEGIN;
+                    UPDATE notifications
+                        SET read_timestamp = NOW()
+                        WHERE to_guid = ?
+                        ORDER BY created_timestamp DESC
+                        LIMIT 1
+                        RETURNING NOTHING;
+                    COMMIT;";
         
         $params = [
             (int) $this->user->getGuid(),
