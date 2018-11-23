@@ -50,7 +50,7 @@ class Counters
                     AND read_timestamp IS NULL";
         
         $params = [
-            (int) $opts['to_guid'],
+            (int) $this->user->getGuid(),
         ];
 
         $statement = $this->sql->prepare($query);
@@ -58,8 +58,8 @@ class Counters
         $statement->execute($params);
 
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-        return (int) $result['count'];
+       
+        return (int) $result[0]['count'];
     }
 
     /**
@@ -85,7 +85,7 @@ class Counters
                     AND read_timestamp IS NULL";
         
         $params = [
-            (int) $opts['to_guid'],
+            (int) $this->user->getGuid(),
         ];
 
         $statement = $this->sql->prepare($query);
