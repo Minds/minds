@@ -45,7 +45,8 @@ class Counters
      */
     public function getCount(array $options = [])
     {
-        $query = "SELECT count(*) FROM notifications
+        return 0;
+        /*$query = "SELECT count(*) FROM notifications
                     WHERE to_guid = ?
                     AND read_timestamp IS NULL";
         
@@ -59,7 +60,7 @@ class Counters
 
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
        
-        return (int) $result[0]['count'];
+        return (int) $result[0]['count'];*/
     }
 
     /**
@@ -79,6 +80,7 @@ class Counters
      */
     public function resetCounter()
     {
+        return;
         $query = "UPDATE notifications
                     SET read_timestamp = NOW()
                     WHERE to_guid = ?
