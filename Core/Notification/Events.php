@@ -62,9 +62,12 @@ class Events
             $data = $params['params'];
             $data['description'] = $description;
 
-            $entityGuid = $entity->getGuid();
-            if ($entity->getType() == 'comment') {
-                $entityGuid = (string) $entity->getLuid();
+            $entityGuid = null;
+            if ($entity) {
+                $entityGuid = $entity->getGuid();
+                if ($entity->getType() == 'comment') {
+                    $entityGuid = (string) $entity->getLuid();
+                }
             }
 
             $notification = new Notification;
