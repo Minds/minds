@@ -17,10 +17,17 @@ class Notifications implements EmailBatchInterface
     /** @var Repository */
     protected $repository;
 
+    /** @var Counters $counters */
+    protected $counters;
+
     protected $offset = '';
 
-    public function __construct($notificationRepository= null) {
+    public function __construct(
+        $notificationRepository= null,
+        $counters = null
+    ) {
         $this->repository = $notificationRepository ?: Di::_()->get('Notification\Repository');
+        $this->counters = $counters ?: new Counters();
     }
 
     public function setOffset($offset)
@@ -31,7 +38,6 @@ class Notifications implements EmailBatchInterface
 
     public function run()
     {
-        $counters = new Counters();
 
         $iterator = new EmailSubscribersIterator();
         $iterator->setCampaign('when')
@@ -40,8 +46,8 @@ class Notifications implements EmailBatchInterface
             ->setOffset($this->offset);
 
         foreach ($iterator as $user) {
-            $counters->setUser($user->guid);
-            $count = $counters->getCount();
+            $this->counters->setUser($user->guid);
+            $count = $this->counters->getCount();
 
             if ($count >= 0) {
 

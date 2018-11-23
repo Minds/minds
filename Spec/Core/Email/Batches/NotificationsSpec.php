@@ -6,6 +6,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Email\EmailSubscription;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Notification\Repository;
+use Minds\Core\Notification\Counters;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -21,7 +22,8 @@ class NotificationsSpec extends ObjectBehavior
     function let(
         Repository $notificationRepository,
         \Minds\Core\Email\Repository $emailRepository,
-        EntitiesBuilder $builder
+        EntitiesBuilder $builder,
+        Counters $counters
     ) {
         $this->notificationRepository = $notificationRepository;
         $this->emailRepository = $emailRepository;
@@ -34,7 +36,7 @@ class NotificationsSpec extends ObjectBehavior
             return $builder->getWrappedObject();
         });
 
-        $this->beConstructedWith($notificationRepository);
+        $this->beConstructedWith($notificationRepository, $counters);
     }
 
     function it_is_initializable()
