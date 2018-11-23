@@ -89,6 +89,10 @@ class Repository
      */
     public function add($notifications)
     {
+        if (!is_array($notifications)) {
+            $notifications = [ $notifications ];
+        }
+
         $query = "INSERT INTO notifications (
             to_guid,
             from_guid,
