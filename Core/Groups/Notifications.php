@@ -117,7 +117,7 @@ class Notifications
 
             $notifications = [];
             foreach ($guids as $recipient) {
-                $notifications[] = $notification->setToGuid($recipient);
+                $notifications[] = (clone) $notification->setToGuid($recipient);
             }
 
             echo "dispatching ...";
