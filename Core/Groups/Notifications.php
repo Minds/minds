@@ -114,7 +114,7 @@ class Notifications
             }
 
             $offset = end($guids);
-
+            return;
             $notifications = [];
             foreach ($guids as $recipient) {
                 $notifications[] = (clone $notification)->setToGuid($recipient);
