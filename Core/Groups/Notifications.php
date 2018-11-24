@@ -119,7 +119,7 @@ class Notifications
             foreach ($guids as $recipient) {
                 $notifications[] = (clone) $notification->setToGuid($recipient);
             }
-
+exit;
             echo "dispatching ...";
             $this->notifications->add($notifications);
             echo " (dispatched) \n";
