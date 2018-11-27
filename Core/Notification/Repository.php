@@ -52,11 +52,9 @@ class Repository
                     SELECT batch_id FROM notification_batches
                     WHERE user_guid=?
                 ) as ns 
-                ON (notifications.batch_id=ns.batch_id)
-                WHERE from_guid != ?";
+                ON (notifications.batch_id=ns.batch_id)";
 
         $joinParams = [
-            (int) $opts['to_guid'],
             (int) $opts['to_guid'],
         ];
 
