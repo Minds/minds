@@ -28,6 +28,9 @@ class Notification
     /** @param array $data */
     private $data;
 
+    /** @var string $batchId */
+    private $batchId;
+
     /**
      * Export
      * @return array

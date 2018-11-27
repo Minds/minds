@@ -40,25 +40,53 @@ class Repository
             throw new \Exception('to_guid must be provided');
         }
 
-        $query = "SELECT * FROM notifications
-                      WHERE to_guid = ?";
+        $params = [];
+
+        $query = "
+            SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
+                   created_timestamp, read_timestamp, data
+                   FROM notifications";
+
+        $join = "
+            INNER JOIN (
+                    SELECT batch_id FROM notification_batches
+                    WHERE user_guid=?
+                ) as ns 
+                ON (notifications.batch_id=ns.batch_id)
+                WHERE from_guid != ?";
+
+        $joinParams = [
+            (int) $opts['to_guid'],
+            (int) $opts['to_guid'],
+        ];
+
+        $union = "
+            SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
+                created_timestamp, read_timestamp, data
+            FROM notifications
+            WHERE to_guid = ?";
         
-        $params = [
+        $unionParams = [
             (int) $opts['to_guid'],
         ];
 
         if ($opts['types']) {
             $placeholders = implode(', ', array_fill(0, count($opts['types']), '?'));
-            $query .= " AND notification_type IN ({$placeholders})";
-            $params = array_merge($params, $opts['types']);
+            $join .= " AND notification_type IN ({$placeholders})";
+            $union .= " AND notification_type IN ({$placeholders})";
+            $joinParams = array_merge($joinParams, $opts['types']);
+            $unionParams = array_merge($unionParams, $opts['types']);
         }
+
+        $query .= $join . " UNION ALL " . $union;
+        $params = array_merge([], $joinParams, $unionParams);
 
         $query .= " ORDER BY created_timestamp DESC
                       LIMIT ? OFFSET ?";
 
         $params[] = (int) $opts['limit'];
         $params[] = (int) $opts['offset'];
-
+        
         $statement = $this->sql->prepare($query);
         
         $statement->execute($params);
@@ -98,7 +126,8 @@ class Repository
             from_guid,
             entity_guid,
             notification_type,
-            data
+            data,
+            batch_id
             ) VALUES ";
 
         $values = [];
@@ -109,10 +138,11 @@ class Repository
                 $notification->getEntityGuid(),
                 $notification->getType(),
                 json_encode($notification->getData()),
+                (string) $notification->getBatchId(),
             ]);
         }
 
-        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?)'));
+        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?,?)'));
         
         $statement = $this->sql->prepare($query);
 

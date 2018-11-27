@@ -19,5 +19,8 @@ class NotificationProvider extends Provider
         $this->di->bind('Notification\Manager', function ($di) {
             return new Manager();
         });
+        $this->di->bind('Notification\Batches\Manager', function ($di) {
+            return new Batches\Manager();
+        });
     }
 }

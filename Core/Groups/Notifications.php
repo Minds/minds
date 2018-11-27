@@ -25,15 +25,28 @@ class Notifications
     protected $cql;
     protected $group;
 
+    /** @var NotificationsManager $notifications */
+    protected $notifications;
+
+    /** @var NotificationBatches */
+    protected $notificationBatches;
+
     /**
      * Constructor
      */
-    public function __construct($relDb = null, $indexDb = null, $cql = null, $notifications = null)
+    public function __construct(
+        $relDb = null,
+        $indexDb = null,
+        $cql = null,
+        $notifications = null,
+        $notificationBatches = null
+    )
     {
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->indexDb = $indexDb ?: Di::_()->get('Database\Cassandra\Indexes');
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->notifications = $notifications ?: Di::_()->get('Notification\Manager');
+        $this->notificationBatches = $notificationBatches ?: Di::_()->get('Notification\Batches\Manager');
     }
 
     /**
@@ -78,8 +91,11 @@ class Notifications
         if (!$activity) {
             return false;
         }
-        //generate only one notification, because it's quicker that way
+        
+        // Generate only one notification, because it's quicker that way
+        // send as a batch
         $notification = (new Notification())
+            ->setToGuid(0) // Groups send to nobody
             ->setEntityGuid($activity->getGuid())
             ->setFromGuid($activity->getOwner())
             ->setType('group_activity')
@@ -87,48 +103,11 @@ class Notifications
             ->setData([
                 'group_guid' => $this->group->getGuid() 
             ])
+            ->setBatchId($this->group->getGuid())
             ->setCreatedTimestamp(time());
 
-        $offset = "";
-        //$from_user = $notification->getFrom();
-
-        while (true) {
-            echo "[notification][group][$activity->container_guid]: Running from $offset \n";
-
-            $guids = $this->getRecipients([
-                'exclude' => $params['exclude'] ?: [],
-                'limit' => 1000,
-                'offset' => $offset
-            ]);
-
-            if ($offset) {
-                array_shift($guids);
-            }
-
-            if (!$guids) {
-                break;
-            }
-
-            if ($guids[0] == $offset) {
-                break;
-            }
-
-            $offset = end($guids);
-            return;
-            $notifications = [];
-            foreach ($guids as $recipient) {
-                $notifications[] = (clone $notification)->setToGuid($recipient);
-            }
-
-            echo "dispatching ...";
-            $this->notifications->add($notifications);
-            echo " (dispatched) \n";
-
-            if (!$offset) {
-                break;
-            }
-        }
-        echo "[notification]: Dispatch complete for $activity->guid \n";
+        $this->notifications->add($notification);
+        echo " dispatched to batchId: {$this->group->getGuid()}";
     }
 
     /**
@@ -226,13 +205,15 @@ class Notifications
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $this->relDB->setGuid($user_guid);
 
-        return $this->relDB->check('group:muted', $this->group->getGuid());
+        $this->notificationBatches->setUser($user_guid);
+        $this->notificationBatches->setBatchId($this->group->getGuid());
+
+        return !$this->notificationBatches->isSubscribed();
     }
 
     /**
-     * Adds an user to the muted Index list
+     * Adds an user to the notifictions batch
      * @param  mixed $user
      * @return boolean
      */
@@ -243,9 +224,11 @@ class Notifications
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $this->relDB->setGuid($user_guid);
 
-        $done = $this->relDB->create('group:muted', $this->group->getGuid());
+        $this->notificationBatches->setUser($user_guid);
+        $this->notificationBatches->setBatchId($this->group->getGuid());
+
+        $done = $this->notificationBatches->unSubscribe();
 
         if ($done) {
             return true;
@@ -255,7 +238,7 @@ class Notifications
     }
 
     /**
-     * Removes an user from the muted Index list
+     * Removes an user from the group notification batch
      * @param  mixed $user
      * @return boolean
      */
@@ -266,9 +249,11 @@ class Notifications
         }
 
         $user_guid = is_object($user) ? $user->guid : $user;
-        $this->relDB->setGuid($user_guid);
 
-        $done = $this->relDB->remove('group:muted', $this->group->getGuid());
+        $this->notificationBatches->setUser($user_guid);
+        $this->notificationBatches->setBatchId($this->group->getGuid());
+
+        $done = $this->notificationBatches->subscribe();
 
         if ($done) {
             return true;
