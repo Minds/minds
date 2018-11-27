@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 $_SCRIPTNAME = basename(__FILE__);
 
