@@ -42,7 +42,7 @@ class Repository
 
         $params = [];
 
-        $query = "
+        /*$query = "
             SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
                    created_timestamp, read_timestamp, data
                    FROM notifications";
@@ -56,7 +56,7 @@ class Repository
 
         $joinParams = [
             (int) $opts['to_guid'],
-        ];
+        ];*/
 
         $union = "
             SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
@@ -70,14 +70,16 @@ class Repository
 
         if ($opts['types']) {
             $placeholders = implode(', ', array_fill(0, count($opts['types']), '?'));
-            $join .= " AND notification_type IN ({$placeholders})";
+            //$join .= " AND notification_type IN ({$placeholders})";
             $union .= " AND notification_type IN ({$placeholders})";
-            $joinParams = array_merge($joinParams, $opts['types']);
+            //$joinParams = array_merge($joinParams, $opts['types']);
             $unionParams = array_merge($unionParams, $opts['types']);
         }
 
-        $query .= $join . " UNION ALL " . $union;
-        $params = array_merge([], $joinParams, $unionParams);
+        //$query .= $join . " UNION ALL " . $union;
+        //$params = array_merge([], $joinParams, $unionParams);
+        $query = $union;
+        $params = $unionParams;
 
         $query .= " ORDER BY created_timestamp DESC
                       LIMIT ? OFFSET ?";
