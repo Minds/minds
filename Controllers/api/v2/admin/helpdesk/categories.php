@@ -24,6 +24,7 @@ class categories implements Api, ApiAdminPam
 
         try {
             $title = $this->getParam('title', 'title must be provided');
+            
             $parent_uuid = $this->getParam('parent_uuid');
 
             $entity = new Category();

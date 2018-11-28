@@ -77,11 +77,7 @@ class questions implements Api
         /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        if ($vote_direction === 'delete') {
-            $result = $manager->unvote($question_uuid);
-        } else {
-            $result = $manager->vote($question_uuid, $vote_direction);
-        }
+        $result = $manager->vote($question_uuid, $vote_direction);
 
         if ($result === false) {
             return Factory::response([
@@ -97,7 +93,43 @@ class questions implements Api
 
     public function delete($pages)
     {
-        return Factory::response([]);
+        $question_uuid = null;
+        $vote_direction = null;
+
+        if (!isset($pages[0])) {
+            return Factory::response(['status' => 'error', 'message' => ':question_uuid must be provided']);
+        }
+
+        $question_uuid = $pages[0];
+
+        if (!isset($pages[1])) {
+            return Factory::response(['status' => 'error', 'message' => 'vote direction must be provided']);
+        }
+
+        if (!(in_array($pages[1], ['up', 'down']))) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => "vote direction can only be either 'up' or 'down'"
+            ]);
+        }
+
+        $vote_direction = $pages[1];
+
+        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
+
+        $result = $manager->unvote($question_uuid);
+
+        if ($result === false) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => "Error saving your vote"
+            ]);
+        }
+
+        return Factory::response([
+            'status' => 'success',
+        ]);
     }
 
 }

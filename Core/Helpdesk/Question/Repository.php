@@ -248,17 +248,15 @@ class Repository
      */
     public function add(Question $entity)
     {
-        $uuid = $entity->getUuid() ?: Core\Util\UUIDGenerator::generate();
 
-        $query = "UPSERT INTO helpdesk_faq (uuid, question, answer, category_uuid) VALUES(?,?,?,?) RETURNING uuid";
+        $query = "INSERT INTO helpdesk_faq (question, answer, category_uuid) VALUES (?,?,?) RETURNING uuid";
 
         $values = [
-            $uuid,
             $entity->getQuestion(),
             $entity->getAnswer(),
-            $entity->getCategoryUuid()
+            $entity->getCategoryUuid(),
         ];
-
+error_log(print_r($values, true));
         try {
             $statement = $this->db->prepare($query);
 

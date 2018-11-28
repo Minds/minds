@@ -74,6 +74,8 @@ class Search
             return $entitiesBuilder->single($r['_source']['guid']);
         }, $result['hits']['hits']);
 
+        $entities = array_values(array_filter($entities));
+
         return $entities;
     }
 }

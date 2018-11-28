@@ -26,6 +26,7 @@ class relatedposts implements Api
         $result = $search->search($_GET['q'], $limit);
 
         $exported = array_map(function($r) {
+            if ($r)
             return $r->export();
         }, $result);
 
