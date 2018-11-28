@@ -16,6 +16,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
 use Minds\Core\Sockets;
+use Minds\Core\Security;
 
 class comments implements Interfaces\Api
 {
@@ -30,6 +31,16 @@ class comments implements Interfaces\Api
         //Factory::isLoggedIn();
         $response = array();
         $guid = $pages[0];
+
+        /*$entity = Entities\Factory::build($guid);
+
+        if (!Security\ACL::_()->read($entity)) {
+            $subtype = $entity->subtype ?: $entity->type;
+            return Factory::response([
+                'status' => 'error',
+                'message' => "You don't have permission to view these comments as the owner has made the $subtype viewable only to themselves."
+            ]);
+        }*/
 
         $repository = new Core\Comments\Repository();
 
@@ -129,6 +140,13 @@ class comments implements Interfaces\Api
                   'message' => 'Comments are disabled for this post'
                 ]);
             }
+
+            /*if (!Security\ACL::_()->write($entity)) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'You do not have permission to comment on this post'
+                ]);
+            }*/
 
             $comment = new Core\Comments\Comment();
             $comment

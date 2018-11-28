@@ -358,6 +358,11 @@ class Defaults
                 'description' => 'Everything you need to know about Minds',
                 'image' => 'assets/photos/canyon.jpg'
             ],
+            'jobs' => [
+                'title' => 'Join the team',
+                'description' => 'Work with Minds.com',
+                'image' => 'assets/photos/canyon.jpg'
+            ],
             'wallet/101' => [
                 'title' => 'Token 101',
                 'description' => 'Everything you need to know about Minds Tokens',

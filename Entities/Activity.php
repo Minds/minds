@@ -247,8 +247,18 @@ class Activity extends Entity
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['rating'] = $this->getRating();
 
-        if ($this->custom_type == 'video' && $this->custom_data['guid']) {
-            $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
+        switch($this->custom_type) {
+            case 'video':
+                if ($this->custom_data['guid']) {
+                    $export['play:count'] = Helpers\Counters::get($this->custom_data['guid'], 'plays');
+                }
+                break;
+            case 'batch':
+                // fix old images src
+                if (is_array($export['custom_data']) && strpos($export['custom_data'][0]['src'], '/wall/attachment') !== false) {
+                    $export['custom_data'][0]['src'] = Core\Config::_()->cdn_url . 'fs/v1/thumbnail/' . $this->entity_guid;
+                }
+                break;
         }
 
         if (Helpers\Flags::shouldDiscloseStatus($this)) {

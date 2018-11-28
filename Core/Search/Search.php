@@ -66,7 +66,8 @@ class Search
             'mature' => false,
             'paywall' => null,
             'license' => null,
-            'sort' => null
+            'sort' => null,
+            'rating' => 1,
         ], $options);
 
         // Initial parameters
@@ -131,6 +132,7 @@ class Search
             $filters['license'] = $options['license'];
         }
 
+
         // Sorting
 
         if ($options['sort'] == 'latest') {
@@ -139,13 +141,25 @@ class Search
             $params['sort'] = [
                 [ '@timestamp' => 'desc' ]
             ];
+            $prepared->setRange([
+                [
+                    'rating' => [
+                        'lte' => $options['rating'],
+                    ]   
+                ]
+            ]);
         } elseif ($options['sort'] == 'top') {
             $match['fields'] = [ 'name^6', 'title^8', 'message^8', 'username^8', 'tags^64'  ];
             $prepared->setRange([
                 [ 
                     'interactions' => [
                         'gt' => '0'
-                        ]
+                    ]
+                ],
+                [
+                    'rating' => [
+                        'lte' => $options['rating'],
+                    ]
                 ],
                 [
                     '@timestamp' => [

@@ -1531,7 +1531,7 @@ abstract class ElggEntity extends ElggData implements
 
     public function setRating($value)
     {
-        if ($value !== 1 && $value !== 2) {
+        if ($value < 1 && $value > 3) {
             $this->rating = 1;
         }
         $this->rating = $value;

@@ -69,6 +69,9 @@ class Entities extends base
             }
         }
 
+	if (!property_exists($row, 'type') || !$row->type) {
+	    //return null;
+        }
         $default = "Minds\\Entities\\" . ucfirst($row->type);
         if (class_exists($default) && is_subclass_of($default, 'ElggEntity')) {
             return new $default($row, $cache);

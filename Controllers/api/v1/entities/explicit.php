@@ -40,6 +40,8 @@ class explicit implements Interfaces\Api
 
         $value = (bool) $_POST['value'];
 
+        $entity->setRating($value ? 3 : 2);
+
         if ($entity->type === 'user') {
             $matureLock = $entity->getMatureLock();
             $isAdmin = Session::isAdmin();
@@ -52,6 +54,7 @@ class explicit implements Interfaces\Api
             }
 
             $entity->setMature($value);
+            
             if ($isAdmin) {
                 $entity->setMatureLock($value);
 

@@ -40,9 +40,9 @@ class Push implements Interfaces\NotificationExtensionInterface
             return false;
         }
 
-        $entity = $notification['notification']->getEntity();
+        $entity_guid = $notification['notification']->getEntityGuid();
+        $entity = EntitiesFactory::build($entity_guid);
 
-        $entity_guid = '';
         $entity_type = 'object';
         $child_guid = '';
         $parent_guid = '';
@@ -83,7 +83,7 @@ class Push implements Interfaces\NotificationExtensionInterface
         }
 
         $push = [
-            'user_guid' => $notification['to']->guid,
+            'user_guid' => $notification['to'],
             'entity_guid' => $entity_guid,
             'child_guid' => $child_guid,
             'entity_type' => $entity_type,
@@ -95,6 +95,10 @@ class Push implements Interfaces\NotificationExtensionInterface
 
         $from_user = EntitiesFactory::build($notification['from'], [ 'cache' => true]) ?:
             Core\Session::getLoggedInUser();
+
+        if (!$from_user) {
+            return;
+        }
 
         $push['title'] = 'Minds';
         $push['message'] = static::buildNotificationMessage($notification, $from_user, $entity);
@@ -200,7 +204,7 @@ class Push implements Interfaces\NotificationExtensionInterface
 
         $name = $from_user->name;
 
-        $isOwner = $notification['to']->getGuid() == $entity->owner_guid;
+        $isOwner = $notification['to'] == $entity->owner_guid;
         $prefix = $isOwner ? 'your ': $entity->ownerObj['name']."'s ";
         $desc = ($entity->type == 'activity') ? 'activity': $entity->subtype;
 

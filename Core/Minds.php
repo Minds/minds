@@ -12,13 +12,37 @@ class Minds extends base
     public $legacy_lib_dir = "/lib/";
     public static $booted = false;
 
+    private $modules = [
+        Experiments\Module::class
+    ];
+
     /**
      * Initializes the site
      * @return null
      */
     public function init()
     {
+        $this->initModules();
         $this->initProviders();
+    }
+
+    /**
+     * Register our modules
+     * @return null
+     */
+    public function initModules()
+    {
+        $modules = [];
+        foreach ($this->modules as $module) {
+            $modules[] = new $module;
+        }
+
+        /**
+         * Initialise the modules
+         */
+        foreach ($modules as $module) {
+            $module->onInit();
+        }
     }
 
     /**

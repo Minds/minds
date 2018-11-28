@@ -25,6 +25,7 @@ class Events
 
         /**
          * Create a notification when triggered
+         * TODO: remove this
          */
         Dispatcher::register('notification', 'all', function (Event $event) {
             $params = $event->getParameters();
@@ -42,6 +43,10 @@ class Events
                 'cache' => true
             ]);
 
+            if (!$from_user) {
+                return; //Must be from a user
+            }
+
             $entity = $params['entity'];
             $description = isset($params['description']) ? $params['description'] : '';
 
@@ -54,14 +59,25 @@ class Events
                 $description = substr($description, 0, 65535);
             }
 
-            $notification = (new Entities\Notification())
-                ->setEntity($entity)
-                ->setFrom($from_user)
-                ->setNotificationView($params['notification_view'])
-                ->setDescription($description)
-                ->setParams($params['params'])
-                ->setTimeCreated(time());
+            $data = $params['params'];
+            $data['description'] = $description;
 
+            $entityGuid = null;
+            if ($entity) {
+                $entityGuid = $entity->getGuid();
+                if ($entity->getType() == 'comment') {
+                    $entityGuid = (string) $entity->getLuid();
+                }
+            }
+
+            $notification = new Notification;
+            $notification
+                ->setToGuid($params['to'])
+                ->setFromGuid($from_user->getGuid())
+                ->setEntityGuid($entityGuid)
+                ->setType($params['notification_view'])
+                ->setData($data);
+            
             try {
                 Queue\Client::build()
                   ->setQueue('NotificationDispatcher')
@@ -69,7 +85,8 @@ class Events
                       'notification' => serialize($notification),
                       'to' => $params['to']
                   ]);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
 
             $event->setResponse([
                 $notification
@@ -142,65 +159,50 @@ class Events
             $params = $event->getParameters();
             $notification = unserialize($params['notification']);
 
-            if (!$notification instanceof Entities\Notification) {
+            if (!$notification instanceof Notification) {
                 return;
             }
 
-            $entity = $notification->getEntity();
-
+            $entity = Entities\Factory::build($notification->getEntityGuid());
+            
             if ($entity->parent_guid || method_exists($entity, 'getEntityGuid')) {
                 $parentGuid = method_exists($entity, 'getEntityGuid') ? $entity->getEntityGuid() : $entity->parent_guid;
                 $parent = Entities\Factory::build($parentGuid, [ 'cache' => false ]);
 
-                if ($parent && method_exists($parent, 'export')) {
-                    $exportedParent = $parent->export();
-
-                    if (isset($exportedParent['guid'])) {
-                        $exportedParent['guid'] = (string) $exportedParent['guid'];
-                    }
-
-                    $notification->setParams(array_merge(
-                        $notification->getParams() ?: [],
-                        [ 'parent' => $exportedParent ]
+                if ($parent && method_exists($parent, 'getGuid')) {
+                    $notification->setData(array_merge(
+                        $notification->getData() ?: [],
+                        [ 'parent_guid' => $parent->getGuid() ]
                     ));
                 }
             }
 
-            $from_user = $notification->getFrom();
-            if (is_numeric($from_user) || is_string($from_user)) {
-                $from_user = Entities\Factory::build($from_user);
-            }
-
             $counters = new Counters();
 
+            $manager = Core\Di\Di::_()->get('Notification\Manager');
+
             foreach ($params['to'] as $to_user) {
-                if (is_numeric($to_user) || is_string($to_user)) {
-                    $to_user = Entities\Factory::build((int) $to_user);
-                }
 
-                if (!$to_user) {
+                if ($notification->getFromGuid() 
+                    && Core\Security\ACL\Block::_()->isBlocked($notification->getFromGuid(), $notification->getToGuid())
+                ) {
                     continue;
                 }
 
-                if ($from_user->guid && Core\Security\ACL\Block::_()->isBlocked($from_user, $to_user)) {
-                    // echo "{$from_user->username} is blocked by {$to_user->username}, skipping.";
-                    continue;
-                }
+                $notification->setToGuid($to_user);
 
-                $notification->setTo($to_user)
-                  ->setOwner($to_user)
-                  ->save();
-
+                $manager->add($notification);
+                
                 $counters->setUser($to_user)
                   ->increaseCounter($to_user);
 
                 $params = $notification->getParams();
-                $params['notification_view']  = $notification->getNotificationView();
+                $params['notification_view']  = $notification->getType();
 
                 Push::_()->queue([
                     'uri' => 'notification',
-                    'from' => $notification->getFrom(),
-                    'to' => $notification->getTo(),
+                    'from' => $notification->getFromGuid(),
+                    'to' => $notification->getToGuid(),
                     'notification' => $notification,
                     'params' => $params,
                     'count' => $counters->getCount()

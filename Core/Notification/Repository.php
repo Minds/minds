@@ -1,206 +1,164 @@
 <?php
+/**
+ * SQL Repository
+ */
 namespace Minds\Core\Notification;
 
-use Cassandra;
-
-use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Data;
-use Minds\Core\Data\Cassandra\Prepared;
-use Minds\Entities;
+use Minds\Common\Repository\Response;
 
 class Repository
 {
-    const NOTIFICATION_TTL = 30 * 24 * 60 * 60;
 
-    protected $owner;
+    /** @var $sql */
+    private $sql;
 
-    public function __construct($db = null)
+    public function __construct($sql = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->sql = $sql ?: Di::_()->get('Database\PDO');
     }
 
-    public function setOwner($guid)
+    // TODO
+    public function get($uuid)
     {
-        if (is_object($guid)) {
-            $guid = $guid->guid;
-        } elseif (is_array($guid)) {
-            $guid = $guid['guid'];
-        }
 
-        $this->owner = $guid;
-
-        return $this;
     }
 
-    public function getAll($type = null, array $options = [])
+    /**
+     * Get a list of notifications
+     */
+    public function getList($opts)
     {
-        if (!$this->owner) {
-            throw new \Exception('Should call to setOwner() first');
-        }
-
-        $options = array_merge([
+        $opts = array_merge([
+            'to_guid' => null,
+            'offset' => 0,
             'limit' => 12,
-            'offset' => ''
-        ], $options);
+            'type' => null,
+        ], $opts);
 
-        $template = "SELECT * FROM notifications WHERE owner_guid = ?";
-        $values = [ new Cassandra\Varint($this->owner) ];
-        $allowFiltering = false;
-
-        if ($type) {
-            // TODO: Switch template to materialized view
-            $template .= " AND type = ?";
-            $values[] = (string) $type;
-            $allowFiltering = true;
+        if (!$opts['to_guid']) {
+            throw new \Exception('to_guid must be provided');
         }
 
-        $template .= " ORDER BY guid DESC";
+        $params = [];
 
-        if ($allowFiltering) {
-            $template .= " ALLOW FILTERING";
+        /*$query = "
+            SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
+                   created_timestamp, read_timestamp, data
+                   FROM notifications";
+
+        $join = "
+            INNER JOIN (
+                    SELECT batch_id FROM notification_batches
+                    WHERE user_guid=?
+                ) as ns 
+                ON (notifications.batch_id=ns.batch_id)";
+
+        $joinParams = [
+            (int) $opts['to_guid'],
+        ];*/
+
+        $union = "
+            SELECT uuid, to_guid, from_guid, entity_guid, notification_type,
+                created_timestamp, read_timestamp, data
+            FROM notifications
+            WHERE to_guid = ?";
+        
+        $unionParams = [
+            (int) $opts['to_guid'],
+        ];
+
+        if ($opts['types']) {
+            $placeholders = implode(', ', array_fill(0, count($opts['types']), '?'));
+            //$join .= " AND notification_type IN ({$placeholders})";
+            $union .= " AND notification_type IN ({$placeholders})";
+            //$joinParams = array_merge($joinParams, $opts['types']);
+            $unionParams = array_merge($unionParams, $opts['types']);
         }
 
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-        $query->setOpts([
-            'page_size' => $options['limit'],
-            'paging_state_token' => base64_decode($options['offset'])
+        //$query .= $join . " UNION ALL " . $union;
+        //$params = array_merge([], $joinParams, $unionParams);
+        $query = $union;
+        $params = $unionParams;
+
+        $query .= " ORDER BY created_timestamp DESC
+                      LIMIT ? OFFSET ?";
+
+        $params[] = (int) $opts['limit'];
+        $params[] = (int) $opts['offset'];
+        
+        $statement = $this->sql->prepare($query);
+        
+        $statement->execute($params);
+
+        $response =  new Response();
+        foreach($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $notification = new Notification();
+            $notification->setUUID($row['uuid'])
+                ->setToGuid($row['to_guid'])
+                ->setFromGuid($row['from_guid'])
+                ->setEntityGuid($row['entity_guid'])
+                ->setCreatedTimestamp(strtotime($row['created_timestamp']))
+                ->setReadTimestamp($row['read_timestamp'])
+                ->setType($row['notification_type'])
+                ->setData(json_decode($row['data'], true));
+
+            $response[] = $notification;
+        }
+        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
+
+        return $response;
+    }
+
+    /**
+     * Add a notification to the database
+     * @param Notification[] $notification
+     * @return bool
+     */
+    public function add($notifications)
+    {
+        if (!is_array($notifications)) {
+            $notifications = [ $notifications ];
+        }
+
+        $query = "INSERT INTO notifications (
+            to_guid,
+            from_guid,
+            entity_guid,
+            notification_type,
+            data,
+            batch_id
+            ) VALUES ";
+
+        $values = [];
+        foreach ($notifications as $notification) {
+            $values = array_merge($values, [
+                $notification->getToGuid(),
+                $notification->getFromGuid(),
+                $notification->getEntityGuid(),
+                $notification->getType(),
+                json_encode($notification->getData()),
+                (string) $notification->getBatchId(),
             ]);
-
-        $notifications = [];
-
-        try {
-            $result = $this->db->request($query);
-
-            foreach ($result as $row) {
-                $notification = new Entities\Notification();
-                $notification->loadFromArray($row['data']);
-                $notifications[] = $notification;
-            }
-        } catch (\Exception $e) {
-            // TODO: Log or warning
         }
 
-        return [
-          'notifications' => $notifications,
-          'token' => base64_encode($result->pagingStateToken())
-        ];
+        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?,?)'));
+        
+        $statement = $this->sql->prepare($query);
+
+        return $statement->execute($values);
     }
 
-    public function getEntity($guid)
+    // TODO
+    public function update($notification, $fields)
     {
-        if (!$guid) {
-            return false;
-        }
 
-        if (!$this->owner) {
-            throw new \Exception('Should call to setOwner() first');
-        }
-
-        $template = "SELECT * FROM notifications WHERE owner_guid = ? AND guid = ? LIMIT ?";
-        $values = [ new Cassandra\Varint($this->owner), new Cassandra\Varint($guid), 1 ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        $notification = false;
-
-        try {
-            $result = $this->db->request($query);
-
-            if (isset($result[0]) && $result[0]) {
-                $notification = new Entities\Notification();
-                $notification->loadFromArray($result[0]['data']);
-            }
-        } catch (\Exception $e) {
-            // TODO: Log or warning
-        }
-
-        return $notification;
     }
 
-    public function store($data, $age = 0)
+    // TODO
+    public function delete($uuid)
     {
-        if (!isset($data['guid']) || !$data['guid']) {
-            return false;
-        }
 
-        if (!$this->owner) {
-            throw new \Exception('Should call to setOwner() first');
-        }
-
-        $ttl = static::NOTIFICATION_TTL - $age;
-
-        if ($ttl < 0) {
-            return false;
-        }
-
-        $template = "INSERT INTO notifications (owner_guid, guid, type, data) VALUES (?, ?, ?, ?) USING TTL ?";
-        $values = [
-            new Cassandra\Varint($this->owner),
-            new Cassandra\Varint($data['guid']),
-            isset($data['filter']) && $data['filter'] ? $data['filter'] : 'other',
-            json_encode($data),
-            $ttl
-        ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $success = $this->db->request($query);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return $success;
     }
 
-    public function delete($guid)
-    {
-        if (!$guid) {
-            return false;
-        }
-
-        if (!$this->owner) {
-            throw new \Exception('Should call to setOwner() first');
-        }
-
-        $template = "DELETE FROM notifications WHERE owner_guid = ? AND guid = ? LIMIT ?";
-        $values = [ new Cassandra\Varint($this->owner), new Cassandra\Varint($guid), 1];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $success = $this->db->request($query);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return (bool) $success;
-    }
-
-    public function count()
-    {
-        if (!$this->owner) {
-            throw new \Exception('Should call to setOwner() first');
-        }
-
-        $template = "SELECT COUNT(*) FROM notifications WHERE owner_guid = ?";
-        $values = [ new Cassandra\Varint($this->owner) ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $result = $this->db->request($query);
-            $count = (int) $result[0]['count'];
-        } catch (\Exception $e) {
-            $count = 0;
-        }
-
-        return $count;
-    }
 }

@@ -31,7 +31,7 @@ class CassandraProvisionerSpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Provisioner\Provisioners\CassandraProvisioner');
     }
 
-    function it_should_provision()
+    /*function it_should_provision()
     {
         $this->_db->keyspaceExists()->shouldBeCalled()->willReturn(false);
         $this->_db->createKeyspace(Argument::type('array'))->shouldBeCalled()->willReturn(true);
@@ -50,5 +50,5 @@ class CassandraProvisionerSpec extends ObjectBehavior
         $this
             ->shouldThrow(Exceptions\ProvisionException::class)
             ->duringProvision();
-    }
+    }*/
 }

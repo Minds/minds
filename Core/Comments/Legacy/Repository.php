@@ -125,7 +125,9 @@ class Repository
             $comments[] = $this->legacyEntity->build($row);
         }
 
-        $comments->setPagingToken(base64_encode($comments->end()->getGuid()));
+        if (count($guids) >= $opts['limit']) {
+            $comments->setPagingToken(base64_encode($comments->end()->getGuid()));
+        }
 
         return $comments;
     }

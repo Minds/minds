@@ -5,7 +5,9 @@
 namespace Minds\Core\Blockchain\Transactions;
 
 use Minds\Entities\User;
+use Minds\Entities\Factory as EntityFactory;
 use Minds\Traits\MagicAttributes;
+use Minds\Helpers\Unknown;
 
 /**
  * Class Transaction
@@ -77,10 +79,12 @@ class Transaction
             'contract' => $this->contract
         ];
         if ($this->data['sender_guid']) {
-            $export['sender'] = (new User($this->data['sender_guid']))->export();
+            $sender = EntityFactory::build($this->data['sender_guid']) ?: Unknown::user();
+            $export['sender'] = $sender->export();
         }
         if ($this->data['receiver_guid']) {
-            $export['receiver'] = (new User($this->data['receiver_guid']))->export();
+            $receiver = EntityFactory::build($this->data['receiver_guid']) ?: Unknown::user();
+            $export['receiver'] = $receiver->export();
         }
         return $export;
     }

@@ -36,9 +36,10 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('paywall')->willReturn(false);
         $user->get('username')->willReturn('phpspec');
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(false);
 
-        $user->isMature()->willReturn(true);
+        $user->isMature()->willReturn(false);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
 
@@ -65,12 +66,13 @@ class UserMappingSpec extends ObjectBehavior
                 'blurb' => 'PHPSpec Blurb',
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
+                'rating' => 1,
                 'username' => 'phpspec',
                 'briefdescription' => 'PHPSpec Brief Description #invalidhashtag',
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'user',
                 'public' => true,
-                'group_membership' => [ 2000 ]
+                'group_membership' => [ 2000 ],
             ]);
     }
 
@@ -88,6 +90,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('owner_guid')->willReturn(false);
         $user->get('container_guid')->willReturn(1000);
         $user->get('mature')->willReturn(false);
+        $user->get('is_mature')->willReturn(false);
         $user->get('message')->willReturn('PHPSpec Message #test #hashtag');
         $user->get('name')->willReturn('PHPSpec Name');
         $user->get('title')->willReturn('PHPSpec Title');
@@ -96,6 +99,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('paywall')->willReturn(false);
         $user->get('username')->willReturn('phpspec');
         $user->get('briefdescription')->willReturn('PHPSpec Brief Description #invalidhashtag');
+        $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(true);
 
         $user->isMature()->willReturn(true);
