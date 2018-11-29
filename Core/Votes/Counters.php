@@ -12,7 +12,7 @@ use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Entities\Question;
+use Minds\Core\Helpdesk\Question\Question;
 use Minds\Helpers;
 
 class Counters
