@@ -3,7 +3,7 @@
 namespace Spec\Minds\Core\Helpdesk\Category;
 
 use Minds\Core\Helpdesk\Category\Repository;
-use Minds\Core\Helpdesk\Entities\Category;
+use Minds\Core\Helpdesk\Category\Category;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -32,13 +32,17 @@ class RepositorySpec extends ObjectBehavior
         $statement->execute(['uuid1'])
             ->shouldBeCalled();
 
-        $statement->fetchAll(\PDO::FETCH_ASSOC)
+        $statement->fetch(\PDO::FETCH_ASSOC)
             ->shouldBeCalled()
-            ->willReturn([['uuid' => 'uuid1', 'title' => 'title', 'parent' => null, 'branch' => 'uuid1']]);
+            ->willReturn([
+                'uuid' => 'uuid1',
+                'title' => 'title',
+                'parent' => null,
+                'branch' => 'uuid1'
+            ]);
 
-        $this->getAll(['uuid' => 'uuid1'])->shouldBeArray();
-
-        $this->getAll(['uuid' => 'uuid1'])[0]->shouldBeAnInstanceOf(Category::class);
+        $this->get('uuid1')
+            ->shouldBeAnInstanceOf(Category::class);
     }
 
     function it_should_add(\PDOStatement $statement, Category $category)

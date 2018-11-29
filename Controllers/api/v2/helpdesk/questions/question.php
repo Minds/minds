@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Helpdesk single questions endpoint
+ */
 namespace Minds\Controllers\api\v2\helpdesk\questions;
 
 use Minds\Api\Factory;
@@ -18,23 +20,13 @@ class question implements Api
         }
 
         $uuid = $pages[0];
-        // get a single question
+
         /** @var Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Manager');
 
         $opts = ['question_uuid' => $uuid];
 
-        if (Session::isLoggedin()) {
-            $opts['user_guid'] = Session::getLoggedInUserGuid();
-        }
-
-        $result = $manager->getAll($opts);
-
-        $question = null;
-
-        if (count($result) > 0) {
-            $question = $result[0];
-        }
+        $question = $manager->get($uuid);
 
         return Factory::response([
             'status' => 'success',

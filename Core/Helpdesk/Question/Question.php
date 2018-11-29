@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Core\Helpdesk\Entities;
+namespace Minds\Core\Helpdesk\Question;
 
 use Minds\Traits\MagicAttributes;
 

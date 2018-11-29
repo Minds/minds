@@ -4,13 +4,14 @@ namespace Minds\Core\Helpdesk\Question;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
+use Minds\Common\Repository\Response;
 use Minds\Core\Helpdesk\Category;
-use Minds\Core\Helpdesk\Entities\Question;
 
 class Repository
 {
     /** @var \PDO */
     protected $db;
+
     /** @var Category\Repository */
     protected $repository;
 
@@ -40,33 +41,17 @@ class Repository
      * @param array $opts
      * @return Question[]
      */
-    public function getAll(array $opts = [])
+    public function getList(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 10,
             'offset' => 0,
             'category_uuid' => null,
-            'question_uuid' => null,
-            'user_guid' => null, // for thumbs
-            'orderBy' => null, // has to be a valid field
-            'orderDirection' => 'DESC',
-            'hydrateCategory' => false,
         ], $opts);
 
-        $query = 'SELECT * FROM helpdesk_faq ';
+        $query = "SELECT * FROM helpdesk_faq ";
         $where = [];
         $values = [];
-
-        if ($opts['user_guid']) {
-            $query = 'SELECT q.*, v.type AS voted FROM helpdesk_faq q 
-                      LEFT JOIN helpdesk_votes v ON v.question_uuid = q.uuid AND v.user_guid = ? ';
-            $values[] = $opts['user_guid'];
-        }
-
-        if ($opts['question_uuid']) {
-            $where[] = "uuid = ?";
-            $values[] = $opts['question_uuid'];
-        }
 
         if ($opts['category_uuid']) {
             $where[] = "category_uuid = ?";
@@ -75,15 +60,6 @@ class Repository
 
         if (count($where) > 0) {
             $query .= 'WHERE ' . implode(' AND ', $where);
-        }
-
-
-        if ($opts['orderBy'] && in_array($opts['orderBy'], self::$orderByFields)) {
-            $query .= " ORDER BY {$opts['orderBy']} ";
-
-            if ($opts['orderDirection'] && in_array(strtoupper($opts['orderDirection']), self::$orderDirections)) {
-                $query .= $opts['orderDirection'];
-            }
         }
 
         if ($opts['limit']) {
@@ -102,28 +78,57 @@ class Repository
 
         $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
-        $result = [];
+
+        $response = new Response();
 
         foreach ($data as $row) {
             $question = new Question();
             $question->setUuid($row['uuid'])
                 ->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
-                ->setCategoryUuid($row['category_uuid'])
-                ->setThumbUp($row['voted'] === true)
-                ->setThumbDown($row['voted'] === false);
+                ->setCategoryUuid($row['category_uuid']);
 
-            if ($opts['hydrateCategory']) {
-                $question->setCategory($this->repository->getAll([
-                    'uuid' => $row['category_uuid'],
-                    'recursive' => false,
-                ])[0]);
-            }
-
-            $result[] = $question;
+            $response[] = $question;
         }
+        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
 
-        return $result;
+        return $response;
+    }
+
+    /**
+     * Return a single question
+     * @param string $uuid
+     * @return Question
+     */
+    public function get($uuid, $user_guid)
+    {
+        $query = "SELECT q.*, v.question_uuid AS voted 
+            FROM helpdesk_faq q 
+            LEFT JOIN helpdesk_votes v 
+                ON v.question_uuid = q.uuid 
+                AND v.user_guid = ?
+            WHERE q.uuid = ?";
+        
+        $values = [
+            $user_guid,
+            $uuid,
+        ];
+
+        $statement = $this->db->prepare($query);
+
+        $statement->execute($values);
+
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+
+        $question = new Question();
+        $question->setUuid($row['uuid'])
+            ->setQuestion($row['question'])
+            ->setAnswer($row['answer'])
+            ->setCategoryUuid($row['category_uuid'])
+            ->setThumbUp($row['voted'] === 'up')
+            ->setThumbDown($row['voted'] === 'down');
+
+        return $question;
     }
 
     /**
@@ -139,7 +144,7 @@ class Repository
         ], $opts);
         $limit = intval($opts['limit']);
 
-        $query = "SELECT q.question,q.answer,q.uuid,count(user_guid)AS votes
+        $query = "SELECT q.question, q.answer, q.uuid, count(user_guid) AS votes
             FROM helpdesk_votes v
             JOIN helpdesk_faq q ON q.uuid=v.question_uuid
             WHERE TYPE=TRUE
@@ -160,14 +165,11 @@ class Repository
 
             foreach ($topQuestions as $row) {
                 $question = new Question();
-                $voted = $this->getVote($row['uuid'], $userGuid);
 
                 $question->setQuestion($row['question'])
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'])
-                    ->setUuid($row['uuid'])
-                    ->setThumbUp($voted === true)
-                    ->setThumbDown($voted === false);
+                    ->setUuid($row['uuid']);
 
                 $result[] = $question;
             }
@@ -191,8 +193,9 @@ class Repository
         ], $opts);
 
         $query = "SELECT q.*, c.branch, v.type AS voted
-            FROM helpdesk_faq q JOIN helpdesk_categories c ON c.uuid = q.category_uuid
-            LEFT JOIN helpdesk_votes v ON v.question_uuid = q.uuid AND v.user_guid = ?";
+            FROM helpdesk_faq q
+            JOIN helpdesk_categories c 
+                ON c.uuid = q.category_uuid";
         $where = [];
         $values = [];
 
@@ -229,10 +232,7 @@ class Repository
             $question->setQuestion($row['question'])
                 ->setAnswer($row['answer'])
                 ->setCategoryUuid($row['category_uuid'])
-                ->setCategory($this->repository->getBranch($row['category_uuid']))
-                ->setUuid($row['uuid'])
-                ->setThumbUp($row['voted'] === true)
-                ->setThumbDown($row['voted'] === false);
+                ->setUuid($row['uuid']);
 
             $result[] = $question;
         }
@@ -256,7 +256,7 @@ class Repository
             $entity->getAnswer(),
             $entity->getCategoryUuid(),
         ];
-error_log(print_r($values, true));
+
         try {
             $statement = $this->db->prepare($query);
 

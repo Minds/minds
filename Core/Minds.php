@@ -13,7 +13,8 @@ class Minds extends base
     public static $booted = false;
 
     private $modules = [
-        Experiments\Module::class
+        Experiments\Module::class,
+        Helpdesk\Module::class,
     ];
 
     /**
@@ -94,7 +95,6 @@ class Minds extends base
         (new Plus\PlusProvider())->register();
         (new Hashtags\HashtagsProvider())->register();
         (new Feeds\FeedsProvider())->register();
-        (new Helpdesk\HelpdeskProvider())->register();
     }
 
     /**

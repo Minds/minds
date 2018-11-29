@@ -2,9 +2,9 @@
 
 namespace Minds\Core\Helpdesk;
 
-use Minds\Core\Di\Provider;
+use Minds\Core\Di\Provider as DiProvider;
 
-class HelpdeskProvider extends Provider
+class Provider extends DiProvider
 {
     public function register()
     {
@@ -22,6 +22,18 @@ class HelpdeskProvider extends Provider
 
         $this->di->bind('Helpdesk\Category\Manager', function ($di) {
             return new Category\Manager();
+        }, ['useFactory' => false]);
+
+        $this->di->bind('Helpdesk\Question\Votes\Manager', function ($di) {
+            return new Question\Votes\Manager();
+        }, ['useFactory' => false]);
+
+        $this->di->bind('Helpdesk\Category', function ($di) {
+            return new Category\Category();
+        }, ['useFactory' => false]);
+
+        $this->di->bind('Helpdesk\Question', function ($di) {
+            return new Question\Question();
         }, ['useFactory' => false]);
 
         $this->di->bind('Helpdesk\Search', function ($di) {

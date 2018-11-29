@@ -3,8 +3,8 @@
 namespace Minds\Core\Helpdesk\Category;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Entities\Category;
 use Minds\Core\Util\UUIDGenerator;
+use Minds\Common\Repository\Response;
 use Minds\Controllers\api\v2\notifications\follow;
 
 class Repository
@@ -19,9 +19,9 @@ class Repository
 
     /**
      * @param array $opts
-     * @return Category[]
+     * @return Response
      */
-    public function getAll(array $opts = [])
+    public function getList(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 10,
@@ -50,7 +50,7 @@ class Repository
 
         $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
-        $result = [];
+        $response = new Response();
 
         foreach ($data as $row) {
             $category = new Category();
@@ -66,10 +66,12 @@ class Repository
                 }
             }
 
-            $result[] = $category;
+            $response[] = $category;
         }
 
-        return $result;
+        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
+
+        return $response;
     }
 
     /**
@@ -78,7 +80,7 @@ class Repository
      * @param string $uuid
      * @return Category
      */
-    public function getOne($uuid)
+    public function get($uuid)
     {
         $query = "SELECT * FROM helpdesk_categories WHERE uuid = ?";
 

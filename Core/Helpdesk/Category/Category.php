@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Core\Helpdesk\Entities;
+namespace Minds\Core\Helpdesk\Category;
 
 use Minds\Api\Factory;
 use Minds\Traits\MagicAttributes;
@@ -25,12 +25,22 @@ class Category
 {
     use MagicAttributes;
 
+    /** @var string $uuid */
     protected $uuid;
+
+    /** @var string $title */
     protected $title;
+
+    /** @var string $parent_uuid */
     protected $parent_uuid;
+
     /** @var Category */
     protected $parent;
+    
+    /** @var string $branch */
     protected $branch;
+    
+    
     protected $questions;
 
     public function export()

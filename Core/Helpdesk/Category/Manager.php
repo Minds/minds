@@ -1,19 +1,21 @@
 <?php
-
+/**
+ * Helpdesk Categories Manager
+ */
 namespace Minds\Core\Helpdesk\Category;
 
-
 use Minds\Core\Di\Di;
+use Minds\Common\Repository\Response;
 use Minds\Core\Helpdesk\Entities\Category;
 
 class Manager
 {
     /** @var Repository */
-    private $repo;
+    private $repository;
 
     public function __construct($repository = null)
     {
-        $this->repo = $repository ?: Di::_()->get('Helpdesk\Category\Repository');
+        $this->repository = $repository ?: Di::_()->get('Helpdesk\Category\Repository');
     }
 
     /**
@@ -28,12 +30,12 @@ class Manager
             'uuid' => '',
             'recursive' => false,
         ], $opts);
-        return $this->repo->getAll($opts);
+        return $this->repo->getList($opts);
     }
 
-    public function getOne($uuid)
+    public function get($uuid)
     {
-        return $this->repo->getOne($uuid);
+        return $this->repo->get($uuid);
     }
 
     public function getBranch($uuid)

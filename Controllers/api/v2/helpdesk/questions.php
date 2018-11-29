@@ -5,6 +5,7 @@ namespace Minds\Controllers\api\v2\helpdesk;
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
 use Minds\Interfaces\Api;
+use Minds\Core\Session;
 
 class questions implements Api
 {
@@ -31,6 +32,11 @@ class questions implements Api
         /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Manager');
 
+        $category = Di::_()->get('Helpdesk\Category');
+        $category->setUuid($category_uuid);
+
+        $manager->setCategory($category);
+
         $questions = $manager->getAll([
             'limit' => $limit,
             'offset' => $offset,
@@ -53,7 +59,7 @@ class questions implements Api
     public function put($pages)
     {
         $question_uuid = null;
-        $vote_direction = null;
+        $direction = null;
 
         if (!isset($pages[0])) {
             return Factory::response(['status' => 'error', 'message' => ':question_uuid must be provided']);
@@ -65,19 +71,25 @@ class questions implements Api
             return Factory::response(['status' => 'error', 'message' => 'vote direction must be provided']);
         }
 
-        if (!(in_array($pages[1], ['up', 'down', 'delete']))) {
+        if (!(in_array($pages[1], ['up', 'down']))) {
             return Factory::response([
                 'status' => 'error',
                 'message' => "vote direction can only be either 'up' or 'down'"
             ]);
         }
 
-        $vote_direction = $pages[1];
+        $direction = $pages[1];
+        $question = Di::_()->get('Helpdesk\Question');
+        $question->setUuid($question_uuid);
 
         /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
-        $manager = Di::_()->get('Helpdesk\Question\Manager');
+        $manager = Di::_()->get('Helpdesk\Question\Votes\Manager');
+        $manager
+            ->setDirection($direction)
+            ->setUser(Session::getLoggedInUser())
+            ->setQuestion($question);
 
-        $result = $manager->vote($question_uuid, $vote_direction);
+        $result = $manager->vote();
 
         if ($result === false) {
             return Factory::response([
@@ -113,12 +125,18 @@ class questions implements Api
             ]);
         }
 
-        $vote_direction = $pages[1];
+        $direction = $pages[1];
+        $question = Di::_()->get('Helpdesk\Question');
+        $question->setUuid($question_uuid);
 
         /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
-        $manager = Di::_()->get('Helpdesk\Question\Manager');
+        $manager = Di::_()->get('Helpdesk\Question\Votes\Manager');
+        $manager
+            ->setDirection($direction)
+            ->setUser(Session::getLoggedInUser())
+            ->setQuestion($question);
 
-        $result = $manager->unvote($question_uuid);
+        $result = $manager->delete();
 
         if ($result === false) {
             return Factory::response([
