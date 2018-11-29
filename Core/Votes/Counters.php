@@ -12,16 +12,14 @@ use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Question\Question;
 use Minds\Helpers;
 
 class Counters
 {
-    public static $validDirections = ['up', 'down'];
+    public static $validDirections = [ 'up', 'down' ];
 
     /** @var Client $cql */
     protected $cql;
-
 
     /** @var abstractCacher $cacher */
     protected $cacher;
@@ -44,21 +42,11 @@ class Counters
         $entity = $vote->getEntity();
         $direction = $vote->getDirection();
 
-        $entity_id = null;
-        $count = null;
-        if ($entity instanceof Question) {
-            $entity_id = $entity->getUuid();
-            $count = $value; // only the diff, as we update in a SQL query
-        } else {
-            $entity_id = $entity->guid;
-            $count = $entity->{"thumbs:{$direction}:count"};
-        }
-
         // Direct entity modification
-        $this->updateEntity($entity, $direction, $entity instanceof Question ? $value : $count + $value);
+        $this->updateEntity($entity->guid, $direction, $entity->{"thumbs:{$direction}:count"} + $value);
 
         // Modify entity counters
-        $this->updateCounter($entity_id, $direction, $value);
+        $this->updateCounter($entity->guid, $direction, $value);
 
         // If there's a remind, modify its counters
         if ($entity->remind_object) {
@@ -90,25 +78,20 @@ class Counters
             throw new \Exception('Invalid direction');
         }
 
-        if ($entity instanceof Question) {
-            $direction = ucfirst($direction);
-            return (int) call_user_func_array([$entity, "getThumbs{$direction}Count"], []);
-        }
-
         return (int) $entity->{"thumbs:{$direction}:count"};
     }
 
     /**
-     * @param $entity
+     * @param int|string $guid
      * @param string $direction
      * @param int $value
      * @return bool|mixed
      */
-    protected function updateEntity($entity, $direction, $value)
+    protected function updateEntity($guid, $direction, $value)
     {
         $prepared = new Custom();
         $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-            (string) $entity->guid,
+            (string) $guid,
             "thumbs:{$direction}:count",
             (string) $value
         ]);

@@ -16,9 +16,7 @@ use Minds\Entities\Factory;
 class Manager
 {
 
-    /** @var Counters */
     protected $counters;
-    /** @var Indexes */
     protected $indexes;
 
     protected $entity;

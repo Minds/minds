@@ -17,7 +17,6 @@ class Indexes
     /** @var Client $cql */
     protected $cql;
 
-
     public function __construct($cql = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
@@ -32,17 +31,11 @@ class Indexes
         $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
         $userGuids[] = (string) $actor->guid;
 
-        $entity_id = null;
-        $entity_type = null;
-
-        $entity_id = $entity->guid;
-        $entity_type = $entity->type;
-
-        $this->setEntityList($entity, $direction, array_values(array_unique($userGuids)));
+        $this->setEntityList($entity->guid, $direction, array_values(array_unique($userGuids)));
 
         // Add to entity based indexes
 
-        $this->addIndex("thumbs:{$direction}:entity:{$entity_id}", $actor->guid);
+        $this->addIndex("thumbs:{$direction}:entity:{$entity->guid}", $actor->guid);
 
         if ($entity->entity_guid) {
             $this->addIndex("thumbs:{$direction}:entity:{$entity->entity_guid}", $actor->guid);
@@ -52,8 +45,8 @@ class Indexes
 
         // Add to actor based indexes
 
-        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}", $entity_id);
-        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity_type}", $entity_id);
+        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}", $entity->guid);
+        $this->addIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity->type}", $entity->guid);
 
         return true;
     }
@@ -64,21 +57,14 @@ class Indexes
         $direction = $vote->getDirection();
         $actor = $vote->getActor();
 
-        $entity_id = null;
-        $entity_type = null;
-        $userGuids = null;
-
-        $entity_id = $entity->guid;
-        $entity_type = $entity->type;
         $userGuids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
-
         $userGuids = array_diff($userGuids, [ (string) $actor->guid ]);
 
         $this->setEntityList($entity->guid, $direction, array_values($userGuids));
 
         // Remove from entity based indexes
 
-        $this->removeIndex("thumbs:{$direction}:entity:{$entity_id}", $actor->guid);
+        $this->removeIndex("thumbs:{$direction}:entity:{$entity->guid}", $actor->guid);
 
         if ($entity->entity_guid) {
             $this->removeIndex("thumbs:{$direction}:entity:{$entity->entity_guid}", $actor->guid);
@@ -88,8 +74,8 @@ class Indexes
 
         // Remove from actor based indexes
 
-        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}", $entity_id);
-        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity_type}", $entity->guid);
+        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}", $entity->guid);
+        $this->removeIndex("thumbs:{$direction}:user:{$actor->guid}:{$entity->type}", $entity->guid);
 
         return true;
     }
@@ -109,21 +95,21 @@ class Indexes
          $direction = $vote->getDirection();
 
          $guids = $entity->{"thumbs:{$direction}:user_guids"} ?: [];
-
+ 
          return in_array($actor->guid, $guids);
      }
 
     /**
-     * @param $entity
+     * @param int|string $guid
      * @param string $direction
      * @param array $value
      * @return bool|mixed
      */
-    protected function setEntityList($entity, $direction, array $value)
+    protected function setEntityList($guid, $direction, array $value)
     {
         $prepared = new Custom();
         $prepared->query("INSERT INTO entities (key, column1, value) VALUES (?, ?, ?)", [
-            (string) is_numeric($entity) ? $entity : $entity->guid,
+            (string) $guid,
             "thumbs:{$direction}:user_guids",
             json_encode($value)
         ]);
