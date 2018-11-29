@@ -30,26 +30,26 @@ class Manager
             'uuid' => '',
             'recursive' => false,
         ], $opts);
-        return $this->repo->getList($opts);
+        return $this->repository->getList($opts);
     }
 
     public function get($uuid)
     {
-        return $this->repo->get($uuid);
+        return $this->repository->get($uuid);
     }
 
     public function getBranch($uuid)
     {
-        return $this->repo->getBranch($uuid);
+        return $this->repository->getBranch($uuid);
     }
 
     public function add(Category $category)
     {
-        return $this->repo->add($category);
+        return $this->repository->add($category);
     }
 
     public function delete(string $category_uuid)
     {
-        return $this->repo->delete($category_uuid);
+        return $this->repository->delete($category_uuid);
     }
 }

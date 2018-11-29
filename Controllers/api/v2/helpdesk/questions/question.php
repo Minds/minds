@@ -26,7 +26,7 @@ class question implements Api
 
         $opts = ['question_uuid' => $uuid];
 
-        $question = $manager->get($uuid);
+        $question = $manager->get($uuid, Session::getLoggedInUser()->guid);
 
         return Factory::response([
             'status' => 'success',

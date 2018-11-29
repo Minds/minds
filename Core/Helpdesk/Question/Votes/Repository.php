@@ -56,8 +56,7 @@ class Repository
         $query = "UPSERT INTO helpdesk_votes
             (question_uuid, user_guid, direction) 
             VALUES 
-            (?,?,?) 
-            RETURNING uuid";
+            (?,?,?)";
 
         $values = [
             $vote->getQuestionUuid(),
@@ -70,8 +69,9 @@ class Repository
 
             $statement->execute($values);
 
-            return $statement->fetch(\PDO::FETCH_ASSOC)['uuid'];
+            return $statement->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
+            error_log(print_r($e, true));
             return false;
         }
     }
@@ -92,10 +92,13 @@ class Repository
     public function delete(Vote $vote)
     {
         $query = "DELETE FROM helpdesk_votes
-            WHERE uuid = ?
+            WHERE question_uuid = ?
                 AND user_guid = ?  ";
 
-        $values = [$question_uuid];
+        $values = [
+            $vote->getQuestionUuid(),
+            $vote->getUserGuid(),
+        ];
 
         try {
             $statement = $this->db->prepare($query);

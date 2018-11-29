@@ -102,7 +102,7 @@ class Repository
      */
     public function get($uuid, $user_guid)
     {
-        $query = "SELECT q.*, v.question_uuid AS voted 
+        $query = "SELECT q.*, v.direction AS voted 
             FROM helpdesk_faq q 
             LEFT JOIN helpdesk_votes v 
                 ON v.question_uuid = q.uuid 
@@ -146,8 +146,9 @@ class Repository
 
         $query = "SELECT q.question, q.answer, q.uuid, count(user_guid) AS votes
             FROM helpdesk_votes v
-            JOIN helpdesk_faq q ON q.uuid=v.question_uuid
-            WHERE TYPE=TRUE
+            JOIN helpdesk_faq q
+              ON q.uuid=v.question_uuid
+            WHERE v.direction='up'
             GROUP BY uuid,question,answer
             ORDER BY votes DESC
             LIMIT $limit";
@@ -192,14 +193,12 @@ class Repository
             'q' => ''
         ], $opts);
 
-        $query = "SELECT q.*, c.branch, v.type AS voted
+        $query = "SELECT q.*, c.branch
             FROM helpdesk_faq q
             JOIN helpdesk_categories c 
                 ON c.uuid = q.category_uuid";
         $where = [];
         $values = [];
-
-        $values[] = Core\Session::getLoggedinUser()->guid;
 
         if ($opts['q']) {
             $where[] = "q.question ILIKE ? OR q.answer ILIKE ?";
@@ -211,12 +210,13 @@ class Repository
         $query .= ' ORDER BY c.branch';
 
         if ($opts['limit']) {
-            $query .= " LIMIT " . intval($opts['limit']);
+            $query .= " LIMIT ?";
+            $values[] = (int) $opts['limit'];
         }
 
         if ($opts['offset']) {
-            $query .= " OFFSET = ?";
-            $values[] = $opts['offset'];
+            $query .= " OFFSET ?";
+            $values[] = (int) $opts['offset'];
         }
 
         $statement = $this->db->prepare($query);
@@ -299,76 +299,6 @@ class Repository
         $statement = $this->db->prepare($query);
 
         return $statement->execute($values);
-    }
-
-    /**
-     * Vote a question for the current user
-     *
-     * @param string $uuid
-     * @param string $direction
-     * @return void
-     */
-    public function vote($uuid, $direction)
-    {
-        // because driver fails to prepare a value of false
-        $d = $direction === 'up' ? 'true' : 'false';
-
-        $query = "INSERT INTO helpdesk_votes (question_uuid, user_guid, type)
-                    VALUES(?,?,$d)
-                  ON CONFLICT (question_uuid, user_guid) DO UPDATE SET type = excluded.type;";
-
-        $values = [
-            $uuid,
-            Core\Session::getLoggedinUser()->guid
-        ];
-
-        try {
-            $statement = $this->db->prepare($query);
-
-            return $statement->execute($values);
-        } catch (\Exception $e) {
-            error_log($e);
-            return false;
-        }
-    }
-
-    /**
-     * Delete a vote for the given question for the current user
-     *
-     * @param string $uuid
-     * @return void
-     */
-    public function unvote($uuid)
-    {
-        $query = "DELETE FROM helpdesk_votes WHERE question_uuid = ? AND user_guid = ?";
-
-        $values = [$uuid, Core\Session::getLoggedinUser()->guid];
-
-        try {
-            $statement = $this->db->prepare($query);
-            return $statement->execute($values);
-        } catch (\Exception $e) {
-            error_log($e);
-            return false;
-        }
-    }
-
-    /**
-     * Get vote for a given question/user
-     *
-     * @param string $uuid
-     * @param string $userGuid
-     * @return boolean|null true thumbUp, false thumbDown, null not voted
-     */
-    public function getVote($uuid, $userGuid)
-    {
-        $statement = $this->db->prepare("SELECT type FROM helpdesk_votes WHERE question_uuid = ? AND user_guid = ?");
-
-        $statement->execute([$uuid, $userGuid]);
-
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-
-        return ($result) ? $result['type'] : null;
     }
 
     /**

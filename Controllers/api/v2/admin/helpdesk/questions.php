@@ -40,7 +40,7 @@ class questions implements Api, ApiAdminPam
 
         $category_uuid = $_POST['category_uuid'];
 
-        $entity = new Question();
+        $entity = Di::_()->get('Helpdesk\Question');
         $entity->setQuestion($question)
             ->setAnswer($answer)
             ->setCategoryUuid($category_uuid);
