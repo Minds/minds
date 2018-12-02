@@ -43,6 +43,8 @@ class Event
     {
         $this->data['@timestamp'] = (int) microtime(true) * 1000;
 
+        $this->data['user_agent'] = $this->getUserAgent();
+
         if (!isset($this->data['platform'])) {
             $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
             if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports
@@ -85,6 +87,18 @@ class Event
      public function getData()
      {
          return $this->data;
+     }
+
+     /**
+      * For security, record the user agent
+      * @return string
+      */
+     protected function getUserAgent()
+     {
+         if (isset($_SERVER['HTTP_USER_AGENT'])) {
+             return $_SERVER['HTTP_USER_AGENT'];
+         }
+         return '';
      }
 
 }
