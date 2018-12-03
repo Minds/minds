@@ -8,6 +8,7 @@
 use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
+use Minds\Core\Analytics\Metrics\Event;
 use Minds\Core\Events\Dispatcher;
 
 class Events
@@ -31,6 +32,17 @@ class Events
                 ->setSubject("You are banned from Minds.")
                 ->setHtml($template);
             Core\Di\Di::_()->get('Mailer')->queue($message);
+
+            // Record metric
+
+            $event = new Event();
+            $event->setType('action')
+                ->setProduct('platform')
+                ->setUserGuid((string) Core\Session::getLoggedInUser()->guid)
+                ->setEntityGuid((string) $user->getGuid())
+                ->setAction("ban")
+                ->setBanReason($user->ban_reason)
+                ->push();
         });
     }
 }
