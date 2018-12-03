@@ -4,6 +4,7 @@ namespace Spec\Minds\Core\Security\RateLimits;
 
 use Minds\Core\Data\Sessions;
 use Minds\Core\Security\RateLimits\Delegates\Notification;
+use Minds\Core\Security\RateLimits\Delegates\Analytics;
 use Minds\Core\Security\RateLimits\Manager;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
@@ -12,13 +13,19 @@ class ManagerSpec extends ObjectBehavior
 {
     private $sessions;
     private $notification;
+    private $analytics;
 
-    function let(Sessions $sessions, Notification $notification)
+    function let(
+        Sessions $sessions,
+        Notification $notification,
+        Analytics $analytics
+    )
     {
         $this->sessions = $sessions;
         $this->notification = $notification;
+        $this->analytics = $analytics;
 
-        $this->beConstructedWith($sessions, $notification);
+        $this->beConstructedWith($sessions, $notification, $analytics);
     }
 
     function it_is_initializable()
@@ -36,6 +43,9 @@ class ManagerSpec extends ObjectBehavior
 
         $this->notification->notify($user, 'ratelimited_interaction:subscribe', 300)
             ->shouldBeCalled();
+        
+        $this->analytics->emit($user, 'ratelimited_interaction:subscribe', 300)
+            ->shouldBeCalled();
 
         $this->setUser($user)
             ->setInteraction('subscribe')
@@ -51,6 +61,9 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->notification->notify($user, 'ratelimited_interaction:subscribe', 600)
+            ->shouldBeCalled();
+
+        $this->analytics->emit($user, 'ratelimited_interaction:subscribe', 600)
             ->shouldBeCalled();
 
         $this->setUser($user)

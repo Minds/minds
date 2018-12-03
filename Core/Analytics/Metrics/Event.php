@@ -20,6 +20,8 @@ use Minds\Interfaces\AnalyticsMetric;
  * @method Event setEntitySubtype($value)
  * @method Event setEntityOwnerGuid($value)
  * @method Event setCommentGuid($value)
+ * @method Event setRatelimitKey($value)
+ * @method Event setRatelimitPeriod($value)
  */
 class Event
 {

@@ -18,6 +18,9 @@ class Manager
     /** @var Delegates\Notification */
     private $notificationDelegate;
 
+    /** @var Delegates\Analytics */
+    private $analyticsDelegate;
+
     /** @var User */
     private $user;
 
@@ -30,10 +33,15 @@ class Manager
     /** @var int $limitLength */
     private $limitLength = 300; //5 minutes
 
-    public function __construct($sessions = null, $notificationDelegate = null)
+    public function __construct(
+        $sessions = null,
+        $notificationDelegate = null,
+        $analyticsDelegate = null
+    )
     {
         $this->sessions = $sessions ?: new Sessions;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\Notification;
+        $this->analyticsDelegate = $analyticsDelegate ?: new Delegates\Analytics;
     }
 
     /**
@@ -101,6 +109,8 @@ class Manager
 
         //Send a notification
         $this->notificationDelegate->notify($this->user, $this->key, $this->limitLength);
+        //Emit to analytics
+        $this->analyticsDelegate->emit($this->user, $this->key, $this->limitLength);
     }
 
     /**
