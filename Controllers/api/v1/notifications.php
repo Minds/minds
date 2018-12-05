@@ -74,7 +74,7 @@ class notifications implements Interfaces\Api
                     return Factory::response([]);
                 }
 
-                $response['notification'] = $notification;
+                $response['notification'] = $this->polyfillResponse([$notification])[0];
                 break;
             case 'list':
             default:
