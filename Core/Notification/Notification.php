@@ -6,6 +6,28 @@ namespace Minds\Core\Notification;
 
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Class Notification
+ * @package Minds\Core\Notification
+ * @method string getUUID()
+ * @method Notification setUUID(string $value)
+ * @method string getToGuid()
+ * @method Notification setToGuid(string $value)
+ * @method string getFromGuid()
+ * @method Notification setFromGuid(string $value)
+ * @method string getEntityGuid()
+ * @method Notification setEntityGuid(string $value)
+ * @method string getType()
+ * @method Notification setType(string $value)
+ * @method array getData()
+ * @method Notification setData($value)
+ * @method string getBatchId()
+ * @method Notification setBatchId(string $value)
+ * @method int getCreatedTimestamp()
+ * @method Notification setCreatedTimestamp(int $value)
+ * @method int getReadTimestamp()
+ * @method Notification setReadTimestamp(int $value)
+ */
 class Notification
 {
     use MagicAttributes;
@@ -30,6 +52,12 @@ class Notification
 
     /** @var string $batchId */
     private $batchId;
+
+    /** @var int $createdTimestamp */
+    private $createdTimestamp;
+
+    /** @var int $readTimestamp */
+    private $readTimestamp;
 
     /**
      * Export

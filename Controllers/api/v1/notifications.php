@@ -64,13 +64,17 @@ class notifications implements Interfaces\Api
                 $response['toggles'] = $toggles;
                 break;
             case 'single':
-                /*$notification = $repository->getEntity($pages[1]);
+                /** @var Notification\Manager $manager */
+                $manager = Di::_()->get('Notification\Manager');
+                $manager->setUser(Core\Session::getLoggedinUser());
+
+                $notification = $manager->getSingle($pages[1]);
 
                 if (!$notification) {
                     return Factory::response([]);
                 }
 
-                $response['notification'] = $notification->export();*/
+                $response['notification'] = $notification;
                 break;
             case 'list':
             default:

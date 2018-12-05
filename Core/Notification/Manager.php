@@ -2,12 +2,13 @@
 /**
  * Notification Manager
  */
+
 namespace Minds\Core\Notification;
 
-use Minds\Core\Di\Di;
 use Minds\Common\Repository\Response;
-use Minds\Core\Guid;
-use Minds\Entities\Factory;
+use Minds\Core\Config;
+use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Manager
 {
@@ -28,7 +29,7 @@ class Manager
     {
         $this->config = $config ?: Di::_()->get('Config');
         $this->repository = $repository ?: new Repository;
-        $this->legacyRepository = $legacyRepository ?:new LegacyRepository;
+        $this->legacyRepository = $legacyRepository ?: new LegacyRepository;
     }
 
     /**
@@ -40,6 +41,16 @@ class Manager
     {
         $this->user = $user;
         return $this;
+    }
+
+    /**
+     * Return a single notification
+     * @param $uuid
+     * @return Notification
+     */
+    public function getSingle($uuid)
+    {
+        return $this->repository->get($uuid);
     }
 
     /**
@@ -118,13 +129,17 @@ class Manager
     /**
      * Add notification to datastores
      * @param Notification $notification
-     * @return void
+     * @return string|false
      */
     public function add($notification)
     {
         try {
-            $this->repository->add($notification);
-        } catch (\Exception $e) { }
+            $uuid = $this->repository->add($notification);
+
+            return $uuid;
+        } catch (\Exception $e) {
+            error_log($e);
+        }
     }
 
 }

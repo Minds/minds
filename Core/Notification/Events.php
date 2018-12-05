@@ -179,6 +179,7 @@ class Events
 
             $counters = new Counters();
 
+            /** @var Manager $manager */
             $manager = Core\Di\Di::_()->get('Notification\Manager');
 
             foreach ($params['to'] as $to_user) {
@@ -191,12 +192,14 @@ class Events
 
                 $notification->setToGuid($to_user);
 
-                $manager->add($notification);
+                $uuid = $manager->add($notification);
+
+                $notification->setUUID($uuid);
                 
                 $counters->setUser($to_user)
                   ->increaseCounter($to_user);
 
-                $params = $notification->getParams();
+                $params = $notification->getData();
                 $params['notification_view']  = $notification->getType();
 
                 Push::_()->queue([
@@ -211,11 +214,11 @@ class Events
                 try {
                     (new Sockets\Events())
                     ->setUser($to_user)
-                    ->emit('notification', (string) $notification->getGuid());
+                    ->emit('notification', (string) $notification->getUUID());
                 } catch (\Exception $e) { /* TODO: To log or not to log */
                 }
 
-                echo "[notification][{$notification->getGuid()}]: Saved {$params['notification_view']} \n";
+                echo "[notification][{$notification->getUUID()}]: Saved {$params['notification_view']} \n";
             }
         });
 

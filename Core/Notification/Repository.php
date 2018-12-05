@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Notification;
 
+use Minds\Controllers\Cli\PDO;
 use Minds\Core\Di\Di;
 use Minds\Common\Repository\Response;
 
@@ -18,10 +19,37 @@ class Repository
         $this->sql = $sql ?: Di::_()->get('Database\PDO');
     }
 
-    // TODO
+    /**
+     * Get a single notification
+     * @param $uuid
+     * @return Notification
+     */
     public function get($uuid)
     {
+        $query = 'SELECT * FROM notifications WHERE uuid = ?';
 
+        $statement = $this->sql->prepare($query);
+
+        $statement->execute([$uuid]);
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $notification = new Notification();
+
+        foreach ($rows as $row) {
+            $notification
+                ->setUUID($row['uuid'])
+                ->setToGuid($row['to_guid'])
+                ->setFromGuid($row['from_guid'])
+                ->setEntityGuid($row['entity_guid'])
+                ->setCreatedTimestamp(strtotime($row['created_timestamp']))
+                ->setReadTimestamp($row['read_timestamp'])
+                ->setType($row['notification_type'])
+                ->setData(json_decode($row['data'], true));
+
+        }
+
+        return $notification;
     }
 
     /**
@@ -112,8 +140,8 @@ class Repository
 
     /**
      * Add a notification to the database
-     * @param Notification[] $notification
-     * @return bool
+     * @param Notification[] $notifications
+     * @return Notification|bool
      */
     public function add($notifications)
     {
@@ -143,10 +171,16 @@ class Repository
         }
 
         $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?,?)'));
-        
+
+        $query .= ' RETURNING UUID';
+
         $statement = $this->sql->prepare($query);
 
-        return $statement->execute($values);
+        if ($statement->execute($values)) {
+            return $statement->fetch(\PDO::FETCH_ASSOC)['uuid'];
+        }
+
+        return false;
     }
 
     // TODO
