@@ -197,7 +197,7 @@ class notifications implements Interfaces\Api
             $notification = [
                 'guid' => $entity->getUUID(),
                 'uuid' => $entity->getUUID(),
-                'description' => $data['desription'],
+                'description' => $data['description'],
                 'entityObj' => $entityObj ? $entityObj->export() : null,
                 'filter' => $entity->getType(),
                 'fromObj' => $fromObj ? $fromObj->export() : null,
