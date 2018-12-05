@@ -196,6 +196,8 @@ class Push implements Interfaces\NotificationExtensionInterface
     {
         $message = '';
 
+        $data = $notification['notification']->getData();
+
         if (!isset($notification['params']['notification_view'])) {
             return $message;
         }
@@ -239,13 +241,13 @@ class Push implements Interfaces\NotificationExtensionInterface
                 return sprintf('%s reminded your %s', $name, $desc);
 
             case 'boost_gift':
-                return sprintf('%s gifted you %d views', $name, $notification['params']['impressions']);
+                return sprintf('%s gifted you %d views', $name, $data['impressions']);
 
             case 'boost_request':
-                return sprintf('%s has requested a boost of %d points', $name, $notification['params']['points']);
+                return sprintf('%s has requested a boost of %d points', $name, $data['points']);
 
             case 'boost_accepted':
-                return sprintf('%d views for %s were accepted', $notification['params']['impressions'], $boostDescription);
+                return sprintf('%d views for %s were accepted', $data['impressions'], $boostDescription);
 
             case 'boost_rejected':
                 return sprintf('Your boost request for %s was rejected', $boostDescription);
@@ -254,10 +256,10 @@ class Push implements Interfaces\NotificationExtensionInterface
                 return sprintf('You revoked the boost request for %s', $boostDescription);
 
             case 'boost_completed':
-                return sprintf('%d/%d impressions were met for %s', $notification['params']['impressions'], $notification['params']['impressions'], $boostDescription);
+                return sprintf('%d/%d impressions were met for %s', $data['impressions'], $data['impressions'], $boostDescription);
 
             case 'group_invite':
-                return sprintf('%s invited you to %s', $name, $notification['params']['group']['name']);
+                return sprintf('%s invited you to %s', $name, $data['group']['name']);
 
             case 'messenger_invite':
                 return sprintf('@%s wants to chat with you!', $name);
