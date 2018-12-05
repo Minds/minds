@@ -22,7 +22,7 @@ class suggested implements Interfaces\Api
             $limit = $_GET['limit'];
         }
 
-        /** @var Core\Hashtags\Suggested\Repository $repo */
+        /** @var Core\Hashtags\User\Manager $manager */
         $manager = Di::_()->get('Hashtags\User\Manager');
         $manager->setUser(Core\Session::getLoggedInUser());
 

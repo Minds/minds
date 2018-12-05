@@ -1,24 +1,31 @@
 <?php
+
 namespace Minds\Core\Hashtags\User;
 
+use Minds\Core\Config;
+use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Manager
 {
 
-    /** @var User $user **/
+    /** @var User $user */
     private $user;
 
-    /** @var Repository $repository **/
+    /** @var Repository $repository */
     private $repository;
 
+    /** @var abstractCacher */
+    private $cacher;
 
-    /** @var Config $config **/
+    /** @var Config $config */
     private $config;
 
-    public function __construct($repo = null, $config = null)
+    public function __construct($repo = null, $cacher = null, $config = null)
     {
         $this->repository = $repo ?: new Repository;
+        $this->cacher = $cacher ?: Di::_()->get('Cache');
         $this->config = $config ?: Di::_()->get('Config');
     }
 
@@ -45,8 +52,16 @@ class Manager
         ], $opts); // Merge in our defaults
 
         $opts['user_guid'] = $this->user->getGuid();
-        $selected = $this->repository->getAll($opts);
 
+        $cacheKey = "user-selected-hashtags:{$this->user->getGuid()}";
+        $cached =  $this->cacher->get($cacheKey);
+
+        if ($cached !== false) {
+            $selected = json_decode($cached, true);
+        } else {
+            $selected = $this->repository->getAll($opts);
+            $this->cacher->set($cacheKey, json_encode($selected));
+        }
 
         $suggested = $this->config->get('tags');
 

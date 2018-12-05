@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Hashtags\User;
 
+use Minds\Core\Data\cache\Redis;
 use Minds\Core\Hashtags\HashtagEntity;
 use Minds\Core\Hashtags\User\Repository;
 use PhpSpec\ObjectBehavior;
@@ -10,12 +11,14 @@ use Prophecy\Argument;
 class RepositorySpec extends ObjectBehavior
 {
     private $db;
+    private $cacher;
 
-    function let(\PDO $db)
+    function let(\PDO $db, Redis $cacher)
     {
         $this->db = $db;
+        $this->cacher = $cacher;
 
-        $this->beConstructedWith($db);
+        $this->beConstructedWith($db, $cacher);
     }
 
     function it_is_initializable()
@@ -54,6 +57,9 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $this->cacher->destroy("user-selected-hashtags:100")
+            ->shouldBeCalled();
+
         $hashtag->getGuid()
             ->shouldBeCalled()
             ->willReturn(100);
@@ -75,6 +81,9 @@ class RepositorySpec extends ObjectBehavior
         $this->db->prepare(Argument::any())
             ->shouldBeCalled()
             ->willReturn($statement);
+
+        $this->cacher->destroy("user-selected-hashtags:100")
+            ->shouldBeCalled();
 
         $statement->execute([100, 'hashtag1'])
             ->shouldBeCalled()
