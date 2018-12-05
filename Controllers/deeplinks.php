@@ -20,9 +20,13 @@ class deeplinks implements Interfaces\Api, Interfaces\ApiIgnorePam
                     'appID' => "35U3998VRZ.com.minds.mobile",
                     'paths' => [
                         '/groups/profile/*',
+                        '/groups/*',
+                        '/media/*',
                         '/newsfeed/*',
                         '/blog/view/*',
+                        '/blog/*',
                         '/channels/*',
+                        '/*'
                     ]
                 ]
             ]
@@ -31,7 +35,7 @@ class deeplinks implements Interfaces\Api, Interfaces\ApiIgnorePam
 
     /**
      * Apple universal links /apple-app-site-association
-     * 
+     *
      * @param  array $pages
      * @return mixed|null
      */
