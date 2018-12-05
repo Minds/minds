@@ -13,7 +13,7 @@ class EtherscanTransactionsByDateSpec extends ObjectBehavior
 {
     private $address;
     // estimationBoundary
-    private $_eb = 1500;
+    private $_eb = 8000;
     private $_eb2;
 
     function let(Etherscan $service, Config $config)
@@ -318,32 +318,32 @@ class EtherscanTransactionsByDateSpec extends ObjectBehavior
         ];
 
         $fakeData1 = [
-            ['timeStamp' => $timestamp + 80, 'blockNumber' => 657518],
-            ['timeStamp' => $timestamp + 70, 'blockNumber' => 657517],
-            ['timeStamp' => $timestamp + 60, 'blockNumber' => 657516],
-            ['timeStamp' => $timestamp + 50, 'blockNumber' => 657515],
-            ['timeStamp' => $timestamp + 40, 'blockNumber' => 657514],
+            ['timeStamp' => $timestamp + 80, 'blockNumber' => 659518],
+            ['timeStamp' => $timestamp + 70, 'blockNumber' => 659517],
+            ['timeStamp' => $timestamp + 60, 'blockNumber' => 659516],
+            ['timeStamp' => $timestamp + 50, 'blockNumber' => 659515],
+            ['timeStamp' => $timestamp + 40, 'blockNumber' => 659514],
         ];
 
         $fakeData2 = [
-            ['timeStamp' => $toTimestamp + 80, 'blockNumber' => 649522],
-            ['timeStamp' => $toTimestamp, 'blockNumber' => 649521],  // finish block
-            ['timeStamp' => $timestamp + 110, 'blockNumber' => 649520],
-            ['timeStamp' => $timestamp + 100, 'blockNumber' => 649519],
-            ['timeStamp' => $timestamp + 90, 'blockNumber' => 649518],
+            ['timeStamp' => $toTimestamp + 80, 'blockNumber' => 668522],
+            ['timeStamp' => $toTimestamp, 'blockNumber' => 668521],  // finish block
+            ['timeStamp' => $timestamp + 110, 'blockNumber' => 668520],
+            ['timeStamp' => $timestamp + 100, 'blockNumber' => 668519],
+            ['timeStamp' => $timestamp + 90, 'blockNumber' => 668518],
         ];
 
         // return all pages with data out of date range truncated
         $result = [
-            ['timeStamp' => $toTimestamp, 'blockNumber' => 649521],
-            ['timeStamp' => $timestamp + 110, 'blockNumber' => 649520],
-            ['timeStamp' => $timestamp + 100, 'blockNumber' => 649519],
-            ['timeStamp' => $timestamp + 90, 'blockNumber' => 649518],
-            ['timeStamp' => $timestamp + 80, 'blockNumber' => 657518],
-            ['timeStamp' => $timestamp + 70, 'blockNumber' => 657517],
-            ['timeStamp' => $timestamp + 60, 'blockNumber' => 657516],
-            ['timeStamp' => $timestamp + 50, 'blockNumber' => 657515],
-            ['timeStamp' => $timestamp + 40, 'blockNumber' => 657514],
+            ['timeStamp' => $toTimestamp, 'blockNumber' => 668521],
+            ['timeStamp' => $timestamp + 110, 'blockNumber' => 668520],
+            ['timeStamp' => $timestamp + 100, 'blockNumber' => 668519],
+            ['timeStamp' => $timestamp + 90, 'blockNumber' => 668518],
+            ['timeStamp' => $timestamp + 80, 'blockNumber' => 659518],
+            ['timeStamp' => $timestamp + 70, 'blockNumber' => 659517],
+            ['timeStamp' => $timestamp + 60, 'blockNumber' => 659516],
+            ['timeStamp' => $timestamp + 50, 'blockNumber' => 659515],
+            ['timeStamp' => $timestamp + 40, 'blockNumber' => 659514],
             ['timeStamp' => $timestamp + 30, 'blockNumber' => 649513],
             ['timeStamp' => $timestamp + 20, 'blockNumber' => 649512],
             ['timeStamp' => $timestamp + 10, 'blockNumber' => 649511],
@@ -352,8 +352,8 @@ class EtherscanTransactionsByDateSpec extends ObjectBehavior
 
         list($from, $to) = $this->_page(649510);
         $service->getTransactions($from, $to)->shouldBeCalled()->willReturn($fakeData0);
-        $service->getTransactions(649514, 657514)->shouldBeCalled()->willReturn($fakeData1);
-        $service->getTransactions(657515, 665515)->shouldBeCalled()->willReturn($fakeData2);
+        $service->getTransactions(649514, 659514)->shouldBeCalled()->willReturn($fakeData1);
+        $service->getTransactions(659515, 669515)->shouldBeCalled()->willReturn($fakeData2);
 
         $this->getRange($timestamp, $toTimestamp)->shouldReturn($result);
     }

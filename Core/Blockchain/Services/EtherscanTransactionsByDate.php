@@ -10,15 +10,15 @@ use Minds\Core\Config;
  */
 class EtherscanTransactionsByDate {
     /** @var intenger $estimationBoundary size of the chunk/2 */
-    private $estimationBoundary = 1500;
+    private $estimationBoundary = 8000;
     /** @var Etherscan $service */
     private $service;
     /** @var float $avgBlockTime */
     private $avgBlockTime = 14.7;
     /** @var string $address */
     private $address = '';
-    /** @var boolean $fetchInternal */
-    private $fetchInternal = false;
+    /** @var string $type */
+    private $type = 'transactions';
 
     /**
      * Constructor
@@ -48,15 +48,14 @@ class EtherscanTransactionsByDate {
     }
 
     /**
-     * Set internal
-     * if true the internal transactions will be fetched from the apis
+     * Set type
      *
      * @param boolean $value
      * @return $this
      */
-    public function setInternal($value)
+    public function setType($value)
     {
-        $this->fetchInternal = $value;
+        $this->type = $value;
 
         return $this;
     }
@@ -92,11 +91,15 @@ class EtherscanTransactionsByDate {
      */
     private function fetch($from, $to)
     {
-        if ($this->fetchInternal) {
-            return $this->service->getInternalTransactions($from, $to);
-        } else {
-            return $this->service->getTransactions($from, $to);
+        switch ($this->type) {
+            case 'transactions':
+                return $this->service->getTransactions($from, $to);
+            case 'internal':
+                return $this->service->getInternalTransactions($from, $to);
+            case 'token':
+                return $this->service->getTokenTransactions($from, $to);
         }
+        throw new \Exception("Type $this->type not supported");
     }
 
     /**
@@ -136,14 +139,20 @@ class EtherscanTransactionsByDate {
     {
         $data = $this->searchBegining($from);
         $lastBlockNumber = $data[0]['blockNumber'];
+        $noDataCount = 0;
 
         while (!$this->isInRange($data, $to) == 0) {
-            $moreData = $this->fetch($lastBlockNumber + 1, $lastBlockNumber + 8001);
+            $moreData = $this->fetch($lastBlockNumber + 1, $lastBlockNumber + 10001);
+            $lastBlockNumber += 10001;
             // we stop if there is no more data
             if (!$moreData || empty($moreData)) {
-                break;
+                $noDataCount++;
+                if ($noDataCount < 10) {
+                    continue;
+                } else {
+                    break;
+                }
             }
-            $lastBlockNumber += 8001;
             $data = array_merge($moreData, $data);
         }
 
@@ -200,7 +209,7 @@ class EtherscanTransactionsByDate {
                     $direction = -1;
                     break;
             }
-        } while($attemps < 3);
+        } while($attemps < 5);
 
         throw new \Exception("Estimation failed! Can't find the block for: $timestamp");
     }

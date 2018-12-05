@@ -1,6 +1,6 @@
 <?php
 /**
- * Token Sale Event Report
+ * Boost Token Report
  *
  * @author Martin Alejandro Santangelo
  */
@@ -14,10 +14,10 @@ use Minds\Core\Blockchain\Services\Poloniex;
 use Minds\Core\Blockchain\Services\Etherscan;
 use Minds\Core\Blockchain\Services\EtherscanTransactionsByDate;
 
-class TokenSaleEvent extends AbstractReport
+class BoostTokens extends AbstractReport
 {
     /** @var string */
-    private $token_sale_event_wallet;
+    protected $token_wallet;
 
     /** @var array columns names */
     protected $columns = [
@@ -26,9 +26,7 @@ class TokenSaleEvent extends AbstractReport
         'Block Number',
         'Tx Hash',
         'From',
-        'ETH',
-        'ETH Price',
-        'USD'
+        'Minds',
     ];
 
     /** @var array allower parameters for the report */
@@ -46,7 +44,7 @@ class TokenSaleEvent extends AbstractReport
 
         $blockchainConfig = $config->get('blockchain');
 
-        $this->token_sale_event_wallet = $blockchainConfig['contracts']['token_sale_event']['wallet_address'];
+        $this->token_wallet = $blockchainConfig['contracts']['boost']['contract_address'];
     }
 
     /**
@@ -63,31 +61,21 @@ class TokenSaleEvent extends AbstractReport
         $service = new EtherscanTransactionsByDate(new Etherscan);
 
         // fetch data from etherscan service
-        $data = $service->setAddress($this->token_sale_event_wallet)
-            ->setType('internal')
+        $data = $service->setAddress($this->token_wallet)
+            ->setType('token')
             ->getRange($this->from, $this->to);
-
-        // fetch prices for the date interval
-        $ethPrice = new EthPrice(new Poloniex);
-        $ethPrice
-            ->setFrom($this->from)
-            ->setTo($this->to)
-            ->get();
 
         // format output
         return array_map(function($row) use($ethPrice) {
-            $eth = BigNumber::fromPlain($row['value'], 18);
-            $ethPriceVal = $ethPrice->getNearestPrice($row['timeStamp']);
-            $usd = $eth->mul($ethPriceVal)->toString();
+            $minds = BigNumber::fromPlain($row['value'], 18);
+
             return [
                 date(DATE_ISO8601, $row['timeStamp']), // friendly time
                 $row['timeStamp'],   // timestamp
                 $row['blockNumber'], // block number
                 $row['hash'],        // tx hash
                 $row['from'],        // origin address
-                $eth->toString(),    // ETH amount
-                $ethPriceVal,
-                $usd                 // USD amount
+                $minds->toString(),  // Minds amount
             ];
         }, $data);
     }
