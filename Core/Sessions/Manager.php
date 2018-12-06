@@ -120,6 +120,10 @@ class Manager
         // Sets the global user
         Core\Session::setUserByGuid($user_guid);
 
+        // Generate JWT cookie for sockets
+        // Hack, needs refactoring
+        Core\Session::generateJWTCookie($session);
+
         return $this;
     }
 
