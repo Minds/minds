@@ -53,23 +53,26 @@ class Counters
         $query = "SELECT uuid, read_timestamp FROM notifications
                     WHERE to_guid = ?
                     ORDER BY created_timestamp DESC
-                    LIMIT 1";
+                    LIMIT 6";
         
         $params = [
             (int) $this->user->getGuid(),
         ];
 
         $statement = $this->sql->prepare($query);
-        
         $statement->execute($params);
 
-        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
-       
-        if (!$result[0]['read_timestamp']) {
-            return 1;
+        $unread = 0;
+
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            if (!$row['read_timestamp']) {
+                $unread++;
+            }
         }
 
-        return 0;
+        $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $unread;
     }
 
     /**
@@ -94,7 +97,7 @@ class Counters
                         SET read_timestamp = NOW()
                         WHERE to_guid = ?
                         ORDER BY created_timestamp DESC
-                        LIMIT 1
+                        LIMIT 6
                         RETURNING NOTHING;
                     COMMIT;";
         
