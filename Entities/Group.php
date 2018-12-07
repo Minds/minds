@@ -97,7 +97,8 @@ class Group extends NormalizedEntity
             'moderator_guids' => $this->moderator_guids,
             'boost_rejection_reason' => $this->boost_rejection_reason,
             'rating' => $this->rating,
-            'mature' => $this->mature
+            'mature' => $this->mature,
+            'videoChatDisabled' => $this->videoChatDisabled,
         ]);
 
         if (!$saved) {
