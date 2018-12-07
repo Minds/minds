@@ -5,14 +5,14 @@
         line-height: 22px;
         letter-spacing: 0.2px;
         font-family: 'Lato', helvetica;">
-            <p>You have <?php echo $vars['amount'] ?> new unread notifications waiting for you. Log in to check them out!</p>
+            <p>You have <?php if ($vars['count'] <=5) { echo $vars['count']; } else { echo "5+"; }?> unread notification<?= $vars['count'] > 1 ? 's' : ''?> waiting for you. Log in to check them out!</p>
         </td>
     </tr>
     <tr>
         <td height="50px" style="text-align:center;">
             <a href="https://www.minds.com/notifications"
                     style="padding:16px 32px; background-color:#4caf50; color:#FFF !important; text-decoration:none; font-weight:bold; border-radius:3px;">
-                See notifications
+                Click to View
             </a>
         </td>
     </tr>
