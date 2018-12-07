@@ -14,6 +14,7 @@ class Minds extends base
 
     private $modules = [
         Experiments\Module::class,
+        VideoChat\Module::class,
         Helpdesk\Module::class,
     ];
 

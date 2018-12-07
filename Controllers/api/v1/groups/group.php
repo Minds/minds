@@ -158,6 +158,10 @@ class group implements Interfaces\Api
             $group->setDefaultView($_POST['default_view']);
         }
 
+        if (isset($_POST['videoChatDisabled']) && Core\Session::isAdmin()) {
+            $group->setVideoChatDisabled($_POST['videoChatDisabled']);
+        }
+
         if (isset($_POST['tags'])) {
             $tags = $_POST['tags'];
             $sanitized_tags = [];

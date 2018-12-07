@@ -28,6 +28,7 @@ class Group extends NormalizedEntity
     protected $membership;
     protected $moderated = 0;
     protected $default_view = 0;
+    protected $videoChatDisabled = 1;
     protected $banner = false;
     protected $banner_position;
     protected $icon_time;
@@ -40,6 +41,8 @@ class Group extends NormalizedEntity
     protected $indexes = [ 'group' ];
     protected $mature = false;
     protected $rating = 1;
+    protected $pinned_posts = [];
+    protected $mature_lock = false;
 
     protected $exportableDefaults = [
         'guid',
@@ -52,12 +55,15 @@ class Group extends NormalizedEntity
         'membership',
         'moderated',
         'default_view',
+        'videoChatDisabled',
         'featured',
         'featured_id',
         'tags',
         'boost_rejection_reason',
         'mature',
-        'rating'
+        'rating',
+        'pinned_posts',
+        'mature_lock',
     ];
 
     /**
@@ -85,6 +91,7 @@ class Group extends NormalizedEntity
             'membership' => $this->membership,
             'moderated' => $this->moderated,
             'default_view' => $this->default_view,
+            'videoChatDisabled' => $this->videoChatDisabled,
             'banner' => $this->banner,
             'banner_position' => $this->banner_position,
             'icon_time' => $this->icon_time,
@@ -95,7 +102,9 @@ class Group extends NormalizedEntity
             'moderator_guids' => $this->moderator_guids,
             'boost_rejection_reason' => $this->boost_rejection_reason,
             'rating' => $this->rating,
-            'mature' => $this->mature
+            'mature' => $this->mature,
+            'pinned_posts' => $this->pinned_posts,
+            'mature_lock' => $this->mature_lock,
         ]);
 
         if (!$saved) {
@@ -312,6 +321,24 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * @return bool
+     */
+    public function isVideoChatDisabled()
+    {
+        return (bool) $this->videoChatDisabled;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setVideoChatDisabled($value)
+    {
+        $this->videoChatDisabled = $value ? 1 : 0;
+        return $this;
+    }
+
+    /**
      * Sets `banner_position`
      * @param mixed $banner_position
      * @return Group
@@ -455,7 +482,9 @@ class Group extends NormalizedEntity
      */
     public function isMember($user = null)
     {
-        return Membership::_($this)->isMember($user);
+        return Di::_()->get('Groups\Membership\Manager')
+            ->setGroup($this)
+            ->isMember($user);
     }
 
     /**
@@ -468,7 +497,9 @@ class Group extends NormalizedEntity
         if ($this->isMember($user)) {
             return false;
         }
-        return Membership::_($this)->isAwaiting($user);
+        return Di::_()->get('Groups\Membership\Manager')
+            ->setGroup($this)
+            ->isAwaiting($user);
     }
 
     /**
@@ -481,7 +512,7 @@ class Group extends NormalizedEntity
         if ($this->isMember()) {
             return false;
         }
-        return (new Invitations)->setGroup($this)
+        return (new Invitations\Manager)->setGroup($this)
           ->isInvited($user);
     }
 
@@ -492,7 +523,7 @@ class Group extends NormalizedEntity
      */
     public function isBanned($user = null)
     {
-        return (new Membership($this))->isInvited($user);
+        return (new Membership\Manager($this))->isInvited($user);
     }
 
     /**
@@ -564,7 +595,7 @@ class Group extends NormalizedEntity
      */
     public function join($user = null, array $opts = [])
     {
-        return (new Membership)->setGroup($this)
+        return (new Membership\Manager)->setGroup($this)
           ->setActor($user)
           ->join($user, $opts);
     }
@@ -576,14 +607,16 @@ class Group extends NormalizedEntity
      */
     public function leave($user = null)
     {
-        return (new Membership)->setGroup($this)
+        return (new Membership\Manager)->setGroup($this)
           ->setActor($user)
           ->leave($user);
     }
 
     public function getMembersCount()
     {
-        return Membership::_($this)->getMembersCount();
+        return Di::_()->get('Groups\Membership\Manager')
+            ->setGroup($this)
+            ->getMembersCount();
     }
 
     public function getActivityCount()
@@ -602,7 +635,9 @@ class Group extends NormalizedEntity
         if ($this->isPublic()) {
             return 0;
         }
-        return Membership::_($this)->getRequestsCount();
+        return Di::_()->get('Groups\Membership\Manager')
+            ->setGroup($this)
+            ->getRequestsCount();
     }
 
     public function setBoostRejectionReason($reason)
@@ -655,6 +690,83 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * @param string $guid
+     */
+    public function addPinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if (!$pinned) {
+            $pinned = [];
+        } else if (count($pinned) > 2) {
+            array_shift($pinned);
+        }
+
+        if (array_search($guid, $pinned) === false) {
+            $pinned[] = (string)$guid;
+            $this->setPinnedPosts($pinned);
+        }
+    }
+
+    /**
+     * @param string $guid
+     * @return bool
+     */
+    public function removePinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if ($pinned && count($pinned) > 0) {
+            $index = array_search((string)$guid, $pinned);
+            if (is_numeric($index)) {
+                array_splice($pinned, $index, 1);
+                $this->pinned_posts = $pinned;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Sets the group's pinned posts
+     * @param array $pinned
+     * @return $this
+     */
+    public function setPinnedPosts($pinned) {
+        if (count($pinned) > 3) {
+            $pinned = array_slice($pinned, 0, 3);
+        }
+        $this->pinned_posts = $pinned;
+        return $this;
+    }
+
+    /**
+     * Gets the group's pinned posts
+     * @return array
+     */
+    public function getPinnedPosts() {
+        if(is_string($this->pinned_posts)) {
+            return json_decode($this->pinned_posts);
+        }
+        return $this->pinned_posts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getMatureLock()
+    {
+        return (bool) $this->mature_lock;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setMatureLock($value)
+    {
+        $this->mature_lock = $value;
+        return $this;
+    }
+
+    /**
      * Public facing properties export
      * @param  array  $keys
      * @return array
@@ -674,7 +786,8 @@ class Group extends NormalizedEntity
         $export['mature'] = (bool) $this->getMature();
         $export['rating'] = (int) $this->getRating();
         $userIsAdmin = Core\Session::isAdmin();
-
+        $export['mature_lock'] = (bool) $this->getMatureLock();
+        $export['pinned_posts'] = $this->getPinnedPosts();
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());
         $export['is:moderator'] = $this->isModerator(Core\Session::getLoggedInUser());
         $export['is:member'] = $this->isMember(Core\Session::getLoggedInUser());
