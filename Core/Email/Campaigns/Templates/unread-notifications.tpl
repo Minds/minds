@@ -10,7 +10,7 @@
     </tr>
     <tr>
         <td height="50px" style="text-align:center;">
-            <a href="https://www.minds.com/notifications"
+            <a href="https://www.minds.com/notifications?__e_ct_guid=<?= $vars['guid']?>&campaign=when&topic=unread_notifications"
                     style="padding:16px 32px; background-color:#4caf50; color:#FFF !important; text-decoration:none; font-weight:bold; border-radius:3px;">
                 Click to View
             </a>
