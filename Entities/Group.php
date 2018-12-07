@@ -58,7 +58,8 @@ class Group extends NormalizedEntity
         'tags',
         'boost_rejection_reason',
         'mature',
-        'rating'
+        'rating',
+        'videoChatDisabled',
     ];
 
     /**
