@@ -17,18 +17,14 @@ use Minds\Helpers\Unknown;
  * @method Comment setParentGuid(int $value)
  * @method int getParentGuid()
  * @method Comment setGuid(int $value)
- * @method Comment setHasChildren(bool $value)
- * @method bool getHasChildren()
+ * @method Comment setRepliesCount(int $value)
+ * @method int getRepliesCount())
  * @method Comment setOwnerGuid(int $value)
  * @method int getOwnerGuid()
- * @method Comment setContainerGuid(int $value)
- * @method int getContainerGuid()
  * @method Comment setTimeCreated(int $value)
  * @method int getTimeCreated()
  * @method Comment setTimeUpdated(int $value)
  * @method int getTimeUpdated()
- * @method Comment setAccessId(int $value)
- * @method int getAccessId()
  * @method Comment setBody(string $value)
  * @method string getBody()
  * @method Comment setAttachments(array $value)
@@ -62,23 +58,17 @@ class Comment extends RepositoryEntity
     /** @var int */
     protected $guid;
 
-    /** @var bool */
-    protected $hasChildren = false;
+    /** @var int */
+    protected $repliesCount = 0;
 
     /** @var int */
     protected $ownerGuid;
-
-    /** @var int */
-    protected $containerGuid;
 
     /** @var int */
     protected $timeCreated;
 
     /** @var int */
     protected $timeUpdated;
-
-    /** @var int */
-    protected $accessId = 2;
 
     /** @var string */
     protected $body;
@@ -176,6 +166,7 @@ class Comment extends RepositoryEntity
     {
         if (!$this->ownerObj && $this->ownerGuid) {
             $user = new User($this->ownerGuid);
+            $user->fullExport = false;
             $this->setOwnerObj($user->export());
         }
 
@@ -239,12 +230,10 @@ class Comment extends RepositoryEntity
             'entityGuid',
             'parentGuid',
             'guid',
-            'hasChildren',
+            'repliesCount',
             'ownerGuid',
-            'containerGuid',
             'timeCreated',
             'timeUpdated',
-            'accessId',
             'body',
             'attachments',
             'mature',

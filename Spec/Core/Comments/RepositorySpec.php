@@ -44,7 +44,7 @@ class RepositorySpec extends ObjectBehavior
             'entity_guid' => null,
             'parent_guid' => null,
             'guid' => null,
-            'has_children' => null,
+            'replies_count' => null,
             'owner_guid' => null,
             'container_guid' => null,
             'time_created' => null,
@@ -63,13 +63,6 @@ class RepositorySpec extends ObjectBehavior
         ];
 
         $rows = new Rows([ $row, $row ], 'phpspec');
-
-        $this->legacyRepository->isLegacy(5000)
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this->legacyRepository->getList(Argument::cetera())
-            ->shouldNotBeCalled();
 
         $this->cql->request(Argument::type(Custom::class))
             ->shouldBeCalled()
@@ -84,26 +77,6 @@ class RepositorySpec extends ObjectBehavior
         expect($return->getWrappedObject()->getPagingToken())->shouldBe(base64_encode('phpspec'));
     }
 
-    function it_should_get_legacy_list()
-    {
-        $this->legacyRepository->isLegacy(5000)
-            ->shouldBeCalled()
-            ->willReturn(true);
-
-        $this->legacyRepository->getList(Argument::type('array'))
-            ->shouldBeCalled()
-            ->willReturn([]);
-
-        $this->cql->request(Argument::cetera())
-            ->shouldNotBeCalled();
-
-        $this
-            ->getList([
-                'entity_guid' => 5000
-            ])
-            ->shouldReturn([]);
-    }
-
     function it_should_get(
         Comment $comment
     )
@@ -112,12 +85,10 @@ class RepositorySpec extends ObjectBehavior
             'entity_guid' => null,
             'parent_guid' => null,
             'guid' => null,
-            'has_children' => null,
+            'replies_count' => null,
             'owner_guid' => null,
-            'container_guid' => null,
             'time_created' => null,
             'time_updated' => null,
-            'access_id' => null,
             'body' => null,
             'attachments' => null,
             'mature' => null,
@@ -132,13 +103,6 @@ class RepositorySpec extends ObjectBehavior
 
         $rows = new Rows([ $row, $row ], 'phpspec');
 
-        $this->legacyRepository->isLegacy(5000)
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this->legacyRepository->getList(Argument::cetera())
-            ->shouldNotBeCalled();
-
         $this->cql->request(Argument::type(Custom::class))
             ->shouldBeCalled()
             ->willReturn($rows);
@@ -146,26 +110,6 @@ class RepositorySpec extends ObjectBehavior
         $this
             ->get(5000, 0, 6000)
             ->shouldReturnAnInstanceOf(Comment::class);
-    }
-
-    function it_should_get_legacy(
-        Comment $comment
-    )
-    {
-        $this->legacyRepository->isLegacy(5000)
-            ->shouldBeCalled()
-            ->willReturn(true);
-
-        $this->legacyRepository->getList(Argument::type('array'))
-            ->shouldBeCalled()
-            ->willReturn([ $comment ]);
-
-        $this->cql->request(Argument::cetera())
-            ->shouldNotBeCalled();
-
-        $this
-            ->get(5000, 0, 6000)
-            ->shouldReturn($comment);
     }
 
     function it_should_get_null()
@@ -259,15 +203,11 @@ class RepositorySpec extends ObjectBehavior
         Comment $comment
     )
     {
-        $comment->getHasChildren()
+        $comment->getRepliesCount()
             ->shouldBeCalled()
-            ->willReturn(false);
+            ->willReturn(0);
 
         $comment->getOwnerGuid()
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $comment->getContainerGuid()
             ->shouldBeCalled()
             ->willReturn(1000);
 
@@ -278,10 +218,6 @@ class RepositorySpec extends ObjectBehavior
         $comment->getTimeUpdated()
             ->shouldBeCalled()
             ->willReturn(123145);
-
-        $comment->getAccessId()
-            ->shouldBeCalled()
-            ->willReturn(2);
 
         $comment->getBody()
             ->shouldBeCalled()

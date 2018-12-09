@@ -68,6 +68,24 @@ class Manager
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
     }
 
+    public function getList($opts = [])
+    {
+        $opts = array_merge([
+            'entity_guid' => null,
+            'parent_guid' => null,
+            'guid' => null,
+            'limit' => null,
+            'offset' => null,
+            'descending' => true
+        ], $opts);
+
+        if ($this->legacyRepository->isLegacy($opts['entity_guid'])) {
+            return $this->legacyRepository->getList($opts);
+        }
+
+        return $this->getList($opts);
+    }
+
     /**
      * Adds a comment and triggers creation events
      * @param Comment $comment
@@ -90,6 +108,14 @@ class Manager
             !$this->acl->interact($entity, $owner)
         ) {
             throw new BlockedUserException();
+        }
+
+        try {
+            if ($this->legacyRepository->isFallbackEnabled()) {
+                $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false);
+            }
+        } catch (\Exception $e) {
+            error_log("[Comments\Repository::add/legacy] {$e->getMessage()} > " . get_class($e));
         }
 
         $success = $this->repository->add($comment);
@@ -117,6 +143,10 @@ class Manager
      */
     public function update(Comment $comment)
     {
+        if ($this->legacyRepository->isFallbackEnabled()) {
+            $this->legacyRepository->update($comment, $comment->getDirtyAttributes(), true);
+        }
+
         return $this->repository->update($comment, $comment->getDirtyAttributes());
     }
 

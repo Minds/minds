@@ -156,20 +156,12 @@ class Repository
             $fields['owner_guid'] = (string) $comment->getOwnerGuid();
         }
 
-        if (in_array('containerGuid', $attributes)) {
-            $fields['container_guid'] = (string) ($comment->getContainerGuid() ?: 0);
-        }
-
         if (in_array('timeCreated', $attributes)) {
             $fields['time_created'] = (string) $comment->getTimeCreated();
         }
 
         if (in_array('timeUpdated', $attributes)) {
             $fields['time_updated'] = (string) $comment->getTimeUpdated();
-        }
-
-        if (in_array('accessId', $attributes)) {
-            $fields['access_id'] = (string) $comment->getAccessId();
         }
 
         if (in_array('body', $attributes)) {

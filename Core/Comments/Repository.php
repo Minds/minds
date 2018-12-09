@@ -32,7 +32,7 @@ class Repository
         'entityGuid',
         'parentGuid',
         'guid',
-        'hasChildren',
+        'repliesCount',
         'ownerGuid',
         'containerGuid',
         'timeCreated',
@@ -73,10 +73,6 @@ class Repository
             'offset' => null,
             'descending' => true
         ], $opts);
-
-        if ($this->legacyRepository->isLegacy($opts['entity_guid'])) {
-            return $this->legacyRepository->getList($opts);
-        }
 
         $cql = "SELECT * from comments";
         $values = [];
@@ -135,12 +131,10 @@ class Repository
                     ->setEntityGuid($row['entity_guid'])
                     ->setParentGuid($row['parent_guid'])
                     ->setGuid($row['guid'])
-                    ->setHasChildren($row['has_children'])
+                    ->setRepliesCount($row['replies_count'])
                     ->setOwnerGuid($row['owner_guid'])
-                    ->setContainerGuid($row['container_guid'])
                     ->setTimeCreated($row['time_created'])
                     ->setTimeUpdated($row['time_updated'])
-                    ->setAccessId($row['access_id'])
                     ->setBody($row['body'])
                     ->setAttachments($row['attachments'] ?: [])
                     ->setMature(isset($flags['mature']) && $flags['mature'])
@@ -254,16 +248,12 @@ class Repository
 
         $fields = [];
 
-        if (in_array('hasChildren', $attributes)) {
-            $fields['has_children'] = $comment->getHasChildren();
+        if (in_array('repliesCount', $attributes)) {
+            $fields['replies_count'] = $comment->getRepliesCount();
         }
 
         if (in_array('ownerGuid', $attributes)) {
             $fields['owner_guid'] = new Varint($comment->getOwnerGuid() ?: 0);
-        }
-
-        if (in_array('containerGuid', $attributes)) {
-            $fields['container_guid'] = new Varint($comment->getContainerGuid() ?: 0);
         }
 
         if (in_array('timeCreated', $attributes)) {
@@ -272,10 +262,6 @@ class Repository
 
         if (in_array('timeUpdated', $attributes)) {
             $fields['time_updated'] = new Timestamp($comment->getTimeUpdated());
-        }
-
-        if (in_array('accessId', $attributes)) {
-            $fields['access_id'] = new Varint($comment->getAccessId());
         }
 
         if (in_array('body', $attributes)) {
@@ -331,14 +317,6 @@ class Repository
 
         $query = new Custom();
         $query->query($cql, $values);
-
-        try {
-            if ($this->legacyRepository->isFallbackEnabled()) {
-                $this->legacyRepository->add($comment, $attributes, !$comment->isEphemeral());
-            }
-        } catch (\Exception $e) {
-            error_log("[Comments\Repository::add/legacy] {$e->getMessage()} > " . get_class($e));
-        }
 
         try {
             $this->cql->request($query);
