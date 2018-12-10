@@ -42,7 +42,7 @@ class User extends \ElggUser
         $this->attributes['icontime'] = time();
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
-		$this->attributes['p2p_media_disabled'] = 0;
+		$this->attributes['p2p_media_enabled'] = 0;
 		$this->attributes['is_mature'] = 0;
 		$this->attributes['mature_lock'] = 0;
 		$this->attributes['opted_in_hashtags'] = 0;
@@ -616,14 +616,14 @@ class User extends \ElggUser
     }
 
 
-    public function isP2PMediaDisabled()
+    public function isP2PMediaEnabled()
     {
-        return (bool) $this->attributes['p2p_media_disabled'];
+        return (bool) $this->attributes['p2p_media_enabled'];
     }
 
-    public function toggleP2PMediaDisabled($value)
+    public function setP2PMediaEnabled($value)
     {
-        $this->attributes['p2p_media_disabled'] = (bool) $value;
+        $this->attributes['p2p_media_enabled'] = (bool) $value;
         return $this;
     }
 
@@ -667,7 +667,7 @@ class User extends \ElggUser
 
         $export['tags'] = $this->getHashtags();
         $export['rewards'] = (bool) $this->getPhoneNumberHash();
-        $export['p2p_media_disabled'] = $this->isP2PMediaDisabled();
+        $export['p2p_media_enabled'] = $this->isP2PMediaEnabled();
         $export['is_mature'] = $this->isMature();
         $export['mature_lock'] = $this->getMatureLock();
         $export['mature'] = (int) $this->getViewMature();

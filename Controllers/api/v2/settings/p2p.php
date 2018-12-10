@@ -16,7 +16,7 @@ class p2p implements Interfaces\Api
         $user = Core\Session::getLoggedInUser();
 
         return Factory::response([
-            'p2p_media_disabled' => $user->isP2PMediaDisabled()
+            'p2p_media_enabled' => $user->isP2PMediaEnabled()
         ]);
     }
 
@@ -24,7 +24,7 @@ class p2p implements Interfaces\Api
     {
         $user = Core\Session::getLoggedInUser();
 
-        $user->toggleP2PMediaDisabled(true);
+        $user->setP2PMediaEnabled(true);
         $user->save();
 
         return Factory::response(['done' => true]);
@@ -39,7 +39,7 @@ class p2p implements Interfaces\Api
     {
         $user = Core\Session::getLoggedInUser();
 
-        $user->toggleP2PMediaDisabled(false);
+        $user->setP2PMediaEnabled(false);
         $user->save();
 
         return Factory::response(['done' => true]);
