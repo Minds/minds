@@ -75,7 +75,7 @@ class Repository
     }
 
     /**
-     * Get ona category by uuid
+     * Get one category by uuid
      *
      * @param string $uuid
      * @return Category
@@ -106,7 +106,7 @@ class Repository
      * @return Category
      */
     public function getBranch($uuid) {
-        $leaf = $this->getOne($uuid);
+        $leaf = $this->get($uuid);
 
         if (!$leaf) return null;
 
@@ -115,7 +115,7 @@ class Repository
 
         $child = $leaf;
         foreach (array_reverse($branch) as $parent_uuid) {
-            $parent = $this->getOne($parent_uuid);
+            $parent = $this->get($parent_uuid);
             $child->setParent($parent);
             $child = $parent;
         }
