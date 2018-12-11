@@ -257,6 +257,8 @@ class Comment extends RepositoryEntity
         $output['_guid'] = (string) $export['guid'];
         $output['guid'] = $output['luid'] = (string) $this->getLuid();
 
+        $output['entity_guid'] = (string) $this->getEntityGuid();
+
         // Legacy
         $output['ownerObj'] = $this->getOwnerObj();
         $output['description'] = $this->getBody();
@@ -293,7 +295,7 @@ class Comment extends RepositoryEntity
             $output['thumbs:down:count'] = count($this->getVotesDown());
         }
 
-        $output['parent_guid'] = (string) $this->entityGuid;
+        //$output['parent_guid'] = (string) $this->entityGuid;
 
         return $output;
     }

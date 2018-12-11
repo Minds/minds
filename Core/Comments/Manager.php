@@ -132,6 +132,13 @@ class Manager
             $this->countCache->destroy($comment);
         }
 
+        // Update parent count
+        if ($comment->getParentGuid()) {
+            $parent = new Comment();
+            $parent->setGuid($comment->getParentGuid());
+            //$this->update(
+        }
+
         return $success;
     }
 
@@ -144,7 +151,7 @@ class Manager
     public function update(Comment $comment)
     {
         if ($this->legacyRepository->isFallbackEnabled()) {
-            $this->legacyRepository->update($comment, $comment->getDirtyAttributes(), true);
+            $this->legacyRepository->add($comment, $comment->getDirtyAttributes(), true);
         }
 
         return $this->repository->update($comment, $comment->getDirtyAttributes());

@@ -131,7 +131,7 @@ class Repository
                     ->setEntityGuid($row['entity_guid'])
                     ->setParentGuid($row['parent_guid'])
                     ->setGuid($row['guid'])
-                    ->setRepliesCount($row['replies_count'])
+                    ->setRepliesCount($this->count($row['entity_guid'], $row['guid']) ?? 0)
                     ->setOwnerGuid($row['owner_guid'])
                     ->setTimeCreated($row['time_created'])
                     ->setTimeUpdated($row['time_updated'])
@@ -249,7 +249,7 @@ class Repository
         $fields = [];
 
         if (in_array('repliesCount', $attributes)) {
-            $fields['replies_count'] = $comment->getRepliesCount();
+            $fields['replies_count'] = new Varint($comment->getRepliesCount());
         }
 
         if (in_array('ownerGuid', $attributes)) {
@@ -380,4 +380,5 @@ class Repository
 
         return true;
     }
+
 }

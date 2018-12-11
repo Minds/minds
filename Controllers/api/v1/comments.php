@@ -31,6 +31,7 @@ class comments implements Interfaces\Api
         //Factory::isLoggedIn();
         $response = array();
         $guid = $pages[0];
+        $parent_guid = $pages[1] ?? 0;
 
         /*$entity = Entities\Factory::build($guid);
 
@@ -46,7 +47,7 @@ class comments implements Interfaces\Api
 
         $comments = $repository->getList([
             'entity_guid' => $guid,
-            'parent_guid' => 0,
+            'parent_guid' => $parent_guid,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
             'descending' => true,
@@ -151,7 +152,7 @@ class comments implements Interfaces\Api
             $comment = new Core\Comments\Comment();
             $comment
                 ->setEntityGuid($entity->guid)
-                ->setParentGuid(0)
+                ->setParentGuid($pages[1] ?? 0)
                 ->setMature(isset($_POST['mature']) && $_POST['mature'])
                 ->setOwnerObj(Core\Session::getLoggedInUser())
                 ->setContainerGuid(Core\Session::getLoggedInUserGuid())
