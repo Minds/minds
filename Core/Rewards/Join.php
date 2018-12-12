@@ -15,7 +15,7 @@ class Join
     /** @var TwoFactor $twofactor */
     private $twofactor;
 
-    /** @var SMSServiceInterface $sms */
+    /** @var Core\SMS\SMSServiceInterface $sms */
     private $sms;
 
     /** @var PhoneNumberUtil $libphonenumber */
@@ -107,17 +107,23 @@ class Join
         $user_guid = $this->user->guid;
         $this->db->insert("rewards:verificationcode:$user_guid", compact('code', 'secret'));
 
+        if (!$this->sms->verify($this->number)) {
+            throw new \Exception('voip phones not allowed');
+        }
         $this->sms->send($this->number, $code);
 
         return $secret;
     }
 
-    public function resendCode() {
-
+    public function resendCode()
+    {
         $user_guid = $this->user->guid;
         $row = $this->db->getRow("rewards:verificationcode:$user_guid");
 
         if (!empty($row)) {
+            if (!$this->sms->verify($this->number)) {
+                throw new \Exception('voip phones not allowed');
+            }
             $this->sms->send($this->number, $row['code']);
 
             return $row['secret'];

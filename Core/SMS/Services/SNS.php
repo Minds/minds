@@ -33,6 +33,11 @@ class SNS implements SMSServiceInterface
         $this->client = $client ? $client : new \Aws\Sns\SnsClient($opts);
     }
 
+    public function verify($number)
+    {
+        throw new \Exception('not implemented!');
+    }
+
     /**
      * Send an sms
      */
