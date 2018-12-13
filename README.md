@@ -29,7 +29,7 @@ Minds is split into multiple repositories:
 7. Run `docker-compose up -d nginx`
 8. Run `docker-compose up installer` (one time only.. initial username: minds / password: Pa$$w0rd)
 9. Run `docker-compose up front-build`
-10. Add and save local host IP below to you host file  `sudoedit etc/host`
+10. Add and save local host IP below to you host file  `sudoedit /etc/host`
 11. Navigate to `http://localhost:8080`
 
 ### Troubleshooting
