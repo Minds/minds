@@ -40,6 +40,7 @@ class Group extends NormalizedEntity
     protected $indexes = [ 'group' ];
     protected $mature = false;
     protected $rating = 1;
+    protected $videoChatDisabled = 1; // disable by default
 
     protected $exportableDefaults = [
         'guid',
@@ -57,7 +58,8 @@ class Group extends NormalizedEntity
         'tags',
         'boost_rejection_reason',
         'mature',
-        'rating'
+        'rating',
+        'videoChatDisabled',
     ];
 
     /**
@@ -95,7 +97,8 @@ class Group extends NormalizedEntity
             'moderator_guids' => $this->moderator_guids,
             'boost_rejection_reason' => $this->boost_rejection_reason,
             'rating' => $this->rating,
-            'mature' => $this->mature
+            'mature' => $this->mature,
+            'videoChatDisabled' => $this->videoChatDisabled,
         ]);
 
         if (!$saved) {
@@ -373,6 +376,24 @@ class Group extends NormalizedEntity
     public function isValidOwnerGuid($guid)
     {
         return (bool) $guid && (is_numeric($guid) || is_string($guid));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVideoChatDisabled()
+    {
+        return (bool) $this->videoChatDisabled;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setVideoChatDisabled($value)
+    {
+        $this->videoChatDisabled = $value ? 1 : 0;
+        return $this;
     }
 
     /**

@@ -40,7 +40,7 @@ class threshold implements Interfaces\Api
 
         // if the user wires amounts to the threshold or more
         if ($isAllowed) {
-            $entity->paywall = false;
+            $entity->setPaywall(false);
 
             if ($entity->type == 'activity') {
                 $response['activity'] = $entity->export();

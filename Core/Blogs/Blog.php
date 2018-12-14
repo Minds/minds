@@ -418,6 +418,7 @@ class Blog extends RepositoryEntity
     public function setTags($value)
     {
         $this->_tags = $value ?: [];
+        $this->markAsDirty('tags');
         return $this;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Hashtags\User;
 
+use Minds\Core\Data\cache\abstractCacher;
 use Minds\Core\Di\Di;
 use Minds\Core\Hashtags\HashtagEntity;
 
@@ -10,9 +11,13 @@ class Repository
     /** @var \PDO */
     protected $db;
 
-    public function __construct($db = null)
+    /** @var abstractCacher */
+    protected $cacher;
+
+    public function __construct($db = null, $cacher = null)
     {
         $this->db = $db ?: Di::_()->get('Database\PDO');
+        $this->cacher = $cacher ?: Di::_()->get('Cache');
     }
 
     /**
@@ -50,6 +55,8 @@ class Repository
             try {
                 $statement = $this->db->prepare($query);
 
+                $this->cacher->destroy("user-selected-hashtags:{$hashtag->getGuid()}");
+
                 return $statement->execute([$hashtag->getGuid(), $hashtag->getHashtag()]);
             } catch (\Exception $e) {
                 error_log($e->getMessage());
@@ -70,6 +77,8 @@ class Repository
         $query = "DELETE FROM user_hashtags WHERE guid = ? AND hashtag IN ({$variables})";
 
         $statement = $this->db->prepare($query);
+
+        $this->cacher->destroy("user-selected-hashtags:{$user_guid}");
 
         return $statement->execute(array_merge([$user_guid], $hashtags));
     }
