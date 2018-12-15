@@ -1211,7 +1211,7 @@ abstract class ElggEntity extends ElggData implements
 		global $CONFIG, $ENTITY_CACHE;
 
 		//some plugins may want to halt the delete...
-		$delete = elgg_trigger_event('delete', $this->type, $this);
+		$delete = Minds\Core\Events\Dispatcher::trigger('delete', $this->type, [ 'entity' => $this ]);
 
 		if ($delete && $this->canEdit()) {
 
