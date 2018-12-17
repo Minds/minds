@@ -263,8 +263,11 @@ class newsfeed implements Interfaces\Api
                 $embeded = core\Entities::build($embeded); //more accurate, as entity doesn't do this @todo maybe it should in the future
 
                 //check to see if we can interact with the parent
-                if (!Security\ACL::_()->interact($embeded)) {
-                    return false;
+                if (!Security\ACL::_()->interact($embeded, Core\Session::getLoggedinUser(), 'remind')) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => 'Actor cannot interact with the entity'
+                    ]);
                 }
 
                 Counters::increment($embeded->guid, 'remind');

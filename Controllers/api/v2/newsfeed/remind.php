@@ -25,8 +25,11 @@ class remind implements Interfaces\Api
         $embedded = core\Entities::build($embedded); //more accurate, as entity doesn't do this @todo maybe it should in the future
 
         //check to see if we can interact with the parent
-        if (!Security\ACL::_()->interact($embedded)) {
-            return false;
+        if (!Security\ACL::_()->interact($embedded, Core\Session::getLoggedinUser(), 'remind')) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Actor cannot interact with the entity'
+            ]);
         }
 
         Counters::increment($embedded->guid, 'remind');
@@ -126,7 +129,7 @@ class remind implements Interfaces\Api
                                     ->setTitle($embedded->title)
                                     ->setBlurb($embedded->description)
                                     ->export()
-                                )
+                            )
                                 ->setMessage($message)
                                 ->save();
                         }
@@ -165,7 +168,7 @@ class remind implements Interfaces\Api
                                     ->setTitle($embedded->title)
                                     ->setBlurb($embedded->description)
                                     ->export()
-                                )
+                            )
                                 ->setMessage($message)
                                 ->save();
                         }

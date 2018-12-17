@@ -6,6 +6,7 @@
 namespace Minds\Core\Security\RateLimits;
 
 use Minds\Core\Security\RateLimits\Aggregates\Comments;
+use Minds\Core\Security\RateLimits\Aggregates\Reminds;
 use Minds\Core\Security\RateLimits\Aggregates\VotesDown;
 use Minds\Core\Security\RateLimits\Aggregates\VotesUp;
 use Minds\Core\Trending\Aggregates; //TODO: This should probably be more unified
@@ -84,6 +85,14 @@ class Maps
             'threshold' => 500,
             'aggregates' => [
                 Comments::class,
+            ],
+        ],
+        'interactions:remindday' => [
+            'interaction' => 'comment',
+            'period' => 86400, //1 day
+            'threshold' => 500,
+            'aggregates' => [
+                Reminds::class,
             ],
         ]
     ];
