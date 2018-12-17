@@ -6,7 +6,7 @@ namespace Minds\Core\Helpdesk\Category;
 
 use Minds\Core\Di\Di;
 use Minds\Common\Repository\Response;
-use Minds\Core\Helpdesk\Entities\Category;
+use Minds\Core\Helpdesk\Category\Category;
 
 class Manager
 {

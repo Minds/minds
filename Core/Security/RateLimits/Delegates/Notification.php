@@ -35,6 +35,9 @@ class Notification
             case "ratelimited_interaction:comment":
                 $message = "Your channel has been rate limited due to a high number of comments.";
                 break;
+            case "ratelimited_interaction:remind":
+                $message = "Your channel has been rate limited due to a high number of reminds.";
+                break;
         }
 
         switch ($period) {

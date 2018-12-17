@@ -5,7 +5,7 @@ namespace Minds\Controllers\api\v2\admin\helpdesk;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Entities\Category;
+use Minds\Core\Helpdesk\Category\Category;
 use Minds\Core\Helpdesk\Repository;
 use Minds\Interfaces\Api;
 use Minds\Interfaces\ApiAdminPam;

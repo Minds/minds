@@ -60,7 +60,14 @@ class twofactor implements Interfaces\Api
             case "setup":
 
                 $secret = $twofactor->createSecret();
-                if (Core\Di\Di::_()->get('SMS')->send($_POST['tel'], $twofactor->getCode($secret))) {
+
+                /** @var Core\SMS\SMSServiceInterface $sms */
+                $sms = Core\Di\Di::_()->get('SMS');
+
+                if (!$sms->verify($_POST['tel'])) {
+                    return Factory::response(['status' => 'error', 'message' => 'voip phones are not supported']);
+                }
+                if ($sms->send($_POST['tel'], $twofactor->getCode($secret))) {
                     $response['secret'] = $secret;
                 } else {
                     $response['status'] = "error";

@@ -70,7 +70,14 @@ class phone implements Interfaces\Api
         $secret = $twofactor->createSecret();
         $code = $twofactor->getCode($secret);
 
-        Core\Di\Di::_()->get('SMS')->send($phone, $code);
+        /** @var Core\SMS\SMSServiceInterface $sms */
+        $sms = Core\Di\Di::_()->get('SMS');
+
+        if (!$sms->verify($phone)) {
+            return Factory::response(['status' => 'success', 'message' => 'voip phones not allowed']);
+        }
+
+        $sms->send($phone, $code);
 
         return Factory::response(['status' => 'success', 'secret' => $secret]);
     }

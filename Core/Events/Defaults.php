@@ -8,6 +8,7 @@ namespace Minds\Core\Events;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
+use Minds\Core\Analytics\Metrics;
 
 class Defaults
 {
@@ -73,6 +74,26 @@ class Defaults
             $export['comments:count'] = $count;
 
             $event->setResponse($export);
+        });
+
+        Dispatcher::register('delete', 'all', function ($e) {
+            $params = $e->getParameters();
+            $entity = $params['entity'];
+
+            if (!$entity) {
+                return;
+            }
+
+            $event = new Metrics\Event;
+            $event->setType('action')
+                ->setProduct('platform')
+                ->setUserGuid((string) Core\Session::getLoggedInUserGuid())
+                ->setAction("delete")
+                ->setEntityGuid($entity->guid)
+                ->setEntityType($entity->type)
+                ->setEntitySubtype($entity->subtype)
+                ->setEntityOwnerGuid($entity->owner_guid)
+                ->push();
         });
 
         // Notifications events
