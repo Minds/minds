@@ -33,6 +33,14 @@ class comments implements Interfaces\Api
         $guid = $pages[0];
         $parent_guid = $pages[1] ?? 0;
 
+        if (isset($pages[2])) {
+            $manager = new Core\Comments\Manager();
+            $comment = $manager->get($guid, $parent_guid, $pages[2]);
+            return Factory::response([
+                     'comments' => [ $comment->export() ],
+                   ]);
+        }
+
         /*$entity = Entities\Factory::build($guid);
 
         if (!Security\ACL::_()->read($entity)) {
@@ -61,7 +69,11 @@ class comments implements Interfaces\Api
         $response['comments'] = Exportable::_($comments);
         $response['load-previous'] = (string) $comments->getPagingToken();
 
-        $response['socketRoomName'] = "comments:{$guid}";
+        if ($parent_guid) {
+            $response['socketRoomName'] = "comments:{$guid}:{$parent_guid}";
+        } else {
+            $response['socketRoomName'] = "comments:{$guid}";
+        }
 
         return Factory::response($response);
     }
@@ -262,6 +274,10 @@ class comments implements Interfaces\Api
 
         // Emit at the end because of attachment processing
         if ($emitToSocket) {
+            $roomName = "comments:{$comment->getEntityGuid()}";
+            if ($parent_guid = $comment->getParentGuid()) {
+                $roomName .= ":$parent_guid";
+            }
             try {
                 (new Sockets\Events())
                 ->setRoom("comments:{$comment->getEntityGuid()}")
@@ -269,7 +285,7 @@ class comments implements Interfaces\Api
                     'comment',
                     (string) $comment->getEntityGuid(),
                     (string) $comment->getOwnerGuid(),
-                    (string) $comment->getLuid()
+                    (string) $comment->getGuid()
                 );
             } catch (\Exception $e) { }
         }
