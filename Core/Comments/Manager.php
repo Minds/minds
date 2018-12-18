@@ -68,6 +68,11 @@ class Manager
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
     }
 
+    public function get($entity_guid, $parent_guid, $guid)
+    {
+        return $this->repository->get($entity_guid, $parent_guid, $guid);
+    }
+
     public function getList($opts = [])
     {
         $opts = array_merge([
