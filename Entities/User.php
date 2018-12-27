@@ -554,15 +554,15 @@ class User extends \ElggUser
         }
 
         $return = 0;
-        $db = new Core\Data\Call('friends');
-        $row = $db->getRow($this->guid, array('limit'=> 1, 'offset'=>$guid));
-        if ($row && key($row) == $guid) {
+        $db = new Core\Data\Call('friendsof');
+        $row = $db->getRow($guid, ['limit' => 1, 'offset' => $this->guid]);
+        if ($row && key($row) == $this->guid) {
             $return = true;
         }
 
         $cacher->set("$this->guid:isSubscribed:$guid", $return);
 
-        return $return ;
+        return $return;
     }
 
     public function getSubscribersCount()
