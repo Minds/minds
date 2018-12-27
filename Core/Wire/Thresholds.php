@@ -5,12 +5,17 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Payments;
 use Minds\Core\Util\BigNumber;
+use Minds\Entities\User;
 use Minds\Helpers\MagicAttributes;
 
 class Thresholds
 {
     /**
      * Check if the entity can be shown to the passed user
+     * @param User $user
+     * @param $entity
+     * @return bool
+     * @throws \Exception
      */
     public function isAllowed($user, $entity)
     {
@@ -18,7 +23,7 @@ class Thresholds
             throw new \Exception('Entity cannot be paywalled');
         }
 
-	    if ($user && ($user->guid === $entity->getOwnerEntity()->guid || $user->isAdmin())) {
+	    if ($user && ($user->guid == $entity->getOwnerEntity()->guid || $user->isAdmin())) {
             return true;
         }
 

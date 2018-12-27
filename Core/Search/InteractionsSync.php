@@ -44,7 +44,7 @@ class InteractionsSync
             $entity->interactions = $interactions;
         }
 
-        $this->indexer->index($entity);
+        $this->indexer->update($entity, [ 'interactions' => $interactions ]);
     }
 
 }

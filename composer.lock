@@ -3091,29 +3091,29 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "3.13.1",
+            "version": "5.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "43bee3cc0956447efa1b83ee39b7a59b1b90df06"
+                "reference": "e7c05bd00a595dce7532ddd5e1e63535357332da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/43bee3cc0956447efa1b83ee39b7a59b1b90df06",
-                "reference": "43bee3cc0956447efa1b83ee39b7a59b1b90df06",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/e7c05bd00a595dce7532ddd5e1e63535357332da",
+                "reference": "e7c05bd00a595dce7532ddd5e1e63535357332da",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.1"
+                "php": ">=5.5.0"
             },
             "require-dev": {
-                "mockery/mockery": ">=0.7.2",
+                "apigen/apigen": "^4.1",
                 "phpunit/phpunit": "4.5.*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Services_Twilio": ""
+                "psr-4": {
+                    "Twilio\\": "Twilio/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3122,12 +3122,8 @@
             ],
             "authors": [
                 {
-                    "name": "Kevin Burke",
-                    "email": "kevin@twilio.com"
-                },
-                {
-                    "name": "Kyle Conroy",
-                    "email": "kyle+pear@twilio.com"
+                    "name": "Twilio API Team",
+                    "email": "api@twilio.com"
                 }
             ],
             "description": "A PHP wrapper for Twilio's API",
@@ -3137,7 +3133,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2015-03-31T21:34:10+00:00"
+            "time": "2018-11-30T22:36:22+00:00"
         },
         {
             "name": "videlalvaro/php-amqplib",

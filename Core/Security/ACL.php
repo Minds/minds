@@ -70,31 +70,38 @@ class ACL
             return true;
         }
 
-      /**
-       * Is the entity open for loggedin users?
-       */
-      if (in_array($entity->getAccessId(), array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))) {
-          return true;
-      }
+        /**
+         * Is the entity open for loggedin users?
+         */
+        if (in_array($entity->getAccessId(), array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))) {
+            return true;
+        }
 
-      /**
-       * Is this user an admin?
-       */
-      if ($user && $user->isAdmin()) {
-          return true;
-      }
+        /**
+         * If marked as unlisted and we don't have a container_guid matching owner_guid
+         */
+        if ($entity->getAccessId() == 0 && $entity->owner_guid == $entity->container_guid) {
+            return true;
+        }
 
-      //$access_array = get_access_array($user->guid, 0);
-      //if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array) || in_array($entity->guid, $access_array)){
-      //  return true;
-      //}
+        /**
+         * Is this user an admin?
+         */
+        if ($user && $user->isAdmin()) {
+            return true;
+        }
 
-      /**
-       * Allow plugins to extend the ACL check
-       */
-      if (Core\Events\Dispatcher::trigger('acl:read', $entity->getType(), array('entity'=>$entity, 'user'=>$user), false) === true) {
-          return true;
-      }
+        //$access_array = get_access_array($user->guid, 0);
+        //if(in_array($entity->access_id, $access_array) || in_array($entity->container_guid, $access_array) || in_array($entity->guid, $access_array)){
+        //  return true;
+        //}
+
+        /**
+         * Allow plugins to extend the ACL check
+         */
+        if (Core\Events\Dispatcher::trigger('acl:read', $entity->getType(), array('entity'=>$entity, 'user'=>$user), false) === true) {
+            return true;
+        }
 
         return false;
     }

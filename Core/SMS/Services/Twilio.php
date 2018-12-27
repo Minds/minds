@@ -7,10 +7,11 @@ namespace Minds\Core\SMS\Services;
 
 use Minds\Core\Di\Di;
 use Minds\Core\SMS\SMSServiceInterface;
+use Twilio\Rest\Client as TwilioClient;
 
 class Twilio implements SMSServiceInterface
 {
-    /** @var \Services_Twilio */
+    /** @var TwilioClient */
     protected $client;
     /** @var array */
     protected $config;
@@ -22,7 +23,26 @@ class Twilio implements SMSServiceInterface
 
         $AccountSid = $this->config['account_sid'];
         $AuthToken = $this->config['auth_token'];
-        $this->client = $client ? $client : new \Services_Twilio($AccountSid, $AuthToken);
+        $this->client = $client ? $client : new TwilioClient($AccountSid, $AuthToken);
+    }
+
+    /**
+     * Verifies the number isn't a voip line
+     * @param $number
+     * @return boolean
+     */
+    public function verify($number)
+    {
+
+        try {
+            $phone_number = $this->client->lookups->v1->phoneNumbers($number)
+                ->fetch(array("type" => "carrier"));
+
+            return $phone_number->carrier['type'] !== 'voip';
+        } catch (\Exception $e) {
+            error_log("[guard] Twilio error: {$e->getMessage()}");
+        }
+        return false;
     }
 
     /**
@@ -30,15 +50,13 @@ class Twilio implements SMSServiceInterface
      */
     public function send($number, $message)
     {
-
         $result = null;
 
         try {
-
-            $result = $this->client->account->messages->create([
-                'To' => $number,
-                'From' => $this->config['from'],
-                'Body' => $message,
+            $result = $this->client->messages->create(
+                $number, [
+                'from' => $this->config['from'],
+                'body' => $message,
             ]);
         } catch (\Exception $e) {
             error_log("[guard] Twilio error: {$e->getMessage()}");
