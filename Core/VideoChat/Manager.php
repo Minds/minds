@@ -33,21 +33,21 @@ class Manager
     {
         $guid = $this->entity->getGuid();
         
-        if ($cached = $this->cacher->get($guid)) {
+        if ($cached = $this->cacher->get("videochat:$guid")) {
             return $cached;
         }
         
         $key = "minds-{$guid}-" . uniqid();
 
-        $this->cacher->set($guid, $key, 3600 * 2); // 2 hour TTL
+        $this->cacher->set("videochat:$guid", $key, 3600 * 2); // 2 hour TTL
 
         return $key;
     }
 
     public function refreshTTL($roomName)
     {
-        if ($key = $this->cacher->get($roomName) !== false) {
-            $this->cacher->set($roomName, $key, 3600 * 2);
+        if ($key = $this->cacher->get("videochat:$roomName") !== false) {
+            $this->cacher->set("videochat:$roomName", $key, 3600 * 2);
         }
     }
 }
