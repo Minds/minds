@@ -25,5 +25,6 @@ class CreateEventDispatcher
     public function dispatch(Comment $comment)
     {
         $this->eventsDispatcher->trigger('create', 'elgg/event/comment', $comment);
+        $this->eventsDispatcher->trigger('save', 'comment', [ 'entity' => $comment ]);
     }
 }

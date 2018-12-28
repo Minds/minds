@@ -97,6 +97,8 @@ class Comment extends RepositoryEntity
     /** @var array */
     protected $votesDown;
 
+    protected $groupConversation = false;
+
     /** @var bool */
     protected $ephemeral = true;
 

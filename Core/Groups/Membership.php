@@ -10,7 +10,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities;
 use Minds\Entities\Group;
-
+use Minds\Core\Notification\UpdateMarkers;
 use Minds\Behaviors\Actorable;
 
 use Minds\Exceptions\GroupOperationException;
@@ -26,17 +26,25 @@ class Membership
     protected $relDB;
     protected $cache;
     protected $notifications;
+    protected $updateMarkers;
 
     protected $memberCache = [];
 
     /**
      * Constructor
      */
-    public function __construct($db = null, $notifications = null, $acl = null, $cache = null)
+    public function __construct(
+        $db = null,
+        $notifications = null,
+        $acl = null,
+        $cache = null,
+        $updateMarkers = null
+    )
     {
         $this->relDB = $db ?: Di::_()->get('Database\Cassandra\Relationships');
         $this->notifications = $notifications ?: new Notifications;
         $this->cache = $cache ?: Di::_()->get('Cache');
+        $this->updateMarkers = $updateMarkers ?: new UpdateMarkers\Manager;
         $this->setAcl($acl);
     }
 
@@ -621,6 +629,63 @@ class Membership
             'entity' => $user
         ]);
         $user->context('');
+    }
+
+    public function getGroupsByMember($opts = [])
+    {
+        $opts = array_merge([
+            'limit' => 12,
+            'offset' => 0,
+            'token' => '',
+        ], $opts);
+
+        // Get all update markers
+        $markers = $this->updateMarkers->getList([
+            'user_guid' => $opts['user_guid'],
+            'entity_type' => 'group',
+            'limit' => 1000,
+        ])->toArray();
+
+        // Grab all groups we are a member of
+        $this->relDB->setGuid($opts['user_guid']);
+        $guids = $this->relDB->get('member', [
+            'limit' => 500,
+            'inverse' => false,
+        ]);
+
+        // Populate all groups to markers
+        $markers = array_map(function($guid) use ($markers) {
+            $marker = array_slice(array_filter($markers, function($m) use ($guid) {
+                return $m->getEntityGuid() == $guid;
+            }), 0, 1)[0];
+            if (!$marker) {
+                $marker = new UpdateMarkers\UpdateMarker();
+                $marker
+                    ->setEntityGuid($guid)
+                    ->setEntityType('group');
+            }
+            return $marker;
+        }, $guids);
+
+        //Sort markers
+        usort($markers, function ($a, $b) {
+            $score = -1;
+            if ($a->getReadTimestamp() < $b->getReadTimestamp()) {
+                $score += 2;
+            }
+
+            if ($a->getUpdatedTimestamp() < $b->getUpdatedTimestamp()) {
+                $score += 1;
+            }
+            return $score;
+        });
+
+        // Reduce back to just a guid
+        $guids = array_map(function($marker) {
+            return $marker->getEntityGuid();
+        }, $markers);
+
+        return array_slice($guids, $opts['offset'], $opts['limit']);
     }
 
     public static function _($group)

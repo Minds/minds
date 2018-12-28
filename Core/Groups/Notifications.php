@@ -11,7 +11,7 @@ use Minds\Entities;
 use Minds\Helpers\Counters;
 use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Core\Notification\Notification;
-
+use Minds\Core\Notification\UpdateMarkers\UpdateMarker;
 use Minds\Behaviors\Actorable;
 
 use Minds\Exceptions\GroupOperationException;
@@ -31,6 +31,8 @@ class Notifications
     /** @var NotificationBatches */
     protected $notificationBatches;
 
+    protected $updateMarkers;
+
     /**
      * Constructor
      */
@@ -40,6 +42,7 @@ class Notifications
         $cql = null,
         $notifications = null,
         $notificationBatches = null
+    
     )
     {
         $this->relDB = $relDb ?: Di::_()->get('Database\Cassandra\Relationships');
@@ -47,6 +50,7 @@ class Notifications
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->notifications = $notifications ?: Di::_()->get('Notification\Manager');
         $this->notificationBatches = $notificationBatches ?: Di::_()->get('Notification\Batches\Manager');
+        $this->updateMarkers = Di::_()->get('Notification\UpdateMarkers\Manager');
     }
 
     /**
@@ -65,19 +69,20 @@ class Notifications
      * @param  Entities\Activity|array $activity
      * @return mixed
      */
-    public function queue($activity)
+    public function queue($markerId)
     {
-        $me = $activity['ownerObj']['guid'];
+        $marker = new UpdateMarker();
+        $marker
+            ->setEntityType('group')
+            ->setEntityGuid($this->group->getGuid())
+            ->setMarker($markerId)
+            ->setUpdatedTimestamp(time());
 
         return Queue\Client::build()
             ->setExchange('mindsqueue')
-            ->setQueue('GroupsNotificationDispatcher')
+            ->setQueue('UpdateMarkerDispatcher')
             ->send([
-                'entity' => $this->group->getGuid(),
-                'params' => [
-                    'activity' => is_object($activity) ? $activity->guid : $activity['guid'],
-                    'exclude' => [ $me ]
-                ]
+                'marker' => serialize($marker),
             ]);
     }
 
@@ -85,29 +90,41 @@ class Notifications
      * Sends a Group notification for a certain activity
      * @param  array $params
      */
-    public function send($params)
+    public function send($marker)
     {
-        $activity = Entities\Factory::build($params['activity']);
-        if (!$activity) {
-            return false;
+        foreach ($this->getAllMembers() as $guid) {
+            $marker->setUserGuid($guid);
+            $this->updateMarkers->add($marker);
         }
-        
-        // Generate only one notification, because it's quicker that way
-        // send as a batch
-        $notification = (new Notification())
-            ->setToGuid(0) // Groups send to nobody
-            ->setEntityGuid($activity->getGuid())
-            ->setFromGuid($activity->getOwner())
-            ->setType('group_activity')
-            ->setDescription($activity->message)
-            ->setData([
-                'group_guid' => $this->group->getGuid() 
-            ])
-            ->setBatchId($this->group->getGuid())
-            ->setCreatedTimestamp(time());
+    }
 
-        $this->notifications->add($notification);
-        echo " dispatched to batchId: {$this->group->getGuid()}";
+    public function getAllMembers()
+    {
+        $this->relDB->setGuid($this->group->getGuid());
+        $offset = '';
+        while (true) {
+            $guids = $this->relDB->get('member', [
+                'inverse' => true,
+                'offset' => $offset,
+                'limit' => 100,
+            ]);
+
+            if ($offset) {
+                unset($guids[0]);
+            }
+
+            if (!$guids) {
+                return;
+            }
+
+            foreach ($guids as $guid) {
+                if ($guid == $offset) {
+                    return;
+                }
+                yield $guid;
+                $offset = $guid;
+            }
+        }
     }
 
     /**

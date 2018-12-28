@@ -69,11 +69,11 @@ class comments implements Interfaces\Api
         $response['comments'] = Exportable::_($comments);
         $response['load-previous'] = (string) $comments->getPagingToken();
 
-        if ($parent_guid) {
+        //if ($parent_guid) {
             $response['socketRoomName'] = "comments:{$guid}:{$parent_guid}";
-        } else {
-            $response['socketRoomName'] = "comments:{$guid}";
-        }
+        //} else {
+        //    $response['socketRoomName'] = "comments:{$guid}";
+        //}
 
         return Factory::response($response);
     }
@@ -171,6 +171,10 @@ class comments implements Interfaces\Api
                 ->setTimeCreated(time())
                 ->setTimeUpdated(time())
                 ->setBody($_POST['comment']);
+
+            if ($entity->type == 'group') {
+                $comment->setGroupConversation(true);
+            }
 
             // TODO: setHasChildren (for threaded)
 
@@ -275,18 +279,28 @@ class comments implements Interfaces\Api
         // Emit at the end because of attachment processing
         if ($emitToSocket) {
             $roomName = "comments:{$comment->getEntityGuid()}";
-            if ($parent_guid = $comment->getParentGuid()) {
+            $parent_guid = $comment->getParentGuid();
+            //if ($parent_guid = $comment->getParentGuid()) {
                 $roomName .= ":$parent_guid";
-            }
+            //}
             try {
                 (new Sockets\Events())
-                ->setRoom("comments:{$comment->getEntityGuid()}")
+                ->setRoom("comments:{$comment->getEntityGuid()}:$parent_guid")
                 ->emit(
                     'comment',
                     (string) $comment->getEntityGuid(),
                     (string) $comment->getOwnerGuid(),
                     (string) $comment->getGuid()
                 );
+                // Emit to parent
+                if ($parent_guid) {
+                    (new Sockets\Events())
+                    ->setRoom("comments:{$comment->getEntityGuid()}:0")
+                    ->emit(
+                        'reply',
+                        (string) $comment->getParentGuid()
+                    );
+                }
             } catch (\Exception $e) { }
         }
 

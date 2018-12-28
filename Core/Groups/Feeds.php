@@ -179,7 +179,7 @@ class Feeds
 
             (new Notifications())
                 ->setGroup($this->group)
-                ->queue($activity);
+                ->queue('activity');
         }
 
         return $success;
