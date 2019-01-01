@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class Subscriptions extends Aggregate
 {
 
-    protected $multiplier = 0;
+    protected $multiplier = 4;
 
     public function get()
     {

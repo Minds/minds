@@ -11,6 +11,11 @@ class EntityValidator
         if (!$entity || !method_exists($entity, 'getRating')) {
 //            var_dump($entity);exit;
             echo " .. no entity or getRating method";
+//            return false;
+        }
+
+        if ($entity->getAccessId() != 2) {
+            echo " .. unlisted";
             return false;
         }
 
@@ -18,6 +23,10 @@ class EntityValidator
         //    echo "..rating too high";
         //    return false;
         //}
+
+        if ($entity->type == 'user' && (!$entity->icontime || $entity->icontime == $entity->time_created)) {
+            return false;
+        }
 
         return $this->isEnabled($entity) 
             && ($entity->type == 'user' || $this->isOwnerEnabled($entity->getOwnerEntity()))

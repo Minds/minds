@@ -9,36 +9,40 @@ class Maps
             'type' => 'activity',
             'subtype' => '',
             'aggregates' => [
-                Aggregates\Comments::class,
+  //              Aggregates\Comments::class,
                 Aggregates\Votes::class,
-                Aggregates\Reminds::class
+                Aggregates\DownVotes::class,
+    //            Aggregates\Reminds::class
             ]
         ],
         'videos' => [
             'type' => 'object',
             'subtype' => 'video',
             'aggregates' => [
-                Aggregates\Comments::class,
+               // Aggregates\Comments::class,
                 Aggregates\Votes::class,
-                Aggregates\Reminds::class
+               // Aggregates\Reminds::class
+                Aggregates\DownVotes::class,
             ]
         ],
         'images' => [
             'type' => 'object',
             'subtype' => 'image',
             'aggregates' => [
-                Aggregates\Comments::class,
+//                Aggregates\Comments::class,
                 Aggregates\Votes::class,
-                Aggregates\Reminds::class
+                Aggregates\DownVotes::class,
+//                Aggregates\Reminds::class
             ]
         ],
         'blogs' => [
             'type' => 'object',
             'subtype' => 'blog',
             'aggregates' => [
-                Aggregates\Comments::class,
+//                Aggregates\Comments::class,
                 Aggregates\Votes::class,
-                Aggregates\Reminds::class
+                Aggregates\DownVotes::class,
+//                Aggregates\Reminds::class
             ]
         ],
         'groups' => [
@@ -57,7 +61,9 @@ class Maps
             'subtype' => '',
             'aggregates' => [
                 Aggregates\ChannelVotes::class,
-                Aggregates\Subscriptions::class
+                Aggregates\ChannelDownVotes::class,
+                Aggregates\ChannelVotesMade::class,
+//                Aggregates\Subscriptions::class
             ]
         ]
     ];
