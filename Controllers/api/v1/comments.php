@@ -160,12 +160,12 @@ class comments implements Interfaces\Api
                 ->setBody($_POST['comment']);
 
             // TODO: setHasChildren (for threaded)
-
             try {
                 $saved = $manager->add($comment);
 
                 if ($saved) {
                     // Defer emitting after processing attachments
+                    $comment->setEphemeral(false);
                     $emitToSocket = true;
                     $response['comment'] = $comment->export();
                 } else {
