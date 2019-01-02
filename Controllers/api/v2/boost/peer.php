@@ -73,7 +73,8 @@ class peer implements Interfaces\Api
 
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
-        $bid = (string) BigNumber::_($_POST['bid']);
+        $bidBN = BigNumber::_($_POST['bid']);
+        $bid = (string) $bidBN;
         $currency = isset($_POST['currency']) ? $_POST['currency'] : '';
         $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : [];
 
@@ -107,6 +108,12 @@ class peer implements Interfaces\Api
                 'stage' => 'initial',
                 'message' => 'Invalid bid'
             ]);
+        }
+
+        // Ensure bid is positive
+
+        if ($bidBN->lt(0)) {
+            return Factory::response(['status' => 'error', 'message' => 'bid must be a positive number']);
         }
 
         if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
