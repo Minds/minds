@@ -46,8 +46,8 @@ class RemindsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 200,
-            456 => 100
+            123 => 50,
+            456 => 25
         ]);
     }
 
@@ -137,8 +137,8 @@ class RemindsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 200,
-            456 => 100
+            123 => 50,
+            456 => 25
         ]);
     }
 
@@ -225,8 +225,8 @@ class RemindsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 200,
-            456 => 100
+            123 => 50,
+            456 => 25
         ]);
     }
 
