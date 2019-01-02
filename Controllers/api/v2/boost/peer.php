@@ -116,6 +116,12 @@ class peer implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'bid must be a positive number']);
         }
 
+        // Do not allow boosting to self
+
+        if (Core\Session::getLoggedinUser()->guid == $destination->guid) {
+            return Factory::response(['status' => 'error', 'message' => 'can not boost to self']);
+        }
+
         if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
             return Factory::response([
                 'status' => 'error',
