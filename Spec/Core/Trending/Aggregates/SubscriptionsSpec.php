@@ -32,8 +32,8 @@ class SubscriptionsSpec extends ObjectBehavior
             ]);
 
         $this->get()->shouldReturn([
-            123 => 0,
-            456 => 0
+            123 => 200,
+            456 => 100,
         ]);
     }
 

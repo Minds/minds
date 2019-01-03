@@ -43,7 +43,8 @@ class Votes extends Aggregate
         }
         
         $field = 'entity_guid';
-        $cardinality_field = 'user_phone_number_hash';
+        //$cardinality_field = 'user_phone_number_hash';
+        $cardinality_field = 'ip_hash';
 
         if ($this->type == 'group') {
             $field = 'entity_container_guid';
@@ -76,12 +77,13 @@ class Votes extends Aggregate
                         'terms' => [ 
                             'field' => "$field.keyword",
                             'size' => $this->limit,
-                            'order' => [ 'uniques' => 'DESC' ],
+//                            'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => "$cardinality_field.keyword"
+                                    'field' => "$cardinality_field.keyword",
+                                    //'precision_threshold' => 40000
                                 ]
                             ]
                         ]

@@ -1,21 +1,21 @@
 <?php
 /**
- * Channel Votes aggregates
+ * Votes aggregates
  */
 namespace Minds\Core\Trending\Aggregates;
 
 use Minds\Core\Data\ElasticSearch;
 
-class ChannelVotes extends Aggregate
+class DownVotes extends Aggregate
 {
 
-    protected $multiplier = 2;
+    protected $multiplier = -1;
 
     public function get()
     {
         $filter = [ 
             'term' => [
-                'action' => 'vote:up'
+                'action' => 'vote:down'
             ]
         ];
 
@@ -29,52 +29,59 @@ class ChannelVotes extends Aggregate
                 ]
             ]
         ];
-
-        if ($this->type) {
+        
+        if ($this->type && $this->type != 'group') {
             $must[]['match'] = [
-                'entity_type' => 'activity',
+                'entity_type' => $this->type
             ];
         }
 
-        /*if ($this->subtype) {
+        if ($this->subtype) {
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
             ];
-        }*/
+        }
+        
+        $field = 'entity_guid';
+        $cardinality_field = 'ip_hash';
+
+        if ($this->type == 'group') {
+            $field = 'entity_container_guid';
+            $this->multiplier = 4;
+            $must[]['range'] = [
+                'entity_access_id' => [
+                  'gte' => 3, //would be group
+                  'lt' => null,
+                ]
+            ];
+        }
+
+        //$must[]['match'] = [
+        //    'rating' => $this->rating
+        //];
 
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',
-            'size' => 1, //we want just the aggregates
+            'size' => 0, //we want just the aggregates
             'body' => [
                 'query' => [
                     'bool' => [
-                        //'filter' => $filter,
-                        'must' => $must,
-                        'must_not' => [
-                            [
-                                'term' => [
-                                    'is_remind' => true,
-                                ],
-
-                            ],
-                            ],
+                        'filter' => $filter,
+                        'must' => $must
                     ]
                 ],
                 'aggs' => [
                     'entities' => [
                         'terms' => [ 
-                            'field' => 'entity_owner_guid.keyword',
+                            'field' => "$field.keyword",
                             'size' => $this->limit,
-                            'order' => [
-                                'uniques' => 'desc'
-                            ]
+             //               'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_guid.keyword',
-                                //    'precision_threshold' => 40000
+                                    'field' => "$cardinality_field.keyword"
                                 ]
                             ]
                         ]

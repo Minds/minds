@@ -1,7 +1,7 @@
 # ignore Elgg configuration
 /settings.php
 /multi.settings.php
-
+!.gitlab-ci.yml
 bin
 
 /.htaccess

@@ -139,15 +139,15 @@ class Subscriptions
         }
 
         $return = 0;
-        $db = new Core\Data\Call('friends');
-        $row = $db->getRow($user, array('limit'=> 1, 'offset'=>$to));
-        if ($row && key($row) == $to) {
+        $db = new Core\Data\Call('friendsof');
+        $row = $db->getRow($to, ['limit' => 1, 'offset' => $user]);
+        if ($row && key($row) == $user) {
             $return = true;
         }
 
         $cacher->set("$user:isSubscribed:$to", $return);
 
-        return (bool) $return ;
+        return (bool) $return;
     }
 
     /**
