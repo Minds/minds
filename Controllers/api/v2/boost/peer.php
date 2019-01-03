@@ -265,6 +265,17 @@ class peer implements Interfaces\Api
             ]);
         }
 
+        // Set state (before charge)
+
+        $review->setBoost($boost);
+        try {
+            $review->accept();
+        } catch (\Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
+            return Factory::response($response);
+        }
+
         // Charge
 
         $chargeId = Di::_()->get('Boost\Payment')->charge($boost);
@@ -298,26 +309,6 @@ class peer implements Interfaces\Api
             'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType(), 'title' => $boost->getEntity()->title]
         ]);
 
-        //Now forward through to social networks if selected
-
-        if ($boost->shouldPostToFacebook()) {
-            $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
-            $facebook->getApiCredentials();
-            if ($boost->getScheduledTs() > time()) {
-                $facebook->schedule($boost->getScheduledTs());
-            }
-            $facebook->post($embedded);
-        }
-
-        // Set state
-
-        $review->setBoost($boost);
-        try {
-            $review->accept();
-        } catch (\Exception $e) {
-            $response['status'] = 'error';
-            $response['message'] = $e->getMessage();
-        }
         $response['status'] = 'success';
         return Factory::response($response);
     }
@@ -345,16 +336,6 @@ class peer implements Interfaces\Api
         }
 
         try {
-            // Refund payment
-
-            $refund = Di::_()->get('Boost\Payment')->refund($boost);
-
-            if (!$refund) {
-                return Factory::response([
-                    'status' => 'error',
-                    'message' => 'Cannot process refund'
-                ]);
-            }
 
             // Action
 
@@ -372,6 +353,17 @@ class peer implements Interfaces\Api
                     ]
                 ]);
                 $review->reject();
+            }
+
+            // Refund payment
+
+            $refund = Di::_()->get('Boost\Payment')->refund($boost);
+
+            if (!$refund) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Cannot process refund'
+                ]);
             }
 
             $response['status'] = 'success';
