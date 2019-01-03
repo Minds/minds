@@ -140,6 +140,11 @@ class entities implements Interfaces\Api
             array_shift($entities);
         }
 
+        // Remove all unlisted content if it appears
+        $entities = array_values(array_filter($entities, function($entity) {
+            return $entity->getAccessId() != 0;
+        }));
+
         $response = [];
         if ($entities) {
             $response['entities'] = factory::exportable($entities);

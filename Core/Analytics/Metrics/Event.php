@@ -46,6 +46,8 @@ class Event
         $this->data['@timestamp'] = (int) microtime(true) * 1000;
 
         $this->data['user_agent'] = $this->getUserAgent();
+        $this->data['ip_hash'] = $this->getIpHash();
+        $this->data['ip_range_hash'] = $this->getIpRangeHash();
 
         if (!isset($this->data['platform'])) {
             $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
@@ -103,4 +105,21 @@ class Event
          return '';
      }
 
+     protected function getIpHash()
+     {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return hash('sha256', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        }
+        return '';
+     }
+
+    protected function getIpRangeHash()
+    {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $parts = explode('.', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            array_pop($parts);
+            return hash('sha256', implode('.', $parts));
+        }
+        return '';
+    }
 }

@@ -6,16 +6,16 @@ namespace Minds\Core\Trending\Aggregates;
 
 use Minds\Core\Data\ElasticSearch;
 
-class ChannelVotes extends Aggregate
+class ChannelDownVotes extends Aggregate
 {
 
-    protected $multiplier = 2;
+    protected $multiplier = -0.5;
 
     public function get()
     {
         $filter = [ 
             'term' => [
-                'action' => 'vote:up'
+                'action' => 'vote:down'
             ]
         ];
 
@@ -30,13 +30,13 @@ class ChannelVotes extends Aggregate
             ]
         ];
 
-        if ($this->type) {
+        /*if ($this->type) {
             $must[]['match'] = [
-                'entity_type' => 'activity',
+                'entity_type' => $this->type
             ];
         }
 
-        /*if ($this->subtype) {
+        if ($this->subtype) {
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
             ];
@@ -58,7 +58,7 @@ class ChannelVotes extends Aggregate
                                 ],
 
                             ],
-                            ],
+                        ],
                     ]
                 ],
                 'aggs' => [
@@ -73,8 +73,8 @@ class ChannelVotes extends Aggregate
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_guid.keyword',
-                                //    'precision_threshold' => 40000
+                                    'field' => 'ip_hash.keyword',
+                                    'precision_threshold' => 40000
                                 ]
                             ]
                         ]

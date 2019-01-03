@@ -94,6 +94,8 @@ class Defaults
                 ->setEntitySubtype($entity->subtype)
                 ->setEntityOwnerGuid($entity->owner_guid)
                 ->push();
+
+            $e->setResponse(true);
         });
 
         // Notifications events

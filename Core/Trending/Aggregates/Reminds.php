@@ -9,7 +9,7 @@ use Minds\Core\Data\ElasticSearch;
 class Reminds extends Aggregate
 {
 
-    protected $multiplier = 4;
+    protected $multiplier = 1;
 
     public function get()
     {

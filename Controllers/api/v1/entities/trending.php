@@ -99,6 +99,11 @@ class trending implements Interfaces\Api, Interfaces\ApiIgnorePam
             ]);
         }
 
+        $pages[0] = $key;
+        $pages[1] = 'all';
+        $suggested = new \Minds\Controllers\api\v2\entities\suggested;
+        return $suggested->get($pages);
+
         $offset = get_input('offset', 0);
         if ($offset && strlen($offset) < 15) {
             $offset = (new \GUID())->migrate($offset);

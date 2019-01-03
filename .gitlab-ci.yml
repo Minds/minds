@@ -1,0 +1,68 @@
+image: minds/php:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  paths:
+    - vendor
+    - bin
+  policy: pull
+
+build:
+  stage: build
+  script:
+    - apk update && apk add --no-cache git nodejs
+    - sh tools/setup.sh
+  cache:
+    paths:
+      - vendor
+      - bin
+    policy: push
+
+test:
+  stage: test
+  image: php:7.1.11-fpm-alpine3.4 # TODO: Fix cassandra driver conflicts
+  script:
+    - docker-php-ext-install mbstring
+    - docker-php-ext-install bcmath
+    - bin/phpspec run
+
+deploy:fpm:
+  stage: deploy
+  image: docker:latest
+  script:
+    - apk add --no-cache curl jq python py-pip
+    - pip install awscli
+    - docker build -t $REPOSITORY_URL_FPM -f containers/php-fpm/Dockerfile .
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker push $REPOSITORY_URL_FPM
+    - aws ecs update-service --service=$SERVICE_FPM --force-new-deployment --region us-east-1 --cluster=$CLUSTER
+  only:
+    refs:
+      - master
+      - test/gitlab-ci
+  environment:
+    name: production
+
+deploy:runners:
+  stage: deploy
+  image: docker:latest
+  script:
+    - apk add --no-cache curl jq python py-pip
+    - pip install awscli
+    - docker build -t $REPOSITORY_URL_RUNNERS -f containers/php-runners/Dockerfile .
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker push $REPOSITORY_URL_RUNNERS
+    - aws ecs update-service --service=$SERVICE_RUNNERS --force-new-deployment --region us-east-1 --cluster=$CLUSTER
+  only:
+    refs:
+      - master
+      - test/gitlab-ci
+  environment:
+    name: production

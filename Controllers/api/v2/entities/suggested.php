@@ -86,6 +86,11 @@ class suggested implements Interfaces\Api
 
         $result = $repo->getFeed($opts);
 
+        // Remove all unlisted content if it appears
+        $result = array_values(array_filter($result, function($entity) {
+            return $entity->getAccessId() != 0;
+        }));
+
         return Factory::response([
             'status' => 'success',
             'entities' => Factory::exportable($result),

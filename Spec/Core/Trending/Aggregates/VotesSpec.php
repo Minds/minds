@@ -62,12 +62,12 @@ class VotesSpec extends ObjectBehavior
                         'terms' => [ 
                             'field' => "entity_container_guid.keyword",
                             'size' => 1,
-                            'order' => [ 'uniques' => 'DESC' ],
+                            //'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => "user_phone_number_hash.keyword"
+                                    'field' => "ip_hash.keyword"
                                 ]
                             ]
                         ]
@@ -151,12 +151,12 @@ class VotesSpec extends ObjectBehavior
                         'terms' => [ 
                             'field' => "entity_guid.keyword",
                             'size' => 1,
-                            'order' => [ 'uniques' => 'DESC' ],
+                            //'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => "user_phone_number_hash.keyword"
+                                    'field' => "ip_hash.keyword"
                                 ]
                             ]
                         ]

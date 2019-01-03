@@ -187,7 +187,8 @@ class blog implements Interfaces\Api
         }
 
         if (isset($_POST['tags'])) {
-            $blog->setTags($_POST['tags']);
+            $tags = !is_array($_POST['tags']) ? explode(',', $_POST['tags']) : $_POST['tags'];
+            $blog->setTags($tags);
         }
 
         if (isset($_POST['mature'])) {

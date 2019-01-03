@@ -88,7 +88,7 @@ class Maps
             ],
         ],
         'interactions:remindday' => [
-            'interaction' => 'comment',
+            'interaction' => 'remind',
             'period' => 86400, //1 day
             'threshold' => 500,
             'aggregates' => [

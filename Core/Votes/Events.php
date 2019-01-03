@@ -105,8 +105,13 @@ class Events
                 ->setEntityType($entity->type)
                 ->setEntitySubtype((string) $entity->subtype)
                 ->setEntityOwnerGuid((string) $entity->owner_guid)
-                ->setAction("vote:{$direction}")
-                ->push();
+                ->setAction("vote:{$direction}");
+            
+            if ($entity->type == 'activity' && $entity->remind_object) {
+                $event->setIsRemind(true);
+            }
+
+            $event->push();
             
             if ($entity->type == 'activity' && $entity->custom_type) {
                 $subtype = '';

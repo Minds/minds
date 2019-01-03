@@ -73,7 +73,8 @@ class peer implements Interfaces\Api
 
         $entity = Entities\Factory::build($pages[0]);
         $destination = Entities\Factory::build($_POST['destination']);
-        $bid = (string) BigNumber::_($_POST['bid']);
+        $bidBN = BigNumber::_($_POST['bid']);
+        $bid = (string) $bidBN;
         $currency = isset($_POST['currency']) ? $_POST['currency'] : '';
         $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : [];
 
@@ -107,6 +108,18 @@ class peer implements Interfaces\Api
                 'stage' => 'initial',
                 'message' => 'Invalid bid'
             ]);
+        }
+
+        // Ensure bid is positive
+
+        if ($bidBN->lt(0)) {
+            return Factory::response(['status' => 'error', 'message' => 'bid must be a positive number']);
+        }
+
+        // Do not allow boosting to self
+
+        if (Core\Session::getLoggedinUser()->guid == $destination->guid) {
+            return Factory::response(['status' => 'error', 'message' => 'can not boost to self']);
         }
 
         if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedinUser(), $destination)) {
@@ -252,6 +265,17 @@ class peer implements Interfaces\Api
             ]);
         }
 
+        // Set state (before charge)
+
+        $review->setBoost($boost);
+        try {
+            $review->accept();
+        } catch (\Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = $e->getMessage();
+            return Factory::response($response);
+        }
+
         // Charge
 
         $chargeId = Di::_()->get('Boost\Payment')->charge($boost);
@@ -285,26 +309,6 @@ class peer implements Interfaces\Api
             'params' => ['bid' => $boost->getBid(), 'type' => $boost->getType(), 'title' => $boost->getEntity()->title]
         ]);
 
-        //Now forward through to social networks if selected
-
-        if ($boost->shouldPostToFacebook()) {
-            $facebook = Core\ThirdPartyNetworks\Factory::build('facebook');
-            $facebook->getApiCredentials();
-            if ($boost->getScheduledTs() > time()) {
-                $facebook->schedule($boost->getScheduledTs());
-            }
-            $facebook->post($embedded);
-        }
-
-        // Set state
-
-        $review->setBoost($boost);
-        try {
-            $review->accept();
-        } catch (\Exception $e) {
-            $response['status'] = 'error';
-            $response['message'] = $e->getMessage();
-        }
         $response['status'] = 'success';
         return Factory::response($response);
     }
@@ -332,16 +336,6 @@ class peer implements Interfaces\Api
         }
 
         try {
-            // Refund payment
-
-            $refund = Di::_()->get('Boost\Payment')->refund($boost);
-
-            if (!$refund) {
-                return Factory::response([
-                    'status' => 'error',
-                    'message' => 'Cannot process refund'
-                ]);
-            }
 
             // Action
 
@@ -359,6 +353,17 @@ class peer implements Interfaces\Api
                     ]
                 ]);
                 $review->reject();
+            }
+
+            // Refund payment
+
+            $refund = Di::_()->get('Boost\Payment')->refund($boost);
+
+            if (!$refund) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Cannot process refund'
+                ]);
             }
 
             $response['status'] = 'success';

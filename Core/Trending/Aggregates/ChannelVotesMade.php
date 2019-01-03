@@ -6,37 +6,39 @@ namespace Minds\Core\Trending\Aggregates;
 
 use Minds\Core\Data\ElasticSearch;
 
-class ChannelVotes extends Aggregate
+class ChannelVotesMade extends Aggregate
 {
 
-    protected $multiplier = 2;
+    protected $multiplier = -1.5;
 
     public function get()
     {
+        $this->limit = 500;
         $filter = [ 
-            'term' => [
-                'action' => 'vote:up'
-            ]
+        //    'term' => [
+        //        'action' => 'vote:up'
+        //    ]
         ];
 
         $must = [
             [
                 'range' => [
                 '@timestamp' => [
-                    'gte' => $this->from,
+                    //'gte' => $this->from,
+                    'gte' => strtotime('-12 hours', $this->from/1000) * 1000,
                     'lte' => $this->to
                     ]
                 ]
             ]
         ];
 
-        if ($this->type) {
+        /*if ($this->type) {
             $must[]['match'] = [
                 'entity_type' => 'activity',
             ];
         }
 
-        /*if ($this->subtype) {
+        if ($this->subtype) {
             $must[]['match'] = [
                 'entity_subtype' => $this->subtype
             ];
@@ -51,20 +53,20 @@ class ChannelVotes extends Aggregate
                     'bool' => [
                         //'filter' => $filter,
                         'must' => $must,
-                        'must_not' => [
+                        /*'must_not' => [
                             [
                                 'term' => [
                                     'is_remind' => true,
                                 ],
 
                             ],
-                            ],
+                        ],*/
                     ]
                 ],
                 'aggs' => [
                     'entities' => [
                         'terms' => [ 
-                            'field' => 'entity_owner_guid.keyword',
+                            'field' => 'user_guid.keyword',
                             'size' => $this->limit,
                             'order' => [
                                 'uniques' => 'desc'
@@ -73,8 +75,8 @@ class ChannelVotes extends Aggregate
                         'aggs' => [
                             'uniques' => [
                                 'cardinality' => [
-                                    'field' => 'user_guid.keyword',
-                                //    'precision_threshold' => 40000
+                                    'field' => 'entity_guid.keyword',
+//                                    'precision_threshold' => 40000
                                 ]
                             ]
                         ]
@@ -87,7 +89,7 @@ class ChannelVotes extends Aggregate
         $prepared->query($query);
 
         $result = $this->client->request($prepared);
-
+//var_dump($result); exit;       
         $entities = [];
         foreach ($result['aggregations']['entities']['buckets'] as $entity) {
             $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
