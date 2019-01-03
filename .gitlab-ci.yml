@@ -20,6 +20,9 @@ build:
     - apk update && apk add --no-cache git nodejs
     - sh tools/setup.sh
   cache:
+    paths:
+      - vendor
+      - bin
     policy: push
 
 test:
