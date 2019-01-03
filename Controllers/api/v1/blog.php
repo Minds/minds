@@ -72,7 +72,7 @@ class blog implements Interfaces\Api
             case "network":
             case "owner":
                 $opts = [
-                    'limit' => $limit,
+                    'limit' => $limit + 6,
                     'offset' => $offset,
                 ];
 
@@ -90,8 +90,17 @@ class blog implements Interfaces\Api
                 }
 
                 $blogs = $repository->getList($opts);
-
-                $response['entities'] = new Exportable($blogs);
+                
+                $export = [];
+                foreach ($blogs as $blog) {
+                    if ($blog->getOwnerGuid() != Core\Session::getLoggedInUserGuid() && $blog->getAccessId() != 2) {
+                        continue;
+                    }
+                    $export[] = $blog;
+                }
+                $export = array_slice($export, 0, $limit);
+                
+                $response['entities'] = new Exportable($export);
                 $response['load-next'] = $blogs->getPagingToken();
                 break;
 
