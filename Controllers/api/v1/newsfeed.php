@@ -104,6 +104,14 @@ class newsfeed implements Interfaces\Api
                 $options = array(
                     'container_guid' => isset($pages[1]) ? $pages[1] : elgg_get_logged_in_user_guid()
                 );
+
+                if (isset($_GET['pinned']) && count($_GET['pinned']) > 0) {
+                    $pinned_guids = [];
+                    $p = explode(',', $_GET['pinned']);
+                    foreach($p as $guid) {
+                        $pinned_guids[] = (string) $guid;
+                    }
+                }
                 break;
         }
 
