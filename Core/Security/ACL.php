@@ -51,8 +51,15 @@ class ACL
             return true;
         }
 
+        // If logged out and public and not container        
         if (!Core\Session::isLoggedIn()) {
-            if ((int) $entity->access_id == ACCESS_PUBLIC) {
+            if (
+                (int) $entity->access_id == ACCESS_PUBLIC
+                && (
+                    $entity->owner_guid == $entity->container_guid
+                    || $entity->container_guid == 0
+                )
+            ) {
                 return true;
             } else {
                 return false;
