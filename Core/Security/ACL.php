@@ -72,8 +72,15 @@ class ACL
 
         /**
          * Is the entity open for loggedin users?
+         * And check the owner is the container_guid too
          */
-        if (in_array($entity->getAccessId(), array(ACCESS_LOGGED_IN, ACCESS_PUBLIC))) {
+        if (
+            in_array($entity->getAccessId(), [ACCESS_LOGGED_IN, ACCESS_PUBLIC])
+            && (
+                $entity->owner_guid == $entity->container_guid
+                || $entity->container_guid == 0
+            )
+        ) {
             return true;
         }
 
