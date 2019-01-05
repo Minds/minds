@@ -21,8 +21,8 @@ class Twilio implements SMSServiceInterface
     {
         $this->config = $config ? $config : Di::_()->get('Config')->get('twilio');
 
-        $AccountSid = $this->config['account_sid'] ?? 'not set';
-        $AuthToken = $this->config['auth_token'] ?? 'not set';
+        $AccountSid = $this->config['account_sid'] ?: 'not set';
+        $AuthToken = $this->config['auth_token'] ?: 'not set';
         $this->client = $client ? $client : new TwilioClient($AccountSid, $AuthToken);
     }
 
