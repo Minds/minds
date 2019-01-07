@@ -21,6 +21,7 @@ class Email implements Interfaces\QueueRunner
         $client = Queue\Client::Build();
         $client->setQueue("Email")
                ->receive(function ($data) use ($mailer) {
+                   return;
                    echo "[email]: Received an email \n";
 
                    $data = $data->getData();
