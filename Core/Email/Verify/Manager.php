@@ -15,6 +15,11 @@ class Manager
     /** @var $spamBlocksManager */
     private $spamBlocksManager;
 
+    /** @var $bannedDomains */
+    private $bannedDomains = [
+        'annomails.com',
+    ];
+
     public function __construct($service = null, $spamBlocksManager = null)
     {
         $this->service = $service ?: new Services\Kickbox;
@@ -28,6 +33,11 @@ class Manager
      */
     public function verify($email)
     {
+        $domain = explode('@', strtolower($email))[1];
+        if (in_array($domain, $this->bannedDomains)) {
+            return false;
+        }
+
         $hash = hash('sha256', $email);
         $spamBlock = new SpamBlocks\SpamBlock;
         $spamBlock->setKey('email_hash')
