@@ -51,6 +51,14 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
                 throw new \Exception('Captcha failed');
             }
 
+            $emailVerify = Core\Di\Di::_()->get('Email\Verify\Manager');
+            if (!$emailVerify->verify($_POST['email'])) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Please verify your email address is correct',
+                ]);
+            }
+
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
 
