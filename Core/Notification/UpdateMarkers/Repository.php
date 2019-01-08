@@ -28,7 +28,12 @@ class Repository
     public function getList($opts = [])
     {
         $opts = array_merge([
+            'user_guid' => null,
         ], $opts);
+
+        if (!$opts['user_guid']) {
+            throw new \Exception('user_guid be be sent');
+        }
 
         $statement = "SELECT * FROM update_markers";
 

@@ -7,6 +7,7 @@ namespace Minds\Core\Groups;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Group as GroupEntity;
+use Minds\Core\Session;
 
 class Events
 {
@@ -138,6 +139,7 @@ class Events
             } else {
                 (new Notifications())
                     ->setGroup($group)
+                    ->setActor(Session::getLoggedInUser())
                     ->queue('activity');
             }
         });
@@ -160,6 +162,7 @@ class Events
 
             (new Notifications())
                 ->setGroup($group)
+                ->setActor(Session::getLoggedInUser())
                 ->queue('conversation');
         });
     }

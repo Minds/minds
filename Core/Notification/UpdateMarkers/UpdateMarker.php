@@ -13,6 +13,9 @@ class UpdateMarker
     /** @var $userGuid */
     private $userGuid;
 
+    /** @var $fromGuid */
+    private $fromGuid;
+
     /** @var $entityType */
     private $entityType;
 

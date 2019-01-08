@@ -73,6 +73,7 @@ class Notifications
     {
         $marker = new UpdateMarker();
         $marker
+            ->setFromGuid($this->actor->guid)
             ->setEntityType('group')
             ->setEntityGuid($this->group->getGuid())
             ->setMarker($markerId)
@@ -93,6 +94,9 @@ class Notifications
     public function send($marker)
     {
         foreach ($this->getAllMembers() as $guid) {
+            if ($guid == $marker->getFromGuid()) {
+                continue;
+            }
             $marker->setUserGuid($guid);
             $this->updateMarkers->add($marker);
         }

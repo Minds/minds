@@ -25,6 +25,10 @@ class markers implements Interfaces\Api
     {
         $user = Session::getLoggedinUser();
 
+        if (!$user) {
+            return;
+        }
+
         $entity_type = $_GET['type'] ?? 'group';
 
         $opts = [
