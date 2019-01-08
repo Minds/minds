@@ -48,5 +48,9 @@ class SecurityProvider extends Provider
         $this->di->bind('Security\Events', function ($di) {
             return new Events();
         }, ['useFactory' => true]);
+
+        $this->di->bind('Security\SpamBlocks\IPHash', function ($di) {
+            return new SpamBlocks\IPHash;
+        }, ['useFactory' => true]);
     }
 }
