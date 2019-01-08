@@ -25,5 +25,9 @@ class EmailProvider extends Provider
         $this->di->bind('Email\Repository', function ($di) {
             return new Repository();
         }, ['useFactory' => true]);
+
+        $this->di->bind('Email\Verify\Manager', function ($di) {
+            return new Verify\Manager;
+        }, ['useFactory' => true]);
     }
 }
