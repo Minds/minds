@@ -1004,7 +1004,7 @@ function register_user($username, $password, $name, $email,
 $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 
 	// no need to trim password.
-	$username = trim($username);
+	$username = strtolower(trim($username));
 	$name = trim(strip_tags($name));
 	$email = trim($email);
 
