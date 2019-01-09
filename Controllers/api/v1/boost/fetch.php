@@ -72,10 +72,11 @@ class fetch implements Interfaces\Api
 
         switch ($pages[0]) {
             case 'content':
+                $iterator->setOffset('');
                 $iterator->setIncrement(true);
 
-                foreach ($iterator as $entity) {
-                    $response['boosts'][] = $entity->export();
+                foreach ($iterator as $guid => $entity) {
+                    $response['boosts'][] = array_merge($entity->export(), ['boosted_guid' => (string) $guid]);
                     Counters::increment($entity->guid, "impression");
                     Counters::increment($entity->owner_guid, "impression");
                 }
