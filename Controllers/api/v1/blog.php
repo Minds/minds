@@ -72,7 +72,7 @@ class blog implements Interfaces\Api
             case "network":
             case "owner":
                 $opts = [
-                    'limit' => $limit + 6,
+                    'limit' => $limit,
                     'offset' => $offset,
                 ];
 
@@ -98,7 +98,7 @@ class blog implements Interfaces\Api
                     }
                     $export[] = $blog;
                 }
-                $export = array_slice($export, 0, $limit);
+                //$export = array_slice($export, 0, $limit);
                 
                 $response['entities'] = new Exportable($export);
                 $response['load-next'] = $blogs->getPagingToken();
