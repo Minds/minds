@@ -53,15 +53,18 @@ class comments implements Interfaces\Api
 
         $repository = new Core\Comments\Repository();
 
+        $descending = isset($_GET['descending']) ? $_GET['descending'] !== 'false' : true;
         $comments = $repository->getList([
             'entity_guid' => $guid,
             'parent_guid' => $parent_guid,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
-            'descending' => true,
+            'include-offset' => isset($_GET['include-offset']) ? $_GET['include-offset'] : true,
+            'token' => isset($_GET['token']) ? $_GET['token'] : null,
+            'descending' => $descending,
         ]);
 
-        if (!isset($_GET['reversed']) || $_GET['reversed'] || $_GET['reversed'] === 'false') {
+        if ($descending) {
             // Reversed order output
             $comments = $comments->reverse();
         }
