@@ -95,16 +95,12 @@ class Repository
             $values[] = new Varint($opts['guid']);
         }
 
-        if ($where) {
-            $cql .= ' WHERE ' . implode(' AND ', $where);
-        }
-
         if (!$opts['descending']) {
             $cql .= 'ORDER BY parent_guid DESC, guid ASC';
         }
 
-        if ($opts['offset']) {
-            $cqlOpts['paging_state_token'] = base64_decode($opts['offset']);
+        if ($opts['token']) {
+            $cqlOpts['paging_state_token'] = base64_decode($opts['token']);
         }
 
         if ($opts['limit']) {
