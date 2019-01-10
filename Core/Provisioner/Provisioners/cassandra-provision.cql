@@ -1341,3 +1341,9 @@ CREATE TABLE minds.user (
     AND min_index_interval = 128
     AND read_repair_chance = 1.0
     AND speculative_retry = '99PERCENTILE';
+
+CREATE TABLE minds.spam_blocks (
+    key text,
+    value text,
+    PRIMARY KEY (key, value)
+) WITH CLUSTERING ORDER BY (value ASC)
