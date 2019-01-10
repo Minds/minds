@@ -8,7 +8,6 @@
 
 namespace Minds\Core\Comments;
 
-use Cassandra\Collection;
 use Cassandra\Map;
 use Cassandra\Rows;
 use Cassandra\Timestamp;
@@ -46,7 +45,6 @@ class Repository
         'spam',
         'deleted',
         'ownerObj',
-        'ancestors',
     ];
 
     /**
@@ -156,15 +154,6 @@ class Repository
                     ->setEphemeral(false)
                     ->markAllAsPristine();
 
-                $ancestors = $row['ancestors'] ? $row['ancestors']->values() : [];
-
-                $arr = [];
-                foreach ($ancestors as $ancestor) {
-                    $arr[] = $ancestor->value();
-                }
-                $comment->setAncestors($arr);
-
-
                 $comments[] = $comment;
             }
 
@@ -268,14 +257,6 @@ class Repository
 
         if (in_array('repliesCount', $attributes)) {
             $fields['replies_count'] = new Varint($comment->getRepliesCount());
-        }
-
-        if (in_array('ancestors', $attributes)) {
-            $col = new Collection(Type::varint());
-            foreach ($comment->getAncestors() as $ancestor) {
-                $col->add(new Varint($ancestor));
-            }
-            $fields['ancestors'] = $col;
         }
 
         if (in_array('ownerGuid', $attributes)) {

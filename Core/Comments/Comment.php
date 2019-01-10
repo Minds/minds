@@ -43,8 +43,6 @@ use Minds\Helpers\Unknown;
  * @method array getVotesDown()
  * @method Comment setEphemeral(bool $value)
  * @method bool isEphemeral()
- * @method Comment setAncestors(array $value)
- * @method array getAncestors()
  */
 class Comment extends RepositoryEntity
 {
@@ -100,9 +98,6 @@ class Comment extends RepositoryEntity
     protected $votesDown;
 
     protected $groupConversation = false;
-
-    /** @var array */
-    protected $ancestors = [];
 
     /** @var bool */
     protected $ephemeral = true;
@@ -247,7 +242,6 @@ class Comment extends RepositoryEntity
             'edited',
             'spam',
             'deleted',
-            'ancestors',
             function ($export) {
                 return $this->_extendExport($export);
             }
