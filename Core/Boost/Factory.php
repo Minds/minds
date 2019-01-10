@@ -9,6 +9,16 @@ use Minds\Interfaces;
  */
 class Factory
 {
+    public static function getClassHandler($handler)
+    {
+        $handler = ucfirst($handler);
+        $handler = "Minds\\Core\\Boost\\$handler";
+        if (class_exists($handler)) {
+            return $handler;
+        }
+        throw new \Exception("Handler not found");
+    }
+
     /**
      * Build the handler
      * @param  string $handler

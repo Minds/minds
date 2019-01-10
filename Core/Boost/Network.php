@@ -475,4 +475,13 @@ class Network implements BoostHandlerInterface
 
         return ($totals->diffSum ?: 0) / ($totals->count ?: 1);
     }
+
+    /**
+     * @param mixed $entity
+     * @return boolean
+     */
+    public static function validateEntity($entity)
+    {
+        return true;
+    }
 }

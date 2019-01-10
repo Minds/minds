@@ -64,4 +64,13 @@ class Peer implements Interfaces\BoostHandlerInterface
     {
         return false;
     }
+
+    /**
+     * @param mixed $entity
+     * @return boolean
+     */
+    public static function validateEntity($entity)
+    {
+        return true;
+    }
 }
