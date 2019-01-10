@@ -71,6 +71,8 @@ class Repository
             'guid' => null,
             'limit' => null,
             'offset' => null,
+            'include-offset' => false,
+            'token' => null,
             'descending' => true
         ], $opts);
 
@@ -93,6 +95,15 @@ class Repository
         if ($opts['guid']) {
             $where[] = 'guid = ?';
             $values[] = new Varint($opts['guid']);
+        }
+
+        if ($opts['offset']) {
+            $where[] = $opts['include-offset'] ? 'guid >= ?' : 'guid > ?';
+            $values[] = new Varint($opts['offset']);
+        }
+
+        if ($where) {
+            $cql .= ' WHERE ' . implode(' AND ', $where);
         }
 
         if (!$opts['descending']) {
