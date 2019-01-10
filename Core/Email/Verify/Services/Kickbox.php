@@ -6,14 +6,16 @@ use Minds\Core\Config;
 
 class Kickbox
 {
-
     /** @var KickboxClient $client */
     private $client;
 
+    /** @var Config $config */
+    private $config;
+
     public function __construct($client = null, $config = null)
     {
-        $config = $config ?: Config::_();
-        $this->client  = $client ?: (new KickboxClient($config->get('kickbox_secret')))
+        $this->config = $config ?: Config::_();
+        $this->client  = $client ?: (new KickboxClient($this->config->get('kickbox_secret')))
                                         ->kickbox();
     }
 
@@ -24,6 +26,8 @@ class Kickbox
      */
     public function verify($email)
     {
+        if (!$this->config->get('kickbox_secret'))
+            return true;
         $response =  $this->client->verify($email);
         return !($response->body['result'] == 'undeliverable');
     }
