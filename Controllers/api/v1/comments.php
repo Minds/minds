@@ -165,6 +165,7 @@ class comments implements Interfaces\Api
             $comment
                 ->setEntityGuid($entity->guid)
                 ->setParentGuid($pages[1] ?? 0)
+                ->setAncestors(isset($_POST['ancestors']) ? $_POST['ancestors'] : [])
                 ->setMature(isset($_POST['mature']) && $_POST['mature'])
                 ->setOwnerObj(Core\Session::getLoggedInUser())
                 ->setContainerGuid(Core\Session::getLoggedInUserGuid())
