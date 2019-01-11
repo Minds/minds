@@ -93,13 +93,25 @@ class Notifications
      */
     public function send($marker)
     {
-        foreach ($this->getAllMembers() as $guid) {
+        foreach ($this->getSubscribedBatch() as $guid) {
             if ($guid == $marker->getFromGuid()) {
                 continue;
             }
             $marker->setUserGuid($guid);
             $this->updateMarkers->add($marker);
         }
+    }
+
+    /**
+     * Return send batch for group
+     * @yield $guid
+     * @return void
+     */
+    public function getSubscribedBatch()
+    {
+        return $this->notificationBatches
+            ->setBatchId($this->group->getGuid())
+            ->getSubscribers();
     }
 
     public function getAllMembers()
