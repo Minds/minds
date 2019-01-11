@@ -271,9 +271,9 @@ class Notifications
 
         $user_guid = is_object($user) ? $user->guid : $user;
 
-        $this->notificationBatches->setUser($user_guid);
+        $this->notificationBatches->setUser((int) $user_guid);
         $this->notificationBatches->setBatchId($this->group->getGuid());
-
+        
         $done = $this->notificationBatches->subscribe();
 
         if ($done) {
