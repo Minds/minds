@@ -258,4 +258,13 @@ class Channel implements Interfaces\BoostHandlerInterface
             }
         }*/
     }
+
+    /**
+     * @param mixed $entity
+     * @return boolean
+     */
+    public static function validateEntity($entity)
+    {
+        return true;
+    }
 }

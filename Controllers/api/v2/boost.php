@@ -249,6 +249,18 @@ class boost implements Interfaces\Api
                         }
                     }
 
+                    // Validate entity
+
+                    $boostHandler = Core\Boost\Factory::getClassHandler(ucfirst($pages[0]));
+                    $isEntityValid = call_user_func([$boostHandler, 'validateEntity'], $entity);
+
+                    if (!$isEntityValid) {
+                        return Factory::response([
+                            'status' => 'error',
+                            'message' => 'Entity cannot be boosted'
+                        ]);
+                    }
+
                     // Generate Boost entity
 
                     $state = 'created';
