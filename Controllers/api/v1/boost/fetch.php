@@ -118,7 +118,7 @@ class fetch implements Interfaces\Api
                         $response['boosts'][] = array_merge($entity->export(), [ 'boosted' => true ]);
                     }
                     if (!$response['boosts'] || count($response['boosts']) < 5) {
-                        $cacher->destory(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset");
+                        $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset");
                     } else {
                         $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", ((int) $offset) + count($posts));
                     }
