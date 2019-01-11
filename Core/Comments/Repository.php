@@ -71,7 +71,7 @@ class Repository
             'guid' => null,
             'limit' => null,
             'offset' => null,
-            'include-offset' => false,
+            'include_offset' => false,
             'token' => null,
             'descending' => true
         ], $opts);
@@ -96,9 +96,13 @@ class Repository
             $where[] = 'guid = ?';
             $values[] = new Varint($opts['guid']);
         }
-
         if ($opts['offset']) {
-            $where[] = $opts['include-offset'] ? 'guid >= ?' : 'guid > ?';
+            if ($opts['include_offset']) {
+                $where[] = $opts['descending'] ? " guid <= ?" : "guid >= ?";
+
+            } else {
+                $where[] = $opts['descending'] ? " guid < ?" : "guid > ?";
+            }
             $values[] = new Varint($opts['offset']);
         }
 

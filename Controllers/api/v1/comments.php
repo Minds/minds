@@ -59,7 +59,7 @@ class comments implements Interfaces\Api
             'parent_guid' => $parent_guid,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
-            'include-offset' => isset($_GET['include-offset']) ? $_GET['include-offset'] : true,
+            'include_offset' => isset($_GET['include_offset']) ? !($_GET['include_offset'] === "false") : true,
             'token' => isset($_GET['token']) ? $_GET['token'] : null,
             'descending' => $descending,
         ]);
