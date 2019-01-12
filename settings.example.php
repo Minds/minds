@@ -25,6 +25,9 @@ $CONFIG->redis = [
 
 $CONFIG->rabbitmq = [
     'host' => 'rabbitmq',
+    'port' => 5672,
+    'username' =>  'guest',
+    'password' =>  'guest'
 ];
 
 $CONFIG->disable_secure_cookies = true;

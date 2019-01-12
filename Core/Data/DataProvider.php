@@ -71,9 +71,10 @@ class DataProvider extends Provider
             $name = isset($config['name']) ? $config['name'] : 'minds';
             $sslmode = isset($config['sslmode']) ? $config['sslmode'] : 'disable';
             $username = isset($config['username']) ? $config['username'] : 'php';
+            // This is a generic data object using the postgres driver to connect to cockroachdb.
             return new PDO("pgsql:host=$host;port=$port;dbname=$name;sslmode=$sslmode",
                 $username,
-                null, 
+                null,
                 [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_EMULATE_PREPARES => true,

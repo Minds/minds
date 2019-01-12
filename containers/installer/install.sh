@@ -7,8 +7,6 @@ sh /var/www/Minds/engine/tools/setup.sh
 
 echo "Setting up Keys"
 
-php /var/www/Minds/engine/cli.php install keys
-
 echo "Running install"
 
 php /var/www/Minds/engine/cli.php install \

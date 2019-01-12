@@ -1,11 +1,8 @@
 <?php
 namespace Minds\Core\Provisioner\Provisioners;
 
-use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
-use Minds\Entities;
-use Minds\Exceptions\ProvisionException;
 
 class CassandraProvisioner implements ProvisionerInterface
 {
@@ -21,8 +18,9 @@ class CassandraProvisioner implements ProvisionerInterface
         $this->client = $client ?: null; // Should be created on-the-fly at provision()
     }
 
-    public function provision()
+    public function provision(bool $cleanData)
     {
+        // TODO: Add cleanData to provisioner.
         $config = $this->config->get('cassandra');
 
         // Apply

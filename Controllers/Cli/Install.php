@@ -6,7 +6,6 @@ use Minds\Core;
 use Minds\Cli;
 use Minds\Interfaces;
 use Minds\Exceptions;
-use Minds\Exceptions\ProvisionException;
 
 class Install extends Cli\Controller implements Interfaces\CliControllerInterface
 {
@@ -17,7 +16,11 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
 
     public function help($command = null)
     {
-        $this->out('TBD');
+        $this->out('Configures web server and provisions and sets up databases for the minds application.');
+        $this->out('use-existing-settings: uses the existing settings in settings.php.');
+        $this->out('only=[keys|site|cassandra|cockroach] to set up individual components.');
+        $this->out('cleanCassandra cleanCockroach: deletes and recreates db.');
+        $this->out('graceful-storage-provision: causes installation to proceed past storage (db) failures.');
     }
 
     public function exec()
@@ -28,46 +31,77 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
                 ->setApp($this->getApp())
                 ->setOptions($this->getAllOpts());
 
-            $this->out('- Checking passed options:', $this::OUTPUT_INLINE);
-            $provisioner->checkOptions();
-            $this->out('OK');
-
+            // If flagged, use existing settings, otherwise build from template.
             if ($this->getOpt('use-existing-settings')) {
                 $this->out('- Fetching settings:', $this::OUTPUT_INLINE);
                 $provisioner->checkSettingsFile();
-                $this->getApp()->loadConfigs();
-                $this->out('OK');
             } else {
                 $this->out('- Building configuration file:', $this::OUTPUT_INLINE);
                 $provisioner->buildConfig();
                 $this->out('OK');
+            }
+            $this->out('- Loading new configuration:', $this::OUTPUT_INLINE);
+            $this->getApp()->loadConfigs();
+            $this->out('OK');
 
-                $this->out('- Loading new configuration:', $this::OUTPUT_INLINE);
-                $this->getApp()->loadConfigs();
-                $this->out('OK');
+            // TODO: List setup parameters flag.
+
+            // REVNOTE: Moved to after the other configuration loaders, in order to parameter check
+            // values arriving from those sources.
+            $this->out('- Checking install options:', $this::OUTPUT_INLINE);
+            $provisioner->checkOptions();
+            $this->out('OK');
+
+            // only=[keys|cassandra|cockroach|site]
+            $installOnly = $this->getopt('only');
+            $installType = $installOnly ? $installOnly : "all";
+
+            if ($installType == "all" || $installType == "keys") {
+                $this->keys();
             }
 
-            $newStorage = false;
-
             try {
-                $this->out('- Setting up data storage (ignore errors, if any):', $this::OUTPUT_INLINE);
-                $provisioner->setupStorage();
-                $this->out('OK');
+                if ($installType == "all" || $installType == "cassandra") {
+                    $this->out('- Provisioning Cassandra: ', $this::OUTPUT_INLINE);
+                    $isCleanCassandra = $this->getopt("cleanCassandra") != null;
+                    $provisioner->provisionCassandra(null, $isCleanCassandra);
+                    $this->out('OK');
 
-                $this->out('- Emptying Cassandra pool:', $this::OUTPUT_INLINE);
-                $provisioner->reloadStorage();
-                $this->out('OK');
-
-                $newStorage = true;
-            } catch (ProvisionException $e) {
+                    $this->out('- Emptying Cassandra pool:', $this::OUTPUT_INLINE);
+                    $provisioner->reloadStorage();
+                    $this->out('OK');
+                }
+            } catch (Exception $e) {
+                // REVNOTE: This seems unused, currently. None of the database provisioners currently
+                // throw ProvisionException. We should maybe catch general exceptions (log them) and continue,
+                // and not ProvisionExceptions. I considered removing this altogether, but it is useful to continue
+                // past server errors in an setup.
                 if ($this->getOpt('graceful-storage-provision')) {
-                    $this->out('ALREADY SETUP');
+                    $this->out($e->getMessage());
+                    $this->out('Error in cassandra setup. Continuing.');
                 } else {
                     throw $e;
                 }
             }
 
-            if ($newStorage) {
+            try {
+                if ($installType == "all" || $installType == "cockroach") {
+                    $this->out('- Provisioning Cockroach:', $this::OUTPUT_INLINE);
+                    $isCleanCockroach = $this->getopt("cleanCockroach") != null;
+                    $provisioner->provisionCockroach(null, $isCleanCockroach);
+                    $this->out('OK');
+                }
+            } catch (Exception $e) {
+                // See REVNOTE above.
+                if ($this->getOpt('graceful-storage-provision')) {
+                    $this->out($e->getMessage());
+                    $this->out('Error in cockroach setup. Continuing.');
+                } else {
+                    throw $e;
+                }
+            }
+
+            if (($installType == "all") || ($installType == "site")) {
                 $this->out('- Setting up site:', $this::OUTPUT_INLINE);
                 $provisioner->setupSite();
                 $this->out('OK');
@@ -91,10 +125,10 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
             "private_key_bits" => 4096,
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
         ]);
-        
+
         openssl_pkey_export($ssl, $privateKey);
         $publicKey = openssl_pkey_get_details($ssl)['key'];
-        
+
         mkdir($target);
         file_put_contents("{$target}minds.pem", $privateKey);
         file_put_contents("{$target}minds.pub", $publicKey);
