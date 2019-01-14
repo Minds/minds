@@ -31,6 +31,9 @@ class Repository
     static $allowedEntityAttributes = [
         'entityGuid',
         'parentGuid',
+        'parentGuidL1',
+        'parentGuidL2',
+        'parentGuidL3',
         'guid',
         'repliesCount',
         'ownerGuid',
@@ -67,7 +70,10 @@ class Repository
     {
         $opts = array_merge([
             'entity_guid' => null,
-            'parent_guid' => null,
+            'parent_guid_l1' => null,
+            'parent_guid_l2' => null,
+            'parent_guid_l3' => 0, //future support
+            'parent_path' => '0:0:0',
             'guid' => null,
             'limit' => null,
             'offset' => null,
@@ -76,6 +82,11 @@ class Repository
             'descending' => true
         ], $opts);
 
+        $parent_guids = explode(':', $opts['parent_path']);
+        $opts['parent_guid_l1'] = $parent_guids[0];
+        $opts['parent_guid_l2'] = $parent_guids[1];
+        $opts['parent_guid_l3'] = 0; //do not support l3 yet
+        
         $cql = "SELECT * from comments";
         $values = [];
         $cqlOpts = [];
@@ -87,10 +98,21 @@ class Repository
             $values[] = new Varint($opts['entity_guid']);
         }
 
-        if ($opts['parent_guid'] !== null) {
-            $where[] = 'parent_guid = ?';
-            $values[] = new Varint($opts['parent_guid']);
+        if ($opts['parent_guid_l1'] !== null) {
+            $where[] = 'parent_guid_l1 = ?';
+            $values[] = new Varint($opts['parent_guid_l1']);
         }
+
+        if ($opts['parent_guid_l2'] !== null) {
+            $where[] = 'parent_guid_l2 = ?';
+            $values[] = new Varint($opts['parent_guid_l2']);
+        }
+
+        // Do not allow l3 at the moment
+        // but still pass as we need to query
+        $where[] = 'parent_guid_l3 = ?';
+        $values[] = new Varint($opts['parent_guid_l3']);
+
 
         if ($opts['guid']) {
             $where[] = 'guid = ?';
@@ -140,9 +162,9 @@ class Repository
                 $comment = new Comment();
                 $comment
                     ->setEntityGuid($row['entity_guid'])
-                    ->setParentGuid($row['parent_guid'])
+                    ->setParentGuidL1($row['parent_guid_l1'])
+                    ->setParentGuidL2($row['parent_guid_l2'])
                     ->setGuid($row['guid'])
-                    ->setRepliesCount($this->count($row['entity_guid'], $row['guid']) ?? 0)
                     ->setOwnerGuid($row['owner_guid'])
                     ->setTimeCreated($row['time_created'])
                     ->setTimeUpdated($row['time_updated'])
@@ -158,11 +180,16 @@ class Repository
                     ->setEphemeral(false)
                     ->markAllAsPristine();
 
+                $comment->setRepliesCount($this->countReplies($comment));
+
                 $comments[] = $comment;
             }
 
-            $comments->setPagingToken(base64_encode($rows->pagingStateToken()));
-        } catch (\Exception $e) { }
+            if ($rows)
+              $comments->setPagingToken(base64_encode($rows->pagingStateToken()));
+        } catch (\Exception $e) {
+            error_log($e);
+        }
 
         return $comments;
     }
@@ -171,13 +198,14 @@ class Repository
      * Gets a single comment based on its primary keys
      * @return Comment|null
      */
-    public function get($entity_guid, $parent_guid, $guid)
+    public function get($entity_guid, $parent_path, $guid)
     {
         if (!$entity_guid || !$guid) {
             return null;
         }
 
         if ($this->legacyRepository->isLegacy($entity_guid)) {
+
             $comments = $this->legacyRepository->getList([
                 'limit' => 1,
                 'offset' => base64_encode($guid),
@@ -186,7 +214,7 @@ class Repository
         } else {
             $comments = $this->getList([
                 'entity_guid' => $entity_guid,
-                'parent_guid' => $parent_guid,
+                'parent_path' => $parent_path, //do not support l3 yet
                 'guid' => $guid,
                 'limit' => 1,
             ]);
@@ -205,29 +233,41 @@ class Repository
      * @param int $parent_guid
      * @return int
      */
-    public function count($entity_guid, $parent_guid = null)
+    public function countReplies($comment)
     {
-        if (!$entity_guid) {
+        if (!$comment) {
             return 0;
         }
 
-        if ($this->legacyRepository->isLegacy($entity_guid)) {
-            if ($parent_guid > 0) {
+        if ($this->legacyRepository->isLegacy($comment->getEntityGuid())) {
+            if ($comment->getParentGuidL1() > 0) {
                 return 0;
             }
 
-            return $this->legacyRepository->count($entity_guid);
+            return $this->legacyRepository->count($comment->getEntityGuid());
         }
 
         $cql = "SELECT COUNT(*) as count FROM comments WHERE entity_guid = ?";
         $values = [
-            new Varint($entity_guid)
+            new Varint($comment->getEntityGuid())
         ];
 
-        if ($parent_guid !== null) {
-            $cql .= " AND parent_guid = ?";
-            $values[] = new Varint($parent_guid);
+        $l1 = $comment->getGuid();
+        $l2 = 0;
+
+        if ($comment->getParentGuidL1()) {
+            $l1 = $comment->getParentGuidL1();
+            $l2 = $comment->getGuid();
         }
+
+        $cql .= " AND parent_guid_l1 = ?";
+        $values[] = new Varint($l1);
+
+        $cql .= " AND parent_guid_l2 = ?";
+        $values[] = new Varint($l2);
+
+        $cql .= " AND parent_guid_l3 = ?";
+        $values[] = new Varint(0);
 
         $prepared = new Custom();
         $prepared->query($cql, $values);
@@ -261,6 +301,14 @@ class Repository
 
         if (in_array('repliesCount', $attributes)) {
             $fields['replies_count'] = new Varint($comment->getRepliesCount());
+        }
+
+        if (in_array('parentGuidL1', $attributes)) {
+            $fields['parent_guid_l1'] = new Varint($comment->getParentGuidL1() ?: 0);
+        }
+
+        if (in_array('parentGuidL2', $attributes)) {
+            $fields['parent_guid_l2'] = new Varint($comment->getParentGuidL2() ?: 0);
         }
 
         if (in_array('ownerGuid', $attributes)) {
@@ -315,7 +363,9 @@ class Repository
 
         $fields = array_merge($fields, [
             'entity_guid' => new Varint($comment->getEntityGuid()),
-            'parent_guid' => new Varint($comment->getParentGuid()),
+            'parent_guid_l1' => new Varint($comment->getParentGuidL1()),
+            'parent_guid_l2' => new Varint($comment->getParentGuidL2()),
+            'parent_guid_l3' => new Varint(0),
             'guid' => new Varint($comment->getGuid()),
         ]);
 
@@ -360,12 +410,16 @@ class Repository
     {
         $cql = "DELETE FROM comments WHERE
           entity_guid = ? AND
-          parent_guid = ? AND
+          parent_guid_l1 = ? AND
+          parent_guid_l2 = ? AND
+          parent_guid_l3 = ? AND
           guid = ?";
 
         $values = [
             new Varint($comment->getEntityGuid()),
-            new Varint($comment->getParentGuid()),
+            new Varint($comment->getParentGuidL1()),
+            new Varint($comment->getParentGuidL2()),
+            new Varint(0),
             new Varint($comment->getGuid())
         ];
 

@@ -14,8 +14,10 @@ use Minds\Helpers\Unknown;
  * Comment Entity
  * @package Minds\Core\Comments
  * @method Comment setEntityGuid(int $value)
- * @method Comment setParentGuid(int $value)
- * @method int getParentGuid()
+ * @method Comment setParentGuidL1(int $value)
+ * @method int getParentGuidL1()
+ * @method Comment setParentGuidL2(int $value)
+ * @method int getParentGuidL2()
  * @method Comment setGuid(int $value)
  * @method Comment setRepliesCount(int $value)
  * @method int getRepliesCount())
@@ -53,7 +55,13 @@ class Comment extends RepositoryEntity
     protected $entityGuid;
 
     /** @var int */
-    protected $parentGuid;
+    protected $parentGuidL1;
+
+    /** @var int */
+    protected $parentGuidL2;
+
+    /** @var int */
+    protected $parentGuidL3 = 0; // Not supported yet
 
     /** @var int */
     protected $guid;
@@ -119,7 +127,9 @@ class Comment extends RepositoryEntity
         $luid
             ->setType('comment')
             ->setEntityGuid($this->getEntityGuid())
-            ->setParentGuid($this->getParentGuid())
+            ->setPartitionPath($this->getPartitionPath())
+            ->setParentPath($this->getParentPath())
+            ->setChildPath($this->getChildPath())
             ->setGuid($this->getGuid());
 
         return $luid;
@@ -222,6 +232,43 @@ class Comment extends RepositoryEntity
     }
 
     /**
+     * Get exact path, includes all the partition 
+     * @return string
+     */
+    public function getPartitionPath()
+    {
+        return "{$this->getParentGuidL1()}:{$this->getParentGuidL2()}:{$this->getParentGuidL3()}";
+    }
+
+    /**
+     * Return the partition path of the parent
+     * that can be used to grab the parent thread
+     * @return string
+     */
+    public function getParentPath()
+    {
+        if ($this->getParentGuidL2() == 0) {
+            return "0:0:0";
+        }
+        return "{$this->getParentGuidL1()}:0:0";
+    }
+
+    /**
+     * Return the partition path to be used to 
+     * fetch child replies
+     */
+    public function getChildPath()
+    {
+        if ($this->getParentGuidL1() == 0) { //No parent so we are at the top level
+            return "{$this->getGuid()}:0:0";
+        }
+        if ($this->getParentGuidL2() == 0) { //No level2 so we are at the l1 level
+            return "{$this->getParentGuidL1()}:{$this->getGuid()}:0";
+        }
+        return "{$this->getParentGuidL1()}:{$this->getParentGuidL2()}:{$this->getGuid()}";
+    }
+
+    /**
      * Defines the exportable members
      * @return array
      */
@@ -230,7 +277,8 @@ class Comment extends RepositoryEntity
         return [
             'type',
             'entityGuid',
-            'parentGuid',
+            'parentGuidL1',
+            'parentGuidL2',
             'guid',
             'repliesCount',
             'ownerGuid',
@@ -260,6 +308,12 @@ class Comment extends RepositoryEntity
         $output['guid'] = $output['luid'] = (string) $this->getLuid();
 
         $output['entity_guid'] = (string) $this->getEntityGuid();
+
+        $output['parent_guid_l1'] = (string) $this->getParentGuidL1();
+        $output['parent_guid_l2'] = (string) $this->getParentGuidL2();
+
+        $output['parent_path'] = $this->getParentPath();
+        $output['child_path'] = $this->getChildPath();
 
         // Legacy
         $output['ownerObj'] = $this->getOwnerObj();

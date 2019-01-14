@@ -71,7 +71,7 @@ class Events
             $comment = $vote->getEntity();
             
             (new Sockets\Events())
-                ->setRoom("comments:{$comment->getEntityGuid()}:0")
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
                 ->emit(
                     'vote',
                     (string) $comment->getGuid(),
@@ -91,7 +91,7 @@ class Events
             $comment = $vote->getEntity();
 
             (new Sockets\Events())
-                ->setRoom("comments:{$comment->getEntityGuid()}:0")
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
                 ->emit(
                     'vote:cancel',
                     (string) $comment->getGuid(),

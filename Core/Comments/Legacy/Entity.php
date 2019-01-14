@@ -31,7 +31,8 @@ class Entity
         $comment = new Comment();
         $comment
             ->setEntityGuid($row['parent_guid'])
-            ->setParentGuid(0)
+            ->setParentGuidL1($row['parent_guid_l1'])
+            ->setParentGuidL2($row['parent_guid_l2'])
             ->setGuid($row['guid'])
             ->setHasChildren(false)
             ->setOwnerGuid($row['owner_guid'])

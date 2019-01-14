@@ -68,9 +68,9 @@ class Manager
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
     }
 
-    public function get($entity_guid, $parent_guid, $guid)
+    public function get($entity_guid, $parent_path, $guid)
     {
-        return $this->repository->get($entity_guid, $parent_guid, $guid);
+        return $this->repository->get($entity_guid, $parent_path, $guid);
     }
 
     public function getList($opts = [])
@@ -190,7 +190,7 @@ class Manager
         try {
             $luid = new Luid($luid);
 
-            return $this->repository->get($luid->getEntityGuid(), $luid->getParentGuid(), $luid->getGuid());
+            return $this->repository->get($luid->getEntityGuid(), $luid->getPartitionPath(), $luid->getGuid());
         } catch (InvalidLuidException $e) {
             // Fallback to old GUIDs
             if (is_numeric($luid) && strlen($luid) >= 18) {
@@ -210,7 +210,7 @@ class Manager
     public function count($entity_guid, $parent_guid = null)
     {
         try {
-            $count = $this->repository->count($entity_guid, $parent_guid);
+//            $count = $this->repository->count($entity_guid, $parent_guid);
         } catch (\Exception $e) {
             error_log('Comments\Manager::count ' . get_class($e) . ':' . $e->getMessage());
             $count = 0;
