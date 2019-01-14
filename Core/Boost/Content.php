@@ -28,6 +28,7 @@ class Content extends Network implements BoostHandlerInterface
             $entity instanceof Entities\User ||
             $entity instanceof Entities\Video ||
             $entity instanceof Entities\Image ||
-            $entity instanceof Core\Blogs\Blog;
+            $entity instanceof Core\Blogs\Blog ||
+            $entity instanceof Entities\Group;
     }
 }
