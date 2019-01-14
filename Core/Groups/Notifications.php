@@ -93,6 +93,7 @@ class Notifications
      */
     public function send($marker)
     {
+        $this->updateMarkers->pushToSocketRoom($marker);
         foreach ($this->getSubscribedBatch() as $guid) {
             if ($guid == $marker->getFromGuid()) {
                 continue;

@@ -76,6 +76,19 @@ class markers implements Interfaces\Api
      */
     public function put($pages)
     {
+        $marker = new UpdateMarker;
+        $marker
+            ->setUserGuid(Session::getLoggedInUserGuid())
+            ->setEntityGuid($pages[1])
+            ->setEntityType('group')
+            ->setMarker('gathering-heartbeat')
+            ->setUpdatedTimestamp(time());
+        $manager = (new Manager());
+        $manager->pushToSocketRoom($marker);
+
+        return Factory::response([
+            'marker' => $marker->export(),
+        ]);
     }
 
     /**

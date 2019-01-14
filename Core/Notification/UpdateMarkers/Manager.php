@@ -5,12 +5,15 @@
  */
 namespace Minds\Core\Notification\UpdateMarkers;
 
+use Minds\Core\Sockets;
+
 class Manager
 {
 
-    public function __construct($repository = null)
+    public function __construct($repository = null, $sockets = null)
     {
         $this->repository = $repository ?: new Repository;
+        $this->sockets = $sockets ?: new Sockets\Events;
     }
 
     public function getList($opts = [])
@@ -34,6 +37,13 @@ class Manager
     public function add(UpdateMarker $marker)
     {
         return $this->repository->add($marker);
+    }
+
+    public function pushToSocketRoom(UpdateMarker $marker)
+    {
+        $this->sockets
+          ->setRoom("marker:{$marker->getEntityGuid()}")
+          ->emit("marker:{$marker->getEntityGuid()}", json_encode($marker->export()));
     }
 
 }
