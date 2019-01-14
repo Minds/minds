@@ -27,7 +27,7 @@ class Repository
      */
     public function add($lease)
     {
-        $template = "INSERT INTO video_chast_lease (
+        $template = "INSERT INTO video_chat_leases (
             key,
             secret,
             holder_guid,
@@ -69,7 +69,7 @@ class Repository
         ], $options);
 
 
-        $cql = "SELECT * from video_chat_lease";
+        $cql = "SELECT * from video_chat_leases";
         $where = [];
         $values = [];
 
