@@ -14,11 +14,20 @@ Minds is split into multiple repositories:
 
 ## Development System Requirements
 
-- > 10GB RAM
+- > 10GB RAM (be sure to set it in your docker settings)
 - > 100GB Disk space
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ## Development Installation
+
+**Enabling full installation**
+
+By default, we try not to eat your machine by running the full stack. You'll be able to run the app, but you won't have search and indexing. If you need everthing, be sure to uncomment the ```depends_on``` services in
+
+* runners
+* php-fpm
+
+Then you can run:
 
 1. Run `sh init.sh` in order to install the front and engine repositories
 2. Run `docker-compose up -d nginx`
@@ -34,6 +43,33 @@ Minds is split into multiple repositories:
 - Cassandra will not boot
   - Ensure thrift is enabled
   - Cassandra requires at least 4GB of memory to operate. You can start Cassandra manually by running `docker-compose up cassandra`
+
+### Nuclear Option
+
+With dockerized enviroments, it's sometimes best to start from scratch. If you want to delete your data, these steps will completely **delete** your data. You will be starting fresh.
+
+```
+  #Remove your settings file
+  rm engine/settings.php 
+  
+  #Stop your stack
+  docker-compose down
+
+  #Delete your data cache
+  rm -rf .data
+
+  #Purge all volumes
+  docker volume prune
+
+  ```
+
+  That will remove all of your locally cached data. You can either rebuild the containers manually by using ```docker-compose up --build``` or delete everything to start fresh.
+
+```
+  # Delete all containers
+  docker rm $(docker ps -a -q)
+
+```
 
 ## Production System Requirements
 
