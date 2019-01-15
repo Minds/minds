@@ -85,6 +85,10 @@ class ThreadNotifications
                 'to' => $subscribers,
                 'entity' => (string) $comment->getEntityGuid(),
                 'description' => (string) $comment->getBody(),
+                'params' => [
+                    'comment_guid' => (string) $comment->getGuid(),
+                    'parent_guid' => (string) $comment->getParentGuid(),
+                ],
                 'notification_view' => 'comment'
             ));
         }
