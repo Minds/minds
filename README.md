@@ -7,6 +7,20 @@ Back-end system for Minds. Please run inside of [the Minds repo](https://github.
 ## Documentation
 Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/docs)
 
+## Tasks
+
+### Syncing the newsfeed
+
+* Make sure you have at least 1 upvote and a hashtag.
+* sh into either php-fpm container
+* run ```/var/www/Minds/engine/cli.php suggested sync_newsfeed```inside the php-fpm container
+
+### Running php tests
+
+* Have a fully setup development environment so all the composer dependencies are installed.
+* To run all tests: ```bin/phpsec run```
+* To run a specific spec, include a specific spec file ```bin/phpspec run Spec/Core/Feeds/Suggested/RepositorySpec.php```
+* To run a specific test in a spec, include a specific spec file:line number of the test function: ```bin/phpspec run Spec/Core/Feeds/Suggested/RepositorySpec.php:82```
 ## Contributing
 If you'd like to contribute to the Minds project, check out the [Contribution](https://www.minds.org/docs/contributing.html) section of Minds.org or head right over to the [Minds Open Source Community](https://www.minds.com/groups/profile/365903183068794880).  If you've found or fixed a bug, let us know in the [Minds Help and Support Group](https://www.minds.com/groups/profile/100000000000000681/activity)!
 
