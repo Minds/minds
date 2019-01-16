@@ -195,7 +195,7 @@ class blog implements Interfaces\Api
             $blog->setCategories($_POST['categories']);
         }
 
-        if (isset($_POST['tags'])) {
+        if (isset($_POST['tags']) && $_POST['tags'] !== '') {
             $tags = !is_array($_POST['tags']) ? explode(',', $_POST['tags']) : $_POST['tags'];
             $blog->setTags($tags);
         }
