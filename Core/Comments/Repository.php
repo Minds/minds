@@ -334,18 +334,18 @@ class Repository
 
         try {
             if ($this->legacyRepository->isFallbackEnabled()) {
-                $this->legacyRepository->add($comment, $attributes, !$comment->isEphemeral());
+                return $this->legacyRepository->add($comment, $attributes, !$comment->isEphemeral());
             }
         } catch (\Exception $e) {
             error_log("[Comments\Repository::add/legacy] {$e->getMessage()} > " . get_class($e));
         }
 
-        try {
-            $this->cql->request($query);
-        } catch (\Exception $e) {
-            error_log("[Comments\Repository::add] {$e->getMessage()} > " . get_class($e));
-            return false;
-        }
+//        try {
+//            $this->cql->request($query);
+//        } catch (\Exception $e) {
+//            error_log("[Comments\Repository::add] {$e->getMessage()} > " . get_class($e));
+//            return false;
+//        }
 
         return true;
     }
