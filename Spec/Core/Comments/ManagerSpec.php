@@ -114,7 +114,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->repository->add($comment)
+        $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false)
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -221,7 +221,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(['body']);
 
-        $this->repository->update($comment, ['body'])
+        $this->legacyRepository->add($comment, ['body'], true)
             ->shouldBeCalled()
             ->willReturn(true);
 

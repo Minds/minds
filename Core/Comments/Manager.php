@@ -92,7 +92,9 @@ class Manager
             throw new BlockedUserException();
         }
 
-        $success = $this->repository->add($comment);
+//        $success = $this->repository->add($comment);
+
+        $success = $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false);
 
         if ($success) {
             // NOTE: It's important to _first_ notify, then subscribe.
@@ -117,7 +119,8 @@ class Manager
      */
     public function update(Comment $comment)
     {
-        return $this->repository->update($comment, $comment->getDirtyAttributes());
+//        return $this->repository->update($comment, $comment->getDirtyAttributes());
+        return $this->legacyRepository->add($comment, $comment->getDirtyAttributes(), true);
     }
 
     /**

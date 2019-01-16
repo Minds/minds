@@ -185,6 +185,7 @@ class comments implements Interfaces\Api
                     'message' => "The comment couldn't be saved because {$parentOwnerUsername} has blocked you."
                 ];
             } catch (\Exception $e) {
+                error_log($e);
                 $error = true;
 
                 $response = [
