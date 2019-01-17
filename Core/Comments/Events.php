@@ -44,7 +44,7 @@ class Events
 
         $this->eventsDispatcher->register('entity:resolve', 'comment', function (Event $event) {
             $luid = $event->getParameters()['luid'];
-
+            
             $event->setResponse($this->manager->getByLuid($luid));
         });
 

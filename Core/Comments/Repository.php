@@ -100,12 +100,12 @@ class Repository
 
         if ($opts['parent_guid_l1'] !== null) {
             $where[] = 'parent_guid_l1 = ?';
-            $values[] = new Varint($opts['parent_guid_l1']);
+            $values[] = new Varint((int) $opts['parent_guid_l1']);
         }
 
         if ($opts['parent_guid_l2'] !== null) {
             $where[] = 'parent_guid_l2 = ?';
-            $values[] = new Varint($opts['parent_guid_l2']);
+            $values[] = new Varint((int) $opts['parent_guid_l2']);
         }
 
         // Do not allow l3 at the moment
@@ -133,7 +133,7 @@ class Repository
         }
 
         if (!$opts['descending']) {
-            $cql .= 'ORDER BY parent_guid DESC, guid ASC';
+            $cql .= ' ORDER BY parent_guid_l1 DESC, parent_guid_l2 DESC, parent_guid_l3 DESC, guid ASC';
         }
 
         if ($opts['token']) {

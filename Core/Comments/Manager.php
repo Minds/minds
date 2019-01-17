@@ -128,7 +128,7 @@ class Manager
         if ($success) {
             // NOTE: It's important to _first_ notify, then subscribe.
             $this->threadNotifications->notify($comment);
-            $this->threadNotifications->subscribeOwner($comment);
+            //$this->threadNotifications->subscribeOwner($comment);
 
             $this->metrics->push($comment);
 
