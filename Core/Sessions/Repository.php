@@ -4,6 +4,7 @@
  */
 namespace Minds\Core\Sessions;
 
+use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
 use Cassandra\Varint;
@@ -34,6 +35,10 @@ class Repository
         ]);
 
         $result = $this->client->request($prepared);
+
+        if ($result === false) {
+            throw new \Exception('Session database exception');
+        }
 
         if (!$result || !$result[0]) {
             return null;
