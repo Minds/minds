@@ -64,7 +64,7 @@ class ThreadNotifications
         $subscribers = [];
     
         $entity = $this->entitiesBuilder->single($comment->getEntityGuid());
-        if (!$entity || $entity->type === 'group') {
+        if (!$entity || ($entity->type === 'group' && !$isReply)) {
             return;
         }
 
