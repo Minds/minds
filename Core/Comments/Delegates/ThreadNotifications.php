@@ -101,7 +101,7 @@ class ThreadNotifications
             $luid->setPartitionPath($parent_path);
             $luid->setGuid($parent_guid);
             $parent = $this->entitiesBuilder->single($luid);
-            if ($parent) {
+            if ($parent && $parent->getOwnerGuid() != $comment->getOwnerGuid()) {
                 $subscribers = [ $parent->getOwnerGuid() ];
             }
         }
