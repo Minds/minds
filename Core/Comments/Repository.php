@@ -230,7 +230,38 @@ class Repository
     /**
      * Counts the comments on an entity
      * @param int $entity_guid
-     * @param int $parent_guid
+     * @return int
+     */
+    public function count($entity_guid)
+    {
+        if (!$entity_guid) {
+            return 0;
+        }
+
+        if ($this->legacyRepository->isLegacy($entity_guid)) {
+            return $this->legacyRepository->count($entity_guid);
+        }
+
+        $cql = "SELECT COUNT(*) as count FROM comments WHERE entity_guid = ?";
+        $values = [
+            new Varint($entity_guid)
+        ];
+
+        $prepared = new Custom();
+        $prepared->query($cql, $values);
+
+        $result = $this->cql->request($prepared);
+
+        if (!isset($result)) {
+            return 0;
+        }
+
+        return (int) $result[0]['count'];
+    }
+
+    /**
+     * Counts the comments on a comment
+     * @param Comment $comment
      * @return int
      */
     public function countReplies($comment)

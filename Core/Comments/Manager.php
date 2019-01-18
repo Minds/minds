@@ -210,7 +210,7 @@ class Manager
     public function count($entity_guid, $parent_guid = null)
     {
         try {
-//            $count = $this->repository->count($entity_guid, $parent_guid);
+            $count = $this->repository->count($entity_guid, $parent_guid);
         } catch (\Exception $e) {
             error_log('Comments\Manager::count ' . get_class($e) . ':' . $e->getMessage());
             $count = 0;
