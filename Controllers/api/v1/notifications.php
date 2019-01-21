@@ -60,7 +60,9 @@ class notifications implements Interfaces\Api
                 break;
             case 'settings':
                 Factory::isLoggedIn();
-                $toggles = (new Settings\PushSettings())->getToggles();
+                $toggles = (new Settings\PushSettings())
+                    ->setUserGuid(Core\Session::getLoggedinUser()->guid)
+                    ->getToggles();
                 $response['toggles'] = $toggles;
                 break;
             case 'single':
@@ -133,7 +135,8 @@ class notifications implements Interfaces\Api
             case "settings":
                 $settings = new Settings\PushSettings();
                 $settings->setToggle($_POST['id'], $_POST['toggle'])
-                  ->save();
+                    ->setUserGuid(Core\Session::getLoggedinUser()->guid)
+                    ->save();
                 break;
             case "token":
                 $service = static::getPostValue('service', [ 'required' => true ]);
@@ -211,9 +214,9 @@ class notifications implements Interfaces\Api
 
             $notification['entity'] = $notification['entityObj'];
 
-            $notification['owner'] = 
+            $notification['owner'] =
             $notification['ownerObj'] =
-            $notification['from'] = 
+            $notification['from'] =
             $notification['fromObj'];
 
             if ($entityObj && $entityObj->getType() == 'comment') {
@@ -229,7 +232,7 @@ class notifications implements Interfaces\Api
                     unset($notifications[$key]);
                     continue;
                 }
-                $notification['params']['group'] = $group->export(); 
+                $notification['params']['group'] = $group->export();
             }
 
             $return[$key] = $notification;
