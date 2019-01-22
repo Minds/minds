@@ -129,7 +129,7 @@ services:
     entrypoint: 
       - sh
       - -c
-      - "cd /var/www/Minds/front && echo 'Building frontend, please wait...(this can take a long time)' && npm install && npm rebuild node-sass && npm run build-dev && touch /var/www/Minds/front/dist/index.php"
+      - "cd /var/www/Minds/front && echo 'Building frontend, please wait...(this can take a long time)' && npm install && npm run postinstall && npm rebuild node-sass && npm run build-dev && touch /var/www/Minds/front/dist/index.php"
     volumes:
       - "./front/:/var/www/Minds/front"
 
