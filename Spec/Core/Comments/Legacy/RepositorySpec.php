@@ -345,9 +345,13 @@ class RepositorySpec extends ObjectBehavior
     {
         $this->entities->getRow('6000', Argument::any())
             ->shouldBeCalled()
-            ->willReturn([ 'type' => 'comment' ]);
+            ->willReturn([ 'type' => 'comment', 'parent_guid' => 1 ]);
 
-        $this->legacyEntity->build([ 'type' => 'comment', 'guid' => '6000' ])
+        $this->legacyEntity->build([ 
+                'type' => 'comment',
+                'guid' => '6000',
+                'parent_guid' => 1
+            ])
             ->shouldBeCalled()
             ->willReturn($comment);
 
@@ -360,7 +364,7 @@ class RepositorySpec extends ObjectBehavior
     {
         $this->entities->getRow('6001', Argument::any())
             ->shouldBeCalled()
-            ->willReturn([ 'type' => 'comment' ]);
+            ->willReturn([ 'type' => 'comment', 'parent_guid' => 1 ]);
 
         $this->legacyEntity->build(Argument::cetera())
             ->shouldBeCalled()

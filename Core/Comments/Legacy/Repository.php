@@ -256,7 +256,7 @@ class Repository
         try {
             $row = $this->entities->getRow((string) $guid, [ 'limit' => 1000 ]);
 
-            if ($row['parent_guid']) {
+            if (isset($row['parent_guid'])) {
                 $row['type'] = 'comment';
             }
 
