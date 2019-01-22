@@ -8,11 +8,9 @@
 namespace Minds\Core\Notification\Batches;
 
 use Minds\Common\Repository\Response;
-use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
-use Cassandra\Varint;
 use Minds\Core\Di\Di;
 
-class Repository
+class SQLRepository
 {
     /** @var PDO */
     protected $db;
@@ -23,7 +21,7 @@ class Repository
      */
     public function __construct($db = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->db = $db ?: Di::_()->get('Database\PDO');
     }
 
     /**
@@ -37,8 +35,7 @@ class Repository
             'batch_id' => null,
             'user_guid' => null,
             'offset' => null,
-            'limit' => null,
-            'token' => null,
+            'limit' => null
         ], $opts);
 
         $query = "SELECT * FROM notification_batches";
@@ -51,8 +48,8 @@ class Repository
         }
 
         if ($opts['user_guid']) {
-           $where[] = "user_guid = ?";
-           $values[] = new Varint($opts['user_guid']);
+            $where[] = "user_guid = ?";
+            $values[] = $opts['user_guid'];
         }
 
         if ($where) {
@@ -61,24 +58,20 @@ class Repository
 
         $preparedOpts = [];
 
-        //if ($opts['limit']) {
-        //    $query .= " LIMIT ?";
-        //    $values[] = $opts['limit'];
-        // }
+        if ($opts['limit']) {
+            $query .= " LIMIT ?";
+            $values[] = $opts['limit'];
+        }
 
         if ($opts['offset']) {
             $query .= " OFFSET ?";
             $values[] = $opts['offset'];
         }
-        
-        $prepared = new Prepared;
-        $prepared->query($query, $values);
-        $prepared->setOpts([
-            'page_size' => (int) $opts['limit'],
-            'paging_state_token' => (string) $opts['token'],
-        ]); 
 
-        return $this->db->request($prepared);
+        $statement = $this->db->prepare($query);
+        $statement->execute($values);
+
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -89,8 +82,8 @@ class Repository
     public function getList(array $opts = [])
     {
         $rows = $this->getRows($opts);
-        
-        if (!$rows || !isset($rows[0])) {
+
+        if (!$rows) {
             return new Response();
         }
 
@@ -103,8 +96,6 @@ class Repository
                 ->setBatchId($row['batch_id']);
             $response[] = $subscription;
         }
-
-        $response->setPagingToken($rows->pagingStateToken());
 
         return $response;
     }
@@ -143,14 +134,12 @@ class Repository
                     VALUES 
                     (?, ?)";
         $values = [
-            new Varint($subscription->getUserGuid()),
+            $subscription->getUserGuid(),
             $subscription->getBatchId(),
         ];
 
-        $prepared = new Prepared;
-        $prepared->query($query, $values);
-
-        return $this->db->request($prepared);;
+        $statement = $this->db->prepare($query);
+        return $statement->execute($values);
     }
 
     /**
@@ -172,13 +161,11 @@ class Repository
             AND batch_id = ?";
 
         $values = [
-            new Varint($subscription->getUserGuid()),
+            $subscription->getUserGuid(),
             $subscription->getBatchId(),
         ];
 
-        $prepared = new Prepared;
-        $prepared->query($query, $values);
-
-        return $this->db->request($prepared);
+        $statement = $this->db->prepare($query);
+        return $statement->execute($values);
     }
 }

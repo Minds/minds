@@ -7,6 +7,7 @@ namespace Minds\Core\Groups;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Group as GroupEntity;
+use Minds\Core\Session;
 
 class Events
 {
@@ -138,13 +139,31 @@ class Events
             } else {
                 (new Notifications())
                     ->setGroup($group)
-                    ->queue($activity);
+                    ->setActor(Session::getLoggedInUser())
+                    ->queue('activity');
             }
         });
 
         Dispatcher::register('cleanup:dispatch', 'group', function ($e) {
             $params = $e->getParameters();
             $e->setResponse(Membership::cleanup($params['group']));
+        });
+
+        Dispatcher::register('save', 'comment', function ($e) {
+            $params = $e->getParameters();
+            $comment = $params['entity'];
+            
+            if (!$comment->isGroupConversation()) {
+                return;
+            }
+
+            $group = new GroupEntity;
+            $group->setGuid($comment->getEntityGuid());
+
+            (new Notifications())
+                ->setGroup($group)
+                ->setActor(Session::getLoggedInUser())
+                ->queue('conversation');
         });
     }
 }

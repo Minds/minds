@@ -24,13 +24,33 @@ class comments implements Interfaces\Api
      * Returns the comments
      * @param array $pages
      *
-     * API:: /v1/comment/:guid
+     * API:: /v1/comment/:entityGuid/:commentGuid/:path
      */
     public function get($pages)
     {
         //Factory::isLoggedIn();
         $response = array();
         $guid = $pages[0];
+        $parent_guid_l1 = $parent_guid_l2 = 0;
+
+        if(isset($_GET['parent_guid_l1']) && $_GET['parent_guid_l1'] != 0) {
+            $parent_guid_l1 = $_GET['parent_guid_l1'];
+        }
+
+        if(isset($_GET['parent_guid_l2'])  && $_GET['parent_guid_l2'] != 0) {
+            $parent_guid_l2 = $_GET['parent_guid_l2'];
+        }
+
+        $parent_path = $pages[2] ?? "$parent_guid_l1:$parent_guid_l2:0";
+
+        if (isset($pages[1]) && $pages[1] != 0) {
+            $manager = new Core\Comments\Manager();
+            $comment = $manager->get($guid, $parent_path, $pages[1]);
+
+            return Factory::response([
+                'comments' => $comment ? [$comment] : [],
+            ]);
+        }
 
         /*$entity = Entities\Factory::build($guid);
 
@@ -42,17 +62,20 @@ class comments implements Interfaces\Api
             ]);
         }*/
 
-        $repository = new Core\Comments\Repository();
+        $manager = new Core\Comments\Manager();
 
-        $comments = $repository->getList([
+        $descending = isset($_GET['descending']) ? $_GET['descending'] !== 'false' : true;
+        $comments = $manager->getList([
             'entity_guid' => $guid,
-            'parent_guid' => 0,
+            'parent_path' => $parent_path,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
             'offset' => isset($_GET['offset']) ? $_GET['offset'] : null,
-            'descending' => true,
+            'include_offset' => isset($_GET['include_offset']) ? !($_GET['include_offset'] === "false") : true,
+            'token' => isset($_GET['token']) ? $_GET['token'] : null,
+            'descending' => $descending,
         ]);
 
-        if (!isset($_GET['reversed']) || $_GET['reversed'] || $_GET['reversed'] === 'false') {
+        if ($descending) {
             // Reversed order output
             $comments = $comments->reverse();
         }
@@ -60,7 +83,7 @@ class comments implements Interfaces\Api
         $response['comments'] = Exportable::_($comments);
         $response['load-previous'] = (string) $comments->getPagingToken();
 
-        $response['socketRoomName'] = "comments:{$guid}";
+        $response['socketRoomName'] = "comments:{$guid}:{$parent_path}";
 
         return Factory::response($response);
     }
@@ -148,10 +171,13 @@ class comments implements Interfaces\Api
                 ]);
             }*/
 
+            $parent_guids = explode(':', $_POST['parent_path'] ?? '0:0:0');
+
             $comment = new Core\Comments\Comment();
             $comment
                 ->setEntityGuid($entity->guid)
-                ->setParentGuid(0)
+                ->setParentGuidL1($parent_guids[0] ?? 0)
+                ->setParentGuidL2($parent_guids[1] ?? 0)
                 ->setMature(isset($_POST['mature']) && $_POST['mature'])
                 ->setOwnerObj(Core\Session::getLoggedInUser())
                 ->setContainerGuid(Core\Session::getLoggedInUserGuid())
@@ -159,13 +185,25 @@ class comments implements Interfaces\Api
                 ->setTimeUpdated(time())
                 ->setBody($_POST['comment']);
 
-            // TODO: setHasChildren (for threaded)
+            if (isset($_POST['parentGuidL1'])) {
+                $comment->setParentGuidL1($_POST['parentGuidL1']);
+            }
 
+            if (isset($_POST['parentGuidL2'])) {
+                $comment->setParentGuidL2($_POST['parentGuidL2']);
+            }
+
+            if ($entity->type == 'group') {
+                $comment->setGroupConversation(true);
+            }
+
+            // TODO: setHasChildren (for threaded)
             try {
                 $saved = $manager->add($comment);
 
                 if ($saved) {
                     // Defer emitting after processing attachments
+                    $comment->setEphemeral(false);
                     $emitToSocket = true;
                     $response['comment'] = $comment->export();
                 } else {
@@ -264,12 +302,19 @@ class comments implements Interfaces\Api
         if ($emitToSocket) {
             try {
                 (new Sockets\Events())
-                ->setRoom("comments:{$comment->getEntityGuid()}")
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
                 ->emit(
                     'comment',
                     (string) $comment->getEntityGuid(),
                     (string) $comment->getOwnerGuid(),
-                    (string) $comment->getLuid()
+                    (string) $comment->getGuid()
+                );
+                // Emit to parent
+                (new Sockets\Events())
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
+                ->emit(
+                    'reply',
+                    (string) ($comment->getParentGuidL2() ?: $comment->getParentGuidL1())
                 );
             } catch (\Exception $e) { }
         }

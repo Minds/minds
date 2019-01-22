@@ -14,21 +14,19 @@ use Minds\Helpers\Unknown;
  * Comment Entity
  * @package Minds\Core\Comments
  * @method Comment setEntityGuid(int $value)
- * @method Comment setParentGuid(int $value)
- * @method int getParentGuid()
+ * @method Comment setParentGuidL1(int $value)
+ * @method int getParentGuidL1()
+ * @method Comment setParentGuidL2(int $value)
+ * @method int getParentGuidL2()
  * @method Comment setGuid(int $value)
- * @method Comment setHasChildren(bool $value)
- * @method bool getHasChildren()
+ * @method Comment setRepliesCount(int $value)
+ * @method int getRepliesCount())
  * @method Comment setOwnerGuid(int $value)
  * @method int getOwnerGuid()
- * @method Comment setContainerGuid(int $value)
- * @method int getContainerGuid()
  * @method Comment setTimeCreated(int $value)
  * @method int getTimeCreated()
  * @method Comment setTimeUpdated(int $value)
  * @method int getTimeUpdated()
- * @method Comment setAccessId(int $value)
- * @method int getAccessId()
  * @method Comment setBody(string $value)
  * @method string getBody()
  * @method Comment setAttachments(array $value)
@@ -57,28 +55,28 @@ class Comment extends RepositoryEntity
     protected $entityGuid;
 
     /** @var int */
-    protected $parentGuid;
+    protected $parentGuidL1;
+
+    /** @var int */
+    protected $parentGuidL2;
+
+    /** @var int */
+    protected $parentGuidL3 = 0; // Not supported yet
 
     /** @var int */
     protected $guid;
 
-    /** @var bool */
-    protected $hasChildren = false;
+    /** @var int */
+    protected $repliesCount = 0;
 
     /** @var int */
     protected $ownerGuid;
-
-    /** @var int */
-    protected $containerGuid;
 
     /** @var int */
     protected $timeCreated;
 
     /** @var int */
     protected $timeUpdated;
-
-    /** @var int */
-    protected $accessId = 2;
 
     /** @var string */
     protected $body;
@@ -107,6 +105,8 @@ class Comment extends RepositoryEntity
     /** @var array */
     protected $votesDown;
 
+    protected $groupConversation = false;
+
     /** @var bool */
     protected $ephemeral = true;
 
@@ -127,7 +127,9 @@ class Comment extends RepositoryEntity
         $luid
             ->setType('comment')
             ->setEntityGuid($this->getEntityGuid())
-            ->setParentGuid($this->getParentGuid())
+            ->setPartitionPath($this->getPartitionPath())
+            ->setParentPath($this->getParentPath())
+            ->setChildPath($this->getChildPath())
             ->setGuid($this->getGuid());
 
         return $luid;
@@ -176,6 +178,7 @@ class Comment extends RepositoryEntity
     {
         if (!$this->ownerObj && $this->ownerGuid) {
             $user = new User($this->ownerGuid);
+            $user->fullExport = false;
             $this->setOwnerObj($user->export());
         }
 
@@ -229,6 +232,43 @@ class Comment extends RepositoryEntity
     }
 
     /**
+     * Get exact path, includes all the partition 
+     * @return string
+     */
+    public function getPartitionPath()
+    {
+        return "{$this->getParentGuidL1()}:{$this->getParentGuidL2()}:{$this->getParentGuidL3()}";
+    }
+
+    /**
+     * Return the partition path of the parent
+     * that can be used to grab the parent thread
+     * @return string
+     */
+    public function getParentPath()
+    {
+        if ($this->getParentGuidL2() == 0) {
+            return "0:0:0";
+        }
+        return "{$this->getParentGuidL1()}:0:0";
+    }
+
+    /**
+     * Return the partition path to be used to 
+     * fetch child replies
+     */
+    public function getChildPath()
+    {
+        if ($this->getParentGuidL1() == 0) { //No parent so we are at the top level
+            return "{$this->getGuid()}:0:0";
+        }
+        if ($this->getParentGuidL2() == 0) { //No level2 so we are at the l1 level
+            return "{$this->getParentGuidL1()}:{$this->getGuid()}:0";
+        }
+        return "{$this->getParentGuidL1()}:{$this->getParentGuidL2()}:{$this->getGuid()}";
+    }
+
+    /**
      * Defines the exportable members
      * @return array
      */
@@ -237,14 +277,13 @@ class Comment extends RepositoryEntity
         return [
             'type',
             'entityGuid',
-            'parentGuid',
+            'parentGuidL1',
+            'parentGuidL2',
             'guid',
-            'hasChildren',
+            'repliesCount',
             'ownerGuid',
-            'containerGuid',
             'timeCreated',
             'timeUpdated',
-            'accessId',
             'body',
             'attachments',
             'mature',
@@ -267,6 +306,14 @@ class Comment extends RepositoryEntity
 
         $output['_guid'] = (string) $export['guid'];
         $output['guid'] = $output['luid'] = (string) $this->getLuid();
+
+        $output['entity_guid'] = (string) $this->getEntityGuid();
+
+        $output['parent_guid_l1'] = (string) $this->getParentGuidL1();
+        $output['parent_guid_l2'] = (string) $this->getParentGuidL2();
+
+        $output['parent_path'] = $this->getParentPath();
+        $output['child_path'] = $this->getChildPath();
 
         // Legacy
         $output['ownerObj'] = $this->getOwnerObj();
@@ -304,7 +351,9 @@ class Comment extends RepositoryEntity
             $output['thumbs:down:count'] = count($this->getVotesDown());
         }
 
-        $output['parent_guid'] = (string) $this->entityGuid;
+        $output['can_reply'] = (bool) !$this->getParentGuidL2();
+
+        //$output['parent_guid'] = (string) $this->entityGuid;
 
         return $output;
     }

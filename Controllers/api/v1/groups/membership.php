@@ -11,6 +11,7 @@ use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Search\Documents;
+use Minds\Core\Data\ElasticSearch\Prepared;
 
 use Minds\Exceptions\GroupOperationException;
 
@@ -83,14 +84,16 @@ class membership implements Interfaces\Api
                     ]);
                 }
 
+
                 $query = Documents::escapeQuery((string) $_GET['q']);
-                $query = "({$query})^5";
+                $query = "%$query%";
+                $query = "(username:{$query})^10 OR (name:{$query})^5 OR (group_membership:\"{$group->getGuid()}\")^1000";
 
                 $opts = [
-                    'limit' => $_GET['limit'] ?: 12,
+                    'limit' => 100,
                     'type' => 'user',
                     'flags' => [
-                        "+group_membership:\"{$group->getGuid()}\""
+                    //    "+group_membership:\"{$group->getGuid()}\""
                     ]
                 ];
 
@@ -98,7 +101,11 @@ class membership implements Interfaces\Api
                     $opts['offset'] = $_GET['offset'];
                 }
 
-                $guids = (new Documents())->query($_GET['q'], $opts);
+                $suggestions = (new Documents())->suggestQuery($_GET['q'], [ 'size' => 100 ]);
+                $guids = array_map(function($row) {
+                    return $row['_source']['guid'];
+                }, $suggestions['suggest']['autocomplete'][0]['options']);
+
                 $response = [];
 
                 if (!$guids) {
@@ -107,7 +114,21 @@ class membership implements Interfaces\Api
                     ]);
                 }
 
+                $i = 0;
+                $guids = array_filter($guids, function($guid) use ($membership, &$i) {
+                    if ($is > 12) {
+                        return false;
+                    }
+                    $is = $membership->isMember($guid, false);
+                    if ($is) {
+                        $i++;
+                    }
+                    return $is;
+                });
+
                 if ($guids) {
+                    $guids = array_slice($guids, 0, 12);
+
                     $members = Core\Entities::get(['guids' => $guids]);
 
                     $response['members'] = Factory::exportable($members);
@@ -156,6 +177,7 @@ class membership implements Interfaces\Api
                 }
 
                 $response['load-next'] = end($members)->getGuid();
+                $response['total'] = $membership->getMembersCount();
                 break;
         }
 

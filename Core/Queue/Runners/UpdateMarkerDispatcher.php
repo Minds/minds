@@ -10,26 +10,25 @@ use Minds\Core\Groups\Notifications;
 /**
 * Queued Groups Notifications
 */
-class GroupsNotificationDispatcher implements Interfaces\QueueRunner
+class UpdateMarkerDispatcher implements Interfaces\QueueRunner
 {
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setQueue("GroupsNotificationDispatcher")
+        $client->setQueue("UpdateMarkerDispatcher")
             ->receive(function ($data) {
                 $data = $data->getData();
+                $marker = unserialize($data['marker']);
                 
                 $group = new GroupEntity();
-                $group->loadFromGuid($data['entity']);
+                $group->loadFromGuid($marker->getEntityGuid());
 
-                $guid = $data['params']['activity'];
 
-                echo "[]: sending $guid to members of $group->guid \n";
+                echo "[]: updating markers for $group->guid \n";
 
                 $notifications = (new Notifications)->setGroup($group);
-                $notifications->send($data['params']);
-
-                echo "[]: sending $guid to members $group->guid \n";
+                $notifications->send($marker);
+                echo "(done)";
             });
     }
 }

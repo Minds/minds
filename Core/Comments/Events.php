@@ -12,6 +12,8 @@ use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
 use Minds\Core\Votes\Vote;
+use Minds\Core\Sockets;
+use Minds\Core\Session;
 
 class Events
 {
@@ -42,7 +44,7 @@ class Events
 
         $this->eventsDispatcher->register('entity:resolve', 'comment', function (Event $event) {
             $luid = $event->getParameters()['luid'];
-
+            
             $event->setResponse($this->manager->getByLuid($luid));
         });
 
@@ -65,6 +67,18 @@ class Events
         });
 
         $this->eventsDispatcher->register('vote:action:cast', 'comment', function (Event $event) {
+            $vote = $event->getParameters()['vote'];
+            $comment = $vote->getEntity();
+            
+            (new Sockets\Events())
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
+                ->emit(
+                    'vote',
+                    (string) $comment->getGuid(),
+                    (string) Session::getLoggedInUser()->guid, 
+                    $vote->getDirection()
+                ); 
+
             $event->setResponse(
                 $this->votesManager
                     ->setVote($event->getParameters()['vote'])
@@ -73,6 +87,18 @@ class Events
         });
 
         $this->eventsDispatcher->register('vote:action:cancel', 'comment', function (Event $event) {
+            $vote = $event->getParameters()['vote'];
+            $comment = $vote->getEntity();
+
+            (new Sockets\Events())
+                ->setRoom("comments:{$comment->getEntityGuid()}:{$comment->getParentPath()}")
+                ->emit(
+                    'vote:cancel',
+                    (string) $comment->getGuid(),
+                    (string) Session::getLoggedInUser()->guid,
+                    $vote->getDirection()
+                );
+
             $event->setResponse(
                 $this->votesManager
                     ->setVote($event->getParameters()['vote'])

@@ -123,6 +123,7 @@ class RepositorySpec extends ObjectBehavior
         $return = $this->getList([
             'entity_guid' => 5000,
             'limit' => 2,
+            'token' => '',
         ]);
 
         $return
@@ -145,7 +146,8 @@ class RepositorySpec extends ObjectBehavior
             ->shouldNotBecalled();
 
         $return = $this->getList([
-            'entity_guid' => 5000
+            'entity_guid' => 5000,
+            'token' => '',
         ]);
 
         $return
@@ -173,10 +175,8 @@ class RepositorySpec extends ObjectBehavior
     {
         $fields = [
             'owner_guid' => 1000,
-            'container_guid' => 1000,
             'time_created' => 123123123,
             'time_updated' => 123123124,
-            'access_id' => 2,
             'description' => 'phpspec',
             'mature' => false,
             'edited' => true,
@@ -191,10 +191,6 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($fields['owner_guid']);
 
-        $comment->getContainerGuid()
-            ->shouldBeCalled()
-            ->willReturn($fields['container_guid']);
-
         $comment->getTimeCreated()
             ->shouldBeCalled()
             ->willReturn($fields['time_created']);
@@ -202,10 +198,6 @@ class RepositorySpec extends ObjectBehavior
         $comment->getTimeUpdated()
             ->shouldBeCalled()
             ->willReturn($fields['time_updated']);
-
-        $comment->getAccessId()
-            ->shouldBeCalled()
-            ->willReturn($fields['access_id']);
 
         $comment->getBody()
             ->shouldBeCalled()
@@ -258,10 +250,8 @@ class RepositorySpec extends ObjectBehavior
         $this
             ->add($comment, [
                 'ownerGuid',
-                'containerGuid',
                 'timeCreated',
                 'timeUpdated',
-                'accessId',
                 'body',
                 'attachments',
                 'mature',

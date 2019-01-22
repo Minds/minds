@@ -11,6 +11,7 @@ use Minds\Core\Entities;
 use Minds\Core\Session;
 use Minds\Interfaces;
 use Minds\Api\Factory;
+use Minds\Core\Groups\Membership;
 
 class groups implements Interfaces\Api
 {
@@ -45,8 +46,12 @@ class groups implements Interfaces\Api
             $response['load-next'] =  (string) key($guids);
             break;
           case "member":
-            $relDb->setGuid($user->guid);
-            $guids = $relDb->get('member', $opts);
+            $manager = new Membership();
+            $guids = $manager->getGroupsByMember([
+                'user_guid' => $user->guid,
+                'offset' => (int) $_GET['offset'],
+            ]);
+            $response['load-next'] = count($guids) + (int) $_GET['offset'];
             break;
           case "all":
           default:

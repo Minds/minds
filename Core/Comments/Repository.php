@@ -31,8 +31,11 @@ class Repository
     static $allowedEntityAttributes = [
         'entityGuid',
         'parentGuid',
+        'parentGuidL1',
+        'parentGuidL2',
+        'parentGuidL3',
         'guid',
-        'hasChildren',
+        'repliesCount',
         'ownerGuid',
         'containerGuid',
         'timeCreated',
@@ -67,17 +70,23 @@ class Repository
     {
         $opts = array_merge([
             'entity_guid' => null,
-            'parent_guid' => null,
+            'parent_guid_l1' => null,
+            'parent_guid_l2' => null,
+            'parent_guid_l3' => 0, //future support
+            'parent_path' => '0:0:0',
             'guid' => null,
             'limit' => null,
             'offset' => null,
+            'include_offset' => false,
+            'token' => null,
             'descending' => true
         ], $opts);
 
-        if ($this->legacyRepository->isLegacy($opts['entity_guid'])) {
-            return $this->legacyRepository->getList($opts);
-        }
-
+        $parent_guids = explode(':', $opts['parent_path']);
+        $opts['parent_guid_l1'] = $parent_guids[0] ?? 0;
+        $opts['parent_guid_l2'] = $parent_guids[1] ?? 0;
+        $opts['parent_guid_l3'] = 0; //do not support l3 yet
+        
         $cql = "SELECT * from comments";
         $values = [];
         $cqlOpts = [];
@@ -89,14 +98,34 @@ class Repository
             $values[] = new Varint($opts['entity_guid']);
         }
 
-        if ($opts['parent_guid'] !== null) {
-            $where[] = 'parent_guid = ?';
-            $values[] = new Varint($opts['parent_guid']);
+        if ($opts['parent_guid_l1'] !== null) {
+            $where[] = 'parent_guid_l1 = ?';
+            $values[] = new Varint((int) $opts['parent_guid_l1']);
         }
+
+        if ($opts['parent_guid_l2'] !== null) {
+            $where[] = 'parent_guid_l2 = ?';
+            $values[] = new Varint((int) $opts['parent_guid_l2']);
+        }
+
+        // Do not allow l3 at the moment
+        // but still pass as we need to query
+        $where[] = 'parent_guid_l3 = ?';
+        $values[] = new Varint($opts['parent_guid_l3']);
+
 
         if ($opts['guid']) {
             $where[] = 'guid = ?';
             $values[] = new Varint($opts['guid']);
+        }
+        if ($opts['offset']) {
+            if ($opts['include_offset']) {
+                $where[] = $opts['descending'] ? " guid <= ?" : "guid >= ?";
+
+            } else {
+                $where[] = $opts['descending'] ? " guid < ?" : "guid > ?";
+            }
+            $values[] = new Varint($opts['offset']);
         }
 
         if ($where) {
@@ -104,11 +133,11 @@ class Repository
         }
 
         if (!$opts['descending']) {
-            $cql .= 'ORDER BY parent_guid DESC, guid ASC';
+            $cql .= ' ORDER BY parent_guid_l1 DESC, parent_guid_l2 DESC, parent_guid_l3 DESC, guid ASC';
         }
 
-        if ($opts['offset']) {
-            $cqlOpts['paging_state_token'] = base64_decode($opts['offset']);
+        if ($opts['token']) {
+            $cqlOpts['paging_state_token'] = base64_decode($opts['token']);
         }
 
         if ($opts['limit']) {
@@ -133,14 +162,12 @@ class Repository
                 $comment = new Comment();
                 $comment
                     ->setEntityGuid($row['entity_guid'])
-                    ->setParentGuid($row['parent_guid'])
+                    ->setParentGuidL1($row['parent_guid_l1'] ?? 0)
+                    ->setParentGuidL2($row['parent_guid_l2'] ?? 0)
                     ->setGuid($row['guid'])
-                    ->setHasChildren($row['has_children'])
                     ->setOwnerGuid($row['owner_guid'])
-                    ->setContainerGuid($row['container_guid'])
                     ->setTimeCreated($row['time_created'])
                     ->setTimeUpdated($row['time_updated'])
-                    ->setAccessId($row['access_id'])
                     ->setBody($row['body'])
                     ->setAttachments($row['attachments'] ?: [])
                     ->setMature(isset($flags['mature']) && $flags['mature'])
@@ -153,11 +180,16 @@ class Repository
                     ->setEphemeral(false)
                     ->markAllAsPristine();
 
+                $comment->setRepliesCount($this->countReplies($comment));
+
                 $comments[] = $comment;
             }
 
-            $comments->setPagingToken(base64_encode($rows->pagingStateToken()));
-        } catch (\Exception $e) { }
+            if ($rows)
+              $comments->setPagingToken(base64_encode($rows->pagingStateToken()));
+        } catch (\Exception $e) {
+            error_log($e);
+        }
 
         return $comments;
     }
@@ -166,13 +198,14 @@ class Repository
      * Gets a single comment based on its primary keys
      * @return Comment|null
      */
-    public function get($entity_guid, $parent_guid, $guid)
+    public function get($entity_guid, $parent_path, $guid)
     {
         if (!$entity_guid || !$guid) {
             return null;
         }
 
         if ($this->legacyRepository->isLegacy($entity_guid)) {
+
             $comments = $this->legacyRepository->getList([
                 'limit' => 1,
                 'offset' => base64_encode($guid),
@@ -181,7 +214,7 @@ class Repository
         } else {
             $comments = $this->getList([
                 'entity_guid' => $entity_guid,
-                'parent_guid' => $parent_guid,
+                'parent_path' => $parent_path, //do not support l3 yet
                 'guid' => $guid,
                 'limit' => 1,
             ]);
@@ -197,20 +230,15 @@ class Repository
     /**
      * Counts the comments on an entity
      * @param int $entity_guid
-     * @param int $parent_guid
      * @return int
      */
-    public function count($entity_guid, $parent_guid = null)
+    public function count($entity_guid)
     {
         if (!$entity_guid) {
             return 0;
         }
 
         if ($this->legacyRepository->isLegacy($entity_guid)) {
-            if ($parent_guid > 0) {
-                return 0;
-            }
-
             return $this->legacyRepository->count($entity_guid);
         }
 
@@ -219,17 +247,68 @@ class Repository
             new Varint($entity_guid)
         ];
 
-        if ($parent_guid !== null) {
-            $cql .= " AND parent_guid = ?";
-            $values[] = new Varint($parent_guid);
-        }
-
         $prepared = new Custom();
         $prepared->query($cql, $values);
 
         $result = $this->cql->request($prepared);
 
         if (!isset($result)) {
+            return 0;
+        }
+
+        return (int) $result[0]['count'];
+    }
+
+    /**
+     * Counts the comments on a comment
+     * @param Comment $comment
+     * @return int
+     */
+    public function countReplies($comment)
+    {
+        if (!$comment) {
+            return 0;
+        }
+
+        if ($this->legacyRepository->isLegacy($comment->getEntityGuid())) {
+            if ($comment->getParentGuidL1() > 0) {
+                return 0;
+            }
+
+            return $this->legacyRepository->count($comment->getEntityGuid());
+        }
+
+        $cql = "SELECT COUNT(*) as count FROM comments WHERE entity_guid = ?";
+        $values = [
+            new Varint($comment->getEntityGuid())
+        ];
+
+        $l1 = $comment->getGuid();
+        $l2 = 0;
+
+        if ($comment->getParentGuidL1()) {
+            $l1 = $comment->getParentGuidL1();
+            $l2 = $comment->getGuid();
+        }
+
+        $cql .= " AND parent_guid_l1 = ?";
+        $values[] = new Varint($l1);
+
+        $cql .= " AND parent_guid_l2 = ?";
+        $values[] = new Varint($l2);
+
+        $cql .= " AND parent_guid_l3 = ?";
+        $values[] = new Varint(0);
+
+        $prepared = new Custom();
+        $prepared->query($cql, $values);
+
+        $result = $this->cql->request($prepared);
+
+        if (!isset($result) 
+            || !isset($result[0])
+            || !isset($result[0]['count'])
+        ) {
             return 0;
         }
 
@@ -254,16 +333,20 @@ class Repository
 
         $fields = [];
 
-        if (in_array('hasChildren', $attributes)) {
-            $fields['has_children'] = $comment->getHasChildren();
+        if (in_array('repliesCount', $attributes)) {
+            $fields['replies_count'] = new Varint($comment->getRepliesCount());
+        }
+
+        if (in_array('parentGuidL1', $attributes)) {
+            $fields['parent_guid_l1'] = new Varint($comment->getParentGuidL1() ?: 0);
+        }
+
+        if (in_array('parentGuidL2', $attributes)) {
+            $fields['parent_guid_l2'] = new Varint($comment->getParentGuidL2() ?: 0);
         }
 
         if (in_array('ownerGuid', $attributes)) {
             $fields['owner_guid'] = new Varint($comment->getOwnerGuid() ?: 0);
-        }
-
-        if (in_array('containerGuid', $attributes)) {
-            $fields['container_guid'] = new Varint($comment->getContainerGuid() ?: 0);
         }
 
         if (in_array('timeCreated', $attributes)) {
@@ -272,10 +355,6 @@ class Repository
 
         if (in_array('timeUpdated', $attributes)) {
             $fields['time_updated'] = new Timestamp($comment->getTimeUpdated());
-        }
-
-        if (in_array('accessId', $attributes)) {
-            $fields['access_id'] = new Varint($comment->getAccessId());
         }
 
         if (in_array('body', $attributes)) {
@@ -318,7 +397,9 @@ class Repository
 
         $fields = array_merge($fields, [
             'entity_guid' => new Varint($comment->getEntityGuid()),
-            'parent_guid' => new Varint($comment->getParentGuid()),
+            'parent_guid_l1' => new Varint($comment->getParentGuidL1()),
+            'parent_guid_l2' => new Varint($comment->getParentGuidL2()),
+            'parent_guid_l3' => new Varint(0),
             'guid' => new Varint($comment->getGuid()),
         ]);
 
@@ -333,19 +414,11 @@ class Repository
         $query->query($cql, $values);
 
         try {
-            if ($this->legacyRepository->isFallbackEnabled()) {
-                return $this->legacyRepository->add($comment, $attributes, !$comment->isEphemeral());
-            }
+            $this->cql->request($query);
         } catch (\Exception $e) {
-            error_log("[Comments\Repository::add/legacy] {$e->getMessage()} > " . get_class($e));
+            error_log("[Comments\Repository::add] {$e->getMessage()} > " . get_class($e));
+            return false;
         }
-
-//        try {
-//            $this->cql->request($query);
-//        } catch (\Exception $e) {
-//            error_log("[Comments\Repository::add] {$e->getMessage()} > " . get_class($e));
-//            return false;
-//        }
 
         return true;
     }
@@ -371,12 +444,16 @@ class Repository
     {
         $cql = "DELETE FROM comments WHERE
           entity_guid = ? AND
-          parent_guid = ? AND
+          parent_guid_l1 = ? AND
+          parent_guid_l2 = ? AND
+          parent_guid_l3 = ? AND
           guid = ?";
 
         $values = [
             new Varint($comment->getEntityGuid()),
-            new Varint($comment->getParentGuid()),
+            new Varint($comment->getParentGuidL1()),
+            new Varint($comment->getParentGuidL2()),
+            new Varint(0),
             new Varint($comment->getGuid())
         ];
 
@@ -402,4 +479,5 @@ class Repository
 
         return true;
     }
+
 }

@@ -41,6 +41,7 @@ class Group extends NormalizedEntity
     protected $mature = false;
     protected $rating = 1;
     protected $videoChatDisabled = 1; // disable by default
+    protected $pinned_posts = [];
 
     protected $exportableDefaults = [
         'guid',
@@ -60,6 +61,7 @@ class Group extends NormalizedEntity
         'mature',
         'rating',
         'videoChatDisabled',
+        'pinned_posts',
     ];
 
     /**
@@ -99,6 +101,7 @@ class Group extends NormalizedEntity
             'rating' => $this->rating,
             'mature' => $this->mature,
             'videoChatDisabled' => $this->videoChatDisabled,
+            'pinned_posts' => $this->pinned_posts,
         ]);
 
         if (!$saved) {
@@ -638,6 +641,61 @@ class Group extends NormalizedEntity
     }
 
     /**
+     * @param string $guid
+     */
+    public function addPinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if (!$pinned) {
+            $pinned = [];
+        } else if (count($pinned) > 2) {
+            array_shift($pinned);
+        }
+        if (array_search($guid, $pinned) === false) {
+            $pinned[] = (string) $guid;
+            $this->setPinnedPosts($pinned);
+        }
+    }
+    /**
+     * @param string $guid
+     * @return bool
+     */
+    public function removePinned($guid)
+    {
+        $pinned = $this->getPinnedPosts();
+        if ($pinned && count($pinned) > 0) {
+            $index = array_search((string)$guid, $pinned);
+            if (is_numeric($index)) {
+                array_splice($pinned, $index, 1);
+                $this->pinned_posts = $pinned;
+            }
+        }
+        return false;
+    }
+    /**
+     * Sets the group's pinned posts
+     * @param array $pinned
+     * @return $this
+     */
+    public function setPinnedPosts($pinned) {
+        if (count($pinned) > 3) {
+            $pinned = array_slice($pinned, 0, 3);
+        }
+        $this->pinned_posts = $pinned;
+        return $this;
+    }
+    /**
+     * Gets the group's pinned posts
+     * @return array
+     */
+    public function getPinnedPosts() {
+        if(is_string($this->pinned_posts)) {
+            return json_decode($this->pinned_posts);
+        }
+        return $this->pinned_posts;
+    }
+
+    /**
      * Sets the maturity flag for this activity
      * @param mixed $value
      */
@@ -695,6 +753,8 @@ class Group extends NormalizedEntity
         $export['mature'] = (bool) $this->getMature();
         $export['rating'] = (int) $this->getRating();
         $userIsAdmin = Core\Session::isAdmin();
+
+        $export['pinned_posts'] = $this->getPinnedPosts();
 
         $export['is:owner'] = $userIsAdmin || $this->isOwner(Core\Session::getLoggedInUser());
         $export['is:moderator'] = $this->isModerator(Core\Session::getLoggedInUser());

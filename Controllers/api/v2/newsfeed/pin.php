@@ -23,9 +23,24 @@ class pin implements Interfaces\Api
 
         /** @var Activity $activity */
         $activity = Entities\Factory::build($pages[0]);
+
         $user = Core\Session::getLoggedinUser();
-        $user->addPinned($activity->guid);
-        $user->save();
+
+        if ($activity->container_guid != $user->guid) {
+            $group = Entities\Factory::build($activity->container_guid);
+            if ($group->isModerator($user) || $group->isOwner($user)) {
+                $group->addPinned($activity->guid);
+                $group->save();
+            } else {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'You do not not have permission to pin to this group',
+                ]);
+            }
+        } else {
+            $user->addPinned($activity->guid);
+            $user->save();
+        }
 
         return Factory::response([]);
     }

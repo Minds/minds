@@ -83,6 +83,7 @@ class Manager
             $subscription = $this->buildBatchSubscription();
             return $this->repository->add($subscription);
         } catch (\Exception $e) { 
+            error_log(print_r($e->getMessage(), true));
             return false;
         }
     }
@@ -110,6 +111,32 @@ class Manager
         return (new BatchSubscription)
             ->setUserGuid($this->user->getGuid())
             ->setBatchId($this->batchId);
+    }
+
+    public function getSubscribers()
+    {
+        $token = '';
+        while (true) {
+            $subscriptions = $this->repository->getList([
+                'batch_id' => $this->batchId,
+                'token' => $token,
+                'limit' => 100,
+            ]);
+
+            $token = $subscriptions->getPagingToken();
+
+            if (!$subscriptions) {
+                return;
+            }
+
+            foreach ($subscriptions as $subscription) {
+                yield $subscription->getUserGuid();
+            }
+
+            if (!$token) {
+                return;
+            }
+        }       
     }
 
 }

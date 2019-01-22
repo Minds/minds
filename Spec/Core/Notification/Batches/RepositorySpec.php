@@ -5,6 +5,8 @@ namespace Spec\Minds\Core\Notification\Batches;
 use Minds\Core\Notification\Batches\Manager;
 use Minds\Core\Notification\Batches\Repository;
 use Minds\Core\Notification\Batches\BatchSubscription;
+use Minds\Core\Data\Cassandra\Client;
+use Spec\Minds\Mocks\Cassandra\Rows;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -13,7 +15,7 @@ class RepositorySpec extends ObjectBehavior
 {
     protected $db;
 
-    function let(\PDO $db)
+    function let(Client $db)
     {
         $this->db = $db;
         $this->beConstructedWith($db);
@@ -31,25 +33,14 @@ class RepositorySpec extends ObjectBehavior
             ->setUserGuid(123)
             ->setBatchId('phpspec');
 
-        $this->db->prepare(Argument::any())
+        $this->db->request(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($statement);
-
-        $statement->execute([
-                'phpspec', // batch_id
-                123, // user_guid
-                1, // Limit
-            ])
-            ->shouldBeCalled();
-
-        $statement->fetchAll(\PDO::FETCH_ASSOC)
-            ->shouldBeCalled()
-            ->willReturn([
+            ->willReturn(new Rows([
                 [
                     'batch_id' => 'phpspec',
                     'user_guid' => 123,
                 ]
-            ]);
+            ], ''));
 
         $returned = $this->get($subscription);
         $returned->getUserGuid()
@@ -65,14 +56,7 @@ class RepositorySpec extends ObjectBehavior
             ->setUserGuid(456)
             ->setBatchId('phpspec');
 
-        $this->db->prepare(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($statement);
-
-        $statement->execute([
-                456, // user_guid
-                'phpspec', // batch_id
-            ])
+        $this->db->request(Argument::any())
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -87,14 +71,7 @@ class RepositorySpec extends ObjectBehavior
             ->setUserGuid(789)
             ->setBatchId('phpspec');
 
-        $this->db->prepare(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($statement);
-
-        $statement->execute([
-                789, // user_guid
-                'phpspec', // batch_id
-            ])
+        $this->db->request(Argument::any())
             ->shouldBeCalled()
             ->willReturn(true);
 

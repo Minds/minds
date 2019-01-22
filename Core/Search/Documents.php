@@ -150,7 +150,8 @@ class Documents
             'text' => $query,
             'autocomplete' => [
               'completion' => [
-                'field' => 'suggest'
+                  'field' => 'suggest',
+                  'size' => $opts['size'] ?? 5,
               ]
             ]
           ]

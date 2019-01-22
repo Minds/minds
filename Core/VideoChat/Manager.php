@@ -14,9 +14,16 @@ class Manager
     /** @var Entity */
     private $entity;
 
-    public function __construct($cacher = null)
+    /** @var User */
+    private $user;
+
+    /** @var LeaseManager $leaseManager */
+    private $leaseManager;
+
+    public function __construct($cacher = null, $leaseManager = null)
     {
         $this->cacher = $cacher ?: Di::_()->get('Cache');
+        $this->leaseManager = $leaseManager ?: new Leases\Manager;
     }
 
     /**
@@ -29,25 +36,41 @@ class Manager
         return $this;
     }
 
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     public function getRoomKey()
     {
         $guid = $this->entity->getGuid();
-        
-        if ($cached = $this->cacher->get($guid)) {
-            return $cached;
+
+        if ($lease = $this->leaseManager->get($guid)) {
+            return $lease->getSecret();
         }
         
-        $key = "minds-{$guid}-" . uniqid();
+        $secret = "minds-{$guid}-" . uniqid();
 
-        $this->cacher->set($guid, $key, 3600 * 2); // 2 hour TTL
+        $lease = new Leases\VideoChatLease();
+        $lease
+            ->setKey($guid)
+            ->setSecret($secret)
+            ->setHolderGuid($this->user->guid)
+            ->setLastRefreshed(time());
+        
+        $this->leaseManager->add($lease);
 
-        return $key;
+        return $secret;
     }
 
     public function refreshTTL($roomName)
     {
-        if ($key = $this->cacher->get($roomName) !== false) {
-            $this->cacher->set($roomName, $key, 3600 * 2);
-        }
+        // TODO: bring this back
     }
+
 }

@@ -44,15 +44,24 @@ class Repository
         $field = "votes_{$vote->getDirection()}";
         $set = new Set(Type\Set::varint());
         $set->add(new Varint($vote->getActor()->guid));
-
-        $cql = "UPDATE comments SET {$field} = {$field} + ? WHERE entity_guid = ? AND parent_guid = ? AND guid = ? IF EXISTS";
+        
+        $cql = "UPDATE comments
+            SET {$field} = {$field} + ?
+            WHERE entity_guid = ?
+            AND parent_guid_l1 = ?
+            AND parent_guid_l2 = ?
+            AND parent_guid_l3 = ?
+            AND guid = ?
+            IF EXISTS";
         $values = [
             $set,
             new Varint($comment->getEntityGuid()),
-            new Varint($comment->getParentGuid()),
+            new Varint($comment->getParentGuidL1() ?: 0),
+            new Varint($comment->getParentGuidL2() ?: 0),
+            new Varint(0),
             new Varint($comment->getGuid()),
         ];
-
+        
         $prepared = new Custom();
         $prepared->query($cql, $values);
 
@@ -73,11 +82,20 @@ class Repository
         $set = new Set(Type\Set::varint());
         $set->add(new Varint($vote->getActor()->guid));
 
-        $cql = "UPDATE comments SET {$field} = {$field} - ? WHERE entity_guid = ? AND parent_guid = ? AND guid = ? IF EXISTS";
+        $cql = "UPDATE comments
+            SET {$field} = {$field} - ?
+            WHERE entity_guid = ?
+            AND parent_guid_l1 = ?
+            AND parent_guid_l2 = ?
+            AND parent_guid_l3 = ?
+            AND guid = ?
+            IF EXISTS";
         $values = [
             $set,
             new Varint($comment->getEntityGuid()),
-            new Varint($comment->getParentGuid()),
+            new Varint($comment->getParentGuidL1() ?: 0),
+            new Varint($comment->getParentGuidL2() ?: 0),
+            new Varint(0),
             new Varint($comment->getGuid()),
         ];
 

@@ -5,6 +5,7 @@ namespace Minds\Controllers\api\v2\video;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
+use Minds\Core\Session;
 use Minds\Core\VideoChat\Manager;
 use Minds\Interfaces;
 
@@ -35,6 +36,7 @@ class room implements Interfaces\Api
         /** @var Manager $manager */
         $manager = Di::_()->get('VideoChat\Manager');
 
+        $manager->setUser(Session::getLoggedInUser());
         $manager->setEntity($entity);
 
         return Factory::response([
