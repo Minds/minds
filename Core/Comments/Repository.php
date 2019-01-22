@@ -369,8 +369,6 @@ class Repository
             foreach ($attachments as $key => $value) {
                 $fields['attachments']->set((string) $key, (string) $value);
             }
-
-            error_log(print_r($fields['attachments'], true));
         }
 
         if (
@@ -380,7 +378,7 @@ class Repository
             in_array('deleted', $attributes)
         ) {
             // TODO: Check a way to make atomic updates
-            $fields['flags'] = new Map(Type\Map::text(), Type\Map::boolean());
+            $fields['flags'] = new Map(Type::text(), Type::boolean());
 
             $fields['flags']->set('mature', $comment->isMature());
             $fields['flags']->set('edited', $comment->isEdited());
