@@ -48,7 +48,7 @@ class Manager
      */
     public function has()
     {
-        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->getEntityGuid())) {
             return null;
         }
 
@@ -75,7 +75,7 @@ class Manager
     {
         $done = $this->repository->add($this->vote);
 
-        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->getEntityGuid())) {
             return null;
         }
 
@@ -90,7 +90,7 @@ class Manager
     {
         $done = $this->repository->delete($this->vote);
 
-        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->guid)) {
+        if ($this->legacyRepository->isLegacy($this->vote->getEntity()->getEntityGuid())) {
             return null;
         }
 
