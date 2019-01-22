@@ -123,6 +123,7 @@ class RepositorySpec extends ObjectBehavior
         $return = $this->getList([
             'entity_guid' => 5000,
             'limit' => 2,
+            'token' => '',
         ]);
 
         $return
@@ -145,7 +146,8 @@ class RepositorySpec extends ObjectBehavior
             ->shouldNotBecalled();
 
         $return = $this->getList([
-            'entity_guid' => 5000
+            'entity_guid' => 5000,
+            'token' => '',
         ]);
 
         $return
