@@ -137,13 +137,6 @@ class Manager
             $this->countCache->destroy($comment);
         }
 
-        // Update parent count
-        if ($comment->getParentGuid()) {
-            $parent = new Comment();
-            $parent->setGuid($comment->getParentGuid());
-            //$this->update(
-        }
-
         return $success;
     }
 

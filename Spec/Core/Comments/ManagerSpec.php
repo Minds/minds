@@ -122,9 +122,9 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->threadNotifications->subscribeOwner($comment)
-            ->shouldBeCalled()
-            ->willReturn(true);
+        //$this->threadNotifications->subscribeOwner($comment)
+        //    ->shouldBeCalled()
+        //    ->willReturn(true);
 
         $this->metrics->push($comment)
             ->shouldBeCalled()
@@ -251,7 +251,7 @@ class ManagerSpec extends ObjectBehavior
         Comment $comment
     )
     {
-        $this->repository->get('5000', '0', '6000')
+        $this->repository->get('5000', null, '6000')
             ->shouldBeCalled()
             ->willReturn($comment);
 

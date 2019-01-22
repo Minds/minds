@@ -83,8 +83,8 @@ class Repository
         ], $opts);
 
         $parent_guids = explode(':', $opts['parent_path']);
-        $opts['parent_guid_l1'] = $parent_guids[0];
-        $opts['parent_guid_l2'] = $parent_guids[1];
+        $opts['parent_guid_l1'] = $parent_guids[0] ?? 0;
+        $opts['parent_guid_l2'] = $parent_guids[1] ?? 0;
         $opts['parent_guid_l3'] = 0; //do not support l3 yet
         
         $cql = "SELECT * from comments";
@@ -162,8 +162,8 @@ class Repository
                 $comment = new Comment();
                 $comment
                     ->setEntityGuid($row['entity_guid'])
-                    ->setParentGuidL1($row['parent_guid_l1'])
-                    ->setParentGuidL2($row['parent_guid_l2'])
+                    ->setParentGuidL1($row['parent_guid_l1'] ?? 0)
+                    ->setParentGuidL2($row['parent_guid_l2'] ?? 0)
                     ->setGuid($row['guid'])
                     ->setOwnerGuid($row['owner_guid'])
                     ->setTimeCreated($row['time_created'])
@@ -305,7 +305,10 @@ class Repository
 
         $result = $this->cql->request($prepared);
 
-        if (!isset($result)) {
+        if (!isset($result) 
+            || !isset($result[0])
+            || !isset($result[0]['count'])
+        ) {
             return 0;
         }
 

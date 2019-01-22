@@ -108,7 +108,7 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn($rows);
 
         $this
-            ->get(5000, 0, 6000)
+            ->get(5000, '0:0:0', 6000)
             ->shouldReturnAnInstanceOf(Comment::class);
     }
 
@@ -167,7 +167,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldReturn(3);
     }
 
-    function it_should_return_zero_if_parent_guid_during_count_legacy()
+    /*function it_should_return_zero_if_parent_guid_during_count_legacy()
     {
         $this->legacyRepository->isLegacy(5000)
             ->shouldBeCalled()
@@ -179,7 +179,7 @@ class RepositorySpec extends ObjectBehavior
         $this
             ->count(5000, 4999)
             ->shouldReturn(0);
-    }
+    }*/
 
     function it_should_return_zero_if_no_result_during_count()
     {
@@ -251,7 +251,11 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $comment->getParentGuid()
+        $comment->getParentGuidL1()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $comment->getParentGuidL2()
             ->shouldBeCalled()
             ->willReturn(0);
 
@@ -278,7 +282,11 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $comment->getParentGuid()
+        $comment->getParentGuidL1()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $comment->getParentGuidL2()
             ->shouldBeCalled()
             ->willReturn(0);
 
@@ -303,7 +311,11 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $comment->getParentGuid()
+        $comment->getParentGuidL1()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $comment->getParentGuidL2()
             ->shouldBeCalled()
             ->willReturn(0);
 
@@ -339,7 +351,11 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $comment->getParentGuid()
+        $comment->getParentGuidL1()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $comment->getParentGuidL2()
             ->shouldBeCalled()
             ->willReturn(0);
 
@@ -371,7 +387,11 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $comment->getParentGuid()
+        $comment->getParentGuidL1()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $comment->getParentGuidL2()
             ->shouldBeCalled()
             ->willReturn(0);
 
