@@ -185,6 +185,7 @@ class RepositorySpec extends ObjectBehavior
             'owner_obj' => [],
             'parent_guid' => 5000,
             'guid' => 6000,
+            'type' => 'comment',
         ];
 
         $comment->getOwnerGuid()
@@ -342,7 +343,7 @@ class RepositorySpec extends ObjectBehavior
         Comment $comment
     )
     {
-        $this->entities->getRow('6000')
+        $this->entities->getRow('6000', Argument::any())
             ->shouldBeCalled()
             ->willReturn([ 'type' => 'comment' ]);
 
@@ -357,7 +358,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_catch_exception_and_return_null_during_get_by_guid()
     {
-        $this->entities->getRow('6001')
+        $this->entities->getRow('6001', Argument::any())
             ->shouldBeCalled()
             ->willReturn([ 'type' => 'comment' ]);
 
@@ -372,7 +373,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_return_null_if_not_a_comment_row_during_get_by_guid()
     {
-        $this->entities->getRow('5000')
+        $this->entities->getRow('5000', Argument::any())
             ->shouldBeCalled()
             ->willReturn([ 'type' => 'activity' ]);
 
