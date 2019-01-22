@@ -363,12 +363,14 @@ class Repository
 
         if (in_array('attachments', $attributes)) {
             // TODO: Check a way to make atomic updates
-            $fields['attachments'] = new Map(Type\Map::text(), Type\Map::text());
+            $fields['attachments'] = new Map(Type::text(), Type::text());
 
             $attachments = $comment->getAttachments() ?: [];
             foreach ($attachments as $key => $value) {
                 $fields['attachments']->set((string) $key, (string) $value);
             }
+
+            error_log(print_r($fields['attachments'], true));
         }
 
         if (
