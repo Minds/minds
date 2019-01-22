@@ -163,7 +163,7 @@ class group implements Interfaces\Api
             $group->setDefaultView($_POST['default_view']);
         }
 
-        if (isset($_POST['videoChatDisabled']) && Core\Session::isAdmin()) {
+        if (isset($_POST['videoChatDisabled'])) {
             $group->setVideoChatDisabled($_POST['videoChatDisabled']);
         }
 
