@@ -62,10 +62,10 @@ class comments implements Interfaces\Api
             ]);
         }*/
 
-        $repository = new Core\Comments\Repository();
+        $manager = new Core\Comments\Manager();
 
         $descending = isset($_GET['descending']) ? $_GET['descending'] !== 'false' : true;
-        $comments = $repository->getList([
+        $comments = $manager->getList([
             'entity_guid' => $guid,
             'parent_path' => $parent_path,
             'limit' => isset($_GET['limit']) ? (int) $_GET['limit'] : 5,
