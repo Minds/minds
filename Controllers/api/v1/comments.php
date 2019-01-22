@@ -171,13 +171,13 @@ class comments implements Interfaces\Api
                 ]);
             }*/
 
-            $parent_guids = explode(':', $_POST['parent_path']);
+            $parent_guids = explode(':', $_POST['parent_path'] ?? '0:0:0');
 
             $comment = new Core\Comments\Comment();
             $comment
                 ->setEntityGuid($entity->guid)
-                ->setParentGuidL1($parent_guids[0])
-                ->setParentGuidL2($parent_guids[1])
+                ->setParentGuidL1($parent_guids[0] ?? 0)
+                ->setParentGuidL2($parent_guids[1] ?? 0)
                 ->setMature(isset($_POST['mature']) && $_POST['mature'])
                 ->setOwnerObj(Core\Session::getLoggedInUser())
                 ->setContainerGuid(Core\Session::getLoggedInUserGuid())
