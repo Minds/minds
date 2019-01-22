@@ -183,6 +183,10 @@ class Manager
         try {
             $luid = new Luid($luid);
 
+            if ($this->legacyRepository->isLegacy($luid->getEntityGuid())) {
+                return $this->legacyRepository->getByGuid($luid->getGuid());
+            }
+
             return $this->repository->get($luid->getEntityGuid(), $luid->getPartitionPath(), $luid->getGuid());
         } catch (InvalidLuidException $e) {
             // Fallback to old GUIDs

@@ -204,6 +204,7 @@ class Repository
         $fields = array_merge($fields, [
             'parent_guid' => (string) $comment->getEntityGuid(),
             'guid' => (string) $comment->getGuid(),
+            'type' => 'comment',
         ]);
 
         $guid = (string) $comment->getGuid();
@@ -253,9 +254,9 @@ class Repository
     public function getByGuid($guid)
     {
         try {
-            $row = $this->entities->getRow((string) $guid);
-
-            if (!$row || $row['type'] !== 'comment') {
+            $row = $this->entities->getRow((string) $guid, [ 'limit' => 1000 ]);
+            
+            if (!$row || !($row['type'] === 'comment' || $row['parent_guid'])) {
                 return null;
             }
 
