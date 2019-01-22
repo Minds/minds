@@ -100,7 +100,7 @@ class Repository
 
         $guids = $this->indexes->getRow("comments:{$opts['entity_guid']}", [
             'limit' => $opts['limit'],
-            'offset' => $opts['offset'] ? base64_decode($opts['offset']) : '',
+            'offset' => $opts['token'] ? base64_decode($opts['token']) : '',
             'reversed' => $opts['descending']
         ]);
 
