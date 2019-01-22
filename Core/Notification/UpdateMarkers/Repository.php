@@ -75,7 +75,8 @@ class Repository
                     ->setEntityGuid($row['entity_guid'])
                     ->setMarker($row['marker'])
                     ->setUpdatedTimestamp($row['updated_timestamp'])
-                    ->setReadTimestamp($row['read_timestamp']);
+                    ->setReadTimestamp($row['read_timestamp'])
+                    ->setDisabled($row['disabled']);
                 $response[] = $marker;
             }
         } catch (\Exception $e) {
@@ -113,6 +114,10 @@ class Repository
             $columns['read_timestamp'] = new Timestamp($marker->getReadTimestamp());
         }
 
+        if ($marker->getDisabled() !== null) {
+            $columns['disabled'] = $marker->getDisabled();
+        }
+        
         $statement .= " (" . implode(',', array_keys($columns)) . ")";
         $statement .= " VALUES (" . implode(',', array_fill(0, count($columns), '?')) . ")";
 

@@ -31,6 +31,9 @@ class UpdateMarker
     /** @var $readTimestamp */
     private $readTimestamp;
 
+    /** @var $disabled */
+    private $disabled = null;
+
     public function export()
     {
         return [
@@ -39,6 +42,7 @@ class UpdateMarker
             'entity_guid' => $this->entityGuid,
             'marker' => $this->marker,
             'updated_timestamp' => $this->updatedTimestamp,
+            'disabled' => (bool) $this->disabled,
             'read_timestamp' => $this->readTimestamp,
         ];
     }

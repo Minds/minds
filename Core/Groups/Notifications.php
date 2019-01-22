@@ -264,6 +264,15 @@ class Notifications
 
         $done = $this->notificationBatches->unSubscribe();
 
+        $updateMarker = new UpdateMarker();
+        $updateMarker->setUserGuid($user_guid)
+            ->setEntityGuid($this->group->getGuid())
+            ->setEntityType('group')
+            ->setMarker('activity')
+            ->setReadTimestamp(time())
+            ->setDisabled(true);
+        $this->updateMarkers->add($updateMarker);
+
         if ($done) {
             return true;
         }
@@ -288,6 +297,15 @@ class Notifications
         $this->notificationBatches->setBatchId($this->group->getGuid());
         
         $done = $this->notificationBatches->subscribe();
+
+        $updateMarker = new UpdateMarker();
+        $updateMarker->setUserGuid($user_guid)
+            ->setEntityGuid($this->group->getGuid())
+            ->setEntityType('group')
+            ->setMarker('activity')
+            ->setReadTimestamp(time())
+            ->setDisabled(false);
+        $this->updateMarkers->add($updateMarker);
 
         if ($done) {
             return true;
