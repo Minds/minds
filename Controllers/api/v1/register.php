@@ -51,6 +51,22 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
                 throw new \Exception('Captcha failed');
             }
 
+            $ipHashVerify = Core\Di\Di::_()->get('Security\SpamBlocks\IPHash');
+            if (!$ipHashVerify->isValid($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Sorry, you are not allowed to register.',
+                ]);
+            }
+
+            $emailVerify = Core\Di\Di::_()->get('Email\Verify\Manager');
+            if (!$emailVerify->verify($_POST['email'])) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Please verify your email address is correct',
+                ]);
+            }
+
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
 

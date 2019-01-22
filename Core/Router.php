@@ -160,7 +160,7 @@ class Router
     public function detectContentType()
     {
         if (isset($_SERVER["CONTENT_TYPE"]) && $_SERVER["CONTENT_TYPE"] == 'application/json') {
-            \elgg_set_viewtype('json');
+            //\elgg_set_viewtype('json');
             if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
                 $this->postDataFix();
             }

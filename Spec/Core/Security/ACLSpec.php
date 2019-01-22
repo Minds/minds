@@ -40,6 +40,8 @@ class ACLSpec extends ObjectBehavior
     public function it_should_allow_read_of_public_entities(Entity $entity)
     {
         $entity->get('access_id')->willReturn(2);
+        $entity->get('container_guid')->willReturn(123);
+        $entity->get('owner_guid')->willReturn(123);
         $this->read($entity)->shouldReturn(true);
     }
 

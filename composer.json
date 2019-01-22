@@ -9,6 +9,7 @@
         "facebook/php-sdk-v4": "~5.0",
         "firebase/php-jwt": "3.0.*",
         "kramnorth/cinemr-php-sdk": "dev-master@dev",
+	"kickbox/kickbox": "*",
         "Minds/Surge": "dev-master@dev",
         "minds/mw3": "dev-master@dev",
         "neoxygen/neoclient": "^3.3",

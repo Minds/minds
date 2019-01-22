@@ -17,7 +17,7 @@ cache:
 build:
   stage: build
   script:
-    - apk update && apk add --no-cache git nodejs
+    - apk update && apk add --no-cache git nodejs-current nodejs-npm
     - sh tools/setup.sh
   cache:
     paths:

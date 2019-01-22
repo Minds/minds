@@ -29,4 +29,10 @@ interface BoostHandlerInterface
      * @return array
      */
     public function getBoost();
+
+    /**
+     * @param mixed $entity
+     * @return boolean
+     */
+    public static function validateEntity($entity);
 }

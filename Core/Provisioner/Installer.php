@@ -4,11 +4,9 @@ namespace Minds\Core\Provisioner;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Entities\Site;
-use Minds\Entities\User;
 use Minds\Entities\Activity;
 use Minds\Exceptions\ProvisionException;
 use Minds\Helpers;
-use \ElggSite;
 
 class Installer
 {
@@ -20,8 +18,16 @@ class Installer
     public function __construct()
     {
         $this->defaults = [
+            'domain' => 'http://localhost:8080',
+            'username' => 'minds',
+            'password' => 'Pa$$w0rd',
+            'email' => 'minds@minds.com',
+            'email-private-key' => '/.dev/minds.pem',
+            'email-public-key' => '/.dev/minds.pub',
+            'phone-number-private-key' => '/.dev/minds.pem',
+            'phone-number-public-key' => '/.dev/minds.pub',
             'cassandra-keyspace' => 'minds',
-            'cassandra-server' => '127.0.0.1',
+            'cassandra-server' => 'cassandra',
             'cassandra-replication-factor' => '3',
             'dataroot' => '/data/',
             'default-site' => 1,
@@ -63,7 +69,19 @@ class Installer
         return $this;
     }
 
+    // If different checks become necessary for the other components,
+    // dispatch the calls here.
     public function checkOptions()
+    {
+        $isInstallOnly = isset($this->options['only']);
+        if (!$isInstallOnly || $this->options['only'] === "site"){
+            $this->checkSiteOptions();
+            return;
+        }
+        // TODO: Check all database parameters.
+    }
+
+    public function checkSiteOptions()
     {
         if (!isset($this->options['username']) || !$this->options['username']) {
             throw new ProvisionException('Admin username was not provided');
@@ -83,10 +101,12 @@ class Installer
             throw new ProvisionException('Admin email is invalid');
         }
 
-        if (isset($this->options['use-existing-settings']) && $this->options['use-existing-settings']) {
-            // Finish checking if we're using the existing settings file
-            return;
-        }
+        // REVNOTE: Removing because I don't think use-existing-settings should exclude necessary parameter checks,
+        // in case there are errors in the settings.php file.
+//        if (isset($this->options['use-existing-settings']) && $this->options['use-existing-settings']) {
+//            // Finish checking if we're using the existing settings file
+//            return;
+//        }
 
         if (!isset($this->options['domain']) || !$this->options['domain']) {
             throw new ProvisionException('Domain name was not provided');
@@ -112,7 +132,7 @@ class Installer
             throw new ProvisionException('Phone number private key is not readable');
         }
 
-        if (!isset($this->options['email-public-key']) || !$this->options['email-public-key']) {
+        if (!isset($this->options['phone-number-public-key']) || !$this->options['phone-number-public-key']) {
             throw new ProvisionException('Phone number public key path was not provided');
         } elseif (!is_readable($this->options['phone-number-public-key'])) {
             throw new ProvisionException('Phone number public key is not readable');
@@ -122,19 +142,16 @@ class Installer
             throw new ProvisionException('Site email is invalid');
         }
 
-        /*if (
-            isset($this->options['cassandra-server']) &&
-            !filter_var($this->options['cassandra-server'], FILTER_VALIDATE_IP) &&
-            !preg_match('/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/', $this->options['cassandra-server'])
-        ) {
-            throw new ProvisionException('Cassandra server host is invalid');
-        }*/
-
         if (isset($this->options['elasticsearch-server']) && !filter_var($this->options['elasticsearch-server'], FILTER_VALIDATE_URL)) {
             throw new ProvisionException('ElasticSearch server URL is invalid');
         }
     }
 
+    /* Uses settings.example.php as a template to build out settings.php, which is read at
+       runtime for every call to the server. Replaced tags take the form {{varName}} such as
+       {{dataroot}}. This is essentially a mustache style transformation to generate a runtime
+       configuration file (settings.php).
+    */
     public function buildConfig(array $flags = [])
     {
         $flags = array_merge([
@@ -159,8 +176,11 @@ class Installer
             $this->options['jwt-domain'] = $this->options['domain'];
         }
 
+        // Bug REVNOTE. Was resulting in http://localhost:8080:8010
         if (!isset($this->options['socket-server-uri'])) {
-            $this->options['socket-server-uri'] = $this->options['domain'] . ':8010';
+            $domain = $this->options['domain'];
+            $domainParts = parse_url($domain);
+            $this->options['socket-server-uri'] = $domainParts['scheme'] . $domainParts['host'] . ':8010';
         }
 
         if (!isset($this->options['site-name'])) {
@@ -202,13 +222,24 @@ class Installer
         }
     }
 
-    public function setupStorage(Provisioners\ProvisionerInterface $cassandraStorage = null, Provisioners\ProvisionerInterface $cockroachProvisioner = null)
+    public function setupStorage(Provisioners\ProvisionerInterface $cassandraStorage = null,
+                                 Provisioners\ProvisionerInterface $cockroachProvisioner = null,
+                                 $cleanData = false)
     {
-        $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
-        $cassandraStorage->provision();
+        $this->provisionCassandra($cassandraStorage, $cleanData);
+        $this->provisionCockroach($cockroachProvisioner, $cleanData);
+    }
 
-        //$cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
-        //$cockroachProvisioner->provision();
+    public function provisionCassandra(Provisioners\ProvisionerInterface $cassandraStorage = null,
+                                       $cleanData = false) {
+        $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
+        $cassandraStorage->provision($cleanData);
+    }
+
+    public function provisionCockroach(Provisioners\ProvisionerInterface $cockroachProvisioner = null,
+                                       $cleanData = false) {
+        $cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
+        $cockroachProvisioner->provision($cleanData);
     }
 
     public function reloadStorage()

@@ -40,6 +40,7 @@ class Repository
         }
 
         if ($opts['hashtag']) {
+            $opts['hashtag'] = strtolower($opts['hashtag']);
             $query = "SELECT DISTINCT suggested.guid as guid,
                         lastSynced, score
                       FROM suggested

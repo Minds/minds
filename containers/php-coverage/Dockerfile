@@ -15,7 +15,7 @@ RUN apk update && pecl install xdebug && docker-php-ext-enable xdebug && apk add
 
 # Copy config
 
-COPY containers/php-fpm-coverage/php.ini /usr/local/etc/php/
-COPY containers/php-fpm-coverage/opcache.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
-COPY containers/php-fpm-coverage/apcu.ini /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
-COPY containers/php-fpm-coverage/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY containers/php-coverage/php.ini /usr/local/etc/php/
+COPY containers/php-coverage/opcache.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
+COPY containers/php-coverage/apcu.ini /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
+COPY containers/php-coverage/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf

@@ -620,6 +620,23 @@ function get_user_by_username($username) {
 }
 
 /**
+ * Checks if it exists an entry in user_index_to_guid for a given username
+ * @param $username
+ * @return bool
+ */
+function check_user_index_to_guid($username)
+{
+    global $USERNAME_TO_GUID_MAP_CACHE;
+    $guid = isset($USERNAME_TO_GUID_MAP_CACHE[$username]) ? $USERNAME_TO_GUID_MAP_CACHE[$username] : null;
+
+    if (!$guid) {
+        $guid = get_user_index_to_guid($username);
+    }
+
+    return !!$guid;
+}
+
+/**
  * Get user by session code
  *
  * @param string $code The session code
@@ -987,7 +1004,7 @@ function register_user($username, $password, $name, $email,
 $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 
 	// no need to trim password.
-	$username = trim($username);
+	$username = strtolower(trim($username));
 	$name = trim(strip_tags($name));
 	$email = trim($email);
 
@@ -1015,7 +1032,7 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 		throw new RegistrationException("Invalid username");
 	}
 
-	if ($user = get_user_by_username($username)) {
+	if (check_user_index_to_guid($username)) {
 		throw new RegistrationException("Username already in use");
 	}
 

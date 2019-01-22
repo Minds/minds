@@ -90,8 +90,17 @@ class blog implements Interfaces\Api
                 }
 
                 $blogs = $repository->getList($opts);
-
-                $response['entities'] = new Exportable($blogs);
+                
+                $export = [];
+                foreach ($blogs as $blog) {
+                    if ($blog->getOwnerGuid() != Core\Session::getLoggedInUserGuid() && $blog->getAccessId() != 2) {
+                        continue;
+                    }
+                    $export[] = $blog;
+                }
+                //$export = array_slice($export, 0, $limit);
+                
+                $response['entities'] = new Exportable($export);
                 $response['load-next'] = $blogs->getPagingToken();
                 break;
 
@@ -186,7 +195,7 @@ class blog implements Interfaces\Api
             $blog->setCategories($_POST['categories']);
         }
 
-        if (isset($_POST['tags'])) {
+        if (isset($_POST['tags']) && $_POST['tags'] !== '') {
             $tags = !is_array($_POST['tags']) ? explode(',', $_POST['tags']) : $_POST['tags'];
             $blog->setTags($tags);
         }

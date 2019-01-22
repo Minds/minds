@@ -114,6 +114,14 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $this->legacyRepository->isFallbackEnabled()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this->repository->add($comment)
             ->shouldBeCalled()
             ->willReturn(true);
@@ -220,6 +228,14 @@ class ManagerSpec extends ObjectBehavior
         $comment->getDirtyAttributes()
             ->shouldBeCalled()
             ->willReturn(['body']);
+
+        $this->legacyRepository->isFallbackEnabled()
+            ->shouldBeCalled()
+            ->wilLReturn(true);
+
+        $this->legacyRepository->add($comment, ['body'], true)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
         $this->repository->update($comment, ['body'])
             ->shouldBeCalled()

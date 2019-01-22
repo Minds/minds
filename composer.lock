@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3da9199123996bc09d9556280490a86b",
+    "content-hash": "4b7591814edb52926d18a881c566614e",
     "packages": [
         {
             "name": "Minds/Surge",
@@ -995,12 +995,12 @@
             "version": "v2.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-api-php-client.git",
+                "url": "https://github.com/googleapis/google-api-php-client.git",
                 "reference": "4e0fd83510e579043e10e565528b323b7c2b3c81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/4e0fd83510e579043e10e565528b323b7c2b3c81",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/4e0fd83510e579043e10e565528b323b7c2b3c81",
                 "reference": "4e0fd83510e579043e10e565528b323b7c2b3c81",
                 "shasum": ""
             },
@@ -1054,12 +1054,12 @@
             "version": "v0.69",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-api-php-client-services.git",
+                "url": "https://github.com/googleapis/google-api-php-client-services.git",
                 "reference": "6e2507a5bb39d970ae98cc2f1421012e7b38248f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/6e2507a5bb39d970ae98cc2f1421012e7b38248f",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/6e2507a5bb39d970ae98cc2f1421012e7b38248f",
                 "reference": "6e2507a5bb39d970ae98cc2f1421012e7b38248f",
                 "shasum": ""
             },
@@ -1091,12 +1091,12 @@
             "version": "v1.3.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-auth-library-php.git",
+                "url": "https://github.com/googleapis/google-auth-library-php.git",
                 "reference": "af72b3f50420c801dc35cc07b1fa429ae027b847"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/af72b3f50420c801dc35cc07b1fa429ae027b847",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/af72b3f50420c801dc35cc07b1fa429ae027b847",
                 "reference": "af72b3f50420c801dc35cc07b1fa429ae027b847",
                 "shasum": ""
             },
@@ -1456,6 +1456,58 @@
                 "stream"
             ],
             "time": "2014-10-12T19:18:40+00:00"
+        },
+        {
+            "name": "kickbox/kickbox",
+            "version": "2.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kickboxio/kickbox-php.git",
+                "reference": "97847a887a2df4d04890c1f2676fb1ce0189a074"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kickboxio/kickbox-php/zipball/97847a887a2df4d04890c1f2676fb1ce0189a074",
+                "reference": "97847a887a2df4d04890c1f2676fb1ce0189a074",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.3",
+                "phpunit/phpunit": "^4.8 || ^5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Kickbox\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chaitanya Surapaneni",
+                    "email": "chaitanya.surapaneni@kickbox.io",
+                    "homepage": "https://github.com/kickboxio"
+                }
+            ],
+            "description": "Official kickbox API library client for PHP",
+            "homepage": "http://kickbox.io",
+            "keywords": [
+                "email",
+                "free",
+                "kickbox",
+                "sendex",
+                "service",
+                "validation",
+                "verification"
+            ],
+            "time": "2018-07-08T02:10:23+00:00"
         },
         {
             "name": "kramnorth/cinemr-php-sdk",

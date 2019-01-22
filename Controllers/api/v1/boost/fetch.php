@@ -72,10 +72,11 @@ class fetch implements Interfaces\Api
 
         switch ($pages[0]) {
             case 'content':
+                $iterator->setOffset('');
                 $iterator->setIncrement(true);
 
-                foreach ($iterator as $entity) {
-                    $response['boosts'][] = $entity->export();
+                foreach ($iterator as $guid => $entity) {
+                    $response['boosts'][] = array_merge($entity->export(), ['boosted_guid' => (string) $guid]);
                     Counters::increment($entity->guid, "impression");
                     Counters::increment($entity->owner_guid, "impression");
                 }
@@ -104,49 +105,22 @@ class fetch implements Interfaces\Api
                 }
                 if (!$iterator->list) {
                     $cacher = Core\Data\cache\factory::build('apcu');
-                    $offset = $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: "";
-                    $guids = Core\Data\indexes::fetch('object:image:featured', ['offset' => $offset, 'limit' => 12]);
-                    if (!$guids) {
-                        break;
-                    }
-                    $entities = Core\Entities::get(['guids' => $guids]);
-                    usort($entities, function ($a, $b) {
-                        if ((int)$a->featured_id == (int)$b->featured_id) {
-                            return 0;
-                        }
-                        return ((int)$a->featured_id < (int)$b->featured_id) ? 1 : -1;
-                    });
-                    foreach ($entities as $entity) {
-                        $boost = new Entities\Activity();
-                        $boost->guid = $entity->guid;
-                        $boost->owner_guid = $entity->owner_guid;
-                        $boost->time_created = $entity->time_created;
-                        $boost->time_updated = $entity->time_updated;
-                        $boost->{'thumbs:up:user_guids'} = $entity->{'thumbs:up:user_guids'};
-                        $boost->{'thumbs:down:user_guids'} = $entity->{'thumbs:down:user_guids'};
-                        $boost->setTitle($entity->title);
-                        $boost->setFromEntity($entity);
-                        switch ($entity->subtype) {
-                            case "blog":
-                                $boost->setBlurb(strip_tags($entity->description))
-                                    ->setURL($entity->getURL())
-                                    ->setThumbnail($entity->getIconUrl());
-                                break;
-                            case "image":
-                                $boost->setCustom('batch', [[
-                                    'src' => elgg_get_site_url() . 'fs/v1/thumbnail/' . $entity->guid,
-                                    'href' => $entity->getUrl(),
-                                    'mature' => $entity instanceof \Minds\Interfaces\Flaggable ? $entity->getFlag('mature') : false
-                                ]]);
-                                break;
-                        }
-                        $boost->boosted = true;
-                        $response['boosts'][] = $boost->export();
+                    $offset = (int) $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: 0;
+                    
+                    $posts = $this->getSuggestedPosts([
+                        'offset' => $offset,
+                        'limit' => $limit,
+                        'rating' => $rating,
+                    ]);
+
+                    foreach ($posts as $entity) {
+                        $entity->boosted = true;
+                        $response['boosts'][] = array_merge($entity->export(), [ 'boosted' => true ]);
                     }
                     if (!$response['boosts'] || count($response['boosts']) < 5) {
-                        $cacher->destory(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset");
+                        $cacher->destroy(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset");
                     } else {
-                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", end($entities)->guid);
+                        $cacher->set(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset", ((int) $offset) + count($posts));
                     }
                 }
         }
@@ -194,4 +168,35 @@ class fetch implements Interfaces\Api
     public function delete($pages)
     {
     }
+
+    private function getSuggestedPosts($opts = [])
+    {
+        $opts = array_merge([
+            'offset' => 0,
+            'limit' => 12,
+            'rating' => 1,
+        ], $opts);
+
+        /** @var Core\Feeds\Suggested\Manager $repo */
+        $repo = Di::_()->get('Feeds\Suggested\Manager');
+
+        $opts = [
+            'user_guid' => Core\Session::getLoggedInUserGuid(),
+            'rating' => $opts['rating'],
+            'limit' => $opts['limit'],
+            'offset' => $opts['offset'],
+            'type' => 'newsfeed',
+            'all' => true,
+        ];
+
+        $result = $repo->getFeed($opts);
+
+        // Remove all unlisted content if it appears
+        $result = array_values(array_filter($result, function($entity) {
+            return $entity->getAccessId() != 0;
+        }));
+
+        return $result;
+    }
 }
+

@@ -2,34 +2,47 @@
 
 namespace Minds\Core\Provisioner\Provisioners;
 
-use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Data;
-use Minds\Entities;
-use Minds\Exceptions\ProvisionException;
+use PDO;
 
 class CockroachProvisioner implements ProvisionerInterface
 {
     protected $config;
-    protected $db;
 
-    public function __construct($db = null)
+    public function provision(bool $cleanData)
     {
-        $this->db = $db ?: Di::_()->get('Database\PDO'); // Should be created on-the-fly at provision()
-    }
+        $config = Di::_()->get('Config')->get('database');
+        $host = isset($config['host']) ? $config['host'] : 'cockroachdb';
+        $port = isset($config['port']) ? $config['port'] : 26257;
+        $dbName = isset($config['name']) ? $config['name'] : 'minds';
+        $sslMode = isset($config['sslmode']) ? $config['sslmode'] : 'disable';
+        $username = isset($config['username']) ? $config['username'] : 'php';
 
-    public function provision()
-    {
+        // Using root account because only superusers have permission to create databases.
+        $adminDb = new PDO("pgsql:host=$host;port=$port;dbname=$dbName;sslmode=$sslMode",
+            'root',
+            null,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_EMULATE_PREPARES => true,
+                PDO::ATTR_PERSISTENT => true,
+            ]);
+
+        $adminDb->prepare("CREATE USER IF NOT EXISTS $username")->execute();
+        if ($cleanData)
+        {
+            $adminDb->prepare("DROP DATABASE IF EXISTS $dbName")->execute();
+        }
+        $adminDb->prepare("CREATE DATABASE IF NOT EXISTS $dbName")->execute();
+        $adminDb->prepare("GRANT ALL ON DATABASE $dbName TO $username")->execute();
         $schema = explode(';', file_get_contents(dirname(__FILE__) . '/cockroach-provision.sql'));
 
         foreach ($schema as $query) {
             if (trim($query) === '') {
                 continue;
             }
-            $statement = $this->db->prepare($query);
-
+            $statement = $adminDb->prepare($query);
             $statement->execute();
         }
     }
-
 }
