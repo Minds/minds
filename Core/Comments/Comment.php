@@ -351,6 +351,8 @@ class Comment extends RepositoryEntity
             $output['thumbs:down:count'] = count($this->getVotesDown());
         }
 
+        $output['can_reply'] = (bool) !$this->getParentGuidL2();
+
         //$output['parent_guid'] = (string) $this->entityGuid;
 
         return $output;

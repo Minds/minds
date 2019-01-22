@@ -88,7 +88,7 @@ class Manager
             return $this->legacyRepository->getList($opts);
         }
 
-        return $this->getList($opts);
+        return $this->repository->getList($opts);
     }
 
     /**

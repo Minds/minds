@@ -32,7 +32,7 @@ class Entity
         $comment
             ->setEntityGuid($row['parent_guid'])
             ->setParentGuidL1($row['parent_guid_l1'])
-            ->setParentGuidL2($row['parent_guid_l2'])
+            ->setParentGuidL2(1) //fake it
             ->setGuid($row['guid'])
             ->setHasChildren(false)
             ->setOwnerGuid($row['owner_guid'])
