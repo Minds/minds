@@ -148,8 +148,8 @@ class Events
                         'to' => $to,
                         'entity' => $params,
                         'notification_view' => 'tag',
-                        'description' => $params->message,
-                        'params' => ['title' => $params->title]
+                        'description' => $message,
+                        'params' => [ 'title'=>$message ], 
                     ]);
                 }
             }
