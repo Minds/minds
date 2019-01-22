@@ -47,6 +47,10 @@ class ManagerSpec extends ObjectBehavior
         $comment->getVotesDown()
             ->shouldNotBeCalled();
 
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(999);
+
         $actor->get('guid')
             ->shouldBeCalled()
             ->willReturn(1000);
@@ -81,6 +85,10 @@ class ManagerSpec extends ObjectBehavior
 
         $comment->getVotesDown()
             ->shouldNotBeCalled();
+
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(999);
 
         $actor->get('guid')
             ->shouldBeCalled()
@@ -117,6 +125,10 @@ class ManagerSpec extends ObjectBehavior
         $comment->getVotesUp()
             ->shouldNotBeCalled();
 
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(999);
+
         $actor->get('guid')
             ->shouldBeCalled()
             ->willReturn(1000);
@@ -152,6 +164,10 @@ class ManagerSpec extends ObjectBehavior
         $comment->getVotesUp()
             ->shouldNotBeCalled();
 
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(999);
+
         $actor->get('guid')
             ->shouldBeCalled()
             ->willReturn(1003);
@@ -176,11 +192,13 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_cast(
         Vote $vote,
-        Entity $entity
+        Comment $comment
     ) {
-        $entity->get('guid')->willReturn('5000');
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
 
-        $vote->getEntity()->willReturn($entity);
+        $vote->getEntity()->willReturn($comment);
 
         $this->legacyRepository->isLegacy('5000');
 
@@ -196,11 +214,13 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_cancel(
         Vote $vote,
-        Entity $entity
+        Comment $comment
     ) {
-        $entity->get('guid')->willReturn('5000');
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
 
-        $vote->getEntity()->willReturn($entity);
+        $vote->getEntity()->willReturn($comment);
 
         $this->legacyRepository->isLegacy('5000');
 
