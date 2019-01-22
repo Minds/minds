@@ -674,9 +674,9 @@ class Membership
                 $score += 2;
             }
 
-            if ($a->getUpdatedTimestamp() > $b->getReadTimestamp()) {
-                $score += 2;
-            }
+            //if ($a->getUpdatedTimestamp() > $b->getReadTimestamp()) {
+            //    $score += 2;
+            //}
             return $score;
         });
 
