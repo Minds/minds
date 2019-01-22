@@ -126,11 +126,11 @@ class Comment extends RepositoryEntity
 
         $luid
             ->setType('comment')
-            ->setEntityGuid($this->getEntityGuid())
+            ->setEntityGuid((string) $this->getEntityGuid())
             ->setPartitionPath($this->getPartitionPath())
             ->setParentPath($this->getParentPath())
             ->setChildPath($this->getChildPath())
-            ->setGuid($this->getGuid());
+            ->setGuid((string) $this->getGuid());
 
         return $luid;
     }
