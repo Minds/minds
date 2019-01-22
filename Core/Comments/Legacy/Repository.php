@@ -255,8 +255,12 @@ class Repository
     {
         try {
             $row = $this->entities->getRow((string) $guid, [ 'limit' => 1000 ]);
-            
-            if (!$row || !($row['type'] === 'comment' || $row['parent_guid'])) {
+
+            if ($row['parent_guid']) {
+                $row['type'] = 'comment';
+            }
+
+            if (!$row || $row['type'] !== 'comment') { 
                 return null;
             }
 
