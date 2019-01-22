@@ -850,51 +850,6 @@ function _elgg_php_exception_handler($exception) {
 	header("Cache-Control: no-cache, must-revalidate", true);
 	header('Expires: Fri, 05 Feb 1982 00:00:00 -0500', true);
 	// @note Do not send a 500 header because it is not a server error
-
-	try {
-		// we don't want the 'pagesetup', 'system' event to fire
-		global $CONFIG;
-		$CONFIG->pagesetupdone = true;
-
-		//send an email!
-		//$server = $_SERVER['SERVER_ADDR'];
-		$server = exec("hostname");
-		$time = date("F j, Y, g:i a");
-		$path = $_SERVER["REQUEST_URI"];
-		$class = get_class($exception);
-		$username = elgg_is_logged_in() ? elgg_get_logged_in_user_entity()->name : 'logged out';
-
-		$body = "<h1>Minds | Automatic bug report</h1>\n";
-		$body .= "<p><b>Path:</b> $path </p>";
-		$body .= "<p><b>Server:</b> $server </p>";
-		$body .= "<p><b>Time:</b> $time</p>";
-		$body .= "<p><b>User:</b> $username</p>";
-		$body .= "<p><b>Stack:</b></p>";
-	    $body .= nl2br(htmlentities(print_r($exception, true), ENT_QUOTES, 'UTF-8'));
-
-		//elgg_send_email('minds@minds.com', 'mark@minds.com', 'Exception ' . get_class($vars['object']), nl2br(htmlentities(print_r($vars['object'], true), ENT_QUOTES, 'UTF-8')));
-		if(function_exists('phpmailer_send')){
-			phpmailer_send(
-						'minds@minds.com',
-						'Minds Bugs',
-						'mark@minds.com',
-						'Mark Harding',
-						'Automatic Report',
-						$body,
-						null,
-						//array('bill@minds.com', 'john@minds.com','mark@kramnorth.com'),
-						true //html
-			);
-		}
-
-		echo file_get_contents(dirname(dirname(dirname(__FILE__))) . '/errors/500.html');
-
-	} catch (Exception $e) {
-		$timestamp = time();
-		$message = $e->getMessage();
-		echo "Fatal error in exception handler. Check log for Exception #$timestamp";
-		error_log("Exception #$timestamp : fatal error in exception handler : $message");
-	}
 }
 
 /**
