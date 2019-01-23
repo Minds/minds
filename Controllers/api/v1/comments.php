@@ -338,12 +338,16 @@ class comments implements Interfaces\Api
             return Factory::response([]);
         }
         //check if owner of activity trying to remove
-        $entity = new \Minds\Entities\Entity($comment->getEntityGuid());
-
+        $entity = Entities\Factory::build($comment->getEntityGuid());
+        
         if ($entity->owner_guid == Core\Session::getLoggedInUserGuid()) {
-            $manager->delete($comment);
+            $manager->delete($comment, [ 'force' => true ]);
+            return Factory::response([]);
         }
 
-        return Factory::response([]);
+        return Factory::response([
+            'status' => 'error',
+            'message' => 'You can not delete this comment',
+        ]);
     }
 }

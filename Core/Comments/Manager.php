@@ -161,8 +161,16 @@ class Manager
      * @return bool
      * @throws \Exception
      */
-    public function delete(Comment $comment)
+    public function delete(Comment $comment, $opts = [])
     {
+        $opts = array_merge([
+                    'force' => false,
+                ], $opts);
+
+        if (!$this->acl->write($comment) && !$opts['force']) {
+            return false; //TODO throw exception
+        }
+
         $success = $this->repository->delete($comment);
 
         if ($success) {

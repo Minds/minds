@@ -7,6 +7,8 @@ namespace Minds\Core\Groups;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities\Group as GroupEntity;
+use Minds\Entities\Activity;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Session;
 
 class Events
@@ -51,6 +53,25 @@ class Events
                 return;
             }
 
+            $e->setResponse(($group->isOwner($user->guid) || $group->isModerator($user->guid)) && $group->isMember($user->guid));
+        });
+
+        Dispatcher::register('acl:write', 'comment', function ($e) {
+            $params = $e->getParameters();
+            $comment = $params['entity'];
+            $user = $params['user'];
+
+            $entity = EntitiesFactory::build($comment->getEntityGuid());
+
+            if (!($entity instanceof GroupEntity)) {
+                if ($entity instanceof Activity && $entity->canEdit()) {
+                    //TODO: refactor as this could potential catch non-groups
+                    $e->setResponse(true);
+                }
+                return;
+            }
+
+            $group = $entity;
             $e->setResponse(($group->isOwner($user->guid) || $group->isModerator($user->guid)) && $group->isMember($user->guid));
         });
 
