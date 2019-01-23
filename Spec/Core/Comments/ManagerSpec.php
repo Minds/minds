@@ -250,6 +250,10 @@ class ManagerSpec extends ObjectBehavior
         Comment $comment
     )
     {
+        $this->acl->write($comment)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this->repository->delete($comment)
             ->shouldBeCalled()
             ->willReturn(true);
@@ -261,6 +265,19 @@ class ManagerSpec extends ObjectBehavior
         $this
             ->delete($comment)
             ->shouldReturn(true);
+    }
+
+    function it_should_not_delete_if_acl_catches(
+        Comment $comment
+    )
+    {
+        $this->acl->write($comment)
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->delete($comment)
+            ->shouldReturn(false);
     }
 
     function it_should_get_by_luid(
