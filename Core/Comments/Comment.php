@@ -185,6 +185,14 @@ class Comment extends RepositoryEntity
         return $this->ownerObj;
     }
 
+    public function getBody()
+    {
+        if (strlen($this->body) > 1500) {
+            return substr($this->body, 0, 1500) . '...';
+        }
+        return $this->body;
+    }
+
     /**
      * Sets an individual attachment
      * @param $attachment
