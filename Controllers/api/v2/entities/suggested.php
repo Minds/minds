@@ -54,7 +54,7 @@ class suggested implements Interfaces\Api
             $offset = intval($_GET['offset']);
         }
 
-        $rating = 1;
+        $rating = Core\Session::getLoggedinUser()->boost_rating ?: 1; 
         if (isset($_GET['rating'])) {
             $rating = intval($_GET['rating']);
         }
