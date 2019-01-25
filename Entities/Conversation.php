@@ -188,7 +188,7 @@ class Conversation extends DenormalizedEntity
                 $export['username'] = $user->username;
             }
         }
-        $export['participants'] = array_values($export['participants']); //make sure we are an array, not an object
+        $export['participants'] = $export['participants'] ? array_values($export['participants']) : []; //make sure we are an array, not an object
         $export['socketRoomName'] = $this->buildSocketRoomName();
 
         return $export;
