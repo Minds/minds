@@ -52,6 +52,13 @@ class markers implements Interfaces\Api
      */
     public function post($pages)
     {
+        if (!Session::isLoggedIn()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must be logged in to update a marker',
+            ]);
+        }
+
         switch ($pages[0]) {
             case "read":
                 $marker = new UpdateMarker;
