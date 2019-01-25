@@ -320,6 +320,7 @@ class Comment extends RepositoryEntity
         $output['parent_guid_l1'] = (string) $this->getParentGuidL1();
         $output['parent_guid_l2'] = (string) $this->getParentGuidL2();
 
+        $output['partition_path'] = $this->getPartitionPath();
         $output['parent_path'] = $this->getParentPath();
         $output['child_path'] = $this->getChildPath();
 
