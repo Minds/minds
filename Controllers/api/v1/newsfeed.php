@@ -388,6 +388,7 @@ class newsfeed implements Interfaces\Api
                                         'width' => $embeded->width,
                                         'height' => $embeded->height,
                                     ]])
+                                        ->setMature($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false)
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
                                         ->setBlurb($embeded->description)
