@@ -211,4 +211,17 @@ class RepositorySpec extends ObjectBehavior
 
         $this->removeAll('activity')->shouldReturn(true);
     }
+
+    function it_should_remove_a_key(\PDOStatement $statement) {
+        $this->db->prepare("DELETE FROM suggested WHERE guid = ?")
+            ->shouldBeCalled()
+            ->willReturn($statement);
+
+        $statement->execute([ 123123 ])
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->remove('key', 123123)
+            ->shouldReturn(true);
+    }
 }

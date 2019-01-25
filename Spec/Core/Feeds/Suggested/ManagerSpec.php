@@ -104,17 +104,20 @@ class ManagerSpec extends ObjectBehavior
         $entities = [
             1 => (new Entity)
                 ->set('guid', 10)
+                ->set('owner_guid', 1)
                 ->set('type', 'activity')
                 ->set('perma_url', 'https://minds.com/blog/view/1000001')
                 ->set('message', '#hashtag')
                 ->setRating(1),
             2 => (new Entity)
                 ->set('guid', 20)
+                ->set('owner_guid', 2)
                 ->set('type', 'activity')
                 ->set('message', '#hashtag')
                 ->setRating(1),
             3 => (new Entity)
                 ->set('guid', 30)
+                ->set('owner_guid', 3)
                 ->set('type', 'activity')
                 ->set('message', '#hashtag')
                 ->setRating(1),
@@ -139,7 +142,7 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn([
                 10 => 5,
                 20 => 10,
-                30 => 10
+                30 => 10,
             ]);
         $this->aggImages->setType('object')->shouldBeCalled();
         $this->aggImages->setSubtype('image')->shouldBeCalled();
