@@ -92,6 +92,22 @@ class Redis extends abstractCacher
         }
     }
 
+    /**
+     * @return RedisServer
+     */
+    public function forReading()
+    {
+        return $this->getSlave() ?: $this->getMaster();
+    }
+
+    /**
+     * @return RedisServer
+     */
+    public function forWriting()
+    {
+        return $this->getMaster();
+    }
+
     public function __destruct()
     {
         try {

@@ -113,3 +113,4 @@ class suggested implements Interfaces\Api
         return Factory::response([]);
     }
 }
+

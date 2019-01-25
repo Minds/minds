@@ -13,5 +13,9 @@ class FeedsProvider extends Provider {
         $this->di->bind('Feeds\Suggested\Manager', function($di) {
             return new Suggested\Manager();
         });
+
+        $this->di->bind('Feeds\Top\Manager', function($di) {
+            return new Top\Manager();
+        });
     }
 }

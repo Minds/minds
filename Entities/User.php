@@ -920,4 +920,12 @@ class User extends \ElggUser
             'opted_in_hashtags',
         ));
     }
+
+    public function getTags()
+    {
+        if (is_array($this->tags)) {
+            return $this->tags;
+        }
+        return json_decode($this->tags, true);
+    }
 }
