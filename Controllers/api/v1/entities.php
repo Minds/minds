@@ -135,7 +135,7 @@ class entities implements Interfaces\Api
             }
         }
 
-        $entities = Core\Entities::get($options);
+        $entities = Core\Entities::get($options) ?: [];
         if (isset($_GET['offset']) && $_GET['offset']) {
             array_shift($entities);
         }
