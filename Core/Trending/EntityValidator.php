@@ -8,7 +8,8 @@ class EntityValidator
 
     public function isValid($entity, $rating = 1)
     {
-        if (!$entity || !method_exists($entity, 'getRating')) {
+        //if (!$entity || !method_exists($entity, 'getRating')) {
+        if (!$entity) {
 //            var_dump($entity);exit;
             echo " .. no entity or getRating method";
 //            return false;

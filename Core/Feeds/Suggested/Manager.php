@@ -41,6 +41,12 @@ class Manager
         $this->to = time() * 1000;
     }
 
+    public function setFrom($from)
+    {
+        $this->from = $from;
+        return $this;
+    }
+
     /**
      * @param array $opts
      * @return Entity[]
@@ -108,6 +114,7 @@ class Manager
                 $scores[$key] = [];
             }
             $ratings = [];
+            $ownersCounts = [];
             foreach ($map['aggregates'] as $aggregate) {
                 $class = is_string($aggregate) ? new $aggregate : $aggregate;
                 $class->setLimit(10000);
@@ -117,6 +124,10 @@ class Manager
                 $class->setTo($this->to);
 
                 foreach ($class->get() as $guid => $score) {
+                    if ($score < 2) {
+                    //    continue;
+                    }
+
                     echo "\n$guid ($score)";
                     //collect the entity
                     $entity = $this->entitiesBuilder->single($guid);
@@ -125,9 +136,15 @@ class Manager
                         continue;
                     }
 
+                    if (isset($ownersCounts[$entity->owner_guid]) && $entity->type != 'user') {
+                        continue;
+                    }
+
+                    $ownersCounts[$entity->owner_guid] = 1;
+
                     $tags = $entity->getTags();
 
-                    if ($entity->container_guid != 0 && $entity->container_guid != $entity->owner_guid && $key == 'newsfeed') {
+                    if ($entity->container_guid != 0 && $entity->container_guid != $entity->owner_guid) {
                         echo " skipping because group post";
                         continue; // skip groups
                     }
@@ -139,6 +156,7 @@ class Manager
                     //validate this entity is ok
                     if (!$this->validator->isValid($entity)) {
                         echo "\n[$entity->getRating()] $key: $guid ($score) invalid";
+                        $this->feedsRepository->remove($key, $guid);
                         continue;
                     }
                     
@@ -148,22 +166,22 @@ class Manager
                         if (!isset($scores['image'][$entity->entity_guid])) {
                             $scores['image'][$entity->entity_guid] = 0;
                         }
-                        $scores['image'][$entity->entity_guid] += $score;
-                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        //$scores['image'][$entity->entity_guid] += $score;
+                        //$ratings[$entity->entity_guid] = $ratings[$guid];
                         $this->saveTags($entity->entity_guid, $tags);
                     } elseif ($entity->custom_type == 'video' && $entity->entity_guid) {
                         if (!isset($scores['video'][$entity->entity_guid])) {
                             $scores['video'][$entity->entity_guid] = 0;
                         }
-                        $scores['video'][$entity->entity_guid] += $score;
-                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        //$scores['video'][$entity->entity_guid] += $score;
+                        //$ratings[$entity->entity_guid] = $ratings[$guid];
                         $this->saveTags($entity->entity_guid, $tags);
                     } elseif (strpos($entity->perma_url, '/blog') !== false && $entity->entity_guid) {
                         if (!isset($scores['blog'][$entity->entity_guid])) {
                             $scores['blog'][$entity->entity_guid] = 0;
                         }
-                        $scores['blog'][$entity->entity_guid] += $score;
-                        $ratings[$entity->entity_guid] = $ratings[$guid];
+                        //$scores['blog'][$entity->entity_guid] += $score;
+                        //$ratings[$entity->entity_guid] = $ratings[$guid];
                         $this->saveTags($entity->entity_guid, $tags);
                         echo "\n\tblog here $entity->entity_guid";
                     }
@@ -181,6 +199,7 @@ class Manager
             foreach ($scores as $_key => $_scores) {
                 foreach ($_scores as $guid => $score) {
                     if (! (int) $score || !$guid) {
+                        echo "\n[{$ratings[$guid]}] $_key: $guid ($score) FAILED";
                         continue;
                     }
                     if (!isset($ratings[$guid])) {

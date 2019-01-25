@@ -193,4 +193,10 @@ class Repository
 
         return $statement->execute($guids);
     }
+
+    public function remove($key, $guid)
+    {
+        $statement = $this->db->prepare("DELETE FROM suggested WHERE guid = ?");
+        return $statement->execute([ $guid ]);
+    }
 }
