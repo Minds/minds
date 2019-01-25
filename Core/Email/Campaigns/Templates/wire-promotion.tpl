@@ -2,7 +2,7 @@
   <tbody>
     <tr>
       <td style="">
-        <p>Please use the button below to log in and claim your token reward. Please note android users need to open the below link in their browser to claim the reward. We are continuing to work to enable this feature on the app.</p> 
+        <p>Use the button below to log in and claim your token reward! Please note that android users need to open the below link in their browser to claim the reward. We are continuing to work to enable this feature on the app.</p> 
       </td>
     </tr>
 
