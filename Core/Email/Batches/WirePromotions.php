@@ -92,8 +92,8 @@ class WirePromotions implements EmailBatchInterface
         foreach ($iterator as $user) {
             $i++;
 
-            $user = new \Minds\Entities\User('mark');
-            $user->bounced = false;
+            //$user = new \Minds\Entities\User('mark');
+            //$user->bounced = false;
 
             if ($user->bounced) {
                 echo "\n[$i]: $user->guid ($iterator->offset) bounced:$bounced";
@@ -112,11 +112,10 @@ class WirePromotions implements EmailBatchInterface
                 ->setUser($user)
                 //->setTemplateKey($this->templatePath)
                 ->setSubject("You’ve received a token reward!")
-                ->setPromotionKey('oct-19')
+                ->setPromotionKey('jan-24')
                 ->send();
 
             echo " sent";
-            exit;
         }
     }
 
