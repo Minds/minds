@@ -55,12 +55,18 @@ class avatars implements Interfaces\FS
 
         $contents = $f->read();
         if (empty($contents)) {
-            $contents = file_get_contents(Core\Config::build()->path . "engine/Assets/avatars/default-$size.png");
+            $filepath = Core\Config::build()->path . "engine/Assets/avatars/default-$size.png";
+            $contents = file_get_contents($filepath);
         }
 
-        $finfo    = finfo_open(FILEINFO_MIME);
-        $mimetype = finfo_file($finfo, $filepath);
-        finfo_close($finfo);
+        if ($filepath) {
+            $finfo    = finfo_open(FILEINFO_MIME);
+            $mimetype = finfo_file($finfo, $filepath);
+            finfo_close($finfo);
+        } else {
+            $mimetype = 'image/jpeg';
+        }
+
         header('Content-Type: '.$mimetype);
         header('Expires: ' . date('r', time() + 864000));
         header("Pragma: public");
