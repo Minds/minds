@@ -27,9 +27,9 @@ class avatars implements Interfaces\FS
         $guid = null;
         $type = null;
 
-        if (method_exists($entity, 'getType')) {
+        if ($entity && method_exists($entity, 'getType')) {
             $type = $entity->getType();
-        } elseif (property_exists($entity, 'type')) {
+        } elseif ($entity && property_exists($entity, 'type')) {
             $type = $entity->type;
         }
 
@@ -53,7 +53,7 @@ class avatars implements Interfaces\FS
                 break;
         }
 
-        $contents = $f->read();
+        $contents = $f ? $f->read() : null;
         if (empty($contents)) {
             $filepath = Core\Config::build()->path . "engine/Assets/avatars/default-$size.png";
             $contents = file_get_contents($filepath);
