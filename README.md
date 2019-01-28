@@ -12,8 +12,8 @@ Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/d
 ### Syncing the newsfeed
 
 * Make sure you have at least 1 upvote and a hashtag.
-* sh into either php-fpm container
-* run ```/var/www/Minds/engine/cli.php suggested sync_newsfeed```inside the php-fpm container
+* Assuming your container is named 'minds_php-fpm_1'
+* run ```docker exec -it minds_php-fpm_1 php '/var/www/Minds/engine/cli.php' suggested sync_newsfeed```inside the php-fpm container
 
 ### Running php tests
 
