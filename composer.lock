@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://bc220f12a84437201d2bc003c3afe0b543040b36@github.com/minds/Surge.git",
-                "reference": "fef04c4fa35888d9fb710c0ad4fd2b0ad24bff91"
+                "reference": "20dbf78c080504ee67db2eb04070bddabcf9b576"
             },
             "type": "library",
             "autoload": {
@@ -21,7 +21,7 @@
                 }
             },
             "description": "A php library for sending push notifications",
-            "time": "2018-06-26T12:42:54+00:00"
+            "time": "2019-01-29T20:04:40+00:00"
         },
         {
             "name": "abraham/twitteroauth",
