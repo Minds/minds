@@ -1021,23 +1021,23 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 	access_show_hidden_entities(true);
 
 	if (!validate_email_address($email)) {
-		throw new RegistrationException("Invalid email");
+		throw new RegistrationException("RegistrationException::InvalidEmail");
 	}
 
 	if (!validate_password($password)) {
-		throw new RegistrationException("Invalid password");
+		throw new RegistrationException("RegistrationException::InvalidPassword");
 	}
 
 	if (!validate_username($username)) {
-		throw new RegistrationException("Invalid username");
+		throw new RegistrationException("RegistrationException::InvalidUsername");
 	}
 
 	if (check_user_index_to_guid($username)) {
-		throw new RegistrationException("Username already in use");
+		throw new RegistrationException("RegistrationException::UsernameInUse");
 	}
 
 	if ((!$allow_multiple_emails) && (get_user_by_email($email))) {
-		throw new RegistrationException("Email already in use");
+		throw new RegistrationException("RegistrationException::EmailInUse");
 	}
 
 	access_show_hidden_entities($access_status);
