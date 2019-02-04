@@ -52,6 +52,9 @@ class EventsSpec extends ObjectBehavior
         $this->dispatcher->register('vote:action:cancel', 'comment', Argument::any())
             ->shouldBeCalled();
 
+        $this->dispatcher->register('acl:read', 'all', Argument::any())
+            ->shouldBeCalled();
+
         $this->register();
     }
 }
