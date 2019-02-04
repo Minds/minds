@@ -300,6 +300,8 @@ class peer implements Interfaces\Api
             $activity->setRemind($embedded->export())->save();
         }
 
+        $activity->save();
+
         // Notify
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
