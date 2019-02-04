@@ -11,6 +11,7 @@ namespace Minds\Core\Comments;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
+use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Votes\Vote;
 use Minds\Core\Sockets;
 use Minds\Core\Session;
@@ -104,6 +105,20 @@ class Events
                     ->setVote($event->getParameters()['vote'])
                     ->cancel()
             );
+        });
+
+        // If comment is container_guid then decide if we can allow access
+        $this->eventsDispatcher->register('acl:read', 'all', function (Event $event) {
+            $params = $event->getParameters();
+            $entity = $params['entity'];
+            $user = $params['user'];
+
+            $container = EntitiesFactory::build($entity->container_guid);
+
+            // If the container container_guid is the same as the the container owner
+            if ($container->container_guid == $container->owner_guid) {
+                $event->setResponse(true);
+            }
         });
     }
 }
