@@ -2,23 +2,37 @@
 
 namespace Spec\Minds\Core\Helpdesk\Question;
 
+use Cassandra\Set;
+use Cassandra\Type;
+use Cassandra\Uuid;
+use Minds\Core\Data\Cassandra;
+use Minds\Core\Data\ElasticSearch;
 use Minds\Core\Helpdesk\Question\Question;
 use Minds\Core\Helpdesk\Question\Repository;
-use Minds\Common\Repository\Response;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Spec\Minds\Mocks\Cassandra\Rows;
 
 class RepositorySpec extends ObjectBehavior
 {
-    private $db;
+    /** @var Cassandra\Client */
+    private $cassandraClient;
+    /** @var ElasticSearch\Client */
+    private $esClient;
+    /** @var \Minds\Core\Helpdesk\Category\Repository */
     private $categoryRepo;
 
-    function let(\PDO $db, \Minds\Core\Helpdesk\Category\Repository $categoryRepo)
+    function let(
+        Cassandra\Client $cassandraClient,
+        ElasticSearch\Client $esClient,
+        \Minds\Core\Helpdesk\Category\Repository $categoryRepo
+    )
     {
-        $this->db = $db;
+        $this->cassandraClient = $cassandraClient;
+        $this->esClient = $esClient;
         $this->categoryRepo = $categoryRepo;
 
-        $this->beConstructedWith($db, $categoryRepo);
+        $this->beConstructedWith($cassandraClient, $esClient, $categoryRepo);
     }
 
     function it_is_initializable()
@@ -26,68 +40,52 @@ class RepositorySpec extends ObjectBehavior
         $this->shouldHaveType(Repository::class);
     }
 
-    function it_should_get_list_of_questions(\PDOStatement $statement)
+    function it_should_get_list_of_questions()
     {
-        $this->db->prepare(Argument::any())
+        $this->cassandraClient->request(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($statement);
-
-        $statement->execute(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(true);
-
-        $statement->fetchAll(\PDO::FETCH_ASSOC)
-            ->shouldBeCalled()
-            ->willReturn([
+            ->willReturn(new Rows([
                 [
-                    'uuid' => 'uuid1',
+                    'uuid' => new Uuid('f990a87d-1255-42e5-a78e-4a2256569e8a'),
                     'question' => 'Is this a test?',
                     'answer' => 'no',
                     'category_uuid' => null,
-                    'user_guids' => '{}',
-                    'thumbs_up_count' => 0,
-                    'thumbs_down_count' => 0
+                    'thumbs_up' => new Set(Type::varint()),
+                    'thumbs_down' => new Set(Type::varint()),
+                    'score' => 1,
                 ],
                 [
-                    'uuid' => 'uuid2',
+                    'uuid' => new Uuid('f990a87d-1255-42e5-a78e-4a2256569e8b'),
                     'question' => 'Is this a test?',
                     'answer' => 'no',
                     'category_uuid' => null,
-                    'user_guids' => '{}',
-                    'thumbs_up_count' => 0,
-                    'thumbs_down_count' => 0
+                    'thumbs_up' => new Set(Type::varint()),
+                    'thumbs_down' => new Set(Type::varint()),
+                    'score' => 1,
                 ],
-            ]);
+            ], ''));
 
-        $this->getList()->shouldBeAnInstanceOf(Response::class);
         $this->getList()[0]->shouldBeAnInstanceOf(Question::class);
     }
 
-    function it_should_return_a_single_question(\PDOStatement $statement)
+    function it_should_return_a_single_question()
     {
-        $this->db->prepare(Argument::any())
+        $this->cassandraClient->request(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($statement);
+            ->willReturn(new Rows([[
+                'uuid' => new Uuid('f990a87d-1255-42e5-a78e-4a2256569e8a'),
+                'question' => 'Is this a test?',
+                'answer' => 'yes',
+                'category_uuid' => null,
+                'votes_up' => new Set(Type::varint()),
+                'votes_down' => new Set(Type::varint()),
+            ]], ''));
 
-        $statement->execute(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(true);
+        $question = $this->get('f990a87d-1255-42e5-a78e-4a2256569e8a', 'user_guid1');
 
-        $statement->fetch(\PDO::FETCH_ASSOC)
-            ->shouldBeCalled()
-            ->willReturn([
-                    'uuid' => 'uuid1',
-                    'question' => 'Is this a test?',
-                    'answer' => 'yes',
-                    'category_uuid' => null,
-                    'voted' => 'up',
-                ]);
-
-        $question = $this->get('uuid1', 'user_guid1');
-        
         $question->shouldBeAnInstanceOf(Question::class);
         $question->getUuid()
-            ->shouldBe('uuid1');
+            ->shouldBe('f990a87d-1255-42e5-a78e-4a2256569e8a');
         $question->getQuestion()
             ->shouldBe('Is this a test?');
         $question->getAnswer()

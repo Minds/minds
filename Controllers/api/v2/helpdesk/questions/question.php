@@ -24,9 +24,7 @@ class question implements Api
         /** @var Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Manager');
 
-        $opts = ['question_uuid' => $uuid];
-
-        $question = $manager->get($uuid, Session::getLoggedInUser()->guid);
+        $question = $manager->get($uuid);
 
         return Factory::response([
             'status' => 'success',

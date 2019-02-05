@@ -3,6 +3,7 @@
 namespace Minds\Core\Helpdesk\Question;
 
 
+use Minds\Common\Repository\Response;
 use Minds\Core\Di\Di;
 
 class Manager
@@ -17,19 +18,15 @@ class Manager
 
     /**
      * @param array $opts
-     * @return Question[]
+     * @return Response
      */
     public function getAll(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 10,
-            'offset' => 0,
+            'offset' => '',
             'category_uuid' => null,
             'question_uuid' => null,
-            'user_guid' => null, // for thumbs
-            'orderBy' => null, // has to be a valid field
-            'orderDirection' => 'DESC',
-            'hydrateCategory' => false,
         ], $opts);
         return $this->repository->getList($opts);
     }
@@ -52,9 +49,9 @@ class Manager
         return $this->repository->suggest($opts);
     }
 
-    public function get($uuid, $user_guid)
+    public function get($uuid)
     {
-        return $this->repository->get($uuid, $user_guid);
+        return $this->repository->get($uuid);
     }
 
     public function add(Question $entity)
@@ -62,9 +59,9 @@ class Manager
         return $this->repository->add($entity);
     }
 
-    public function update(string $question_uuid, array $fields)
+    public function update(Question $entity)
     {
-        return $this->repository->update($question_uuid, $fields);
+        return $this->repository->update($entity);
     }
 
 }

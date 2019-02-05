@@ -4,6 +4,7 @@ namespace Minds\Controllers\api\v2\helpdesk;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
+use Minds\Core\Helpdesk\Question\Manager;
 use Minds\Interfaces\Api;
 use Minds\Core\Session;
 
@@ -35,7 +36,7 @@ class questions implements Api
         $category = Di::_()->get('Helpdesk\Category');
         $category->setUuid($category_uuid);
 
-        $manager->setCategory($category);
+        //$manager->setCategory($category);
 
         $questions = $manager->getAll([
             'limit' => $limit,
@@ -45,7 +46,7 @@ class questions implements Api
 
         return Factory::response([
             'status' => 'success',
-            'questions' => $questions
+            'questions' => Factory::exportable($questions),
         ]);
     }
 
@@ -79,10 +80,11 @@ class questions implements Api
         }
 
         $direction = $pages[1];
-        $question = Di::_()->get('Helpdesk\Question');
-        $question->setUuid($question_uuid);
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
+        $question = $manager->get($question_uuid);
 
-        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        /** @var \Minds\Core\Helpdesk\Question\Votes\Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Votes\Manager');
         $manager
             ->setDirection($direction)
@@ -126,10 +128,11 @@ class questions implements Api
         }
 
         $direction = $pages[1];
-        $question = Di::_()->get('Helpdesk\Question');
-        $question->setUuid($question_uuid);
+        /** @var Manager $manager */
+        $manager = Di::_()->get('Helpdesk\Question\Manager');
+        $question = $manager->get($question_uuid);
 
-        /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
+        /** @var \Minds\Core\Helpdesk\Question\Votes\Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Votes\Manager');
         $manager
             ->setDirection($direction)

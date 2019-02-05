@@ -2,11 +2,12 @@
 /**
  * Helpdesk votes manager
  */
+
 namespace Minds\Core\Helpdesk\Question\Votes;
 
-
-use Minds\Core\Di\Di;
-use Minds\Core\Helpdesk\Entities\Question;
+use Minds\Core\Helpdesk\Question\Question;
+use Minds\Core\Helpdesk\Question\Repository;
+use Minds\Entities\User;
 
 class Manager
 {
@@ -60,13 +61,18 @@ class Manager
      */
     public function vote()
     {
-        $vote = new Vote();
-        $vote
-            ->setUserGuid($this->user->getGuid())
-            ->setQuestionUuid($this->question->getUuid())
-            ->setDirection($this->direction);
+        $key = $this->direction === 'up' ? 'ThumbsUp' : 'ThumbsDown';
+        $getter = 'get' . $key;
+        $setter = 'set' . $key;
 
-        return $this->repository->add($vote);
+        $array = $this->question->$getter();
+
+        if (!in_array($this->user->getGuid(), $array)) {
+            $array[] = (string) $this->user->getGuid();
+            $this->question->$setter($array);
+        }
+
+        return $this->repository->update($this->question);
     }
 
     /**
@@ -74,12 +80,18 @@ class Manager
      */
     public function delete()
     {
-        $vote = new Vote();
-        $vote
-            ->setUserGuid($this->user->getGuid())
-            ->setQuestionUuid($this->question->getUuid())
-            ->setDirection($this->direction);
+        $key = $this->direction === 'up' ? 'ThumbsUp' : 'ThumbsDown';
+        $getter = 'get' . $key;
+        $setter = 'set' . $key;
 
-        return $this->repository->delete($vote);
+        $array = $this->question->$getter();
+
+        $index = array_search($this->user->getGuid(), $array);
+        if ($index) {
+            array_splice($array, $index, 1);
+            $this->question->$setter($array);
+        }
+
+        return $this->repository->update($this->question);
     }
 }

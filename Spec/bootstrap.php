@@ -99,6 +99,11 @@ class Mock
 
     }
 
+    public function uuid()
+    {
+        return (string) $this->a;
+    }
+
     public function time()
     {
         return (int) $this->a;
@@ -117,6 +122,11 @@ class Mock
     public function value()
     {
         return (string) $this->a;
+    }
+
+    public function values()
+    {
+        return (array) $this->a;
     }
 
     public function __toString()
@@ -183,6 +193,7 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Tinyint');
     class_alias('Mock', 'Cassandra\Set');
     class_alias('Mock', 'Cassandra\Map');
+    class_alias('Mock', 'Cassandra\Uuid');
     class_alias('Mock', 'MongoDB\BSON\UTCDateTime');
     class_alias('Mock', 'Cassandra\RetryPolicy\Logging');
     class_alias('Mock', 'Cassandra\RetryPolicy\DowngradingConsistency');
