@@ -2,19 +2,21 @@
 
 namespace Minds\Core\Helpdesk\Category;
 
+use Cassandra\Uuid;
+use Minds\Common\Repository\Response;
+use Minds\Core\Data\Cassandra\Client;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Util\UUIDGenerator;
-use Minds\Common\Repository\Response;
-use Minds\Controllers\api\v2\notifications\follow;
 
 class Repository
 {
-    /** @var \PDO */
-    protected $db;
+    /** @var Client */
+    protected $client;
 
-    public function __construct(\PDO $db = null)
+    public function __construct(Client $client = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\PDO');
+        $this->client = $client ?: Di::_()->get('Database\Cassandra\Cql');
     }
 
     /**
@@ -30,46 +32,49 @@ class Repository
             'recursive' => false,
         ], $opts);
 
-        $query = "SELECT * FROM helpdesk_categories as cats1";
+        $query = "SELECT * FROM helpdesk_categories ";
 
         $where = [];
         $values = [];
 
         if ($opts['uuid']) {
-            $where[] = 'cats1.uuid = ?';
-            $values[] = $opts['uuid'];
+            $where[] = 'uuid = ?';
+            $values[] = new Uuid($opts['uuid']);
         }
 
         if (count($where) > 0) {
             $query .= ' WHERE ' . implode('AND', $where);
         }
 
-        $statement = $this->db->prepare($query);
-
-        $statement->execute($values);
-
-        $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $prepared = (new Custom())
+            ->query($query, $values);
 
         $response = new Response();
 
-        foreach ($data as $row) {
-            $category = new Category();
-            $category->setUuid($row['uuid'])
-                ->setTitle($row['title'])
-                ->setParentUuid($row['parent'])
-                ->setBranch($row['branch']);
+        try {
+            $data = $this->client->request($prepared);
 
-            if ($opts['recursive']) {
-                if ($category->getParentUuid()) {
-                    $branch = $this->getBranch($category->getParentUuid());
-                    $category->setParent($branch);
+            foreach ($data as $row) {
+                $category = new Category();
+                $category->setUuid($row['uuid']->uuid())
+                    ->setTitle($row['title'])
+                    ->setParentUuid($row['parent'])
+                    ->setBranch($row['branch']);
+
+                if ($opts['recursive']) {
+                    if ($category->getParentUuid()) {
+                        $branch = $this->getBranch($category->getParentUuid());
+                        $category->setParent($branch);
+                    }
                 }
+
+                $response[] = $category;
             }
 
-            $response[] = $category;
+            $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
+        } catch (\Exception $e) {
+            error_log($e);
         }
-
-        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
 
         return $response;
     }
@@ -84,19 +89,27 @@ class Repository
     {
         $query = "SELECT * FROM helpdesk_categories WHERE uuid = ?";
 
-        $statement = $this->db->prepare($query);
-        $statement->execute([$uuid]);
-        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $prepared = (new Custom())
+            ->query($query, [new Uuid($uuid)]);
 
-        if (!$row) return null;
+        try {
+            $rows = $this->client->request($prepared);
 
-        $category = new Category();
-        $category->setUuid($row['uuid'])
-            ->setTitle($row['title'])
-            ->setParentUuid($row['parent'])
-            ->setBranch($row['branch']);
+            $category = null;
 
-        return $category;
+            foreach ($rows as $row) {
+                $category = new Category();
+                $category->setUuid($row['uuid']->uuid())
+                    ->setTitle($row['title'])
+                    ->setParentUuid($row['parent'])
+                    ->setBranch($row['branch']);
+            }
+
+            return $category;
+        } catch (\Exception $e) {
+            error_log($e);
+            return null;
+        }
     }
 
     /**
@@ -105,7 +118,8 @@ class Repository
      * @param string $uuid
      * @return Category
      */
-    public function getBranch($uuid) {
+    public function getBranch($uuid)
+    {
         $leaf = $this->get($uuid);
 
         if (!$leaf) return null;
@@ -132,19 +146,25 @@ class Repository
     public function add(Category $category)
     {
         $query = "INSERT INTO helpdesk_categories(uuid, title, parent, branch) VALUES (?,?,?,?)";
-        $uuid = UUIDGenerator::generate();
+        
+        $uuid = $category->getUuid() ?: UUIDGenerator::generate();
 
         $values = [
-            $uuid,
+            new Uuid($uuid),
             $category->getTitle(),
-            $category->getParentUuid(),
-            // we need to do this as cockroachdb doesn't yet support triggers
+            $category->getParentUuid() ? new Uuid($category->getParentUuid()) : null,
             $category->getParentUuid() ? $this->generateBranch($uuid, $category->getParentUuid()) : $uuid
         ];
 
-        $statement = $this->db->prepare($query);
+        $prepared = (new Custom())
+            ->query($query, $values);
 
-        if (!$statement->execute($values)) {
+        try {
+            if (!$this->client->request($prepared)) {
+                return false;
+            }
+        } catch (\Exception $e) {
+            error_log($e);
             return false;
         }
 
@@ -161,12 +181,13 @@ class Repository
     {
         $query = "DELETE FROM helpdesk_categories WHERE uuid = ?";
 
-        $values = [$category_uuid];
+        $values = [new Uuid($category_uuid)];
 
         try {
-            $statement = $this->db->prepare($query);
+            $prepared = (new Custom())
+                ->query($query, $values);
 
-            return $statement->execute($values);
+            return !!$this->client->request($prepared);
         } catch (\Exception $e) {
             error_log($e);
             return false;
@@ -182,10 +203,17 @@ class Repository
      */
     protected function generateBranch($uuid, $parent_uuid)
     {
-        $statement = $this->db->prepare('SELECT branch FROM helpdesk_categories WHERE uuid = ?');
+        $query = 'SELECT branch FROM helpdesk_categories WHERE uuid = ?';
+        $prepared = (new Custom())
+            ->query($query, [new Uuid($parent_uuid)]);
 
-        $statement->execute([$parent_uuid]);
+        try {
+            $response = $this->client->request($prepared);
+            return $response->current()['branch'] . ':' . $uuid;
 
-        return $statement->fetchColumn().':'.$uuid;
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+        return $uuid;
     }
 }

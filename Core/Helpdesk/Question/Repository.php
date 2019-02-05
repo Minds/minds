@@ -2,131 +2,131 @@
 
 namespace Minds\Core\Helpdesk\Question;
 
-use Minds\Core;
-use Minds\Core\Di\Di;
+use Cassandra\Set;
+use Cassandra\Type;
+use Cassandra\Uuid;
+use Cassandra\Varint;
 use Minds\Common\Repository\Response;
+use Minds\Core;
+use Minds\Core\Data\Cassandra;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
+use Minds\Core\Data\ElasticSearch;
+use Minds\Core\Di\Di;
 use Minds\Core\Helpdesk\Category;
 
 class Repository
 {
-    /** @var \PDO */
-    protected $db;
+    /** @var Core\Data\Cassandra\Client */
+    protected $cassandraClient;
+
+    /** @var Core\Data\ElasticSearch\Client */
+    protected $esClient;
 
     /** @var Category\Repository */
     protected $repository;
 
-    private static $orderByFields = [
-        'question',
-        'answer'
-    ];
-
-    private static $orderDirections = [
-        'ASC',
-        'DESC',
-    ];
-
-    private static $questionFields = [
-        'question',
-        'answer',
-    ];
-
-    public function __construct(\PDO $db = null, Category\Repository $categoryRepository = null)
+    public function __construct(
+        Cassandra\Client $cassandraClient = null,
+        ElasticSearch\Client $esClient = null,
+        Category\Repository $categoryRepository = null
+    )
     {
-        $this->db = $db ?: Di::_()->get('Database\PDO');
+        $this->cassandraClient = $cassandraClient ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->esClient = $esClient ?: Di::_()->get('Database\ElasticSearch');
         $this->repository = $categoryRepository ?: Di::_()->get('Helpdesk\Category\Repository');
     }
 
     /**
      * Get questions
      * @param array $opts
-     * @return Question[]
+     * @return Response
      */
     public function getList(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 10,
-            'offset' => 0,
+            'offset' => '',
             'category_uuid' => null,
         ], $opts);
 
-        $query = "SELECT * FROM helpdesk_faq ";
+        $query = "SELECT * FROM helpdesk_faq_by_category_uuid ";
         $where = [];
         $values = [];
 
         if ($opts['category_uuid']) {
             $where[] = "category_uuid = ?";
-            $values[] = $opts['category_uuid'];
+            $values[] = new Uuid($opts['category_uuid']);
         }
 
         if (count($where) > 0) {
             $query .= 'WHERE ' . implode(' AND ', $where);
         }
 
-        if ($opts['limit']) {
-            $query .= ' LIMIT ?';
-            $values[] = $opts['limit'];
+        $prepared = (new Custom())
+            ->query($query, $values);
+
+        $prepared->setOpts([
+            'page_size' => (int) $opts['limit'],
+            'paging_state_token' => base64_decode($opts['offset']),
+        ]);
+
+        $response = new Response([]);
+
+        try {
+            $data = $this->cassandraClient->request($prepared);
+
+            foreach ($data as $row) {
+                $question = new Question();
+
+                $question->setUuid($row['uuid']->uuid())
+                    ->setQuestion($row['question'])
+                    ->setAnswer($row['answer'])
+                    ->setCategoryUuid($row['category_uuid'] ? $row['category_uuid']->uuid() : null)
+                    ->setScore($row['score']);
+
+                $response[] = $question;
+            }
+            $response->setPagingToken($data->pagingStateToken());
+        } catch (\Exception $e) {
+            error_log($e);
         }
-
-        if ($opts['offset']) {
-            $query .= ' OFFSET ?';
-            $values[] = $opts['offset'];
-        }
-
-        $statement = $this->db->prepare($query);
-
-        $statement->execute($values);
-
-        $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-
-        $response = new Response();
-
-        foreach ($data as $row) {
-            $question = new Question();
-            $question->setUuid($row['uuid'])
-                ->setQuestion($row['question'])
-                ->setAnswer($row['answer'])
-                ->setCategoryUuid($row['category_uuid']);
-
-            $response[] = $question;
-        }
-        $response->setPagingToken((int) $opts['offset'] + (int) $opts['limit']);
 
         return $response;
     }
 
     /**
      * Return a single question
-     * @param string $uuid
+     * @param $uuid
      * @return Question
      */
-    public function get($uuid, $user_guid)
+    public function get($uuid)
     {
-        $query = "SELECT q.*, v.direction AS voted 
-            FROM helpdesk_faq q 
-            LEFT JOIN helpdesk_votes v 
-                ON v.question_uuid = q.uuid 
-                AND v.user_guid = ?
-            WHERE q.uuid = ?";
-        
-        $values = [
-            $user_guid,
-            $uuid,
-        ];
+        if (!isset($uuid)) {
+            throw new \Exception('uuid must be provided');
+        }
 
-        $statement = $this->db->prepare($query);
+        $query = "SELECT * FROM helpdesk_faq WHERE uuid = ?";
 
-        $statement->execute($values);
+        $prepared = (new Custom())
+            ->query($query, [new Uuid($uuid)]);
 
-        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $question = null;
+        try {
+            $result = $this->cassandraClient->request($prepared);
+            if ($result->count() > 0) {
+                $row = $result->current();
 
-        $question = new Question();
-        $question->setUuid($row['uuid'])
-            ->setQuestion($row['question'])
-            ->setAnswer($row['answer'])
-            ->setCategoryUuid($row['category_uuid'])
-            ->setThumbUp($row['voted'] === 'up')
-            ->setThumbDown($row['voted'] === 'down');
+                $question = (new Question())
+                    ->setUuid($row['uuid']->uuid())
+                    ->setQuestion($row['question'])
+                    ->setAnswer($row['answer'])
+                    ->setCategoryUuid($row['category_uuid'] ? $row['category_uuid']->uuid() : null)
+                    ->setThumbsUp($this->getThumbsFromSet($row['votes_up']))
+                    ->setThumbsDown($this->getThumbsFromSet($row['votes_down']));
+            }
+        } catch (\Exception $e) {
+            error_log($e);
+        }
 
         return $question;
     }
@@ -142,41 +142,37 @@ class Repository
         $opts = array_merge([
             'limit' => 8,
         ], $opts);
-        $limit = intval($opts['limit']);
 
-        $query = "SELECT q.question, q.answer, q.uuid, count(user_guid) AS votes
-            FROM helpdesk_votes v
-            JOIN helpdesk_faq q
-              ON q.uuid=v.question_uuid
-            WHERE v.direction='up'
-            GROUP BY uuid,question,answer
-            ORDER BY votes DESC
-            LIMIT $limit";
-
-        $statement = $this->db->prepare($query);
-        $statement->execute();
-        // TODO: CACHE THIS RESULT!
-        $topQuestions = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-        $result = [];
-
-        if (count($topQuestions)) {
-
-            $userGuid = Core\Session::getLoggedinUser()->guid;
-
-            foreach ($topQuestions as $row) {
-                $question = new Question();
-
-                $question->setQuestion($row['question'])
-                    ->setAnswer($row['answer'])
-                    ->setCategoryUuid($row['category_uuid'])
-                    ->setUuid($row['uuid']);
-
-                $result[] = $question;
-            }
+        try {
+            $results = $this->esClient->getClient()->search([
+                'index' => 'minds-helpdesk',
+                'size' => $opts['limit'],
+                'sort' => ['score:desc'],
+                'body' => [
+                    'query' => [
+                        'match_all' => (object) [] // need to cast empty array to object to allow this to work
+                    ],
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return [];
         }
 
-        return $result;
+        if (!isset($results['hits']) || !isset($results['hits']['hits'])) {
+            return [];
+        }
+
+        $uuids = array_map(function ($document) {
+            return $document['_source']['uuid'];
+        }, $results['hits']['hits']);
+
+        $questions = [];
+
+        foreach ($uuids as $uuid) {
+            $questions[] = $this->get($uuid);
+        }
+
+        return $questions;
     }
 
     /**
@@ -193,51 +189,30 @@ class Repository
             'q' => ''
         ], $opts);
 
-        $query = "SELECT q.*, c.branch
-            FROM helpdesk_faq q
-            JOIN helpdesk_categories c 
-                ON c.uuid = q.category_uuid";
-        $where = [];
-        $values = [];
+        $query = new Core\Data\ElasticSearch\Prepared\Suggest();
 
-        if ($opts['q']) {
-            $where[] = "q.question ILIKE ? OR q.answer ILIKE ?";
-            $values[] = '%' . $opts['q'] . '%';
-            $values[] = '%' . $opts['q'] . '%';
+        $query->query('minds-helpdesk', $opts['q'], ['size' => $opts['limit']]);
+
+        try {
+            $results = $this->esClient->request($query);
+
+            if (!isset($results['suggest']['autocomplete'][0]['options'])) {
+                return [];
+            }
+
+            $uuids = array_map(function ($document) {
+                return $document['_source']['uuid'];
+            }, $results['suggest']['autocomplete'][0]['options']);
+
+            $entities = [];
+            foreach ($uuids as $uuid) {
+                $entities[] = $this->get($uuid);
+            }
+
+            return $entities;
+        } catch (\Exception $e) {
+            error_log($e);
         }
-
-        $query .= ' WHERE ' . implode(' AND ', $where);
-        $query .= ' ORDER BY c.branch';
-
-        if ($opts['limit']) {
-            $query .= " LIMIT ?";
-            $values[] = (int) $opts['limit'];
-        }
-
-        if ($opts['offset']) {
-            $query .= " OFFSET ?";
-            $values[] = (int) $opts['offset'];
-        }
-
-        $statement = $this->db->prepare($query);
-
-        $statement->execute($values);
-
-        $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-        $result = [];
-
-        foreach ($data as $row) {
-            $question = new Question();
-            $question->setQuestion($row['question'])
-                ->setAnswer($row['answer'])
-                ->setCategoryUuid($row['category_uuid'])
-                ->setUuid($row['uuid']);
-
-            $result[] = $question;
-        }
-
-        return $result;
     }
 
     /**
@@ -248,78 +223,177 @@ class Repository
      */
     public function add(Question $entity)
     {
-
-        $query = "INSERT INTO helpdesk_faq (question, answer, category_uuid) VALUES (?,?,?) RETURNING uuid";
+        if (!$entity->getCategoryUuid()) {
+            throw new \Exception('categoryUuid must be provided');
+        }
+        
+        $uuid = $entity->getUuid() ?: Core\Util\UUIDGenerator::generate();
+        $query = "INSERT INTO helpdesk_faq (uuid, question, answer, category_uuid) VALUES (?,?,?,?)";
 
         $values = [
+            new Uuid($uuid),
             $entity->getQuestion(),
             $entity->getAnswer(),
-            $entity->getCategoryUuid(),
+            new Uuid($entity->getCategoryUuid()),
         ];
 
+        $prepared = (new Custom())
+            ->query($query, $values);
+
         try {
-            $statement = $this->db->prepare($query);
+            $this->cassandraClient->request($prepared);
 
-            $statement->execute($values);
+            $prepared = new Core\Data\ElasticSearch\Prepared\Index();
+            $prepared->query([
+                'index' => 'minds-helpdesk',
+                'id' => $uuid,
+                'type' => 'question',
+                'body' => [
+                    'uuid' => $uuid,
+                    'score' => $entity->getScore() ?: 1,
+                    'category_uuid' => $entity->getCategoryUuid(),
+                    'question' => $entity->getQuestion(),
+                    'answer' => $entity->getAnswer(),
+                    'suggest' => [
+                        'input' => array_merge([
+                            $entity->getQuestion(),
+                            $entity->getAnswer()
+                        ], $this->permutateString($entity->getQuestion()))
+                    ]
+                ]
+            ]);
 
-            return $statement->fetch(\PDO::FETCH_ASSOC)['uuid'];
+            $this->esClient->request($prepared);
         } catch (\Exception $e) {
             error_log($e);
             return false;
         }
+        return $uuid;
     }
 
     /**
      * Update a question
      *
-     * @param string $question_uuid
-     * @param array $fields
-     * @return void
+     * @param Question $question
+     * @return bool
      */
-    public function update(string $question_uuid, array $fields)
+    public function update(Question $question)
     {
 
         $query = "UPDATE helpdesk_faq SET ";
 
-        $columns = [];
-        $values = [];
+        $query .= " question = ?, answer = ?, category_uuid = ?, score = ?, votes_up = ?, votes_down = ? WHERE uuid = ?";
 
-        foreach (self::$questionFields as $field) {
-            if ($fields[$field] !== null) {
-                $columns[] = "{$field} = ?";
-                $values[] = $fields[$field];
-            }
+        $thumbsUp = new Set(Type::varint());
+        foreach ($question->getThumbsUp() as $userGuid) {
+            $thumbsUp->add(new Varint($userGuid));
         }
 
-        $query .= implode(', ', $columns);
+        $thumbsDown = new Set(Type::varint());
+        foreach ($question->getThumbsDown() as $userGuid) {
+            $thumbsDown->add(new Varint($userGuid));
+        }
 
-        $query .= " WHERE uuid = ?";
-        $values[] = $question_uuid;
+        $values = [
+            $question->getQuestion(),
+            $question->getAnswer(),
+            $question->getCategoryUuid() ? new Uuid($question->getCategoryUuid()) : null,
+            $question->getScore() ?: 1,
+            $thumbsUp,
+            $thumbsDown,
+            new Uuid($question->getUuid()),
+        ];
 
-        $statement = $this->db->prepare($query);
+        $prepared = (new Custom())
+            ->query($query, $values);
 
-        return $statement->execute($values);
+        try {
+            $result = $this->cassandraClient->request($prepared);
+
+            $prepared = new Core\Data\ElasticSearch\Prepared\Index();
+            $prepared->query([
+                'index' => 'minds-helpdesk',
+                'id' => $question->getUuid(),
+                'type' => 'question',
+                'body' => [
+                    'uuid' => $question->getUuid(),
+                    'score' => $question->getScore() ?: 1,
+                    'category_uuid' => $question->getCategoryUuid(),
+                    'question' => $question->getQuestion(),
+                    'answer' => $question->getAnswer(),
+                    'suggest' => ['input' => [$question->getQuestion(), $question->getAnswer()]]
+                ]
+            ]);
+
+            $this->esClient->request($prepared);
+
+            return !!$result;
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+        return false;
     }
 
     /**
      * Delete a question
      *
      * @param string $question_uuid
-     * @return void
+     * @return bool
      */
     public function delete(string $question_uuid)
     {
         $query = "DELETE FROM helpdesk_faq WHERE uuid = ?";
 
-        $values = [$question_uuid];
+        $values = [new Uuid($question_uuid)];
+
+        $prepared = (new Custom())
+            ->query($query, $values);
 
         try {
-            $statement = $this->db->prepare($query);
+            $result = $this->cassandraClient->request($prepared);
 
-            return $statement->execute($values);
+            return !!$result;
         } catch (\Exception $e) {
             error_log($e);
             return false;
         }
+    }
+
+    private function getThumbsFromSet($set)
+    {
+        $set = $set ? $set->values() : [];
+
+        $thumbs = [];
+        foreach ($set as $userGuid) {
+            $thumbs[] = (string) $userGuid->value();
+        }
+
+        return $thumbs;
+    }
+
+    /**
+     * @param $inputs
+     * @param int $calls
+     * @return array
+     */
+    protected function permutateString($string, $calls = 0)
+    {
+        $parts = explode(' ', $string);
+        $lr = [];
+        $rl = [];
+
+        foreach ($parts as $part) {
+            $lr[] = end($lr) . "$part ";
+        }
+
+        foreach (array_reverse($parts) as $part) {
+            $rl[] = "$part " . end($rl);
+        }
+
+        $result = array_merge($lr, $rl);
+
+        var_dump($result); 
+        return $result;
     }
 }

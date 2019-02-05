@@ -2,20 +2,24 @@
 
 namespace Spec\Minds\Core\Helpdesk\Category;
 
-use Minds\Core\Helpdesk\Category\Repository;
+use Cassandra\Uuid;
+use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Helpdesk\Category\Category;
+use Minds\Core\Helpdesk\Category\Repository;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Spec\Minds\Mocks\Cassandra\Rows;
 
 class RepositorySpec extends ObjectBehavior
 {
-    private $db;
+    /** @var Client */
+    private $client;
 
-    function let(\PDO $db)
+    function let(Client $client)
     {
-        $this->db = $db;
+        $this->client = $client;
 
-        $this->beConstructedWith($db);
+        $this->beConstructedWith($client);
     }
 
     function it_is_initializable()
@@ -23,30 +27,29 @@ class RepositorySpec extends ObjectBehavior
         $this->shouldHaveType(Repository::class);
     }
 
-    function it_should_get_by_uuid(\PDOStatement $statement)
+    function it_should_get_by_uuid()
     {
-        $this->db->prepare(Argument::any())
+        $this->client->request(Argument::any())
             ->shouldBeCalled()
-            ->willReturn($statement);
+            ->willReturn(new Rows([
+                [
+                    'uuid' => new Uuid('f990a87d-1255-42e5-a78e-4a2256569e8a'),
+                    'title' => 'title',
+                    'parent' => null,
+                    'branch' => 'f990a87d-1255-42e5-a78e-4a2256569e8a',
+                ]
+            ], ''));
 
-        $statement->execute(['uuid1'])
-            ->shouldBeCalled();
-
-        $statement->fetch(\PDO::FETCH_ASSOC)
-            ->shouldBeCalled()
-            ->willReturn([
-                'uuid' => 'uuid1',
-                'title' => 'title',
-                'parent' => null,
-                'branch' => 'uuid1'
-            ]);
-
-        $this->get('uuid1')
+        $this->get('f990a87d-1255-42e5-a78e-4a2256569e8a')
             ->shouldBeAnInstanceOf(Category::class);
     }
 
-    function it_should_add(\PDOStatement $statement, Category $category)
+    function it_should_add(Category $category)
     {
+        $category->getUuid()
+            ->shouldBeCalled()
+            ->willReturn(null);
+
         $category->getParentUuid()
             ->shouldBeCalled()
             ->willReturn(null);
@@ -55,11 +58,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn('title');
 
-        $this->db->prepare(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn($statement);
-
-        $statement->execute(Argument::any())
+        $this->client->request(Argument::any())
             ->shouldBeCalled()
             ->willReturn(true);
 

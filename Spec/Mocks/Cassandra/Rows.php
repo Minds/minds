@@ -53,4 +53,14 @@ class Rows implements \IteratorAggregate, \ArrayAccess
         return $this->_isLastPage;
     }
 
+    public function count()
+    {
+        return count($this->_items);
+    }
+
+    public function current()
+    {
+        return $this->_items[key($this->_items)];
+    }
+
 }

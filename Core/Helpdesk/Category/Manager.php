@@ -20,7 +20,7 @@ class Manager
 
     /**
      * @param array $opts
-     * @return Category[]
+     * @return Response
      */
     public function getAll(array $opts = [])
     {
