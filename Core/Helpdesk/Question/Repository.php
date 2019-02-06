@@ -393,7 +393,6 @@ class Repository
 
         $result = array_merge($lr, $rl);
 
-        var_dump($result); 
         return $result;
     }
 }
