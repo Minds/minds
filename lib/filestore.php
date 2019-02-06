@@ -54,14 +54,15 @@ function get_uploaded_file($input_name) {
  * (Returns false if the uploaded file was not an image)
  *
  * @param string $input_name The name of the file input field on the submission form
- * @param int    $maxwidth   The maximum width of the resized image
- * @param int    $maxheight  The maximum height of the resized image
- * @param bool   $square     If set to true, will take the smallest
+ * @param int $maxwidth The maximum width of the resized image
+ * @param int $maxheight The maximum height of the resized image
+ * @param bool $square If set to true, will take the smallest
  *                           of maxwidth and maxheight and use it to set the
  *                           dimensions on all size; the image will be cropped.
- * @param bool   $upscale    Resize images smaller than $maxwidth x $maxheight?
+ * @param bool $upscale Resize images smaller than $maxwidth x $maxheight?
  *
  * @return false|mixed The contents of the resized image, or false on failure
+ * @throws Exception
  */
 function get_resized_image_from_uploaded_file($input_name, $maxwidth, $maxheight,
 $square = false, $upscale = false, $output = "jpeg") {
@@ -109,13 +110,18 @@ $x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0, $upscale = FALSE, $output = 'jpeg', $quality
 	$width = $imgsizearray[0];
 	$height = $imgsizearray[1];
 
-	$accepted_formats = array(
+	$accepted_formats = [
 		'image/jpeg' => 'jpeg',
 		'image/pjpeg' => 'jpeg',
 		'image/png' => 'png',
 		'image/x-png' => 'png',
-		'image/gif' => 'gif'
-	);
+		'image/gif' => 'gif',
+    ];
+
+    //unsupported format
+    if (!$accepted_formats[$imgsizearray['mime']]) {
+        throw new \Exception("{$imgsizearray['mime']} is not a supported format");
+    }
 
 	// make sure the function is available
 	$load_function = "imagecreatefrom" . $accepted_formats[$imgsizearray['mime']];
