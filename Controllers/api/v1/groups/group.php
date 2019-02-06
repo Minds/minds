@@ -103,13 +103,27 @@ class group implements Interfaces\Api
             switch ($pages[1]) {
                 case "avatar":
                     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                        $this->uploadAvatar($group);
+                        try {
+                            $this->uploadAvatar($group);
+                        } catch (\Exception $e) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'message' => $e->getMessage()
+                            ]);
+                        }
                         $response['done'] = true;
                     }
                     break;
                 case "banner":
                     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                        $this->uploadBanner($group, $_POST['banner_position']);
+                        try {
+                            $this->uploadBanner($group, $_POST['banner_position']);
+                        } catch (\Exception $e) {
+                            return Factory::response([
+                                'status' => 'error',
+                                'message' => $e->getMessage()
+                            ]);
+                        }
                         $response['done'] = true;
                     }
                     break;
@@ -207,7 +221,14 @@ class group implements Interfaces\Api
 
         // Legacy behavior
         if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $this->uploadBanner($group, $_POST['banner_position']);
+            try {
+                $this->uploadBanner($group, $_POST['banner_position']);
+            } catch (\Exception $e) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ]);
+            }
         }
 
         $response = array();
@@ -276,6 +297,8 @@ class group implements Interfaces\Api
      * Uploads a Group avatar
      * @param  GroupEntity $group
      * @return GroupEntity
+     * @throws \IOException
+     * @throws \InvalidParameterException
      */
     protected function uploadAvatar(GroupEntity $group)
     {
@@ -302,7 +325,10 @@ class group implements Interfaces\Api
     /**
      * Uploads a Group banner
      * @param  GroupEntity $group
+     * @param $banner_position
      * @return GroupEntity
+     * @throws \IOException
+     * @throws \InvalidParameterException
      */
     protected function uploadBanner($group, $banner_position)
     {
