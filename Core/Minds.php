@@ -1,26 +1,27 @@
 <?php
+
 namespace Minds\Core;
 
 use Minds\Core\Di\Di;
 
 /**
- * Core Minds Engine
+ * Core Minds Engine.
  */
 class Minds extends base
 {
     public $root = __MINDS_ROOT__;
-    public $legacy_lib_dir = "/lib/";
+    public $legacy_lib_dir = '/lib/';
     public static $booted = false;
 
     private $modules = [
+        Email\Module::class,
         Experiments\Module::class,
         VideoChat\Module::class,
         Helpdesk\Module::class,
     ];
 
     /**
-     * Initializes the site
-     * @return null
+     * Initializes the site.
      */
     public function init()
     {
@@ -29,17 +30,16 @@ class Minds extends base
     }
 
     /**
-     * Register our modules
-     * @return null
+     * Register our modules.
      */
     public function initModules()
     {
         $modules = [];
         foreach ($this->modules as $module) {
-            $modules[] = new $module;
+            $modules[] = new $module();
         }
 
-        /**
+        /*
          * Initialise the modules
          */
         foreach ($modules as $module) {
@@ -48,8 +48,7 @@ class Minds extends base
     }
 
     /**
-     * Register our DI providers
-     * @return null
+     * Register our DI providers.
      */
     public function initProviders()
     {
@@ -63,7 +62,6 @@ class Minds extends base
         (new Sessions\SessionsProvider())->register();
         (new Boost\BoostProvider())->register();
         (new Data\DataProvider())->register();
-        (new Email\EmailProvider())->register();
         (new Events\EventsProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
         (new Pages\PagesProvider())->register();
@@ -92,15 +90,13 @@ class Minds extends base
         (new Payments\Subscriptions\SubscriptionsProvider())->register();
         (new Faq\FaqProvider())->register();
         (new Rewards\RewardsProvider())->register();
-        (new Email\EmailProvider())->register();
         (new Plus\PlusProvider())->register();
         (new Hashtags\HashtagsProvider())->register();
         (new Feeds\FeedsProvider())->register();
     }
 
     /**
-     * Start the Minds engine
-     * @return null
+     * Start the Minds engine.
      */
     public function start()
     {
@@ -118,30 +114,29 @@ class Minds extends base
 
         Events\Defaults::_();
 
-        /**
+        /*
          * Boot the system, @todo this should be oop?
          */
         \elgg_trigger_event('boot', 'system');
 
-        /**
+        /*
          * Complete the boot process for both engine and plugins
          */
         elgg_trigger_event('init', 'system');
 
-        /**
+        /*
          * tell the system that we have fully booted
          */
         self::$booted = true;
 
-        /**
+        /*
          * System loaded and ready
          */
         \elgg_trigger_event('ready', 'system');
     }
 
     /**
-     * Load settings files
-     * @return null
+     * Load settings files.
      */
     public function loadConfigs()
     {
@@ -151,20 +146,20 @@ class Minds extends base
         }
 
         // Load the system settings
-        if (file_exists(__MINDS_ROOT__ . '/settings.php')) {
-            include_once(__MINDS_ROOT__ . "/settings.php");
+        if (file_exists(__MINDS_ROOT__.'/settings.php')) {
+            include_once __MINDS_ROOT__.'/settings.php';
         }
 
         // Load mulit globals if set
-        if (file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
+        if (file_exists(__MINDS_ROOT__.'/multi.settings.php')) {
             define('multisite', true);
-            require_once(__MINDS_ROOT__ . '/multi.settings.php');
+            require_once __MINDS_ROOT__.'/multi.settings.php';
         }
     }
 
-
     /**
-     * Load the legacy files for Elgg framework
+     * Load the legacy files for Elgg framework.
+     *
      * @todo Deprecate this
      */
     public function loadLegacy()
@@ -182,22 +177,22 @@ class Minds extends base
             'languages.php',
             'memcache.php',
             //'notification.php',
-            'objects.php', 
+            'objects.php',
             //'pagehandler.php',
             //'pageowner.php',
             'pam.php',
             //'plugins.php',
             'private_settings.php',
             'sessions.php',
-            'sites.php', 
+            'sites.php',
             'user_settings.php',
-            'users.php', 
+            'users.php',
             //'xml.php',
             //'xml-rpc.php'
         );
 
         foreach ($lib_files as $file) {
-            $file = __MINDS_ROOT__ . $this->legacy_lib_dir . $file;
+            $file = __MINDS_ROOT__.$this->legacy_lib_dir.$file;
             if (!include_once($file)) {
                 $msg = "Could not load $file";
                 throw new \InstallationException($msg);
@@ -206,12 +201,13 @@ class Minds extends base
     }
 
     /**
-     * Detects if there are multisite settings present
+     * Detects if there are multisite settings present.
+     *
      * @return bool
      */
     public function detectMultisite()
     {
-        if (file_exists(__MINDS_ROOT__ . '/multi.settings.php')) {
+        if (file_exists(__MINDS_ROOT__.'/multi.settings.php')) {
             return true;
         }
 
@@ -219,26 +215,26 @@ class Minds extends base
     }
 
     /**
-     * Check if Minds is installed, if not redirect to install script
-     * @return null
+     * Check if Minds is installed, if not redirect to install script.
      */
     public function checkInstalled()
     {
-        /**
+        /*
          * If we are a multisite, we get the install status from the multisite settings
          */
         if ($this->detectMultisite()) {
             //we do this on db load.. not here
         } else {
-            if (!file_exists(__MINDS_ROOT__ . '/settings.php') && !defined('__MINDS_INSTALLING__')) {
-                header("Location: install.php");
+            if (!file_exists(__MINDS_ROOT__.'/settings.php') && !defined('__MINDS_INSTALLING__')) {
+                header('Location: install.php');
                 exit;
             }
         }
     }
 
     /**
-     * TBD. Not used
+     * TBD. Not used.
+     *
      * @return bool
      */
     public static function getVersion()

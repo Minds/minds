@@ -1,0 +1,170 @@
+{
+    "index": "minds-metrics-*",
+    "size": "0",
+    "body": {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "match_phrase": {
+                            "action.keyword": {
+                                "query": "active"
+                            }
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "from": 1548892800000,
+                                "to": 1549584000000,
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "aggs": {
+            "users": {
+                "terms": {
+                    "field": "user_guid.keyword",
+                    "size": 5000,
+                    "include": {
+                        "partition": 0,
+                        "num_partitions": 200
+                    }
+                },
+                "aggs": {
+                    "day-0-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549497600000,
+                                    "to": 1549584000000
+                                }
+                            ]
+                        }
+                    },
+                    "day-0": {
+                        "sum_bucket": {
+                            "buckets_path": "day-0-bucket>_count"
+                        }
+                    },
+                    "day-1-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549411200000,
+                                    "to": 1549497600000
+                                }
+                            ]
+                        }
+                    },
+                    "day-1": {
+                        "sum_bucket": {
+                            "buckets_path": "day-1-bucket>_count"
+                        }
+                    },
+                    "day-2-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549324800000,
+                                    "to": 1549411200000
+                                }
+                            ]
+                        }
+                    },
+                    "day-2": {
+                        "sum_bucket": {
+                            "buckets_path": "day-2-bucket>_count"
+                        }
+                    },
+                    "day-3-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549238400000,
+                                    "to": 1549324800000
+                                }
+                            ]
+                        }
+                    },
+                    "day-3": {
+                        "sum_bucket": {
+                            "buckets_path": "day-3-bucket>_count"
+                        }
+                    },
+                    "day-4-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549152000000,
+                                    "to": 1549238400000
+                                }
+                            ]
+                        }
+                    },
+                    "day-4": {
+                        "sum_bucket": {
+                            "buckets_path": "day-4-bucket>_count"
+                        }
+                    },
+                    "day-5-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1549065600000,
+                                    "to": 1549152000000
+                                }
+                            ]
+                        }
+                    },
+                    "day-5": {
+                        "sum_bucket": {
+                            "buckets_path": "day-5-bucket>_count"
+                        }
+                    },
+                    "day-6-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1548979200000,
+                                    "to": 1549065600000
+                                }
+                            ]
+                        }
+                    },
+                    "day-6": {
+                        "sum_bucket": {
+                            "buckets_path": "day-6-bucket>_count"
+                        }
+                    },
+                    "day-7-bucket": {
+                        "date_range": {
+                            "field": "@timestamp",
+                            "ranges": [
+                                {
+                                    "from": 1548892800000,
+                                    "to": 1548979200000
+                                }
+                            ]
+                        }
+                    },
+                    "day-7": {
+                        "sum_bucket": {
+                            "buckets_path": "day-7-bucket>_count"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

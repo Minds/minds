@@ -1,0 +1,2038 @@
+{
+    "mappings": {
+      "activity:blog": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "comment": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "activity": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "aggs": {
+            "properties": {
+              "minds": {
+                "properties": {
+                  "terms": {
+                    "properties": {
+                      "field": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "minds_badger": {
+                "properties": {
+                  "terms": {
+                    "properties": {
+                      "field": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "query": {
+            "properties": {
+              "exists": {
+                "properties": {
+                  "field": {
+                    "type": "text",
+                    "fields": {
+                      "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          },
+          "votes:down:12h": {
+            "type": "long"
+          },
+          "votes:down:12h:synced": {
+            "type": "long"
+          },
+          "votes:down:24h": {
+            "type": "long"
+          },
+          "votes:down:24h:synced": {
+            "type": "long"
+          },
+          "votes:down:30d": {
+            "type": "long"
+          },
+          "votes:down:30d:synced": {
+            "type": "long"
+          },
+          "votes:down:7d": {
+            "type": "long"
+          },
+          "votes:down:7d:synced": {
+            "type": "long"
+          },
+          "votes:up:12h": {
+            "type": "long"
+          },
+          "votes:up:12h:synced": {
+            "type": "long"
+          },
+          "votes:up:24h": {
+            "type": "long"
+          },
+          "votes:up:24h:synced": {
+            "type": "long"
+          },
+          "votes:up:7d": {
+            "type": "long"
+          },
+          "votes:up:7d:synced": {
+            "type": "long"
+          }
+        }
+      },
+      "object:video": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "license": {
+            "type": "text"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text"
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "text"
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          },
+          "votes:down:12h": {
+            "type": "long"
+          },
+          "votes:down:12h:synced": {
+            "type": "long"
+          },
+          "votes:up:12h": {
+            "type": "long"
+          },
+          "votes:up:12h:synced": {
+            "type": "long"
+          }
+        }
+      },
+      "object": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "object:audio": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "activity_search": {
+        "properties": {
+          "aggs": {
+            "properties": {
+              "minds_badger": {
+                "properties": {
+                  "terms": {
+                    "properties": {
+                      "field": {
+                        "type": "text",
+                        "fields": {
+                          "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                          }
+                        }
+                      },
+                      "size": {
+                        "type": "long"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "comment:points_transaction": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "object:file": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "object:blog": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "license": {
+            "type": "text"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text"
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "text"
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          }
+        }
+      },
+      "activity:points_transaction": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "group": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "brief_description": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "membership": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text"
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "text"
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          }
+        }
+      },
+      "user": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "briefdescription": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "group_membership": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text"
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "suggest": {
+            "type": "completion",
+            "analyzer": "simple",
+            "preserve_separators": true,
+            "preserve_position_increments": true,
+            "max_input_length": 50
+          },
+          "suggest_context": {
+            "type": "completion",
+            "analyzer": "standard",
+            "preserve_separators": true,
+            "preserve_position_increments": true,
+            "max_input_length": 50,
+            "contexts": [
+              {
+                "name": "groups",
+                "type": "CATEGORY"
+              }
+            ]
+          },
+          "tags": {
+            "type": "text"
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          },
+          "username": {
+            "type": "text"
+          }
+        }
+      },
+      "object:album": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "activity:carousel": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "object:image": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text"
+          },
+          "blurb": {
+            "type": "text"
+          },
+          "container_guid": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "guid": {
+            "type": "text"
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "license": {
+            "type": "text"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text"
+          },
+          "name": {
+            "type": "text"
+          },
+          "owner_guid": {
+            "type": "text"
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "text"
+          },
+          "taxonomy": {
+            "type": "text"
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text"
+          },
+          "type": {
+            "type": "text"
+          },
+          "votes:down:12h": {
+            "type": "long"
+          },
+          "votes:down:12h:synced": {
+            "type": "long"
+          },
+          "votes:up:12h": {
+            "type": "long"
+          },
+          "votes:up:12h:synced": {
+            "type": "long"
+          }
+        }
+      },
+      "object:carousel": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "long"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "object:points_transaction": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "access_id": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "blurb": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "container_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "description": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "interactions": {
+            "type": "integer"
+          },
+          "mature": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "owner_guid": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "paywall": {
+            "type": "boolean"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "subtype": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "tags": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "taxonomy": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "time_created": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "type": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+  }
