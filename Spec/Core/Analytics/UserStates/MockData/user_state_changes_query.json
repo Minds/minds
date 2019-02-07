@@ -1,0 +1,53 @@
+{
+    "index": "minds-kite",
+    "size": "2",
+    "body": {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "range": {
+                            "reference_date": {
+                                "gte": 1549411200000,
+                                "lte": 1549497600000,
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "aggs": {
+            "user_state": {
+                "terms": {
+                    "field": "user_guid",
+                    "size": 5000,
+                    "include": {
+                        "partition": 0,
+                        "num_partitions": 200
+                    }
+                },
+                "aggs": {
+                    "unique_state": {
+                        "cardinality": {
+                            "field": "state.keyword"
+                        }
+                    },
+                    "latest_state": {
+                        "top_hits": {
+                            "docvalue_fields": [
+                                "state.keyword"
+                            ],
+                            "size": 2,
+                            "sort": {
+                                "reference_date": {
+                                    "order": "desc"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": 2,
+        "max_score": 1,
+        "hits": [
+            {
+                "_index": "minds-kite",
+                "_type": "active_user",
+                "_id": "933120961241157645-1549152000000",
+                "_score": 1,
+                "_source": {
+                    "user_guid": "933120961241157645",
+                    "reference_date": 1549152000000,
+                    "state": "resurrected",
+                    "previous_state": null,
+                    "activity_percentage": "0.14"
+                }
+            },
+            {
+                "_index": "minds-kite",
+                "_type": "active_user",
+                "_id": "933120961241157645-1549238400000",
+                "_score": 1,
+                "_source": {
+                    "user_guid": "933120961241157645",
+                    "reference_date": 1549238400000,
+                    "state": "curious",
+                    "previous_state": "resurrected",
+                    "activity_percentage": "0.14"
+                }
+            }
+        ]
+    },
+    "aggregations": {
+        "user_state": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": 933120961241157645,
+                    "doc_count": 2,
+                    "latest_state": {
+                        "hits": {
+                            "total": 2,
+                            "max_score": null,
+                            "hits": [
+                                {
+                                    "_index": "minds-kite",
+                                    "_type": "active_user",
+                                    "_id": "933120961241157645-1549238400000",
+                                    "_score": null,
+                                    "_source": {
+                                        "user_guid": "933120961241157645",
+                                        "reference_date": 1549238400000,
+                                        "state": "curious",
+                                        "previous_state": "resurrected",
+                                        "activity_percentage": "0.14"
+                                    },
+                                    "fields": {
+                                        "state.keyword": [
+                                            "curious"
+                                        ]
+                                    },
+                                    "sort": [
+                                        1549238400000
+                                    ]
+                                },
+                                {
+                                    "_index": "minds-kite",
+                                    "_type": "active_user",
+                                    "_id": "933120961241157645-1549152000000",
+                                    "_score": null,
+                                    "_source": {
+                                        "user_guid": "933120961241157645",
+                                        "reference_date": 1549152000000,
+                                        "state": "resurrected",
+                                        "previous_state": null,
+                                        "activity_percentage": "0.14"
+                                    },
+                                    "fields": {
+                                        "state.keyword": [
+                                            "resurrected"
+                                        ]
+                                    },
+                                    "sort": [
+                                        1549152000000
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "unique_state": {
+                        "value": 2
+                    }
+                }
+            ]
+        }
+    }
+}

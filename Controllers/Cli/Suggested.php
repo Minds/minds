@@ -33,7 +33,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         $this->out('Collecting trending items');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('all');
 
         $this->out('Completed syncing all');
@@ -44,7 +45,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         $this->out('Syncing newsfeed');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('newsfeed');
 
         $this->out('Completed syncing newsfeed');
@@ -53,7 +55,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
     public function sync_images()
     {
         $this->out('Syncing images');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('images');
 
         $this->out('Completed syncing images');
@@ -62,7 +65,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
     public function sync_videos()
     {
         $this->out('Syncing videos');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('videos');
 
         $this->out('Completed syncing videos');
@@ -71,7 +75,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
     public function sync_groups()
     {
         $this->out('Syncing groups');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('groups');
 
         $this->out('Completed syncing groups');
@@ -80,7 +85,8 @@ class Suggested extends Cli\Controller implements Interfaces\CliControllerInterf
     public function sync_blogs()
     {
         $this->out('Syncing blogs');
-
+        $this->manager->setFrom($this->getOpt('from') ?: strtotime('-12 hours') * 1000);
+        $this->manager->setTo($this->getOpt('to') ?: time() * 1000);
         $this->manager->run('blogs');
 
         $this->out('Completed syncing blogs');
