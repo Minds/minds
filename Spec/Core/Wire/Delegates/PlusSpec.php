@@ -6,6 +6,7 @@ use Minds\Entities\User;
 use Minds\Core\Config\Config;
 use Minds\Core\Wire\Wire;
 use Minds\Core\Wire\Delegates\Plus;
+use Minds\Core\EntitiesBuilder;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -20,10 +21,11 @@ class PlusSpec extends ObjectBehavior
     function it_should_make_a_user_plus_if_offchain_wire_sent(
         Config $config,
         User $receiver,
-        User $sender
+        User $sender,
+        EntitiesBuilder $entitiesBuilder
     )
     {
-        $this->beConstructedWith($config);
+        $this->beConstructedWith($config, $entitiesBuilder);
 
         $config->get('blockchain')
             ->willReturn([
@@ -35,18 +37,26 @@ class PlusSpec extends ObjectBehavior
                 ]
             ]);
 
+        $sender->getGUID()
+            ->willReturn(123);
+
+        // Cache false is important
+        $entitiesBuilder->single(123, [ 'cache' => false])
+            ->shouldBeCalled()
+            ->willReturn($sender);
+
         $receiver->get('guid')
             ->willReturn(123);
 
-        //$sender->setPlusExpires(Argument::any())
-        //    ->shouldBeCalled();
-        //$sender->save()
-        //    ->shouldBeCalled();
+        $sender->setPlusExpires(Argument::any())
+            ->shouldBeCalled();
+        $sender->save()
+            ->shouldBeCalled();
 
         $wire = new Wire();
         $wire->setReceiver($receiver)
             ->setAmount("20000000000000000000")
-            ->setSender($sender);
+            ->setSender($sender->getWrappedObject());
 
         $this->onWire($wire, 'offchain');
     }
@@ -86,10 +96,11 @@ class PlusSpec extends ObjectBehavior
     function it_should_make_a_user_plus_if_onchain_wire_sent(
         Config $config,
         User $receiver,
-        User $sender
+        User $sender,
+        EntitiesBuilder $entitiesBuilder
     )
     {
-        $this->beConstructedWith($config);
+        $this->beConstructedWith($config, $entitiesBuilder);
 
         $config->get('blockchain')
             ->willReturn([
@@ -101,19 +112,26 @@ class PlusSpec extends ObjectBehavior
                 ]
             ]);
 
+        $entitiesBuilder->single(123, [ 'cache' => false ])
+            ->shouldBeCalled()
+            ->willReturn($sender);
+
         $receiver->get('guid')
             ->willReturn(123);
 
-        //$sender->setPlusExpires(Argument::any())
-        //    ->shouldBeCalled();
-        //$sender->save()
-        //    ->shouldBeCalled();
+        $sender->getGUID()
+            ->willReturn(123);
+
+        $sender->setPlusExpires(Argument::any())
+            ->shouldBeCalled();
+        $sender->save()
+            ->shouldBeCalled();
 
         $wire = new Wire();
 
         $wire->setReceiver($receiver)
             ->setAmount("20000000000000000000")
-            ->setSender($sender);
+            ->setSender($sender->getWrappedObject());
 
         $this->onWire($wire, '0xaddr');
     }

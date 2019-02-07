@@ -11,11 +11,12 @@ class EntitiesBuilder
     /**
      * Build by a single guid
      * @param $guid number
+     * @param $opts array
      * @return Entity
      */
-    public function single($guid)
+    public function single($guid, $opts = [])
     {
-        return Factory::build($guid);
+        return Factory::build($guid, $opts);
     }
 
     /**
