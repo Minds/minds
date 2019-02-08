@@ -76,7 +76,7 @@ class twofactor implements Interfaces\Api
 
                 break;
             case "check":
-                $secret = $pages[1];
+                $secret = $_POST['secret'];
                 $code = $_POST['code'];
                 $telno = $_POST['telno'];
                 if ($twofactor->verifyCode($secret, $code, 1)) {
