@@ -33,6 +33,8 @@ class ObjectBlogMappingSpec extends ObjectBehavior
         $blog->isPaywall()->willReturn(false);
         $blog->getLicense()->willReturn('cc-test-lic');
         $blog->isMature()->willReturn(false);
+        $blog->getTags()->willReturn([ 'art' ]);
+        $blog->getRating()->willReturn(1);
 
         $this
             ->setEntity($blog)
@@ -58,7 +60,8 @@ class ObjectBlogMappingSpec extends ObjectBehavior
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:blog',
                 'public' => true,
-                'tags' => [ 'test', 'hashtag' ]
+                'tags' => [ 'art', 'test', 'hashtag' ],
+                'rating' => 1,
             ]);
     }
 }

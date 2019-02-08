@@ -151,7 +151,11 @@ class ObjectBlogMapping extends EntityMapping implements MappingInterface
             $tags = array_values(array_unique($matches[2]));
         }
 
+        $tags = array_merge($this->entity->getTags(), $tags);
+
         $map['tags'] = array_map('strtolower', $tags);
+
+        $map['rating'] = (int) $this->entity->getRating();
 
         //
 
