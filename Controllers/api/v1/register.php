@@ -55,7 +55,7 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             if (!$ipHashVerify->isValid($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                 return Factory::response([
                     'status' => 'error',
-                    'message' => 'RegisterException::NotAllowed',
+                    'message' => 'Sorry, you are not allowed to register.',
                 ]);
             }
 
@@ -63,7 +63,7 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             if (!$emailVerify->verify($_POST['email'])) {
                 return Factory::response([
                     'status' => 'error',
-                    'message' => 'RegisterException::VerifyEmailIsCorrect',
+                    'message' => 'Please verify your email address is correct',
                 ]);
             }
 
