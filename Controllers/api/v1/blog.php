@@ -169,6 +169,14 @@ class blog implements Interfaces\Api
             $blog
                 ->setOwnerObj(Core\Session::getLoggedinUser())
                 ->setContainerGuid(Core\Session::getLoggedInUserGuid());
+        
+            $owner = Core\Session::getLoggedinUser();
+            if ($owner->icontime == $owner->time_created) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Please ensure your channel has an avatar before creating a blog',
+                ]);
+            }
         }
 
         if (isset($_POST['title'])) {
