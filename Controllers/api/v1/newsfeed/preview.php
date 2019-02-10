@@ -32,6 +32,7 @@ class preview implements Interfaces\Api
         $output = curl_exec($ch);
         curl_close($ch);
         $meta = json_decode($output, true);
+        $meta['meta']['description'] = html_entity_decode($meta['meta']['description'], ENT_QUOTES); //Decode HTML entities.
         return Factory::response($meta);
     }
 
