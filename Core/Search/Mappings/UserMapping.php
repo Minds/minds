@@ -67,6 +67,12 @@ class UserMapping extends EntityMapping implements MappingInterface
         $name = preg_replace('/[0-9]*/', '', $this->entity->name);
         $username = preg_replace('/[0-9]*/', '', $this->entity->username);
 
+        if (!$name && !$username) {
+            error_log('[es]: tried to save user without username or name');
+            error_log(print_r(debug_backtrace(true), true));
+            return $map;
+        }
+
         $inputs = [ $username, $name ];
         //split out the name based on CamelCase
         $nameParts = preg_split('/([\s])?(?=[A-Z])/', $name, -1, PREG_SPLIT_NO_EMPTY);
