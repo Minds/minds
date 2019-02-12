@@ -13,9 +13,13 @@ class Plus
     /** @var Config $config */
     private $config;
 
-    public function __construct($config = null)
+    /** @var EntitiesBuilder $entitiesBuilder */
+    private $entitiesBuilder;
+
+    public function __construct($config = null, $entitiesBuilder = null)
     {
         $this->config = $config ?: Di::_()->get('Config');
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
     }
 
     /**
@@ -46,6 +50,11 @@ class Plus
 
         //set the plus period for this user
         $user = $wire->getSender();
+
+        // rebuild the user as we can't trust upstream
+        $user = $this->entitiesBuilder->single($user->getGuid(), [
+            'cache' => false,
+        ]);
         $user->setPlusExpires(strtotime('+30 days', $wire->getTimestamp()));
         $user->save();
 
