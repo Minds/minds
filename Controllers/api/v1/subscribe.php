@@ -14,6 +14,7 @@ use Minds\Entities;
 use Minds\Interfaces;
 use Minds\Api\Factory;
 use Minds\Helpers;
+use Minds\Core\Subscriptions;
 
 class subscribe implements Interfaces\Api
 {
@@ -128,6 +129,8 @@ class subscribe implements Interfaces\Api
             return Factory::response(['status' => 'success']);
         }
 
+        $publisher = Entities\Factory::build($pages[0]);
+
         $canSubscribe = Security\ACL::_()->interact(Core\Session::getLoggedinUser(), $pages[0]) &&
             Security\ACL::_()->interact($pages[0], Core\Session::getLoggedinUser(), 'subscribe');
 
@@ -137,14 +140,20 @@ class subscribe implements Interfaces\Api
             ]);
         }
 
-        $success = elgg_get_logged_in_user_entity()->subscribe($pages[0]);
-        $response = array('status'=>'success');
-        if (!$success) {
-            $response = array(
-                'status' => 'error'
-            );
+
+        $manager = new Subscriptions\Manager();
+        $subscription = $manager->setSubscriber(Core\Session::getLoggedinUser())
+            ->subscribe($publisher);
+
+        $response = [];
+        if (!$subscription) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Subscribing failed',
+            ];
         }
 
+        //TODO: move Core/Subscriptions/Delegates
         $event = new Core\Analytics\Metrics\Event();
         $event->setType('action')
             ->setAction('subscribe')
@@ -164,7 +173,11 @@ class subscribe implements Interfaces\Api
     public function delete($pages)
     {
         Factory::isLoggedIn();
-        $success = elgg_get_logged_in_user_entity()->unSubscribe($pages[0]);
+        $publisher = Entities\Factory::build($pages[0]);
+
+        $manager = new Subscriptions\Manager();
+        $subscription = $manager->setSubscriber(Core\Session::getLoggedinUser())
+            ->unSubscribe($publisher); 
 
         $event = new Core\Analytics\Metrics\Event();
         $event->setType('action')
@@ -176,7 +189,7 @@ class subscribe implements Interfaces\Api
             ->push();
 
         $response = array('status'=>'success');
-        if (!$success) {
+        if (!$subscription) {
             $response = array(
                 'status' => 'error'
             );
