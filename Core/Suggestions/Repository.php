@@ -27,9 +27,14 @@ class Repository
     {
         $opts = array_merge([
             'limit' => 12,
+            'offset' => 0,
             'user_guid' => null,
             'paging-token' => '',
         ], $opts);
+
+        if ($opts['offset']) {
+            $opts['limit'] += $opts['offset'];
+        }
 
         $must = [ ];
         $must_not = [];
@@ -67,8 +72,19 @@ class Repository
             ],
         ];
 
+        // Remove ourselves
         $must_not[]['term'] = [
             'entity_guid.keyword' => $opts['user_guid'],
+        ];
+
+        // Remove everyone we have passed
+        $must_not[]['terms'] = [
+            'entity_guid.keyword' => [
+                'index' => 'minds-graph',
+                'type' => 'pass',
+                'id' => $opts['user_guid'],
+                'path' => 'guids',
+            ],
         ];
 
         $query = [
@@ -102,14 +118,17 @@ class Repository
 
         $response = new Response();
 
-        foreach ($result['aggregations']['subscriptions']['buckets'] as $row) {
+        foreach ($result['aggregations']['subscriptions']['buckets'] as $i => $row) {
+            if ($i < $opts['offset'] -1 || count($response) >= $opts['limit'] - $opts['offset']) {
+                continue;
+            }
             $suggestion = new Suggestion();
             $suggestion->setConfidenceScore($row['doc_count'])
                 ->setEntityGuid($row['key'])
                 ->setEntityType('user');
             $response[] = $suggestion;
         }
-
+        
         return $response;
     }
 

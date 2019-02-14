@@ -22,6 +22,7 @@ class suggestions implements Interfaces\Api
         $opts = [
             'limit' => $_GET['limit'] ?? 12,
             'paging-token' => $_GET['paging-token'] ?? '',
+            'offset' => $_GET['offset'] ?? 0,
         ];
 
         $result = $manager->getList($opts);
@@ -49,6 +50,16 @@ class suggestions implements Interfaces\Api
      */
     public function put($pages)
     {
+        switch ($pages[0] ?? 'pass') {
+            case "pass":
+                $pass = new Core\Suggestions\Pass\Pass;
+                $pass->setUserGuid(Core\Session::getLoggedinUser()->getGuid())
+                    ->setSuggestedGuid($pages[1]);
+                $manager = Di::_()->get('Suggestions/Pass/Manager');
+                $manager = new Core\Suggestions\Pass\Manager();
+                $manager->add($pass);
+                break;
+        }
         return Factory::response([]);
     }
 
