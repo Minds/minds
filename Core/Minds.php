@@ -18,6 +18,7 @@ class Minds extends base
         Experiments\Module::class,
         VideoChat\Module::class,
         Helpdesk\Module::class,
+        Subscriptions\Module::class,
     ];
 
     /**
