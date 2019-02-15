@@ -45,7 +45,7 @@ class CopyToElasticSearchDelegateSpec extends ObjectBehavior
     {
         $subscription = new Subscription();
         $subscription->setSubscriberGuid(123)
-            ->setPublisherGuid(46)
+            ->setPublisherGuid(456)
             ->setActive(true);
 
         $this->es->request(Argument::that(function($prepared) {
