@@ -6,6 +6,10 @@ namespace Minds\Core\Suggestions\Pass;
 
 use Minds\Traits\MagicAttributes;
 
+/**
+ * @method Pass getSuggestedGuid(): int
+ * @method Pass getUserGuid(): int
+ */
 class Pass
 {
     use MagicAttributes;
