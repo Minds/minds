@@ -13,6 +13,6 @@ class Provider extends DiProvider
     {
         $this->di->bind('Subscriptions\Manager', function ($di) {
             return new Manager();
-        }, [ 'useFactory'=>true ]);
+        }, [ 'useFactory'=>false ]);
     }
 }
