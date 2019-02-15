@@ -34,7 +34,7 @@ class group implements Interfaces\Api
         if (!$group) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'The group could not be gound',
+                'message' => 'The group could not be found',
             ]);
         }
 
