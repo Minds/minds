@@ -75,6 +75,21 @@ class Defaults
             ];
         });
 
+        Manager::add('/canary', function ($slugs = []) {
+            return [
+                'title' => 'Minds Canary',
+                'description' => 'Receive the latest Minds features before everyone else',
+                'og:title' => 'Minds Canary',
+                'og:description' => 'Receive the latest Minds features before everyone else',
+                'og:url' => '/canary',
+                'og:image' => $this->config->cdn_assets_url . 'assets/photos/canary.jpg',
+                'og:image:width' => 2000,
+                'og:image:height' => 1000,
+                'twitter:site' => '@minds',
+                'twitter:card' => 'summary',
+            ];
+        });
+
         /**
          * Activity SEO default
          */
