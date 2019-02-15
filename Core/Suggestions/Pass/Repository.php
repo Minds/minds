@@ -25,7 +25,7 @@ class Repository
      */
     public function getList($opts = [])
     {
-
+        // Not implemented
     }
 
     /**
@@ -35,6 +35,7 @@ class Repository
      */
     public function get($pass)
     {
+        // Not implemented
     }
 
     /**
@@ -88,6 +89,7 @@ class Repository
      */
     public function update(Pass $pass, $fields = [])
     {
+        // Not implemented
     }
 
     /**
@@ -97,7 +99,7 @@ class Repository
      */
     public function delete(Pass $Pass)
     {
-
+        // Not implemented
     }
 
 }

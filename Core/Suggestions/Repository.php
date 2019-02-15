@@ -138,20 +138,23 @@ class Repository
      */
     public function get($guid)
     {
+        // Not implemented
     }
 
     public function add($suggestion)
     {
+        // Not implemented
     }
 
     public function update($suggestion)
     {
-
+        // Not implemented
     }
 
 
     public function delete($suggestion)
     {
+        // Not implemented
     }
 
 }
