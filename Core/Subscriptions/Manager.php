@@ -19,7 +19,7 @@ class Manager
     /** @var SendNotificationDelegate $sendNotificationDelegate */
     private $sendNotificationDelegate;
 
-    /** @var $cacheDelegate */
+    /** @var CacheDelegate $cacheDelegate */
     private $cacheDelegate;
 
     /** @var EventsDelegate $eventsDelegate */
@@ -52,6 +52,7 @@ class Manager
     }
 
     /**
+     * NOT IMPLEMENTED.. USING LEGACY CODE!
      * Is the subscriber subscribed to the publisher
      * @param User $publisher
      * @return bool
@@ -73,8 +74,7 @@ class Manager
     {
         $subscription = new Subscription();
         $subscription->setSubscriberGuid($this->subscriber->getGuid())
-            ->setPublisherGuid($publisher->getGuid())
-            ->setActive(true);
+            ->setPublisherGuid($publisher->getGuid());
 
         $subscription = $this->repository->add($subscription);
 

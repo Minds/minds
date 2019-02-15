@@ -9,16 +9,11 @@ use Minds\Core\Data\Call;
 
 class FeedsDelegate 
 {
-
-    /** @var EventsDispatcher $eventsDispatcher */
-    private $eventsDispatcher;
-
     /** @var Call $feed */
     private $feed;
 
-    public function __construct($eventsDispatcher = null, $feed = null)
+    public function __construct($feed = null)
     {
-        $this->eventsDispatcher = $eventsDispatcher ?: Di::_()->get('EventsDispatcher');
         $this->feed = $feed ?: new Call('entities_by_time');
     }
 
@@ -36,7 +31,7 @@ class FeedsDelegate
         // Sync copy of first 12 activities, if the user is not Minds
         $feed = $this->feed->getRow("activity:user:{$subscription->getPublisherGuid()}", [ 'limit' => 12 ]);
         if ($feed) {
-            $this->feed->insert("activity:network:{$subscription->getPublisherGuid()}", $feed);
+            $this->feed->insert("activity:network:{$subscription->getSubscriberGuid()}", $feed);
         }
     }
 
@@ -54,7 +49,7 @@ class FeedsDelegate
         // Sync copy of first 12 activities, if the user is not Minds
         $feed = $this->feed->getRow("activity:user:{$subscription->getPublisherGuid()}", [ 'limit' => 100 ]);
         if ($feed) {
-            $this->feed->removeAttributes("activity:network:{$subscription->getPublisherGuid()}", array_keys($feed));
+            $this->feed->removeAttributes("activity:network:{$subscription->getSubscriberGuid()}", array_keys($feed));
         }
     } 
 
