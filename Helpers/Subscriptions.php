@@ -3,6 +3,7 @@ namespace Minds\Helpers;
 
 use Minds\Core;
 use Minds\Core\Security;
+use Minds\Core\Di\Di;
 use Minds\Core\Events;
 use Minds\Entities\User;
 use Minds\Helpers\Wallet;
@@ -26,52 +27,9 @@ class Subscriptions
             return false;
         }
 
-        $return = false;
-        if (empty($data)) {
-            $data = time();
-        }
-
-        $friends = new Core\Data\Call('friends');
-        $friendsof = new Core\Data\Call('friendsof');
-
-
-        if (is_array($data)) {
-            $data = json_encode($data);
-        }
-
-        if ($friends->insert($user_guid, array($to_guid=>$data)) && $friendsof->insert($to_guid, array($user_guid=>$data))) {
-            $return =  true;
-        }
-
-        if ($to_guid != '100000000000000519') {
-            // Sync copy of first 12 activities, if the user is not Minds
-            $nf = new Core\Data\Call('entities_by_time');
-            $feed = $nf->getRow("activity:user:$to_guid", array('limit'=>12));
-            if ($feed) {
-                $nf->insert("activity:network:$user_guid", $feed);
-            }
-        }
-
-        $cacher = Core\Data\cache\factory::build();
-        $cacher->set("$user_guid:isSubscribed:$to_guid", true);
-        $cacher->set("$to_guid:isSubscriber:$user_guid", true);
-        //$cacher->destroy("friendsof:$to_guid");
-        //$cacher->destroy("friends:$user_guid");
-
-        $cacher->destroy("$to_guid:friendsofcount");
-        $cacher->destroy("$user_guid:friendscount");
-
-        //\Minds\Core\Data\cache\factory::build()->set("$user_guid:friendof:$to_guid", 'yes');
-        if ($return) {
-            Events\Dispatcher::trigger('subscribe', 'all', array('user_guid'=>$user_guid, 'to_guid'=>$to_guid));
-        }
-        Events\Dispatcher::trigger('notification', 'subscription', array(
-                'to'=>array($to_guid),
-                'entity' => $user_guid,
-                'notification_view' => 'friends',
-                'from' => $user_guid,
-                'params' => array()
-                ));
+        $manager = Di::_()->get('Subscriptions\Manager');
+        $manager->setSubscriber((new User())->set('guid', $user_guid));
+        $return = $manager->subscribe((new User())->set('guid', $to_guid));
 
         return (bool) $return;
     }
@@ -88,36 +46,10 @@ class Subscriptions
             return false;
         }
 
-        $return = false;
+        $manager = Di::_()->get('Subscriptions\Manager');
+        $manager->setSubscriber((new User())->set('guid', $user));
+        $return = $manager->unSubscribe((new User())->set('guid', $from));
 
-        $friends = new Core\Data\Call('friends');
-        $friendsof = new Core\Data\Call('friendsof');
-        error_log("$user is unsubscribing from $from");
-        $friends->removeAttributes($user, array($from));
-        $friendsof->removeAttributes($from, array($user));
-        $return = true;
-
-        //grab the newsfeed
-        $nf = new Core\Data\Call('entities_by_time');
-        $feed = $nf->getRow("activity:user:$from", array('limit'=>12));
-        if ($feed) {
-            $nf->removeAttributes("activity:network:$user", array_keys($feed));
-        }
-
-        $cacher = Core\Data\cache\factory::build();
-        $cacher->set("$user:isSubscribed:$from", false);
-        $cacher->set("$from:isSubscriber:$user", false);
-        //$cacher->destroy("friendsof:$from");
-        //$cacher->destroy("friends:$user");
-
-        $cacher->destroy("$from:friendsofcount");
-        $cacher->destroy("$user:friendscount");
-
-        if ($return) {
-            Events\Dispatcher::trigger('unsubscribe', 'all', [ 'user_guid'=>$user, 'from_guid'=>$from]);
-        }
-
-        //\Minds\Core\Data\cache\factory::build()->set("$user:friendof:$from", 'no');
         return (bool) $return;
     }
 
