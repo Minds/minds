@@ -919,6 +919,7 @@ class User extends \ElggUser
             'mature_lock',
             'last_accepted_tos',
             'opted_in_hashtags',
+            'canary',
         ));
     }
 
