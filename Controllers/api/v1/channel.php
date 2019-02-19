@@ -137,7 +137,8 @@ class channel implements Interfaces\Api
                     'x2' => 0,
                     'y1' => 0,
                     'y2' => 0,
-                    'icontime' => time()
+                    'icontime' => time(),
+                    'last_avatar_upload' => time(),
                 ]);
 
                 break;

@@ -118,7 +118,7 @@ class Repository
 
         $response = new Response();
 
-	if (!$result['aggregations']['subscriptions']['buckets']) {
+        if (!$result['aggregations']['subscriptions']['buckets']) {
             // Hack subscription results if nothing returns
             $result['aggregations']['subscriptions']['buckets'] = [
                 [
@@ -139,10 +139,34 @@ class Repository
                 ],
                 [
                     'doc_count' => 1,
+                    'key' => 884147802853089287,
+                ],
+                [
+                    'doc_count' => 1,
                     'key' => 100000000000000341,
                 ],
-	    ];
-	}
+                [
+                    'doc_count' => 1,
+                    'key' => 823662468030013460,
+                ],
+                [
+                    'doc_count' => 1,
+                    'key' => 942538426693984265,
+                ],
+                [
+                    'doc_count' => 1,
+                    'key' => 607668752611287060,
+                ],
+                [
+                    'doc_count' => 1,
+                    'key' => 602551056588615697,
+                ],
+            ];
+
+            $result['aggregations']['subscriptions']['buckets'] = array_slice($result['aggregations']['subscriptions']['buckets'], 0, $opts['limit']);
+        }
+
+
 
         foreach ($result['aggregations']['subscriptions']['buckets'] as $i => $row) {
             if ($i < $opts['offset'] -1 || count($response) >= $opts['limit'] - $opts['offset']) {

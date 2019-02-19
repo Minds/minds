@@ -47,6 +47,9 @@ class User extends \ElggUser
 		$this->attributes['mature_lock'] = 0;
 		$this->attributes['opted_in_hashtags'] = 0;
         $this->attributes['last_accepted_tos'] = Core\Config::_()->get('last_tos_update');
+        $this->attributes['onboarding_shown'] = 0;
+        $this->attributes['creator_frequency'] = null;
+        $this->attributes['last_avatar_upload'] = 0;
         $this->attributes['canary'] = 0;
 
         parent::initializeAttributes();
@@ -71,6 +74,63 @@ class User extends \ElggUser
     public function setHashtags(array $tags)
     {
         $this->tags = $tags;
+        return $this;
+    }
+
+    /**
+     * Gets `onboarding_shown`
+     * @return bool
+     */
+    public function wasOnboardingShown()
+    {
+        return (bool) $this->onboarding_shown;
+    }
+
+    /**
+     * Sets `onboarding_shown`
+     * @return $this
+     */
+    public function setOnboardingShown($onboardingShown)
+    {
+        $this->onboarding_shown = $onboardingShown ? 1 : 0;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastAvatarUpload()
+    {
+        return $this->last_avatar_upload;
+    }
+
+    /**
+     * @param int $lastAvatarUpload
+     * @return $this
+     */
+    public function setLastAvatarUpload($lastAvatarUpload)
+    {
+        $this->last_avatar_upload = $lastAvatarUpload;
+        return $this;
+    }
+
+    /**
+     * Gets `creator_frequency`
+     * @return bool
+     */
+    public function getCreatorFrequency()
+    {
+        return $this->creator_frequency;
+    }
+
+    /**
+     * Sets `creator_frequency`
+     * @param $creatorFrequency
+     * @return $this
+     */
+    public function setCreatorFrequency($creatorFrequency)
+    {
+        $this->creator_frequency = $creatorFrequency;
         return $this;
     }
 
@@ -920,6 +980,7 @@ class User extends \ElggUser
             'mature_lock',
             'last_accepted_tos',
             'opted_in_hashtags',
+            'last_avatar_upload',
             'canary',
         ));
     }
