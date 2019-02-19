@@ -94,6 +94,8 @@ class CopyToElasticSearchDelegate
         
         $prepared = new Prepared();
         $prepared->query($query);
-        $this->es->request($prepared);
+        try {
+            $this->es->request($prepared);
+        } catch (\Exception $e) { }
     }
 }
