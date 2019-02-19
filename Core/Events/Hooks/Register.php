@@ -16,10 +16,10 @@ class Register
         Dispatcher::register('register', 'user', function ($event) {
             $params = $event->getParameters();
 
-            $guid = $params['user']->guid;
+            //$guid = $params['user']->guid;
             //subscribe to minds channel
-            $minds = new Entities\User('minds');
-            $params['user']->subscribe($minds->guid);
+            //$minds = new Entities\User('minds');
+            //$params['user']->subscribe($minds->guid);
 
             //setup chat keys
             /*$openssl = new Core\Messenger\Encryption\OpenSSL();

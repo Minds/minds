@@ -9,6 +9,7 @@ use Minds\Core\Email\EmailSubscription;
 use Minds\Core\Email\Repository;
 use Minds\Core\Queue;
 use Minds\Core\Queue\Interfaces\QueueRunner;
+use Minds\Entities\User;
 
 class Registered implements QueueRunner
 {
@@ -24,6 +25,11 @@ class Registered implements QueueRunner
             ->receive(function ($data) use ($subscriptions, $repository) {
                 $data = $data->getData();
                 $user_guid = $data['user_guid'];
+
+                //subscribe to minds channel
+                $subscriber = new User($user_guid); 
+                $subscriber->subscribe('100000000000000519');
+    
 
                 echo "[registered]: User registered $user_guid\n";
 
