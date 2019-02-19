@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', '256M');
+
 global $CONFIG;
 
 date_default_timezone_set('UTC');

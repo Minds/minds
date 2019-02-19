@@ -24,8 +24,11 @@ class CacheDelegate
     {
         $this->cache->set("{$subscription->getSubscriberGuid()}:isSubscribed:{$subscription->getPublisherGuid()}", $subscription->isActive());
         $this->cache->set("{$subscription->getPublisherGuid()}:isSubscriber:{$subscription->getSubscriberGuid()}", $subscription->isActive());
+
         $this->cache->destroy("friends:{$subscription->getSubscriberGuid()}");
         $this->cache->destroy("friendsof:{$subscription->getPublisherGuid()}");
-    }
 
+        $this->cache->destroy("{$subscription->getSubscriberGuid()}:friendscount");
+        $this->cache->destroy("{$subscription->getPublisherGuid()}:friendsofcount");
+    }
 }

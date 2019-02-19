@@ -25,7 +25,11 @@ class CacheDelegateSpec extends ObjectBehavior
             ->shouldBeCalled();
         $cache->destroy('friends:123')
             ->shouldBeCalled();
+        $cache->destroy('123:friendscount')
+            ->shouldBeCalled();
         $cache->destroy('friendsof:456')
+            ->shouldBeCalled();
+        $cache->destroy('456:friendsofcount')
             ->shouldBeCalled();
 
         $subscription = new Subscription();
@@ -45,7 +49,11 @@ class CacheDelegateSpec extends ObjectBehavior
             ->shouldBeCalled();
         $cache->destroy('friends:123')
             ->shouldBeCalled();
+        $cache->destroy('123:friendscount')
+            ->shouldBeCalled();
         $cache->destroy('friendsof:456')
+            ->shouldBeCalled();
+        $cache->destroy('456:friendsofcount')
             ->shouldBeCalled();
 
         $subscription = new Subscription();
