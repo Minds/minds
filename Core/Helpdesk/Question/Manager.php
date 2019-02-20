@@ -64,4 +64,9 @@ class Manager
         return $this->repository->update($entity);
     }
 
+    public function delete($uuid)
+    {
+        return $this->repository->delete($uuid);
+    }
+
 }
