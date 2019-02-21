@@ -29,5 +29,9 @@ class Provider extends DiProvider
         $this->di->bind('Email\Verify\Manager', function ($di) {
             return new Verify\Manager;
         }, ['useFactory' => true]);
+
+        $this->di->bind('Email\RouterHooks', function ($di) {
+            return new RouterHooks;
+        }, ['useFactory' => false]);
     }
 }
