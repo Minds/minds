@@ -105,16 +105,22 @@ class Minds extends base
 
         $this->loadConfigs();
         $this->loadLegacy();
+        $this->loadEvents();
 
         /*
-         * If this is a multisite, then load the specific database settings
-         */
+        * If this is a multisite, then load the specific database settings
+        */
         if ($this->detectMultisite()) {
             new multisite();
         }
+    }
 
+    /*
+    * Load events
+    */
+    public function loadEvents()
+    {
         Events\Defaults::_();
-
         /*
          * Boot the system, @todo this should be oop?
          */

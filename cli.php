@@ -27,6 +27,11 @@ if (!$argv) {
 }
 
 try {
+    $minds = new Minds\Core\Minds();
+    $minds->loadConfigs();
+    $minds->loadLegacy();
+    $minds->loadEvents();
+    
     $handler = Minds\Cli\Factory::build($argv);
 
     if (!$handler) {
@@ -36,10 +41,6 @@ try {
         echo "{$_SCRIPTNAME}: `{$argv[0]}` is not a controller" . PHP_EOL;
         exit(1);
     }
-
-    $minds = new Minds\Core\Minds();
-    $minds->loadConfigs();
-    $minds->loadLegacy();
 
     if (method_exists($handler, 'setApp')) {
         $handler->setApp($minds);
