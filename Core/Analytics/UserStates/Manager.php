@@ -80,6 +80,7 @@ class Manager
                 'user_state_change' => $userState->export(),
             ]);
         }
+        $this->bulk();
     }
 
     /**

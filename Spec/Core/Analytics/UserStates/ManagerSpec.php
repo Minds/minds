@@ -45,7 +45,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($this->getMockData('active_users_results.json'));
 
-        $this->client->request(Argument::type(Prepared\Update::class))
+        $this->client->bulk(Argument::size(1))
             ->shouldBeCalled();
 
         $this->sync();
@@ -63,7 +63,7 @@ class ManagerSpec extends ObjectBehavior
 
         $this->queue->send($this->getMockQueueMessage())->shouldBeCalled();
 
-        $this->client->request(Argument::type(Prepared\Update::class))
+        $this->client->bulk(Argument::size(1))
             ->shouldBeCalled();
         $this->emitStateChanges();
     }
