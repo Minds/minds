@@ -26,6 +26,9 @@ class Manager
     /** @var UserStateIterator */
     private $userStateIterator;
 
+    /** @var array $pendingBulkInserts **/
+    private $pendingBulkInserts = [];
+
     public function __construct($client = null, $index = null, $queue = null, $activeUsersIterator = null, $userStateIterator = null)
     {
         $this->es = $client ?: Di::_()->get('Database\ElasticSearch');
@@ -62,6 +65,7 @@ class Manager
                 ->setActivityPercentage($activeUser->getActivityPercentage());
             $this->index($userState);
         }
+        $this->bulk();
     }
 
     public function emitStateChanges()
@@ -78,31 +82,40 @@ class Manager
         }
     }
 
+    /**
+     * Index a user user state (queues to batch)
+     * @param UserState $userState
+     * @return bool
+     */
     public function index($userState)
     {
-        $body = [
+        $this->pendingBulkInserts[] = [ 
+            'update' => [
+                '_id' => "{$userState->getUserGuid()}-{$userState->getReferenceDateMs()}",
+                '_index' => $this->userStateIndex,
+                '_type' => 'active_user',
+            ]
+        ];
+
+        $this->pendingBulkInserts[] = [ 
             'doc' => $userState->export(),
             'doc_as_upsert' => true,
         ];
 
-        $query = [
-            'index' => $this->userStateIndex,
-            'type' => 'active_user',
-            'id' => "{$userState->getUserGuid()}-{$userState->getReferenceDateMs()}",
-            'body' => $body,
-        ];
-
-        $prepared = new Prepared\Update();
-        $prepared->query($query);
-
-        try {
-            $result = (bool) $this->es->request($prepared);
-        } catch (\Exception $e) {
-            error_log($e);
-
-            return false;
+        if (count($this->pendingBulkInserts) > 2000) { //1000 inserts
+            $this->bulk();
         }
 
-        return $result;
+        return true;
+    }
+
+    /**
+     * Run a bulk insert job (quicker)
+     * @return void
+     */
+    public function bulk()
+    {
+        $this->es->bulk([ 'body' => $this->pendingBulkInserts ]);
+        $this->pendingBulkInserts = [];
     }
 }

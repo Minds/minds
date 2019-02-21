@@ -41,6 +41,15 @@ class Client implements Interfaces\ClientInterface
     }
 
     /**
+     * @param array $params
+     * @return mixed
+     */
+    public function bulk($params = [])
+    {
+        return $this->elasticsearch->bulk($params);
+    }
+
+    /**
      * @return Elasticsearch\Client
      */
     public function getClient()
