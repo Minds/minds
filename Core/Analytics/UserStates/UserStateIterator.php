@@ -75,12 +75,12 @@ class UserStateIterator implements \Iterator
                 'aggs' => [
                     'unique_state' => [
                         'cardinality' => [
-                            'field' => 'state.keyword',
+                            'field' => 'state',
                         ],
                     ],
                     'latest_state' => [
                         'top_hits' => [
-                            'docvalue_fields' => ['state.keyword'],
+                            'docvalue_fields' => ['state'],
                             'size' => 2,
                             'sort' => [
                                 'reference_date' => [
