@@ -30,13 +30,13 @@
                 "aggs": {
                     "unique_state": {
                         "cardinality": {
-                            "field": "state.keyword"
+                            "field": "state"
                         }
                     },
                     "latest_state": {
                         "top_hits": {
                             "docvalue_fields": [
-                                "state.keyword"
+                                "state"
                             ],
                             "size": 2,
                             "sort": {
