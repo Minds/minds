@@ -1,48 +1,48 @@
 <?php
+
 namespace Minds\Core;
 
 use Minds\Core\I18n\I18n;
 use Minds\Helpers;
-use Minds\Controllers;
 use Minds\Core\Di\Di;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\JsonResponse;
-use Zend\Diactoros\Response\SapiEmitter;
 
 /**
- * Minds Core Router
+ * Minds Core Router.
  */
 class Router
 {
     // these are core pages, other pages are registered by plugins
     public static $routes = array(
-      '/archive/thumbnail' => "Minds\\Controllers\\fs\\v1\\thumbnail",
-      '/api/v1/archive/thumbnails' => "Minds\\Controllers\\api\\v1\\media\\thumbnails",
+      '/archive/thumbnail' => 'Minds\\Controllers\\fs\\v1\\thumbnail',
+      '/api/v1/archive/thumbnails' => 'Minds\\Controllers\\api\\v1\\media\\thumbnails',
 
-      '/oauth2/token' => "Minds\\Controllers\\oauth2\\token",
+      '/oauth2/token' => 'Minds\\Controllers\\oauth2\\token',
 
-      '/icon' => "Minds\\Controllers\\icon",
-      '//icon' => "Minds\\Controllers\\icon",
-      '/api' => "Minds\\Controllers\\api\\api",
-      '/fs' => "Minds\\Controllers\\fs\\fs",
-      '/thumbProxy' => "Minds\\Controllers\\thumbProxy",
-      '/wall' => "Minds\\Controllers\\Legacy\\wall",
+      '/icon' => 'Minds\\Controllers\\icon',
+      '//icon' => 'Minds\\Controllers\\icon',
+      '/api' => 'Minds\\Controllers\\api\\api',
+      '/fs' => 'Minds\\Controllers\\fs\\fs',
+      '/thumbProxy' => 'Minds\\Controllers\\thumbProxy',
+      '/wall' => 'Minds\\Controllers\\Legacy\\wall',
       '/not-supported' => "Minds\Controllers\\notSupported",
         //  "/app" => "minds\\pages\\app",
-      '/emails/unsubscribe' => "Minds\\Controllers\\emails\\unsubscribe",
-      '/sitemap' => "Minds\\Controllers\\sitemap",
+      '/emails/unsubscribe' => 'Minds\\Controllers\\emails\\unsubscribe',
+      '/sitemap' => 'Minds\\Controllers\\sitemap',
 
       '/apple-app-site-association' => '\\Minds\\Controllers\\deeplinks',
       '/sitemaps' => '\\Minds\\Controllers\\sitemaps',
-
     );
 
     /**
      * Route the pages
-     * (fallback to elgg page handler if we fail)
-     * @param  string $uri
-     * @param  string $method
+     * (fallback to elgg page handler if we fail).
+     *
+     * @param string $uri
+     * @param string $method
+     *
      * @return null|mixed
      */
     public function route($uri = null, $method = null)
@@ -52,7 +52,7 @@ class Router
         }
 
         if (!$uri) {
-            $uri = strtok($_SERVER["REQUEST_URI"], '?');
+            $uri = strtok($_SERVER['REQUEST_URI'], '?');
         }
 
         $this->detectContentType();
@@ -81,21 +81,23 @@ class Router
         if (!Session::isLoggedIn()) { // Middleware will resolve this
             Session::withRouterRequest($request, $response);
         }
-                
+
         // XSRF Cookie - may be able to remove now with OAuth flow
         Security\XSRF::setCookie();
 
         new SEO\Defaults(Di::_()->get('Config'));
 
         if (Session::isLoggedin()) {
-            Helpers\Analytics::increment("active");
+            Helpers\Analytics::increment('active');
         }
 
         if (isset($_GET['__e_ct_guid']) && is_numeric($_GET['__e_ct_guid'])) {
-            Helpers\Analytics::increment("active", $_GET['__e_ct_guid']);
-            Helpers\Analytics::increment("email:clicks", $_GET['__e_ct_guid']);
+            Helpers\Analytics::increment('active', $_GET['__e_ct_guid']);
             Helpers\Campaigns\EmailRewards::reward($_GET['campaign'], $_GET['__e_ct_guid']);
         }
+
+        Di::_()->get('Email\RouterHooks')
+            ->withRouterRequest($request);
 
         if (isset($_GET['referrer'])) {
             Helpers\Campaigns\Referrals::register($_GET['referrer']);
@@ -103,11 +105,11 @@ class Router
 
         $loop = count($segments);
         while ($loop >= 0) {
-            $offset = $loop -1;
+            $offset = $loop - 1;
             if ($loop < count($segments)) {
-                $slug_length = strlen($segments[$offset+1].'/');
+                $slug_length = strlen($segments[$offset + 1].'/');
                 $route_length = strlen($route);
-                $route = substr($route, 0, $route_length-$slug_length);
+                $route = substr($route, 0, $route_length - $slug_length);
             }
 
             if (isset(self::$routes[$route])) {
@@ -122,6 +124,7 @@ class Router
                     if (method_exists($handler, 'setResponse')) {
                         $handler->setResponse($response);
                     }
+
                     return $handler->$method($pages);
                 } else {
                     exit;
@@ -138,9 +141,11 @@ class Router
     }
 
     /**
-     * Legacy Router fallback
-     * @param  string   $uri
-     * @return boolean
+     * Legacy Router fallback.
+     *
+     * @param string $uri
+     *
+     * @return bool
      */
     public function legacyRoute($uri)
     {
@@ -154,12 +159,11 @@ class Router
     }
 
     /**
-     * Detects request content type and apply the corresponding polyfills
-     * @return null
+     * Detects request content type and apply the corresponding polyfills.
      */
     public function detectContentType()
     {
-        if (isset($_SERVER["CONTENT_TYPE"]) && $_SERVER["CONTENT_TYPE"] == 'application/json') {
+        if (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json') {
             //\elgg_set_viewtype('json');
             if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
                 $this->postDataFix();
@@ -168,12 +172,11 @@ class Router
     }
 
     /**
-     * Populates $_POST and $_REQUEST with request's JSON payload
-     * @return null
+     * Populates $_POST and $_REQUEST with request's JSON payload.
      */
     public function postDataFix()
     {
-        $postdata = file_get_contents("php://input");
+        $postdata = file_get_contents('php://input');
         $request = json_decode($postdata, true);
         if ($request) {
             foreach ($request as $k => $v) {
@@ -184,10 +187,11 @@ class Router
     }
 
     /**
-     * Register routes
+     * Register routes.
      *
-     * @param  array $routes - an array of routes to handlers
-     * @return array         - the array of all your routes
+     * @param array $routes - an array of routes to handlers
+     *
+     * @return array - the array of all your routes
      */
     public static function registerRoutes($routes = array())
     {
