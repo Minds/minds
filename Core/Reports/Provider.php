@@ -1,9 +1,9 @@
 <?php
 namespace Minds\Core\Reports;
 
-use Minds\Core\Di\Provider;
+use Minds\Core\Di\Provider as DiProvider;
 
-class ReportsProvider extends Provider
+class Provider extends DiProvider
 {
     public function register()
     {
