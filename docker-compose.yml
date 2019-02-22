@@ -43,6 +43,10 @@ services:
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     networks:
       - app
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./.data/elasticsearch:/usr/share/elasticsearch/data
 
   redis:
     image: redis:4.0-alpine
