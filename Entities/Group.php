@@ -40,7 +40,7 @@ class Group extends NormalizedEntity
     protected $indexes = [ 'group' ];
     protected $mature = false;
     protected $rating = 1;
-    protected $videoChatDisabled = 1; // disable by default
+    protected $videoChatDisabled = 0; // enable by default
     protected $pinned_posts = [];
 
     protected $exportableDefaults = [
