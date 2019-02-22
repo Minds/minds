@@ -293,6 +293,9 @@ class Membership
 
             $done = $this->relDB->create('member', $this->group->getGuid());
             $this->cache->set("group:{$this->group->getGuid()}:isMember:$user_guid", true);
+
+            $this->notifications
+                ->unmute($user_guid);
         } else {
             if ($this->isAwaiting($user_guid)) {
                 throw new GroupOperationException('you have already requested to join');
