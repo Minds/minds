@@ -72,6 +72,10 @@ class OpenSSL implements EncryptionInterface
         $private_key = $this->keystore->setUser($this->user)->getUnlockedPrivateKey();
         openssl_private_decrypt(base64_decode($encrypted), $decrypted, openssl_get_privatekey($private_key, $this->password));
 
+        if (!$decrypted) {
+            $decrypted = "(Could not decrypt. Try logging back in to messenger)";
+        }
+
         $this->message->setMessages([$this->user->guid => $decrypted], false);
         $this->message->setMessage($decrypted, false);
         return $this;
