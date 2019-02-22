@@ -8,8 +8,8 @@ If you haven’t already, make sure to design your <a href="https://www.minds.co
     <a href="https://itunes.apple.com/us/app/minds-com/id961771928?ls=1&mt=8" style="text-decoration: none">
         <img src="<?php echo $vars['cdn_assets_url']; ?>assets/ext/appstore.png" width="142" alt="Apple App Store"/>
     </a>
-    <a href="https://play.google.com/store/apps/details?id=com.minds.mobile" style="text-decoration: none">
-        <img src="<?php echo $vars['cdn_assets_url']; ?>assets/ext/playstore.png" width="142" alt="Google Play"/>
+    <a href="https://www.minds.com/mobile" style="text-decoration: none">
+        <img src="<?php echo $vars['cdn_assets_url']; ?>assets/minds-android-app.png" width="142" alt="Minds Android App"/>
     </a>
 </p>
 
