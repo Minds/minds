@@ -2,6 +2,8 @@
 namespace Minds\Core\Suggestions;
 
 use Minds\Core\EntitiesBuilder;
+use Minds\Common\Repository\Response;
+use Minds\Core\Di\Di;
 
 class Manager
 {
@@ -18,10 +20,17 @@ class Manager
     /** @var string $type */
     private $type;
 
-    public function __construct($repository = null, $entitiesBuilder = null)
+    public function __construct(
+        $repository = null,
+        $entitiesBuilder = null,
+        $suggestedFeedsManager = null,
+        $subscriptionsManager = null
+    )
     {
         $this->repository = $repository ?: new Repository();
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder();
+        $this->suggestedFeedsManager = $suggestedFeedsManager ?: Di::_()->get('Feeds\Suggested\Manager');
+        $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Subscriptions\Manager');
     }
 
     /**
@@ -61,13 +70,64 @@ class Manager
         $opts['user_guid'] = $this->user->getGuid();
 
         $response = $this->repository->getList($opts);
-        
+
+        if (!count($response)) {
+            $response = $this->getFallbackSuggested($opts);
+        }
+
         // Hydrate the entities
         // TODO: make this a bulk request vs sequential
         foreach ($response as $suggestion) {
-            $entity = $this->entitiesBuilder->single($suggestion->getEntityGuid());
+            $entity = $suggestion->getEntity() ?: $this->entitiesBuilder->single($suggestion->getEntityGuid());
             $suggestion->setEntity($entity);
         }
+        return $response;
+    }
+
+    private function getFallbackSuggested($opts = [])
+    {
+        $this->subscriptionsManager->setSubscriber($this->user);
+        if ($this->subscriptionsManager->getSubscriptionsCount() > 1) {
+            return new Response;
+        }
+
+        $opts = array_merge([
+            'user_guid' => $this->user->getGuid(),
+            'type' => 'user',
+        ], $opts);
+
+        $response = new Response();
+        
+        //$result = $this->suggestedFeedsManager->getFeed($opts);
+
+        //foreach ($result as $user) {
+        //    $suggestion = new Suggestion();
+        //    $suggestion->setEntityGuid($user->guid);
+        //    $response[] = $suggestion;
+        //}
+
+        $guids = [
+            626772382194872329,
+            100000000000065670,
+            100000000000081444,
+            732703596054847489,
+            884147802853089287,
+            100000000000000341,
+            823662468030013460,
+            942538426693984265,
+            607668752611287060,
+            602551056588615697,
+        ];
+
+        foreach ($guids as $i => $guid) {
+            if ($i >= $opts['limit']) {
+                continue;
+            }
+            $suggestion = new Suggestion();
+            $suggestion->setEntityGuid($guid);
+            $response[] = $suggestion;
+        }
+
         return $response;
     }
 
