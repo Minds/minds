@@ -7,6 +7,7 @@ use Minds\Common\Repository\Response;
 use Minds\Core\Suggestions\Manager;
 use Minds\Core\Suggestions\Suggestion;
 use Minds\Core\Suggestions\Repository;
+use Minds\Core\Subscriptions\Manager as SubscriptionsManager;
 use Minds\Core\EntitiesBuilder;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -19,10 +20,11 @@ class ManagerSpec extends ObjectBehavior
 
     function let(
         Repository $repository,
-        EntitiesBuilder $entitiesBuilder
+        EntitiesBuilder $entitiesBuilder,
+        SubscriptionsManager $subscriptionsManager
     )
     {
-        $this->beConstructedWith($repository, $entitiesBuilder);
+        $this->beConstructedWith($repository, $entitiesBuilder, $subscriptionsManager);
         $this->repository = $repository;
         $this->entitiesBuilder = $entitiesBuilder;
     }

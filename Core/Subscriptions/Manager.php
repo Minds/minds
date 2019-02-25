@@ -107,6 +107,15 @@ class Manager
         $this->cacheDelegate->cache($subscription);
 
         return $subscription;
-    } 
+    }
+
+    /**
+     * Return the count of subscriptions a user has
+     * @return int
+     */
+    public function getSubscriptionsCount()
+    {
+        return $this->subscriber->getSubscriptonsCount(); //TODO: Refactor so we are the source of truth
+    }
 
 }

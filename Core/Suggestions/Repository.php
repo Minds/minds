@@ -30,6 +30,7 @@ class Repository
             'offset' => 0,
             'user_guid' => null,
             'paging-token' => '',
+            'allowFallback' => false,
         ], $opts);
 
         if ($opts['offset']) {
@@ -117,56 +118,6 @@ class Repository
         $result = $this->es->request($prepared);
 
         $response = new Response();
-
-        if (!$result['aggregations']['subscriptions']['buckets']) {
-            // Hack subscription results if nothing returns
-            $result['aggregations']['subscriptions']['buckets'] = [
-                [
-                    'doc_count' => 5,
-                    'key' => 626772382194872329,
-                ],
-                [
-                    'doc_count' => 4,
-                    'key' => 100000000000065670,
-                ],
-                [
-                    'doc_count' => 3,
-                    'key' => 100000000000081444,
-                ],
-                [
-                    'doc_count' => 2,
-                    'key' => 732703596054847489,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 884147802853089287,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 100000000000000341,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 823662468030013460,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 942538426693984265,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 607668752611287060,
-                ],
-                [
-                    'doc_count' => 1,
-                    'key' => 602551056588615697,
-                ],
-            ];
-
-            $result['aggregations']['subscriptions']['buckets'] = array_slice($result['aggregations']['subscriptions']['buckets'], 0, $opts['limit']);
-        }
-
-
 
         foreach ($result['aggregations']['subscriptions']['buckets'] as $i => $row) {
             if ($i < $opts['offset'] -1 || count($response) >= $opts['limit'] - $opts['offset']) {
