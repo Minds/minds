@@ -178,7 +178,11 @@ class ElggUser extends ElggEntity
             unset($array['salt']);
         }else{
             //error_log('allowing password save!');
-        }
+		}
+		
+		if (!$this->plus_expires || $this->plus_expires < time()) { //ensure we don't update this field
+			unset($array['plus_expires']);
+		}
 
         if (!$this->merchant || !is_array($this->merchant)) {
             unset($array['merchant']); //HACK: only allow updating of merchant if it's an array
