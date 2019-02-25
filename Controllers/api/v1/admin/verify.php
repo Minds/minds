@@ -36,6 +36,9 @@ class verify implements Interfaces\Api, Interfaces\ApiAdminPam
         foreach ($requests as $request) {
             $payload = json_decode($request, true);
             $user = Entities\Factory::build($payload['guid']);
+            if (!$user) {
+                continue; // User deleted
+            }
             $payload['user'] = $user->export();
             $response['requests'][] = $payload;
         }
