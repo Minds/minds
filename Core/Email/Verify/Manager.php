@@ -19,6 +19,7 @@ class Manager
     private $bannedDomains = [
         'annomails.com',
         'emailweb.xyz',
+        'buydiscountdeal.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
