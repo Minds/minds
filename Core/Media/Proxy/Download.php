@@ -130,7 +130,7 @@ class Download
 
     public function download()
     {
-        $this->downloadBinaryString();
+        $content = $this->downloadBinaryString();
 
         $resource = imagecreatefromstring($content);
 
