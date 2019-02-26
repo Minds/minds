@@ -62,7 +62,7 @@
             <!-- END HEADER -->
 
             <!-- START BODY -->
-            <table id="body" style="width: 100%;padding-bottom: 16px;" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <table id="body" style="padding-bottom: 16px;" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
               <tbody>
                 <tr>
                   <td><?php echo $vars['body'] ?></td>

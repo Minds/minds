@@ -81,7 +81,6 @@ class News extends EmailCampaign
 
         //send email
         $this->mailer->send($message);
-        exit;
     }
 
 }

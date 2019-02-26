@@ -1,0 +1,13 @@
+Last week, Minds CEO Bill Ottman sat down with Joe Rogan for a deep conversation about censorship, transparency, privacy, free and open source software and the quest for Internet freedom. Please watch, share and subscribe to [Joe](https://www.minds.com/joerogan?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>) and [Bill](https://www.minds.com/ottman?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>). 
+
+| |
+|:--:|
+| [![Video](https://cdn-assets.minds.com/emails/ottman.jpg)](https://www.minds.com/newsfeed/944686933718839296?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>)
+| |
+
+Just by clicking through this email you will receive 3 Minds tokens, which are worth 3,000 views when you use the [Boost](https://www.minds.com/boost?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>) feature on your posts. You can also send them as tips to other users for their content. 
+
+What will we do without freedom? 
+
+Thank you for everything. Huge upgrades are coming in the next 30 days. 
+
