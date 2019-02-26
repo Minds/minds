@@ -8,6 +8,8 @@ namespace Minds\Core\Email;
 use Minds\Core\Events\Dispatcher;
 use Minds\Interfaces\ModuleInterface;
 use Minds\Core\Analytics\UserStates\UserActivityBuckets;
+use Minds\Core\Email\Campaigns\UserRetention\GoneCold;
+use Minds\Entities\User;
 
 class Events implements ModuleInterface
 {
@@ -32,6 +34,11 @@ class Events implements ModuleInterface
 
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_COLD, function ($opts) {
             error_log('user_state_change cold');
+            $params = $opts->getParameters();
+            $user = new User($params['user_guid']);
+            $campaign = (new GoneCold())
+                ->setUser($user);
+            $campaign->send();
         });
 
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_CORE, function ($opts) {
