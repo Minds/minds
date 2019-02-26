@@ -69,7 +69,7 @@ class News extends EmailCampaign
         $this->template->set('topic', $this->topic);
 
         //do not reward twice
-        $validatorHash = sha1($this->campaign . $this->topic . $this->user->guid . Config::_()->get('emails_secret'));
+        $validatorHash = sha1($this->campaign . $this->templateKey . $this->topic . $this->user->guid . Config::_()->get('emails_secret'));
         $this->template->set('validator', $validatorHash);
 
         $message = new Message();

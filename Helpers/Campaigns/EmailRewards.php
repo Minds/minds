@@ -72,8 +72,9 @@ class EmailRewards
                   return;
               }
               $validator = $_GET['validator'];
-              if ($validator == sha1($campaign . $topic . $user->guid . Config::_()->get('emails_secret'))) {
-                  $tokens = (10 ** 18);
+              $key = 'rogan.md';
+              if ($validator == sha1($campaign . 'rogan.md' . $topic . $user->guid . Config::_()->get('emails_secret'))) {
+                  $tokens = 3 * (10 ** 18);
                   $campaign = $validator; //hack
               } else {
                 return;
