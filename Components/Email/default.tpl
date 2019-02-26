@@ -18,12 +18,12 @@
              padding-bottom: 16px;
         }
         #actionBtn {
-          padding:16px 32px;
-          background-color:#4caf50;
+          padding:18px 36px;
+          background-color: #4690d6 !important;
           color:#ffffff !important;
           text-decoration:none;
           font-weight:bold;
-          border-radius:3px;
+          border-radius:25px;
           text-align: center;
         }
       </style>
@@ -62,7 +62,7 @@
             <!-- END HEADER -->
 
             <!-- START BODY -->
-            <table id="body" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <table id="body" style="width: 100%;padding-bottom: 16px;" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
               <tbody>
                 <tr>
                   <td><?php echo $vars['body'] ?></td>

@@ -3,6 +3,7 @@
 namespace Minds\Core\Email;
 
 use Minds\Core\Markdown\Markdown;
+use Minds\Core\Di\Di;
 
 class Template
 {
@@ -21,21 +22,24 @@ class Template
     protected $markdown;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param Markdown $markdown
      */
-    public function __construct($markdown = null)
+    public function __construct($markdown = null, $config = null)
     {
         $this->markdown = $markdown ?: new Markdown();
-        $this->data['cdn_assets_url'] = 'https://cdn-assets.minds.com/front/dist/';
+        $this->config = $config ?: Di::_()->get('Config');
+        $this->data['cdn_assets_url'] = $this->config->get('cdn_assets_url') ?: 'https://cdn-assets.minds.com/front/dist/';
     }
 
     public function setTemplate($template = 'default')
     {
         $this->template = $this->findTemplate($template);
         if (!$this->template) {
-            $this->template = __MINDS_ROOT__ . '/Components/Email/default.tpl';
+            $this->template = __MINDS_ROOT__.'/Components/Email/default.tpl';
         }
+
         return $this;
     }
 
@@ -43,29 +47,45 @@ class Template
     {
         $this->body = $fromFile ? $this->findTemplate($template) : $template;
         $this->loadFromFile = (bool) $fromFile;
+
         return $this;
     }
 
     /**
+     * Get the underlying data for the template.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * @param bool $value
+     *
      * @return $this
      */
     public function toggleMarkdown($value)
     {
         $this->useMarkdown = (bool) $value;
+
         return $this;
     }
 
     /**
-     * Sets a data key to be used within templates
+     * Sets a data key to be used within templates.
+     *
      * @param mixed $key
      * @param mixed $value
+     *
      * @return $this
      */
     public function set($key, $value = null)
     {
         if (!is_array($key)) {
             $this->data[$key] = $value;
+
             return $this;
         }
 
@@ -77,15 +97,16 @@ class Template
     }
 
     /**
-     * Find a template from a path
-     * @param  string $template
+     * Find a template from a path.
+     *
+     * @param string $template
+     *
      * @return string
      */
     protected function findTemplate($template)
     {
-
         //relative paths
-        if (strpos($template, './') === 0) {
+        if (strpos($template, './') === 0 || strpos($template, '../') === 0) {
             //relative path!
 
             $trace = debug_backtrace();
@@ -95,7 +116,7 @@ class Template
             $dir = implode('/', $parts);
 
             $template = substr($template, 1);
-            $file = $dir . $template;
+            $file = $dir.$template;
 
             if (file_exists($file)) {
                 return $file;
@@ -103,7 +124,7 @@ class Template
         }
 
         if (strpos($template, '/') !== 0) {
-            $template = __MINDS_ROOT__ . '/Components/Email/' . $template;
+            $template = __MINDS_ROOT__.'/Components/Email/'.$template;
         }
 
         if (file_exists($template)) {
@@ -120,13 +141,17 @@ class Template
             $body = $this->markdown->text($body);
         }
         $template = $this->compile($this->template, ['body' => $body]);
+
         return $template;
     }
 
     /**
-     * Compiles a file by injecting variables and executing PHP code
-     * @param  string $file
-     * @param  array $vars
+     * Compiles a file by injecting variables and executing PHP code.
+     *
+     * @param string $file
+     * @param array  $vars
+     *
+
      * @return string
      */
     protected function compile($file, $vars = [])

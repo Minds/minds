@@ -3,7 +3,6 @@
 namespace Minds\Core\Analytics\UserStates;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Core\Queue;
 
 class Manager
@@ -26,7 +25,7 @@ class Manager
     /** @var UserStateIterator */
     private $userStateIterator;
 
-    /** @var array $pendingBulkInserts **/
+    /** @var array $pendingBulkInserts * */
     private $pendingBulkInserts = [];
 
     public function __construct($client = null, $index = null, $queue = null, $activeUsersIterator = null, $userStateIterator = null)
@@ -84,21 +83,23 @@ class Manager
     }
 
     /**
-     * Index a user user state (queues to batch)
+     * Index a user user state (queues to batch).
+     *
      * @param UserState $userState
+     *
      * @return bool
      */
     public function index($userState)
     {
-        $this->pendingBulkInserts[] = [ 
+        $this->pendingBulkInserts[] = [
             'update' => [
                 '_id' => "{$userState->getUserGuid()}-{$userState->getReferenceDateMs()}",
                 '_index' => $this->userStateIndex,
                 '_type' => 'active_user',
-            ]
+            ],
         ];
 
-        $this->pendingBulkInserts[] = [ 
+        $this->pendingBulkInserts[] = [
             'doc' => $userState->export(),
             'doc_as_upsert' => true,
         ];
@@ -111,12 +112,13 @@ class Manager
     }
 
     /**
-     * Run a bulk insert job (quicker)
-     * @return void
+     * Run a bulk insert job (quicker).
      */
     public function bulk()
     {
-        $this->es->bulk([ 'body' => $this->pendingBulkInserts ]);
-        $this->pendingBulkInserts = [];
+        if (count($this->pendingBulkInserts) > 0) {
+            $this->es->bulk(['body' => $this->pendingBulkInserts]);
+            $this->pendingBulkInserts = [];
+        }
     }
 }
