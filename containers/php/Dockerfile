@@ -12,6 +12,8 @@ RUN apk update && apk add --no-cache --update \
     $PHPIZE_DEPS \
     openssl-dev \
     postgresql-dev \
+    imagemagick-dev \
+    imagemagick \
     && docker-php-ext-install -j$(nproc) bcmath \
     && docker-php-ext-install -j$(nproc) zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -35,7 +37,11 @@ ENV BUILD_DEPS \
     pcre-dev \
     libuv-dev \
     git \
-    gmp-dev
+    gmp-dev \
+    autoconf \
+    imagemagick-dev \
+    libtool
+
 
 RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && apk add --no-cache libuv gmp \
@@ -44,6 +50,8 @@ RUN apk update && apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && git submodule update --init \
     && cd ext && bash $INSTALL_DIR/ext/install.sh \
     && docker-php-ext-enable cassandra \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && apk del .build-deps \
     && rm -rf $INSTALL_DIR
 
