@@ -83,7 +83,7 @@ class Repository
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'] ? $row['category_uuid']->uuid() : null)
                     ->setScore($row['score'])
-                    ->setPosition($row['position'] ?? 10);
+                    ->setPosition($row['position'] ?: 10);
 
                 $response[] = $question;
             }
@@ -123,7 +123,8 @@ class Repository
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'] ? $row['category_uuid']->uuid() : null)
                     ->setThumbsUp($this->getThumbsFromSet($row['votes_up']))
-                    ->setThumbsDown($this->getThumbsFromSet($row['votes_down']));
+                    ->setThumbsDown($this->getThumbsFromSet($row['votes_down']))
+                    ->setPosition($row['position'] ?: 10);
             }
         } catch (\Exception $e) {
             error_log($e);
