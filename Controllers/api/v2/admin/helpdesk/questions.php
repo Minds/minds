@@ -46,7 +46,8 @@ class questions implements Api, ApiAdminPam
             ->setUuid($uuid)
             ->setQuestion($question)
             ->setAnswer($answer)
-            ->setCategoryUuid($category_uuid);
+            ->setCategoryUuid($category_uuid)
+            ->setPosition($_POST['position'] ?? 10);
 
         /** @var \Minds\Core\Helpdesk\Question\Manager $manager */
         $manager = Di::_()->get('Helpdesk\Question\Manager');

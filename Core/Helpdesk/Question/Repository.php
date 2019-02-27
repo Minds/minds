@@ -82,7 +82,8 @@ class Repository
                     ->setQuestion($row['question'])
                     ->setAnswer($row['answer'])
                     ->setCategoryUuid($row['category_uuid'] ? $row['category_uuid']->uuid() : null)
-                    ->setScore($row['score']);
+                    ->setScore($row['score'])
+                    ->setPosition($row['position'] ?? 10);
 
                 $response[] = $question;
             }
@@ -228,13 +229,14 @@ class Repository
         }
         
         $uuid = $entity->getUuid() ?: Core\Util\UUIDGenerator::generate();
-        $query = "INSERT INTO helpdesk_faq (uuid, question, answer, category_uuid) VALUES (?,?,?,?)";
+        $query = "INSERT INTO helpdesk_faq (uuid, question, answer, category_uuid, position) VALUES (?,?,?,?,?)";
 
         $values = [
             new Uuid($uuid),
             $entity->getQuestion(),
             $entity->getAnswer(),
             new Uuid($entity->getCategoryUuid()),
+            (int) $entity->getPosition(),
         ];
 
         $prepared = (new Custom())

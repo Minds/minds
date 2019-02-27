@@ -26,6 +26,8 @@ use phpcassa\UUID;
  * @method Question setThumbsDown(array $value)
  * @method int getScore()
  * @method Question setScore(int $value)
+ * @method int getPosition()
+ * @method Question setPosition(int $value)
  */
 class Question
 {
@@ -48,6 +50,9 @@ class Question
     /** @var int */
     protected $score;
 
+    /** @var int $position */
+    protected $position = 10;
+
     public function export()
     {
         $export = [];
@@ -59,6 +64,7 @@ class Question
         $export['category'] = $this->getCategory() ? $this->getCategory()->export() : null;
         $export['thumb_up'] = in_array(Session::getLoggedInUserGuid(), $this->getThumbsUp());
         $export['thumb_down'] = in_array(Session::getLoggedInUserGuid(), $this->getThumbsDown());
+        $export['position'] = $this->getPosition();
 
         return $export;
     }
