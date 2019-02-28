@@ -53,6 +53,7 @@ class RepositorySpec extends ObjectBehavior
                     'thumbs_up' => new Set(Type::varint()),
                     'thumbs_down' => new Set(Type::varint()),
                     'score' => 1,
+                    'position' => 2,
                 ],
                 [
                     'uuid' => new Uuid('f990a87d-1255-42e5-a78e-4a2256569e8b'),
@@ -62,6 +63,7 @@ class RepositorySpec extends ObjectBehavior
                     'thumbs_up' => new Set(Type::varint()),
                     'thumbs_down' => new Set(Type::varint()),
                     'score' => 1,
+                    'position' => 2,
                 ],
             ], ''));
 
@@ -79,6 +81,7 @@ class RepositorySpec extends ObjectBehavior
                 'category_uuid' => null,
                 'votes_up' => new Set(Type::varint()),
                 'votes_down' => new Set(Type::varint()),
+                'position' => 2,
             ]], ''));
 
         $question = $this->get('f990a87d-1255-42e5-a78e-4a2256569e8a', 'user_guid1');
