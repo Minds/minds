@@ -324,7 +324,12 @@ class Repository
                     'category_uuid' => $question->getCategoryUuid(),
                     'question' => $question->getQuestion(),
                     'answer' => $question->getAnswer(),
-                    'suggest' => ['input' => [$question->getQuestion(), $question->getAnswer()]]
+                    'suggest' => [
+                        'input' => array_merge([
+                            $question->getQuestion(),
+                            $question->getAnswer()
+                        ], $this->permutateString($question->getQuestion()))
+                    ], 
                 ]
             ]);
 
