@@ -452,7 +452,9 @@ CREATE TABLE minds.jwt_sessions (
 
 CREATE TABLE minds.comments (
     entity_guid varint,
-    parent_guid varint,
+    parent_guid_l1 varint,
+    parent_guid_l2 varint,
+    parent_guid_l3 varint,
     guid varint,
     access_id varint,
     attachments map<text, text>,
@@ -462,26 +464,14 @@ CREATE TABLE minds.comments (
     has_children boolean,
     owner_guid varint,
     owner_obj text,
+    replies_count varint,
+    score varint,
     time_created timestamp,
     time_updated timestamp,
     votes_down set<varint>,
     votes_up set<varint>,
-    PRIMARY KEY (entity_guid, parent_guid, guid)
-) WITH CLUSTERING ORDER BY (parent_guid ASC, guid DESC)
-    AND bloom_filter_fp_chance = 0.01
-    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
-    AND comment = ''
-    AND compaction = {'class': 'org.apache.cassandra.db.compaction.LeveledCompactionStrategy'}
-    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
-    AND crc_check_chance = 1.0
-    AND dclocal_read_repair_chance = 0.1
-    AND default_time_to_live = 0
-    AND gc_grace_seconds = 864000
-    AND max_index_interval = 2048
-    AND memtable_flush_period_in_ms = 0
-    AND min_index_interval = 128
-    AND read_repair_chance = 0.0
-    AND speculative_retry = '99PERCENTILE';
+    PRIMARY KEY (entity_guid, parent_guid_l1, parent_guid_l2, parent_guid_l3, guid)
+) WITH CLUSTERING ORDER BY (parent_guid_l1 ASC, parent_guid_l2 ASC, parent_guid_l3 ASC, guid DESC)
 
 CREATE TABLE minds.recurring_subscriptions (
     type text,
@@ -1347,3 +1337,10 @@ CREATE TABLE minds.spam_blocks (
     value text,
     PRIMARY KEY (key, value)
 ) WITH CLUSTERING ORDER BY (value ASC)
+
+CREATE TABLE minds.video_chat_leases (
+    key text PRIMARY KEY,
+    holder_guid varint,
+    last_refreshed timestamp,
+    secret text
+);
