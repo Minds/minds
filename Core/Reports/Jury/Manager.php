@@ -1,8 +1,8 @@
 <?php
 /**
- * Reports manager
+ * Jury manager
  */
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\Jury;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -18,13 +18,9 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var PreFeb2019Repository $preFeb2019Repository */
-    private $preFeb2019Repository;    
-
-    public function __construct($repository = null, $preFeb2019Repository = null)
+    public function __construct($repository = null)
     {
         $this->repository = $repository ?: new Repository;
-        $this->preFeb2019Repository = $preFeb2019Repository ?: new PreFeb2019Repository();
     }
 
     /**
@@ -41,11 +37,11 @@ class Manager
     }
 
     /**
-     * Add a report
-     * @param Report $report
+     * Cast a decision
+     * @param Decision $decision
      * @return boolean
      */
-    public function add(Report $report)
+    public function cast(Decision $decision)
     {
         return $this->repository->add($report);
     }

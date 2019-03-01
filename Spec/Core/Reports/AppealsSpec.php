@@ -15,7 +15,7 @@ class AppealsSpec extends ObjectBehavior
     public $_actions;
 
     function let(
-        Core\Reports\Repository $repository,
+        Core\Reports\PreFeb2019Repository $repository,
         Core\Reports\Actions $actions
     )
     {

@@ -1,8 +1,8 @@
 <?php
 /**
- * Reports manager
+ * Appeals manager
  */
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\Appeals;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -18,13 +18,15 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var PreFeb2019Repository $preFeb2019Repository */
-    private $preFeb2019Repository;    
+    /** @var NotificationDelegate $notificationDelegate */
 
-    public function __construct($repository = null, $preFeb2019Repository = null)
+    public function __construct(
+        $repository = null,
+        $notificationDelegate = null
+    )
     {
         $this->repository = $repository ?: new Repository;
-        $this->preFeb2019Repository = $preFeb2019Repository ?: new PreFeb2019Repository();
+        $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
     /**
@@ -41,13 +43,17 @@ class Manager
     }
 
     /**
-     * Add a report
-     * @param Report $report
+     * Appeal
+     * @param Appeal $appeal
      * @return boolean
      */
-    public function add(Report $report)
+    public function appeal(Appeal $appeal)
     {
-        return $this->repository->add($report);
+        $added = $this->repository->add($appeal);
+
+        $this->notificationDelegate->onAction($appeal);
+
+        return $added;
     }
 
 }

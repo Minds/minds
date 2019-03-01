@@ -1,8 +1,9 @@
 <?php
 
-namespace Spec\Minds\Core\Reports;
+namespace Spec\Minds\Core\Reports\Appeals;
 
-use Minds\Core\Reports\Repository;
+use Minds\Core\Reports\Appeals\Repository;
+use Minds\Core\Reports\Appeals\Appeal;
 use Minds\Core\Reports\Report;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -10,6 +11,7 @@ use Minds\Core\Data\ElasticSearch\Client;
 
 class RepositorySpec extends ObjectBehavior
 {
+
     private $es;
 
     function let(Client $es)
@@ -23,38 +25,35 @@ class RepositorySpec extends ObjectBehavior
         $this->shouldHaveType(Repository::class);
     }
 
-    function it_should_add_a_report(Report $report)
+    function it_should_add_an_appeal(Appeal $appeal)
     {
         $ts = microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
-                $params = $query['body']['script']['params']['report'];
-                return $params[0]['reporter_guid'] === 456
-                    && $params[0]['reason'] === 2
-                    && $params[0]['@timestamp'] === $ts
-                    && $query['body']['upsert']['entity_guid'] === 123
+                $doc = $query['body']['doc'];
+                return $doc['@appeal_timestamp'] === $ts
+                    && $doc['appeal_note'] === 'Should not be reported because this is a test'
                     && $query['id'] === 123;
             }))
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $report->getTimestamp()
+        $appeal->getTimestamp()
             ->shouldBeCalled()
             ->willReturn($ts);
 
-        $report->getEntityGuid()
+        $report = new Report();
+        $report->setEntityGuid(123);
+
+        $appeal->getReport()
             ->shouldBeCalled()
-            ->willReturn(123);
+            ->willReturn($report);
         
-        $report->getReporterGuid()
+        $appeal->getNote()
             ->shouldBeCalled()
-            ->willReturn(456);
-
-        $report->getReasonCode()
-            ->shouldBeCalled()
-            ->willReturn(2);
-
-        $this->add($report)
+            ->willReturn('Should not be reported because this is a test');
+        
+        $this->add($appeal)
             ->shouldBe(true);
     }
 

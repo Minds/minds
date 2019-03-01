@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\Jury;
 
 use Cassandra;
 
@@ -23,6 +23,7 @@ class Repository
     }
 
     /**
+     * Return the decisions a jury has made
      * @param array $options 'limit', 'offset', 'state'
      * @return array
      */
@@ -35,40 +36,45 @@ class Repository
             'owner' => null
         ], $opts);
 
+
+        $response = new Response;
+
+        return $response;
     }
 
     /**
-     * Add a report for an entity
-     * @param Report $report
+     * Add a decision for a report
+     * @param Decision $decision
      * @return boolean
      */
-    public function add(Report $report)
+    public function add(Decision $decision)
     {
+        $juryType = $decision->isAppeal() ? 'appeal_jury' : 'initial_jury';
         $body = [
             'script' => [
-                'inline' => 'ctx._source.reports.add(params.report)',
+                'inline' => "ctx._source.$juryType.add(params.decision)",
                 'lang' => 'painless',
                 'params' => [
-                    'report' => [
+                    'decision' => [
                         [
-                            '@timestamp' => $report->getTimestamp(), // In MS
-                            'reporter_guid' => $report->getReporterGuid(),
-                            'reason' => $report->getReasonCode(),
+                            '@timestamp' => $decision->getTimestamp(), // In MS
+                            'juror_guid' => $decision->getJurorGuid(),
+                            'action' => $decision->getAction(),
                         ],
                     ],
                 ],
             ],
             'scripted_upsert' => true,
             'upsert' => [
-                'entity_guid' => $report->getEntityGuid(),
-                'reports' => []
+                'entity_guid' => $decision->getReport()->getEntityGuid(),
+                $juryType => [],
             ],
         ];
 
         $query = [
             'index' => 'minds-moderation',
             'type' => 'reports',
-            'id' => $report->getEntityGuid(),
+            'id' => $decision->getReport()->getEntityGuid(),
             'body' => $body,
         ];
 

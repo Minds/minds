@@ -5,9 +5,9 @@
 
 namespace Minds\Core\Events;
 
-use Minds\Core\Di\Provider;
+use Minds\Core\Di\Provider as DiProvider;
 
-class EventsProvider extends Provider
+class Provider extends DiProvider
 {
     public function register()
     {

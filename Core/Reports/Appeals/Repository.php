@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\Appeals;
 
 use Cassandra;
 
@@ -23,6 +23,7 @@ class Repository
     }
 
     /**
+     * Return a list of appeals
      * @param array $options 'limit', 'offset', 'state'
      * @return array
      */
@@ -38,37 +39,24 @@ class Repository
     }
 
     /**
-     * Add a report for an entity
-     * @param Report $report
+     * Add an appeal
+     * @param Appeal $appeal
      * @return boolean
      */
-    public function add(Report $report)
+    public function add(Appeal $appeal)
     {
         $body = [
-            'script' => [
-                'inline' => 'ctx._source.reports.add(params.report)',
-                'lang' => 'painless',
-                'params' => [
-                    'report' => [
-                        [
-                            '@timestamp' => $report->getTimestamp(), // In MS
-                            'reporter_guid' => $report->getReporterGuid(),
-                            'reason' => $report->getReasonCode(),
-                        ],
-                    ],
-                ],
+            'doc' => [
+                '@appeal_timestamp' => $appeal->getTimestamp(),
+                'appeal_note' => $appeal->getNote(),
             ],
-            'scripted_upsert' => true,
-            'upsert' => [
-                'entity_guid' => $report->getEntityGuid(),
-                'reports' => []
-            ],
+            'doc_as_upsert' => true,
         ];
 
         $query = [
             'index' => 'minds-moderation',
             'type' => 'reports',
-            'id' => $report->getEntityGuid(),
+            'id' => $appeal->getReport()->getEntityGuid(),
             'body' => $body,
         ];
 

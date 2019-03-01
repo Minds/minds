@@ -7,15 +7,21 @@ namespace Minds\Core\Reports;
 use Minds\Core\Reports\UserReport;
 use Minds\Traits\MagicAttributes;
 
-class ReportedEntity
+/**
+ * @method Report getEntityGuid(): long
+ * @method Report getReporterGuid(): long
+ * @method Report getReasonCode(): int
+ * @method Report getTimestamp: int
+ */
+class Report
 {
     use MagicAttributes;
 
-    /** @var date $timestamp */
+    /** @var long $timestamp -< in ms*/
     private $timestamp;
 
-    /** @var long $guid */
-    private $guid;
+    /** @var long $reporterGuid */
+    private $reporterGuid;
 
     /** @var long $entityGuid  */
     private $entityGuid;
@@ -23,26 +29,20 @@ class ReportedEntity
     /** @var Entity $entity  */
     private $entity;
 
-    /** @var string $state */
-    private $state;
+    /** @var int $reasonCode */
+    private $reasonCode;
 
-    /** @var array<EntityAction> $entityActions */
-    private $entityActions;
-
-    /** @var int $reportCount  */
-    private $reportCount;
-
-    /** @var array<UserReport> $userReports */
-    private $userReports;
-
+    /**
+     * @return array
+     */
     public function export()
     {
         $export = [
-            'guid' => $this->guid,
-            'time_created' => $this->timestamp,
+            'reporter_guid' => $this->reporterGuid,
+            '@timestamp' => $this->timestamp,
             'entity_guid' => $this->entityGuid,
-            'entity' => $this->entity->export(),
-            'state' => $this->state,
+            'entity' => $this->entity ? $this->entity->export() : null,
+            'reason_code' => $this->reasonCode,
         ];
 
         return $export;

@@ -1,5 +1,5 @@
 <?php
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\Verdict;
 
 use Cassandra;
 
@@ -23,6 +23,7 @@ class Repository
     }
 
     /**
+     * Return the decisions a jury has made
      * @param array $options 'limit', 'offset', 'state'
      * @return array
      */
@@ -35,40 +36,32 @@ class Repository
             'owner' => null
         ], $opts);
 
+
+        $response = new Response;
+
+        return $response;
     }
 
     /**
-     * Add a report for an entity
-     * @param Report $report
+     * Add a decision for a report
+     * @param Decision $decision
      * @return boolean
      */
-    public function add(Report $report)
+    public function add(Verdict $verdict)
     {
+        $reportStage = $verdict->isAppeal() ? 'appeal_jury_' : 'initial_jury_';
         $body = [
-            'script' => [
-                'inline' => 'ctx._source.reports.add(params.report)',
-                'lang' => 'painless',
-                'params' => [
-                    'report' => [
-                        [
-                            '@timestamp' => $report->getTimestamp(), // In MS
-                            'reporter_guid' => $report->getReporterGuid(),
-                            'reason' => $report->getReasonCode(),
-                        ],
-                    ],
-                ],
+            'doc' => [
+                "@{$reportStage}decided_timestamp" => $verdict->getTimestamp(),
+                $reportStage . 'action' => $verdict->getAction(),
             ],
-            'scripted_upsert' => true,
-            'upsert' => [
-                'entity_guid' => $report->getEntityGuid(),
-                'reports' => []
-            ],
+            'doc_as_upsert' => true,
         ];
 
         $query = [
             'index' => 'minds-moderation',
             'type' => 'reports',
-            'id' => $report->getEntityGuid(),
+            'id' => $verdict->getReport()->getEntityGuid(),
             'body' => $body,
         ];
 
