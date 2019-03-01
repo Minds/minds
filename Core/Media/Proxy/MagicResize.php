@@ -64,9 +64,7 @@ class MagicResize
         $height = $this->output->getImageHeight();
 
         if (!$this->upscale && max($width, $height) < $this->size) {
-            $this->output = $this->image;
-
-            return $this;
+            $this->output = $this->getImage();
         }
 
         $ratio = $width / $height;
@@ -96,7 +94,7 @@ class MagicResize
         if (!$this->output) {
             throw new \Exception('Output was not generated');
         }
-        error_log($this->imageType);
+
         $this->output->setImageFormat($this->imageFormat);
 
         return $this->output->getImage();
