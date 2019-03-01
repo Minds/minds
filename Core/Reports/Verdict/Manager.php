@@ -14,6 +14,11 @@ use Minds\Entities\NormalizedEntity;
 
 class Manager
 {
+    const INITIAL_JURY_SIZE = 1;
+    const INITIAL_JURY_MAJORITY = 1;
+
+    const APPEAL_JURY_SIZE = 12;
+    const APPEAL_JURY_MAJORITY = 9;
 
     /** @var Repository $repository */
     private $repository;
@@ -49,6 +54,11 @@ class Manager
     }
 
     /**
+     * @param int $entity_guid
+     * @return Verdict
+     */
+
+    /**
      * Cast a verdict
      * @param Verdict $verdict
      * @return boolean
@@ -62,6 +72,35 @@ class Manager
 
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);
+    }
+
+    /**
+     * Reach a verdict
+     * @param Verdict $verdict
+     * @return string
+     */
+    public function getAction(Verdict $verdict)
+    {
+        $requiredAction = $verdict->isAppeal() ? $verdict->getInitialJuryAction() : null;
+        $upheldCount = 0;
+        $uphealdCountRequired = $verdict->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
+
+        foreach ($verdict->getDecisions() as $decision) {
+            if ($requiredAction && $requiredAction === $decision->getAction()) {
+                $upheldCount++;
+            }
+
+            if (!$verdict->isAppeal() && !$requiredAction) {
+                $upheldCount++;
+                $requiredAction = $decision->getAction();
+            }
+        }
+
+        if ($upheldCount >= $uphealdCountRequired) {
+            return $requiredAction;
+        }
+
+        return 'overturned';
     }
 
 }

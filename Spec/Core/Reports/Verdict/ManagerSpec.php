@@ -5,6 +5,7 @@ namespace Spec\Minds\Core\Reports\Verdict;
 use Minds\Core\Reports\Verdict\Manager;
 use Minds\Core\Reports\Verdict\Repository;
 use Minds\Core\Reports\Verdict\Verdict;
+use Minds\Core\Reports\Jury\Decision;
 use Minds\Core\Reports\Verdict\Delegates;
 use Minds\Core\Reports\Report;
 use PhpSpec\ObjectBehavior;
@@ -48,6 +49,109 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->cast($verdict->getWrappedObject());
+    }
+
+    function it_should_return_the_verdict_action_as_explicit(Verdict $verdict)
+    {
+        $verdict->isAppeal()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $verdict->getDecisions()
+            ->shouldBeCalled()
+            ->willReturn([
+                (new Decision)
+                    ->setAction('explicit'),
+            ]);
+
+        $this->getAction($verdict)
+            ->shouldBe('explicit');
+    }
+
+    function it_should_return_the_appeal_verdict_action_as_explicit(Verdict $verdict)
+    {
+        $verdict->isAppeal()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $verdict->getInitialJuryAction()
+            ->shouldBeCalled()
+            ->willReturn('explicit');
+
+        $verdict->getDecisions()
+            ->shouldBeCalled()
+            ->willReturn([
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('overturned'),
+                (new Decision)
+                    ->setAction('overturned'),
+            ]);
+
+        $this->getAction($verdict)
+            ->shouldBe('explicit');
+    }
+
+    function it_should_return_the_appeal_verdict_action_as_overturned(Verdict $verdict)
+    {
+        $verdict->isAppeal()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $verdict->getInitialJuryAction()
+            ->shouldBeCalled()
+            ->willReturn('explicit');
+
+        $verdict->getDecisions()
+            ->shouldBeCalled()
+            ->willReturn([
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('explicit'),
+                (new Decision)
+                    ->setAction('overturned'),
+                (new Decision)
+                    ->setAction('overturned'),
+                (new Decision)
+                    ->setAction('overturned'),
+                (new Decision)
+                    ->setAction('overturned'),
+                (new Decision)
+                    ->setAction('overturned'),
+            ]);
+
+        $this->getAction($verdict)
+            ->shouldBe('overturned');
     }
 
 }

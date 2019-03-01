@@ -12,6 +12,7 @@ use Minds\Traits\MagicAttributes;
  * @method Report isAppeal(): boolean
  * @method Report isAccepted(): boolean
  * @method Report getAction(): string
+ * @method Report getInitialJuryAction(): string
  * @method Report getTimestamp: int
  */
 class Verdict
@@ -35,6 +36,9 @@ class Verdict
 
     /** @var string $action */
     private $action;
+
+    /** @var string $initialJuryAction */
+    private $initialJuryAction;
 
     /**
      * @return array
