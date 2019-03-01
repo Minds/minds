@@ -13,7 +13,7 @@ use Minds\Core\Media\Proxy\Download;
 use Minds\Core\Media\Proxy\Resize;
 use Minds\Interfaces;
 
-class magicproxy implements Interfaces\Api, Interfaces\ApiIgnorePam
+class MagicProxy implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     const MAX_TIME = 5;
 
@@ -27,6 +27,7 @@ class magicproxy implements Interfaces\Api, Interfaces\ApiIgnorePam
     public function get($pages)
     {
         $src = isset($_GET['src']) ? $_GET['src'] : null;
+
         // thumbProxy polyfill
         $width = isset($_GET['size']) ? (int) $_GET['size'] : null;
 
@@ -37,21 +38,12 @@ class magicproxy implements Interfaces\Api, Interfaces\ApiIgnorePam
         }
 
         if ($src) {
-            $siteUrl = Di::_()->get('Config')->get('site_url');
-            $cdnUrl = Di::_()->get('Config')->get('cdn_url');
-
-            if ($siteUrl && strpos($src, $siteUrl) === 0) {
-                \forward($src);
-                exit;
-            } elseif ($cdnUrl && strpos($src, $cdnUrl) === 0) {
-                \forward($src);
-                exit;
-            } elseif (strpos($src, '//') === 0) {
+            if (strpos($src, '//') === 0) {
                 $src = 'https:'.$src;
             }
-        }
-
-        if ($size < 0) {
+        } else {
+            header('X-Minds-Exception: missing image src');
+            http_response_code(415);
             exit;
         }
 
