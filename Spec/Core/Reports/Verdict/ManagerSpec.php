@@ -51,6 +51,43 @@ class ManagerSpec extends ObjectBehavior
         $this->cast($verdict->getWrappedObject());
     }
 
+    function it_should_return_a_single_verdict_object_from_repository()
+    {
+        $ts = microtime(true);
+        $report = new Report();
+
+        $decisions = [
+            (new Decision)
+                ->setAction('overturned'),
+            (new Decision)
+                ->setAction('explicit'),
+        ];
+
+        $this->repository->get(123)
+            ->shouldBeCalled()
+            ->willReturn(
+                (new Verdict())
+                    ->setTimestamp($ts)
+                    ->setAppeal(false)
+                    ->setAction(null)
+                    ->setReport($report)
+                    ->setDecisions($decisions)
+            );
+
+        $verdict = $this->get(123);
+
+        $verdict->getReport()
+            ->shouldBe($report);
+        $verdict->getDecisions()
+            ->shouldBe($decisions);
+        $verdict->getTimestamp()
+            ->shouldBe($ts);
+        $verdict->isAppeal()
+            ->shouldBe(false);
+        $verdict->getAction()
+            ->shouldBe(null);
+    }
+
     function it_should_return_the_verdict_action_as_explicit(Verdict $verdict)
     {
         $verdict->isAppeal()

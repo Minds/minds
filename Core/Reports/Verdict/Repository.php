@@ -10,6 +10,9 @@ use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Common\Repository\Response;
+use Minds\Core\Reports\Report;
+use Minds\Core\Reports\Jury\Decision;
 
 
 class Repository
@@ -36,10 +39,121 @@ class Repository
             'owner' => null
         ], $opts);
 
+        $must = [];
+
+        if ($opts['entity_guid']) {
+            $must[] = [
+                'match' => [
+                    'entity_guid' => $opts['entity_guid'],
+                ],
+            ];
+        }
+
+        $body = [
+            'query' => [
+                'bool' => [
+                    'must' => $must,   
+                ]
+            ],
+            'size' => $opts['limit'],
+            'aggs' => [ // We use aggregates as we can't rely on nested not having duplicate votes
+                'decisions' => [
+                    'terms' => [
+                        'field' => 'entity_guid'
+                    ],
+                    'aggs' => [
+                        'initial_jury' => [
+                            'nested' => [
+                                'path' => 'initial_jury',
+                            ],
+                            'aggs' => [
+                                'decision' => [
+                                    'terms' => [
+                                        'field' => 'initial_jury.reporter_guid',
+                                    ],
+                                    'aggs' => [
+                                        'action' => [
+                                            'terms' => [
+                                                'field' => 'initial_jury.action',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'appeal_jury' => [
+                            'nested' => [
+                                'path' => 'appeal_jury',
+                            ],
+                            'aggs' => [
+                                'decision' => [
+                                    'terms' => [
+                                        'field' => 'appeal_jury.reporter_guid',
+                                    ],
+                                    'aggs' => [
+                                        'action' => [
+                                            'terms' => [
+                                                'field' => 'appeal_jury.action',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
 
         $response = new Response;
 
+        $prepared = new Prepared\Search();
+        $result = $this->es->request($prepared);
+
+        foreach ($result['hits']['hits'] as $row) {
+
+            $report = new Report();
+            $report->setEntityGuid($row['_source']['entity_guid']);
+
+            $verdict = new Verdict();
+            $verdict->setAppeal(isset($row['_source']['@initial_jury_decided_timestamp']))
+                ->setReport($report);
+
+            $reportStage = $verdict->isAppeal() ? 'appeal_jury' : 'initial_jury';
+            $decisions = [];
+            foreach ($result['aggregations']['decisions']['buckets'][$reportStage]['decision']['buckets'] as $decision_row) {
+                $decisions[] = (new Decision)
+                    ->setJurorGuid($decision_row['key'])
+                    //->setTimestamp($decision_row['@timestamp'])
+                    ->setAction($decision_row['action']['buckets'][0]['key']);
+            }
+            $verdict->setDecisions($decisions);
+
+            $response[] = $verdict;
+        }
+
         return $response;
+    }
+
+    /**
+     * @param $entity_guid
+     * @return Verdict
+     */
+    public function get($entity_guid)
+    {
+        $response = $this->getList([
+            'entity_guid' => $entity_guid,
+        ]);
+
+        if ($response[0] 
+            && $response[0]->getReport()
+            && $response[0]->getReport()->getEntityGuid() == $entity_guid
+        ) {
+            return $response[0];
+        }
+
+        return null;
     }
 
     /**

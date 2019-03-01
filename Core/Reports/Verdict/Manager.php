@@ -54,9 +54,13 @@ class Manager
     }
 
     /**
-     * @param int $entity_guid
+     * @param long $entity_guid
      * @return Verdict
      */
+    public function get($entity_guid)
+    {
+        return $this->repository->get($entity_guid);
+    }
 
     /**
      * Cast a verdict
