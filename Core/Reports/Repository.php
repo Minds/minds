@@ -51,9 +51,10 @@ class Repository
                 'params' => [
                     'report' => [
                         [
-                            '@timestamp' => $report->getTimestamp(), // In MS
+                            '@timestamp' => (int) $report->getTimestamp(), // In MS
                             'reporter_guid' => $report->getReporterGuid(),
                             'reason' => $report->getReasonCode(),
+                            'sub_reason' => (int) $report->getSubReasonCode(),
                         ],
                     ],
                 ],

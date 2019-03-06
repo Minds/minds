@@ -18,5 +18,10 @@ class Provider extends DiProvider
         $this->di->bind('Reports\Repository', function ($di) {
             return new Repository();
         }, [ 'useFactory'=> true ]);
+
+        // New moderation system
+        $this->di->bind('Moderation\Reports\Manager', function ($di) {
+            return new Manager();
+        }, [ 'useFactory'=> false ]);
     }
 }

@@ -32,6 +32,9 @@ class Report
     /** @var int $reasonCode */
     private $reasonCode;
 
+    /** @var int $subReasonCode */
+    private $subReasonCode;
+
     /**
      * @return array
      */
@@ -43,6 +46,7 @@ class Report
             'entity_guid' => $this->entityGuid,
             'entity' => $this->entity ? $this->entity->export() : null,
             'reason_code' => $this->reasonCode,
+            'sub_reason_code' => $this->subReasonCode,
         ];
 
         return $export;
