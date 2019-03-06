@@ -20,6 +20,11 @@ class WireNotification implements Interfaces\QueueRunner
 
                 $data = $data->getData();
                 $entity = unserialize($data['entity']);
+
+                if (!$entity || !is_object($entity)) {
+                    return;
+                }
+
                 $receiverUser = $entity->type === 'user' ? $entity : $entity->getOwnerEntity();
 
                 if (isset($data['walletNotSetupException']) && $data['walletNotSetupException']) {
