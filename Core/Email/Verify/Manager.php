@@ -20,6 +20,7 @@ class Manager
         'annomails.com',
         'emailweb.xyz',
         'buydiscountdeal.com',
+        'palantirmails.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
