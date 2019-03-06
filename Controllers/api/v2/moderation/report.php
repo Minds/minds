@@ -52,7 +52,7 @@ class report implements Interfaces\Api
             ->setReporterGuid($user->getGuid())
             ->setReasonCode((int) $_POST['reason_code'])
             ->setSubReasonCode($_POST['sub_reason_code'] ?? null)
-            ->setTimestamp(microtime(true));
+            ->setTimestamp(round(microtime(true) * 1000));
 
         if (!$manager->add($report)) {
             Factory::response([
