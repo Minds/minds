@@ -9,12 +9,26 @@ use Minds\Core;
 use Minds\Entities;
 use Minds\Entities\Activity;
 use Minds\Interfaces;
+use Minds\Core\Di\Di;
 
 class jury implements Interfaces\Api
 {
     public function get($pages)
     {
-        return Factory::response([]);
+        $juryType = $pages[0] ?? 'appeal';
+
+        $juryManager = Di::_()->get('Moderation\Jury\Manager');
+        $juryManager->setJuryType($juryType)
+            ->setUser(Core\Session::getLoggedInUser());
+
+        $reports = $juryManager->getUnmoderatedList([
+            'limit' => 12,
+            'hydrate' => true,
+        ]);
+
+        return Factory::response([
+            'reports' => Factory::exportable($reports),
+        ]);
     }
 
     public function post($pages)

@@ -23,5 +23,8 @@ class Provider extends DiProvider
         $this->di->bind('Moderation\Reports\Manager', function ($di) {
             return new Manager();
         }, [ 'useFactory'=> false ]);
+        $this->di->bind('Moderation\Jury\Manager', function ($di) {
+            return new Jury\Manager();
+        }, [ 'useFactory'=> false ]);
     }
 }

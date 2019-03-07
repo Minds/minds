@@ -10,6 +10,7 @@ use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Common\Repository\Response;
 
 
 class Repository
@@ -25,7 +26,7 @@ class Repository
     /**
      * Return the decisions a jury has made
      * @param array $options 'limit', 'offset', 'state'
-     * @return array
+     * @return Response
      */
     public function getList(array $opts = [])
     {
