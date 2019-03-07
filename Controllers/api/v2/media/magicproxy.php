@@ -1,21 +1,31 @@
 <?php
 
 /**
- * Minds Media Proxy.
+ * Minds Media Proxy using Imagick.
  *
- * @author emi
+ * @author Brian Hatchet
  */
 
 namespace Minds\Controllers\api\v2\media;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Media\Proxy\Download;
-use Minds\Core\Media\Proxy\Resize;
 use Minds\Interfaces;
+use Minds\Core\Media\Proxy\MagicResize;
 
 class MagicProxy implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     const MAX_TIME = 5;
+
+    private $downloader;
+    private $resizer;
+    private $config;
+
+    public function __construct($downloader = null, MagicResize $resizer = null, $config = null)
+    {
+        $this->downloader = $downloader ?: Di::_()->get('Media\Proxy\Download');
+        $this->resizer = $resizer ?: Di::_()->get('Media\Proxy\MagicResize');
+        $this->config = $config ?: Di::_()->get('Config');
+    }
 
     /**
      * Equivalent to HTTP GET method.
@@ -36,8 +46,17 @@ class MagicProxy implements Interfaces\Api, Interfaces\ApiIgnorePam
         } else {
             $size = isset($_GET['size']) ? (int) $_GET['size'] : 1024;
         }
-
         if ($src) {
+            $siteUrl = $this->config->get('site_url');
+            $cdnUrl = $this->config->get('cdn_url');
+            //If not on minds or the cdn
+            if (($siteUrl && strpos($src, $siteUrl) !== 0)
+                 && ($cdnUrl && strpos($src, $cdnUrl) !== 0)) {
+                header('X-Minds-Exception: not a Minds resource');
+                http_response_code(415);
+                exit;
+            }
+
             if (strpos($src, '//') === 0) {
                 $src = 'https:'.$src;
             }
@@ -54,36 +73,32 @@ class MagicProxy implements Interfaces\Api, Interfaces\ApiIgnorePam
             set_time_limit(static::MAX_TIME + 1);
             ini_set('max_execution_time', static::MAX_TIME + 1);
 
-            /** @var Download $downloader */
-            $downloader = Di::_()->get('Media\Proxy\Download');
+            $this->downloader->setLimitKb(2048);
 
-            /** @var Resize $resizer */
-            $magicResizer = Di::_()->get('Media\Proxy\MagicResize');
-
-            $binaryString = $downloader
+            $binaryString = $this->downloader
                 ->setSrc($src)
                 ->setTimeout(static::MAX_TIME)
                 ->downloadBinaryString();
 
-            $magicResizer
+            $this->resizer
                 ->setSize($size)
                 ->setUpscale(false)
                 ->setImage($binaryString)
                 ->resize();
 
             if ($roundX && $roundY) {
-                $magicResizer->setImageFormat('png');
-                $magicResizer->roundCorners($roundX, $roundY);
+                $this->resizer->setImageFormat('png');
+                $this->resizer->roundCorners($roundX, $roundY);
             }
 
-            $output = $magicResizer->getImage();
+            $output = $this->resizer->getImage();
 
             $expires = date('r', strtotime('+6 months'));
 
             header("Expires: {$expires}", true);
             header('Pragma: public');
             header('Cache-Control: public');
-            header("Content-Type: image/{$magicResizer->getImageFormat()}");
+            header("Content-Type: image/{$this->resizer->getImageFormat()}");
 
             echo $output;
         } catch (\Exception $e) {
