@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Minds JSON-RPC Client
+ * Minds JSON-RPC Client.
  *
  * @author emi
  */
@@ -12,15 +12,21 @@ use Minds\Core\Http\Curl;
 
 class Client extends Curl\Client
 {
-    static $version = '2.0';
+    public static $version = '2.0';
 
     protected $id = 1;
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
-     * Not used
+     * Not used.
+     *
      * @param $url
      * @param array $options
-     * @return void
+     *
      * @throws \Exception
      */
     public function get($url, array $options = [])
@@ -29,26 +35,29 @@ class Client extends Curl\Client
     }
 
     /**
-     * Sends a request to an RPC-JSON server
+     * Sends a request to an RPC-JSON server.
+     *
      * @param $url
      * @param array $data
      * @param array $options
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function post($url, array $data = [], array $options = [])
     {
         $options = array_merge([
-            'headers' => []
+            'headers' => [],
         ], $options);
 
         $options['headers'] = array_merge([
-            'Content-Type: application/json'
+            'Content-Type: application/json',
         ], $options['headers']);
 
         $data = array_merge($data, [
             'version' => static::$version,
-            'id' => $this->id++
+            'id' => $this->id++,
         ]);
 
         if (!isset($data['method'])) {
@@ -65,11 +74,12 @@ class Client extends Curl\Client
     }
 
     /**
-     * Not used
+     * Not used.
+     *
      * @param $url
      * @param array $data
      * @param array $options
-     * @return void
+     *
      * @throws \Exception
      */
     public function put($url, array $data = [], array $options = [])
@@ -78,11 +88,12 @@ class Client extends Curl\Client
     }
 
     /**
-     * Not used
+     * Not used.
+     *
      * @param $url
      * @param array $data
      * @param array $options
-     * @return void
+     *
      * @throws \Exception
      */
     public function delete($url, array $data = [], array $options = [])

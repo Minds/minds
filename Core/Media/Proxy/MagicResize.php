@@ -15,6 +15,7 @@ use Minds\Traits\MagicAttributes;
 class MagicResize
 {
     use MagicAttributes;
+
     /** @var string $image */
     protected $image;
 
@@ -47,6 +48,7 @@ class MagicResize
         $this->output = new Imagick();
         $this->output->setBackgroundColor(new ImagickPixel('transparent'));
         $this->output->readImageBlob($this->image);
+        $this->imageFormat = $this->output->getImageFormat();
 
         return $this;
     }

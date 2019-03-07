@@ -10,9 +10,12 @@ namespace Minds\Core\Media\Proxy;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Http\Curl\Client;
+use Minds\Traits\MagicAttributes;
 
 class Download
 {
+    use MagicAttributes;
+
     /** @var Client $http */
     protected $http;
 
@@ -25,34 +28,13 @@ class Download
     /** @var int $timeout */
     protected $timeout = 2;
 
+    /** @var int $limitkb */
+    protected $limitKb;
+
     public function __construct($http = null, $blacklist = null)
     {
         $this->http = $http ?: Di::_()->get('Http');
         $this->blacklist = $blacklist ?: Di::_()->get('Config')->get('internal_blacklist');
-    }
-
-    /**
-     * @param string $src
-     *
-     * @return Download
-     */
-    public function setSrc($src)
-    {
-        $this->src = $src;
-
-        return $this;
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return Download
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-
-        return $this;
     }
 
     /**
@@ -110,6 +92,7 @@ class Download
                 CURLOPT_CONNECTTIMEOUT_MS => $this->timeout * 1000,
                 CURLOPT_TIMEOUT_MS => $this->timeout * 1000,
             ],
+            'limit' => $this->limitKb ? $this->limitKb : null,
         ]);
 
         if (!$content) {

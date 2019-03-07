@@ -1,29 +1,45 @@
 <?php
+
 namespace Minds\Core\Http\Curl;
+
+use Minds\Traits\MagicAttributes;
 
 class Client
 {
+    use MagicAttributes;
+
+    private $curl;
+
+    public function __construct(CurlWrapper $curl = null)
+    {
+        $this->curl = $curl ?: new CurlWrapper();
+    }
+
     public function get($url, array $options = [])
     {
-        $options = array_merge([ 'method' => 'get', 'url' => $url ], $options);
+        $options = array_merge(['method' => 'get', 'url' => $url], $options);
+
         return $this->request($options);
     }
 
     public function post($url, array $data = [], array $options = [])
     {
-        $options = array_merge([ 'method' => 'post', 'url' => $url, 'data' => $data ], $options);
+        $options = array_merge(['method' => 'post', 'url' => $url, 'data' => $data], $options);
+
         return $this->request($options);
     }
 
     public function put($url, array $data = [], array $options = [])
     {
-        $options = array_merge([ 'method' => 'put', 'url' => $url, 'data' => $data ], $options);
+        $options = array_merge(['method' => 'put', 'url' => $url, 'data' => $data], $options);
+
         return $this->request($options);
     }
 
     public function delete($url, array $data = [], array $options = [])
     {
-        $options = array_merge([ 'method' => 'delete', 'url' => $url, 'data' => $data ], $options);
+        $options = array_merge(['method' => 'delete', 'url' => $url, 'data' => $data], $options);
+
         return $this->request($options);
     }
 
@@ -35,6 +51,7 @@ class Client
             'data' => [],
             'headers' => [],
             'curl' => [],
+            'limit' => 0,
         ], $options);
 
         $headers = [];
@@ -43,10 +60,8 @@ class Client
             return false;
         }
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $options['url']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $this->curl->setOpt(CURLOPT_URL, $options['url']);
+        $this->curl->setOpt(CURLOPT_RETURNTRANSFER, 1);
 
         $validMethods = ['get', 'post', 'put', 'delete', 'options', 'head'];
 
@@ -62,24 +77,28 @@ class Client
             $options['data'] = json_encode($options['data']);
         }
 
+        if ($options['limit']) {
+            $this->curl->setLimit($options['limit']);
+        }
+
         if (in_array($options['method'], $validMethods)) {
             switch ($options['method']) {
                 case 'get':
-                    curl_setopt($ch, CURLOPT_HTTPGET, true);
+                    $this->curl->setOpt(CURLOPT_HTTPGET, true);
                     break;
                 case 'post':
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $options['data']);
+                    $this->curl->setOpt(CURLOPT_POST, true);
+                    $this->curl->setOpt(CURLOPT_POSTFIELDS, $options['data']);
                     break;
                 case 'options':
                 case 'head':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($options['method']));
+                    $this->curl->setOpt(CURLOPT_CUSTOMREQUEST, strtoupper($options['method']));
                     break;
                 case 'put':
                 case 'delete':
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($options['method']));
-                    $headers = array_merge($headers, [ 'X-HTTP-Method-Override: ' . strtoupper($options['method']) ]);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $options['data']);
+                    $this->curl->setOpt(CURLOPT_CUSTOMREQUEST, strtoupper($options['method']));
+                    $headers = array_merge($headers, ['X-HTTP-Method-Override: '.strtoupper($options['method'])]);
+                    $this->curl->setOpt(CURLOPT_POSTFIELDS, $options['data']);
                     break;
             }
         }
@@ -88,18 +107,20 @@ class Client
             $headers = array_merge($headers, $options['headers']);
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $this->curl->setOpt(CURLOPT_HTTPHEADER, $headers);
 
         if ($options['curl']) {
-            curl_setopt_array($ch, $options['curl']);
+            $this->curl->setOptArray($options['curl']);
         }
 
-        $response = curl_exec($ch);
-        $errorNumber = curl_errno($ch);
-        $error = curl_error($ch);
-        curl_close($ch);
+        $response = $this->curl->execute();
+        $errorNumber = $this->curl->getErrorNumber();
+        $error = $this->curl->getError();
 
         if ($errorNumber) {
+            if ($errorNumber === CURLE_ABORTED_BY_CALLBACK) {
+                throw new \Exception("Exceeded max download size of {$options['limit']} Kbs", $errorNumber);
+            }
             throw new \Exception($error, $errorNumber);
         }
 
