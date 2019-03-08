@@ -2,14 +2,14 @@
 
 namespace Spec\Minds\Core\Hashtags\User;
 
-use Minds\Core\Hashtags\User\Repository;
+use Minds\Core\Hashtags\User\Manager;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class RepositorySpec extends ObjectBehavior
+class ManagerSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType(Repository::class);
+        $this->shouldHaveType(Manager::class);
     }
 }

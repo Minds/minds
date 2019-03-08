@@ -29,8 +29,10 @@ class Top implements SortingAlgorithm
             'bool' => [
                 'must' => [
                     [
-                        'exists' => [
-                            'field' => "votes:up:{$this->period}",
+                        'range' => [
+                            "votes:up:{$this->period}:synced" => [
+                                'gte' => strtotime("7 days ago", time()),
+                            ],
                         ],
                     ],
                 ],
@@ -48,10 +50,8 @@ class Top implements SortingAlgorithm
             def down = (doc['votes:down:{$this->period}'].value ?: 0) * 1.0;
             def magnitude = up + down;
             
-            def was_synced = (doc['votes:up:{$this->period}:synced'].value + 43200) > (new Date().getTime() / 1000);
-            
-            if (magnitude <= 0 || !was_synced) {
-                return 0;
+            if (magnitude <= 0) {
+                return -10;
             }
             
             def score = ((up + 1.9208) / (up + down) - 1.96 * Math.sqrt((up * down) / (up + down) + 0.9604) / (up + down)) / (1 + 3.8416 / (up + down));

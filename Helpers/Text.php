@@ -10,6 +10,11 @@ namespace Minds\Helpers;
 
 class Text
 {
+    /**
+     * @param string $text
+     * @param int $charLimit
+     * @return false|string|null
+     */
     public static function slug($text, $charLimit = 0)
     {
         if (!$text) {
@@ -46,13 +51,42 @@ class Text
         return $text;
     }
 
+    /**
+     * @param string $text
+     * @return string
+     */
     public static function camel($text)
     {
         return lcfirst(str_replace(['_', ':'], '', ucwords($text, '_:')));
     }
 
+    /**
+     * @param string $text
+     * @return string
+     */
     public static function snake($text)
     {
         return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $text));
+    }
+
+    /**
+     * @param mixed $value
+     * @return string[]
+     */
+    public static function buildArray($value)
+    {
+        if (is_array($value)) {
+            return array_map('static::_buildArrayElement', $value);
+        }
+
+        return [ static::_buildArrayElement($value) ];
+    }
+
+    /**
+     * @param mixed $value
+     * @return string
+     */
+    protected static function _buildArrayElement($value) {
+        return (string) $value;
     }
 }

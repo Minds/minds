@@ -17,16 +17,22 @@ class suggested implements Interfaces\Api
         Factory::isLoggedIn();
 
         $limit = 10;
-
         if (isset($_GET['limit'])) {
-            $limit = $_GET['limit'];
+            $limit = intval($_GET['limit']);
         }
+
+        $trending = (bool) ($_GET['trending'] ?? false);
+        $defaults = (bool) ($_GET['defaults'] ?? true); // Legacy behavior
 
         /** @var Core\Hashtags\User\Manager $manager */
         $manager = Di::_()->get('Hashtags\User\Manager');
         $manager->setUser(Core\Session::getLoggedInUser());
 
-        $result = $manager->get(['limit' => $limit]);
+        $result = $manager->get([
+            'limit' => $limit,
+            'trending' => $trending,
+            'defaults' => $defaults,
+        ]);
 
         return Factory::response([
             'status' => 'success',

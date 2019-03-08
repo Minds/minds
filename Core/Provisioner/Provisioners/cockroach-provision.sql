@@ -115,12 +115,3 @@ CREATE TABLE minds.suggested_tags (
   CONSTRAINT "primary" PRIMARY KEY (guid ASC),
   FAMILY "primary" (guid, rating, type, score, lastsynced, hashtags)
 );
-
-CREATE TABLE minds.user_hashtags (
-  guid INT NOT NULL,
-  hashtag STRING NOT NULL,
-  CONSTRAINT "primary" PRIMARY KEY (guid ASC, hashtag ASC),
-  INDEX user_hashtags_hashtag_idx (hashtag ASC),
-  INDEX user_hashtags_hashtag_guid_idx (hashtag ASC, guid ASC),
-  FAMILY "primary" (guid, hashtag)
-)

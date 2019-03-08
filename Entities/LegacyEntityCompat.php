@@ -27,6 +27,8 @@ abstract class LegacyEntityCompat
             case 'access_id':
             case 'owner_guid':
             case 'container_guid':
+            case 'time_created':
+            case 'time_updated':
             case 'hidden':
                 $prop = Text::camel($name);
                 return isset($this->$prop) ? $this->$prop : null;
@@ -57,6 +59,8 @@ abstract class LegacyEntityCompat
             case 'access_id':
             case 'owner_guid':
             case 'container_guid':
+            case 'time_created':
+            case 'time_updated':
             case 'hidden':
             case 'thumbs:up:user_guids':
             case 'thumbs:down:user_guids':

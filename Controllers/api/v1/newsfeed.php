@@ -474,7 +474,8 @@ class newsfeed implements Interfaces\Api
                 //essentially an edit
                 if (is_numeric($pages[0])) {
                     $activity = new Activity($pages[0]);
-                    if (!$activity->canEdit()) {
+
+                    if (!$activity->canEdit() || $activity->type !== 'activity') {
                         return Factory::response(array('status' => 'error', 'message' => 'Post not editable'));
                     }
 

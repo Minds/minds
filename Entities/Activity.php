@@ -36,6 +36,7 @@ class Activity extends Entity
             'boost_rejection_reason' => -1,
             'pending' => false,
             'rating' => 2, //open by default
+            'ephemeral' => false,
             //	'node' => elgg_get_site_url()
         ));
     }
@@ -52,6 +53,10 @@ class Activity extends Entity
      */
     public function save($index = true)
     {
+
+        if ($this->getEphemeral()) {
+            throw new \Exception('Cannot save an ephemeral activity');
+        }
 
         //cache owner_guid for brief
         if (!$this->ownerObj && $owner = $this->getOwnerEntity(false)) {
@@ -100,6 +105,10 @@ class Activity extends Entity
      */
     public function delete()
     {
+        if ($this->getEphemeral()) {
+            throw new \Exception('Cannot save an ephemeral activity');
+        }
+
         if ($this->p2p_boosted) {
             return false;
         }
@@ -204,7 +213,8 @@ class Activity extends Entity
                 'wire_threshold',
                 'boost_rejection_reason',
                 'pending',
-                'rating'
+                'rating',
+                'ephemeral',
             ));
     }
 
@@ -246,6 +256,7 @@ class Activity extends Entity
         $export['wire_threshold'] = $this->getWireThreshold();
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['rating'] = $this->getRating();
+        $export['ephemeral'] = $this->getEphemeral();
 
         switch($this->custom_type) {
             case 'video':
@@ -426,6 +437,26 @@ class Activity extends Entity
     public function getMature()
     {
         return (bool) $this->mature;
+    }
+
+    /**
+     * Sets the ephemeral flag for this activity
+     * @param bool $value
+     * @return Activity
+     */
+    public function setEphemeral($value)
+    {
+        $this->ephemeral = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Gets the ephemeral flag
+     * @return boolean
+     */
+    public function getEphemeral()
+    {
+        return (bool) $this->ephemeral;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Minds\Controllers\api\v2;
 
+use Minds\Api\Exportable;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -64,7 +65,7 @@ class feeds implements Interfaces\Api
         if ($algorithm === 'hot') {
             $period = '12h';
         } elseif ($algorithm === 'latest') {
-            $period = null;
+            $period = '1y';
         }
 
         $offset = 0;
@@ -84,7 +85,13 @@ class feeds implements Interfaces\Api
             $hashtag = $_GET['hashtag'];
         }
 
+        $all = false;
+        if (!$hashtag && isset($_GET['all']) && $_GET['all']) {
+            $all = true;
+        }
+
         $container_guid = $_GET['container_guid'] ?? null;
+        $custom_type = isset($_GET['custom_type']) && $_GET['custom_type'] ? [$_GET['custom_type']] : null;
 
         if ($container_guid) {
             $container = EntitiesFactory::build($container_guid);
@@ -100,32 +107,53 @@ class feeds implements Interfaces\Api
         /** @var Core\Feeds\Top\Manager $repo */
         $repo = Di::_()->get('Feeds\Top\Manager');
 
+        /** @var Core\Feeds\Top\Entities $entities */
+        $entities = new Core\Feeds\Top\Entities();
+
         $opts = [
             'cache_key' => Core\Session::getLoggedInUserGuid(),
             'container_guid' => $container_guid,
+            'custom_type' => $custom_type,
             'limit' => $limit,
             'offset' => $offset,
             'type' => $type,
             'algorithm' => $algorithm,
             'period' => $period,
+            'rating' => $_GET['rating'] ?? 1,
         ];
 
         if ($hashtag) {
             $opts['hashtags'] = [$hashtag];
-        } elseif (isset($_GET['hashtags']) && $_GET['hashtags'] && !$all) {
+            $opts['filter_hashtags'] = true;
+        } elseif (isset($_GET['hashtags']) && $_GET['hashtags']) {
             $opts['hashtags'] = explode(',', $_GET['hashtags']);
+            $opts['filter_hashtags'] = true;
+        } elseif (!$all) {
+            /** @var Core\Hashtags\User\Manager $manager */
+            $manager = Di::_()->get('Hashtags\User\Manager');
+            $manager->setUser(Core\Session::getLoggedInUser());
+
+            $result = $manager->get([
+                'limit' => 50,
+                'trending' => false,
+                'defaults' => false,
+            ]);
+
+            $opts['hashtags'] = array_column($result ?: [], 'value');
+            $opts['filter_hashtags'] = false;
         }
 
         $result = $repo->getList($opts);
 
         // Remove all unlisted content if it appears
-        $result = array_values(array_filter($result, function ($entity) {
-            return $entity->getAccessId() != 0;
-        }));
+        $result = array_filter($result, [$entities, 'filter']);
+
+        // Cast to ephemeral Activity entities, if another type
+        $result = array_map([$entities, 'cast'], $result);
 
         return Factory::response([
             'status' => 'success',
-            'entities' => Factory::exportable($result),
+            'entities' => Exportable::_(array_values($result)),
             'load-next' => $limit + $offset,
         ]);
     }

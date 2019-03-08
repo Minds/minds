@@ -2,29 +2,53 @@
 
 namespace Minds\Core\Hashtags\User;
 
-use Minds\Core\Data\cache\abstractCacher;
+use Cassandra\Varint;
+use Minds\Common\Repository\Response;
+use Minds\Core\Config;
+use Minds\Core\Data\Cassandra\Client;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
 use Minds\Core\Hashtags\HashtagEntity;
 
 class Repository
 {
-    /** @var \PDO */
+    /** @var Client */
     protected $db;
 
-    /** @var abstractCacher */
-    protected $cacher;
+    /** @var LegacyRepository */
+    protected $legacyRepository;
 
-    public function __construct($db = null, $cacher = null)
+    /** @var Config */
+    protected $config;
+
+    public function __construct($db = null, $legacyRepository = null, $config = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\PDO');
-        $this->cacher = $cacher ?: Di::_()->get('Cache');
+        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->legacyRepository = $legacyRepository ?: new LegacyRepository();
+        $this->config = $config ?: Di::_()->get('Config');
     }
 
     /**
-     * Return all hashtags
+     * @param array $opts
+     * @return bool|Response
+     * @throws \Exception
      */
     public function getAll($opts = [])
     {
+        // Legacy fallback
+        if ($this->config->get('user_hashtags_legacy_read')) {
+            $rows = $this->legacyRepository->getAll($opts);
+            $response = new Response();
+
+            foreach ($rows as $row) {
+                $response[] = (new HashtagEntity())
+                    ->setGuid($opts['user_guid'])
+                    ->setHashtag($row['hashtag']);
+            }
+
+            return $response;
+        }
+
         $opts = array_merge([
             'user_guid' => null
         ], $opts);
@@ -33,59 +57,110 @@ class Repository
             throw new \Exception('user_guid must be provided');
         }
 
-        $query = "SELECT hashtag FROM user_hashtags WHERE guid = ?";
-        $params = [$opts['user_guid']];
+        $cql = "SELECT hashtag FROM user_hashtags WHERE user_guid = ?";
+        $params = [
+            new Varint($opts['user_guid'])
+        ];
 
-        $statement = $this->db->prepare($query);
+        $prepared = new Custom();
+        $prepared->query($cql, $params);
 
-        $statement->execute($params);
+        try {
+            $rows = $this->db->request($prepared);
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+            if (!$rows) {
+                return false;
+            }
+
+            $response = new Response();
+
+            foreach ($rows as $row) {
+                $response[] = (new HashtagEntity())
+                    ->setGuid($opts['user_guid'])
+                    ->setHashtag($row['hashtag']);
+            }
+
+            return $response;
+        } catch (\Exception $e) {
+            error_log(static::class . '::getAll() CQL Exception ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**
      * @param HashtagEntity[] $hashtags
      * @return bool
      */
-    public function add($hashtags)
+    public function add(array $hashtags)
     {
-        $query = "UPSERT INTO user_hashtags(guid, hashtag) VALUES (?, ?)";
+        $cql = "INSERT INTO user_hashtags (user_guid, hashtag) VALUES (?, ?)";
 
         foreach ($hashtags as $hashtag) {
             try {
-                $statement = $this->db->prepare($query);
+                $params = [
+                    new Varint($hashtag->getGuid()),
+                    (string) $hashtag->getHashtag()
+                ];
 
-                $this->cacher->destroy("user-selected-hashtags:{$hashtag->getGuid()}");
+                $prepared = new Custom();
+                $prepared->query($cql, $params);
 
-                return $statement->execute([$hashtag->getGuid(), $hashtag->getHashtag()]);
+                $this->db->request($prepared, true);
             } catch (\Exception $e) {
-                error_log($e->getMessage());
+                error_log(static::class . '::add() CQL Exception ' . $e->getMessage());
+                return false;
             }
         }
-        return false;
+
+        if ($this->config->get('user_hashtags_migration')) {
+            $this->legacyRepository->add($hashtags);
+        }
+
+        return true;
     }
 
     /**
-     * @param $user_guid
-     * @param array $hashtags
+     * @param HashtagEntity[] $hashtags
      * @return bool
      */
-    public function remove($user_guid, array $hashtags)
+    public function remove(array $hashtags)
     {
-        $variables = implode(',', array_fill(0, count($hashtags), '?'));
+        $userGuid = $hashtags[0]->getGuid();
 
-        $query = "DELETE FROM user_hashtags WHERE guid = ? AND hashtag IN ({$variables})";
+        $hashtagValues = array_map(function ($hashtag) {
+            return $hashtag->getHashtag();
+        }, $hashtags);
+        $hashtagCollection = \Cassandra\Type::collection(\Cassandra\Type::text())->create(...$hashtagValues);
 
-        $statement = $this->db->prepare($query);
+        $cql = "DELETE FROM user_hashtags WHERE user_guid = ? AND hashtag IN ?";
+        $params = [
+            new Varint($userGuid),
+            $hashtagCollection
+        ];
 
-        $this->cacher->destroy("user-selected-hashtags:{$user_guid}");
+        $prepared = new Custom();
+        $prepared->query($cql, $params);
 
-        return $statement->execute(array_merge([$user_guid], $hashtags));
+        try {
+            $this->db->request($prepared, true);
+        } catch (\Exception $e) {
+            error_log(static::class . '::remove() CQL Exception ' . $e->getMessage());
+            return false;
+        }
+
+        if ($this->config->get('user_hashtags_migration')) {
+            $this->legacyRepository->remove($userGuid, $hashtagValues);
+        }
+
+        return true;
     }
 
-    public function update()
+    /**
+     * @param HashtagEntity[] $hashtags
+     * @return bool
+     */
+    public function update(array $hashtags)
     {
-
+        return $this->add($hashtags);
     }
-
 }

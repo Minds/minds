@@ -38,7 +38,7 @@ class entity implements Interfaces\Api
             $response['status'] = 'error';
         } else {
             $entity = Core\Entities::build(new Entities\Entity($pages[0]));
-            if ($entity instanceof \ElggEntity) {
+            if ($entity instanceof \ElggEntity || $entity instanceof Entities\LegacyEntityCompat) {
                 $response['entity'] = $entity->export();
                 $response['entity']['guid'] = (string) $entity->guid;
                 if ($entity->entityObj) {

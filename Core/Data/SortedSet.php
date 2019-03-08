@@ -25,6 +25,9 @@ class SortedSet
     /** @var int */
     protected $throttle;
 
+    /** @var array */
+    protected $pool = [];
+
     /**
      * SortedSet constructor.
      * @param Client
@@ -68,7 +71,7 @@ class SortedSet
             return false;
         }
 
-        $timestamp = (int) $this->redis->forReading()->get("{$this->key}::timestamp");
+        $timestamp = (int) $this->redis->forReading()->get($this->getTimestampKey());
 
         if (!$timestamp) {
             return false;
@@ -87,8 +90,8 @@ class SortedSet
             throw new \Exception('Missing key');
         }
 
-        $this->redis->forWriting()->del($this->key);
-        $this->redis->forWriting()->set("{$this->key}::timestamp", time());
+        $this->redis->forWriting()->del($this->getSetKey());
+        $this->redis->forWriting()->set($this->getTimestampKey(), time());
         $this->initialized = true;
 
         return $this;
@@ -100,8 +103,8 @@ class SortedSet
      */
     public function expiresIn($ttl)
     {
-        $this->redis->forWriting()->expire($this->key, $ttl);
-        $this->redis->forWriting()->expire("{$this->key}::timestamp", $ttl);
+        $this->redis->forWriting()->expire($this->getSetKey(), $ttl);
+        $this->redis->forWriting()->expire($this->getTimestampKey(), $ttl);
 
         return $this;
     }
@@ -118,7 +121,38 @@ class SortedSet
             throw new \Exception('Missing key');
         }
 
-        $this->redis->forWriting()->zAdd($this->key, $order, $value);
+        $this->redis->forWriting()->zAdd($this->getSetKey(), $order, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param $order
+     * @param $value
+     * @return SortedSet
+     */
+    public function lazyAdd($order, $value)
+    {
+        $this->pool[] = $order;
+        $this->pool[] = $value;
+        return $this;
+    }
+
+    /**
+     * @param int $threshold
+     * @return SortedSet
+     * @throws \Exception
+     */
+    public function flush($threshold = 0)
+    {
+        if ((!$threshold && count($this->pool) > 0) || (count($this->pool) >= $threshold)) {
+            if (!$this->key) {
+                throw new \Exception('Missing key');
+            }
+
+            $this->redis->forWriting()->zAdd($this->getSetKey(), ...$this->pool);
+            $this->pool = [];
+        }
 
         return $this;
     }
@@ -147,7 +181,7 @@ class SortedSet
 
         // Fetch data
 
-        $data = $this->redis->forReading()->zRange($this->key, $start, $end);
+        $data = $this->redis->forReading()->zRange($this->getSetKey(), $start, $end);
 
         // Build Response
 
@@ -159,5 +193,21 @@ class SortedSet
         }
 
         return $response;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSetKey()
+    {
+        return "SortedSet:{$this->key}";
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTimestampKey()
+    {
+        return "SortedSet\$ts:{$this->key}";
     }
 }

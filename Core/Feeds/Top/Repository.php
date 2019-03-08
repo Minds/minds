@@ -6,6 +6,7 @@ use Minds\Core\Data\ElasticSearch\Client as ElasticsearchClient;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Core\Search\SortingAlgorithms;
+use Minds\Helpers\Text;
 
 class Repository
 {
@@ -19,7 +20,7 @@ class Repository
 
     /**
      * @param array $opts
-     * @return null
+     * @return \Generator|ScoredGuid[]
      * @throws \Exception
      */
     public function getList(array $opts = [])
@@ -28,10 +29,13 @@ class Repository
             'offset' => 0,
             'limit' => 12,
             'container_guid' => null,
+            'custom_type' => null,
             'hashtags' => [],
+            'filter_hashtags' => true,
             'type' => null,
             'period' => null,
             'algorithm' => null,
+            'rating' => 1,
         ], $opts);
 
         if (!$opts['type']) {
@@ -43,7 +47,7 @@ class Repository
         }
 
         if (!in_array($opts['period'], ['12h', '24h', '7d', '30d', '1y'])) {
-            throw new \Exception('unsupported period');
+            throw new \Exception('Unsupported period');
         }
 
         $body = [
@@ -76,13 +80,39 @@ class Repository
         ];
 
         if ($opts['container_guid']) {
+            $containerGuids = Text::buildArray($opts['container_guid']);
+
             if (!isset($body['query']['function_score']['query']['bool']['must'])) {
                 $body['query']['function_score']['query']['bool']['must'] = [];
             }
 
             $body['query']['function_score']['query']['bool']['must'][] = [
-                'match' => [
-                    'container_guid' => (string) $opts['container_guid'],
+                'terms' => [
+                    'container_guid' => $containerGuids,
+                ],
+            ];
+        }
+
+        if ($opts['custom_type']) {
+            $customTypes = Text::buildArray($opts['custom_type']);
+
+            if (!isset($body['query']['function_score']['query']['bool']['must'])) {
+                $body['query']['function_score']['query']['bool']['must'] = [];
+            }
+
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'terms' => [
+                    'custom_type' => $customTypes,
+                ],
+            ];
+        }
+
+        if ($opts['rating']) {
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'range' => [
+                    'rating' => [
+                        'lte' => (int) $opts['rating'],
+                    ],
                 ],
             ];
         }
@@ -90,15 +120,36 @@ class Repository
         //
 
         if ($opts['hashtags']) {
-            $body['query']['function_score']['functions'][] = [
-                'filter' => [
-                    'multi_match' => [
-                        'query' => implode(' ', $opts['hashtags']),
-                        'fields' => ['message', 'tags^3']
-                    ]
-                ],
-                'weight' => 100000000
-            ];
+            if ($opts['filter_hashtags']) {
+                if (!isset($body['query']['function_score']['query']['bool']['must'])) {
+                    $body['query']['function_score']['query']['bool']['must'] = [];
+                }
+
+                $body['query']['function_score']['query']['bool']['must'][] = [
+                    'terms' => [
+                        'tags' => $opts['hashtags'],
+                    ],
+                ];
+            } else {
+                $body['query']['function_score']['functions'][] = [
+                    'filter' => [
+                        'multi_match' => [
+                            'query' => implode(' ', $opts['hashtags']),
+                            'fields' => ['tags']
+                        ]
+                    ],
+                    'weight' => 100
+                ];
+                $body['query']['function_score']['functions'][] = [
+                    'filter' => [
+                        'multi_match' => [
+                            'query' => implode(' ', $opts['hashtags']),
+                            'fields' => ['message']
+                        ]
+                    ],
+                    'weight' => 10
+                ];
+            }
         }
 
         //
@@ -160,15 +211,12 @@ class Repository
         $prepared = new Prepared\Search();
         $prepared->query($query);
 
-        // echo(json_encode($prepared->build()['body'], JSON_PRETTY_PRINT));die;
-
         $response = $this->client->request($prepared);
 
         foreach ($response['hits']['hits'] as $doc) {
-            yield [
-                (string) $doc['_source']['guid'],
-                $doc['_score']
-            ];
+            yield (new ScoredGuid())
+                ->setGuid($doc['_source']['guid'])
+                ->setScore($doc['_score']);
         }
     }
 

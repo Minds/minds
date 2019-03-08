@@ -9,6 +9,7 @@ namespace Minds\Core\Feeds\Top;
 
 
 use Minds\Core\Data\SortedSet;
+use Minds\Helpers\Text;
 
 class CachedRepository
 {
@@ -29,15 +30,17 @@ class CachedRepository
 
     /**
      * @param string $key
+     * @return CachedRepository
      */
     public function setKey($key)
     {
         $this->key = (string) $key;
+        return $this;
     }
 
     /**
      * @param array $opts
-     * @return array
+     * @return ScoredGuid[]
      * @throws \Exception
      */
     public function getList(array $opts = [])
@@ -53,21 +56,31 @@ class CachedRepository
 
         // Check if cache refresh is needed
 
-        if (!$opts['offset'] && !$this->sortedSet->isThrottled()) {
+        if (!($opts['offset'] ?? null) && !$this->sortedSet->isThrottled()) {
             $repoOpts = $opts; // Clone
 
-            $repoOpts['limit'] = 10000; // Batches of 10000
+            $repoOpts['limit'] = 1000; // Batches of 1000
             $repoOpts['offset'] = 0;
 
             // Initialize
             $this->sortedSet->clean();
 
+            $firstPage = [];
+
             $index = -1;
-            foreach ($this->repository->getList($repoOpts) as list($guid, $score)) {
-                $this->sortedSet->add(++$index, implode(':', [$guid, $score]));
+            foreach ($this->repository->getList($repoOpts) as $scoredGuid) {
+                $this->sortedSet->lazyAdd(++$index, implode(':', [$scoredGuid->getGuid(), $scoredGuid->getScore()]));
+                $this->sortedSet->flush(500); // Flush every 500 items
+
+                if ($index < $opts['limit']) {
+                    $firstPage[] = $scoredGuid;
+                }
             }
 
+            $this->sortedSet->flush(); // Force flushing
             $this->sortedSet->expiresIn(14400); // 4 hours
+
+            return $firstPage;
         }
 
         // Read from cache
@@ -75,25 +88,32 @@ class CachedRepository
         $response = $this->sortedSet->fetch($opts['limit'], $opts['offset']);
 
         return array_map(function ($row) {
-            $items = explode(':', $row);
+            $fragments = explode(':', $row);
 
-            return [$items[0], (float) $items[1]];
+            return (new ScoredGuid())
+                ->setGuid($fragments[0])
+                ->setScore((float) $fragments[1]);
         }, $response->toArray());
     }
 
     protected function buildCacheKeyBasedOnOpts(array $opts)
     {
-        $key = ['sortedset', $this->key, $opts['type'], $opts['period'], $opts['algorithm']];
+        $key = ['FeedsTopCache', $this->key, $opts['type'], $opts['period'], $opts['algorithm'], $opts['rating']];
 
-        if (isset($opts['container_guid']) && $opts['container_guid']) {
-            $key[] = (string) $opts['container_guid'];
-        }
+        $key[] = isset($opts['container_guid']) && $opts['container_guid'] ? $this->buildCacheKeyFragment($opts['container_guid']) : '';
 
-        if (isset($opts['hashtags']) && $opts['hashtags']) {
-            // TODO: Find a better way to hash (sort array + map to lowercase?)
-            $key[] = md5(json_encode($opts['hashtags']));
-        }
+        $key[] = isset($opts['custom_type']) && $opts['custom_type'] ? $this->buildCacheKeyFragment($opts['custom_type']) : '';
+
+        // TODO: Find a better way to hash (sort array + map to lowercase?)
+        $key[] = isset($opts['hashtags']) && $opts['hashtags'] ? md5($this->buildCacheKeyFragment($opts['hashtags'])) : '';
+
+        $key[] = isset($opts['filter_hashtags']) && $opts['filter_hashtags'] ? '1' : '0';
 
         return implode(':', $key);
+    }
+
+    protected function buildCacheKeyFragment($value)
+    {
+        return implode('|', Text::buildArray($value));
     }
 }
