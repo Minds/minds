@@ -39,16 +39,18 @@ class user implements Interfaces\Api
             $hashtag = substr($hashtag, 1);
         }
 
+        /** @var \Minds\Entities\User $user */
         $user = Core\Session::getLoggedInUser();
 
-        /** @var Core\Hashtags\User\Repository $repo */
-        $repo = Di::_()->get('Hashtags\User\Repository');
+        /** @var Core\Hashtags\User\Manager $manager */
+        $manager = Di::_()->get('Hashtags\User\Manager');
+        $manager->setUser($user);
 
         $entity = (new Core\Hashtags\HashtagEntity())
             ->setGuid($user->guid)
             ->setHashtag($hashtag);
 
-        $result = $repo->add([$entity]);
+        $result = $manager->add([$entity]);
 
         $user->setOptedInHashtags(1);
         $user->save();
@@ -80,12 +82,18 @@ class user implements Interfaces\Api
             $hashtag = substr($hashtag, 1);
         }
 
+        /** @var \Minds\Entities\User $user */
         $user = Core\Session::getLoggedInUser();
 
-        /** @var Core\Hashtags\User\Repository $repo */
-        $repo = Di::_()->get('Hashtags\User\Repository');
+        /** @var Core\Hashtags\User\Manager $manager */
+        $manager = Di::_()->get('Hashtags\User\Manager');
+        $manager->setUser($user);
 
-        $result = $repo->remove($user->guid, [$hashtag]);
+        $entity = (new Core\Hashtags\HashtagEntity())
+            ->setGuid($user->guid)
+            ->setHashtag($hashtag);
+
+        $result = $manager->remove([$entity]);
 
         $user->setOptedInHashtags(-1);
         $user->save();

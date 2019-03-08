@@ -17,6 +17,8 @@ class ActivityMapping extends EntityMapping implements MappingInterface
     {
         $this->mappings = array_merge($this->mappings, [
             'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
+            'custom_type' => [ 'type' => 'text', '$exportField' => 'custom_type' ],
+            'entity_guid' => [ 'type' => 'text', '$exportField' => 'entity_guid' ],
         ]);
     }
 }

@@ -29,8 +29,10 @@ class Controversial implements SortingAlgorithm
             'bool' => [
                 'must' => [
                     [
-                        'exists' => [
-                            'field' => "votes:up:{$this->period}",
+                        'range' => [
+                            "votes:up:{$this->period}:synced" => [
+                                'gte' => strtotime('7 days ago', time()),
+                            ],
                         ],
                     ],
                 ],
@@ -47,9 +49,7 @@ class Controversial implements SortingAlgorithm
             def up = doc['votes:up:{$this->period}'].value ?: 0;
             def down = doc['votes:down:{$this->period}'].value ?: 0;
             
-            def was_synced = (doc['votes:up:{$this->period}:synced'].value + 43200) > (new Date().getTime() / 1000);
-            
-            if (down <= 0 || up <= 0 || !was_synced) {
+            if (down <= 0 || up <= 0) {
                 return 0;
             }
             

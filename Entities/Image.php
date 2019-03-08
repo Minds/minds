@@ -316,7 +316,9 @@ class Image extends File
             [[
                 'src' => \elgg_get_site_url() . 'fs/v1/thumbnail/' . $this->guid,
                 'href' => \elgg_get_site_url() . 'media/' . ($this->container_guid ? $this->container_guid . '/' : '') . $this->guid,
-                'mature' => $this->getFlag('mature')
+                'mature' => $this->getFlag('mature'),
+                'width' => $this->width ?? 0,
+                'height' => $this->height ?? 0,
             ]]
         ];
     }

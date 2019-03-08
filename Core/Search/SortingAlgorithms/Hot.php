@@ -30,8 +30,10 @@ class Hot implements SortingAlgorithm
             'bool' => [
                 'must' => [
                     [
-                        'exists' => [
-                            'field' => "votes:up:{$this->period}",
+                        'range' => [
+                            "votes:up:{$this->period}:synced" => [
+                                'gte' => strtotime("7 days ago", time()),
+                            ],
                         ],
                     ],
                 ],
@@ -47,11 +49,6 @@ class Hot implements SortingAlgorithm
         return "
             def up = doc['votes:up:{$this->period}'].value ?: 0;
             def down = doc['votes:down:{$this->period}'].value ?: 0;
-            def was_synced = (doc['votes:up:{$this->period}:synced'].value + 43200) > (new Date().getTime() / 1000);
-            
-            if (!was_synced) {
-                return 0;
-            }
             
             def age = (new Date().getTime() - doc['@timestamp'].value) / 1000.0;
             

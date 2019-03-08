@@ -35,6 +35,8 @@ class ActivityMappingSpec extends ObjectBehavior
         $activity->get('blurb')->willReturn('PHPSpec Blurb');
         $activity->get('description')->willReturn('PHPSpec Description');
         $activity->get('paywall')->willReturn(false);
+        $activity->get('custom_type')->willReturn('video');
+        $activity->get('entity_guid')->willReturn(8000);
 
         $activity->isPayWall()->willReturn(false);
         $activity->getMature()->willReturn(false);
@@ -63,10 +65,12 @@ class ActivityMappingSpec extends ObjectBehavior
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
                 'rating' => 1,
+                'custom_type' => 'video',
+                'entity_guid' => '8000',
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'activity',
                 'public' => true,
-                'tags' => [ 'test', 'hashtag' ]
+                'tags' => [ 'test', 'hashtag' ],
             ]);
     }
 }

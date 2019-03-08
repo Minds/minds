@@ -25,4 +25,12 @@ class HashtagEntity
     /** @var string $hashtag */
     private $hashtag;
 
+    public function toArray()
+    {
+        return [
+            'guid' => $this->getGuid(),
+            'hashtag' => $this->getHashtag(),
+        ];
+    }
+
 }

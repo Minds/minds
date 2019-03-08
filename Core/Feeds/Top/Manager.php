@@ -40,20 +40,40 @@ class Manager
     }
 
     /**
+     * @param string $type
+     * @return Manager
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @param string $subtype
+     * @return Manager
+     */
+    public function setSubtype($subtype)
+    {
+        $this->subtype = $subtype;
+        return $this;
+    }
+
+    /**
      * @param array $opts
      * @return Entity[]
      * @throws \Exception
      */
-    public
-    function getList(array $opts = [])
+    public function getList(array $opts = [])
     {
         $opts = array_merge([
             'cache_key' => null,
             'user_guid' => null,
             'container_guid' => null,
+            'custom_type' => null,
             'offset' => 0,
             'limit' => 12,
-            'rating' => 1,
+            'rating' => 2,
             'type' => null,
         ], $opts);
 
@@ -63,13 +83,13 @@ class Manager
         $this->cachedRepository
             ->setKey($opts['cache_key']);
 
-        foreach ($this->cachedRepository->getList($opts) as list($guid, $score)) {
-            if (!$guid) {
+        foreach ($this->cachedRepository->getList($opts) as $scoredGuid) {
+            if (!$scoredGuid->getGuid()) {
                 continue;
             }
 
-            $guids[] = $guid;
-            $scores[(string) $guid] = $score;
+            $guids[] = $scoredGuid->getGuid();
+            $scores[(string) $scoredGuid->getGuid()] = $scoredGuid->getScore();
         }
 
         $entities = [];
@@ -84,7 +104,7 @@ class Manager
                     return 0;
                 }
 
-                return $bScore < $aScore ? 1 : -1;
+                return $aScore < $bScore ? 1 : -1;
             });
         }
 
@@ -94,9 +114,8 @@ class Manager
     public function run($opts = [])
     {
         $opts = array_merge([
-            'type' => 'activity',
-            'subtype' => '',
             'period' => null,
+            'metric' => null,
         ], $opts);
 
         $maps = [
@@ -130,19 +149,38 @@ class Manager
 
         $this->from = $maps[$period]['from'];
 
-        $type = implode(':', [$this->type, $this->subtype]);
-        if (!$this->subtype) {
-            $type = $this->type;
+        $type = $this->type;
+        if ($this->subtype) {
+            $type = implode(':', [$this->type, $this->subtype]);
+        }
+
+        switch ($opts['metric']) {
+            case 'up':
+                $metricMethod = 'getVotesUp';
+                $metricId = 'votes:up';
+                $sign = 1;
+                break;
+
+            case 'down':
+                $metricMethod = 'getVotesDown';
+                $metricId = 'votes:down';
+                $sign = -1;
+                break;
+
+            default:
+                throw new \Exception('Invalid metric');
         }
 
         //sync
-        foreach ($this->getVotesUp() as $guid => $count) {
+        foreach ($this->{$metricMethod}() as $guid => $count) {
+            $countValue = $sign * $count;
+
             $metric = new MetricsSync();
             $metric
                 ->setGuid($guid)
                 ->setType($type)
-                ->setMetric('votes:up')
-                ->setCount($count)
+                ->setMetric($metricId)
+                ->setCount($countValue)
                 ->setPeriod($maps[$period]['period'])
                 ->setSynced(time());
             try {
@@ -150,25 +188,7 @@ class Manager
             } catch (\Exception $e) {
             }
 
-            echo "\nUP:$guid: $count";
-        }
-
-        //sync
-        foreach ($this->getVotesDown() as $guid => $count) {
-            $metric = new MetricsSync();
-            $metric
-                ->setGuid($guid)
-                ->setType($type)
-                ->setMetric('votes:down')
-                ->setCount($count * -1)
-                ->setPeriod($maps[$period]['period'])
-                ->setSynced(time());
-            try {
-                $this->repository->add($metric);
-            } catch (\Exception $e) {
-            }
-
-            echo "\nDOWN:$guid: " . ($count * -1);
+            echo "\n$guid -> $metricId = $countValue";
         }
     }
 
