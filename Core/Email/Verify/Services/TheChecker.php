@@ -28,15 +28,19 @@ class TheChecker
         if (!$this->config->get('thechecker_secret'))
             return true;
 
-        $content = $this->http->get('https://api.thechecker.co/v2/verify?email=' . $email . '&api_key=' . $this->config->get('thechecker_secret'), [
-            'curl' => [
-                CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_NOSIGNAL => 1,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_CONNECTTIMEOUT_MS => 3 * 1000,
-                CURLOPT_TIMEOUT_MS => 10 * 1000,
-            ],
-        ]);
+        try {
+            $content = $this->http->get('https://api.thechecker.co/v2/verify?email=' . $email . '&api_key=' . $this->config->get('thechecker_secret'), [
+                'curl' => [
+                    CURLOPT_FOLLOWLOCATION => 1,
+                    CURLOPT_NOSIGNAL => 1,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_CONNECTTIMEOUT_MS => 3 * 1000,
+                    CURLOPT_TIMEOUT_MS => 10 * 1000,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return true; // If provider errors out then verify
+        }
 
         $response = json_decode($content, true);
         return !($response['result'] == 'undeliverable');
