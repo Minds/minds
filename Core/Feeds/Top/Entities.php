@@ -80,6 +80,8 @@ class Entities
             // New entities
             $fromExport = $entity->export();
 
+            $activity->set('message', implode(' ', array_map(function($tag) { return "#$tag"; }, $entity->getTags())));
+
             foreach ($fields as $field) {
                 if (isset($fromExport[$field])) {
                     $activity->set($field, $fromExport[$field]);

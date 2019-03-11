@@ -13,6 +13,9 @@ class Repository
     /** @var ElasticsearchClient */
     protected $client;
 
+    /** @var array $pendingBulkInserts * */
+    private $pendingBulkInserts = [];
+
     public function __construct($client = null)
     {
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
@@ -229,16 +232,35 @@ class Repository
 
         $body[$key . ':synced'] = $metric->getSynced();
 
-        $query = [
-            'index' => 'minds_badger',
-            'type' => $metric->getType(),
-            'id' => (string) $metric->getGuid(),
-            'body' => ['doc' => $body],
+        $this->pendingBulkInserts[] = [
+            'update' => [
+                '_id' => (string) $metric->getGuid(),
+                '_index' => 'minds_badger',
+                '_type' => $metric->getType(),
+            ],
         ];
 
-        $prepared = new Prepared\Update();
-        $prepared->query($query);
+        $this->pendingBulkInserts[] = [
+            'doc' => $body,
+            'doc_as_upsert' => true,
+        ];
 
-        return $this->client->request($prepared);
+        if (count($this->pendingBulkInserts) > 2000) { //1000 inserts
+            $this->bulk();
+        }
+        
+        return true;
     }
+
+    /**
+     * Run a bulk insert job (quicker).
+     */
+    public function bulk()
+    {
+        if (count($this->pendingBulkInserts) > 0) {
+            $res = $this->client->bulk(['body' => $this->pendingBulkInserts]);
+            $this->pendingBulkInserts = [];
+        }
+    }
+
 }

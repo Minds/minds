@@ -172,6 +172,7 @@ class Manager
         }
 
         //sync
+        $i = 0;
         foreach ($this->{$metricMethod}() as $guid => $count) {
             $countValue = $sign * $count;
 
@@ -188,8 +189,11 @@ class Manager
             } catch (\Exception $e) {
             }
 
-            echo "\n$guid -> $metricId = $countValue";
+            $i++;
+            echo "\n$i: $guid -> $metricId = $countValue";
         }
+        // clear any pending bulk inserts
+        $this->repository->bulk();
     }
 
 
