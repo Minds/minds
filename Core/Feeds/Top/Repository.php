@@ -82,6 +82,28 @@ class Repository
             'sort' => [],
         ];
 
+        //
+
+        switch ($opts['algorithm']) {
+            case "top":
+                $algorithm = new SortingAlgorithms\Top();
+                break;
+            case "controversial":
+                $algorithm = new SortingAlgorithms\Controversial();
+                break;
+            case "hot":
+                $algorithm = new SortingAlgorithms\Hot();
+                break;
+            case "latest":
+            default:
+                $algorithm = new SortingAlgorithms\Chronological();
+                break;
+        }
+
+        $algorithm->setPeriod($opts['period']);
+
+        //
+
         if ($opts['container_guid']) {
             $containerGuids = Text::buildArray($opts['container_guid']);
 
@@ -123,7 +145,7 @@ class Repository
         //
 
         if ($opts['hashtags']) {
-            if ($opts['filter_hashtags']) {
+            if ($opts['filter_hashtags'] || $algorithm instanceof SortingAlgorithms\Chronological) {
                 if (!isset($body['query']['function_score']['query']['bool']['must'])) {
                     $body['query']['function_score']['query']['bool']['must'] = [];
                 }
@@ -154,26 +176,6 @@ class Repository
                 ];
             }
         }
-
-        //
-
-        switch ($opts['algorithm']) {
-            case "top":
-                $algorithm = new SortingAlgorithms\Top();
-                break;
-            case "controversial":
-                $algorithm = new SortingAlgorithms\Controversial();
-                break;
-            case "hot":
-                $algorithm = new SortingAlgorithms\Hot();
-                break;
-            case "latest":
-            default:
-                $algorithm = new SortingAlgorithms\Chronological();
-                break;
-        }
-
-        $algorithm->setPeriod($opts['period']);
 
         //
 
