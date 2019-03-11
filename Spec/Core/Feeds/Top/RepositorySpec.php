@@ -86,12 +86,16 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5000);
 
-        $this->client->request(Argument::type(Update::class))
+        $this->client->bulk(Argument::that(function($arr) {
+                return isset($arr['body']);
+            }))
             ->shouldBeCalled()
             ->willReturn(true);
 
         $this
             ->add($metric)
             ->shouldReturn(true);
+
+        $this->bulk();
     }
 }

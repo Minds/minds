@@ -250,6 +250,10 @@ class EntitiesSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn('title');
 
+        $blog->getTags()
+            ->shouldBeCalled()
+            ->willReturn(['test']);
+
         $blog->getBody()
             ->shouldBeCalled()
             ->willReturn('description');
