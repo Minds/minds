@@ -15,6 +15,7 @@ use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Core\Votes\Vote;
 use Minds\Core\Sockets;
 use Minds\Core\Session;
+use Minds\Core\Security\ACL;
 
 class Events
 {
@@ -116,7 +117,10 @@ class Events
             $container = EntitiesFactory::build($entity->container_guid);
 
             // If the container container_guid is the same as the the container owner
-            if ($container instanceof Comment && $container->container_guid == $container->owner_guid) {
+            if ($container 
+                && $container->container_guid == $container->owner_guid
+                && ACL::_()->read($container)
+            ) {
                 $event->setResponse(true);
             }
         });
