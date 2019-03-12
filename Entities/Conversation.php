@@ -193,4 +193,10 @@ class Conversation extends DenormalizedEntity
 
         return $export;
     }
+
+    public function getAccessId()
+    {
+        return -1;
+    }
+
 }

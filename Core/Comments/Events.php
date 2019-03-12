@@ -116,7 +116,7 @@ class Events
             $container = EntitiesFactory::build($entity->container_guid);
 
             // If the container container_guid is the same as the the container owner
-            if ($container->container_guid == $container->owner_guid) {
+            if ($container instanceof Comment && $container->container_guid == $container->owner_guid) {
                 $event->setResponse(true);
             }
         });
