@@ -124,8 +124,9 @@ class feeds implements Interfaces\Api
             'type' => $type,
             'algorithm' => $algorithm,
             'period' => $period,
-            'rating' => $_GET['rating'] ?? 1,
-            'query' => $query ?? null
+            'query' => $query ?? null,
+            //'rating' => $_GET['rating'] ?? 1,
+            'rating' => 2,
         ];
 
         if ($hashtag) {
