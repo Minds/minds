@@ -107,6 +107,8 @@ class CachedRepository
         // TODO: Find a better way to hash (sort array + map to lowercase?)
         $key[] = isset($opts['hashtags']) && $opts['hashtags'] ? md5($this->buildCacheKeyFragment($opts['hashtags'])) : '';
 
+        $key[] = isset($opts['query']) && $opts['query'] ? md5($this->buildCacheKeyFragment(strtolower($opts['query']))) : '';
+
         $key[] = isset($opts['filter_hashtags']) && $opts['filter_hashtags'] ? '1' : '0';
 
         return implode(':', $key);

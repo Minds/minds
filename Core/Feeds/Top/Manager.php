@@ -75,6 +75,7 @@ class Manager
             'limit' => 12,
             'rating' => 2,
             'type' => null,
+            'query' => null,
         ], $opts);
 
         $guids = [];

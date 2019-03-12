@@ -3,8 +3,8 @@
 namespace Minds\Core\Feeds\Top;
 
 use Minds\Core\Data\ElasticSearch\Client as ElasticsearchClient;
-use Minds\Core\Di\Di;
 use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Di\Di;
 use Minds\Core\Search\SortingAlgorithms;
 use Minds\Helpers\Text;
 
@@ -13,12 +13,18 @@ class Repository
     /** @var ElasticsearchClient */
     protected $client;
 
+    protected $index;
+
     /** @var array $pendingBulkInserts * */
     private $pendingBulkInserts = [];
 
-    public function __construct($client = null)
+    public function __construct($client = null, $config = null)
     {
         $this->client = $client ?: Di::_()->get('Database\ElasticSearch');
+
+        $config = $config ?: Di::_()->get('Config');
+
+        $this->index = $config->get('elasticsearch')['index'];
     }
 
     /**
@@ -39,6 +45,7 @@ class Repository
             'period' => null,
             'algorithm' => null,
             'rating' => 1,
+            'query' => null,
         ], $opts);
 
         if (!$opts['type']) {
@@ -55,7 +62,7 @@ class Repository
 
         $body = [
             '_source' => [
-                'guid',
+                $this->getSourceField($opts['type'])
             ],
             'query' => [
                 'function_score' => [
@@ -81,6 +88,23 @@ class Repository
             ],
             'sort' => [],
         ];
+
+        if ($opts['type'] === 'group') {
+            if (!isset($body['query']['function_score']['query']['bool']['must_not'])) {
+                $body['query']['function_score']['query']['bool']['must_not'] = [];
+            }
+            $body['query']['function_score']['query']['bool']['must_not'][] = [
+                'term' => [
+                    'access_id' => '2',
+                ],
+            ];
+        } elseif ($opts['type'] === 'user') {
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'term' => [
+                    'access_id' => '2',
+                ],
+            ];
+        }
 
         //
 
@@ -143,8 +167,24 @@ class Repository
         }
 
         //
+        if ($opts['query']) {
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'multi_match' => [
+                    'query' => $opts['query'],
+                    'fields' => ['name^6', 'title^8', 'message^8', 'description^8', 'brief_description^8', 'username^8', 'tags^64']
+                ]
+            ];
 
-        if ($opts['hashtags']) {
+            $body['query']['function_score']['functions'][] = [
+                'filter' => [
+                    'multi_match' => [
+                        'query' => $opts['query'],
+                        'fields' => ['tags']
+                    ]
+                ],
+                'weight' => 100
+            ];
+        } elseif ($opts['hashtags']) {
             if ($opts['filter_hashtags'] || $algorithm instanceof SortingAlgorithms\Chronological) {
                 if (!isset($body['query']['function_score']['query']['bool']['must'])) {
                     $body['query']['function_score']['query']['bool']['must'] = [];
@@ -206,8 +246,8 @@ class Repository
         //
 
         $query = [
-            'index' => 'minds_badger',
-            'type' => $opts['type'],
+            'index' => $this->index,
+            'type' => in_array($opts['type'], ['user', 'group']) ? 'activity' : $opts['type'],
             'body' => $body,
             'size' => $opts['limit'],
             'from' => $opts['offset'],
@@ -220,8 +260,23 @@ class Repository
 
         foreach ($response['hits']['hits'] as $doc) {
             yield (new ScoredGuid())
-                ->setGuid($doc['_source']['guid'])
+                ->setGuid($doc['_source'][$this->getSourceField($opts['type'])])
                 ->setScore($doc['_score']);
+        }
+    }
+
+    private function getSourceField(string $type)
+    {
+        switch ($type) {
+            case 'user':
+                return 'owner_guid';
+                break;
+            case 'group':
+                return 'container_guid';
+                break;
+            default:
+                return 'guid';
+                break;
         }
     }
 
@@ -250,7 +305,7 @@ class Repository
         if (count($this->pendingBulkInserts) > 2000) { //1000 inserts
             $this->bulk();
         }
-        
+
         return true;
     }
 

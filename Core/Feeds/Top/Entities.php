@@ -7,12 +7,13 @@
 
 namespace Minds\Core\Feeds\Top;
 
-
 use Minds\Core\Blogs\Blog;
 use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
 use Minds\Entities\Activity;
+use Minds\Entities\Group;
 use Minds\Entities\Image;
+use Minds\Entities\User;
 use Minds\Entities\Video;
 
 class Entities
@@ -47,7 +48,7 @@ class Entities
             $entity = $this->entitiesBuilder->build($entity);
         }
 
-        if ($entity instanceof Activity) {
+        if ($entity instanceof Activity || $entity instanceof User || $entity instanceof Group) {
             return $entity;
         }
 
