@@ -87,7 +87,7 @@ class Manager
         $this->cachedRepository
             ->setKey($opts['cache_key']);
 
-        foreach ($this->cachedRepository->getList($opts) as $scoredGuid) {
+        foreach ($this->repository->getList($opts) as $scoredGuid) {
             if (!$scoredGuid->getGuid()) {
                 continue;
             }
