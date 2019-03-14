@@ -3,6 +3,8 @@
 namespace Minds\Core\Feeds\Top;
 
 use Minds\Core\Feeds\FeedSyncEntity;
+use Minds\Core\Di\Di;
+use Minds\Core\Search\Search;
 use Minds\Entities\Entity;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Trending\Aggregates;
@@ -14,6 +16,9 @@ class Manager
 
     /** @var CachedRepository */
     protected $cachedRepository;
+
+    /** @var Search */
+    private $search;
 
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
@@ -29,12 +34,14 @@ class Manager
     public function __construct(
         $repository = null,
         $entitiesBuilder = null,
-        $cachedRepository = null
+        $cachedRepository = null,
+        $search = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder;
         $this->cachedRepository = $cachedRepository ?: new CachedRepository;
+        $this->search = $search ?: Di::_()->get('Search\Search');
 
         $this->from = strtotime('-7 days') * 1000;
         $this->to = time() * 1000;
@@ -68,6 +75,7 @@ class Manager
     public function getList(array $opts = [])
     {
         $opts = array_merge([
+            'algorithm' => null,
             'cache_key' => null,
             'user_guid' => null,
             'container_guid' => null,
@@ -80,6 +88,10 @@ class Manager
             'query' => null,
             'nsfw' => [ ],
         ], $opts);
+
+        if (isset($opts['query']) && in_array($opts['type'], ['user', 'group'])) {
+            return $this->search($opts);
+        }
 
         $feedSyncEntities = [];
         $scores = [];
@@ -127,6 +139,48 @@ class Manager
         }
 
         return $entities;
+    }
+
+    /**
+     * @param array $opts
+     * @return array
+     * @throws \Exception
+     */
+    private function search(array $opts = [])
+    {
+        $feedSyncEntities = [];
+
+        if (!in_array($opts['type'], [ 'user', 'group' ])) {
+            return [];
+        }
+
+        if ($opts['type'] === 'user') {
+            $response = $this->search->suggest('user', $opts['query'], $opts['limit']);
+            foreach ($response as $row) {
+                $feedSyncEntities[] = (new FeedSyncEntity())
+                    ->setGuid($row['guid'])
+                    ->setOwnerGuid($row['guid']);
+            }
+        }
+
+        if ($opts['type'] === 'group') {
+            $options = [
+                'text' => $opts['query'],
+                'taxonomies' => 'group',
+                //'mature' => count($opts['nsfw']) > 0,
+                'sort' => 'relevant',
+                'rating' => count($opts['nsfw']) > 0 ? 3 : 2,
+            ];
+
+            $response = $this->search->query($options, $opts['limit'], $opts['offset']);
+            foreach ($response as $row) {
+                $feedSyncEntities[] = (new FeedSyncEntity())
+                    ->setGuid($row)
+                    ->setOwnerGuid(-1);
+            }
+        }
+
+        return $feedSyncEntities;
     }
 
     public function run($opts = [])
