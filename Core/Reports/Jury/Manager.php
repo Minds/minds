@@ -102,6 +102,19 @@ class Manager
     }
 
     /**
+     * 
+     */
+    public function getReportEntity($entity_guid) 
+    {
+        $report = $this->reportsRepository->get($entity_guid);
+
+        $entity = $this->entitiesBuilder->single($report->getEntityGuid());
+        $report->setEntity($entity);
+    
+        return $report;
+    }
+
+    /**
      * Cast a decision
      * @param Decision $decision
      * @return boolean

@@ -10,6 +10,7 @@ use Minds\Entities;
 use Minds\Entities\Activity;
 use Minds\Interfaces;
 use Minds\Core\Di\Di;
+use Minds\Core\Reports\Jury\Decision;
 
 class jury implements Interfaces\Api
 {
@@ -33,6 +34,43 @@ class jury implements Interfaces\Api
 
     public function post($pages)
     {
+        $juryType = $pages[0] ?? null;
+        $entityGuid = $pages[1] ?? null;
+        $action = $_POST['decision'] ?? null;
+
+        if (!$juryType) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must supply the jury type in the URI like /:juryType/:entityGuid',
+            ]);
+        }
+        
+        if (!$entityGuid) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You must supply the entity guid in the URI like /:juryType/:entityGuid',
+            ]);
+        }
+
+        if (!$action) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'decision must be supplied in POST body',
+            ]);
+        }
+
+        $juryManager = Di::_()->get('Moderation\Jury\Manager');
+        $report = $juryManager->getReportEntity($entityGuid);
+
+        $decision = new Decision();
+        $decision
+            ->setAppeal($juryType === 'appeal')
+            ->setAction($action)
+            ->setReport($report)
+            ->setTimestamp(round(microtime(true) * 1000))
+            ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid());
+
+        $juryManager->cast($decision);
         
         return Factory::response([]);
     }

@@ -53,13 +53,17 @@ class Repository
         $juryType = $decision->isAppeal() ? 'appeal_jury' : 'initial_jury';
         $body = [
             'script' => [
-                'inline' => "ctx._source.$juryType.add(params.decision)",
+                'inline' => "if (ctx._source.$juryType === null) { 
+                        ctx._source.$juryType = [];
+                    } 
+                    ctx._source.$juryType.add(params.decision)",
                 'lang' => 'painless',
                 'params' => [
                     'decision' => [
                         [
-                            '@timestamp' => $decision->getTimestamp(), // In MS
-                            'juror_guid' => $decision->getJurorGuid(),
+                            '@timestamp' => (int) $decision->getTimestamp(), // In MS
+                            'juror_guid' => (int) $decision->getJurorGuid(),
+                            //'accepted' => true,
                             'action' => $decision->getAction(),
                         ],
                     ],

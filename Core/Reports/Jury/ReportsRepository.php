@@ -42,7 +42,7 @@ class ReportsRepository
 
         $must = [];
         $must_not = [];
-
+        
         if ($opts['juryType'] == 'appeal') {
             $must[] = [
                 'exists' => [
@@ -198,6 +198,30 @@ class ReportsRepository
         }
 
         return $response;
+    }
+
+    /**
+     * Return a single report
+     * @param int $entity_guid
+     * @return ReportEntity
+     */
+    public function get($entity_guid)
+    {
+        $prepared = new Prepared\Document();
+        $prepared->query([
+            'index' => 'minds-moderation',
+            'type' => 'reports',
+            'id' => $entity_guid,
+        ]);
+
+        $result = $this->es->request($prepared);
+
+        $report = new ReportedEntity();
+        $report
+            ->setEntityGuid($result['_source']['entity_guid'])
+            ->setReports($this->buildReports($result['_source']));
+
+        return $report;
     }
 
     /**
