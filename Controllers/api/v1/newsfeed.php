@@ -606,7 +606,7 @@ class newsfeed implements Interfaces\Api
                         }
                     }
 
-                    $attachment->setNsfw($entity->getNsfw());
+                    $attachment->setNsfw($activity->getNsfw());
 
                     $attachment->save();
 
