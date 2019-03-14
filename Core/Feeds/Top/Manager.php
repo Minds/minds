@@ -76,6 +76,7 @@ class Manager
             'rating' => 2,
             'type' => null,
             'query' => null,
+            'nsfw' => [ ],
         ], $opts);
 
         $guids = [];

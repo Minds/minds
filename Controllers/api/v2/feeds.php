@@ -129,6 +129,9 @@ class feeds implements Interfaces\Api
             'rating' => 2,
         ];
 
+        $nsfw = $_GET['nsfw'] ?? '';
+        $opts['nsfw'] = explode(',', $nsfw);
+
         if ($hashtag) {
             $opts['hashtags'] = [$hashtag];
             $opts['filter_hashtags'] = true;

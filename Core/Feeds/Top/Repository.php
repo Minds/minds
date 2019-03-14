@@ -46,6 +46,7 @@ class Repository
             'algorithm' => null,
             'rating' => 1,
             'query' => null,
+            'nsfw' => [ ],
         ], $opts);
 
         if (!$opts['type']) {
@@ -68,11 +69,7 @@ class Repository
                 'function_score' => [
                     'query' => [
                         'bool' => [
-                            'must_not' => [
-                                'term' => [
-                                    'mature' => true,
-                                ],
-                            ],
+                            'must_not' => [ ],
                         ],
                     ],
                     "score_mode" => "sum",
@@ -166,16 +163,45 @@ class Repository
             ];
         }
 
-        //
-        if ($opts['query']) {
-            $body['query']['function_score']['query']['bool']['must'][] = [
-                'multi_match' => [
-                    'query' => $opts['query'],
-                    'fields' => ['name^6', 'title^8', 'message^8', 'description^8', 'brief_description^8', 'username^8', 'tags^64']
-                ]
+        $nsfw = array_diff([ 1, 2, 3, 4, 5, 6 ], $opts['nsfw']);
+        if ($nsfw) {
+            $body['query']['function_score']['query']['bool']['must_not'][] = [
+                'terms' => [
+                    'nsfw' => array_values($nsfw),
+                ],
             ];
 
-            $body['query']['function_score']['functions'][] = [
+            if (in_array(6, $nsfw)) { // 6 is legacy 'mature'
+                $body['query']['function_score']['query']['bool']['must_not'][] = [
+                    'term' => [
+                        'mature' => true,
+                    ],
+                ];
+            }
+        }
+
+        //
+        if ($opts['query']) {
+            $words = explode(' ', $opts['query']);
+
+            if (count($words) === 1) {
+                $body['query']['function_score']['query']['bool']['must'][] = [
+                    'multi_match' => [
+                        'query' => $opts['query'],
+                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^64']
+                    ]
+                ];
+            } else {
+               $body['query']['function_score']['query']['bool']['must'][] = [
+                    'multi_match' => [
+                        'query' => $opts['query'],
+                        'type' => 'phrase',
+                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^16']
+                    ]
+                ]; 
+            }
+
+            /*$body['query']['function_score']['functions'][] = [
                 'filter' => [
                     'multi_match' => [
                         'query' => $opts['query'],
@@ -183,7 +209,7 @@ class Repository
                     ]
                 ],
                 'weight' => 100
-            ];
+            ];*/
         } elseif ($opts['hashtags']) {
             if ($opts['filter_hashtags'] || $algorithm instanceof SortingAlgorithms\Chronological) {
                 if (!isset($body['query']['function_score']['query']['bool']['must'])) {
