@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Feeds\Top;
 
+use Minds\Core\Feeds\FeedSyncEntity;
 use Minds\Entities\Entity;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Trending\Aggregates;
@@ -75,11 +76,12 @@ class Manager
             'limit' => 12,
             'rating' => 2,
             'type' => null,
+            'sync' => false,
             'query' => null,
             'nsfw' => [ ],
         ], $opts);
 
-        $guids = [];
+        $feedSyncEntities = [];
         $scores = [];
 
         $this->cachedRepository
@@ -90,17 +92,31 @@ class Manager
                 continue;
             }
 
-            $guids[] = $scoredGuid->getGuid();
+            $feedSyncEntities[] = (new FeedSyncEntity())
+                ->setGuid($scoredGuid->getGuid())
+                ->setOwnerGuid($scoredGuid->getOwnerGuid());
+
             $scores[(string) $scoredGuid->getGuid()] = $scoredGuid->getScore();
         }
 
         $entities = [];
-        if (count($guids) > 0) {
-            $entities = $this->entitiesBuilder->get(['guids' => $guids]);
+        if (count($feedSyncEntities) > 0) {
+            if (!$opts['sync']) {
+                $guids = array_map(function (FeedSyncEntity $feedSyncEntity) {
+                    return $feedSyncEntity->getGuid();
+                }, $feedSyncEntities);
+
+                $entities = $this->entitiesBuilder->get(['guids' => $guids]);
+            } else {
+                $entities = $feedSyncEntities;
+            }
 
             usort($entities, function ($a, $b) use ($scores) {
-                $aScore = $scores[(string) $a->guid];
-                $bScore = $scores[(string) $b->guid];
+                $aGuid = $a instanceof FeedSyncEntity ? $a->getGuid() : $a->guid;
+                $bGuid = $b instanceof FeedSyncEntity ? $b->getGuid() : $b->guid;
+
+                $aScore = $scores[(string) $aGuid];
+                $bScore = $scores[(string) $bGuid];
 
                 if ($aScore === $bScore) {
                     return 0;

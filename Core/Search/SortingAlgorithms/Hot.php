@@ -71,4 +71,13 @@ class Hot implements SortingAlgorithm
             ]
         ];
     }
+
+    /**
+     * @param array $doc
+     * @return int|float
+     */
+    public function fetchScore($doc)
+    {
+        return $doc['_score'];
+    }
 }

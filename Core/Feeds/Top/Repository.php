@@ -62,9 +62,12 @@ class Repository
         }
 
         $body = [
-            '_source' => [
+            '_source' => array_unique([
+                'guid',
+                'owner_guid',
+                'time_created',
                 $this->getSourceField($opts['type'])
-            ],
+            ]),
             'query' => [
                 'function_score' => [
                     'query' => [
@@ -287,7 +290,8 @@ class Repository
         foreach ($response['hits']['hits'] as $doc) {
             yield (new ScoredGuid())
                 ->setGuid($doc['_source'][$this->getSourceField($opts['type'])])
-                ->setScore($doc['_score']);
+                ->setScore($algorithm->fetchScore($doc))
+                ->setOwnerGuid($doc['_source']['owner_guid']);
         }
     }
 

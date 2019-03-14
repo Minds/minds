@@ -39,7 +39,7 @@ class RepositorySpec extends ObjectBehavior
     {
         $opts = [
             'type' => 'activity',
-            'algorithm' => 'latest',
+            'algorithm' => 'top',
             'period' => '1y',
             'query' => 'test'
         ];
@@ -51,13 +51,17 @@ class RepositorySpec extends ObjectBehavior
                     'hits' => [
                         [
                             '_source' => [
-                                'guid' => '1'
+                                'guid' => '1',
+                                'owner_guid' => '1000',
+                                'time_created' => 1,
                             ],
                             '_score' => 100
                         ],
                         [
                             '_source' => [
-                                'guid' => '2'
+                                'guid' => '2',
+                                'owner_guid' => '1000',
+                                'time_created' => 1,
                             ],
                             '_score' => 50
                         ],
@@ -78,14 +82,14 @@ class RepositorySpec extends ObjectBehavior
     {
         $opts = [
             'type' => 'user',
-            'algorithm' => 'latest',
+            'algorithm' => 'top',
             'period' => '1y',
             'query' => 'test'
         ];
 
         $this->client->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['type'] === 'activity' && $query['body']['_source'] === ['owner_guid'];
+            return $query['type'] === 'activity' && in_array('owner_guid', $query['body']['_source']);
         }))
             ->shouldBeCalled()
             ->willReturn([
@@ -93,13 +97,17 @@ class RepositorySpec extends ObjectBehavior
                     'hits' => [
                         [
                             '_source' => [
-                                'owner_guid' => '1'
+                                'guid' => '1',
+                                'owner_guid' => '1',
+                                'time_created' => 1,
                             ],
                             '_score' => 100
                         ],
                         [
                             '_source' => [
-                                'owner_guid' => '2'
+                                'guid' => '2',
+                                'owner_guid' => '2',
+                                'time_created' => 2,
                             ],
                             '_score' => 50
                         ],
@@ -120,14 +128,14 @@ class RepositorySpec extends ObjectBehavior
     {
         $opts = [
             'type' => 'group',
-            'algorithm' => 'latest',
+            'algorithm' => 'top',
             'period' => '1y',
             'query' => 'test'
         ];
 
         $this->client->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['type'] === 'activity' && $query['body']['_source'] === ['container_guid'];
+            return $query['type'] === 'activity' && in_array('container_guid', $query['body']['_source']);
         }))
             ->shouldBeCalled()
             ->willReturn([
@@ -135,13 +143,19 @@ class RepositorySpec extends ObjectBehavior
                     'hits' => [
                         [
                             '_source' => [
-                                'container_guid' => '1'
+                                'guid' => '1',
+                                'owner_guid' => '1000',
+                                'time_created' => 1,
+                                'container_guid' => '1',
                             ],
                             '_score' => 100
                         ],
                         [
                             '_source' => [
-                                'container_guid' => '2'
+                                'guid' => '2',
+                                'owner_guid' => '1001',
+                                'time_created' => 2,
+                                'container_guid' => '2',
                             ],
                             '_score' => 50
                         ],

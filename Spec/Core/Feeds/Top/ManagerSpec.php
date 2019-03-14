@@ -55,6 +55,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(500);
 
+        $scoredGuid1->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
         $entity1->get('guid')
             ->shouldBeCalled()
             ->willReturn(5000);
@@ -66,6 +70,10 @@ class ManagerSpec extends ObjectBehavior
         $scoredGuid2->getScore()
             ->shouldBeCalled()
             ->willReturn(800);
+
+        $scoredGuid2->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
 
         $entity2->get('guid')
             ->shouldBeCalled()

@@ -5,8 +5,10 @@
  * @version 1
  * @author Mark Harding
  */
+
 namespace Minds\Controllers\api\v1;
 
+use Minds\Api\Exportable;
 use Minds\Components\Controller;
 use Minds\Core;
 use Minds\Helpers;
@@ -28,24 +30,33 @@ class block extends Controller implements Interfaces\Api
         }
 
         switch ($pages[0]) {
-        case "list":
-          $limit = isset($_GET['limit']) ? $_GET['limit'] : 12;
-          $offset = isset($_GET['offset']) ? $_GET['offset'] : "";
+            case "list":
+                $sync = $_GET['sync'] ?? false;
+                $limit = abs(intval($_GET['limit'] ?? 12));
 
-          $block = $this->di->get('Security\ACL\Block');
-          $guids = $block->getBlockList(Core\Session::getLoggedinUser(), $limit, $offset);
+                if ($sync && $limit > 10000) {
+                    $limit = 10000;
+                } elseif (!$sync && $limit > 120) {
+                    $limit = 120;
+                }
 
-          if ($guids) {
-              $entities = Core\Entities::get(array('guids'=>$guids));
-              $response['entities'] = Api\Factory::exportable($entities);
-          }
-          break;
-        case is_numeric($pages[0]):
-          $block = $this->di->get('Security\ACL\Block');
-          $response['blocked'] = $block->isBlocked($pages[0]);
-          break;
-      }
+                $offset = $_GET['offset'] ?? '';
 
+                $block = $this->di->get('Security\ACL\Block');
+                $guids = $block->getBlockList(Core\Session::getLoggedinUser(), $limit, $offset);
+
+                if ($sync) {
+                    $response['guids'] = Helpers\Text::buildArray($guids);
+                } elseif ($guids) {
+                    $entities = Core\Entities::get(['guids' => $guids]);
+                    $response['entities'] = Exportable::_($entities);
+                }
+                break;
+            case is_numeric($pages[0]):
+                $block = $this->di->get('Security\ACL\Block');
+                $response['blocked'] = $block->isBlocked($pages[0]);
+                break;
+        }
 
 
         return Factory::response($response);

@@ -13,19 +13,24 @@ use Minds\Traits\MagicAttributes;
 /**
  * Class ScoredGuid
  * @package Minds\Core\Feeds\Top
- * @method int getGuid()
- * @method ScoredGuid setGuid(int $guid)
+ * @method int|string getGuid()
+ * @method ScoredGuid setGuid(int|string $guid)
  * @method float getScore()
+ * @method int|string getOwnerGuid()
+ * @method ScoredGuid setOwnerGuid(int|string $ownerGuid)
  */
 class ScoredGuid
 {
     use MagicAttributes;
 
-    /** @var int */
+    /** @var int|string */
     protected $guid;
 
     /** @var float */
     protected $score;
+
+    /** @var int|string */
+    protected $ownerGuid;
 
     /**
      * @param $score
