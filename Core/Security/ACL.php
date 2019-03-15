@@ -62,6 +62,13 @@ class ACL
             ) {
                 return true;
             } else {
+                if (Core\Events\Dispatcher::trigger('acl:read', $entity->getType(), [
+                    'entity' => $entity,
+                    'user' => $user
+                    ], false) === true
+                ) {
+                    return true;
+                }
                 return false;
             }
         }
