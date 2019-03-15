@@ -156,7 +156,7 @@ class Repository
             ];
         }
 
-        if ($opts['rating']) {
+        /*if ($opts['rating']) {
             $body['query']['function_score']['query']['bool']['must'][] = [
                 'range' => [
                     'rating' => [
@@ -164,7 +164,7 @@ class Repository
                     ],
                 ],
             ];
-        }
+        }*/
 
         $nsfw = array_diff([ 1, 2, 3, 4, 5, 6 ], $opts['nsfw']);
         if ($nsfw) {
@@ -281,13 +281,19 @@ class Repository
             'size' => $opts['limit'],
             'from' => $opts['offset'],
         ];
-
+        
         $prepared = new Prepared\Search();
         $prepared->query($query);
 
         $response = $this->client->request($prepared);
 
+        $guids = [];
         foreach ($response['hits']['hits'] as $doc) {
+            $guid = $doc['_source'][$this->getSourceField($opts['type'])];
+            if (isset($guids[$guid])) {
+                continue;
+            }
+            $guids[$guid] = true;
             yield (new ScoredGuid())
                 ->setGuid($doc['_source'][$this->getSourceField($opts['type'])])
                 ->setScore($algorithm->fetchScore($doc))
