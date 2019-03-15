@@ -38,7 +38,7 @@ class entities implements Interfaces\Api
 
         // Return
         return Factory::response([
-            'entities' => Exportable::_($entities),
+            'entities' => Exportable::_(array_values($entities)),
         ]);
     }
 
