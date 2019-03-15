@@ -37,6 +37,7 @@ class ActivityMappingSpec extends ObjectBehavior
         $activity->get('paywall')->willReturn(false);
         $activity->get('custom_type')->willReturn('video');
         $activity->get('entity_guid')->willReturn(8000);
+        $activity->getNsfw()->willReturn([ 1 ]);
 
         $activity->isPayWall()->willReturn(false);
         $activity->getMature()->willReturn(false);
@@ -71,6 +72,7 @@ class ActivityMappingSpec extends ObjectBehavior
                 'taxonomy' => 'activity',
                 'public' => true,
                 'tags' => [ 'test', 'hashtag' ],
+                'nsfw' => [ 1 ],
             ]);
     }
 }

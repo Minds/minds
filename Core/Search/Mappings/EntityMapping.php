@@ -30,7 +30,7 @@ class EntityMapping implements MappingInterface
         'blurb' => [ 'type' => 'text', '$exportField' => 'blurb' ],
         'description' => [ 'type' => 'text', '$exportField' => 'description' ],
         'tags' => [ 'type' => 'text' ],
-        'nsfw' => [ 'type' => 'integer', '$exportField' => 'nsfw' ],
+        'nsfw' => [ 'type' => 'integer' ],
         'paywall' => [ 'type' => 'boolean', '$exportField' => 'paywall' ],
         'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
     ];

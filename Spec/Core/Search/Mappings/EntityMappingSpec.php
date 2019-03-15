@@ -107,6 +107,7 @@ class EntityMappingSpec extends ObjectBehavior
         $entity->get('paywall')->willReturn(false);
         $entity->get('tags')->willReturn(['test', 'hashtag']);
         $entity->get('rating')->willReturn(1);
+        $entity->getNsfw()->willReturn([ 1 ]);
 
         $this
             ->setEntity($entity)
@@ -136,6 +137,7 @@ class EntityMappingSpec extends ObjectBehavior
                 'taxonomy' => 'entity',
                 'public' => true,
                 'tags' => [ 'test', 'hashtag' ],
+                'nsfw' => [ 1 ],
             ]);
     }
 

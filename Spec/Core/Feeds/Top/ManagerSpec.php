@@ -85,11 +85,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(5001);
 
-        $this->cachedRepository->setKey('phpspec')
-            ->shouldBeCalled()
-            ->willReturn($this->cachedRepository);
-
-        $this->cachedRepository->getList(Argument::withEntry('cache_key', 'phpspec'))
+        $this->repository->getList(Argument::withEntry('cache_key', 'phpspec'))
             ->shouldBeCalled()
             ->willReturn([$scoredGuid1, $scoredGuid2]);
 

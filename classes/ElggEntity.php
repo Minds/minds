@@ -1548,6 +1548,9 @@ abstract class ElggEntity extends ElggData implements
     public function getNsfw()
     {
         $array = [];
+        if (!$this->nsfw) {
+            return $array;
+        }
         foreach ($this->nsfw as $reason) {
             $array[] = (int) $reason;
         }

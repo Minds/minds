@@ -23,6 +23,7 @@ class VotesSpec extends ObjectBehavior
         $this->setFrom('1');
         $this->setTo('1');
         $this->setLimit(1);
+
         $prepared = new ElasticSearch\Prepared\Search();
         $prepared->query([
             'index' => 'minds-metrics-*',
@@ -62,6 +63,10 @@ class VotesSpec extends ObjectBehavior
                         'terms' => [ 
                             'field' => "entity_container_guid.keyword",
                             'size' => 1,
+                            'include' => [
+                                'partition' => 0,
+                                'num_partitions' => 20,
+                            ],
                             //'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
@@ -75,6 +80,7 @@ class VotesSpec extends ObjectBehavior
                 ]
             ]
         ]);
+
 
         $client->request($prepared)
             ->shouldBeCalled()
@@ -101,10 +107,83 @@ class VotesSpec extends ObjectBehavior
                 ]
             ]);
 
-        $this->get()->shouldReturn([
-            123 => 200,
-            456 => 100,
-        ]);
+        $page = 0;
+        while ($page++ < 19) {
+            $prepared = new ElasticSearch\Prepared\Search();
+            $prepared->query([
+                'index' => 'minds-metrics-*',
+                'type' => 'action',
+                'size' => 0,
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'filter' => [
+                                'term' => [
+                                    'action' => 'vote:up'
+                                ]
+                            ],
+                            'must' => [
+                                [
+                                    'range' => [
+                                        '@timestamp' => [
+                                            'gte' => '1',
+                                            'lte' => '1'
+                                        ]
+                                    ],
+
+                                ],
+                                [
+                                    'range' => [
+                                        'entity_access_id' => [
+                                            'gte' => 3,
+                                            'lt' => null,
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'aggs' => [
+                        'entities' => [
+                            'terms' => [ 
+                                'field' => "entity_container_guid.keyword",
+                                'size' => 1,
+                                'include' => [
+                                    'partition' => $page,
+                                    'num_partitions' => 20,
+                                ],
+                                //'order' => [ 'uniques' => 'DESC' ],
+                            ],
+                            'aggs' => [
+                                'uniques' => [
+                                    'cardinality' => [
+                                        'field' => "ip_hash.keyword"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $client->request($prepared)
+                ->shouldBeCalled()
+                ->willReturn([
+                    'aggregations' => [
+                        'entities' => [
+                            'buckets' => [
+                            ],
+                        ],
+                    ],
+                ]);
+        }
+        
+        $this->get()
+            ->shouldYield(new \ArrayIterator([
+                123 => 200,
+                456 => 100,
+            ]));
+
     }
 
 
@@ -151,6 +230,10 @@ class VotesSpec extends ObjectBehavior
                         'terms' => [ 
                             'field' => "entity_guid.keyword",
                             'size' => 1,
+                            'include' => [
+                                'partition' => 0,
+                                'num_partitions' => 20,
+                            ],
                             //'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
@@ -190,9 +273,78 @@ class VotesSpec extends ObjectBehavior
                 ]
             ]);
 
-        $this->get()->shouldReturn([
-            123 => 50,
-            456 => 25
-        ]);
+        $page = 0;
+        while ($page++ < 19) {
+            $prepared = new ElasticSearch\Prepared\Search();
+            $prepared->query([
+                'index' => 'minds-metrics-*',
+                'type' => 'action',
+                'size' => 0,
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            'filter' => [
+                                'term' => [
+                                    'action' => 'vote:up'
+                                ]
+                            ],
+                            'must' => [
+                                [
+                                    'range' => [
+                                        '@timestamp' => [
+                                            'gte' => '1',
+                                            'lte' => '1'
+                                        ]
+                                    ],
+
+                                ],
+                                [
+                                    'match' => [
+                                        'entity_type' => 'other'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'aggs' => [
+                        'entities' => [
+                            'terms' => [ 
+                                'field' => "entity_guid.keyword",
+                                'size' => 1,
+                                'include' => [
+                                    'partition' => $page,
+                                    'num_partitions' => 20,
+                                ],
+                                //'order' => [ 'uniques' => 'DESC' ],
+                            ],
+                            'aggs' => [
+                                'uniques' => [
+                                    'cardinality' => [
+                                        'field' => "ip_hash.keyword"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $client->request($prepared)
+                ->shouldBeCalled()
+                ->willReturn([
+                    'aggregations' => [
+                        'entities' => [
+                            'buckets' => [
+                            ],
+                        ],
+                    ],
+                ]);
+        }
+        
+        $this->get()
+            ->shouldYield(new \ArrayIterator([
+                123 => 50,
+                456 => 25,
+            ]));
     }
 }
