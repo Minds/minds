@@ -89,7 +89,7 @@ class Manager
             'nsfw' => [ ],
         ], $opts);
 
-        if (isset($opts['query']) && in_array($opts['type'], ['user', 'group'])) {
+        if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
             return $this->search($opts);
         }
 
