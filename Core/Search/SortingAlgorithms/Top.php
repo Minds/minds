@@ -31,7 +31,7 @@ class Top implements SortingAlgorithm
                     [
                         'range' => [
                             "votes:up:{$this->period}:synced" => [
-                                'gte' => strtotime("7 days ago", time()),
+                                'gte' => strtotime("3 days ago", time()),
                             ],
                         ],
                     ],
