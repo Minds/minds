@@ -5,7 +5,7 @@
         "aws/aws-sdk-php": "^3.38",
         "braintree/braintree_php": "3.5.0",
         "datastax/php-driver": "1.2.2",
-	      "elasticsearch/elasticsearch": "~5.0.0",
+	      "elasticsearch/elasticsearch": "^6.1",
         "facebook/php-sdk-v4": "~5.0",
         "firebase/php-jwt": "3.0.*",
         "kramnorth/cinemr-php-sdk": "dev-master@dev",
