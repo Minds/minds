@@ -171,7 +171,11 @@ class Repository
         $questions = [];
 
         foreach ($uuids as $uuid) {
-            $questions[] = $this->get($uuid);
+            $question = $this->get($uuid);
+            if (!$question) {
+                continue;
+            }
+            $questions[] = $question;
         }
 
         return $questions;
@@ -208,7 +212,11 @@ class Repository
 
             $entities = [];
             foreach ($uuids as $uuid) {
-                $entities[] = $this->get($uuid);
+                $question = $this->get($uuid);
+                if (!$question) {
+                    continue;
+                }
+                $entities[] = $question;
             }
 
             return $entities;
