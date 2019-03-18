@@ -72,7 +72,7 @@ class Repository
                 'function_score' => [
                     'query' => [
                         'bool' => [
-                            'must_not' => [ ],
+                            //'must_not' => [ ],
                         ],
                     ],
                     "score_mode" => "sum",
@@ -225,7 +225,13 @@ class Repository
                     ],
                 ];
             } else {
-                $body['query']['function_score']['functions'][] = [
+                $body['query']['function_score']['query']['bool']['must'][] = [
+                    'terms' => [
+                        'tags' => $opts['hashtags'],
+                    ],
+                ];
+                // Really in slow in ES 6.x
+                /*$body['query']['function_score']['functions'][] = [
                     'filter' => [
                         'multi_match' => [
                             'query' => implode(' ', $opts['hashtags']),
@@ -242,7 +248,7 @@ class Repository
                         ]
                     ],
                     'weight' => 10
-                ];
+                ];*/
             }
         }
 
