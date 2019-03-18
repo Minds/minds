@@ -46,4 +46,13 @@ class Chronological implements SortingAlgorithm
             ]
         ];
     }
+
+    /**
+     * @param array $doc
+     * @return int|float
+     */
+    public function fetchScore($doc)
+    {
+        return $doc['_source']['time_created'];
+    }
 }

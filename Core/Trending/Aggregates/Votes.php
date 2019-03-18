@@ -11,7 +11,10 @@ class Votes extends Aggregate
 
     protected $multiplier = 1;
 
-    public function get()
+    private $page = -1;
+    private $partitions = 20;
+
+    public function fetch()
     {
         $filter = [ 
             'term' => [
@@ -77,7 +80,11 @@ class Votes extends Aggregate
                         'terms' => [ 
                             'field' => "$field.keyword",
                             'size' => $this->limit,
-//                            'order' => [ 'uniques' => 'DESC' ],
+                            'include' => [
+                                'partition' => $this->page,
+                                'num_partitions' => $this->partitions,
+                            ],
+                            // 'order' => [ 'uniques' => 'DESC' ],
                         ],
                         'aggs' => [
                             'uniques' => [
@@ -94,14 +101,18 @@ class Votes extends Aggregate
 
         $prepared = new ElasticSearch\Prepared\Search();
         $prepared->query($query);
+    
+        return $this->client->request($prepared);
+    }
 
-        $result = $this->client->request($prepared);
-
-        $entities = [];
-        foreach ($result['aggregations']['entities']['buckets'] as $entity) {
-            $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
+    public function get()
+    {
+        while ($this->page++ < $this->partitions - 1) {
+            $result = $this->fetch();
+            foreach ($result['aggregations']['entities']['buckets'] as $entity) {
+                yield $entity['key'] => ($entity['uniques']['value'] ?: 1) * $this->multiplier;
+            }
         }
-        return $entities;
     }
 
 }

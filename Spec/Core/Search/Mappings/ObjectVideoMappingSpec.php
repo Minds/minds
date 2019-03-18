@@ -39,6 +39,7 @@ class ObjectVideoMappingSpec extends ObjectBehavior
 
         $video->getFlag('mature')->willReturn(false);
         $video->getFlag('paywall')->willReturn(false);
+        $video->getNsfw()->willReturn([ 1 ]);
 
         $this
             ->setEntity($video)
@@ -68,7 +69,8 @@ class ObjectVideoMappingSpec extends ObjectBehavior
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:video',
                 'public' => true,
-                'tags' => [ 'test', 'hashtag' ]
+                'tags' => [ 'test', 'hashtag' ],
+                'nsfw' => [ 1 ],
             ]);
     }
 }

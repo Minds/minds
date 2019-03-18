@@ -7,6 +7,7 @@ use Minds\Core\Feeds\Top\CachedRepository;
 use Minds\Core\Feeds\Top\Manager;
 use Minds\Core\Feeds\Top\Repository;
 use Minds\Core\Feeds\Top\ScoredGuid;
+use Minds\Core\Search\Search;
 use Minds\Entities\Entity;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -23,16 +24,21 @@ class ManagerSpec extends ObjectBehavior
     /** @var CachedRepository */
     protected $cachedRepository;
 
+    /** @var Search */
+    protected $search;
+
     function let(
         Repository $repository,
         EntitiesBuilder $entitiesBuilder,
-        CachedRepository $cachedRepository
+        CachedRepository $cachedRepository,
+        Search $search
     )
     {
         $this->repository = $repository;
         $this->entitiesBuilder = $entitiesBuilder;
         $this->cachedRepository = $cachedRepository;
-        $this->beConstructedWith($repository, $entitiesBuilder, $cachedRepository);
+        $this->search = $search;
+        $this->beConstructedWith($repository, $entitiesBuilder, $cachedRepository, $search);
     }
 
     function it_is_initializable()
@@ -55,6 +61,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(500);
 
+        $scoredGuid1->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
         $entity1->get('guid')
             ->shouldBeCalled()
             ->willReturn(5000);
@@ -67,26 +77,26 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(800);
 
+        $scoredGuid2->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
         $entity2->get('guid')
             ->shouldBeCalled()
             ->willReturn(5001);
 
-        $this->cachedRepository->setKey('phpspec')
+        $this->repository->getList(Argument::withEntry('cache_key', 'phpspec'))
             ->shouldBeCalled()
-            ->willReturn($this->cachedRepository);
+            ->willReturn([$scoredGuid1, $scoredGuid2]);
 
-        $this->cachedRepository->getList(Argument::withEntry('cache_key', 'phpspec'))
+        $this->entitiesBuilder->get(['guids' => [5000, 5001]])
             ->shouldBeCalled()
-            ->willReturn([ $scoredGuid1, $scoredGuid2 ]);
-
-        $this->entitiesBuilder->get([ 'guids' => [ 5000, 5001 ] ])
-            ->shouldBeCalled()
-            ->willReturn([ $entity1, $entity2 ]);
+            ->willReturn([$entity1, $entity2]);
 
         $this
             ->getList([
                 'cache_key' => 'phpspec',
             ])
-            ->shouldReturn([ $entity2, $entity1 ]);
+            ->shouldReturn([$entity2, $entity1]);
     }
 }

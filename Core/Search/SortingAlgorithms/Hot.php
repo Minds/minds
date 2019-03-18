@@ -32,9 +32,14 @@ class Hot implements SortingAlgorithm
                     [
                         'range' => [
                             "votes:up:{$this->period}:synced" => [
-                                'gte' => strtotime("7 days ago", time()),
+                                'gte' => strtotime("1 hour ago", time()),
                             ],
                         ],
+                        /*'range' => [
+                            "votes:up:{$this->period}" => [
+                                'gte' => 1,
+                            ],
+                        ],*/
                     ],
                 ],
             ]
@@ -46,17 +51,18 @@ class Hot implements SortingAlgorithm
      */
     public function getScript()
     {
+        $time = time();
         return "
             def up = doc['votes:up:{$this->period}'].value ?: 0;
             def down = doc['votes:down:{$this->period}'].value ?: 0;
-            
-            def age = (new Date().getTime() - doc['@timestamp'].value) / 1000.0;
-            
+
+            def age = $time - (doc['@timestamp'].value.millis / 1000) - 1546300800;
+
             def votes = up - down;
             def sign = (votes > 0) ? 1 : (votes < 0 ? -1 : 0);
             def order = Math.log(Math.max(Math.abs(votes), 1));
-            
-            return (sign * order) - (age / 45000.0); 
+
+            return (sign * order) - (age / 43200);
         ";
     }
 
@@ -70,5 +76,14 @@ class Hot implements SortingAlgorithm
                 'order' => 'desc'
             ]
         ];
+    }
+
+    /**
+     * @param array $doc
+     * @return int|float
+     */
+    public function fetchScore($doc)
+    {
+        return $doc['_score'];
     }
 }

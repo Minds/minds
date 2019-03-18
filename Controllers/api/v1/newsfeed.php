@@ -498,6 +498,10 @@ class newsfeed implements Interfaces\Api
                         $activity->setTags($_POST['tags']);
                     }
 
+                    if (isset($_POST['nsfw'])) {
+                        $activity->setNsfw($_POST['nsfw']); 
+                    }
+
                     $user = Core\Session::getLoggedInUser();
                     if ($user->isMature()) {
                         $activity->setMature(true);
@@ -602,6 +606,8 @@ class newsfeed implements Interfaces\Api
                         }
                     }
 
+                    $attachment->setNsfw($activity->getNsfw());
+
                     $attachment->save();
 
                     switch ($attachment->subtype) {
@@ -657,6 +663,9 @@ class newsfeed implements Interfaces\Api
                 if (isset($_POST['tags'])) {
                     $activity->setTags($_POST['tags']);
                 }
+
+                $nsfw = $_POST['nsfw'] ?? [];
+                $activity->setNsfw($nsfw);
 
                 try {
                     $guid = $activity->save();

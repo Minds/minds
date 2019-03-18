@@ -69,7 +69,7 @@ class CachedRepository
 
             $index = -1;
             foreach ($this->repository->getList($repoOpts) as $scoredGuid) {
-                $this->sortedSet->lazyAdd(++$index, implode(':', [$scoredGuid->getGuid(), $scoredGuid->getScore()]));
+                $this->sortedSet->lazyAdd(++$index, implode(':', [$scoredGuid->getGuid(), $scoredGuid->getScore(), $scoredGuid->getOwnerGuid()]));
                 $this->sortedSet->flush(500); // Flush every 500 items
 
                 if ($index < $opts['limit']) {
@@ -91,8 +91,9 @@ class CachedRepository
             $fragments = explode(':', $row);
 
             return (new ScoredGuid())
-                ->setGuid($fragments[0])
-                ->setScore((float) $fragments[1]);
+                ->setGuid($fragments[0] ?? 0)
+                ->setScore((float) $fragments[1] ?? 0)
+                ->setOwnerGuid($fragments[2] ?? 0);
         }, $response->toArray());
     }
 

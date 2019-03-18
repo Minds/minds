@@ -28,4 +28,10 @@ interface SortingAlgorithm
      * @return array
      */
     public function getSort();
+
+    /**
+     * @param array $doc
+     * @return int|float
+     */
+    public function fetchScore($doc);
 }

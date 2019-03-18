@@ -39,6 +39,7 @@ class ObjectImageMappingSpec extends ObjectBehavior
 
         $image->getFlag('mature')->willReturn(false);
         $image->getFlag('paywall')->willReturn(false);
+        $image->getNsfw()->willReturn([ 1 ]);
 
         $this
             ->setEntity($image)
@@ -68,7 +69,8 @@ class ObjectImageMappingSpec extends ObjectBehavior
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:image',
                 'public' => true,
-                'tags' => [ 'test', 'hashtag' ]
+                'tags' => [ 'test', 'hashtag' ],
+                'nsfw' => [ 1 ],
             ]);
     }
 }

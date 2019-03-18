@@ -42,6 +42,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->isMature()->willReturn(false);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
+        $user->getNsfw()->willReturn([ 1 ]);
 
         $this
             ->setEntity($user)
@@ -72,6 +73,7 @@ class UserMappingSpec extends ObjectBehavior
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'user',
                 'public' => true,
+                'nsfw' => [ 1 ],
                 'group_membership' => [ 2000 ],
             ]);
     }
@@ -102,6 +104,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->get('rating')->willReturn(1);
         $user->isBanned()->willReturn(true);
 
+        $user->getNsfw()->willReturn([ 1 ]);
         $user->isMature()->willReturn(true);
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);

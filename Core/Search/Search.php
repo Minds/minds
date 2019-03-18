@@ -178,6 +178,9 @@ class Search
             $params['sort'] = [
                 [ 'interactions' => 'desc' ]
             ]; 
+        } elseif ($options['sort'] === 'relevant') {
+            $match['fields'] = [ 'name^6', 'title^8', 'message^8', 'username^8', 'tags^64'  ];
+            $match['type'] = 'phrase';
         }
 
         // Execute
