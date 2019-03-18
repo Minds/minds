@@ -37,10 +37,12 @@ class issues implements Interfaces\Api
         $title = $_POST['title'];
         $description = $_POST['description'];
 
-        return Factory::response([
-            'status' => 'error',
-            'message' => 'Sorry, we need to fix a few things. Please visit gitlab.com/minds to report issues.'
-        ]);
+        if ($description === "wow it works!") {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Sorry, we need to fix a few things. Please visit gitlab.com/minds to report issues.'
+            ]);
+        }
 
         $description .= " reported by: @" . Session::getLoggedInUser()->username;
 
