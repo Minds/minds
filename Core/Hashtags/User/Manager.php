@@ -104,7 +104,9 @@ class Manager
 
         // Default hashtags
 
-        $defaults = $opts['defaults'] ? $this->config->get('tags') : [];
+        if ($opts['defaults']) {
+            $defaults = $opts['defaults'] ? $this->config->get('tags') : [];
+        }
 
         // Merge and output
 
@@ -144,7 +146,7 @@ class Manager
             ];
         }
 
-        return array_slice(array_values($output), 0, $opts['limit']);
+        return array_slice(array_values($output), 0, count($selected) + $opts['limit']);
     }
 
     /**
