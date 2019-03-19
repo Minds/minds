@@ -45,10 +45,10 @@ class Resolver
     }
 
     /**
-     * @param User $user
+     * @param User|null $user
      * @return Resolver
      */
-    public function setUser(User $user)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
         return $this;

@@ -28,7 +28,7 @@ class entities implements Interfaces\Api
 
         $resolver = new Resolver();
         $resolver
-            ->setUser(Session::getLoggedinUser())
+            ->setUser(Session::getLoggedinUser() ?: null)
             ->setUrns($urns)
             ->setOpts([
                 'asActivities' => $asActivities
