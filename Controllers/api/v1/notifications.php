@@ -47,7 +47,7 @@ class notifications implements Interfaces\Api
         if (!isset($pages[0])) {
             $pages = ['list'];
         }
-return;
+
         $repository = Di::_()->get('Notification\Manager');
         $repository->setUser(Core\Session::getLoggedInUser());
 
