@@ -10,6 +10,8 @@ use Minds\Core\Data\ElasticSearch\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Common\Repository\Response;
+use Minds\Core\Reports\Repository as ReportsRepository;
 
 
 class Repository
@@ -17,9 +19,13 @@ class Repository
     /** @var Data\ElasticSearch\Client $es */
     protected $es;
 
-    public function __construct($es = null)
+    /** @var ReportsRepository $reportsRepository */
+    private $reportsRepository;
+
+    public function __construct($es = null, $reportsRepository = null)
     {
         $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
     /**
@@ -33,9 +39,67 @@ class Repository
             'limit' => 12,
             'offset' => '',
             'state' => '',
-            'owner' => null
+            'owner_guid' => null
         ], $opts);
 
+        $response = new Response();
+
+        $must = [];
+        $must_not = [];
+
+        // Only show for posts user owns
+        $must[] = [
+            'match' => [
+                'entity_owner_guid' => (int) $opts['owner_guid'],
+            ],
+        ];
+
+        // Initial jury must have acted
+        $must[] = [
+            'exists' => [
+                'field' => '@initial_jury_decided_timestamp',
+            ],
+        ];
+
+        // But not the appeal jury if we are simply reviewing
+        if ($opts['showAppealed']) {
+            /*$must[] = [
+                'exists' => [
+                    'field' => '@appeal_jury_decided_timestamp',
+                ],
+            ];*/
+            $must[] = [
+                'exists' => [
+                    'field' => '@appeal_timestamp',
+                ],
+            ];
+        } else {
+            $must_not[] = [
+                'exists' => [
+                    'field' => '@appeal_jury_decided_timestamp',
+                ],
+            ];
+            $must_not[] = [
+                'exists' => [
+                    'field' => '@appeal_timestamp',
+                ],
+            ];
+        }
+
+        $opts['must'] = $must;
+        $opts['must_not'] = $must_not;
+
+        $reports = $this->reportsRepository->getList($opts);
+
+        foreach ($reports as $report) {
+            $appeal = new Appeal;
+            $appeal
+                ->setTimestamp($report->getAppealTimestamp())
+                ->setReport($report)
+                ->setNote($report->getAppealNote());
+            $response[] = $appeal;
+        }
+        return $response;
     }
 
     /**
@@ -47,7 +111,7 @@ class Repository
     {
         $body = [
             'doc' => [
-                '@appeal_timestamp' => $appeal->getTimestamp(),
+                '@appeal_timestamp' => (int) $appeal->getTimestamp(),
                 'appeal_note' => $appeal->getNote(),
             ],
             'doc_as_upsert' => true,

@@ -2,7 +2,7 @@
 /**
  * Reports manager
  */
-namespace Minds\Core\Reports;
+namespace Minds\Core\Reports\UserReports;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -18,13 +18,9 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var PreFeb2019Repository $preFeb2019Repository */
-    private $preFeb2019Repository;    
-
-    public function __construct($repository = null, $preFeb2019Repository = null)
+    public function __construct($repository = null)
     {
         $this->repository = $repository ?: new Repository;
-        $this->preFeb2019Repository = $preFeb2019Repository ?: new PreFeb2019Repository();
     }
 
     /**
@@ -40,17 +36,12 @@ class Manager
         return $this->repository->getList($opts);
     }
 
-    public function getReport($entity_guid)
-    {
-        return $this->repository->get($entity_guid);
-    }
-
     /**
      * Add a report
      * @param Report $report
      * @return boolean
      */
-    public function add(Report $report)
+    public function add(UserReport $report)
     {
         return $this->repository->add($report);
     }

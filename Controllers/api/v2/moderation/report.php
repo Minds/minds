@@ -40,6 +40,15 @@ class report implements Interfaces\Api
             ]);
         }
 
+        // Gather the entity
+        $entity = Entities\Factory::build($_POST['entity_guid']);
+        if (!$entity) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'Entity not found',
+            ]);
+        }
+
         if (!isset($_POST['reason_code'])) {
             return Factory::response([
                 'status' => 'error',
@@ -49,12 +58,17 @@ class report implements Interfaces\Api
 
         $report = new Reports\Report();
         $report->setEntityGuid($_POST['entity_guid'])
+            ->setEntityOwnerGuid($entity->getOwnerGuid());
+
+        $userReport = new Reports\UserReports\UserReport();
+        $userReport
+            ->setReport($report)
             ->setReporterGuid($user->getGuid())
             ->setReasonCode((int) $_POST['reason_code'])
             ->setSubReasonCode($_POST['sub_reason_code'] ?? null)
             ->setTimestamp(round(microtime(true) * 1000));
 
-        if (!$manager->add($report)) {
+        if (!$manager->add($userReport)) {
             Factory::response([
                 'status' => 'error',
                 'message' => 'Report could not be saved',

@@ -25,6 +25,9 @@ class Manager
     /** @var EntitiesBuilder $entitiesBuilder */
     private $entitiesBuilder;
 
+    /** @var VerdictManager $verdictManager */
+    private $verdictManager;
+
     /** @var string $juryType */
     private $juryType;
 
@@ -33,13 +36,13 @@ class Manager
 
     public function __construct(
         $repository = null,
-        $reportsRepository = null,
-        $entitiesBuilder = null
+        $entitiesBuilder = null,
+        $verdictManager = null
     )
     {
         $this->repository = $repository ?: new Repository;
-        $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
+        $this->verdictManager = $verdictManager ?: Di::_()->get('Moderation\Verdict\Manager');
     }
 
     /**
@@ -89,7 +92,7 @@ class Manager
             'user' => $this->user, // Session user
         ], $opts);
 
-        $response = $this->reportsRepository->getList($opts);
+        $response = $this->repository->getList($opts);
 
         if ($opts['hydrate']) {
             foreach ($response as $report) {
@@ -102,26 +105,28 @@ class Manager
     }
 
     /**
-     * 
-     */
-    public function getReportEntity($entity_guid) 
-    {
-        $report = $this->reportsRepository->get($entity_guid);
-
-        $entity = $this->entitiesBuilder->single($report->getEntityGuid());
-        $report->setEntity($entity);
-    
-        return $report;
-    }
-
-    /**
      * Cast a decision
      * @param Decision $decision
      * @return boolean
      */
     public function cast(Decision $decision)
     {
-        return $this->repository->add($decision);
+        $success = $this->repository->add($decision);
+
+        $report = $decision->getReport();
+        if ($decision->isAppeal()) {
+            $decisions = $report->getAppealJuryDecisions();
+            $decisions[] = $decision;
+            $report->setAppealJuryDecisions($decisions);
+        } else {
+            $decisions = $report->getInitialJuryDecisions();
+            $decisions[] = $decision;
+            $report->setInitialJuryDecisions($decisions);
+        }
+
+        $this->verdictManager->decideFromReport($report);
+  
+        return $success;
     }
 
 }

@@ -22,14 +22,8 @@ class Verdict
     /** @var long $timestamp -< in ms*/
     private $timestamp;
 
-    /** @var array<Decision> $decisions */
-    private $decisions;
-
     /** @var Report $report */
     private $report;
-
-    /** @var boolean $appeal */
-    private $appeal;
 
     /** @var boolean $accept */
     private $accepted = false;
@@ -39,6 +33,18 @@ class Verdict
 
     /** @var string $initialJuryAction */
     private $initialJuryAction;
+
+    /**
+     * Decisions
+     * @return array<Decision>
+     */
+    public function getDecisions()
+    {
+        if ($this->report->isAppeal()) {
+            return $this->report->getAppealJuryDecisions();
+        }
+        return $this->report->getInitialJuryDecisions();
+    }
 
     /**
      * @return array

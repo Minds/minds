@@ -60,7 +60,8 @@ class jury implements Interfaces\Api
         }
 
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
-        $report = $juryManager->getReportEntity($entityGuid);
+        $moderationManager = Di::_()->get('Moderation\Manager');
+        $report = $moderationManager->getReport($entityGuid);
 
         $decision = new Decision();
         $decision

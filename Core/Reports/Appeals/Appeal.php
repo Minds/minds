@@ -19,9 +19,6 @@ class Appeal
     /** @var long $timestamp -< in ms*/
     private $timestamp;
 
-    /** @var long $ownerGuid */
-    private $ownerGuid;
-
     /** @var Report $report  */
     private $report;
 
@@ -34,7 +31,6 @@ class Appeal
     public function export()
     {
         $export = [
-            'owner_guid' => $this->ownerGuid,
             '@timestamp' => $this->timestamp,
             'report' => $this->report ? $this->report->export() : null,
             'note' => $this->note,

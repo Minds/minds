@@ -19,13 +19,19 @@ class Manager
     private $repository;
 
     /** @var NotificationDelegate $notificationDelegate */
+    private $notificationDelegate;
+
+    /** @var EntitiesBuilder $entitesBuilder */
+    private $entitesBuilder;
 
     public function __construct(
         $repository = null,
+        $entitesBuilder = null,
         $notificationDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
+        $this->entitiesBuilder = $entitesBuilder ?: Di::_()->get('EntitiesBuilder');
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
@@ -37,9 +43,21 @@ class Manager
     {
         $opts = array_merge([
             'hydrate' => false,
+            'showAppealed' => false,
         ], $opts);
 
-        return $this->repository->getList($opts);
+        $response = $this->repository->getList($opts);
+
+        if ($opts['hydrate']) {
+            foreach ($response as $appeal) {
+                $report = $appeal->getReport();
+                $entity = $this->entitiesBuilder->single($report->getEntityGuid());
+                $report->setEntity($entity);
+                $appeal->setReport($report);
+            }
+        }
+
+        return $response;
     }
 
     /**

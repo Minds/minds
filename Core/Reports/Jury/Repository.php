@@ -11,6 +11,7 @@ use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Common\Repository\Response;
+use Minds\Core\Reports\Repository as ReportsRepository;
 
 
 class Repository
@@ -18,9 +19,13 @@ class Repository
     /** @var Data\ElasticSearch\Client $es */
     protected $es;
 
-    public function __construct($es = null)
+    /** @var ReportsRepository $reportsRepository */
+    private $reportsRepository;
+
+    public function __construct($es = null, $reportsRepository = null)
     {
         $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
     /**
@@ -34,11 +39,114 @@ class Repository
             'limit' => 12,
             'offset' => '',
             'state' => '',
-            'owner' => null
+            'owner' => null,
+            'juryType' => 'appeal',
+            'user' => null,
         ], $opts);
 
+        $must = [];
+        $must_not = [];
+
+        // Must never show own posts
+        $must_not[] = [
+            'match' => [
+                'entity_owner_guid' => (int) $opts['user']->getGuid(),
+            ],
+        ];
+        
+        if ($opts['juryType'] == 'appeal') {
+            $must[] = [
+                'exists' => [
+                    'field' => '@initial_jury_decided_timestamp',
+                ],
+            ];
+            $must[] = [
+                'exists' => [
+                    'field' => '@appeal_timestamp',
+                ],
+            ];
+            $must_not[] = [
+                'exists' => [
+                    'field' => '@appeal_jury_decided_timestamp',
+                ],
+            ];
+        } else {
+            $must_not[] = [
+                'exists' => [
+                    'field' => '@initial_jury_decided_timestamp',
+                ],
+            ];
+            $must_not[] = [
+                'exists' => [
+                    'field' => '@appeal_jury_decided_timestamp',
+                ],
+            ];
+        }
+
+        // Do not show what we have reported or previously juried on
+        if ($opts['user']) {
+            $must_not[] = [
+                'nested' => [
+                    'path' => 'reports',
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'match' => [
+                                        'reports.reporter_guid' => $opts['user']->getGuid(),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            ];
+
+            $must_not[] = [
+                'nested' => [
+                    'path' => 'initial_jury',
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'match' => [
+                                        'initial_jury.juror_guid' => $opts['user']->getGuid(),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            ];
+
+            $must_not[] = [
+                'nested' => [
+                    'path' => 'appeal_jury',
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'match' => [
+                                        'appeal_jury.juror_guid' => $opts['user']->getGuid(),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            ];
+        }
+
+        $opts['must'] = $must;
+        $opts['must_not'] = $must_not;
 
         $response = new Response;
+
+        $reports = $this->reportsRepository->getList($opts);
+
+        foreach ($reports as $report) {
+            $response[] = $report;
+        }
 
         return $response;
     }

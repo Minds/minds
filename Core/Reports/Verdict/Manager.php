@@ -37,7 +37,7 @@ class Manager
     {
         $this->repository = $repository ?: new Repository;
         $this->actionDelegate = $actionDelegate ?: new Delegates\ActionDelegate;
-        $this->notificationDelegate = $notificationDelegate ?: Delegates\NotificationDelegate;
+        $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
     /**
@@ -63,6 +63,55 @@ class Manager
     }
 
     /**
+     * Run pending verdicts
+     */
+    public function run($juryType)
+    {
+        $verdicts = $this->repository->getList([
+            'juryType' => $juryType,
+        ]);
+
+        foreach ($verdicts as $verdict) {
+            $this->decide($verdict);
+        }
+       
+       error_log('done');
+    }
+
+    /**
+     * Run a single verdict
+     * @param int $entity_guid
+     * @return boolean
+     */
+    public function decideFromReport($report)
+    {
+        $verdict = new Verdict();
+        $verdict->setReport($report);
+        $this->decide($verdict);
+        return $this;
+    }
+
+    /**
+     * Decide on a verdict
+     * @param Verdict $verdict
+     * @return boolean
+     */
+    public function decide($verdict)
+    {
+        $action = $this->getAction($verdict);
+        $verdict->setAction($action);
+        $verdict->setTimestamp(round(microtime(true) * 1000));
+
+        if (!$verdict->getAction()) {
+            error_log("{$verdict->getReport()->getEntityGuid()} not actionable");
+            return false;
+        } else {
+            error_log("{$verdict->getReport()->getEntityGuid()} decided with {$verdict->getAction()}");
+            $this->cast($verdict);
+        }
+    }
+
+    /**
      * Cast a verdict
      * @param Verdict $verdict
      * @return boolean
@@ -76,6 +125,8 @@ class Manager
 
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);
+
+        return $added;
     }
 
     /**
@@ -85,19 +136,27 @@ class Manager
      */
     public function getAction(Verdict $verdict)
     {
-        $requiredAction = $verdict->isAppeal() ? $verdict->getInitialJuryAction() : null;
+        $requiredAction = $verdict->getReport()->isAppeal() ? 'uphold' : null;
         $upheldCount = 0;
-        $uphealdCountRequired = $verdict->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
+        $totalCount = 0;
+        $jurySize = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_SIZE : static::INITIAL_JURY_SIZE;
+        $uphealdCountRequired = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
 
         foreach ($verdict->getDecisions() as $decision) {
             if ($requiredAction && $requiredAction === $decision->getAction()) {
                 $upheldCount++;
+                $totalCount++;
             }
 
             if (!$verdict->isAppeal() && !$requiredAction) {
                 $upheldCount++;
+                $totalCount++;
                 $requiredAction = $decision->getAction();
             }
+        }
+
+        if ($totalCount < $jurySize) {
+            return null; // not ready yet
         }
 
         if ($upheldCount >= $uphealdCountRequired) {
