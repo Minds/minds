@@ -18,9 +18,13 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    public function __construct($repository = null)
+    /** @var Delegates\NotificationDelegate $notificationDelegate */
+    private $notificationDelegate;
+
+    public function __construct($repository = null, $notificationDelegate = null)
     {
         $this->repository = $repository ?: new Repository;
+        $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
     /**
@@ -43,7 +47,9 @@ class Manager
      */
     public function add(UserReport $report)
     {
-        return $this->repository->add($report);
+        $this->repository->add($report);
+        $this->notificationDelegate->onAction($report);
+        return true;
     }
 
 }
