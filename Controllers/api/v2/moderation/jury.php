@@ -18,6 +18,10 @@ class jury implements Interfaces\Api
     {
         $juryType = $pages[0] ?? 'appeal';
 
+        if ($juryType !== 'appeal' && !Core\Session::isAdmin()) {
+            exit;
+        }
+
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
         $juryManager->setJuryType($juryType)
             ->setUser(Core\Session::getLoggedInUser());
