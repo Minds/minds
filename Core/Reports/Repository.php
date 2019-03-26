@@ -161,7 +161,7 @@ class Repository
             if (!isset($row[0]['action'])) {
                 continue; // Something didn't save properly
             }
-            if (isset($jurorGuids[$row[0]['juror_guid']])) {
+            if (isset($jurorGuids[$row[0]['juror_guid']])) { //TODO: change to juror_hash
                 continue; // avoid duplicate reports
             }
             $jurorGuids[$row[0]['juror_guid']] = true; 

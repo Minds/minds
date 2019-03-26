@@ -9,6 +9,7 @@ use Minds\Traits\MagicAttributes;
 /**
  * @method Report getReport(): Report
  * @method Report getJurorGuid(): long
+ * @method Report getJurorHash(): string
  * @method Report isAppeal(): boolean
  * @method Report getAction(): string
  * @method Report getTimestamp: int
@@ -22,6 +23,9 @@ class Decision
 
     /** @var long $jurorGuid */
     private $jurorGuid;
+
+    /** @var string $jurorHash */
+    private $jurorHash;
 
     /** @var Report $report  */
     private $report;

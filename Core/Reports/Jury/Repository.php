@@ -44,6 +44,10 @@ class Repository
             'user' => null,
         ], $opts);
 
+        if (!$opts['user']->getPhoneNumberHash()) {
+            return null;
+        }
+
         $must = [];
         $must_not = [];
 
@@ -110,7 +114,7 @@ class Repository
                             'must' => [
                                 [
                                     'match' => [
-                                        'initial_jury.juror_guid' => $opts['user']->getGuid(),
+                                        'initial_jury.juror_hash' => $opts['user']->getPhoneNumberHash(),
                                     ],
                                 ],
                             ],
@@ -127,7 +131,7 @@ class Repository
                             'must' => [
                                 [
                                     'match' => [
-                                        'appeal_jury.juror_guid' => $opts['user']->getGuid(),
+                                        'appeal_jury.juror_hash' => $opts['user']->getPhoneNumberHash(),
                                     ],
                                 ],
                             ],
@@ -171,6 +175,7 @@ class Repository
                         [
                             '@timestamp' => (int) $decision->getTimestamp(), // In MS
                             'juror_guid' => (int) $decision->getJurorGuid(),
+                            'juror_hash' => (string) $decision->getJurorHash(),
                             //'accepted' => true,
                             'action' => $decision->getAction(),
                         ],

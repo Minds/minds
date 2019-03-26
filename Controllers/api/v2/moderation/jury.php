@@ -63,6 +63,13 @@ class jury implements Interfaces\Api
             ]);
         }
 
+        if (!Core\Session::getLoggedInUser()->getPhoneNumberHash()) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'juror must be in the rewards program',
+            ]);
+        }
+
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
         $moderationManager = Di::_()->get('Moderation\Manager');
         $report = $moderationManager->getReport($entityGuid);
@@ -73,7 +80,8 @@ class jury implements Interfaces\Api
             ->setAction($action)
             ->setReport($report)
             ->setTimestamp(round(microtime(true) * 1000))
-            ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid());
+            ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid())
+            ->setJurorHash(Core\Session::getLoggedInUser()->getPhoneNumberHash());
 
         $juryManager->cast($decision);
         
