@@ -31,8 +31,8 @@ class TotalPostsAggregate implements ModerationStatsAggregateInterface
                         [
                             'range' => [
                                 '@timestamp' => [
-                                    'gte' => 1550669969578,
-                                    'lte' => 1553261969578,
+                                    'gte' => strtotime('midnight -30 days') * 1000,
+                                    'lte' => time() * 1000,
                                     'format' => 'epoch_millis',
                                 ],
                             ],
