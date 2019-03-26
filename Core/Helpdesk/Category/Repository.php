@@ -59,7 +59,8 @@ class Repository
                 $category->setUuid($row['uuid']->uuid())
                     ->setTitle($row['title'])
                     ->setParentUuid($row['parent'])
-                    ->setBranch($row['branch']);
+                    ->setBranch($row['branch'])
+                    ->setPosition($row['position'] ?? 10);
 
                 if ($opts['recursive']) {
                     if ($category->getParentUuid()) {

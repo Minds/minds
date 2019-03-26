@@ -39,7 +39,9 @@ class Category
     
     /** @var string $branch */
     protected $branch;
-    
+
+    /** @var int $position */
+    protected $position = 10;    
     
     protected $questions;
 
@@ -52,6 +54,7 @@ class Category
         $export['parent'] = $this->getParent() ? $this->getParent()->export() : null;
         $export['branch'] = $this->getBranch();
         $export['questions'] = $this->getQuestions() ? Factory::exportable($this->getQuestions()) : [];
+        $export['position'] = $this->getPosition();
 
         return $export;
     }
