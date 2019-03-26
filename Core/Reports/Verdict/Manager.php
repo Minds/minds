@@ -126,6 +126,8 @@ class Manager
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);
 
+        // Send rewards to reporters
+
         return $added;
     }
 
@@ -163,7 +165,7 @@ class Manager
             return $requiredAction;
         }
 
-        return 'overturned';
+        return 'overturn';
     }
 
 }
