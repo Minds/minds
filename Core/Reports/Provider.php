@@ -35,5 +35,8 @@ class Provider extends DiProvider
         $this->di->bind('Moderation\Verdict\Manager', function ($di) {
             return new Verdict\Manager();
         }, [ 'useFactory'=> false ]);
+        $this->di->bind('Moderation\Stats\Manager', function ($di) {
+            return new Stats\Manager;
+        }, [ 'useFactory'=> true ]);
     }
 }
