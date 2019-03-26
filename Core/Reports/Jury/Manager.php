@@ -19,9 +19,6 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var ReportsRepository $reportsRepository */
-    private $reportsRepository;
-
     /** @var EntitiesBuilder $entitiesBuilder */
     private $entitiesBuilder;
 
