@@ -65,9 +65,8 @@ class Report
         foreach ($this->reports as $report) {
             $reason_codes[$report->getReasonCode()] = ($reason_codes[$report->getReasonCode()] ?? 0) + 1;
         }
-        $flipped = array_flip($reason_codes);
-        rsort($flipped);
-        return (int) $flipped[0];
+        arsort($reason_codes);
+        return (int) key($reason_codes);
     }
 
     /**
@@ -81,11 +80,10 @@ class Report
         }
         $sub_reason_codes = [];
         foreach ($this->reports as $report) {
-            $sub_reason_codes[$report->getSubReasonCode()] = ($reason_codes[$report->getSubReasonCode()] ?? 0) + 1;
+            $sub_reason_codes[$report->getSubReasonCode()] = ($sub_reason_codes[$report->getSubReasonCode()] ?? 0) + 1;
         }
-        $flipped = array_flip($sub_reason_codes);
-        rsort($flipped);
-        return (int) $flipped[0];
+        arsort($sub_reason_codes);
+        return (int) key($sub_reason_codes);
     }
 
     /**
