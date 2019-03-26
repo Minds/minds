@@ -47,6 +47,15 @@ class Verdict
     }
 
     /**
+     * Is Appeal
+     * @return bool
+     */
+    public function isAppeal()
+    {
+        return (bool) $this->report->isAppeal();
+    }
+
+    /**
      * @return array
      */
     public function export()

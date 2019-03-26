@@ -23,7 +23,7 @@ class Repository
     /** @var ReportsRepository $reportsRepository */
     private $reportsRepository;
 
-    public function __construct($es = null)
+    public function __construct($es = null, $reportsRepository = null)
     {
         $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
         $this->reportsRepository = $reportsRepository ?: new ReportsRepository;

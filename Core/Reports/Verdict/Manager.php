@@ -87,8 +87,7 @@ class Manager
     {
         $verdict = new Verdict();
         $verdict->setReport($report);
-        $this->decide($verdict);
-        return $this;
+        return $this->decide($verdict);
     }
 
     /**
@@ -107,7 +106,7 @@ class Manager
             return false;
         } else {
             error_log("{$verdict->getReport()->getEntityGuid()} decided with {$verdict->getAction()}");
-            $this->cast($verdict);
+            return $this->cast($verdict);
         }
     }
 
@@ -145,14 +144,14 @@ class Manager
         $uphealdCountRequired = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
 
         foreach ($verdict->getDecisions() as $decision) {
+            $totalCount++;
+
             if ($requiredAction && $requiredAction === $decision->getAction()) {
                 $upheldCount++;
-                $totalCount++;
             }
 
             if (!$verdict->isAppeal() && !$requiredAction) {
                 $upheldCount++;
-                $totalCount++;
                 $requiredAction = $decision->getAction();
             }
         }

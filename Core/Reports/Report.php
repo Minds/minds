@@ -11,6 +11,9 @@ use Minds\Traits\MagicAttributes;
  * @method Report getEntityGuid(): long
  * @method Report getReports(): []
  * @method Report getEntity(): Entity
+ * @method Report isAppeal(): boolean
+ * @method Report getInitialJuryDecisions: []
+ * @method Report getAppealJuryDecisions: []
  */
 class Report
 {

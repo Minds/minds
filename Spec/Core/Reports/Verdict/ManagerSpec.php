@@ -56,22 +56,20 @@ class ManagerSpec extends ObjectBehavior
         $ts = microtime(true);
         $report = new Report();
 
-        $decisions = [
+        $report->setInitialJuryDecisions($decisions = [
             (new Decision)
                 ->setAction('overturned'),
             (new Decision)
                 ->setAction('explicit'),
-        ];
+        ]);
 
         $this->repository->get(123)
             ->shouldBeCalled()
             ->willReturn(
                 (new Verdict())
                     ->setTimestamp($ts)
-                    ->setAppeal(false)
                     ->setAction(null)
                     ->setReport($report)
-                    ->setDecisions($decisions)
             );
 
         $verdict = $this->get(123);
@@ -82,14 +80,16 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBe($decisions);
         $verdict->getTimestamp()
             ->shouldBe($ts);
-        $verdict->isAppeal()
-            ->shouldBe(false);
         $verdict->getAction()
             ->shouldBe(null);
     }
 
     function it_should_return_the_verdict_action_as_explicit(Verdict $verdict)
     {
+        $report = new Report();
+        $verdict->getReport()
+            ->willReturn($report);
+
         $verdict->isAppeal()
             ->shouldBeCalled()
             ->willReturn(false);
@@ -98,97 +98,133 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 (new Decision)
-                    ->setAction('explicit'),
+                    ->setAction('2.2'),
             ]);
 
         $this->getAction($verdict)
-            ->shouldBe('explicit');
+            ->shouldBe('2.2');
     }
 
-    function it_should_return_the_appeal_verdict_action_as_explicit(Verdict $verdict)
+    function it_should_return_the_appeal_verdict_action_as_explicit()
     {
-        $verdict->isAppeal()
-            ->shouldBeCalled()
-            ->willReturn(true);
+        $report = new Report();
+        $report->setAppeal(true);
 
-        $verdict->getInitialJuryAction()
-            ->shouldBeCalled()
-            ->willReturn('explicit');
+        $report->setAppealJuryDecisions([
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('overturn'),
+                (new Decision)
+                    ->setAction('overturn'),
+            ]);
 
-        $verdict->getDecisions()
+        $verdict = new Verdict;
+        $verdict->setReport($report);
+
+        $this->getAction($verdict)
+            ->shouldBe('uphold');
+    }
+
+    function it_should_return_the_appeal_verdict_action_as_overturned()
+    {
+        $report = new Report();
+        $report->setAppeal(true);
+
+        $report->setAppealJuryDecisions([
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('overturn'),
+                (new Decision)
+                    ->setAction('overturn'),
+                (new Decision)
+                    ->setAction('overturn'),
+                (new Decision)
+                    ->setAction('overturn'),
+                (new Decision)
+                    ->setAction('overturn'),
+            ]);
+
+        $verdict = new Verdict;
+        $verdict->setReport($report);
+
+        $this->getAction($verdict)
+            ->shouldBe('overturn');
+    }
+
+    function it_should_return_the_appeal_verdict_action_as_null()
+    {
+        $report = new Report();
+        $report->setAppeal(true);
+
+        $report->setAppealJuryDecisions([
+                (new Decision)
+                    ->setAction('uphold'),
+                (new Decision)
+                    ->setAction('overturn'),
+            ]);
+
+        $verdict = new Verdict;
+        $verdict->setReport($report);
+
+        $this->getAction($verdict)
+            ->shouldBe(null);
+    }
+
+    function it_should_decide_verdict_from_a_report(Report $report)
+    {
+        $report->isAppeal()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $report->getInitialJuryDecisions()
             ->shouldBeCalled()
             ->willReturn([
                 (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('overturned'),
-                (new Decision)
-                    ->setAction('overturned'),
+                    ->setAction('2.2'),
             ]);
+        
+        $report->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(123);
 
-        $this->getAction($verdict)
-            ->shouldBe('explicit');
-    }
-
-    function it_should_return_the_appeal_verdict_action_as_overturned(Verdict $verdict)
-    {
-        $verdict->isAppeal()
+        $this->repository->add(Argument::type(Verdict::class))
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $verdict->getInitialJuryAction()
-            ->shouldBeCalled()
-            ->willReturn('explicit');
-
-        $verdict->getDecisions()
-            ->shouldBeCalled()
-            ->willReturn([
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('explicit'),
-                (new Decision)
-                    ->setAction('overturned'),
-                (new Decision)
-                    ->setAction('overturned'),
-                (new Decision)
-                    ->setAction('overturned'),
-                (new Decision)
-                    ->setAction('overturned'),
-                (new Decision)
-                    ->setAction('overturned'),
-            ]);
-
-        $this->getAction($verdict)
-            ->shouldBe('overturned');
+        $this->decideFromReport($report)
+            ->shouldBe(true);
     }
 
 }

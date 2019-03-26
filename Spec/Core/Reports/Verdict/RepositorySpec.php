@@ -4,7 +4,9 @@ namespace Spec\Minds\Core\Reports\Verdict;
 
 use Minds\Core\Reports\Verdict\Repository;
 use Minds\Core\Reports\Verdict\Verdict;
+use Minds\Core\Reports\Jury\Decision;
 use Minds\Core\Reports\Report;
+use Minds\Core\Reports\Repository as ReportsRepository;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Minds\Core\Data\ElasticSearch\Client;
@@ -12,11 +14,13 @@ use Minds\Core\Data\ElasticSearch\Client;
 class RepositorySpec extends ObjectBehavior
 {
     private $es;
+    private $reportsRepository;
 
-    function let(Client $es)
+    function let(Client $es, ReportsRepository $reportsRepository)
     {
-        $this->beConstructedWith($es);
+        $this->beConstructedWith($es, $reportsRepository);
         $this->es = $es;
+        $this->reportsRepository = $reportsRepository;
     }
 
     function it_is_initializable()
@@ -26,7 +30,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_add_a_verdict(Verdict $verdict)
     {
-        $ts = microtime(true);
+        $ts = (int) microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
                 $doc = $query['body']['doc'];
@@ -62,7 +66,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_add_a_verdict_as_overturned(Verdict $verdict)
     {
-        $ts = microtime(true);
+        $ts = (int) microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
                 $doc = $query['body']['doc'];
@@ -98,7 +102,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_add_an_appeal_verdict(Verdict $verdict)
     {
-        $ts = microtime(true);
+        $ts = (int) microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
                 $doc = $query['body']['doc'];
@@ -134,7 +138,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_add_an_appeal_verdict_as_overturned(Verdict $verdict)
     {
-        $ts = microtime(true);
+        $ts = (int) microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
                 $doc = $query['body']['doc'];
@@ -170,51 +174,19 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_get_a_single_verdict()
     {
-        $this->es->request(Argument::that(function($prepared) {
-                return true;
-            }))
+        $this->reportsRepository->getList(Argument::that(function($opts) {
+            return true;
+        }))
             ->shouldBeCalled()
             ->willReturn([
-                'hits' => [
-                    'hits' => [
-                        [
-                            '_index' => 'minds-moderation',
-                            '_type' => 'reports',
-                            '_id' => 123,
-                            '_score' => 1,
-                            '_source' => [
-                                'entity_guid' => 123,
-                            ],
-                        ]
-                    ],
-                ],
-                'aggregations' => [
-                    'decisions' => [
-                        'buckets' => [
-                            'key' => 10,
-                                'doc_count' => 1,
-                                'initial_jury' => [
-                                    'doc_count' => 3,
-                                    'decision' => [
-                                        'buckets' => [
-                                            [
-                                                'key' => 4,
-                                                'doc_count' => 2,
-                                                'action' => [
-                                                    'buckets' => [
-                                                        [
-                                                            'key' => 'action',
-                                                        ],
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                (new Report())
+                    ->setEntityGuid(123)
+                    ->setInitialJuryDecisions([
+                        (new Decision)
+                            ->setJurorGuid(4),
+                    ]),
             ]);
+
 
         $verdict = $this->get(123);
 
@@ -230,54 +202,20 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_get_a_single_verdict_as_an_appeal()
     {
-        $this->es->request(Argument::that(function($prepared) {
-                return true;
-            }))
+        $this->reportsRepository->getList(Argument::that(function($opts) {
+            return true;
+        }))
             ->shouldBeCalled()
             ->willReturn([
-                'hits' => [
-                    'hits' => [
-                        [
-                            '_index' => 'minds-moderation',
-                            '_type' => 'reports',
-                            '_id' => 123,
-                            '_score' => 1,
-                            '_source' => [
-                                'entity_guid' => 123,
-                                '@initial_jury_decided_timestamp' => 1551052800000,
-                                'initial_jury_action' => 'explicit',
-                            ],
-                        ]
-                    ],
-                ],
-                'aggregations' => [
-                    'decisions' => [
-                        'buckets' => [
-                            'key' => 10,
-                                'doc_count' => 1,
-                                'appeal_jury' => [
-                                    'doc_count' => 3,
-                                    'decision' => [
-                                        'buckets' => [
-                                            [
-                                                'key' => 4,
-                                                'doc_count' => 2,
-                                                'action' => [
-                                                    'buckets' => [
-                                                        [
-                                                            'key' => 6,
-                                                        ],
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                (new Report())
+                    ->setAppeal(true)
+                    ->setEntityGuid(123)
+                    ->setAppealJuryDecisions([
+                        (new Decision)
+                            ->setJurorGuid(4),
+                    ]),
             ]);
-
+        
         $verdict = $this->get(123);
 
         $verdict->getReport()->getEntityGuid()
