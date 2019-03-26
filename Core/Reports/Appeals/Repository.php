@@ -61,6 +61,12 @@ class Repository
             ],
         ];
 
+        $must_not[] = [
+            'match' => [
+                'initial_jury_action' => 'overturn',
+            ],
+        ];
+
         // But not the appeal jury if we are simply reviewing
         if ($opts['showAppealed']) {
             /*$must[] = [
