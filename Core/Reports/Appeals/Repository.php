@@ -39,7 +39,8 @@ class Repository
             'limit' => 12,
             'offset' => '',
             'state' => '',
-            'owner_guid' => null
+            'owner_guid' => null,
+            'showAppealed' => false,
         ], $opts);
 
         $response = new Response();
