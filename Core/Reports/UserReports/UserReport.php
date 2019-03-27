@@ -7,9 +7,10 @@ namespace Minds\Core\Reports\UserReports;
 use Minds\Traits\MagicAttributes;
 
 /**
- * @method Report getEntityGuid(): long
+ * @method Report getReport(): Report
  * @method Report getReporterGuid(): long
  * @method Report getReasonCode(): int
+ * @method Report getSubReasonCode(): int
  * @method Report getTimestamp: int
  */
 class UserReport

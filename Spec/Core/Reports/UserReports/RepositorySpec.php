@@ -1,8 +1,9 @@
 <?php
 
-namespace Spec\Minds\Core\Reports;
+namespace Spec\Minds\Core\Reports\UserReports;
 
-use Minds\Core\Reports\Repository;
+use Minds\Core\Reports\UserReports\Repository;
+use Minds\Core\Reports\UserReports\UserReport;
 use Minds\Core\Reports\Report;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -23,14 +24,15 @@ class RepositorySpec extends ObjectBehavior
         $this->shouldHaveType(Repository::class);
     }
 
-    function it_should_add_a_report(Report $report)
+    function it_should_add_a_report(UserReport $report)
     {
-        $ts = microtime(true);
+        $ts = (int) microtime(true);
         $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
                 $params = $query['body']['script']['params']['report'];
                 return $params[0]['reporter_guid'] === 456
                     && $params[0]['reason'] === 2
+                    && $params[0]['sub_reason'] === 4
                     && $params[0]['@timestamp'] === $ts
                     && $query['body']['upsert']['entity_guid'] === 123
                     && $query['id'] === 123;
@@ -42,9 +44,10 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($ts);
 
-        $report->getEntityGuid()
+        $report->getReport()
             ->shouldBeCalled()
-            ->willReturn(123);
+            ->willReturn((new Report)
+                ->setEntityGuid(123));
         
         $report->getReporterGuid()
             ->shouldBeCalled()
@@ -53,6 +56,10 @@ class RepositorySpec extends ObjectBehavior
         $report->getReasonCode()
             ->shouldBeCalled()
             ->willReturn(2);
+
+        $report->getSubReasonCode()
+            ->shouldBeCalled()
+            ->willReturn(4);
 
         $this->add($report)
             ->shouldBe(true);
