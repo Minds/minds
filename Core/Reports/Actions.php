@@ -472,7 +472,7 @@ class Actions
      * @param bool $value
      * @return bool
      */
-    protected function setDeletedFlag($entity = null, $value = false)
+    public function setDeletedFlag($entity = null, $value = false)
     {
         if (!$entity || !is_object($entity)) {
             return false;

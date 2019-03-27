@@ -13,9 +13,16 @@ class ActionDelegate
     /** @var EntitiesBuilder $entitiesBuilder */
     private $entitiesBuilder;
 
-    public function __construct($entitiesBuilder = null)
+    /** @var Actions $actions */
+    private $actions;
+
+    public function __construct(
+        $entitiesBuilder = null,
+        $actions = null
+    )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
+        $this->actions = $actions ?: Di::_()->get('Reports\Actions');
     }
 
     public function onAction(Verdict $verdict)
@@ -31,8 +38,7 @@ class ActionDelegate
             case '1.2': // Should be fully removed?
             case '1.3':
             case '1.4':
-                $entity->setDeleted(true);
-                $entity->save();
+                $this->actions->setDeletedFlag($entity, true);
                 break;
             case '2.1':
             case '2.2':
@@ -41,6 +47,12 @@ class ActionDelegate
                 $nsfw = explode('.', $verdict->getAction())[1];
                 $entity->setNsfw([$nsfw]);
                 $entity->save();
+                break;
+            case 'uphold':
+            case 'overturn':
+                break;
+            default: //Remove is the default
+                $this->actions->setDeletedFlag($entity, true);
                 break;
         }
 
