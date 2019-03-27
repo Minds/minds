@@ -51,7 +51,7 @@ class issues implements Interfaces\Api
         $issue = new Issue;
         $issue->setTitle($title)
             ->setDescription($description)
-            ->setLabels('by user');
+            ->setLabels('S - Triage (New), T - Bug (Triage)');
 
         // call gitlab api
         $res = $manager->postIssue($issue, $pages[0]);
