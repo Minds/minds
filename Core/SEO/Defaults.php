@@ -388,6 +388,11 @@ class Defaults
                 'description' => 'Everything you need to know about Minds Tokens',
                 'image' => 'assets/photos/canyon.jpg',
             ],
+            'help' => [
+                'title' => 'Helpdesk',
+                'description' => 'Everything you need to know about Minds',
+                'image' => 'assets/photos/balloon.jpg',
+            ],
         ];
 
         foreach ($marketing as $uri => $page) {
