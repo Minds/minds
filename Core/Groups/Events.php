@@ -127,7 +127,7 @@ class Events
             $group = $params['container'];
             $user = $params['user'];
 
-            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
+            $e->setResponse($group->isOwner($user->guid) || $group->isMember($user->guid));
         });
 
         Dispatcher::register('activity:container:prepare', 'group', function ($e) {
