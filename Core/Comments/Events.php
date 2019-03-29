@@ -124,5 +124,20 @@ class Events
                 $event->setResponse(true);
             }
         });
+
+        // If comment is container_guid then decide if we can allow writing
+        $this->eventsDispatcher->register('acl:write:container', 'all', function (Event $event) {
+            $params = $event->getParameters();
+            $entity = $params['entity'];
+            $user = $params['user'];
+            $container = $params['container'];
+
+            if ($container->type === 'activity' || $container->type === 'object') {
+                $canInteract = ACL::_()->interact($container);
+                if ($canInteract && $user->guid == $entity->owner_guid) {
+                    $event->setResponse(true);
+                }
+            }
+        });
     }
 }
