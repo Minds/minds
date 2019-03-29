@@ -24,6 +24,7 @@ class config implements Interfaces\Api, Interfaces\ApiIgnorePam
     {
         $minds = [
             "cdn_url" => Minds\Core\Config::_()->get('cdn_url') ?: Minds\Core\Config::_()->cdn_url,
+            "cinemr_url" => Minds\Core\Config::_()->get('cinemr_url') ?: Minds\Core\Config::_()->cinemr_url,
             "site_url" => Minds\Core\Config::_()->get('site_url') ?: Minds\Core\Config::_()->site_url,
             "socket_server" => Minds\Core\Config::_()->get('sockets-server-uri') ?: 'ha-socket-io-us-east-1.minds.com:3030',
             "thirdpartynetworks" => Minds\Core\Di\Di::_()->get('ThirdPartyNetworks\Manager')->availableNetworks(),
@@ -31,7 +32,7 @@ class config implements Interfaces\Api, Interfaces\ApiIgnorePam
             "stripe_key" => Minds\Core\Config::_()->get('payments')['stripe']['public_key'],
             "recaptchaKey" => Minds\Core\Config::_()->get('google')['recaptcha']['site_key'],
             "max_video_length" => (Core\Session::getLoggedInUser() && Core\Session::getLoggedInUser()->isPlus())
-                ? Minds\Core\Config::_()->get('max_video_length_plus') 
+                ? Minds\Core\Config::_()->get('max_video_length_plus')
                 : Minds\Core\Config::_()->get('max_video_length'),
             "features" => (object) (Minds\Core\Config::_()->get('features') ?: []),
             "blockchain" => (object) Minds\Core\Di\Di::_()->get('Blockchain\Manager')->getPublicSettings(),
