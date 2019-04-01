@@ -15,6 +15,11 @@ class deeplinks implements Interfaces\Api, Interfaces\ApiIgnorePam
     private $applinks = [
         'applinks' => [
             'apps' => [],
+            'activitycontinuation' => [
+                "apps" => [
+                  "35U3998VRZ.com.minds.mobile"
+                ]
+            ],
             'details' => [
                 [
                     'appID' => "35U3998VRZ.com.minds.mobile",
