@@ -735,6 +735,7 @@ class User extends \ElggUser
         $export['last_accepted_tos'] = (int) $this->getLastAcceptedTOS();
         $export['opted_in_hashtags'] = (int) $this->getOptedInHashtags();
         $export['canary'] = (bool) $this->isCanary();
+        $export['is_admin'] = $this->attributes['admin'] == 'yes';
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
