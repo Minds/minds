@@ -320,6 +320,7 @@ class Image extends File
                 'width' => $this->width ?? 0,
                 'height' => $this->height ?? 0,
                 'gif' => (bool) ($this->gif ?? false),
+                'license' => $this->license ?? '',
             ]]
         ];
     }
