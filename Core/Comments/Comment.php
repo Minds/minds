@@ -277,6 +277,21 @@ class Comment extends RepositoryEntity
     }
 
     /**
+     * Return the urn for the comment
+     * @return string
+     */
+    public function getUrn()
+    {
+        return implode(':', [
+            'urn',
+            'comment',
+            $this->getEntityGuid(),
+            $this->getPartitionPath(),
+            $this->getGuid(),
+        ]);
+    }
+
+    /**
      * Defines the exportable members
      * @return array
      */
