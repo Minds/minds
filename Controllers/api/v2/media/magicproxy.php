@@ -75,6 +75,9 @@ class MagicProxy implements Interfaces\Api, Interfaces\ApiIgnorePam
 
             $this->downloader->setLimitKb(2048);
 
+            /** @var Resize $resizer */
+            $magicResizer = Di::_()->get('Media\Proxy\MagicResize');
+            error_log($src);
             $binaryString = $this->downloader
                 ->setSrc($src)
                 ->setTimeout(static::MAX_TIME)

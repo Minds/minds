@@ -3,10 +3,15 @@
 namespace Minds\Controllers\Cli;
 
 use Minds\Core;
-use Minds\Core\Di\Di;
 use Minds\Cli;
 use Minds\Interfaces;
-use Minds\Entities;
+use Minds\Entities\User;
+use Minds\Core\Email\Campaigns\UserRetention\GoneCold;
+use Minds\Core\Email\Campaigns\UserRetention\WelcomeComplete;
+use Minds\Core\Email\Campaigns\UserRetention\WelcomeIncomplete;
+use Minds\Core\Events\Dispatcher;
+use Minds\Core\Suggestions\Manager;
+use Minds\Core\Di\Di;
 
 class Email extends Cli\Controller implements Interfaces\CliControllerInterface
 {
@@ -18,7 +23,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
     {
         $this->out('TBD');
     }
-    
+
     public function exec()
     {
         error_reporting(E_ALL);
@@ -45,7 +50,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $this->out('Top posts');
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
-        
+
         $period = $this->getOpt('period');
         $offset = '';
 
@@ -66,7 +71,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $this->out('Retention emails');
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
-        
+
         $period = $this->getOpt('period');
         $offset = '';
 
@@ -87,24 +92,105 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
             ->run();
     }
 
-    public function testWelcome()
+    public function testGoneCold()
     {
-        $user = new Entities\User('mark');
-        $template = new Core\Email\Template();
-        $template
-          ->setTemplate()
-          ->setBody('welcome.tpl')
-          ->set('guid', $user->guid)
-          ->set('username', $user->username)
-          ->set('email', $user->getEmail())
-          ->set('user', $user);
-        $message = new Core\Email\Message();
-        $message->setTo($user)
-          ->setMessageId(implode('-', [ $user->guid, sha1($user->getEmail()), sha1('register-' . time()) ]))
-          ->setSubject("Welcome to Minds. Introduce yourself.")
-          ->setHtml($template);
-        $mailer = new Core\Email\Mailer();
-        $mailer->send($message);
+        $userguid = $this->getOpt('guid');
+        $output = $this->getOpt('output');
+        $send = $this->getOpt('send');
+        $user = new User($userguid);
+
+        if (!$user->guid) {
+            $this->out('User not found');
+            exit;
+        }
+
+        $manager = Di::_()->get('Suggestions\Manager');
+        $manager->setUser($user);
+        $suggestions = $manager->getList();
+
+        $campaign = (new GoneCold())
+            ->setUser($user)
+            ->setSuggestions($suggestions);
+
+        $message = $campaign->build();
+
+        if ($send) {
+            $campaign->send();
+        }
+
+        if ($output) {
+            file_put_contents($output, $message->buildHtml());
+        } else {
+            $this->out($message->buildHtml());
+        }
     }
 
+    public function testWelcomeComplete()
+    {
+        $userguid = $this->getOpt('guid');
+        $output = $this->getOpt('output');
+        $send = $this->getOpt('send');
+        $user = new User($userguid);
+
+        if (!$user->guid) {
+            $this->out('User not found');
+            exit;
+        }
+
+        $manager = new Manager();
+        $manager2 = new Manager();
+
+        $manager->setUser($user);
+        $suggestions = $manager->getList();
+
+        $campaign = (new WelcomeComplete())
+            ->setUser($user)
+            ->setSuggestions($suggestions);
+
+        $message = $campaign->build();
+
+        if ($send) {
+            $campaign->send();
+        }
+
+        if ($output) {
+            file_put_contents($output, $message->buildHtml());
+        } else {
+            $this->out($message->buildHtml());
+        }
+    }
+
+    public function testWelcomeIncomplete()
+    {
+        $userguid = $this->getOpt('guid');
+        $output = $this->getOpt('output');
+        $send = $this->getOpt('send');
+        $user = new User($userguid);
+
+        if (!$user->guid) {
+            $this->out('User not found');
+            exit;
+        }
+
+        $campaign = (new WelcomeIncomplete())
+            ->setUser($user);
+
+        $message = $campaign->build();
+
+        if ($send) {
+            $campaign->send();
+        }
+
+        if ($output) {
+            file_put_contents($output, $message->buildHtml());
+        } else {
+            $this->out($message->buildHtml());
+        }
+    }
+
+    public function testWelcomeUserEvent()
+    {
+        $userguid = $this->getOpt('guid');
+        Dispatcher::trigger('welcome_email', 'all', ['user_guid' => $userguid]);
+    }
 }
