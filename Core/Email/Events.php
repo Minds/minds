@@ -26,19 +26,6 @@ class Events
             error_log('user_state_change casual');
         });
 
-        Dispatcher::register('user_state_change', UserActivityBuckets::STATE_COLD, function ($opts) {
-            error_log('user_state_change cold');
-            $params = $opts->getParameters();
-            $user = new User($params['user_guid']);
-            $manager = Di::_()->get('Suggestions\Manager');
-            $manager->setUser($user);
-            $suggestions = $manager->getList();
-            $campaign = (new GoneCold())
-                ->setUser($user)
-                ->setSuggestions($suggestions);
-            $campaign->send();
-        });
-
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_CORE, function ($opts) {
             error_log('user_state_change core');
         });
