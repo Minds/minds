@@ -11,7 +11,7 @@ class suggestions implements Interfaces\Api
 {
     public function get($pages)
     {
-        $manager = Di::_()->get('Suggestions/Manager');
+        $manager = Di::_()->get('Suggestions\Manager');
 
         $manager
             ->setUser(Core\Session::getLoggedinUser())
