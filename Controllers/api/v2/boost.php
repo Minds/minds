@@ -155,12 +155,18 @@ class boost implements Interfaces\Api
             return Factory::response(array('status' => 'error', 'message' => 'impressions must be a positive whole number'));
         }
 
+        $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : [];
+
         $config = array_merge([
             'network' => [
                 'min' => 100,
                 'max' => 5000,
             ],
         ], (array)Core\Di\Di::_()->get('Config')->get('boost'));
+
+        if ($paymentMethod['method'] === 'onchain') {
+            $config['network']['max'] *= 2;
+        }
 
         if ($impressions < $config['network']['min'] || $impressions > $config['network']['max']) {
             return Factory::response([
@@ -196,7 +202,6 @@ class boost implements Interfaces\Api
                         $priorityRate = $this->getQueuePriorityRate();
                     }
 
-                    $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : [];
                     $bidType = isset($_POST['bidType']) ? $_POST['bidType'] : null;
                     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
                     $checksum =  isset($_POST['checksum']) ? $_POST['checksum'] : '';
