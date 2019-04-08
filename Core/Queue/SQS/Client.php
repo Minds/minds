@@ -98,7 +98,7 @@ class Client implements QueueClient
             ];
 
             if ($delay) {
-                var_dump("Delaying {$delay}");
+                //var_dump("Delaying {$delay}");
                 $messageCommand['DelaySeconds'] = $delay;
             }
             $asyncMessageResponse = $this->client->sendMessageAsync($messageCommand);
