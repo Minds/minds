@@ -2,14 +2,18 @@
   <tbody>
     <tr>
         <td>
-            <p>Minds is one of the easiest places on the Internet to share your ideas and expand your reach.</p>
+            <p>Welcome to Minds!</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>In order to provide the best possible experience, it is important to properly setup your channel.</p>
         </td>
     </tr>
     <tr>
         <td>
             <p>
-                By spending just one token, you can Boost your post and receive at least 1,000 views from the network. 
-                If your post gains traction, you will earn more tokens and can grow your channel even quicker.
+              Please take a moment to complete our onboarding process so that you can enjoy all of the different features we have to offer!
             </p>      
         </td>
     </tr>
@@ -17,24 +21,11 @@
         <td align="center">
             <p>
               <a href="<?php echo "{$vars['site_url']}newsfeed/subscribed?{$vars['tracking']}"?>">
-                <img src="<?php echo $vars['cdn_assets_url']; ?>assets/emails/cta_make_a_post.png" width="142" alt="Make a Post"/>
+                <img src="<?php echo $vars['cdn_assets_url']; ?>assets/emails/cta_complete_setup.png" width="142" alt="Complete Setup"/>
               </a>
             </p>
         </td>
     </tr>
-
-    <?php if ($vars['suggestions']): ?>
-    <tr>
-      <td align="center">
-        <p>If you don't feel like posting, then here are some more suggested channels for you to subscribe to.</p>
-      </td>
-    </tr>
-    <tr>
-        <td>
-            <?php echo $vars['suggestions']; ?>
-        </td>
-    </tr>
-    <?php endif; ?>
     <tr>
         <td>
             <p>Also, be sure to download our mobile app using the links below:</p>      

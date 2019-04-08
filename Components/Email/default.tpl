@@ -11,7 +11,7 @@
           padding-bottom: 16px;
         }
         a {
-          color: #4690df !important;
+          color: #4690df;
         }
         #body table {
              width: 100%;
@@ -48,7 +48,7 @@
                       <!-- Email body -->
 
                       <p align="right">
-                        <a href="https://www.minds.com/?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none;">
+                        <a href="<?php echo $vars['site_url']; ?>?__e_ct_guid=<?= $vars['guid']?>" style="text-decoration:none;">
                           <img src="<?php echo $vars['cdn_assets_url']; ?>assets/logos/bulb.jpg" align="middle" height="80px"/>
                         </a>
                       </p>

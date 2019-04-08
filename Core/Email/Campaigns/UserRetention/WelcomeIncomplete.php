@@ -11,7 +11,7 @@ use Minds\Traits\MagicAttributes;
 use Minds\Core\Email\Partials\SuggestedChannels;
 use Minds\Core\Di\Di;
 
-class GoneCold extends EmailCampaign
+class WelcomeIncomplete extends EmailCampaign
 {
     use MagicAttributes;
     protected $db;
@@ -30,7 +30,7 @@ class GoneCold extends EmailCampaign
 
         $this->campaign = 'global';
         $this->topic = 'minds_tips';
-        $this->state = 'cold';
+        $this->state = 'new';
     }
 
     public function build()
@@ -43,7 +43,7 @@ class GoneCold extends EmailCampaign
         ];
 
         $this->template->setTemplate('default.tpl');
-        $this->template->setBody('./Templates/gone_cold.tpl');
+        $this->template->setBody('./Templates/welcome_incomplete.tpl');
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
         $this->template->set('email', $this->user->getEmail());
@@ -58,7 +58,7 @@ class GoneCold extends EmailCampaign
 
         $this->template->set('suggestions', $suggestedChannels->build());
 
-        $subject = 'What fascinates you?';
+        $subject = 'Welcome to Minds';
 
         $message = new Message();
         $message->setTo($this->user)

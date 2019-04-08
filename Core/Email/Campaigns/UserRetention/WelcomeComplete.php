@@ -7,11 +7,11 @@ use Minds\Core\Email\Template;
 use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Message;
 use Minds\Core\Email\Manager;
-use Minds\Traits\MagicAttributes;
 use Minds\Core\Email\Partials\SuggestedChannels;
+use Minds\Traits\MagicAttributes;
 use Minds\Core\Di\Di;
 
-class GoneCold extends EmailCampaign
+class WelcomeComplete extends EmailCampaign
 {
     use MagicAttributes;
     protected $db;
@@ -30,7 +30,7 @@ class GoneCold extends EmailCampaign
 
         $this->campaign = 'global';
         $this->topic = 'minds_tips';
-        $this->state = 'cold';
+        $this->state = 'new';
     }
 
     public function build()
@@ -41,9 +41,8 @@ class GoneCold extends EmailCampaign
             'topic' => $this->topic,
             'state' => $this->state,
         ];
-
         $this->template->setTemplate('default.tpl');
-        $this->template->setBody('./Templates/gone_cold.tpl');
+        $this->template->setBody('./Templates/welcome_complete.tpl');
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
         $this->template->set('email', $this->user->getEmail());
@@ -52,13 +51,14 @@ class GoneCold extends EmailCampaign
         $this->template->set('topic', $this->topic);
         $this->template->set('state', $this->state);
         $this->template->set('tracking', http_build_query($tracking));
+
         $suggestedChannels = (new SuggestedChannels())
-            ->setTracking(http_build_query($tracking))
-            ->setSuggestions($this->suggestions);
+        ->setTracking(http_build_query($tracking))
+        ->setSuggestions($this->suggestions);
 
         $this->template->set('suggestions', $suggestedChannels->build());
 
-        $subject = 'What fascinates you?';
+        $subject = 'Welcome to Minds';
 
         $message = new Message();
         $message->setTo($this->user)

@@ -1,12 +1,9 @@
 <?php
-/**
- */
 
 namespace Minds\Core\Events\Hooks;
 
 use Minds\Core;
 use Minds\Entities;
-use Minds\Helpers;
 use Minds\Core\Events\Dispatcher;
 
 class Register
@@ -50,27 +47,17 @@ class Register
             }
             //send welcome email
             try {
-                $template = new Core\Email\Template();
-                $template
-                  ->setTemplate()
-                  ->setBody('welcome.tpl')
-                  ->set('guid', $params['user']->guid)
-                  ->set('username', $params['user']->username)
-                  ->set('email', $_POST['email'])
-                  ->set('user', $params['user']);
-                $message = new Core\Email\Message();
-                $message->setTo($params['user'])
-                  ->setMessageId(implode('-', [ $params['user']->guid, sha1($params['user']->getEmail()), sha1('register-' . time()) ]))
-                  ->setSubject("Welcome to Minds. Introduce yourself.")
-                  ->setHtml($template);
-                $mailer = new Core\Email\Mailer();
-                $mailer->queue($message);
-
-                Core\Queue\Client::build()->setQueue("Registered")
+                Core\Queue\Client::build()->setQueue('Registered')
                     ->send([
-                        "user_guid" => $params['user']->guid,
+                        'user_guid' => $params['user']->guid,
                     ]);
-            } catch (\Exception $e) { }
+                //Delay by two hours so the user has time to complete their profile
+                Core\Queue\Client::build()->setQueue('WelcomeEmail')
+                    ->send([
+                        'user_guid' => $params['user']->guid,
+                    ], 7200);
+            } catch (\Exception $e) {
+            }
         });
     }
 }

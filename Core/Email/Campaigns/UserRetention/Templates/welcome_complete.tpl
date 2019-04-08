@@ -2,14 +2,20 @@
   <tbody>
     <tr>
         <td>
-            <p>Minds is one of the easiest places on the Internet to share your ideas and expand your reach.</p>
+            <p>Welcome to Minds!</p>
         </td>
     </tr>
     <tr>
         <td>
             <p>
-                By spending just one token, you can Boost your post and receive at least 1,000 views from the network. 
-                If your post gains traction, you will earn more tokens and can grow your channel even quicker.
+              You have successfully completed our onboarding process and your channel has been rewarded with one Minds token! 
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>
+                Try making a post and using your token to Boost the post for 1,000 extra views from the community.
             </p>      
         </td>
     </tr>

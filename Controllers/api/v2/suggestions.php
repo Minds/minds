@@ -1,20 +1,18 @@
 <?php
+
 namespace Minds\Controllers\api\v2;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Common\Cookie;
 use Minds\Interfaces;
 use Minds\Api\Factory;
-use Minds\Entities;
 
 class suggestions implements Interfaces\Api
 {
-
     public function get($pages)
     {
         $manager = Di::_()->get('Suggestions/Manager');
-        $manager = new Core\Suggestions\Manager();
+
         $manager
             ->setUser(Core\Session::getLoggedinUser())
             ->setType($pages[0] ?? 'user');
@@ -33,9 +31,11 @@ class suggestions implements Interfaces\Api
         ]);
     }
 
-   /**
-     * Equivalent to HTTP POST method
-     * @param  array $pages
+    /**
+     * Equivalent to HTTP POST method.
+     *
+     * @param array $pages
+     *
      * @return mixed|null
      */
     public function post($pages)
@@ -44,15 +44,17 @@ class suggestions implements Interfaces\Api
     }
 
     /**
-     * Equivalent to HTTP PUT method
-     * @param  array $pages
+     * Equivalent to HTTP PUT method.
+     *
+     * @param array $pages
+     *
      * @return mixed|null
      */
     public function put($pages)
     {
         switch ($pages[0] ?? 'pass') {
-            case "pass":
-                $pass = new Core\Suggestions\Pass\Pass;
+            case 'pass':
+                $pass = new Core\Suggestions\Pass\Pass();
                 $pass->setUserGuid(Core\Session::getLoggedinUser()->getGuid())
                     ->setSuggestedGuid($pages[1]);
                 $manager = Di::_()->get('Suggestions/Pass/Manager');
@@ -60,17 +62,19 @@ class suggestions implements Interfaces\Api
                 $manager->add($pass);
                 break;
         }
+
         return Factory::response([]);
     }
 
     /**
-     * Equivalent to HTTP DELETE method
-     * @param  array $pages
+     * Equivalent to HTTP DELETE method.
+     *
+     * @param array $pages
+     *
      * @return mixed|null
      */
     public function delete($pages)
     {
         return Factory::response([]);
     }
-
 }

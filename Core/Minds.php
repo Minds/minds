@@ -16,9 +16,11 @@ class Minds extends base
     private $modules = [
         Email\Module::class,
         Experiments\Module::class,
-        VideoChat\Module::class,
         Helpdesk\Module::class,
+        Onboarding\Module::class,
         Subscriptions\Module::class,
+        Suggestions\Module::class,
+        VideoChat\Module::class,
     ];
 
     /**

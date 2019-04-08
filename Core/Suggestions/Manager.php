@@ -1,4 +1,5 @@
 <?php
+
 namespace Minds\Core\Suggestions;
 
 use Minds\Core\EntitiesBuilder;
@@ -7,7 +8,6 @@ use Minds\Core\Di\Di;
 
 class Manager
 {
-
     /** @var $repository */
     private $repository;
 
@@ -25,39 +25,46 @@ class Manager
         $entitiesBuilder = null,
         $suggestedFeedsManager = null,
         $subscriptionsManager = null
-    )
-    {
+    ) {
         $this->repository = $repository ?: new Repository();
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder();
-        $this->suggestedFeedsManager = $suggestedFeedsManager ?: Di::_()->get('Feeds\Suggested\Manager');
+        //$this->suggestedFeedsManager = $suggestedFeedsManager ?: Di::_()->get('Feeds\Suggested\Manager');
         $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Subscriptions\Manager');
     }
 
     /**
-     * Set the user to return data for
+     * Set the user to return data for.
+     *
      * @param User $user
+     *
      * @return $this
      */
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
     }
 
     /**
-     * Set the type to return data for
+     * Set the type to return data for.
+     *
      * @param string $type
+     *
      * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * Return a list of users
+     * Return a list of users.
+     *
      * @param array $opts
+     *
      * @return Response
      */
     public function getList($opts = [])
@@ -81,6 +88,7 @@ class Manager
             $entity = $suggestion->getEntity() ?: $this->entitiesBuilder->single($suggestion->getEntityGuid());
             $suggestion->setEntity($entity);
         }
+
         return $response;
     }
 
@@ -88,7 +96,7 @@ class Manager
     {
         $this->subscriptionsManager->setSubscriber($this->user);
         if ($this->subscriptionsManager->getSubscriptionsCount() > 1) {
-            return new Response;
+            return new Response();
         }
 
         $opts = array_merge([
@@ -97,7 +105,7 @@ class Manager
         ], $opts);
 
         $response = new Response();
-        
+
         //$result = $this->suggestedFeedsManager->getFeed($opts);
 
         //foreach ($result as $user) {
@@ -130,5 +138,4 @@ class Manager
 
         return $response;
     }
-
 }
