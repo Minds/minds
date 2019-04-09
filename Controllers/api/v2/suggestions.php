@@ -2,7 +2,6 @@
 
 namespace Minds\Controllers\api\v2;
 
-use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Interfaces;
