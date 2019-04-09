@@ -2,6 +2,7 @@
 
 namespace Minds\Controllers\api\v2;
 
+use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Interfaces;
@@ -9,13 +10,22 @@ use Minds\Api\Factory;
 
 class suggestions implements Interfaces\Api
 {
+
     public function get($pages)
     {
-        $manager = Di::_()->get('Suggestions\Manager');
+	$type = $pages[0] ?? 'user';
+        $loggedInUser = Core\Session::getLoggedinUser();
 
-        $manager
+        if ($loggedInUser->getSubscriptionsCount() >= 5000) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'You have too many subscriptions'
+            ]);
+        }
+
+        $manager = (new Core\Suggestions\Manager())
             ->setUser(Core\Session::getLoggedinUser())
-            ->setType($pages[0] ?? 'user');
+            ->setType($type);
 
         $opts = [
             'limit' => $_GET['limit'] ?? 12,
@@ -32,8 +42,7 @@ class suggestions implements Interfaces\Api
     }
 
     /**
-     * Equivalent to HTTP POST method.
-     *
+     * Equivalent to HTTP POST method
      * @param array $pages
      *
      * @return mixed|null
@@ -57,7 +66,7 @@ class suggestions implements Interfaces\Api
                 $pass = new Core\Suggestions\Pass\Pass();
                 $pass->setUserGuid(Core\Session::getLoggedinUser()->getGuid())
                     ->setSuggestedGuid($pages[1]);
-                $manager = Di::_()->get('Suggestions/Pass/Manager');
+
                 $manager = new Core\Suggestions\Pass\Manager();
                 $manager->add($pass);
                 break;
@@ -77,4 +86,5 @@ class suggestions implements Interfaces\Api
     {
         return Factory::response([]);
     }
+
 }
