@@ -3,6 +3,8 @@
 namespace Minds\Core\Hashtags\Trending;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Data\ElasticSearch\Prepared\Search as Prepared;
+use Minds\Common\Repository\Response;
 
 /**
  * Hashtags Trending Repository
@@ -12,9 +14,127 @@ class Repository
     /** @var \PDO $db */
     protected $db;
 
-    public function __construct(\PDO $db = null)
+    /** @var ElasticSearch $es */
+    protected $es;
+
+    public function __construct(\PDO $db = null, $es = null)
     {
         $this->db = $db ?: Di::_()->get('Database\PDO');
+        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+    }
+
+    /**
+     * @param array $opts
+     * @return Response
+     */
+    public function getList(array $opts = [])
+    {
+        $opts = array_merge([
+            'limit' => 12,
+            'from' => strtotime('-24 hours', time()),
+        ], $opts);
+
+        $body = [
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'range' => [
+                                'votes:up:24h:synced' => [
+                                    'gte' => $opts['from'],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'must_not' => [
+                        'bool' => [
+                            'should' => [
+                                [
+                                    'terms' => [
+                                        'nsfw' => [ 1, 2, 3, 4, 5, 6 ],
+                                    ],
+                                ],
+                                [
+                                    'terms' => [
+                                        'tags' => array_column($this->getHidden(), 'hashtag'),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'aggs' => [
+                'tags' => [
+                    'terms' => [
+                        'field' => 'tags.keyword',
+                        'size' => $opts['limit'] * 20,
+                        'order' => [
+                            'counts' => 'desc',
+                        ],
+                    ],
+                    'aggs' => [
+                        'counts' => [
+                            'max' => [
+                                'field' => 'votes:up:24h',
+                            ],
+                        ],
+                        'owners' => [
+                            'cardinality' => [
+                                'field' => 'owner_guid.keyword',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $query = [
+            'index' => 'minds_badger',
+            'type' => 'activity',
+            'body' => $body,
+            'size' => 0,
+        ];
+
+        $prepared = new Prepared();
+        $prepared->query($query);
+
+        $result = $this->es->request($prepared);
+
+        $response = new Response();
+
+        $rows = $result['aggregations']['tags']['buckets'];
+
+        usort($rows, function($a, $b) {
+            $a_score = $this->getConfidenceScore($a['owners']['value'], $a['doc_count']);
+            $b_score = $this->getConfidenceScore($b['owners']['value'], $b['doc_count']);     
+
+            return $a_score < $b_score ? 1 : 0;
+        });
+
+        foreach ($rows as $row) {
+            $response[] = $row['key'];
+            if (count($response) > $opts['limit']) {
+                break;
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Return a confifdence score
+     * TODO: Move to global helper
+     * @param int $positive
+     * @param int $total
+     * @return int
+     */
+    private function getConfidenceScore($positive, $total) {
+        $z = 1.9208;
+        $phat = 1.0 * $positive / $total;
+        $n = $phat + $z * $z / (2 * $total) - $z * sqrt(($phat * (1 - $phat) + $z * $z / (4 * $total)) / $total);
+        $d  = 1 + $z * $z / $total; 
+
+        return $n / $d;
     }
 
     /**
@@ -38,7 +158,7 @@ class Repository
                     GROUP BY entity_hashtags.hashtag
                     ORDER BY hashCount Desc
                     LIMIT ?";
-
+       
         $statement = $this->db->prepare($query);
 
         $statement->execute([$opts['from_date'], $opts['limit']]);
