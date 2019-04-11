@@ -97,7 +97,7 @@ class Manager
 
                 if ($results) {
                     $trending = $results;
-                    $this->cacher->set($this->getCacheKey('trending'), json_encode($trending), 15 * 60 * 60); // 15 minutes
+                    $this->cacher->set($this->getCacheKey('trending'), json_encode($trending), 60 * 15); // 15 minutes
                 }
             }
         }
