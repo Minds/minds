@@ -8,7 +8,7 @@
         continue;
     }
     $avatarUrl =  "{$entity->getIconUrl()}";
-    $channelUrl = "{$vars['site_url']}{$entity->get('name')}?{$vars['tracking']}";
+    $channelUrl = "{$vars['site_url']}{$entity->get('username')}?{$vars['tracking']}";
     $rowStyle = 'm-suggestionsSidebarList__item';
     if(++$counter == count($vars['suggestions'])) {
         $rowStyle = '';
