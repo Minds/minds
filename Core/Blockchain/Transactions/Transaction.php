@@ -23,7 +23,7 @@ use Minds\Helpers\Unknown;
  * @method string getContract()
  * @method Transaction setContract(string $value)
  * @method string getAmount()
- * @method Transaction setAmount(string)
+ * @method Transaction setAmount(string $value)
  * @method bool isCompleted()
  * @method bool getCompleted()
  * @method Transaction setCompleted(bool $value)
