@@ -80,6 +80,7 @@ class Client implements QueueClient
         return $queueUrl.$namespace.$this->queueName;
     }
 
+    //$delay must be between 0 and 900 seconds else SQS will error
     public function send($message, $delay = null)
     {
         $msgClass = new Message();
@@ -98,7 +99,6 @@ class Client implements QueueClient
             ];
 
             if ($delay) {
-                //var_dump("Delaying {$delay}");
                 $messageCommand['DelaySeconds'] = $delay;
             }
             $asyncMessageResponse = $this->client->sendMessageAsync($messageCommand);
