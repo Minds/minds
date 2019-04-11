@@ -51,11 +51,11 @@ class Register
                     ->send([
                         'user_guid' => $params['user']->guid,
                     ]);
-                //Delay by two hours so the user has time to complete their profile
+                //Delay by 15 minutes (aws max) so the user has time to complete their profile
                 Core\Queue\Client::build()->setQueue('WelcomeEmail')
                     ->send([
                         'user_guid' => $params['user']->guid,
-                    ], 7200);
+                    ], 900);
             } catch (\Exception $e) {
             }
         });
