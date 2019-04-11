@@ -35,6 +35,9 @@ class ManagerSpec extends ObjectBehavior
     protected $balance;
     protected $redisLock;
 
+    protected $plusDelegate;
+    protected $offchainTxs;
+
     function let(
         Redis $cache,
         Repository $repo,
@@ -49,10 +52,12 @@ class ManagerSpec extends ObjectBehavior
         Core\Events\EventsDispatcher $dispatcher,
         Core\Data\Call $call,
         Core\Blockchain\Wallets\OffChain\Balance $balance,
-        Core\Data\Locks\Redis $redisLock
+        Core\Data\Locks\Redis $redisLock,
+        Core\Wire\Delegates\Plus $plusDelegate,
+        Core\Blockchain\Wallets\OffChain\Transactions $offchainTxs
     ) {
         $this->beConstructedWith($cache, $repo, $subscriptionsManager, $txManager, $txRepo, $config, $queue, $client,
-            $token, $cap, $dispatcher);
+            $token, $cap, $dispatcher, $plusDelegate, $offchainTxs);
 
         Core\Di\Di::_()->bind('Database\Cassandra\Entities', function ($di) use ($call) {
             return $call->getWrappedObject();
@@ -88,6 +93,9 @@ class ManagerSpec extends ObjectBehavior
 
         $this->balance = $balance;
         $this->redisLock = $redisLock;
+
+        $this->plusDelegate = $plusDelegate;
+        $this->offchainTxs = $offchainTxs;
     }
 
     function it_is_initializable()
@@ -338,38 +346,25 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->redisLock->setKey('balance:')
-            ->shouldBeCalled();
-
-        $this->redisLock->setKey('balance:guid')
-            ->shouldBeCalled();
-
-
-        $this->redisLock->isLocked()
+        $this->offchainTxs->setAmount(1000000000000000000)
             ->shouldBeCalled()
-            ->willReturn(false);
+            ->willReturn($this->offchainTxs);
 
-        $this->redisLock->setTTL(120)
+        $this->offchainTxs->setType('wire')
             ->shouldBeCalled()
-            ->willReturn($this->redisLock);
+            ->willReturn($this->offchainTxs);
 
-        $this->redisLock->lock()
-            ->shouldBeCalled();
-
-        $this->balance->setUser(Argument::any())
+        $this->offchainTxs->setUser(Argument::type(User::class))
             ->shouldBeCalled()
-            ->willReturn($this->balance);
+            ->willReturn($this->offchainTxs);
 
-        $this->balance->get()
+        $this->offchainTxs->setData(Argument::type('array'))
             ->shouldBeCalled()
-            ->willReturn(10 ** 18);
+            ->willReturn($this->offchainTxs);
 
-        $this->txRepo->add(Argument::any())
+        $this->offchainTxs->transferFrom(Argument::type(User::class))
             ->shouldBeCalled()
             ->willReturn(true);
-
-        $this->redisLock->unlock()
-            ->shouldBeCalled();
 
         $this->queue->setQueue('WireNotification')
             ->shouldBeCalled()

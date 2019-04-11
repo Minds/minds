@@ -74,6 +74,9 @@ class Manager
     /** @var Delegates\Plus $plusDelegate */
     protected $plusDelegate;
 
+    /** @var Core\Blockchain\Wallets\OffChain\Transactions */
+    protected $offchainTxs;
+
     public function __construct(
         $cache = null,
         $repository = null,
@@ -86,7 +89,8 @@ class Manager
         $token = null,
         $cap = null,
         $dispatcher = null,
-        $plusDelegate = null
+        $plusDelegate = null,
+        $offchainTxs = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
@@ -100,6 +104,7 @@ class Manager
         $this->cap = $cap ?: Di::_()->get('Blockchain\Wallets\OffChain\Cap');
         $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
         $this->plusDelegate = $plusDelegate ?: new Delegates\Plus;
+        $this->offchainTxs = $offchainTxs ?: new Core\Blockchain\Wallets\OffChain\Transactions();
     }
 
     /**
@@ -219,21 +224,12 @@ class Manager
                     'entity_guid' => (string) $this->entity->guid,
                 ];
 
-                $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
-                $sendersTx
-                    ->setAmount((string) BigNumber::_($this->amount)->neg())
-                    ->setType('wire')
-                    ->setUser($this->sender)
-                    ->setData($txData)
-                    ->create();
-
-                $receiversTx = new Core\Blockchain\Wallets\OffChain\Transactions();
-                $receiversTx
+                $this->offchainTxs
                     ->setAmount($this->amount)
                     ->setType('wire')
                     ->setUser($this->receiver)
                     ->setData($txData)
-                    ->create();
+                    ->transferFrom($this->sender);
 
                 $wire = new Wire();
                 $wire
