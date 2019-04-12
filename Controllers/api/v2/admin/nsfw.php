@@ -52,6 +52,17 @@ class nsfw implements Interfaces\Api, Interfaces\ApiAdminPam
             'immediate' => true
         ]);
 
+        if ($entity->entity_guid) {
+            $child = Entities\Factory::build($entity->entity_guid);
+            $child->setNsfw($_POST['nsfw']);
+            $child->save();
+
+            $dispatcher->trigger('search:index', 'all', [
+                'entity' => $child,
+                'immediate' => true
+            ]);
+        }
+
         return Factory::response([]);
     }
 
