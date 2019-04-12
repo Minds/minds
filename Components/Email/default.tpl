@@ -92,7 +92,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="https://www.minds.com/emails/unsubscribe/<?= $vars['username']?>/<?= $vars['email']?>/<?= $vars['campaign']?><?= '/' . $vars['topic']?>?__e_ct_guid=<?= $vars['guid']?>?campaign=<?= $vars['campaign'] ?>&topic=<?= $vars['topic'] ?>&state=<?= $vars['state'] ?>" align="center" style="color:#888">
+                    <a href="https://www.minds.com/emails/unsubscribe/<?= $vars['username']?>/<?= $vars['email']?>/<?= $vars['campaign']?><?= '/' . $vars['topic']?>?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign'] ?>&topic=<?= $vars['topic'] ?>&state=<?= $vars['state'] ?>" align="center" style="color:#888">
                       Unsubscribe 
                     </a>
                     from this type of email. 
