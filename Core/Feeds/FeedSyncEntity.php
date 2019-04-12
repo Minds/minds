@@ -17,6 +17,8 @@ use Minds\Traits\MagicAttributes;
  * @method FeedSyncEntity setGuid(int|string $guid)
  * @method int|string getOwnerGuid()
  * @method FeedSyncEntity setOwnerGuid(int|string $ownerGuid)
+ * @method string getUrn()
+ * @method FeedSyncEntity setUrn(string $urn)
  */
 class FeedSyncEntity
 {
@@ -29,6 +31,9 @@ class FeedSyncEntity
     /** @var int|string */
     protected $ownerGuid;
 
+    /** @var string */
+    protected $urn;
+
     /**
      * Specifies the exportable properties
      * @return array<string|\Closure>
@@ -36,6 +41,7 @@ class FeedSyncEntity
     public function getExportable()
     {
         return [
+            'urn',
             'guid',
             'ownerGuid',
         ];
