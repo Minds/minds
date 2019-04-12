@@ -48,6 +48,10 @@ class EntityGuidResolverDelegate implements ResolverDelegate
             'asActivities' => false,
         ], $opts);
 
+        if (!$urns) {
+            return [];
+        }
+
         $guids = array_map(function (Urn $urn) {
             return $urn->getNss();
         }, $urns);
@@ -64,6 +68,16 @@ class EntityGuidResolverDelegate implements ResolverDelegate
         }
 
         return $entities;
+    }
+
+    /**
+     * @param mixed $entity
+     * @return mixed
+     */
+    public function map($urn, $entity)
+    {
+        // NOTE: No need to attach URN as GUID fallback defaults to this delegate
+        return $entity;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Feeds\Top;
 
+use Minds\Common\Urn;
 use Minds\Core\Feeds\FeedSyncEntity;
 use Minds\Core\Di\Di;
 use Minds\Core\Search\Search;
@@ -106,7 +107,8 @@ class Manager
 
             $feedSyncEntities[] = (new FeedSyncEntity())
                 ->setGuid($scoredGuid->getGuid())
-                ->setOwnerGuid($scoredGuid->getOwnerGuid());
+                ->setOwnerGuid($scoredGuid->getOwnerGuid())
+                ->setUrn(new Urn($scoredGuid->getGuid()));
 
             $scores[(string) $scoredGuid->getGuid()] = $scoredGuid->getScore();
         }

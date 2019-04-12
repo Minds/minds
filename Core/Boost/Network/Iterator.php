@@ -19,6 +19,7 @@ class Iterator implements \Iterator
     protected $priority = false;
     protected $categories = null;
     protected $increment = false;
+    protected $hydrate = true;
 
     protected $tries = 0;
 
@@ -86,6 +87,16 @@ class Iterator implements \Iterator
         return $this;
     }
 
+    /**
+     * @param bool $hydrate
+     * @return Iterator
+     */
+    public function setHydrate($hydrate)
+    {
+        $this->hydrate = $hydrate;
+        return $this;
+    }
+
     public function getList()
     {
         $match = [
@@ -143,45 +154,51 @@ class Iterator implements \Iterator
                 $data = $data['_document'];
             }
 
-            $impressions = $data['impressions'];
+            if ($this->hydrate) {
+                $impressions = $data['impressions'];
 
-            $boost = $this->getBoostEntity($data['guid']);
-            //if(!$boost)
-            //var_dump(print_r($data['guid'], true)); die();
-            //var_dump(print_r($boost, true)); die();
-            $count = 0;
+                $boost = $this->getBoostEntity($data['guid']);
+                //if(!$boost)
+                //var_dump(print_r($data['guid'], true)); die();
+                //var_dump(print_r($boost, true)); die();
+                $count = 0;
 
-            if ($this->increment) {
-                /** @var Metrics $metrics */
-                $metrics = Core\Di\Di::_()->get('Boost\Network\Metrics');
+                if ($this->increment) {
+                    /** @var Metrics $metrics */
+                    $metrics = Core\Di\Di::_()->get('Boost\Network\Metrics');
 
-                $count = $metrics->incrementViews($boost);
-            }
+                    $count = $metrics->incrementViews($boost);
+                }
 
+                if ($count > $impressions) {
+                    $expire->setBoost($boost);
+                    $expire->expire();
+                    continue; //max count met
+                }
 
-            if ($count > $impressions) {
-                $expire->setBoost($boost);
-                $expire->expire();
-                continue; //max count met
-            }
-
-            /*if ($legacy_boost) {
-                $return[] = $entity;
-            } else {
+                /*if ($legacy_boost) {
+                    $return[] = $entity;
+                } else {
+                    $return[$data['guid']] = $boost->getEntity();
+                }*/
                 $return[$data['guid']] = $boost->getEntity();
-            }*/
-            $return[$data['guid']] = $boost->getEntity();
+            } else {
+                $return[] = $data;
+            }
+
             $this->offset = (string) $data['_id'];
         }
 
-        if (empty($return) && $this->tries++ <= 1) {
-            return null;
-            //$this->offset = "";
-            //return $this->getList();
-        }
+        if ($this->hydrate) {
+            if (empty($return) && $this->tries++ <= 1) {
+                return null;
+                //$this->offset = "";
+                //return $this->getList();
+            }
 
-        $return = $this->patchThumbs($return);
-        $return = $this->filterBlocked($return);
+            $return = $this->patchThumbs($return);
+            $return = $this->filterBlocked($return);
+        }
 
         $this->list = $return;
         return $return;
