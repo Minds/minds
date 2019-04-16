@@ -153,11 +153,28 @@ class Image extends File
                 default:
                     continue;
             }
-            //@todo - this might not be the smartest way to do this
-            $resized = \get_resized_image_from_existing_file($master, $w, $h, $s, 0, 0, 0, 0, $u);
+
+            /** @var Core\Media\Proxy\Autorotate $autorotate */
+            $autorotate = Core\Di\Di::_()->get('Media\Imagick\Autorotate');
+
+            /** @var Core\Media\Proxy\Resize $resize */
+            $resize = Core\Di\Di::_()->get('Media\Imagick\Resize');
+
+            $image = new \Imagick($master);
+
+            $autorotate->setImage($image);
+            $image = $autorotate->autorotate();
+
+            $resize->setImage($image)
+                ->setUpscale($u)
+                ->setSquare($s)
+                ->setWidth($w)
+                ->setHeight($h)
+                ->resize();
+
             $this->setFilename("image/$this->batch_guid/$this->guid/$size.jpg");
             $this->open('write');
-            $this->write($resized);
+            $this->write($resize->getJpeg(90));
             $this->close();
         }
     }
