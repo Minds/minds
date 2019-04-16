@@ -8,6 +8,8 @@ namespace Minds\Core\Queue\Runners;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Queue;
 use Minds\Core\Queue\Interfaces;
+use Minds\Core\Util\BigNumber;
+use Minds\Core\Wire;
 
 class WireNotification implements Interfaces\QueueRunner
 {
@@ -41,7 +43,8 @@ class WireNotification implements Interfaces\QueueRunner
                     if (!$wire || !is_object($wire)) {
                         return;
                     }
-                    $amount = $this->getAmountString($wire->getAmount());
+
+                    $amount = $wire->getMethod() === 'tokens' ? BigNumber::fromPlain($wire->getAmount(), 18)->toDouble() : $wire->getAmount();
                     $senderUser = $wire->getSender();
 
                     //send notification to receiver
@@ -50,7 +53,7 @@ class WireNotification implements Interfaces\QueueRunner
                         'from' => $senderUser->guid,
                         'notification_view' => 'wire_happened',
                         'params' => [
-                            'amount' => $amount,
+                            'amount' => $this->getAmountString($amount),
                             'from_guid' => $senderUser->guid,
                             'from_username' => $senderUser->username,
                             'to_guid' => $receiverUser->guid,
