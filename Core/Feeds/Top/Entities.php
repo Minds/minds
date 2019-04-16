@@ -72,6 +72,7 @@ class Entities
             'thumbs:up:count',
             'thumbs:down:user_guids',
             'thumbs:down:count',
+            'nsfw',
         ];
 
         $activity = new Activity();

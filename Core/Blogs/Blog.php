@@ -219,6 +219,9 @@ class Blog extends RepositoryEntity
 
     protected $_tags = [];
 
+    /** @var array */
+    protected $_nsfw = [];
+
     /**
      * Blog constructor.
      * @param null $eventsDispatcher
@@ -422,6 +425,24 @@ class Blog extends RepositoryEntity
         return $this;
     }
 
+    public function setNsfw($array = [])
+    {
+        $array = array_unique($array);
+        foreach ($array as $reason) {
+            if ($reason < 1 || $reason > 6) {
+                throw \Exception('Incorrect NSFW value provided');
+            }
+        }
+        $this->_nsfw = $array;
+        $this->markAsDirty('nsfw');
+        return $this; 
+    }
+
+    public function getNsfw()
+    {
+        return $this->_nsfw ?? [];
+    }
+
     /**
      * Defines the exportable members
      * @return array
@@ -463,6 +484,7 @@ class Blog extends RepositoryEntity
             'boostRejectionReason',
             'ownerObj',
             'tags',
+            'nsfw',
             function ($export) {
                 return $this->_extendExport($export);
             }
@@ -487,6 +509,7 @@ class Blog extends RepositoryEntity
         $output['excerpt'] = $this->getExcerpt();
         $output['category'] = $this->getCategories() ? $this->getCategories()[0] : '';
         $output['tags'] = $this->getTags();
+        $output['nsfw'] = $this->getNsfw();
         $output['header_bg'] = $export['has_header_bg'];
 
         if (!$this->isEphemeral()) {
