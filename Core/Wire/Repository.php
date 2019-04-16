@@ -1,6 +1,6 @@
 <?php
 /**
- * Wire Repository
+ * Wire Repository.
  */
 
 namespace Minds\Core\Wire;
@@ -8,7 +8,6 @@ namespace Minds\Core\Wire;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
-use Minds\Entities\User;
 use Cassandra;
 use Cassandra\Varint;
 use Cassandra\Timestamp;
@@ -17,31 +16,34 @@ class Repository
 {
     private $db;
     private $config;
+    private $entitiesBuilder;
 
-    public function __construct($db = null, $config = null)
+    public function __construct($db = null, $config = null, $entitiesBuilder = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
         $this->config = $config ?: Di::_()->get('Config');
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
     }
 
     /**
-     * Inserts wires to the database
+     * Inserts wires to the database.
+     *
      * @param array[Wire] $wires
      */
     public function add($wires)
     {
         if (!is_array($wires)) {
-            $wires = [ $wires ];
+            $wires = [$wires];
         }
 
         $requests = [];
-        $template = "INSERT INTO wire
+        $template = 'INSERT INTO wire
             (receiver_guid, sender_guid, method, timestamp, entity_guid, wire_guid, wei, recurring, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         foreach ($wires as $wire) {
             $requests[] = [
-                'string' => $template, 
+                'string' => $template,
                 'values' => [
                     new Varint($wire->getReceiver()->guid),
                     new Varint($wire->getSender()->guid),
@@ -50,9 +52,9 @@ class Repository
                     new Varint($wire->getEntity()->guid ?: $wire->getReceiver()->guid),
                     new Varint($wire->getGuid()),
                     new Cassandra\Varint($wire->getAmount()),
-                    (boolean) $wire->isRecurring(),
-                    'success'
-                ]
+                    (bool) $wire->isRecurring(),
+                    'success',
+                ],
             ];
         }
 
@@ -75,8 +77,9 @@ class Repository
         ], $options);
 
         $table = 'wire';
-        $where = [ 'method = ?' ];
-        $values = [ 'tokens' ];
+        $where = ['method = ?'];
+        $values = ['tokens'];
+        $orderBy = ' ORDER BY method DESC, timestamp DESC';
 
         if ($options['receiver_guid']) {
             $where[] = 'receiver_guid = ?';
@@ -93,6 +96,7 @@ class Repository
             $table = 'wire_by_entity';
             $where[] = 'entity_guid = ?';
             $values[] = new Varint($options['entity_guid']);
+            $orderBy = ' ORDER BY method DESC, sender_guid DESC, timestamp DESC';
         }
 
         if ($options['timestamp']['gte']) {
@@ -106,30 +110,31 @@ class Repository
         }
 
         $cql = "SELECT * from $table";
-    
+
         if ($where) {
-            $cql .= " WHERE " . implode(" AND ", $where);
+            $cql .= ' WHERE '.implode(' AND ', $where);
         }
 
-        $cql .=  " ORDER BY method DESC, timestamp DESC";
+        $cql .= $orderBy;
 
         if ($options['allowFiltering']) {
-            $cql .= " ALLOW FILTERING";
+            $cql .= ' ALLOW FILTERING';
         }
 
         $query = new Custom();
         $query->query($cql, $values);
         $query->setOpts([
             'page_size' => (int) $options['limit'],
-            'paging_state_token' => base64_decode($options['offset'])
+            'paging_state_token' => base64_decode($options['offset']),
         ]);
 
         $wires = [];
 
-        try{
+        try {
             $rows = $this->db->request($query);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
+
             return [];
         }
 
@@ -137,16 +142,17 @@ class Repository
             return [];
         }
 
-        foreach($rows as $row) {
-            $entity = Core\Entities::get(['guid' => $row['entity_guid']])[0];
+        foreach ($rows as $row) {
+            $entity = $this->entitiesBuilder->single((string) $row['entity_guid']);
+
             $wire = new Wire();
-            $wire->setSender(new User($row['sender_guid']))
-                ->setReceiver(new User($row['receiver_guid']))
+            $wire->setSender($this->entitiesBuilder->single((string) $row['sender_guid']))
+                ->setReceiver($this->entitiesBuilder->single((string) $row['receiver_guid']))
                 ->setTimestamp($row['timestamp'])
                 ->setEntity($entity)
                 ->setRecurring($row['recurring'])
                 ->setMethod($row['method'])
-                ->setAmount((string) Core\Util\BigNumber::_($row['amount'] ?: 0)->add($row['wei'] ?: 0));
+                ->setAmount((string) Core\Util\BigNumber::_($row['amount'] ?: 0)->add($row['wei']->toInt() ?: 0));
             $wires[] = $wire;
         }
 
@@ -158,7 +164,6 @@ class Repository
 
     public function get($guid)
     {
-
     }
 
     public function update($key, $guids)
@@ -170,5 +175,4 @@ class Repository
     {
         // TODO: Implement delete() method.
     }
-
 }

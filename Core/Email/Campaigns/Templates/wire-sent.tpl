@@ -1,6 +1,6 @@
 <?php
     $wireUrl = "{$vars['site_url']}wallet/tokens/transactions/{$vars['contract']}?{$vars['tracking']}";
-    $avatarUrl = "{$vars['sender']->getIconUrl()}";
+    $avatarUrl = "{$vars['receiver']->getIconUrl()}";
     $wireDate = date('M d, Y', ($vars['timestamp'])); 
     $amount = number_format($vars['amount'], 2);
 ?>
@@ -12,11 +12,11 @@
                     <tr>
                         <td style="width: 30%;">
                             <a href="<?php echo $wireUrl; ?>">
-                                <img alt="<?php echo $vars['sender']->get('name'); ?>" src="<?php echo "{$vars['site_url']}api/v2/media/magicproxy?size=90&amp;src={$avatarUrl}&amp;roundX=45&amp;roundY=45"; ?>"/>
+                                <img alt="<?php echo $vars['receiver']->get('name'); ?>" src="<?php echo "{$vars['site_url']}api/v2/media/magicproxy?size=90&amp;src={$avatarUrl}&amp;roundX=45&amp;roundY=45"; ?>"/>
                             </a>
                         </td>
                         <td style="width: 70%">
-                            <h4 <?php echo $emailStyles->getStyles('m-clear', 'm-fonts', 'm-header'); ?>>@<?php echo $vars['sender']->get('name'); ?> wired you</h4>
+                            <h4 <?php echo $emailStyles->getStyles('m-clear', 'm-fonts', 'm-header'); ?>>You wired @<?php echo $vars['receiver']->get('name'); ?></h4>
                             <p <?php echo $emailStyles->getStyles('m-fonts', 'm-subtitle', 'm-clear'); ?>>Transfer Date and Amount:</p>
                             <p <?php echo $emailStyles->getStyles('m-fonts', 'm-subtitle', 'm-clear'); ?>>
                                 <?php echo $wireDate; ?>; +<?php echo $amount ?> tokens
