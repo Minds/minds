@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by Marcelo.
- * Date: 03/08/2017
+ * Date: 03/08/2017.
  */
 
 namespace Minds\Core\Wire;
@@ -10,9 +10,6 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Session;
 use Minds\Core\Events\Dispatcher;
-use Minds\Core\Util\BigNumber;
-use Minds\Core\Wire\Exceptions\WalletNotSetupException;
-use Minds\Entities;
 use Minds\Entities\User;
 
 class Events
@@ -42,16 +39,15 @@ class Events
                         ->save();
                 }
             }
-
         });
 
-        /**
+        /*
          * Legcacy compatability for exclusive content
          */
-        Dispatcher::register('export:extender', 'activity', function($event) {
+        Dispatcher::register('export:extender', 'activity', function ($event) {
             $params = $event->getParameters();
             $activity = $params['entity'];
-            if($activity->type != 'activity'){
+            if ($activity->type != 'activity') {
                 return;
             }
             $export = $event->response() ?: [];
@@ -60,8 +56,9 @@ class Events
             if ($activity->isPaywall() && !$activity->getWireThreshold()) {
                 $export['wire_threshold'] = [
                   'type' => 'money',
-                  'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount']
+                  'min' => $activity->getOwnerEntity()->getMerchant()['exclusive']['amount'],
                 ];
+
                 return $event->setResponse($export);
             }
         });
@@ -79,35 +76,30 @@ class Events
             return $event->setResponse($result);
         });
 
+        // Wire ermails
         Dispatcher::register('wire:email', 'wire', function (Core\Events\Event $event) {
             $params = $event->getParameters();
-            /** @var User $receiver */
-            $receiver = $params['receiver'];
+            $wire = $params['wire'];
+            $campaign = (new Core\Email\Campaigns\WireReceived())
+                ->setUser($wire->getReceiver())
+                ->setWire($wire)
+                ->send();
 
-            $method = $params['method'];
+            return $event->setResponse(true);
+        });
 
-            /** @var Core\Email\Manager $manager */
-            $manager = Di::_()->get('Email\Manager');
-
-            $subscription = new Core\Email\EmailSubscription();
-            $subscription
-                ->setUserGuid($receiver->guid)
-                ->setCampaign('when')
-                ->setTopic('wire_received')
-                ->setValue(true);
-
-
-            if ($manager->isSubscribed($subscription)) {
-                $campaign = new Core\Email\Campaigns\WhenWire();
-                $campaign->setUser($receiver)
-                    ->setMethod($method)
-                    ->send();
-            }
+        // Wire ermails
+        Dispatcher::register('wire-receipt:email', 'wire', function (Core\Events\Event $event) {
+            $params = $event->getParameters();
+            $wire = $params['wire'];
+            $campaign = (new Core\Email\Campaigns\WireSent())
+                ->setUser($wire->getSender())
+                ->setWire($wire)
+                ->send();
 
             return $event->setResponse(true);
         });
     }
-
 
     private function cancelSubscriptions(User $user)
     {
@@ -118,7 +110,7 @@ class Events
 
         $subscriptions = $repository->getList([
             'user_guid' => $user->guid,
-            'plan_id' => 'wire'
+            'plan_id' => 'wire',
         ]);
 
         foreach ($subscriptions as $subscription) {

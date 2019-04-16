@@ -17,7 +17,6 @@ use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
-
     protected $cache;
     protected $repo;
     protected $subscriptionsManager;
@@ -38,7 +37,7 @@ class ManagerSpec extends ObjectBehavior
     protected $plusDelegate;
     protected $offchainTxs;
 
-    function let(
+    public function let(
         Redis $cache,
         Repository $repo,
         SubscriptionsManager $subscriptionsManager,
@@ -98,15 +97,16 @@ class ManagerSpec extends ObjectBehavior
         $this->offchainTxs = $offchainTxs;
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Core\Wire\Manager');
     }
 
-    function it_should_create_an_onchain_wire()
+    public function it_should_create_an_onchain_wire()
     {
         $this->txManager->add(Argument::that(function ($transaction) {
             $data = $transaction->getData();
+
             return $transaction->getUserGuid() == 123
                 && $transaction->getAmount() == -100001
                 && $transaction->getWalletAddress() == '0xSPEC'
@@ -144,7 +144,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_confirm_a_wire_from_the_blockchain()
+    public function it_should_confirm_a_wire_from_the_blockchain()
     {
         $this->txRepo->add(Argument::that(function ($transaction) {
             return $transaction->getUserGuid() == 123
@@ -161,9 +161,9 @@ class ManagerSpec extends ObjectBehavior
         $this->queue->send(Argument::any())
             ->shouldBeCalled();
 
-        $receiver = new User;
+        $receiver = new User();
         $receiver->guid = 123;
-        $sender = new User;
+        $sender = new User();
         $sender->guid = 123;
         $wire = new WireModel();
         $wire->setReceiver($receiver)
@@ -184,13 +184,13 @@ class ManagerSpec extends ObjectBehavior
 
         $this->confirm($wire, $transaction)
             ->shouldReturn(true);
-
     }
 
-    function it_should_create_a_creditcard_wire()
+    public function it_should_create_a_creditcard_wire()
     {
         $this->txManager->add(Argument::that(function ($transaction) {
             $data = $transaction->getData();
+
             return $transaction->getUserGuid() == 123
                 && $transaction->getAmount() == -100001
                 && $transaction->getWalletAddress() == '0xSPEC'
@@ -228,12 +228,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_charge_a_recurring_onchain_subscription(
+    public function it_should_charge_a_recurring_onchain_subscription(
         User $user,
         User $user2,
         Core\Payments\Subscriptions\Subscription $subscription
     ) {
-
         $this->call->getRow(Argument::any(), Argument::any())
             ->shouldBeCalled()
             ->willReturn([
@@ -249,9 +248,9 @@ class ManagerSpec extends ObjectBehavior
                     'wire' => [
                         'wallet_pkey' => 'key',
                         'wallet_address' => 'address',
-                        'contract_address' => 'contract_address'
-                    ]
-                ]
+                        'contract_address' => 'contract_address',
+                    ],
+                ],
             ]);
 
         $subscription->getUser()
@@ -277,7 +276,7 @@ class ManagerSpec extends ObjectBehavior
         $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
             '0x123',
             'wallet',
-            Core\Util\BigNumber::_(1000000000000000000)->toHex(true)
+            Core\Util\BigNumber::_(1000000000000000000)->toHex(true),
         ])
             ->shouldBeCalled()
             ->willReturn('data hash');
@@ -290,23 +289,19 @@ class ManagerSpec extends ObjectBehavior
             'from' => 'address',
             'to' => 'contract_address',
             'gasLimit' => Core\Util\BigNumber::_(200000)->toHex(true),
-            'data' => 'data hash'
+            'data' => 'data hash',
         ])
             ->shouldBeCalled()
             ->willReturn('0x123asd');
 
-        $this->dispatcher->trigger('wire:email', 'wire', Argument::any())
-            ->shouldBeCalled();
-
         $this->onRecurring($subscription);
     }
 
-    function it_should_charge_a_recurring_offchain_subscription(
+    public function it_should_charge_a_recurring_offchain_subscription(
         User $user,
         User $user2,
         Core\Payments\Subscriptions\Subscription $subscription
     ) {
-
         $this->call->getRow(Argument::any(), Argument::any())
             ->shouldBeCalled()
             ->willReturn([
@@ -373,10 +368,6 @@ class ManagerSpec extends ObjectBehavior
         $this->queue->send(Argument::any())
             ->shouldBeCalled();
 
-        $this->dispatcher->trigger('wire:email', 'wire', Argument::any())
-            ->shouldBeCalled();
-
         $this->onRecurring($subscription);
     }
-
 }

@@ -16,7 +16,7 @@ class EmailStyles
     public function __construct()
     {
         $this->styles = [
-            'm-fonts' => 'font-family:Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;',
+            'm-fonts' => 'font-family:Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;',
             'm-clear' => 'margin: 0px; padding: 0px;',
             'm-link' => 'text-decoration: none;',
             'm-avatar-size' => 'height: 50px; width: 44px;',
@@ -26,6 +26,8 @@ class EmailStyles
             'm-suggestionsSidebarList__item' => 'border-bottom: 1px solid #e8e8e8;',
             'm-suggestionsSidebarList__item' => 'border-bottom: 1px solid #e8e8e8;',
             'm-suggestionsSidebarListItem__description' => 'color: #888;font-size: 11px; line-height: 16px; font-family: Roboto; overflow: hidden; text-overflow:ellipsis; white-space:nowrap; width: 480px; height: 20px;',
+            'm-header' => 'font-size: 24px; color: #000; margin-bottom: 10px;',
+            'm-subtitle' => 'font-family:Roboto-Light; font-size: 14px; color: #4A4A4A !important; line-height: 30px;',
         ];
     }
 
