@@ -45,5 +45,15 @@ class MediaProvider extends Provider
         $this->di->bind('Media\Proxy\MagicResize', function ($di) {
             return new Proxy\MagicResize();
         }, ['useFactory' => true]);
+
+        // Imagick
+
+        $this->di->bind('Media\Imagick\Autorotate', function ($di) {
+            return new Imagick\Autorotate();
+        }, ['useFactory' => true]);
+
+        $this->di->bind('Media\Imagick\Resize', function ($di) {
+            return new Imagick\Resize();
+        }, ['useFactory' => true]);
     }
 }
