@@ -736,6 +736,7 @@ class User extends \ElggUser
         $export['opted_in_hashtags'] = (int) $this->getOptedInHashtags();
         $export['canary'] = (bool) $this->isCanary();
         $export['is_admin'] = $this->attributes['admin'] == 'yes';
+        $export['theme'] = $this->getTheme();
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
@@ -983,6 +984,7 @@ class User extends \ElggUser
             'opted_in_hashtags',
             'last_avatar_upload',
             'canary',
+            'theme',
         ));
     }
 
@@ -1011,6 +1013,26 @@ class User extends \ElggUser
     public function setCanary($enabled = true)
     {
         $this->canary = $enabled ? 1 : 0;
+    }
+    
+    /**
+     * Get `theme`
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * Set `theme``
+     * @param string $value
+     * @return $this
+     */
+    public function setTheme($value)
+    {
+        $this->theme = $value;
+        return $this;
     }
 
 }
