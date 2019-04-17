@@ -17,6 +17,7 @@ use Minds\Entities;
 use Minds\Helpers;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
+use Minds\Core\Boost\Network;
 
 class boost implements Interfaces\Api
 {
@@ -274,16 +275,19 @@ class boost implements Interfaces\Api
                         $state = 'pending';
                     }
 
-                    $boost = (new Entities\Boost\Network())
+                    $manager = Di::_()->get('Boost\Network\Manager');
+
+                    $boost = (new Network\Boost())
+                        ->setEntityGuid($entity->getGuid())
                         ->setEntity($entity)
                         ->setBid($amount)
                         ->setBidType($bidType)
                         ->setImpressions($impressions)
+                        ->setOwnerGuid(Core\Session::getLoggedInUser()->getGuid())
                         ->setOwner(Core\Session::getLoggedInUser())
-                        ->setState($state)
-                        ->setHandler(lcfirst($pages[0]))
-                        ->setPriorityRate($priorityRate)
-                        ->setCategories($categories);
+                        ->setCreatedTimestamp(round(microtime(true) * 1000))
+                        ->setType(lcfirst($pages[0]))
+                        ->setPriority(false);
 
                     // Pre-set GUID
 
@@ -298,10 +302,7 @@ class boost implements Interfaces\Api
                             ]);
                         }
 
-                        /** @var Core\Boost\Repository $repository */
-                        $repository = Di::_()->get('Boost\Repository');
-
-                        $existingBoost = $repository->getEntity($boost->getHandler(), $guid);
+                        $existingBoost = $manager->get("urn:boost:{$boost->getType()}:{$guid}");
 
                         if ($existingBoost) {
                             return Factory::response([
@@ -337,15 +338,11 @@ class boost implements Interfaces\Api
                     }
 
                     // Run boost
+    
+                    $boost->setTransactionId($transactionId);
+                    $success = $manager->add($boost);
 
-                    $boostId = Core\Boost\Factory::build(ucfirst($pages[0]))->boost($boost, $impressions);
-
-                    if ($boostId) {
-                        $boost
-                            ->setId((string) $boostId)
-                            ->setTransactionId($transactionId)
-                            ->save();
-                    } else {
+                    if (!$success) {
                         $response['status'] = 'error';
                     }
                     break;

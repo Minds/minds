@@ -25,15 +25,18 @@ class views implements Interfaces\Api
             case 'boost':
                 $expire = Di::_()->get('Boost\Network\Expire');
                 $metrics = Di::_()->get('Boost\Network\Metrics');
+                $manager = Di::_()->get('Boost\Network\Manager');
 
-                $boost = Core\Boost\Factory::build("Newsfeed")->getBoostEntity($pages[1]);
+                $urn = "urn:boost:newsfeed:{$pages[1]}";
+
+                $boost = $manager->get($urn, [ 'hydrate' => true ]);
                 if (!$boost) {
                     return Factory::response([
                         'status' => 'error',
                         'message' => 'Could not find boost'
                     ]);
                 }
-
+                
                 $count = $metrics->incrementViews($boost);
 
                 if ($count > $boost->getImpressions()) {
@@ -43,6 +46,12 @@ class views implements Interfaces\Api
 
                 Counters::increment($boost->getEntity()->guid, "impression");
                 Counters::increment($boost->getEntity()->owner_guid, "impression");
+
+                return Factory::response([
+                    'status' => 'succcess',
+                    'impressions' => $boost->getImpressions(),
+                    'impressions_met' => $count,
+                ]);
                 break;
             case 'activity':
                 $activity = new Entities\Activity($pages[1]);
