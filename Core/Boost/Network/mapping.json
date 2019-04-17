@@ -1,0 +1,59 @@
+{
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "entity_guid": {
+                    "type": "long"
+                },
+                "owner_guid": {
+                    "type": "long"
+                },
+                "@timestamp": {
+                    "type": "date"  
+                },
+                "@reviewed": {
+                    "type": "date"
+                },
+                "@rejected": {
+                    "type": "date"
+                },
+                "@revoked": {
+                    "type": "date"
+                },
+                "@completed": {
+                    "type": "date"
+                },
+                "type": {
+                    "type": "keyword"
+                },
+                "bid": {
+                    "type": "double"
+                },
+                "bid_type": {
+                    "type": "keyword"
+                },
+                "impressions": {
+                    "type": "long"
+                },
+                "impressions_met": {
+                    "type": "long"  
+                },
+                "priority": {
+                    "type": "boolean"
+                },
+                "tags": {
+                    "type": "keyword"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "nsfw": {
+                    "type": "keyword"
+                }
+            }
+        }
+    },
+    "settings": {
+        "index.number_of_shards": 1
+    }
+}
