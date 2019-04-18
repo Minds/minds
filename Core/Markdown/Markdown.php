@@ -7,7 +7,7 @@ namespace Minds\Core\Markdown;
 
 class Markdown extends \Parsedown
 {
-    protected $regexAttribute = '(?:[#.][-\w]+[ ]*)';
+    protected $regexAttribute = '(?:[#.=][-\w]+[ ]*)';
 
     protected function parseAttributeData($attributeString)
     {
@@ -16,6 +16,12 @@ class Markdown extends \Parsedown
         foreach ($attributes as $attribute) {
             if ($attribute[0] === '#') {
                 $Data['id'] = substr($attribute, 1);
+            } elseif ($attribute[0] === '=') {
+                list($w, $h) = explode('x', substr($attribute, 1));
+                $Data['width'] = $w;
+                if ($h) {
+                    $Data['height'] = $h;
+                }
             } else # "."
             {
                 $classes [] = substr($attribute, 1);
