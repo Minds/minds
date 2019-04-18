@@ -114,7 +114,7 @@ class Installer
             //throw new ProvisionException('Domain name is invalid');
         }
 
-        if (!isset($this->options['email-private-key']) || !$this->options['email-private-key']) {
+        /*if (!isset($this->options['email-private-key']) || !$this->options['email-private-key']) {
             throw new ProvisionException('Email private key path was not provided');
         } elseif (!is_readable($this->options['email-private-key'])) {
             throw new ProvisionException('Email private key is not readable');
@@ -136,7 +136,7 @@ class Installer
             throw new ProvisionException('Phone number public key path was not provided');
         } elseif (!is_readable($this->options['phone-number-public-key'])) {
             throw new ProvisionException('Phone number public key is not readable');
-        }
+        }*/
 
         if (isset($this->options['site-email']) && !filter_var($this->options['site-email'], FILTER_VALIDATE_EMAIL)) {
             throw new ProvisionException('Site email is invalid');
