@@ -9,6 +9,7 @@
 namespace Minds\Core\Blogs;
 
 use Minds\Core\Di\Di;
+use Minds\Core\Security\Spam;
 
 class Manager
 {
@@ -27,12 +28,17 @@ class Manager
     /** @var Spam **/
     protected $spam;
 
+    /** @var Delegates\Search */
+    protected $search;
+
     /**
      * Manager constructor.
      * @param null $repository
      * @param null $paywallReview
      * @param null $slug
      * @param null $feeds
+     * @param null $spam
+     * @param null $search
      * @throws \Exception
      */
     public function __construct(
@@ -40,7 +46,8 @@ class Manager
         $paywallReview = null,
         $slug = null,
         $feeds = null,
-        $spam = null
+        $spam = null,
+        $search = null
     )
     {
         $this->repository = $repository ?: new Repository();
@@ -48,6 +55,7 @@ class Manager
         $this->slug = $slug ?: new Delegates\Slug();
         $this->feeds = $feeds ?: new Delegates\Feeds();
         $this->spam = $spam ?: Di::_()->get('Security\Spam');
+        $this->search = $search ?: new Delegates\Search();
     }
 
     /**
@@ -120,6 +128,7 @@ class Manager
             if (!$blog->isDeleted()) {
                 $this->feeds->index($blog);
                 $this->feeds->dispatch($blog);
+                $this->search->index($blog);
             }
 
             $this->paywallReview->queue($blog);
@@ -148,11 +157,16 @@ class Manager
         $saved = $this->repository->update($blog);
 
         if ($saved) {
+            if (!$blog->isDeleted()) {
+                $this->search->index($blog);
+            }
+
             if ($shouldReindex) {
                 if (!$blog->isDeleted()) {
                     $this->feeds->index($blog);
                 } else {
                     $this->feeds->remove($blog);
+                    $this->search->prune($blog);
                 }
             }
 
@@ -174,6 +188,7 @@ class Manager
 
         if ($deleted) {
             $this->feeds->remove($blog);
+            $this->search->prune($blog);
         }
 
         return $deleted;

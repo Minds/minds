@@ -243,6 +243,25 @@ class Blog extends RepositoryEntity
     }
 
     /**
+     * @return array
+     */
+    function __sleep() {
+        return array_diff(array_keys(get_object_vars($this)), [
+            '_eventsDispatcher',
+            '_config',
+            '_header',
+            '_acl',
+        ]);
+    }
+
+    /**
+     * @return void
+     */
+    function __wakeup() {
+        $this->__construct();
+    }
+
+    /**
      * @return int
      */
     public function getGuid()
