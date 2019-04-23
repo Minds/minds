@@ -158,7 +158,7 @@ class ElasticRepository
             'doc' => [
                 '@timestamp' => $boost->getCreatedTimestamp(),
                 'bid' => $boost->getBidType() === 'tokens' ?
-                    (int) BigNumber::fromPlain($boost->getBid(), 18) : $boost->getBid(),
+                    (int) BigNumber::fromPlain($boost->getBid(), 18)->toInt() : $boost->getBid(),
                 'bid_type' => $boost->getBidType(),
                 'entity_guid' => $boost->getEntityGuid(),
                 'impressions' => $boost->getImpressions(),
