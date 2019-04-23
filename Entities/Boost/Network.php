@@ -73,7 +73,7 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $this->impressions = $array['impressions'];
         $this->owner = Entities\Factory::build($array['owner']);
         $this->state = $array['state'];
-        $this->time_created = $array['time_created'];
+        $this->time_created = isset($array['schema']) ? $array['time_created'] / 1000 : $array['time_created'];
         $this->last_updated = $array['last_updated'];
         $this->transactionId = $array['transactionId'];
         $this->handler = $array['handler'];
