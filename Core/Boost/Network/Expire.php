@@ -49,7 +49,7 @@ class Expire
         Core\Events\Dispatcher::trigger('boost:completed', 'boost', ['boost' => $this->boost]);
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to' => [$this->boost->getOwner()->guid],
+            'to' => [$this->boost->getOwnerGuid()],
             'from' => 100000000000000519,
             'entity' => $this->boost->getEntity(),
             'notification_view' => 'boost_completed',

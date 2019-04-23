@@ -78,7 +78,7 @@ class Review implements BoostReviewInterface
             throw new \Exception('Boost wasn\'t set');
         }
 
-        $this->boost->setRejectReason($reason);
+        $this->boost->setRejectedReason($reason);
         $this->boost->setReviewedTimestamp(round(microtime(true) * 1000));
         $this->boost->setRejectedTimestamp(round(microtime(true) * 1000));
         $this->manager->update($this->boost);
@@ -93,7 +93,7 @@ class Review implements BoostReviewInterface
                 'from' => 100000000000000519,
                 'entity' => $this->boost->getEntity(),
                 'params' => [
-                    'reason' => $this->boost->getRejectReason(),
+                    'reason' => $this->boost->getRejectedReason(),
                     'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
                 ],
                 'notification_view' => 'boost_rejected',

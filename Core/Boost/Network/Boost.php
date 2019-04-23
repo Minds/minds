@@ -6,6 +6,31 @@ namespace Minds\Core\Boost\Network;
 
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Boost Entity
+ * @package Minds\Core\Boost\Network
+ * @method Boost setGuid(long $guid)
+ * @method Boost setEntiyGuid()
+ * @method Boost setEntity()
+ * @method Entity getEntity()
+ * @method Boost setBid()
+ * @method Boost setBidType()
+ * @method Booot setImpressions()
+ * @method int getImpressions()
+ * @method Boost setOwnerGuid()
+ * @method long getOwnerGuid()
+ * @method Boost setOwner()
+ * @method User getOwner()
+ * 
+ * @method Boost setRejectedReason(int $reason)
+ * @method int getRejectedReason()
+ * @method Boost setCompletedTimestamp(int $ts)
+ * @method Boost setReviewedTimestamp(int $ts)
+ * @method Boost setRejectedTimestamp(int $ts)
+ * @method Boost setCreatedTimestamp(int $ts)
+ * @method Boost setRevokedTimestamp(int $ts)
+ * @method string getState()
+ */
 class Boost
 {
     use MagicAttributes;
