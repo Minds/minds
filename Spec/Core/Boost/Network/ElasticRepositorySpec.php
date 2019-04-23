@@ -50,7 +50,8 @@ class ElasticRepositorySpec extends ObjectBehavior
                 && round($body['doc']['@revoked'], -5) === round(time() * 1000, -5)
                 && round($body['doc']['@rejected'], -5) === round(time() * 1000, -5)
                 && $body['doc']['bid'] == 10
-                && $body['doc']['bid_type'] === 'offchain'
+                && $body['doc']['bid_type'] === 'tokens'
+                && $body['doc']['token_method'] === 'offchain'
                 && $body['doc']['entity_guid'] === 123
                 && $body['doc']['impressions'] === 10000
                 && $body['doc']['impressions_met'] === 10

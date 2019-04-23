@@ -158,9 +158,7 @@ class ElasticRepository
                 '@timestamp' => $boost->getCreatedTimestamp(),
                 'bid' => $boost->getBidType() === 'tokens' ?
                     $boost->getBid() / (10**18) : $boost->getBid(),
-                'bid_type' => $boost->getBidType() === 'tokens' ?
-                    strpos($boost->getTransactionId(), '0x', 0) === 0 ? 'onchain' : 'offchain'
-                    : $boost->getBidType(),
+                'bid_type' => $boost->getBidType(),
                 'entity_guid' => $boost->getEntityGuid(),
                 'impressions' => $boost->getImpressions(),
                 'owner_guid' => $boost->getOwnerGuid(),
@@ -170,6 +168,11 @@ class ElasticRepository
             ],
             'doc_as_upsert' => true,
         ];
+
+        if ($boost->getBidType() === 'tokens') {
+            $body['doc']['token_method'] = (strpos($boost->getTransactionId(), '0x', 0) === 0) 
+                ? 'onchain' : 'offchain';
+        }
 
         if ($boost->getImpressionsMet()) {
             $body['doc']['impressions_met'] = $boost->getImpressionsMet();
