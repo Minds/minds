@@ -9,13 +9,10 @@ class Template
 {
     protected $template;
     protected $template_path;
+    protected $emailStyles;
     protected $data = [];
-
     protected $body;
-    protected $partials = [];
-
     protected $loadFromFile = true;
-
     protected $useMarkdown = false;
 
     /** @var Markdown */
@@ -26,11 +23,14 @@ class Template
      *
      * @param Markdown $markdown
      */
-    public function __construct($markdown = null, $config = null)
+    public function __construct($markdown = null, $config = null, $emailStyles = null)
     {
         $this->markdown = $markdown ?: new Markdown();
+        $this->emailStyles = $emailStyles ?: Di::_()->get('Email\EmailStyles');
         $this->config = $config ?: Di::_()->get('Config');
+        $this->data['site_url'] = $this->config->get('site_url') ?: 'https://www.minds.com/';
         $this->data['cdn_assets_url'] = $this->config->get('cdn_assets_url') ?: 'https://cdn-assets.minds.com/front/dist/';
+        $this->data['cdn_url'] = $this->config->get('cdn_url') ?: 'https://cdn.minds.com/';
     }
 
     public function setTemplate($template = 'default')
@@ -157,6 +157,7 @@ class Template
     protected function compile($file, $vars = [])
     {
         $vars = array_merge($this->data, $vars);
+        $emailStyles = $this->emailStyles;
 
         ob_start();
 

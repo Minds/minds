@@ -126,8 +126,16 @@ class Events
             $params = $e->getParameters();
             $group = $params['container'];
             $user = $params['user'];
+            $entity = $params['entity'];
 
-            $e->setResponse($group->isOwner($user->guid) && $group->isMember($user->guid));
+            if ($group->isOwner($user->guid)) {
+                return $e->setResponse(true);
+            }
+
+            // If member and we own the post
+            if ($group->isMember($user->guid) && $entity->owner_guid == $user->guid) {
+                return $e->setResponse(true);
+            }
         });
 
         Dispatcher::register('activity:container:prepare', 'group', function ($e) {

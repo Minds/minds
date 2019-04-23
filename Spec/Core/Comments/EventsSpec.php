@@ -55,6 +55,9 @@ class EventsSpec extends ObjectBehavior
         $this->dispatcher->register('acl:read', 'all', Argument::any())
             ->shouldBeCalled();
 
+        $this->dispatcher->register('acl:write:container', 'all', Argument::any())
+            ->shouldBeCalled();
+
         $this->register();
     }
 }

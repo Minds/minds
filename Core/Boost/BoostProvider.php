@@ -25,8 +25,11 @@ class BoostProvider extends Provider
         $this->di->bind('Boost\Network', function ($di) {
             return new Network([], Client::build('MongoDB'), new Data\Call('entities_by_time'));
         }, ['useFactory' => true]);
+        $this->di->bind('Boost\Network\Manager', function ($di) {
+            return new Network\Manager;
+        }, ['useFactory' => false]);
         $this->di->bind('Boost\Network\Iterator', function ($di) {
-            return new Network\Iterator(Client::build('MongoDB'));
+            return new Network\Iterator();
         }, ['useFactory' => false]);
         $this->di->bind('Boost\Network\Metrics', function ($di) {
             return new Network\Metrics(Client::build('MongoDB'));
@@ -35,7 +38,7 @@ class BoostProvider extends Provider
             return new Network\Review();
         }, ['useFactory' => false]);
         $this->di->bind('Boost\Network\Expire', function ($di) {
-            return new Network\Expire(Client::build('MongoDB'));
+            return new Network\Expire();
         }, ['useFactory' => false]);
         $this->di->bind('Boost\Newsfeed', function ($di) {
             return new Newsfeed([], Client::build('MongoDB'), new Data\Call('entities_by_time'));

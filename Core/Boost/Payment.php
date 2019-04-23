@@ -299,6 +299,20 @@ class Payment
                 }
 
                 switch ($method) {
+                    case 'onchain':
+                        $eth = Di::_()->get('Blockchain\Services\Ethereum');
+                        $receipt = $eth->request('eth_getTransactionReceipt', [ $boost->getTransactionId() ]);
+
+                        if (!$receipt || !isset($receipt['status'])) {
+                            return false; //too soon
+                        }
+
+                        if ($receipt['status'] === '0x1') {
+                            $guid = (string) BigNumber::fromHex($receipt['logs'][3]['data']);                  
+                            return $boost->getGuid() === $guid;
+                        }
+                        return false;
+                        break;
                     case 'offchain':
                         if ($boost->getHandler() === 'peer') {
                             /** @var Core\Blockchain\Wallets\OffChain\Transactions $receiversTx */
@@ -384,6 +398,10 @@ class Payment
     {
         $currency = method_exists($boost, 'getMethod') ?
             $boost->getMethod() : $boost->getBidType();
+
+        if (in_array($currency, [ 'onchain', 'offchain' ])) {
+            $currency = 'tokens';
+        }
 
         switch ($currency) {
             case 'points':

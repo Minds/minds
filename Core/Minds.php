@@ -17,10 +17,12 @@ class Minds extends base
         Events\Module::class,
         Email\Module::class,
         Experiments\Module::class,
-        VideoChat\Module::class,
         Helpdesk\Module::class,
+        Onboarding\Module::class,
         Subscriptions\Module::class,
+        Suggestions\Module::class,
         Reports\Module::class,
+        VideoChat\Module::class,
     ];
 
     /**

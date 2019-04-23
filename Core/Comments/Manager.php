@@ -81,14 +81,36 @@ class Manager
             'guid' => null,
             'limit' => null,
             'offset' => null,
-            'descending' => true
+            'descending' => true,
+            'is_focused' => false,
         ], $opts);
 
         if ($this->legacyRepository->isLegacy($opts['entity_guid'])) {
             return $this->legacyRepository->getList($opts);
         }
 
-        return $this->repository->getList($opts);
+        $response = $this->repository->getList($opts);
+        
+        if ($opts['is_focused'] === true && $opts['offset']) {
+            $count = count($response);
+            $diff = $opts['limit'] - $count;
+            if ($diff <= 0) {
+                return $response; // no need to load anything else
+            }
+            $earlier = $this->repository->getList(array_merge($opts, [
+                'limit' => $diff,
+                'descending' => true,
+                'include_offset' => false,
+            ]));
+            $newResponse = $earlier->reverse();
+            foreach ($response as $comment) {
+                $newResponse[] = $comment;
+            }
+            $newResponse->setPagingToken($response->getPagingToken());
+            return $newResponse;
+        }
+
+        return $response;
     }
 
     /**

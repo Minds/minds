@@ -88,16 +88,16 @@ class Manager
         $trending = [];
 
         if ($opts['trending']) {
-            $cached =  $this->cacher->get($this->getCacheKey('trending'));
+            $cached = $this->cacher->get($this->getCacheKey('trending'));
 
             if ($cached !== false) {
                 $trending = json_decode($cached, true);
             } else {
-                $results = $this->trendingRepository->getTrending($opts);
+                $results = $this->trendingRepository->getList($opts);
 
                 if ($results) {
-                    $trending = array_column($results, 'hashtag');
-                    $this->cacher->set($this->getCacheKey('trending'), json_encode($trending), 15 * 60 * 60); // 15 minutes
+                    $trending = $results;
+                    $this->cacher->set($this->getCacheKey('trending'), json_encode($trending), 60 * 15); // 15 minutes
                 }
             }
         }

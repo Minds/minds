@@ -27,10 +27,15 @@ class RateLimits extends Cli\Controller implements Interfaces\CliControllerInter
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
+        session_start();
         Core\Security\ACL::$ignore = true;
         \Minds\Core\Events\Defaults::_();
-        $scanner = new Core\Security\RateLimits\Scanner();
-        $scanner->run();
+        while (true) {
+            echo ".";
+            $scanner = new Core\Security\RateLimits\Scanner();
+            $scanner->run();
+            sleep(1); //sleep for 1 second
+        }
     }
 
     public function manual()

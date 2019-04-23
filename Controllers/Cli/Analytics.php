@@ -14,7 +14,6 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
 
     public function help($command = null)
     {
-        $this->out($command);
         switch ($command) {
             case 'sync_activeUsers':
                 $this->out('Indexes user activity by guid and counts per day');
@@ -30,13 +29,13 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
                 // no break
             default:
                 $this->out('Syntax usage: cli analytics <type>');
-                $this->out('Available types: sync_activeUsers, counts');
-                $this->out('Command specific help: help analytics <type>');
+                $this->displayCommandHelp();
         }
     }
 
     public function exec()
     {
+        $this->help();
     }
 
     public function sync_activeUsers()

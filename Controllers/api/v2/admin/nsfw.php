@@ -8,6 +8,7 @@ namespace Minds\Controllers\api\v2\admin;
 use Minds\Api\Factory;
 use Minds\Entities;
 use Minds\Interfaces;
+use Minds\Core\Entities\Actions\Save;
 use Minds\Core\Di\Di;
 
 class nsfw implements Interfaces\Api, Interfaces\ApiAdminPam
@@ -41,8 +42,11 @@ class nsfw implements Interfaces\Api, Interfaces\ApiAdminPam
             return Factory::response(['status' => 'error', 'message' => 'Entity not found.']);
         }
 
-        $entity->setNsfw($_POST['nsfw'])
-            ->save();
+        $entity->setNsfw($_POST['nsfw']);
+
+        $save = new Save();
+        $save->setEntity($entity)
+          ->save();
         
         /** @var Core\Events\Dispatcher $dispatcher */
         $dispatcher = Di::_()->get('EventsDispatcher');
@@ -51,6 +55,19 @@ class nsfw implements Interfaces\Api, Interfaces\ApiAdminPam
             'entity' => $entity,
             'immediate' => true
         ]);
+
+        if ($entity->entity_guid) {
+            $child = Entities\Factory::build($entity->entity_guid);
+            $child->setNsfw($_POST['nsfw']);
+
+            $save->setEntity($child)
+                ->save();
+
+            $dispatcher->trigger('search:index', 'all', [
+                'entity' => $child,
+                'immediate' => true
+            ]);
+        }
 
         return Factory::response([]);
     }

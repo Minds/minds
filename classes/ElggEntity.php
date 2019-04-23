@@ -1066,7 +1066,10 @@ abstract class ElggEntity extends ElggData implements
                 }
             } else {
                 $this->guid = Minds\Core\Guid::build();
-                elgg_trigger_event('create', $this->type, $this);
+				elgg_trigger_event('create', $this->type, $this);
+				if (!$this->canEdit()) {
+					return false;
+				}
             }
 
             $db = new Minds\Core\Data\Call('entities');

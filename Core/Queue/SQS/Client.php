@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Amazon SQS Queue Client
+ * Amazon SQS Queue Client.
  *
  * @author emi
  */
@@ -11,7 +11,6 @@ namespace Minds\Core\Queue\SQS;
 use Minds\Core\Di\Di;
 use Minds\Core\Queue\Interfaces\QueueClient;
 use Minds\Core\Queue\Message;
-
 use Aws\Sqs\SqsClient;
 use Aws\Sqs\Exception\SqsException;
 
@@ -37,8 +36,8 @@ class Client implements QueueClient
             'version' => '2012-11-05',
             'region' => $awsConfig['region'],
             'http' => [
-                'scheme'  => 'http'
-            ]
+                'scheme' => 'http',
+            ],
         ];
 
         if (!isset($awsConfig['useRoles']) || !$awsConfig['useRoles']) {
@@ -54,13 +53,13 @@ class Client implements QueueClient
         $this->setExchange();
     }
 
-    public function setExchange($name = "default_exchange", $type = "direct")
+    public function setExchange($name = 'default_exchange', $type = 'direct')
     {
         // TODO: Implement setExchange() method with Standard queue / FIFO queue smart selection based on $name or $type.
         return $this;
     }
 
-    public function setQueue($name = "default")
+    public function setQueue($name = 'default')
     {
         $this->queueName = $name;
 
@@ -75,34 +74,40 @@ class Client implements QueueClient
         $queueUrl = "https://sqs.{$awsConfig['region']}.amazonaws.com/{$awsConfig['account_id']}/";
 
         if (isset($awsConfig['queue']['namespace']) && $awsConfig['queue']['namespace']) {
-            $namespace = $awsConfig['queue']['namespace'] . '';
+            $namespace = $awsConfig['queue']['namespace'].'';
         }
 
-        return $queueUrl . $namespace . $this->queueName;
+        return $queueUrl.$namespace.$this->queueName;
     }
 
-    public function send($message)
+    //$delay must be between 0 and 900 seconds else SQS will error
+    public function send($message, $delay = null)
     {
         $msgClass = new Message();
         $body = [
             'queueName' => $this->queueName,
-            'message' => $msgClass->setData($message)
+            'message' => $msgClass->setData($message),
         ];
 
         $asyncMessageResponse = null;
         $response = null;
 
         try {
-            $asyncMessageResponse = $this->client->sendMessageAsync([
+            $messageCommand = [
                 'QueueUrl' => $this->getQueueUrl(),
-                'MessageBody' => json_encode($body)
-            ]);
+                'MessageBody' => json_encode($body),
+            ];
+
+            if ($delay) {
+                $messageCommand['DelaySeconds'] = $delay;
+            }
+            $asyncMessageResponse = $this->client->sendMessageAsync($messageCommand);
 
             if ($asyncMessageResponse) {
                 $response = $asyncMessageResponse->wait();
             }
         } catch (SqsException $e) {
-            error_log('[SQS Queue:send] ' . get_class($e) . ': ' . $e->getMessage());
+            error_log('[SQS Queue:send] '.get_class($e).': '.$e->getMessage());
         }
 
         // Reset exchange
@@ -126,17 +131,17 @@ class Client implements QueueClient
         $queueOpts = [
             'QueueUrl' => $queueUrl,
             'MaxNumberOfMessages' => $maxMessages,
-            'WaitTimeSeconds' => $waitSeconds
+            'WaitTimeSeconds' => $waitSeconds,
         ];
 
-        echo 'Queue Options: ' . print_r($queueOpts, 1);
+        echo 'Queue Options: '.print_r($queueOpts, 1);
 
         while (true) {
             $result = null;
             try {
                 $result = $this->client->receiveMessage($queueOpts);
             } catch (SqsException $e) {
-                echo '[SQS Queue:receive:receive] ' . get_class($e) . ': ' . $e->getMessage();
+                echo '[SQS Queue:receive:receive] '.get_class($e).': '.$e->getMessage();
             }
 
             if (!$result || !$result->search('Messages[*].Body')) {
@@ -151,17 +156,17 @@ class Client implements QueueClient
                 try {
                     $callback(new Message($body->message));
                 } catch (\Exception $e) {
-                    echo '[SQS Queue:receive:callback] ' . get_class($e) . ': ' . $e->getMessage();
+                    echo '[SQS Queue:receive:callback] '.get_class($e).': '.$e->getMessage();
                     echo $e->getTraceAsString();
                 }
 
                 try {
                     $this->client->deleteMessage([
                         'QueueUrl' => $queueUrl,
-                        'ReceiptHandle' => $receiptHandle
+                        'ReceiptHandle' => $receiptHandle,
                     ]);
                 } catch (\Exception $e) {
-                    echo '[SQS Queue:receive:purge] ' . get_class($e) . ': ' . $e->getMessage();
+                    echo '[SQS Queue:receive:purge] '.get_class($e).': '.$e->getMessage();
                 }
             }
         }

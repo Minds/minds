@@ -48,11 +48,13 @@ class Entity
         'deleted' => 'deleted',
         'boostRejectionReason' => 'boost_rejection_reason',
         'ownerObj' => 'ownerObj',
+        'nsfw' => 'nsfw',
     ];
 
     static $jsonEncodedFields = [
         'categories',
         'tags',
+        'nsfw',
         'custom_meta',
         'wire_threshold',
         'ownerObj',

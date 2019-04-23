@@ -51,6 +51,16 @@ class groups implements Interfaces\Api
                 'user_guid' => $user->guid,
                 'offset' => (int) $_GET['offset'],
             ]);
+
+            if (!($_GET['offset'] || 0)) {
+                array_unshift($guids, 100000000000000681); // Help & Support group
+            } else {
+                // remove Help & Support group from subsequent calls
+                $guids = array_filter($guids, function ($guid) {
+                    return $guid != 100000000000000681;
+                });
+            }
+
             $response['load-next'] = count($guids) + (int) $_GET['offset'];
             break;
           case "all":

@@ -7,7 +7,6 @@ use Minds\Core\Onboarding\Delegates\OnboardingDelegate;
 use Minds\Core\Onboarding\Manager;
 use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
@@ -17,13 +16,12 @@ class ManagerSpec extends ObjectBehavior
     /** @var Config */
     protected $config;
 
-    function let(
+    public function let(
         OnboardingDelegate $onboardingDelegate1,
         OnboardingDelegate $onboardingDelegate2,
         OnboardingDelegate $onboardingDelegate3,
         Config $config
-    )
-    {
+    ) {
         $this->delegates = [
             'delegate1' => $onboardingDelegate1,
             'delegate2' => $onboardingDelegate2,
@@ -35,12 +33,12 @@ class ManagerSpec extends ObjectBehavior
         $this->beConstructedWith($this->delegates, $this->config);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(Manager::class);
     }
 
-    function it_should_check_if_was_onboarding_shown(User $user)
+    public function it_should_check_if_was_onboarding_shown(User $user)
     {
         $this->config->get('onboarding_modal_timestamp')
             ->shouldBeCalled()
@@ -60,7 +58,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_check_if_user_is_older_than_feature(User $user)
+    public function it_should_check_if_user_is_older_than_feature(User $user)
     {
         $this->config->get('onboarding_modal_timestamp')
             ->shouldBeCalled()
@@ -79,7 +77,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_set_onboarding_shown(User $user)
+    public function it_should_set_onboarding_shown(User $user)
     {
         $user->setOnboardingShown(true)
             ->shouldBeCalled()
@@ -95,7 +93,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_get_creator_frequency(User $user)
+    public function it_should_get_creator_frequency(User $user)
     {
         $user->getCreatorFrequency()
             ->shouldBeCalled()
@@ -107,7 +105,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn('rarely');
     }
 
-    function it_should_set_creator_frequency(User $user)
+    public function it_should_set_creator_frequency(User $user)
     {
         $user->setCreatorFrequency('rarely')
             ->shouldBeCalled()
@@ -123,7 +121,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_get_all_items()
+    public function it_should_get_all_items()
     {
         $this
             ->getAllItems()
@@ -134,7 +132,7 @@ class ManagerSpec extends ObjectBehavior
             ]);
     }
 
-    function it_should_get_completed_items(User $user)
+    public function it_should_get_completed_items(User $user)
     {
         $this->delegates['delegate1']
             ->isCompleted($user)
@@ -158,5 +156,63 @@ class ManagerSpec extends ObjectBehavior
                 'delegate1',
                 'delegate3',
             ]);
+    }
+
+    public function it_should_mark_a_user_complete(User $user)
+    {
+        $this
+            ->setUser($user)
+            ->getAllItems()
+            ->shouldReturn([
+                'delegate1',
+                'delegate2',
+                'delegate3',
+            ]);
+
+        $this->delegates['delegate1']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->delegates['delegate2']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->delegates['delegate3']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->isComplete()->shouldReturn(true);
+    }
+
+    public function it_should_mark_a_user_incomplete(User $user)
+    {
+        $this
+            ->setUser($user)
+            ->getAllItems()
+            ->shouldReturn([
+                'delegate1',
+                'delegate2',
+                'delegate3',
+            ]);
+
+        $this->delegates['delegate1']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->delegates['delegate2']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->delegates['delegate3']
+            ->isCompleted($user)
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this->isComplete()->shouldReturn(false);
     }
 }

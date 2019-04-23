@@ -7,6 +7,7 @@ use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Entities\Factory as EntitiesFactory;
+use Minds\Entities\User;
 use Minds\Interfaces;
 
 class feeds implements Interfaces\Api
@@ -19,6 +20,9 @@ class feeds implements Interfaces\Api
     public function get($pages)
     {
         Factory::isLoggedIn();
+
+        /** @var User $currentUser */
+        $currentUser = Core\Session::getLoggedinUser();
 
         $filter = $pages[0] ?? null;
 
@@ -68,6 +72,14 @@ class feeds implements Interfaces\Api
             $period = '1y';
         }
 
+        //
+
+        $hardLimit = 600;
+
+        if ($currentUser && $currentUser->isAdmin()) {
+            $hardLimit = 5000;
+        }
+
         $offset = 0;
 
         if (isset($_GET['offset'])) {
@@ -80,9 +92,20 @@ class feeds implements Interfaces\Api
             $limit = abs(intval($_GET['limit']));
         }
 
-        if ($limit > 5000) {
-            $limit = 5000;
+        if (($offset + $limit) > $hardLimit) {
+            $limit = $hardLimit - $offset;
         }
+
+        if ($limit <= 0) {
+            return Factory::response([
+                'status' => 'success',
+                'entities' => [],
+                'load-next' => $hardLimit,
+                'overflow' => true,
+            ]);
+        }
+
+        //
 
         $hashtag = null;
         if (isset($_GET['hashtag'])) {

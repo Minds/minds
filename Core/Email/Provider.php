@@ -1,6 +1,6 @@
 <?php
 /**
- * Minds Email Provider
+ * Minds Email Provider.
  */
 
 namespace Minds\Core\Email;
@@ -13,10 +13,10 @@ class Provider extends DiProvider
     {
         $this->di->bind('Mailer', function ($di) {
             return new Mailer(new \PHPMailer());
-        }, ['useFactory'=>true]);
+        }, ['useFactory' => true]);
         $this->di->bind('Email\SpamFilter', function ($di) {
             return new SpamFilter();
-        }, ['useFactory'=>true]);
+        }, ['useFactory' => true]);
 
         $this->di->bind('Email\Manager', function ($di) {
             return new Manager();
@@ -27,11 +27,15 @@ class Provider extends DiProvider
         }, ['useFactory' => true]);
 
         $this->di->bind('Email\Verify\Manager', function ($di) {
-            return new Verify\Manager;
+            return new Verify\Manager();
         }, ['useFactory' => true]);
 
         $this->di->bind('Email\RouterHooks', function ($di) {
-            return new RouterHooks;
+            return new RouterHooks();
+        }, ['useFactory' => false]);
+
+        $this->di->bind('Email\EmailStyles', function ($di) {
+            return new EmailStyles();
         }, ['useFactory' => false]);
     }
 }

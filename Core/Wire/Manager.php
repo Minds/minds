@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by Marcelo.
- * Date: 03/07/2017
+ * Date: 03/07/2017.
  */
 
 namespace Minds\Core\Wire;
@@ -19,7 +19,6 @@ use Minds\Entities\User;
 
 class Manager
 {
-
     /** @var Data\cache\Redis */
     protected $cache;
 
@@ -44,7 +43,7 @@ class Manager
     /** @var Entities\Entity $entity */
     protected $entity;
 
-    /** @var double $amount */
+    /** @var float $amount */
     protected $amount;
 
     /** @var bool $recurring */
@@ -74,6 +73,9 @@ class Manager
     /** @var Delegates\Plus $plusDelegate */
     protected $plusDelegate;
 
+    /** @var Core\Blockchain\Wallets\OffChain\Transactions */
+    protected $offchainTxs;
+
     public function __construct(
         $cache = null,
         $repository = null,
@@ -86,7 +88,8 @@ class Manager
         $token = null,
         $cap = null,
         $dispatcher = null,
-        $plusDelegate = null
+        $plusDelegate = null,
+        $offchainTxs = null
     ) {
         $this->cache = $cache ?: Di::_()->get('Cache');
         $this->repository = $repository ?: Di::_()->get('Wire\Repository');
@@ -99,23 +102,29 @@ class Manager
         $this->token = $token ?: Di::_()->get('Blockchain\Token');
         $this->cap = $cap ?: Di::_()->get('Blockchain\Wallets\OffChain\Cap');
         $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
-        $this->plusDelegate = $plusDelegate ?: new Delegates\Plus;
+        $this->plusDelegate = $plusDelegate ?: new Delegates\Plus();
+        $this->offchainTxs = $offchainTxs ?: new Core\Blockchain\Wallets\OffChain\Transactions();
     }
 
     /**
-     * Set the sender of the wire
+     * Set the sender of the wire.
+     *
      * @param User $sender
+     *
      * @return $this
      */
     public function setSender($sender)
     {
         $this->sender = $sender;
+
         return $this;
     }
 
     /**
-     * Set the entity of the wire - will also set the receiver
+     * Set the entity of the wire - will also set the receiver.
+     *
      * @param Entity $entity
+     *
      * @return $this
      */
     public function setEntity($entity)
@@ -129,34 +138,41 @@ class Manager
             $entity;
 
         $this->entity = $entity;
+
         return $this;
     }
 
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
 
     public function setRecurring($recurring)
     {
         $this->recurring = $recurring;
+
         return $this;
     }
 
     /**
-     * Set the payload of the transaction
+     * Set the payload of the transaction.
+     *
      * @param array $payload
+     *
      * @return $this
      */
     public function setPayload($payload = [])
     {
         $this->payload = $payload;
+
         return $this;
     }
 
     /**
      * @return bool
+     *
      * @throws WalletNotSetupException
      * @throws \Exception
      */
@@ -203,7 +219,7 @@ class Manager
 
                 break;
             case 'offchain':
-                /** @var Core\Blockchain\Wallets\OffChain\Cap $cap */
+                /* @var Core\Blockchain\Wallets\OffChain\Cap $cap */
                 $this->cap
                     ->setUser($this->sender)
                     ->setContract('wire');
@@ -219,21 +235,12 @@ class Manager
                     'entity_guid' => (string) $this->entity->guid,
                 ];
 
-                $sendersTx = new Core\Blockchain\Wallets\OffChain\Transactions();
-                $sendersTx
-                    ->setAmount((string) BigNumber::_($this->amount)->neg())
-                    ->setType('wire')
-                    ->setUser($this->sender)
-                    ->setData($txData)
-                    ->create();
-
-                $receiversTx = new Core\Blockchain\Wallets\OffChain\Transactions();
-                $receiversTx
+                $this->offchainTxs
                     ->setAmount($this->amount)
                     ->setType('wire')
                     ->setUser($this->receiver)
                     ->setData($txData)
-                    ->create();
+                    ->transferFrom($this->sender);
 
                 $wire = new Wire();
                 $wire
@@ -261,18 +268,13 @@ class Manager
                 break;
         }
 
-        // send wire email
-        $this->dispatcher->trigger('wire:email', 'wire', [
-            'receiver' => $this->receiver,
-            'method' => $this->payload['method']
-        ]);
-
         return true;
     }
 
     /**
-     * Confirmationof wire from the blockchain
-     * @param Wire $wire
+     * Confirmationof wire from the blockchain.
+     *
+     * @param Wire        $wire
      * @param Transaction $transaction - the transaction from the blockchain
      */
     public function confirm($wire, $transaction)
@@ -316,9 +318,9 @@ class Manager
     }
 
     /**
-     * Call when a recurring wire is triggered
+     * Call when a recurring wire is triggered.
+     *
      * @param Core\Payments\Subscriptions\Subscription $subscription
-     * @return void
      */
     public function onRecurring($subscription)
     {
@@ -339,8 +341,8 @@ class Manager
                     'data' => $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
                         $subscription->getId(),
                         $receiver->getEthWallet(),
-                        BigNumber::_($this->token->toTokenUnit($amount))->toHex(true)
-                    ])
+                        BigNumber::_($this->token->toTokenUnit($amount))->toHex(true),
+                    ]),
                 ]);
             $this->setPayload([
                 'method' => 'onchain',
@@ -367,15 +369,12 @@ class Manager
 
     protected function sendNotification(Wire $wire = null)
     {
-        $this->queue->setQueue("WireNotification")
-            ->send([
-                "amount" => $wire ?
-                    (float) BigNumber::_($wire->getAmount(), 18)->div(10 ** 18)->toString()
-                    : (float) BigNumber::_($this->amount, 18)->div(10 ** 18)->toString(),
-                "sender" => serialize($wire ? $wire->getSender() : $this->sender),
-                "entity" => serialize($wire ? $wire->getEntity() : $this->entity),
-                "subscribed" => $wire ? $wire->isRecurring() : $this->recurring,
-            ]);
+        $this->queue->setQueue('WireNotification')
+            ->send(
+                [
+                    'wire' => serialize($wire),
+                    'entity' => serialize($wire->getEntity()),
+                ]
+        );
     }
-
 }

@@ -83,6 +83,9 @@ class ACLSpec extends ObjectBehavior
 
         $entity->get('owner_guid')
             ->willReturn(123);
+        
+        $entity->get('container_guid')
+            ->willReturn(123);
 
         $this->write($entity)->shouldReturn(true);
         $this->mock_session(false);

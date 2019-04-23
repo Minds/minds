@@ -12,6 +12,7 @@ use Minds\Core;
 use Minds\Helpers;
 use Minds\Entities;
 use Minds\Interfaces;
+use Minds\Core\Boost\Network;
 use Minds\Api\Factory;
 
 class boost implements Interfaces\Api, Interfaces\ApiAdminPam
@@ -24,52 +25,22 @@ class boost implements Interfaces\Api, Interfaces\ApiAdminPam
     {
         $response = [];
 
-        $mongo = Core\Data\Client::build('MongoDB');
-        $boost_impressions = 0;
-        $boost_impressions_met = 0;
-        $boost_backlog = null;
-        $boost_objs_query = [ 'state'=>'approved', 'type'=>'newsfeed' ];
-        $boost_objs = $mongo->find("boost", $boost_objs_query, [
-            'sort' => [ '_id'=> 1 ],
-        ]);
-        foreach ($boost_objs as $boost) {
-            if ($boost_backlog == null) {
-                $boost_backlog = (time() - $mongo->getDocumentTimestamp($boost)) / (60 * 60);
-            }
-            $boost_impressions = $boost_impressions + $boost['impressions'];
-            $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
-        }
+        $analytics = new Network\Analytics;
 
-        $boost_reviews_query = [ 'state'=>'review', 'type'=>'newsfeed' ];
-        $boost_reviews = $mongo->find("boost", $boost_reviews_query, [
-            'sort' => [ '_id' => 1 ],
-        ]);
-        foreach ($boost_reviews as $obj) {
-            $review_backlog = (time() - $mongo->getDocumentTimestamp($obj)) / (60 * 60);
-            break;
-        }
         $boosts = [
-          'review' =>  $mongo->count("boost", $boost_reviews_query),
-          'review_backlog' => $review_backlog,
-          'approved' => $mongo->count("boost", $boost_objs_query),
-          'approved_backlog' => $boost_backlog,
-          'impressions' => $boost_impressions,
-          'impressions_met' => $boost_impressions_met
+          'review' =>  $analytics->getReviewCount(),
+          'review_backlog' => $analytics->getReviewBacklog(),
+          'approved' => $analytics->getApprovedCount(),
+          'approved_backlog' => $analytics->getApprovedBacklog(),
+          'impressions' => $analytics->getImpressions(),
+          'impressions_met' => $analytics->getImpressionsMet(),
         ];
 
-        $boost_objs_query = [ 'state'=>'approved', 'type'=>'content' ];
-        $boost_objs = $mongo->find("boost", $boost_objs_query);
-        $boost_impressions = 0;
-        $boost_impressions_met = 0;
-        foreach ($boost_objs as $boost) {
-            $boost_impressions = $boost_impressions + $boost['impressions'];
-            $boost_impressions_met = $boost_impressions_met + Helpers\Counters::get((string) $boost['_id'], "boost_impressions", false);
-        }
-        $boosts_content = [
+        /*$boosts_content = [
           'approved' => $mongo->count("boost", $boost_objs_query),
           'impressions' => $boost_impressions,
           'impressions_met' => $boost_impressions_met
-        ];
+        ];*/
 
         $response['newsfeed'] = $boosts;
         $response['content'] = $boosts_content;

@@ -292,6 +292,7 @@ class peer implements Interfaces\Api
         Helpers\Counters::increment($boost->getEntity()->guid, 'remind');
 
         $activity = new Entities\Activity();
+        $activity->ownerObj = Core\Session::getLoggedInUser()->export();
         $activity->p2p_boosted = true;
 
         if ($embedded->remind_object) {
@@ -299,8 +300,6 @@ class peer implements Interfaces\Api
         } else {
             $activity->setRemind($embedded->export())->save();
         }
-
-        $activity->save();
 
         // Notify
 

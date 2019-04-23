@@ -229,6 +229,15 @@ class Activity extends Entity
             $export['entity_guid'] = (string) $this->entity_guid;
         }
 
+        if ($this->urn) {
+            $export['urn'] = $this->urn;
+        }
+
+        if ($this->boosted_guid) {
+            $export['boosted'] = (bool) $this->boosted;
+            $export['boosted_guid'] = (string) $this->boosted_guid;
+        }
+
         $export['impressions'] = $this->getImpressions();
         $export['reminds'] = $this->getRemindCount();
 
