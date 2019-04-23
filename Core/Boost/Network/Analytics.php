@@ -14,9 +14,18 @@ class Analytics
     /** @var Client $es */
     protected $es;
 
+    /** @var string $type */
+    protected $type;
+
     public function __construct($es = null)
     {
         $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 
     public function getReview()
@@ -58,6 +67,14 @@ class Analytics
                 ],
             ],
         ];
+
+        if ($this->type ) {
+            $body['query']['bool']['must'][] = [
+                'term' => [
+                    'type' => $this->type,
+                ],
+            ];
+        }
 
         $prepared = new Prepared\Search();
         $prepared->query([

@@ -18,12 +18,16 @@ class Review implements BoostReviewInterface
     /** @var Manager $manager */
     protected $manager;
 
+    /** @var Analytics $analaytics */
+    protected $analytics;
+
     /** @var string $type */
     protected $type;
 
-    public function __construct($manager = null)
+    public function __construct($manager = null, $analytics = null)
     {
         $this->manager = $manager ?: new Manager;
+        $this->analytics = $analytics ?: new Analytics;
     }
 
     /**
@@ -208,8 +212,7 @@ class Review implements BoostReviewInterface
      */
     public function getReviewQueueCount()
     {
-        $query = ['state' => 'review', 'type' => $this->type];
-        //$count = $this->mongo->count("boost", $query);
-        return $count;
+        $this->analytics->setType($this->type);
+        return $this->analytics->getReviewCount();
     }
 }
