@@ -35,6 +35,7 @@ class ObjectBlogMappingSpec extends ObjectBehavior
         $blog->isMature()->willReturn(false);
         $blog->getTags()->willReturn([ 'art' ]);
         $blog->getRating()->willReturn(1);
+        $blog->getNsfw()->willReturn([ 1 ]);
 
         $this
             ->setEntity($blog)
@@ -57,6 +58,7 @@ class ObjectBlogMappingSpec extends ObjectBehavior
                 'description' => 'PHPSpec Description',
                 'paywall' => false,
                 'license' => 'cc-test-lic',
+                'nsfw' => [ 1 ],
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'object:blog',
                 'public' => true,

@@ -32,6 +32,7 @@ class ObjectBlogMapping extends EntityMapping implements MappingInterface
         'tags' => [ 'type' => 'text' ],
         'license' => [ 'type' => 'text', '$exportGetter' => 'getLicense' ],
         'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
+        'nsfw' => [ 'type' => 'array', '$exportGetter' => 'getNsfw' ],
     ];
 
     /** @var Blog $entity */
