@@ -35,8 +35,8 @@ class ElasticRepository
         $sort = [ '@timestamp' => 'asc' ];
 
         $must[] = [
-            'terms' => [
-                'bid_type' => ['offchain','onchain'],
+            'term' => [
+                'bid_type' => 'tokens',
             ],
         ];
 
