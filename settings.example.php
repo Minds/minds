@@ -373,3 +373,5 @@ $CONFIG->set('internal_blacklist', []);
 $CONFIG->set('tags', [
     'art', 'music', 'journalism', 'blockchain', 'freespeech', 'news', 'gaming', 'myphoto', 'nature', 'photography', 'politics', 'top', 'bitcoin', 'technology', 'food', 'animals', 'health', 'science', 'philosophy', 'comedy', 'film', 'minds'
 ]);
+
+$CONFIG->set('steward_guid', '');
