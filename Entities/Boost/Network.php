@@ -445,7 +445,8 @@ class Network extends Entities\DenormalizedEntity implements BoostEntityInterfac
         $export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity' => $this), array()));
         $export = \Minds\Helpers\Export::sanitize($export);
 
-        $export['met_impressions'] = Counters::get((string) $this->getId(), "boost_impressions");
+        $export['met_impressions'] = Counters::get((string) $this->getId(), "boost_impressions")
+            + Counters::get($this->getGuid(), "boost_impressions");
         return $export;
     }
 }
