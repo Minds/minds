@@ -7,6 +7,7 @@ namespace Minds\Core\Boost\Network;
 use Minds\Common\Repository\Response;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Util\BigNumber;
 
 class ElasticRepository
 {
@@ -157,7 +158,7 @@ class ElasticRepository
             'doc' => [
                 '@timestamp' => $boost->getCreatedTimestamp(),
                 'bid' => $boost->getBidType() === 'tokens' ?
-                    $boost->getBid() / (10**18) : $boost->getBid(),
+                    (int) BigNumber::fromPlain($boost->getBid(), 18) : $boost->getBid(),
                 'bid_type' => $boost->getBidType(),
                 'entity_guid' => $boost->getEntityGuid(),
                 'impressions' => $boost->getImpressions(),
