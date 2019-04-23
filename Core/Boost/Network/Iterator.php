@@ -4,12 +4,17 @@ namespace Minds\Core\Boost\Network;
 
 use Minds\Core;
 use Minds\Core\Data;
+use Minds\Core\Di\Di;
 use MongoDB\BSON\ObjectID;
 use Minds\Entities\Boost;
 
 class Iterator implements \Iterator
 {
     protected $mongo;
+    protected $elasticRepository;
+    protected $entitiesBuilder;
+    protected $expire;
+    protected $metrics;
 
     protected $rating = 1;
     protected $quality = 0;
@@ -27,9 +32,17 @@ class Iterator implements \Iterator
 
     const MONGO_LIMIT = 50;
 
-    public function __construct(Data\Interfaces\ClientInterface $mongo = null)
+    public function __construct(
+        $elasticRepository = null,
+        $entitiesBuilder = null,
+        $expire = null,
+        $metrics = null
+    )
     {
-        $this->mongo = $mongo ?: Data\Client::build('MongoDB');
+        $this->elasticRepository = $elasticRepository ?: new ElasticRepository;
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
+        $this->expire = $expire ?: Di::_()->get('Boost\Network\Expire');
+        $this->metrics = $metrics ?: Di::_()->get('Boost\Network\Metrics');
     }
 
     public function setRating($rating)
@@ -113,153 +126,64 @@ class Iterator implements \Iterator
 
         $sort = ['_id' => 1];
 
-        if ($this->offset) {
-            $match = array_merge([
-                '_id' => [
-                    '$gt' => new ObjectId($this->offset),
-                ]
-            ], $match);
-        }
-
         if ($this->priority) {
             $sort = ['priority' => -1, '_id' => 1];
         }
 
-        // TODO: Settle experimental feature
-        // Enable with $CONFIG->set('allowExperimentalCategories', true); in engine/settings.php
-        $allowExperimentalCategories = Core\Di\Di::_()->get('Config')->get('allowExperimentalCategories');
-
-        //if (!$this->categories || !$allowExperimentalCategories /* TODO: Settle experimental feature */) {
-            $boosts = $this->mongo->find("boost", $match, [
-                'limit' => self::MONGO_LIMIT,
-                'sort' => $sort,
-            ]);
-        //} else {
-        //    $boosts = $this->getBoostsByCategories($match, $sort);
-        //}
+        $boosts = $this->elasticRepository->getList([
+            'type' => $this->type,
+            'limit' => self::MONGO_LIMIT,
+            'offset' => $this->offset,
+            'state' => 'approved',
+            'rating' => $this->rating ? $this->rating : (int) Core\Session::getLoggedinUser()->getBoostRating(),
+        ]);
 
         if (!$boosts) {
             return null;
         }
 
-        /** @var Expire $expire */
-        $expire = Core\Di\Di::_()->get('Boost\Network\Expire');
         $return = [];
-        foreach ($boosts as $data) {
+        foreach ($boosts as $boost) {
             if (count($return) >= $this->limit) {
                 break;
             }
 
-            if (isset($data['_document'])) {
-                $data = $data['_document'];
-            }
-
             if ($this->hydrate) {
-                $impressions = $data['impressions'];
-
-                $boost = $this->getBoostEntity($data['guid']);
-                //if(!$boost)
-                //var_dump(print_r($data['guid'], true)); die();
-                //var_dump(print_r($boost, true)); die();
+                $impressions = $boost->getImpressions();
                 $count = 0;
 
-                if ($this->increment) {
-                    /** @var Metrics $metrics */
-                    $metrics = Core\Di\Di::_()->get('Boost\Network\Metrics');
+                $boost->setEntity($this->entitiesBuilder->single($boost->getEntityGuid()));
 
-                    $count = $metrics->incrementViews($boost);
+                if ($this->increment) {
+                    $count = $this->metrics->incrementViews($boost);
                 }
 
                 if ($count > $impressions) {
-                    $expire->setBoost($boost);
-                    $expire->expire();
+                    $this->expire->setBoost($boost);
+                    $this->expire->expire();
                     continue; //max count met
                 }
 
-                /*if ($legacy_boost) {
-                    $return[] = $entity;
-                } else {
-                    $return[$data['guid']] = $boost->getEntity();
-                }*/
-                $return[$data['guid']] = $boost->getEntity();
+                if ($boost->getEntity()) {
+                    $return[$boost->getGuid()] = $boost->getEntity();
+                }
             } else {
-                $return[] = $data;
+                $return[] = $boost;
             }
 
-            $this->offset = (string) $data['_id'];
+            $this->offset = $boost->getReviewedTimestamp();
         }
 
         if ($this->hydrate) {
             if (empty($return) && $this->tries++ <= 1) {
                 return null;
-                //$this->offset = "";
-                //return $this->getList();
             }
 
-            $return = $this->patchThumbs($return);
             $return = $this->filterBlocked($return);
         }
 
         $this->list = $return;
         return $return;
-    }
-
-    private function getBoostsByCategories($match, $sort)
-    {
-        $pipeline_match = array_merge([
-            'categories' => [
-                '$exists' => true
-            ]
-        ], $match);
-
-        $pipeline_sort = array_merge([
-            'score' => -1
-        ], $sort);
-
-        $boosts = $this->mongo->aggregate('boost', [
-            ['$match' => $pipeline_match],
-            [
-                '$project' => [
-                    '_document' => '$$ROOT',
-                    'score' => [
-                        '$let' => [
-                            'vars' => [
-                                'matchSize' => [
-                                    '$size' => [
-                                        '$setIntersection' => [
-                                            '$categories',
-                                            $this->categories
-                                        ] // $setIntersection
-                                    ] // $size
-                                ] // matchSize
-                            ], // vars
-                            'in' => [
-                                '$add' => [
-                                    '$$matchSize',
-                                    [
-                                        '$cond' => [
-                                            [
-                                                '$eq' => [
-                                                    '$$matchSize',
-                                                    [
-                                                        '$size' => '$categories'
-                                                    ]
-                                                ]
-                                            ],
-                                            '$$matchSize',
-                                            0
-                                        ] // $cond
-                                    ]
-                                ] // $add
-                            ] // in
-                        ] // $let
-                    ] // score
-                ]
-            ], // $project
-            ['$sort' => $pipeline_sort],
-            ['$limit' => self::MONGO_LIMIT]
-        ]);
-        return $boosts;
     }
 
     /**

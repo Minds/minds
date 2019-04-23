@@ -14,12 +14,16 @@ class Review implements BoostReviewInterface
 {
     /** @var  Network $boost */
     protected $boost;
-    protected $mongo;
+
+    /** @var Manager $manager */
+    protected $manager;
+
+    /** @var string $type */
     protected $type;
 
-    public function __construct(Data\Interfaces\ClientInterface $mongo = null)
+    public function __construct($manager = null)
     {
-        $this->mongo = $mongo ?: Data\Client::build('MongoDB');
+        $this->manager = $manager ?: new Manager;
     }
 
     /**
@@ -56,31 +60,8 @@ class Review implements BoostReviewInterface
         }
         $success = Core\Di\Di::_()->get('Boost\Payment')->charge($this->boost);
         if ($success) {
-            $accept = $this->mongo->update("boost", ['_id' => $this->boost->getId()], [
-                'state' => 'approved',
-                'rating' => $this->boost->getRating(),
-                'quality' => $this->boost->getQuality(),
-                'approvedAt' => new BSON\UTCDateTime(time() * 1000)
-            ]);
-            $this->boost->setState('approved');
-            if ($accept) {
-                //remove from review
-                //$db->removeAttributes("boost:newsfeed:review", array($guid));
-                //clear the counter for boost_impressions
-                //Helpers\Counters::clear($guid, "boost_impressions");
-
-                /*Core\Events\Dispatcher::trigger('notification', 'boost', [
-                    'to'=> [ $boost->getOwner()->guid ],
-                    'entity' => $boost->getEntity(),
-                    'from'=> 100000000000000519,
-                    'title' => $boost->getEntity()->title,
-                    'notification_view' => 'boost_accepted',
-                    'params' => ['impressions' => $boost->getBid()],
-                    'impressions' => $boost->getBid()
-                  ]);*/
-                $this->boost->save();
-            }
-            return $accept;
+            $this->boost->setReviewedTimestamp(round(microtime(true) * 1000));
+            return $this->manager->update($this->boost);
         } else {
             throw new \Exception('error while accepting the boost');
         }
@@ -97,22 +78,22 @@ class Review implements BoostReviewInterface
             throw new \Exception('Boost wasn\'t set');
         }
 
-        $this->boost->setRejectionReason($reason);
+        $this->boost->setRejectedReason($reason);
+        $this->boost->setReviewedTimestamp(round(microtime(true) * 1000));
+        $this->boost->setRejectedTimestamp(round(microtime(true) * 1000));
+        $this->manager->update($this->boost);
+
         $entity = $this->boost->getEntity();
 
         $dirty = $this->enableBoostRejectionReasonFlag($entity, $reason);
 
         try {
-            $this->mongo->remove("boost", ['_id' => $this->boost->getId()]);
-            $this->boost->setState('rejected')
-                ->save();
-
             Core\Events\Dispatcher::trigger('notification', 'boost', [
                 'to' => [$this->boost->getOwner()->guid],
                 'from' => 100000000000000519,
                 'entity' => $this->boost->getEntity(),
                 'params' => [
-                    'reason' => $this->boost->getRejectionReason(),
+                    'reason' => $this->boost->getRejectedReason(),
                     'title' => $this->boost->getEntity()->title ?: $this->boost->getEntity()->message
                 ],
                 'notification_view' => 'boost_rejected',
@@ -138,9 +119,9 @@ class Review implements BoostReviewInterface
         if (!$this->boost) {
             throw new \Exception('Boost wasn\'t set');
         }
-        $this->mongo->remove("boost", ['_id' => $this->boost->getId()]);
-        $this->boost->setState('revoked')
-            ->save();
+
+        $this->boost->setRevokedTimestamp(round(microtime(true) * 1000));
+        $this->manager->update($this->boost);
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
             'to' => [$this->boost->getOwner()->guid],
@@ -157,13 +138,11 @@ class Review implements BoostReviewInterface
     /**
      * Gets a single boost entity
      * @param  mixed $guid
-     * @return BoostEntityInterface
+     * @return Boost 
      */
     public function getBoostEntity($guid)
     {
-        /** @var Core\Boost\Repository $repository */
-        $repository = Core\Di\Di::_()->get('Boost\Repository');
-        return $repository->getEntity($this->type, $guid);
+        return $this->manager->get("urn:boost:{$this->type}:{$guid}", [ 'hydrate' => true ]); 
     }
 
     protected function enableBoostRejectionReasonFlag($entity = null, $reason = -1)
@@ -215,43 +194,12 @@ class Review implements BoostReviewInterface
      */
     public function getReviewQueue($limit, $offset = "")
     {
-        $query = ['state' => 'review', 'type' => $this->type];
-        if ($offset) {
-            $query['_id'] = ['$gt' => $offset];
-        }
-        $queue = $this->mongo->find("boost", $query, [
+        return $this->manager->getList([
+            'type' => $this->type,
+            'state' => 'review',
             'limit' => $limit,
-            'sort' => (object) ['priority' => (int) -1, '_id' => 1],
+            'token' => $offset,
         ]);
-        if (!$queue) {
-            return null;
-        }
-
-        $guids = [];
-        $end = "";
-        foreach ($queue as $data) {
-            $_id = (string) $data['_id'];
-            $guids[$_id] = (string) $data['guid'];
-            //$this->mongo->remove("boost", ['_id' => $_id]);
-        }
-
-        if (!$guids) {
-            return [
-                'data' => [],
-                'next' => ''
-            ];
-        }
-
-        /** @var Core\Boost\Repository $repository */
-        $repository = Core\Di\Di::_()->get('Boost\Repository');
-        $boosts = $repository->getAll($this->type, [
-            'guids' => $guids
-        ]);
-
-        return [
-            'data' => $boosts['data'],
-            'next' => $_id
-        ];
     }
 
     /**
@@ -261,7 +209,7 @@ class Review implements BoostReviewInterface
     public function getReviewQueueCount()
     {
         $query = ['state' => 'review', 'type' => $this->type];
-        $count = $this->mongo->count("boost", $query);
+        //$count = $this->mongo->count("boost", $query);
         return $count;
     }
 }

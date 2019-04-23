@@ -37,11 +37,17 @@ class Metrics
     public function incrementViews($boost)
     {
         //increment impression counter
-        Helpers\Counters::increment((string) $boost->getId(), "boost_impressions", 1);
+        Helpers\Counters::increment((string) $boost->getGuid(), "boost_impressions", 1);
         //get the current impressions count for this boost
         Helpers\Counters::increment(0, "boost_impressions", 1);
 
-        return Helpers\Counters::get((string) $boost->getId(), "boost_impressions", false);
+        $count = Helpers\Counters::get((string) $boost->getGuid(), "boost_impressions", false);
+
+        if ($boost->getMongoId()) {
+            $count += Helpers\Counters::get((string) $boost->getMongoId(), "boost_impressions", false);
+        }
+
+        return $count;
     }
 
     public function getBacklogCount($userGuid = null)

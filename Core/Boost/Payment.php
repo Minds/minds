@@ -385,6 +385,10 @@ class Payment
         $currency = method_exists($boost, 'getMethod') ?
             $boost->getMethod() : $boost->getBidType();
 
+        if (in_array($currency, [ 'onchain', 'offchain' ])) {
+            $currency = 'tokens';
+        }
+
         switch ($currency) {
             case 'points':
                 return true;

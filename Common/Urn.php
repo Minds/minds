@@ -23,9 +23,11 @@ class Urn implements \JsonSerializable
      * @param string $urn
      * @throws \Exception
      */
-    public function __construct($urn)
+    public function __construct($urn = null)
     {
-        $this->setUrn($urn);
+        if ($urn) {
+            $this->setUrn($urn);
+        }
     }
 
     /**
