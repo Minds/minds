@@ -10,6 +10,7 @@ use Minds\Traits\MagicAttributes;
  * Boost Entity
  * @package Minds\Core\Boost\Network
  * @method Boost setGuid(long $guid)
+ * @method long getGuid()
  * @method Boost setEntiyGuid()
  * @method Boost setEntity()
  * @method Entity getEntity()
@@ -52,6 +53,9 @@ class Boost
 
     /** @var int $impressions */
     private $impressions;
+
+    /** @var int $impressionsMet */
+    private $impressionsMet;
 
     /** @var long $ownerGuid */
     private $ownerGuid;

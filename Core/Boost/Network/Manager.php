@@ -40,6 +40,7 @@ class Manager
         $opts = array_merge([
             'hydrate' => true,
             'useElastic' => false,
+            'state' => null,
         ], $opts);
 
         if ($opts['state'] == 'review') {
