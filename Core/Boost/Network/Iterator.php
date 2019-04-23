@@ -15,6 +15,7 @@ class Iterator implements \Iterator
     protected $entitiesBuilder;
     protected $expire;
     protected $metrics;
+    protected $manager;
 
     protected $rating = 1;
     protected $quality = 0;
@@ -36,13 +37,15 @@ class Iterator implements \Iterator
         $elasticRepository = null,
         $entitiesBuilder = null,
         $expire = null,
-        $metrics = null
+        $metrics = null,
+        $manager = null
     )
     {
         $this->elasticRepository = $elasticRepository ?: new ElasticRepository;
         $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
         $this->expire = $expire ?: Di::_()->get('Boost\Network\Expire');
         $this->metrics = $metrics ?: Di::_()->get('Boost\Network\Metrics');
+        $this->manager = $manager ?: new Manager;
     }
 
     public function setRating($rating)
@@ -159,6 +162,8 @@ class Iterator implements \Iterator
                 }
 
                 if ($count > $impressions) {
+                    // Grab the main storage to prevent issues with elastic formatted data
+                    $boost = $this->manager->get("urn:boost:{$boost->getType()}:{$boost->getGuid()}");
                     $this->expire->setBoost($boost);
                     $this->expire->expire();
                     continue; //max count met
