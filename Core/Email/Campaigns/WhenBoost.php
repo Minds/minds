@@ -32,6 +32,10 @@ class WhenBoost extends EmailCampaign
 
     public function send()
     {
+        if (!$this->user) {
+            return false;
+        }
+
         $this->template->setTemplate('default.tpl');
 
         $this->template->setBody("./Templates/boost.tpl");
