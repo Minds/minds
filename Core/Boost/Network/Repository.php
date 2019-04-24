@@ -155,7 +155,7 @@ class Repository
             'schema' => '04-2019',
             '_id' => $boost->getMongoId(), //TODO: remove once on production
             'entity_guid' => $boost->getEntityGuid(),
-            'entity' => $boost->getEntity()->export(), //TODO: remove once on production
+            'entity' => $boost->getEntity() ? $boost->getEntity()->export() : null, //TODO: remove once on production
             'bid' => $boost->getBid(),
             'impressions' => $boost->getImpressions(),
             //'bidType' => $boost->getBidType(),
