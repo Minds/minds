@@ -112,6 +112,10 @@ class EntitiesSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn('thumbs:down:count');
 
+        $image->get('nsfw')
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $image->get('title')
             ->shouldBeCalled()
             ->willReturn('title');
@@ -214,6 +218,10 @@ class EntitiesSpec extends ObjectBehavior
         $video->get('thumbs:down:count')
             ->shouldBeCalled()
             ->willReturn('thumbs:down:count');
+        
+        $video->get('nsfw')
+            ->shouldBeCalled()
+            ->willReturn([]);
 
         $video->get('title')
             ->shouldBeCalled()

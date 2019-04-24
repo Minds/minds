@@ -24,6 +24,10 @@ class suggested implements Interfaces\Api
         $trending = (bool) ($_GET['trending'] ?? false);
         $defaults = (bool) ($_GET['defaults'] ?? true); // Legacy behavior
 
+        if (!$trending && !$defaults) {
+            $defaults = true;
+        }
+
         /** @var Core\Hashtags\User\Manager $manager */
         $manager = Di::_()->get('Hashtags\User\Manager');
         $manager->setUser(Core\Session::getLoggedInUser());

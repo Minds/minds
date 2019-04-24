@@ -97,27 +97,27 @@ class Events
         /**
          * Create a notification upon @mentioning on activities or comments
          */
-        Dispatcher::register('create', 'all', function ($hook, $type, $params = []) {
+        Dispatcher::register('create', 'all', function ($hook, $type, $entity) {
             if ($type != 'activity' && $type != 'comment') {
                 return;
             }
 
-            if ($params->message) {
-                $message = $params->message;
+            if ($entity->message) {
+                $message = $entity->message;
             }
 
             if ($type == 'comment') {
-                $message = $params->getBody();
+                $message = $entity->getBody();
             }
 
-            if ($params->title) {
-                $message .= $params->title;
+            if ($entity->title) {
+                $message .= $entity->title;
             }
 
             $remind_owner_username = null;
 
-            if ($type == 'activity' && isset($params->remind_object['ownerObj']['username'])) {
-                $remind_owner_username = $params->remind_object['ownerObj']['username'];
+            if ($type == 'activity' && isset($entity->remind_object['ownerObj']['username'])) {
+                $remind_owner_username = $entity->remind_object['ownerObj']['username'];
             }
 
             if (preg_match_all('!@(.+)(?:\s|$)!U', $message, $matches)) {
@@ -143,13 +143,21 @@ class Events
                     }
                 }
 
+                $params = [
+                    'title' => $message,
+                ];
+
+                if ($entity->type === 'comment') {
+                    $params['focusedCommentUrn'] = $entity->getUrn();
+                }
+
                 if ($to) {
                     Dispatcher::trigger('notification', 'all', [
                         'to' => $to,
-                        'entity' => $params,
+                        'entity' => $entity,
                         'notification_view' => 'tag',
                         'description' => $message,
-                        'params' => [ 'title'=>$message ], 
+                        'params' => $params, 
                     ]);
                 }
             }

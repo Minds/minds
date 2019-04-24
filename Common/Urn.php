@@ -7,7 +7,7 @@
 
 namespace Minds\Common;
 
-class Urn
+class Urn implements \JsonSerializable
 {
     /** @var string */
     protected $urn;
@@ -23,9 +23,11 @@ class Urn
      * @param string $urn
      * @throws \Exception
      */
-    public function __construct($urn)
+    public function __construct($urn = null)
     {
-        $this->setUrn($urn);
+        if ($urn) {
+            $this->setUrn($urn);
+        }
     }
 
     /**
@@ -102,6 +104,26 @@ class Urn
     public static function isValid($urn)
     {
         return is_numeric($urn) || (bool) preg_match('/^urn:[a-z0-9][a-z0-9-]{0,31}:([a-z0-9()+,\\-.:=@;$_!*\']|%[0-9a-f]{2})+$/i', $urn);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->urn;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return $this->urn;
     }
 
     /**

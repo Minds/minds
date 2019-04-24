@@ -148,9 +148,22 @@ class ACL
         }
 
         /**
-         * Check if we are the owner
+         * Does the user own the entity, or is it the container?
          */
-        if ($entity->owner_guid == $user->guid || $entity->container_guid == $user->guid || $entity->guid == $user->guid) {
+        if ($entity->owner_guid
+            && ($entity->owner_guid == $user->guid)
+            && (
+                !$entity->container_guid // there is no container guid
+                || ($entity->container_guid == $user->guid) // or it is the same as owner
+            )
+        ) {
+            return true;
+        }
+
+        /**
+         * Check if its the same entity (is user)
+         */
+        if ($entity->guid == $user->guid) {
             return true;
         }
 
@@ -171,7 +184,10 @@ class ACL
         /**
          * Allow plugins to check if we own the container
          */
-        if ($entity->container_guid && $entity->container_guid != $entity->owner_guid && $entity->container_guid != $entity->guid) {
+        if ($entity->container_guid
+            && $entity->container_guid != $entity->owner_guid
+            && $entity->container_guid != $entity->guid
+        ) {
             if (isset($entity->containerObj) && $entity->containerObj) {
                 $container = Core\Entities::build($entity->containerObj);
             } else {

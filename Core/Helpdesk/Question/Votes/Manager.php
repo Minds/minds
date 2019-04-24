@@ -87,7 +87,7 @@ class Manager
         $array = $this->question->$getter();
 
         $index = array_search($this->user->getGuid(), $array);
-        if ($index) {
+        if ($index !== -1) {
             array_splice($array, $index, 1);
             $this->question->$setter($array);
         }

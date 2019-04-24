@@ -16,11 +16,25 @@
     <tr>
         <td align="center">
             <p>
-              <a href="<?php echo Minds\Core\Config::_()->site_url; ?>newsfeed/subscribed?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>&state=<?= $vars['state'] ?>">
+              <a href="<?php echo "{$vars['site_url']}newsfeed/subscribed?{$vars['tracking']}"?>">
                 <img src="<?php echo $vars['cdn_assets_url']; ?>assets/emails/cta_make_a_post.png" width="142" alt="Make a Post"/>
               </a>
             </p>
         </td>
+    </tr>
+
+    <?php if ($vars['suggestions']): ?>
+    <tr>
+      <td align="center">
+        <p>If you don't feel like posting, then here are some more suggested channels for you to subscribe to.</p>
+      </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $vars['suggestions']; ?>
+        </td>
+    </tr>
+    <?php endif; ?>
     <tr>
         <td>
             <p>Also, be sure to download our mobile app using the links below:</p>      
@@ -32,7 +46,7 @@
           <a href="https://itunes.apple.com/us/app/minds-com/id961771928?ls=1&mt=8" style="text-decoration: none">
             <img src="<?php echo $vars['cdn_assets_url']; ?>assets/ext/appstore.png" width="142" alt="Apple App Store"/>
           </a>
-          <a href="https://www.minds.com/mobile?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>&state=<?= $vars['state'] ?>" style="text-decoration: none">
+          <a href="<?php echo "{$vars['site_url']}mobile?{$vars['tracking']}"?>" style="text-decoration: none">
             <img src="<?php echo $vars['cdn_assets_url']; ?>assets/photos/minds-android-app.png" width="142" alt="Google Play"/>
           </a>
         </p>

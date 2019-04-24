@@ -38,15 +38,14 @@ class Tagcloud
      */
     public function get()
     {
-        if ($cached = $this->cache->get(static::CACHE_KEY)) {
-            $result = json_decode($cached, true);
-        } else {
-            $tags = $this->repository->getTrending();
-            $result = array_column($tags, 'hashtag');
+        //if ($cached = $this->cache->get(static::CACHE_KEY)) {
+        //    $result = json_decode($cached, true);
+        //} else {
+            $result = $this->repository->getList([ 'limit' => 25 ]);
 
             $this->cache->set(static::TIME_CACHE_KEY, time(), static::CACHE_DURATION);
             $this->cache->set(static::CACHE_KEY, json_encode($result), static::CACHE_DURATION);
-        }
+        //}
 
         return $result;
     }
@@ -110,7 +109,7 @@ class Tagcloud
      */
     public function fetch($limit = 20)
     {
-        return $this->repository->getTrending();
+        return $this->repository->getList();
     }
 
     /**

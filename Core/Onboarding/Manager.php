@@ -5,7 +5,6 @@ namespace Minds\Core\Onboarding;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Entities\User;
-use Minds\Core\Onboarding\Delegates;
 
 class Manager
 {
@@ -27,6 +26,7 @@ class Manager
 
     /**
      * Manager constructor.
+     *
      * @param null $items
      */
     public function __construct($items = null, $config = null)
@@ -46,16 +46,19 @@ class Manager
 
     /**
      * @param User $user
+     *
      * @return Manager
      */
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
     }
 
     /**
      * @return bool
+     *
      * @throws \Exception
      */
     public function wasOnboardingShown()
@@ -71,7 +74,9 @@ class Manager
 
     /**
      * @param bool $onboardingShown
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function setOnboardingShown($onboardingShown)
@@ -89,6 +94,7 @@ class Manager
 
     /**
      * @return string
+     *
      * @throws \Exception
      */
     public function getCreatorFrequency()
@@ -102,7 +108,9 @@ class Manager
 
     /**
      * @param string $creatorFrequency
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     public function setCreatorFrequency($creatorFrequency)
@@ -132,6 +140,7 @@ class Manager
 
     /**
      * @return string[]
+     *
      * @throws \Exception
      */
     public function getCompletedItems()
@@ -150,5 +159,15 @@ class Manager
         }
 
         return $completedItems;
+    }
+
+    /**
+     * Compares a user's list of completed items against the number of registered onboarding steps.
+     *
+     * @return bool
+     */
+    public function isComplete()
+    {
+        return count($this->getAllItems()) === count($this->getCompletedItems());
     }
 }

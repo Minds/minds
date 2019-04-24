@@ -1,0 +1,15 @@
+testWireReceived
+----------------
+Sends the wire received email by looking up a specific transaction. 
+
+Required parameters:
+--entity=guid
+--sender=guid
+--timestamp=guid
+
+Optional parameters:
+--send=* actually send the email
+--output=path/to/output.html save the generated email body to the disk.
+
+Running it in docker:
+docker exec -it minds_php-fpm_1 php /var/www/Minds/engine/cli.php email testWireReceived --guid=959472937935573007 --sender=959472702584786948 --timestamp=1554928010 --output=/var/www/Minds/engine/wire_received.html  --send

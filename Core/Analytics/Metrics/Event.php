@@ -52,6 +52,10 @@ class Event
         $this->data['ip_hash'] = $this->getIpHash();
         $this->data['ip_range_hash'] = $this->getIpRangeHash();
 
+        if (isset($_SERVER['HTTP_APP_VERSION'])) {
+            $this->data['mobile_version'] = $_SERVER['HTTP_APP_VERSION'];
+        }
+
         if (!isset($this->data['platform'])) {
             $platform = isset($_REQUEST['cb']) ? 'mobile' : 'browser';
             if (isset($_REQUEST['platform'])) { //will be the sole method once mobile supports

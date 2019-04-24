@@ -55,6 +55,10 @@ class Counters
                     ORDER BY created_timestamp DESC
                     LIMIT 6";
         
+        if (!$this->user) {
+            return;
+        }
+
         $params = [
             (int) $this->user->getGuid(),
         ];

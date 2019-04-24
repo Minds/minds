@@ -7,6 +7,7 @@ use PhpSpec\ObjectBehavior;
 use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Manager;
 use Minds\Core\Email\EmailSubscription;
+use Minds\Core\Suggestions\Suggestion;
 use Minds\Entities\User;
 use Prophecy\Argument;
 
@@ -14,6 +15,11 @@ class GoneColdSpec extends ObjectBehavior
 {
     protected $mailer;
     protected $manager;
+    private $testGUID = 123456789;
+    private $testName = 'test_name';
+    private $testEmail = 'test@minds.com';
+    private $testUsername = 'testUsername';
+    private $testBriefDescription = 'test brief description';
 
     public function let(Mailer $mailer, Manager $manager)
     {
@@ -29,32 +35,31 @@ class GoneColdSpec extends ObjectBehavior
 
     public function it_should_send_a_gone_cold_email(User $user)
     {
-        $testGUID = 123456789;
-        $testName = 'test_name';
-        $testEmail = 'test@minds.com';
-        $testUsername = 'testUsername';
-
-        $user->getGUID()->shouldBeCalled()->willReturn($testGUID);
+        $user->getGUID()->shouldBeCalled()->willReturn($this->testGUID);
         $user->get('enabled')->shouldBeCalled()->willReturn('yes');
-        $user->get('name')->shouldBeCalled()->willReturn($testName);
-        $user->get('guid')->shouldBeCalled()->willReturn($testGUID);
-        $user->getEmail()->shouldBeCalled()->willReturn($testEmail);
-        $user->get('username')->shouldBeCalled()->willReturn($testUsername);
+        $user->get('name')->shouldBeCalled()->willReturn($this->testName);
+        $user->get('guid')->shouldBeCalled()->willReturn($this->testGUID);
+        $user->getEmail()->shouldBeCalled()->willReturn($this->testEmail);
+        $user->get('username')->shouldBeCalled()->willReturn($this->testUsername);
+
         $this->getCampaign()->shouldEqual('global');
         $this->getTopic()->shouldEqual('minds_tips');
         $this->getState()->shouldEqual('cold');
         $this->setUser($user);
-        $this->build();
-
+        $this->setSuggestions($this->mockSuggestions());
+        $message = $this->build();
+        $message->getSubject()->shouldEqual('What fascinates you?');
+        $to = $message->getTo()[0]['name']->shouldEqual($this->testName);
+        $to = $message->getTo()[0]['email']->shouldEqual($this->testEmail);
         $data = $this->getTemplate()->getData();
-        $data['guid']->shouldEqual($testGUID);
-        $data['email']->shouldEqual($testEmail);
-        $data['username']->shouldEqual($testUsername);
+        $data['guid']->shouldEqual($this->testGUID);
+        $data['email']->shouldEqual($this->testEmail);
+        $data['username']->shouldEqual($this->testUsername);
 
         $this->mailer->queue(Argument::any())->shouldBeCalled();
 
         $testEmailSubscription = (new EmailSubscription())
-            ->setUserGuid($testGUID)
+            ->setUserGuid($this->testGUID)
             ->setCampaign('global')
             ->setTopic('minds_tips')
             ->setValue(true);
@@ -65,17 +70,12 @@ class GoneColdSpec extends ObjectBehavior
 
     public function it_should_not_send_unsubscribed(User $user)
     {
-        $testGUID = 123456789;
-        $testName = 'test_name';
-        $testEmail = 'test@minds.com';
-        $testUsername = 'testUsername';
-
-        $user->getGUID()->shouldBeCalled()->willReturn($testGUID);
+        $user->getGUID()->shouldBeCalled()->willReturn($this->testGUID);
         $user->get('enabled')->shouldBeCalled()->willReturn('yes');
-        $user->get('name')->shouldBeCalled()->willReturn($testName);
-        $user->get('guid')->shouldBeCalled()->willReturn($testGUID);
-        $user->getEmail()->shouldBeCalled()->willReturn($testEmail);
-        $user->get('username')->shouldBeCalled()->willReturn($testUsername);
+        $user->get('name')->shouldBeCalled()->willReturn($this->testName);
+        $user->get('guid')->shouldBeCalled()->willReturn($this->testGUID);
+        $user->getEmail()->shouldBeCalled()->willReturn($this->testEmail);
+        $user->get('username')->shouldBeCalled()->willReturn($this->testUsername);
 
         $this->getCampaign()->shouldEqual('global');
         $this->getTopic()->shouldEqual('minds_tips');
@@ -84,13 +84,13 @@ class GoneColdSpec extends ObjectBehavior
         $this->build();
 
         $data = $this->getTemplate()->getData();
-        $data['email']->shouldEqual($testEmail);
-        $data['username']->shouldEqual($testUsername);
+        $data['email']->shouldEqual($this->testEmail);
+        $data['username']->shouldEqual($this->testUsername);
 
         $this->mailer->queue(Argument::any())->shouldNotBeCalled();
 
         $testEmailSubscription = (new EmailSubscription())
-            ->setUserGuid($testGUID)
+            ->setUserGuid($this->testGUID)
             ->setCampaign('global')
             ->setTopic('minds_tips')
             ->setValue(true);
@@ -101,17 +101,12 @@ class GoneColdSpec extends ObjectBehavior
 
     public function it_should_not_blowup_without_a_manager(User $user)
     {
-        $testGUID = 123456789;
-        $testName = 'test_name';
-        $testEmail = 'test@minds.com';
-        $testUsername = 'testUsername';
-
-        $user->getGUID()->shouldBeCalled()->willReturn($testGUID);
+        $user->getGUID()->shouldBeCalled()->willReturn($this->testGUID);
         $user->get('enabled')->shouldBeCalled()->willReturn('yes');
-        $user->get('name')->shouldBeCalled()->willReturn($testName);
-        $user->get('guid')->shouldBeCalled()->willReturn($testGUID);
-        $user->getEmail()->shouldBeCalled()->willReturn($testEmail);
-        $user->get('username')->shouldBeCalled()->willReturn($testUsername);
+        $user->get('name')->shouldBeCalled()->willReturn($this->testName);
+        $user->get('guid')->shouldBeCalled()->willReturn($this->testGUID);
+        $user->getEmail()->shouldBeCalled()->willReturn($this->testEmail);
+        $user->get('username')->shouldBeCalled()->willReturn($this->testUsername);
 
         $this->getCampaign()->shouldEqual('global');
         $this->getTopic()->shouldEqual('minds_tips');
@@ -120,13 +115,13 @@ class GoneColdSpec extends ObjectBehavior
         $this->build();
 
         $data = $this->getTemplate()->getData();
-        $data['email']->shouldEqual($testEmail);
-        $data['username']->shouldEqual($testUsername);
+        $data['email']->shouldEqual($this->testEmail);
+        $data['username']->shouldEqual($this->testUsername);
 
         $this->mailer->queue(Argument::any())->shouldNotBeCalled();
 
         $testEmailSubscription = (new EmailSubscription())
-            ->setUserGuid($testGUID)
+            ->setUserGuid($this->testGUID)
             ->setCampaign('global')
             ->setTopic('minds_tips')
             ->setValue(true);
@@ -143,24 +138,19 @@ class GoneColdSpec extends ObjectBehavior
 
     public function it_should_not_send_disabled(User $user)
     {
-        $testGUID = 123456789;
-        $testName = 'test_name';
-        $testEmail = 'test@minds.com';
-        $testUsername = 'testUsername';
-
-        $user->getGUID()->shouldBeCalled()->willReturn($testGUID);
+        $user->getGUID()->shouldBeCalled()->willReturn($this->testGUID);
         $user->get('enabled')->shouldBeCalled()->willReturn(false);
-        $user->get('name')->shouldBeCalled()->willReturn($testName);
-        $user->get('guid')->shouldBeCalled()->willReturn($testGUID);
-        $user->getEmail()->shouldBeCalled()->willReturn($testEmail);
-        $user->get('username')->shouldBeCalled()->willReturn($testUsername);
+        $user->get('name')->shouldBeCalled()->willReturn($this->testName);
+        $user->get('guid')->shouldBeCalled()->willReturn($this->testGUID);
+        $user->getEmail()->shouldBeCalled()->willReturn($this->testEmail);
+        $user->get('username')->shouldBeCalled()->willReturn($this->testUsername);
 
         $this->setUser($user);
         $this->build();
 
         $data = $this->getTemplate()->getData();
-        $data['email']->shouldEqual($testEmail);
-        $data['username']->shouldEqual($testUsername);
+        $data['email']->shouldEqual($this->testEmail);
+        $data['username']->shouldEqual($this->testUsername);
 
         $this->mailer->queue(Argument::any())->shouldNotBeCalled();
         $this->send();
@@ -168,24 +158,19 @@ class GoneColdSpec extends ObjectBehavior
 
     public function it_should_send_not_send_unsubscribed_emails(User $user)
     {
-        $testGUID = 123456789;
-        $testName = 'test_name';
-        $testEmail = 'test@minds.com';
-        $testUsername = 'testUsername';
-
-        $user->getGUID()->shouldBeCalled()->willReturn($testGUID);
+        $user->getGUID()->shouldBeCalled()->willReturn($this->testGUID);
         $user->get('enabled')->shouldBeCalled()->willReturn(true);
-        $user->get('name')->shouldBeCalled()->willReturn($testName);
-        $user->get('guid')->shouldBeCalled()->willReturn($testGUID);
-        $user->getEmail()->shouldBeCalled()->willReturn($testEmail);
-        $user->get('username')->shouldBeCalled()->willReturn($testUsername);
+        $user->get('name')->shouldBeCalled()->willReturn($this->testName);
+        $user->get('guid')->shouldBeCalled()->willReturn($this->testGUID);
+        $user->getEmail()->shouldBeCalled()->willReturn($this->testEmail);
+        $user->get('username')->shouldBeCalled()->willReturn($this->testUsername);
 
         $this->setUser($user);
         $this->build();
 
         $data = $this->getTemplate()->getData();
-        $data['email']->shouldEqual($testEmail);
-        $data['username']->shouldEqual($testUsername);
+        $data['email']->shouldEqual($this->testEmail);
+        $data['username']->shouldEqual($this->testUsername);
 
         $this->manager->isSubscribed(Argument::type(EmailSubscription::class))
             ->shouldBeCalled()
@@ -193,5 +178,18 @@ class GoneColdSpec extends ObjectBehavior
 
         $this->mailer->queue(Argument::any())->shouldNotBeCalled();
         $this->send();
+    }
+
+    private function mockSuggestions()
+    {
+        $user = new User($this->testGUID);
+        $user['name'] = $this->testName;
+        $user['briefdescription'] = $this->testBriefDescription;
+
+        $suggestion = (new Suggestion())
+            ->setEntityType('user')
+            ->setEntity($user);
+
+        return [$suggestion];
     }
 }

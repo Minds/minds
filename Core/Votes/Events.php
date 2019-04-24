@@ -74,11 +74,19 @@ class Events
                 return;
             }
 
+            $params = [
+                'title' => $entity->title ?: $entity->message,
+            ];
+
+            if ($entity->type === 'comment') {
+                $params['focusedCommentUrn'] = $entity->getUrn();
+            }
+
             Dispatcher::trigger('notification', 'thumbs', [
                 'to' => [ $entity->owner_guid ],
                 'notification_view' => $direction == 'up' ? 'like' : 'downvote',
                 'entity' => $entity,
-                'params' => ['title' => $entity->title ?: $entity->message]
+                'params' => $params,
             ]);
         });
 

@@ -7,15 +7,22 @@ use Minds\Core\Data;
 
 class Expire
 {
+    /** @var Boost $boost */
     protected $boost;
-    protected $mongo;
 
-    public function __construct(Data\Interfaces\ClientInterface $mongo = null)
+    /** @var Manager $manager */
+    protected $manager;
+
+    public function __construct($manager = null)
     {
-        $this->mongo = $mongo ?: Data\Client::build('MongoDB');
-
+        $this->manager = $manager ?: new Manager;
     }
 
+    /**
+     * Set the boost to expire
+     * @param Boost $boost
+     * @return void
+     */
     public function setBoost($boost)
     {
         $this->boost = $boost;
@@ -31,27 +38,18 @@ class Expire
             return false;
         }
 
-//        $handler = Core\Boost\Factory::build($this->getBoostHandler());
-//        if (method_exists($handler, 'expireBoost')) {
-//            $handler->expireBoost($this->boost);
-//            return true;
-//        }
-//        return false;
-
-
         if ($this->boost->getState() == 'completed') {
             return true; //already completed
         }
 
-        $this->boost->setState('completed')
-            ->save();
+        $this->boost->setCompletedTimestamp(round(microtime(true) * 1000));
 
-        $this->mongo->remove("boost", ['_id' => $this->boost->getId()]);
+        $this->manager->update($this->boost);
 
         Core\Events\Dispatcher::trigger('boost:completed', 'boost', ['boost' => $this->boost]);
 
         Core\Events\Dispatcher::trigger('notification', 'boost', [
-            'to' => [$this->boost->getOwner()->guid],
+            'to' => [$this->boost->getOwnerGuid()],
             'from' => 100000000000000519,
             'entity' => $this->boost->getEntity(),
             'notification_view' => 'boost_completed',

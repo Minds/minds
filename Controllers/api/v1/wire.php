@@ -1,10 +1,10 @@
 <?php
 /**
- * Minds Wire Api endpoint
+ * Minds Wire Api endpoint.
  *
  * @version 1
- * @author Mark Harding
  *
+ * @author Mark Harding
  */
 
 namespace Minds\Controllers\api\v1;
@@ -18,10 +18,6 @@ use Minds\Interfaces;
 
 class wire implements Interfaces\Api
 {
-
-    /**
-     *
-     */
     public function get($pages)
     {
         $response = [];
@@ -30,7 +26,8 @@ class wire implements Interfaces\Api
     }
 
     /**
-     * Send a wire to someone
+     * Send a wire to someone.
+     *
      * @param array $pages
      *
      * API:: /v1/wire/:guid
@@ -79,14 +76,15 @@ class wire implements Interfaces\Api
             $result = $manager->create();
 
             if (!$result) {
-                throw new \Exception("Something failed");
+                throw new \Exception('Something failed');
             }
         } catch (WalletNotSetupException $e) {
-            Core\Queue\Client::build()->setQueue("WireNotification")
-                ->send(array(
-                    "entity" => $entity,
-                    "walletNotSetupException" => true
-                ));
+            $wireQueue = (Queue\Client::Build())
+                ->setQueue('WireNotification')
+                ->send([
+                    'entity' => serialize($entity),
+                    'walletNotSetupException' => true,
+                ]);
 
             $response['status'] = 'error';
             $response['message'] = $e->getMessage();
@@ -98,26 +96,11 @@ class wire implements Interfaces\Api
         return Factory::response($response);
     }
 
-    /**
-     */
     public function put($pages)
     {
     }
 
-    /**
-     */
     public function delete($pages)
     {
-    }
-
-    private function sendNotifications($amount, $sender, $entity, $subscribed = false)
-    {
-        Core\Queue\Client::build()->setQueue("WireNotification")
-            ->send([
-                "amount" => $amount,
-                "sender" => serialize($sender),
-                "entity" => serialize($entity),
-                "subscribed" => $subscribed
-            ]);
     }
 }

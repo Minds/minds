@@ -104,7 +104,8 @@ class group implements Interfaces\Api
                 case "avatar":
                     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                         try {
-                            $this->uploadAvatar($group);
+                            $group = $this->uploadAvatar($group);
+                            $response['icontime'] = $group->getIconTime();
                         } catch (\Exception $e) {
                             return Factory::response([
                                 'status' => 'error',
@@ -117,7 +118,9 @@ class group implements Interfaces\Api
                 case "banner":
                     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                         try {
-                            $this->uploadBanner($group, $_POST['banner_position']);
+                            $group = $this->uploadBanner($group, $_POST['banner_position']);
+                            $response['banner'] = $group->banner;
+                            $response['banner_position'] = $group->getBannerPosition();
                         } catch (\Exception $e) {
                             return Factory::response([
                                 'status' => 'error',

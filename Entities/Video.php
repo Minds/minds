@@ -244,7 +244,8 @@ class Video extends Object
             [
                 'thumbnail_src' => $this->getIconUrl(),
                 'guid' => $this->guid,
-                'mature' => $this->getFlag('mature')
+                'mature' => $this->getFlag('mature'),
+                'license' => $this->license ?? '',
             ]
         ];
     }

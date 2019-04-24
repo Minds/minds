@@ -39,9 +39,9 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
         $content_count = $review->getReviewQueueCount();
 
         if ($boosts) {
-            $response['boosts'] = Factory::exportable($boosts['data'], ['boost_impressions', 'boost_id']);
+            $response['boosts'] = Factory::exportable(array_values($boosts->toArray()), ['boost_impressions', 'boost_id']);
             $response['count'] = $type == "newsfeed" ? $newsfeed_count : $content_count;
-            $response['load-next'] = $boosts['next'];
+            $response['load-next'] = $boosts->getPagingToken();
         }
 
         $response['newsfeed_count'] = (int) $newsfeed_count;
@@ -100,9 +100,9 @@ class boosts implements Interfaces\Api, Interfaces\ApiAdminPam
             ->setUserPhoneNumberHash(Core\Session::getLoggedInUser()->getPhoneNumberHash())
             ->setEntityGuid((string) $boost->getGuid())
             ->setEntityType('boost')
-            ->setEntityOwnerGuid($boost->getOwner()->getGuid())
-            ->setBoostEntityGuid($entity->getGuid())
-            ->setBoostType($boost->getHandler());
+            ->setEntityOwnerGuid($boost->getOwnerGuid())
+            ->setBoostEntityGuid($boost->getEntityGuid())
+            ->setBoostType($boost->getType());
 
         $dirty = false;
         // explicit

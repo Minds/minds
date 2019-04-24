@@ -13,6 +13,11 @@ use Minds\Interfaces;
 class deeplinks implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
     private $applinks = [
+        'activitycontinuation' => [
+            "apps" => [
+              "35U3998VRZ.com.minds.mobile"
+            ]
+        ],
         'applinks' => [
             'apps' => [],
             'details' => [

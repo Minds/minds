@@ -8,18 +8,21 @@ namespace Minds\Core\Queue\Runners;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Queue;
 use Minds\Core\Queue\Interfaces;
+use Minds\Core\Util\BigNumber;
+use Minds\Core\Wire;
 
 class WireNotification implements Interfaces\QueueRunner
 {
     public function run()
     {
         $client = Queue\Client::Build();
-        $client->setQueue("WireNotification")
+        $client->setQueue('WireNotification')
             ->receive(function ($data) {
-                echo "Received a wire notification request \n";
-
+                echo 'Received a wire notification request\n';
                 $data = $data->getData();
-                $entity = unserialize($data['entity']);
+
+                $wire = isset($data['wire']) ? unserialize($data['wire']) : null;
+                $entity = isset($data['entity']) ? unserialize($data['entity']) : null;
 
                 if (!$entity || !is_object($entity)) {
                     return;
@@ -37,8 +40,12 @@ class WireNotification implements Interfaces\QueueRunner
                         'message' => $message,
                     ]);
                 } else {
-                    $amount = $this->getAmountString($data['amount']);
-                    $senderUser = unserialize($data['sender']);
+                    if (!$wire || !is_object($wire)) {
+                        return;
+                    }
+
+                    $amount = $wire->getMethod() === 'tokens' ? BigNumber::fromPlain($wire->getAmount(), 18)->toDouble() : $wire->getAmount();
+                    $senderUser = $wire->getSender();
 
                     //send notification to receiver
                     Dispatcher::trigger('notification', 'wire', [
@@ -46,18 +53,28 @@ class WireNotification implements Interfaces\QueueRunner
                         'from' => $senderUser->guid,
                         'notification_view' => 'wire_happened',
                         'params' => [
-                            'amount' => $amount,
+                            'amount' => $this->getAmountString($amount),
                             'from_guid' => $senderUser->guid,
                             'from_username' => $senderUser->username,
                             'to_guid' => $receiverUser->guid,
                             'to_username' => $receiverUser->username,
-                            'subscribed' => $data['subscribed']
-                        ]
+                            'subscribed' => $data['subscribed'],
+                        ],
+                    ]);
+
+                    // send wire email to receiver
+                    Dispatcher::trigger('wire:email', 'wire', [
+                        'wire' => $wire,
+                    ]);
+
+                    // send wire email receipt to sender
+                    Dispatcher::trigger('wire-receipt:email', 'wire', [
+                        'wire' => $wire,
                     ]);
 
                     //send notification to sender
                     Dispatcher::trigger('notification', 'wire', [
-                        'to' => [ $senderUser->guid ],
+                        'to' => [$senderUser->guid],
                         'from' => $receiverUser->guid,
                         'notification_view' => 'wire_happened',
                         'params' => [
@@ -66,8 +83,8 @@ class WireNotification implements Interfaces\QueueRunner
                             'from_username' => $senderUser->username,
                             'to_guid' => $receiverUser->guid,
                             'to_username' => $receiverUser->username,
-                            'subscribed' => $data['subscribed']
-                        ]
+                            'subscribed' => $data['subscribed'],
+                        ],
                     ]);
                 }
 
@@ -78,7 +95,7 @@ class WireNotification implements Interfaces\QueueRunner
     private function getAmountString($amount)
     {
         $currency = $amount > 1 ? ' tokens' : ' token';
-        return $amount . $currency;
-    }
 
+        return $amount.$currency;
+    }
 }

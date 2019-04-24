@@ -25,6 +25,13 @@ interface ResolverDelegate
     public function resolve(array $urns, array $opts = []);
 
     /**
+     * @param string $urn
+     * @param mixed $entity
+     * @return mixed
+     */
+    public function map($urn, $entity);
+
+    /**
      * @param mixed $entity
      * @return string|null
      */
