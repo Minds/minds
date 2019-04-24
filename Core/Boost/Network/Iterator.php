@@ -163,7 +163,9 @@ class Iterator implements \Iterator
 
                 if ($count > $impressions) {
                     // Grab the main storage to prevent issues with elastic formatted data
-                    $boost = $this->manager->get("urn:boost:{$boost->getType()}:{$boost->getGuid()}");
+                    $boost = $this->manager->get("urn:boost:{$boost->getType()}:{$boost->getGuid()}", [ 
+                        'hydrate' => true,
+                    ]);
                     $this->expire->setBoost($boost);
                     $this->expire->expire();
                     continue; //max count met
