@@ -152,6 +152,7 @@ class Boost
             'nsfw' => $this->nsfw,
             'checksum' => $this->checksum,
             'state' => $this->getState(),
+            'transaction_id' => $this->transactionId,
         ];
     }
 }

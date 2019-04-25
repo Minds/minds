@@ -49,6 +49,18 @@ class Manager
 
         if ($opts['useElastic']) {
             $response = $this->elasticRepository->getList($opts);
+
+            if ($opts['state'] === 'review') {
+                $opts['guids'] = array_map(function($boost) {
+                    return $boost->getGuid();
+                }, $response->toArray());
+
+                if (empty($opts['guids'])) {
+                    return $response;
+                }
+
+                $response = $this->repository->getList($opts);
+            }
         } else {
             $response = $this->repository->getList($opts);
         }
