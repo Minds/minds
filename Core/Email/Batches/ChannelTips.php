@@ -7,18 +7,23 @@ use Minds\Core\Email\Campaigns\WithChannelTips;
 use Minds\Core\Email\EmailSubscribersIterator;
 use Minds\Core\Entities;
 use Minds\Core\Trending\Repository;
+use Minds\Traits\MagicAttributes;
 
 class ChannelTips implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     protected $offset;
 
     /**
      * @param string $offset
+     *
      * @return ChannelTips
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
@@ -33,6 +38,7 @@ class ChannelTips implements EmailBatchInterface
         $channels = $this->getNewChannels();
         if (!$channels || count($channels) === 0) {
             error_log('No trending channels were found!');
+
             return;
         }
 

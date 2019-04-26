@@ -1,14 +1,15 @@
 <?php
+
 namespace Minds\Core\Email\Batches;
 
-use Minds\Core;
 use Minds\Core\Di\Di;
-use Minds\Core\Security\ACL;
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
+use Minds\Traits\MagicAttributes;
 
 class WirePromotions implements EmailBatchInterface
 {
+    use MagicAttributes;
 
     /** @var Manager */
     protected $manager;
@@ -25,7 +26,7 @@ class WirePromotions implements EmailBatchInterface
 
     /** @var string $subject */
     protected $subject;
-    
+
     public function __construct($manager = null, $trendingRepository = null, $builder = null)
     {
         $this->manager = $manager ?: Di::_()->get('Email\Manager');
@@ -40,32 +41,37 @@ class WirePromotions implements EmailBatchInterface
 
     /**
      * @param string $offset
+     *
      * @return Catchup
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
     /**
      * @param string $templatePath
+     *
      * @return Catchup
      */
     public function setTemplateKey($template)
     {
         $this->templatePath = $template;
-        return $this;
 
+        return $this;
     }
 
     /**
      * @param string $subject
+     *
      * @return Catchup
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -75,10 +81,10 @@ class WirePromotions implements EmailBatchInterface
     public function run()
     {
         if (!$this->templatePath || $this->templatePath == '') {
-        //    throw new \Exception('You must set the templatePath');
+            //    throw new \Exception('You must set the templatePath');
         }
         if (!$this->subject || $this->subject == '') {
-        //    throw new \Exception('You must set the subject');
+            //    throw new \Exception('You must set the subject');
         }
 
         $iterator = new EmailSubscribersIterator();
@@ -90,7 +96,7 @@ class WirePromotions implements EmailBatchInterface
         $i = 0;
         $bounced = 0;
         foreach ($iterator as $user) {
-            $i++;
+            ++$i;
 
             //$user = new \Minds\Entities\User('mark');
             //$user->bounced = false;
@@ -111,12 +117,11 @@ class WirePromotions implements EmailBatchInterface
             $campaign
                 ->setUser($user)
                 //->setTemplateKey($this->templatePath)
-                ->setSubject("You’ve received a token reward!")
+                ->setSubject('You’ve received a token reward!')
                 ->setPromotionKey('jan-24')
                 ->send();
 
-            echo " sent";
+            echo ' sent';
         }
     }
-
 }

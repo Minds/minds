@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Minds\Core\Email\Batches;
-
 
 use Minds\Core\Analytics\Iterators\SignupsIterator;
 use Minds\Core\Di\Di;
@@ -12,9 +10,12 @@ use Minds\Core\Email\Manager;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Trending\Repository;
 use Minds\Core\Security\ACL;
+use Minds\Traits\MagicAttributes;
 
 class RetentionTopBlogs implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     /** @var Manager */
     protected $manager;
     /** @var Repository */
@@ -22,7 +23,7 @@ class RetentionTopBlogs implements EmailBatchInterface
     /** @var EntitiesBuilder */
     protected $builder;
 
-    /** @var boolean $dryRun */
+    /** @var bool $dryRun */
     protected $dryRun = false;
 
     protected $offset;
@@ -36,53 +37,61 @@ class RetentionTopBlogs implements EmailBatchInterface
     }
 
     /**
-     * @param boolean $dryRun
-     * return RetentionTopBlogs
+     * @param bool $dryRun
+     *                     return RetentionTopBlogs
      */
     public function setDryRun($dryRun)
     {
         $this->dryRun = $dryRun;
+
         return $this;
     }
 
     /**
-     * @param string $subject 
-     * return RetentionTopBlogs
+     * @param string $subject
+     *                        return RetentionTopBlogs
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
     /**
-     * @param string $templateKey 
-     * return RetentionTopBlogs
+     * @param string $templateKey
+     *                            return RetentionTopBlogs
      */
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
+
         return $this;
     }
 
     /**
      * @param string $offset
+     *
      * @return RetentionTopBlogs
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
     /**
-     * The retention period
+     * The retention period.
+     *
      * @param int $period
+     *
      * @return RetentionTopBlogs
      */
     public function setPeriod($period)
     {
         $this->period = $period;
+
         return $this;
     }
 
@@ -98,7 +107,7 @@ class RetentionTopBlogs implements EmailBatchInterface
 
         $i = 0;
         foreach ($iterator as $user) {
-            $i++;
+            ++$i;
             echo "\n[$i]:$user->guid ";
 
             //check if the user is subscribed
@@ -108,8 +117,8 @@ class RetentionTopBlogs implements EmailBatchInterface
                 ->setTopic('top_posts');
 
             $campaign = new WithBlogs();
-            
-            echo "... sending";
+
+            echo '... sending';
 
             $campaign
                 ->setUser($user)
@@ -123,7 +132,7 @@ class RetentionTopBlogs implements EmailBatchInterface
         ACL::$ignore = true;
         $result = $this->repository->getList([
             'type' => 'blogs',
-            'limit' => 10
+            'limit' => 10,
         ]);
 
         if (!$result || !$result['guids'] || count($result['guids']) === 0) {

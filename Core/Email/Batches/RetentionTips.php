@@ -5,11 +5,12 @@ namespace Minds\Core\Email\Batches;
 use Minds\Core\Di\Di;
 use Minds\Core\Analytics\Iterators\SignupsIterator;
 use Minds\Core\Email\Campaigns\GlobalTips;
-use Minds\Core\Email\EmailSubscribersIterator;
 use Minds\Core\Email\EmailSubscription;
+use Minds\Traits\MagicAttributes;
 
 class RetentionTips implements EmailBatchInterface
 {
+    use MagicAttributes;
     protected $offset;
     protected $period;
 
@@ -20,43 +21,48 @@ class RetentionTips implements EmailBatchInterface
 
     /**
      * @param string $offset
+     *
      * @return RetentionTips
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
     /**
-     * The retention period
+     * The retention period.
+     *
      * @param int $period
+     *
      * @return RetentionTips
      */
     public function setPeriod($period)
     {
         $this->period = $period;
+
         return $this;
     }
 
     public function run()
     {
-        $iterator = new SignupsIterator;
+        $iterator = new SignupsIterator();
         $iterator->setPeriod($this->period);
 
         $i = 0;
         foreach ($iterator as $user) {
-            $i++;
+            ++$i;
             echo "\n[$i]:$user->guid ";
 
             //check if the user is subscribed
-            $subscription = (new EmailSubscription)
+            $subscription = (new EmailSubscription())
                 ->setUserGuid($user->guid)
                 ->setCampaign('global')
                 ->setTopic('minds_tips');
 
             if (!$this->manager->isSubscribed($subscription)) {
-                echo "... skipping";
+                echo '... skipping';
                 continue;
             }
 
@@ -76,8 +82,8 @@ class RetentionTips implements EmailBatchInterface
                 default:
                     throw new \Exception('Period not found or not set');
             }
-            echo "... sending";
-            
+            echo '... sending';
+
             $campaign
                 ->setType($type)
                 ->setUser($user)

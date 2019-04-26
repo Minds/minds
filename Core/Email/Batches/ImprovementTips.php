@@ -4,18 +4,23 @@ namespace Minds\Core\Email\Batches;
 
 use Minds\Core\Email\Campaigns\WithImprovementTips;
 use Minds\Core\Email\EmailSubscribersIterator;
+use Minds\Traits\MagicAttributes;
 
 class ImprovementTips implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     protected $offset;
 
     /**
      * @param string $offset
+     *
      * @return ImprovementTips
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
