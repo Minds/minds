@@ -11,6 +11,7 @@ use Minds\Core\Email\Campaigns\WireReceived;
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeComplete;
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeIncomplete;
 use Minds\Core\Suggestions\Manager;
+use Minds\Core\Analytics\Timestamps;
 use Minds\Core\Di\Di;
 
 class Email extends Cli\Controller implements Interfaces\CliControllerInterface
@@ -22,6 +23,9 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
     public function help($command = null)
     {
         switch ($command) {
+            case 'exec':
+                $this->out(file_get_contents(dirname(__FILE__).'/Help/Email/exec.txt'));
+                break;
             case 'testGoneCold':
                 $this->out(file_get_contents(dirname(__FILE__).'/Help/Email/testGoneCold.txt'));
                 break;
@@ -36,7 +40,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
                 break;
             default:
                 $this->out('Utilities for testing emails and sending them manually');
-                $this->out('try `cli email {command} --help');
+                $this->out('try `cli Email {command} --help');
                 $this->displayCommandHelp();
         }
     }
@@ -48,12 +52,16 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
 
         $batch = $this->getOpt('batch');
         $dry = $this->getOpt('dry-run') ?: false;
+        $from = (strtotime('midnight', $this->getOpt('from')) ?: Timestamps::get(['day'])['day']);
+
         $offset = $this->getOpt('offset') ?: '';
         $subject = $this->getOpt('subject') ?: '';
         $template = $this->getOpt('template') ?: '';
 
-        $campaign = Core\Email\Batches\Factory::build($batch);
-        $campaign->setDryRun($dry)
+        $batchRunner = Core\Email\Batches\Factory::build($batch);
+
+        $batchRunner->setFrom($from)
+            ->setDryRun($dry)
             ->setOffset($offset)
             ->setSubject($subject)
             ->setTemplateKey($template)

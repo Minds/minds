@@ -11,21 +11,21 @@ use Prophecy\Argument;
 
 class WhenNotificationsSpec extends ObjectBehavior
 {
-    function let(Template $template, Mailer $mailer)
+    public function let(Template $template, Mailer $mailer)
     {
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Minds\Core\Email\Campaigns\WhenNotifications');
     }
 
-    function it_should_send_an_email(Template $template,Mailer $mailer, User $user)
+    public function it_should_send_an_email(Template $template, Mailer $mailer, User $user)
     {
         $this->beConstructedWith($template, $mailer);
 
         //$user->guid = '123';
-
+        $user->getGUID()->shouldBeCalled()->willReturn('123');
         $user->get('guid')->shouldBeCalled()->willReturn('123');
         $user->get('name')->shouldBeCalled()->willReturn('Test User');
         $user->get('username')->shouldBeCalled()->willReturn('testuser');
@@ -54,8 +54,9 @@ class WhenNotificationsSpec extends ObjectBehavior
         $template->set('topic', 'unread_notifications')->shouldBeCalled();
 
         $template->set('amount', $amount)->shouldBeCalled();
+        $template->set('tracking', '__e_ct_guid=123&campaign=when&topic=unread_notifications')->shouldBeCalled();
 
-        $mailer->queue(Argument::that(function($message)use($amount) {
+        $mailer->queue(Argument::that(function ($message) use ($amount) {
             return $message->to[0]['name'] == 'Test User' && $message->to[0]['email'] == 'testuser@minds.com'
                 && $message->subject = "You have {$amount} new unread notifications";
         }))->shouldBeCalled();

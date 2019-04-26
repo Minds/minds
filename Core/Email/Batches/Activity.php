@@ -9,9 +9,12 @@ use Minds\Core\Email\Campaigns\WithActivity;
 use Minds\Core\Email\EmailSubscribersIterator;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Trending\Repository;
+use Minds\Traits\MagicAttributes;
 
 class Activity implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     /** @var Client */
     protected $db;
     /** @var Repository */
@@ -21,6 +24,7 @@ class Activity implements EmailBatchInterface
 
     protected $period;
     protected $offset = '';
+    protected $from;
 
     public function __construct($db = null, $trendingRepository = null, $builder = null)
     {
@@ -32,12 +36,14 @@ class Activity implements EmailBatchInterface
     public function setPeriod($period)
     {
         $this->period = $period;
+
         return $this;
     }
 
     public function setOffset($offset)
     {
         $this->offset = isset($offset) ? $offset : '';
+
         return $this;
     }
 
@@ -79,9 +85,9 @@ class Activity implements EmailBatchInterface
     {
         $result = $this->repository->getList([
             'type' => 'newsfeed',
-            'limit' => 12
+            'limit' => 12,
         ]);
-        
+
         if (!$result || !$result['guids'] || count($result['guids']) === 0) {
             return [];
         }
@@ -90,7 +96,7 @@ class Activity implements EmailBatchInterface
         $options['guids'] = $result['guids'];
 
         $activities = $this->builder->get(array_merge([
-            'type' => 'activity'
+            'type' => 'activity',
         ], $options));
 
         $activities = array_filter($activities, function ($activity) {
@@ -117,10 +123,9 @@ class Activity implements EmailBatchInterface
         }, $activities));
 
         foreach ($owner_guids as $owner_guid) {
-
             $prepared = new Custom();
-            $prepared->query("SELECT * from friendsof where key=?", [
-                (string) $owner_guid
+            $prepared->query('SELECT * from friendsof where key=?', [
+                (string) $owner_guid,
             ]);
             $rows = $this->db->request($prepared);
             while (true) {
@@ -134,6 +139,7 @@ class Activity implements EmailBatchInterface
                 $rows = $rows->nextPage();
             }
         }
+
         return $subscribers_map;
     }
 }

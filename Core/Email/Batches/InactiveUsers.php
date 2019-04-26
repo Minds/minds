@@ -1,14 +1,15 @@
 <?php
 
-
 namespace Minds\Core\Email\Batches;
 
 use Minds\Core\Email\Campaigns;
-use Minds\Core\Email\EmailSubscribersIterator;
 use Minds\Core\Analytics\Iterators\SignupsOffsetIterator;
+use Minds\Traits\MagicAttributes;
 
 class InactiveUsers implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     /** @var string $offset */
     protected $offset;
 
@@ -23,42 +24,49 @@ class InactiveUsers implements EmailBatchInterface
 
     /**
      * @param string $offset
+     *
      * @return Promotion
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
     /**
      * @param bool $dryRun
+     *
      * @return Promotion
      */
     public function setDryRun($dryRun)
     {
         $this->dryRun = $dryRun;
+
         return $this;
     }
 
     /**
      * @param string $templateKey
+     *
      * @return Promotion
      */
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
-        return $this;
 
+        return $this;
     }
 
     /**
      * @param string $subject
+     *
      * @return Promotion
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -67,7 +75,6 @@ class InactiveUsers implements EmailBatchInterface
      */
     public function run()
     {
-        
         if (!$this->subject || $this->subject == '') {
             throw new \Exception('You must set the subject');
         }
@@ -81,7 +88,6 @@ class InactiveUsers implements EmailBatchInterface
 
         $i = 0;
         foreach ($iterator as $user) {
-      
             if ($user->bounced) {
                 continue;
             }
@@ -90,8 +96,8 @@ class InactiveUsers implements EmailBatchInterface
                 echo "\n[$i]:$user->guid ($iterator->token) (active)";
                 continue;
             }
-           
-            $i++;
+
+            ++$i;
 
             echo "\n[$i]:$user->guid ($iterator->token)";
 
@@ -102,7 +108,7 @@ class InactiveUsers implements EmailBatchInterface
                 ->setTemplateKey($this->templateKey)
                 ->setSubject($this->subject)
                 ->send();
-            echo " (queued)";
+            echo ' (queued)';
         }
     }
 }
