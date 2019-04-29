@@ -33,7 +33,7 @@ services:
       - app
 
   elasticsearch:
-    image: elasticsearch:5.6-alpine
+    image: elasticsearch:6.6.2
     mem_limit: 512MB # keep an eye
     ulimits:
       memlock:
@@ -47,6 +47,17 @@ services:
       - "9200:9200"
     volumes:
       - ./.data/elasticsearch:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.6.2
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://minds_elasticsearch_1:9200
+    networks:
+      - app
+    ports:
+      - "5601:5601"
 
   redis:
     image: redis:4.0-alpine
