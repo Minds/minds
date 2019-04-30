@@ -29,6 +29,7 @@ class ElasticRepository
         $opts = array_merge([
             'rating' => 3,
             'token' => 0,
+            'offset' => null,
         ], $opts);
         
         $must = [];
@@ -46,6 +47,16 @@ class ElasticRepository
                 'type' => $opts['type'],
             ],
         ];
+
+        if ($opts['offset']) {
+            $must[] = [
+                'range' => [
+                    '@timestamp' => [
+                        'gt' => $opts['offset'],
+                    ],
+                ],
+            ];
+        }
 
         if ($opts['state'] === 'approved') {
             $must[] = [
@@ -112,6 +123,7 @@ class ElasticRepository
         
         $response = new Response;
 
+        $offset = 0;
         foreach ($result['hits']['hits'] as $doc) {
             $boost = new Boost();
             $boost
@@ -130,10 +142,11 @@ class ElasticRepository
                 ->setImpressionsMet($doc['_source']['impressions_met'])
                 ->setBid($doc['_source']['bid'])
                 ->setBidType($doc['_source']['bid_type']);
+            $offset = $boost->getCreatedTimestamp();
             $response[] = $boost;
         }
 
-        $response->setPagingToken(count($response) + (int) $opts['token']);
+        $response->setPagingToken($offset);
         return $response;
     }
 

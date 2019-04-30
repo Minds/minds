@@ -177,13 +177,14 @@ class Iterator implements \Iterator
             } else {
                 $return[] = $boost;
             }
-
-            $this->offset = $boost->getReviewedTimestamp();
         }
+
+        $this->offset = $boosts->getPagingToken();
 
         if ($this->hydrate) {
             if (empty($return) && $this->tries++ <= 1) {
-                return null;
+                $this->offset = 0;
+                return $this->getList();
             }
 
             $return = $this->filterBlocked($return);

@@ -72,7 +72,7 @@ class fetch implements Interfaces\Api
 
         switch ($pages[0]) {
             case 'content':
-                $iterator->setOffset('');
+                //$iterator->setOffset('');
                 $iterator->setIncrement(true);
 
                 foreach ($iterator as $guid => $entity) {
