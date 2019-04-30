@@ -103,7 +103,7 @@ class fetch implements Interfaces\Api
                 if (isset($_GET['rating']) && $pages[0] == 'newsfeed') {
                     $cacher->set(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed', $iterator->getOffset(), (3600 / 2));
                 }
-                if (!$iterator->list) {
+                if (!$iterator->list && false) {
                     $cacher = Core\Data\cache\factory::build('apcu');
                     $offset = (int) $cacher->get(Core\Session::getLoggedinUser()->guid . ":newsfeed-fallover-boost-offset") ?: 0;
                     
