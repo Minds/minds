@@ -126,7 +126,7 @@ class Manager
 
         $owner = $comment->getOwnerEntity(false);
 
-        if (!$this->acl->interact($entity->guid, $owner, "comment")) {
+        if (!$this->acl->interact($entity, $owner, "comment")) {
             throw new \Exception();
         }
 
