@@ -59,7 +59,9 @@ class Manager
                     return $response;
                 }
 
+                $loadNext = $response->getPagingToken();
                 $response = $this->repository->getList($opts);
+                $response->setPagingToken($loadNext);
             }
         } else {
             $response = $this->repository->getList($opts);
