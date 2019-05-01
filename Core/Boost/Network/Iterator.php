@@ -183,8 +183,9 @@ class Iterator implements \Iterator
 
         if ($this->hydrate) {
             if (empty($return) && $this->tries++ <= 1) {
-                $this->offset = 0;
-                return $this->getList();
+                return null;
+                //$this->offset = 0;
+                //return $this->getList();
             }
 
             $return = $this->filterBlocked($return);
