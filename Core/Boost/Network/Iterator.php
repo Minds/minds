@@ -146,9 +146,14 @@ class Iterator implements \Iterator
         }
 
         $return = [];
+        $i = 0;
         foreach ($boosts as $boost) {
             if (count($return) >= $this->limit) {
                 break;
+            }
+
+            if (++$i === 2) {
+                $boosts->setPagingToken($boost->getCreatedTimestamp());
             }
 
             if ($this->hydrate) {
