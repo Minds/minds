@@ -391,7 +391,8 @@ class Spam
             '/cadcamoffices.co.uk',
             '/carpetexperts.net',
             '/media4.picsearch.com',
-            'slotsbonus777.com'
+            'slotsbonus777.com',
+            'nudegirls.info',
         ];
     }
 
