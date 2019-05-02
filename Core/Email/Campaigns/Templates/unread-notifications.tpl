@@ -22,7 +22,7 @@
                     <tr>
                         <td align="center" colspan="2">
                             <a href="<?php echo $notificationsUrl; ?>">
-                                 <img src="<?php echo $vars['cdn_assets_url']; ?>en/assets/emails/cta_view_notifications.png" width="142" alt="View Notifications"/>
+                                 <img src="<?php echo $vars['cdn_assets_url']; ?>assets/emails/cta_view_notifications.png" width="142" alt="View Notifications"/>
                             </a>
                         </td>
                     </tr>
