@@ -1,0 +1,14 @@
+testWhenBoost
+----------------
+Sends the Boost Complete email to a specific user.
+
+Required parameters:
+--guid=user_guid
+--type=boost_type newsfeed
+
+Optional parameters:
+--send=* actually send the email
+--output=path/to/output.html save the generated email body to the disk.
+
+Running it in docker:
+docker exec -it minds_php-fpm_1 php /var/www/Minds/engine/cli.php email testGoneCold --guid=959472937935573007 --output=/var/www/Minds/engine/when_boost.html  --send
