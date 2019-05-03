@@ -60,6 +60,8 @@ class remind implements Interfaces\Api
         }*/
 
         $activity = new Activity();
+        $activity->setNSFW($embedded->getNSFW());
+
         switch ($embedded->type) {
             case 'activity':
                 if ($message) {

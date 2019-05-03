@@ -306,6 +306,8 @@ class newsfeed implements Interfaces\Api
                 }*/
 
                 $activity = new Activity();
+                $activity->setNSFW($embeded->getNSFW());
+
                 switch ($embeded->type) {
                     case 'activity':
                         if ($message) {
