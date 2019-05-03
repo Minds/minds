@@ -48,7 +48,7 @@ class views implements Interfaces\Api
                 Counters::increment($boost->getEntity()->owner_guid, "impression");
 
                 return Factory::response([
-                    'status' => 'succcess',
+                    'status' => 'success',
                     'impressions' => $boost->getImpressions(),
                     'impressions_met' => $count,
                 ]);
