@@ -101,6 +101,11 @@ class Mock
 
     }
 
+    public static function bigint()
+    {
+
+    }
+
     public function uuid()
     {
         return (string) $this->a;
@@ -171,9 +176,9 @@ class Mock
 
     }
 
-    public static function set()
+    public static function set(...$args)
     {
-
+        return new Mock(...$args);
     }
 
     public function add()
@@ -192,6 +197,7 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Type\Map');
     class_alias('Mock', 'Cassandra\Decimal');
     class_alias('Mock', 'Cassandra\Bigint');
+    class_alias('Mock', 'Cassandra\Float_');
     class_alias('Mock', 'Cassandra\Tinyint');
     class_alias('Mock', 'Cassandra\Set');
     class_alias('Mock', 'Cassandra\Map');

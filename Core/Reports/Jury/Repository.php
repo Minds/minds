@@ -6,26 +6,26 @@ use Cassandra;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
-use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Common\Repository\Response;
-use Minds\Core\Reports\Repository as ReportsRepository;
+use Minds\Core\Reports\Repository as ReportsManager;
 
 
 class Repository
 {
-    /** @var Data\ElasticSearch\Client $es */
-    protected $es;
+    /** @var Data\Cassandra\Client $cql */
+    protected $cql;
 
-    /** @var ReportsRepository $reportsRepository */
-    private $reportsRepository;
+    /** @var ReportsManager $reportsManager */
+    private $reportsManager;
 
-    public function __construct($es = null, $reportsRepository = null)
+    public function __construct($cql = null, $reportsManager = null)
     {
-        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
-        $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
+        $this->reportsManager = $reportsManager ?: new ReportsManager;
     }
 
     /**
@@ -48,105 +48,34 @@ class Repository
             return null;
         }
 
-        $must = [];
-        $must_not = [];
+        $statement = "SELECT * FROM moderation_reports_by_state
+            WHERE state = ?";
 
-        // Must never show own posts
-        $must_not[] = [
-            'match' => [
-                'entity_owner_guid' => (int) $opts['user']->getGuid(),
-            ],
+        $values = [
+            $opts['juryType'] === 'appeal' ? 'appealed' : 'reported',
         ];
-        
-        if ($opts['juryType'] == 'appeal') {
-            $must[] = [
-                'exists' => [
-                    'field' => '@initial_jury_decided_timestamp',
-                ],
-            ];
-            $must[] = [
-                'exists' => [
-                    'field' => '@appeal_timestamp',
-                ],
-            ];
-            $must_not[] = [
-                'exists' => [
-                    'field' => '@appeal_jury_decided_timestamp',
-                ],
-            ];
-        } else {
-            $must_not[] = [
-                'exists' => [
-                    'field' => '@initial_jury_decided_timestamp',
-                ],
-            ];
-            $must_not[] = [
-                'exists' => [
-                    'field' => '@appeal_jury_decided_timestamp',
-                ],
-            ];
-        }
 
-        // Do not show what we have reported or previously juried on
-        if ($opts['user']) {
-            $must_not[] = [
-                'nested' => [
-                    'path' => 'reports',
-                    'query' => [
-                        'bool' => [
-                            'must' => [
-                                [
-                                    'match' => [
-                                        'reports.reporter_guid' => $opts['user']->getGuid(),
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ]
-            ];
+        $prepared = new Prepared;
+        $prepared->query($statement, $values);
 
-            $must_not[] = [
-                'nested' => [
-                    'path' => 'initial_jury',
-                    'query' => [
-                        'bool' => [
-                            'must' => [
-                                [
-                                    'match' => [
-                                        'initial_jury.juror_hash' => $opts['user']->getPhoneNumberHash(),
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ]
-            ];
-
-            $must_not[] = [
-                'nested' => [
-                    'path' => 'appeal_jury',
-                    'query' => [
-                        'bool' => [
-                            'must' => [
-                                [
-                                    'match' => [
-                                        'appeal_jury.juror_hash' => $opts['user']->getPhoneNumberHash(),
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ]
-            ];
-        }
-
-        $opts['must'] = $must;
-        $opts['must_not'] = $must_not;
+        $result = $this->cql->request($prepared);
 
         $response = new Response;
 
-        $reports = $this->reportsRepository->getList($opts);
+        foreach ($result as $row) {
+            if (in_array($opts['user']->getPhoneNumberHash(), array_map($row['user_hashes']->values(), function ($hash) {
+                return $hash->value();
+            }))) {
+                continue; // Already interacted with
+            }
+
+            $report = new Report();
+            $report->setEntityUrn($row['entity_urn'])
+                ->setReasonCode($row['reason_code']->value())
+                ->setSubReasonCode($row['sub_reason-code']->value());
+                
+            $response[] = $this->reportsManager->buildFromRow($row);
+        }
 
         foreach ($reports as $report) {
             $response[] = $report;

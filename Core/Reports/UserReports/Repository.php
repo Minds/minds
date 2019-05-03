@@ -2,11 +2,16 @@
 namespace Minds\Core\Reports\UserReports;
 
 use Cassandra;
+use Cassandra\Type;
+use Cassandra\Bigint;
+use Cassandra\Float_ as FloatInt;
+use Cassandra\Type\Set;
+use Cassandra\Timestamp;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
-use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
@@ -14,12 +19,12 @@ use Minds\Entities\NormalizedEntity;
 
 class Repository
 {
-    /** @var Data\ElasticSearch\Client $es */
-    protected $es;
+    /** @var Data\Cassandra\Client $es */
+    protected $cql;
 
-    public function __construct($es = null)
+    public function __construct($cql = null)
     {
-        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
     }
 
     /**
@@ -44,40 +49,27 @@ class Repository
      */
     public function add(UserReport $report)
     {
-        $body = [
-            'script' => [
-                'inline' => 'ctx._source.reports.add(params.report)',
-                'lang' => 'painless',
-                'params' => [
-                    'report' => [
-                        [
-                            '@timestamp' => (int) $report->getTimestamp(), // In MS
-                            'reporter_guid' => $report->getReporterGuid(),
-                            'reason' => $report->getReasonCode(),
-                            'sub_reason' => (int) $report->getSubReasonCode(),
-                        ],
-                    ],
-                ],
-            ],
-            'scripted_upsert' => true,
-            'upsert' => [
-                'entity_guid' => $report->getReport()->getEntityGuid(),
-                'entity_owner_guid' => $report->getReport()->getEntityOwnerGuid(),
-                'reports' => []
-            ],
-        ];
+        $statement = "UPDATE moderation_reports
+            SET reports += ?,
+                user_hashes += ?,
+            WHERE entity_urn = ?
+            AND reason_code = ?
+            AND sub_reason_code = ?
+            AND timestamp = ?";
+        
+        $prepared = new Prepared;
+        $prepared->query($statement, [
+                (new Set(Type::bigint()))
+                    ->set($report->getReporterGuid()),
+                (new Set(Type::bigint()))
+                    ->set($report->getReporterHash()),
+                $report->getReport()->getEntityUrn(),
+                new FloatInt($report->getReasonCode()),
+                new FloatInt($report->getSubReasonCode()),
+                new Timestamp($report->getReport()->getTimestamp()),
+            ]);
 
-        $query = [
-            'index' => 'minds-moderation',
-            'type' => 'reports',
-            'id' => $report->getReport()->getEntityGuid(),
-            'body' => $body,
-        ];
-
-        $prepared = new Prepared\Update();
-        $prepared->query($query);
-
-        return (bool) $this->es->request($prepared);
+        return (bool) $this->cql->request($prepared);
     }
 
 }

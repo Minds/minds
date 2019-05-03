@@ -8,12 +8,15 @@ use Minds\Core\Reports\UserReport;
 use Minds\Traits\MagicAttributes;
 
 /**
+ * Class Report
  * @method Report getEntityGuid(): long
  * @method Report getReports(): []
  * @method Report getEntity(): Entity
  * @method Report isAppeal(): boolean
  * @method Report getInitialJuryDecisions: []
  * @method Report getAppealJuryDecisions: []
+ * @method Report getReasonCode(): int
+ * @method Report getSubReasonCode(): int
  */
 class Report
 {
@@ -22,11 +25,17 @@ class Report
     /** @var long $entityGuid  */
     private $entityGuid;
 
+    /** @var string $entityUrn */
+    private $entityUrn;
+
     /** @var long $entityOwnerGuid */
     private $entityOwnerGuid;
 
     /** @var Entity $entity  */
     private $entity;
+
+    /** @var int $timestamp */
+    private $timestamp;
 
     /** @var array<UserReport> $reports */
     private $reports = [];
@@ -34,17 +43,11 @@ class Report
     /** @var array<Decisions> $initialJuryDecisions */
     private $initialJuryDecisions = [];
 
-    /** @var int $initialJuryDecidedTimestamp */
-    private $initialJuryDecidedTimestamp;
-
     /** @var array<Decisions> $appealJuryDecisions */
     private $appealJuryDecisions = [];
 
-    /** @var int $appealJuryDecidedTimestamp */
-    private $appealJuryDecidedTimestamp;
-
-    /** @var string $action */
-    private $action;
+    /** @var boolean $uphold */
+    private $uphold;
 
     /** @var boolean $appeal */
     private $appeal = false;
@@ -55,38 +58,25 @@ class Report
     /** @var string $appealNote */
     private $appealNote = '';
 
-    /**
-     * Return the reason code
-     * @return int | null
-     */
-    public function getReasonCode()
-    {
-        if (!$this->reports) {
-            return null;
-        }
-        $reason_codes = [];
-        foreach ($this->reports as $report) {
-            $reason_codes[$report->getReasonCode()] = ($reason_codes[$report->getReasonCode()] ?? 0) + 1;
-        }
-        arsort($reason_codes);
-        return (int) key($reason_codes);
-    }
+    /** @var int $reasonCode */
+    private $reasonCode;
+
+    /** @var int $subReasonCode */
+    private $subReasonCode;
 
     /**
-     * Return the sub reason code
-     * @return int | null
+     * Return the URN of this case
+     * @return string
      */
-    public function getSubReasonCode()
+    public function getUrn()
     {
-        if (!$this->reports) {
-            return null;
-        }
-        $sub_reason_codes = [];
-        foreach ($this->reports as $report) {
-            $sub_reason_codes[$report->getSubReasonCode()] = ($sub_reason_codes[$report->getSubReasonCode()] ?? 0) + 1;
-        }
-        arsort($sub_reason_codes);
-        return (int) key($sub_reason_codes);
+        $parts = [
+            "({$this->getEntityUrn()})",
+            $this->getReasonCode(),
+            $this->getSubReasonCode(),
+            $this->getTimestamp(),
+        ];
+        return "urn:report:" . implode('-', $parts);
     }
 
     /**
@@ -95,6 +85,7 @@ class Report
     public function export()
     {
         $export = [
+            'urn' => $this->getUrn(),
             'entity_guid' => $this->entityGuid,
             'entity' => $this->entity ? $this->entity->export() : null,
             /*'reports' => $this->reports ? array_map(function($report){

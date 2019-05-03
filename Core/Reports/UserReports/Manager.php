@@ -14,16 +14,23 @@ use Minds\Entities\NormalizedEntity;
 
 class Manager
 {
-
     /** @var Repository $repository */
     private $repository;
+
+    /** @var ElasticRepository $elasticRepository */
+    private $elasticRepository;
 
     /** @var Delegates\NotificationDelegate $notificationDelegate */
     private $notificationDelegate;
 
-    public function __construct($repository = null, $notificationDelegate = null)
+    public function __construct(
+        $repository = null,
+        $elasticRepository = null,
+        $notificationDelegate = null
+    )
     {
         $this->repository = $repository ?: new Repository;
+        $this->elasticRepository = $elasticRepository ?: new ElasticRepository;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
@@ -37,7 +44,7 @@ class Manager
             'hydrate' => false,
         ], $opts);
 
-        return $this->repository->getList($opts);
+        return $this->elasticRepository->getList($opts);
     }
 
     /**
@@ -48,6 +55,7 @@ class Manager
     public function add(UserReport $report)
     {
         $this->repository->add($report);
+        $this->elasticRepository->add($report);
         $this->notificationDelegate->onAction($report);
         return true;
     }

@@ -2,58 +2,56 @@
 
 namespace Spec\Minds\Core\Reports\UserReports;
 
-use Minds\Core\Reports\UserReports\Repository;
+use Minds\Core\Reports\UserReports\ElasticRepository;
 use Minds\Core\Reports\UserReports\UserReport;
 use Minds\Core\Reports\Report;
-use Minds\Core\Data\Cassandra\Client;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Minds\Core\Data\ElasticSearch\Client;
 
-class RepositorySpec extends ObjectBehavior
+class ElasticRepositorySpec extends ObjectBehavior
 {
-    private $cql;
+    private $es;
 
-    function let(Client $cql)
+    function let(Client $es)
     {
-        $this->beConstructedWith($cql);
-        $this->cql = $cql;
+        $this->beConstructedWith($es);
+        $this->es = $es;
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(Repository::class);
+        $this->shouldHaveType(ElasticRepository::class);
     }
 
     function it_should_add_a_report(UserReport $report)
     {
         $ts = (int) microtime(true);
-        $this->cql->request(Argument::that(function($prepared) use ($ts) {
+        $this->es->request(Argument::that(function($prepared) use ($ts) {
                 $query = $prepared->build();
-                $values = $query['values'];
-
-                return $values[0]->value() == 456
-                    && $values[1]->value() == 'hash'
-                    && $values[2] === 'urn:activity:123'
-                    && $values[3]->value() == 2
-                    && $values[4]->value() == 4
-                    && $values[5]->time() == $ts;
+                $params = $query['body']['script']['params']['report'];
+                return $params[0]['reporter_guid'] === 456
+                    && $params[0]['reason'] === 2
+                    && $params[0]['sub_reason'] === 4
+                    && $params[0]['@timestamp'] === $ts
+                    && $query['body']['upsert']['entity_guid'] === 123
+                    && $query['id'] === 123;
             }))
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $report->getTimestamp()
+            ->shouldBeCalled()
+            ->willReturn($ts);
+
         $report->getReport()
             ->shouldBeCalled()
             ->willReturn((new Report)
-                ->setEntityUrn("urn:activity:123")
-                ->setTimestamp($ts));
+                ->setEntityGuid(123));
         
         $report->getReporterGuid()
             ->shouldBeCalled()
             ->willReturn(456);
-        
-        $report->getReporterHash()
-            ->shouldBeCalled()
-            ->willReturn('hash');
 
         $report->getReasonCode()
             ->shouldBeCalled()
