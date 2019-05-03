@@ -162,7 +162,6 @@ class AutoReporter
         $time = $time ?: round(microtime(true) * 1000);
         //Build up a list of reasons to flag unique words in the post
         if (isset($entity['message'])) {
-            error_log('message');
             $this->evaluateText($entity['message'], $reasons);
         }
         //Remove reasons that the user has already tagged
@@ -173,10 +172,11 @@ class AutoReporter
         if (count($reasons) > 0) {
             $scorer = new ReasonScorer($reasons);
             $scoredReason = $scorer->score();
-            error_log($scoredReason->getWeight());
             if ($scoredReason && $scoredReason->getWeight() >= AutoReporter::REPORT_THRESHOLD) {
                 $this->report($entity, $scoredReason, $time);
-                $this->cast($entity, $time);
+                if ($this->config->get('steward_autoconfirm')) {
+                    $this->cast($entity, $time);
+                }
             }
 
             return $scoredReason;

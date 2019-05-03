@@ -10,6 +10,7 @@ use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Core\Reports;
 use Minds\Core\Steward\Reason;
+use Minds\Core\Reports\Jury\Decision;
 use Prophecy\Argument;
 
 class AutoReporterSpec extends ObjectBehavior
@@ -38,6 +39,7 @@ class AutoReporterSpec extends ObjectBehavior
 
         $this->stewardUser = $stewardUser;
         $this->config->get('steward_guid')->willReturn(123);
+        $this->config->get('steward_autoconfirm')->willReturn(null);
         $this->entitiesBuilder->single(123)->willReturn($stewardUser);
         $this->beConstructedWith($this->config,
             $this->entitiesBuilder,
@@ -51,8 +53,9 @@ class AutoReporterSpec extends ObjectBehavior
         $this->shouldHaveType(AutoReporter::class);
     }
 
-    public function it_should_report_a_bad_word()
+    public function it_should_report_a_bad_word_and_cast_a_decision()
     {
+        $this->config->get('steward_autoconfirm')->willReturn(true);
         $entity = (new Entity())
             ->set('guid', 456)
             ->set('owner_guid', 789)
@@ -69,7 +72,19 @@ class AutoReporterSpec extends ObjectBehavior
             ->setSubReasonCode(Reason::REASON_NSFW_RACE)
             ->setTimestamp(1);
 
+        $decision = (new Decision())
+                ->setAppeal(null)
+                ->setAction('uphold')
+                ->setReport($report)
+                ->setTimestamp(1)
+                ->setJurorGuid($this->stewardUser->guid)
+                ->setJurorHash(null);
+
         $this->reportManager->add($autoReport)->shouldBeCalled();
+        $this->moderationManager->getReport($entity->guid)
+            ->shouldBeCalled()->willReturn($report);
+
+        $this->juryManager->cast($decision)->shouldBeCalled();
         $scoredReason = $this->validate($entity, 1)->getWrappedObject();
         expect($scoredReason->getReasonCode())->toEqual(Reason::REASON_NSFW);
         expect($scoredReason->getSubreasonCode())->toEqual(Reason::REASON_NSFW_RACE);
