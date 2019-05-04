@@ -175,7 +175,7 @@ class newsfeed implements Interfaces\Api
             try {
                 $limit = isset($_GET['access_token']) && $_GET['offset'] ? 2 : 1;
                 //$limit = 2;
-                $cacher = Core\Data\cache\factory::build('apcu');
+                $cacher = Core\Data\cache\factory::build('Redis');
                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');
 
                 /** @var Core\Boost\Network\Iterator $iterator */

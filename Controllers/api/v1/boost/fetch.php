@@ -65,7 +65,7 @@ class fetch implements Interfaces\Api
             ->setPriority(true);
 
         if (isset($_GET['rating']) && $pages[0] == 'newsfeed') {
-            $cacher = Core\Data\cache\factory::build('apcu');
+            $cacher = Core\Data\cache\factory::build('Redis');
             $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');
             $iterator->setOffset($offset);
         }
