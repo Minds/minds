@@ -42,6 +42,8 @@ class Group extends NormalizedEntity
     protected $rating = 1;
     protected $videoChatDisabled = 0; // enable by default
     protected $pinned_posts = [];
+    protected $nsfw = [];
+    protected $nsfw_lock = [];
 
     protected $exportableDefaults = [
         'guid',
@@ -102,6 +104,8 @@ class Group extends NormalizedEntity
             'mature' => $this->mature,
             'videoChatDisabled' => $this->videoChatDisabled,
             'pinned_posts' => $this->pinned_posts,
+            'nsfw' => $this->getNSFW(),
+            'nsfw_lock' => $this->getNSFWLock()
         ]);
 
         if (!$saved) {
@@ -733,6 +737,77 @@ class Group extends NormalizedEntity
         return $this->rating;
     }
 
+     /**
+     * Get NSFW options
+     * @return array
+     */
+    public function getNsfw()
+    {
+        $array = [];
+        if (!$this->nsfw) {
+            return $array;
+        }
+        foreach ($this->nsfw as $reason) {
+            $array[] = (int) $reason;
+        }
+        return $array;
+    }
+
+    /**
+     * Set NSFW tags
+     * @param array $array
+     * @return $this
+     */
+    public function setNsfw($array)
+    {
+        $array = array_unique($array);
+        foreach ($array as $reason) {
+            if ($reason < 1 || $reason > 6) {
+                throw \Exception('Incorrect NSFW value provided');
+            }
+        }
+        $this->nsfw = $array;
+        return $this;
+    }
+	
+    /**
+     * Get NSFW Lock options.
+     *
+     * @return array
+     */
+    public function getNsfwLock()
+    {
+        $array = [];
+        if (!$this->nsfwLock) {
+            return $array;
+        }
+        foreach ($this->nsfwLock as $reason) {
+            $array[] = (int) $reason;
+        }
+
+        return $array;
+    }
+	
+    /**
+     * Set NSFW lock tags for administrators. Users cannot remove these themselves.
+     *
+     * @param array $array
+     *
+     * @return $this
+     */
+    public function setNsfwLock($array)
+    {
+        $array = array_unique($array);
+        foreach ($array as $reason) {
+            if ($reason < 1 || $reason > 6) {
+                throw \Exception('Incorrect NSFW value provided');
+            }
+        }
+        $this->nsfwLock = $array;
+
+        return $this;
+    }
+
     /**
      * Public facing properties export
      * @param  array  $keys
@@ -752,6 +827,8 @@ class Group extends NormalizedEntity
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['mature'] = (bool) $this->getMature();
         $export['rating'] = (int) $this->getRating();
+        $export['nsfw'] = $this->getNSFW();
+        $export['nsfw_lock'] = $this->getNSFWLock();
         $userIsAdmin = Core\Session::isAdmin();
 
         $export['pinned_posts'] = $this->getPinnedPosts();
