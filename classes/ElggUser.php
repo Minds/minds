@@ -340,16 +340,21 @@ class ElggUser extends ElggEntity
 	 */
     public function isAdmin() {
 
-        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
+        $config = Minds\Core\Di\Di::_()->get('Config');
 
-        if (!$ip) {
-            return false;
-        }
+        if ($config->get('development_mode') !== true) {
 
-        $whitelist = Minds\Core\Di\Di::_()->get('Config')->get('admin_ip_whitelist');
+            $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
 
-        if (!$whitelist || !in_array($ip, $whitelist)) {
-            return false;
+            if (!$ip) {
+                return false;
+            }
+
+            $whitelist = Minds\Core\Di\Di::_()->get('Config')->get('admin_ip_whitelist');
+
+            if (!$whitelist || !in_array($ip, $whitelist)) {
+                return false;
+            }
         }
 
         // for backward compatibility we need to pull this directly
