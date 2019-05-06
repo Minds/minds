@@ -2,7 +2,7 @@
 namespace Minds\Core\Reports\Jury;
 
 use Cassandra;
-
+use Cassandra\Type;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
@@ -10,6 +10,7 @@ use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Core\Reports\Report;
 use Minds\Common\Repository\Response;
 use Minds\Core\Reports\Repository as ReportsManager;
 
@@ -63,21 +64,20 @@ class Repository
         $response = new Response;
 
         foreach ($result as $row) {
-            if (in_array($opts['user']->getPhoneNumberHash(), array_map($row['user_hashes']->values(), function ($hash) {
-                return $hash->value();
-            }))) {
+            if (in_array($opts['user']->getPhoneNumberHash(), 
+                    array_map(function ($hash) {
+                        return $hash;
+                    }, $row['user_hashes']->values())
+                )
+            ) {
                 continue; // Already interacted with
             }
 
             $report = new Report();
             $report->setEntityUrn($row['entity_urn'])
                 ->setReasonCode($row['reason_code']->value())
-                ->setSubReasonCode($row['sub_reason-code']->value());
+                ->setSubReasonCode($row['sub_reason_code']->value());
                 
-            $response[] = $this->reportsManager->buildFromRow($row);
-        }
-
-        foreach ($reports as $report) {
             $response[] = $report;
         }
 
@@ -91,44 +91,36 @@ class Repository
      */
     public function add(Decision $decision)
     {
-        $juryType = $decision->isAppeal() ? 'appeal_jury' : 'initial_jury';
-        $body = [
-            'script' => [
-                'inline' => "if (ctx._source.$juryType === null) { 
-                        ctx._source.$juryType = [];
-                    } 
-                    ctx._source.$juryType.add(params.decision)",
-                'lang' => 'painless',
-                'params' => [
-                    'decision' => [
-                        [
-                            '@timestamp' => (int) $decision->getTimestamp(), // In MS
-                            'juror_guid' => (int) $decision->getJurorGuid(),
-                            'juror_hash' => (string) $decision->getJurorHash(),
-                            //'accepted' => true,
-                            'action' => $decision->getAction(),
-                        ],
-                    ],
-                ],
-            ],
-            'scripted_upsert' => true,
-            'upsert' => [
-                'entity_guid' => $decision->getReport()->getEntityGuid(),
-                $juryType => [],
-            ],
+        $statement = "UPDATE moderation_reports
+            SET initial_jury += ?
+            SET user_hashes += ?
+            WHERE entity_urn = ?
+            AND reason_code = ?
+            AND sub_reason_code = ?";
+
+        if ($decision->isAppeal()) {
+            $statement = "UPDATE moderation_reports
+                SET appeal_jury += ?
+                SET user_hashes += ?
+                WHERE entity_urn = ?
+                AND reason_code = ?
+                AND sub_reason_code = ?";
+        }
+
+        $params = [
+            (new Type\Map(Type::bigint(), Type::boolean()))
+                ->set($decision->getJurorGuid(), $decision->isAccepted()),
+            (new Type\Set(Type::text()))
+                ->set($decision->getJurorHash()),
+            $decision->getReport()->getEntityUrn(),
+            (float) $decision->getReport()->getReasonCode(),
+            (float) $decision->getReport()->getSubReasonCode(),
         ];
 
-        $query = [
-            'index' => 'minds-moderation',
-            'type' => 'reports',
-            'id' => $decision->getReport()->getEntityGuid(),
-            'body' => $body,
-        ];
+        $prepared = new Prepared();
+        $prepared->query($statement, $params);
 
-        $prepared = new Prepared\Update();
-        $prepared->query($query);
-
-        return (bool) $this->es->request($prepared);
+        return (bool) $this->cql->request($prepared);
     }
 
 }

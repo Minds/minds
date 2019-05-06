@@ -187,6 +187,30 @@ class Mock
     }
 }
 
+class MockMap
+{
+    private $keyType;
+    private $valueType;
+    private $kv;
+
+    public function __construct($keyType, $valueType)
+    {
+        $this->keyType = $keyType;
+        $this->valueType = $valueType;
+    }
+
+    public function set($key, $value)
+    {
+        $this->kv[$key] = $value;
+        return $this;
+    }
+
+    public function values()
+    {
+        return $this->kv;
+    }
+}
+
 if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra');
     class_alias('Mock', 'Cassandra\ExecutionOptions');
@@ -194,7 +218,7 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Timestamp');
     class_alias('Mock', 'Cassandra\Type');
     class_alias('Mock', 'Cassandra\Type\Set');
-    class_alias('Mock', 'Cassandra\Type\Map');
+    class_alias('MockMap', 'Cassandra\Type\Map');
     class_alias('Mock', 'Cassandra\Decimal');
     class_alias('Mock', 'Cassandra\Bigint');
     class_alias('Mock', 'Cassandra\Float_');
