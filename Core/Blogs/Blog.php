@@ -220,7 +220,9 @@ class Blog extends RepositoryEntity
     protected $_tags = [];
 
     /** @var array */
-    protected $_nsfw = [];
+    protected $nsfw = [];
+
+    protected $nsfwLock = [];
 
     /**
      * Blog constructor.
@@ -444,7 +446,28 @@ class Blog extends RepositoryEntity
         return $this;
     }
 
-    public function setNsfw($array = [])
+   /**
+     * Get NSFW options
+     * @return array
+     */
+    public function getNsfw()
+    {
+        $array = [];
+        if (!$this->nsfw) {
+            return $array;
+        }
+        foreach ($this->nsfw as $reason) {
+            $array[] = (int) $reason;
+        }
+        return $array;
+    }
+
+    /**
+     * Set NSFW tags
+     * @param array $array
+     * @return $this
+     */
+    public function setNsfw($array)
     {
         $array = array_unique($array);
         foreach ($array as $reason) {
@@ -452,14 +475,46 @@ class Blog extends RepositoryEntity
                 throw \Exception('Incorrect NSFW value provided');
             }
         }
-        $this->_nsfw = $array;
-        $this->markAsDirty('nsfw');
-        return $this; 
+        $this->nsfw = $array;
+        return $this;
     }
-
-    public function getNsfw()
+	
+    /**
+     * Get NSFW Lock options.
+     *
+     * @return array
+     */
+    public function getNsfwLock()
     {
-        return $this->_nsfw ?? [];
+        $array = [];
+        if (!$this->nsfwLock) {
+            return $array;
+        }
+        foreach ($this->nsfwLock as $reason) {
+            $array[] = (int) $reason;
+        }
+
+        return $array;
+    }
+	
+    /**
+     * Set NSFW lock tags for administrators. Users cannot remove these themselves.
+     *
+     * @param array $array
+     *
+     * @return $this
+     */
+    public function setNsfwLock($array)
+    {
+        $array = array_unique($array);
+        foreach ($array as $reason) {
+            if ($reason < 1 || $reason > 6) {
+                throw \Exception('Incorrect NSFW value provided');
+            }
+        }
+        $this->nsfwLock = $array;
+
+        return $this;
     }
 
     /**
@@ -504,6 +559,7 @@ class Blog extends RepositoryEntity
             'ownerObj',
             'tags',
             'nsfw',
+            'nsfw_lock',
             function ($export) {
                 return $this->_extendExport($export);
             }
@@ -529,6 +585,7 @@ class Blog extends RepositoryEntity
         $output['category'] = $this->getCategories() ? $this->getCategories()[0] : '';
         $output['tags'] = $this->getTags();
         $output['nsfw'] = $this->getNsfw();
+        $output['nsfw_lock'] = $this->getNsfwLock();
         $output['header_bg'] = $export['has_header_bg'];
 
         if (!$this->isEphemeral()) {

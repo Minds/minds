@@ -266,6 +266,7 @@ class Activity extends Entity
         $export['boost_rejection_reason'] = $this->getBoostRejectionReason() ?: -1;
         $export['rating'] = $this->getRating();
         $export['ephemeral'] = $this->getEphemeral();
+        $export['ownerObj'] = $this->getOwnerObj();
 
         switch($this->custom_type) {
             case 'video':
@@ -675,4 +676,15 @@ class Activity extends Entity
         $this->boost_rejection_reason = (int) $reason;
         return $this;
     }
+
+    public function getOwnerObj()
+    {
+        if (!$this->ownerObj && $this->owner_guid) {
+            $user = new User($this->owner_guid);
+            $this->ownerObj = $user->export();
+        }
+
+        return $this->ownerObj;
+    }
+
 }

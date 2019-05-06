@@ -100,6 +100,9 @@ class ElggUser extends ElggEntity
 	protected function load($guid) {
 
 		foreach($guid as $k => $v){
+            if ($this->isJson($v)) {
+                $v = json_decode($v, true);
+            }
 			$this->attributes[$k] = $v;
 		}
 
@@ -116,7 +119,8 @@ class ElggUser extends ElggEntity
 		}
 
 		if($this->cache && $cached = retrieve_cached_entity($guid)){
-			$this->load($cached);
+            $this->load($cached);
+            $this->guid = $guid;
 			return true;
 		}
 
