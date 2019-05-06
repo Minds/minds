@@ -147,12 +147,13 @@ class Iterator implements \Iterator
 
         $return = [];
         $i = 0;
+        $declareOffsetFrom = $this->limit >= 2 ? 2 : 1;
         foreach ($boosts as $boost) {
             if (count($return) >= $this->limit) {
                 break;
             }
 
-            if (++$i === 2) {
+            if (++$i === $declareOffsetFrom) {
                 $boosts->setPagingToken($boost->getCreatedTimestamp());
             }
 
