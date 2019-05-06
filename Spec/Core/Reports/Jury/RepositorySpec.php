@@ -77,7 +77,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn('0xqj1');
 
-        $decision->isAccepted()
+        $decision->isUpheld()
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -119,7 +119,7 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn('0xqj1');
 
-        $decision->isAccepted()
+        $decision->isUpheld()
             ->shouldBeCalled()
             ->willReturn(true);
 

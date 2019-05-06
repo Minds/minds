@@ -12,7 +12,7 @@ use Minds\Traits\MagicAttributes;
  * @method Report getJurorHash(): string
  * @method Report isAppeal(): boolean
  * @method Report getAction(): string
- * @method Report isAccepted(): boolean
+ * @method Report isUphold(): boolean
  * @method Report getTimestamp: int
  */
 class Decision
@@ -37,8 +37,16 @@ class Decision
     /** @var string $action */
     private $action;
 
-    /** @var boolean $accepted */
-    private $accepted;
+    /** @var boolean $uphold */
+    private $uphold;
+
+    /**
+     * Is Upheld
+     */
+    public function isUpheld()
+    {
+        return $this->uphold;
+    }
 
     /**
      * @return array

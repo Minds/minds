@@ -109,7 +109,7 @@ class Repository
 
         $params = [
             (new Type\Map(Type::bigint(), Type::boolean()))
-                ->set($decision->getJurorGuid(), $decision->isAccepted()),
+                ->set($decision->getJurorGuid(), $decision->isUpheld()),
             (new Type\Set(Type::text()))
                 ->set($decision->getJurorHash()),
             $decision->getReport()->getEntityUrn(),
