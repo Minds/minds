@@ -7,6 +7,7 @@ namespace Minds\Core\Reports\Verdict\Delegates;
 use Minds\Core\Di\Di;
 use Minds\Core\Reports\Verdict\Verdict;
 use Minds\Core\Events\EventsDispatcher;
+use Minds\Common\Urn;
 
 class NotificationDelegate
 {
@@ -16,33 +17,40 @@ class NotificationDelegate
     /** @var EntitiesBuilder $entitiesBuilder */
     protected $entitiesBuilder;
 
-    public function __construct($dispatcher = null, $entitiesBuilder = null)
+    /** @var Urn $urn */
+
+    public function __construct($dispatcher = null, $entitiesBuilder = null, $urn = null)
     {
         $this->dispatcher = $dispatcher ?: Di::_()->get('EventsDispatcher');
         $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
+        $this->urn = $urn ?: new Urn;
     }
 
+    /**
+     * Actioned notification
+     * @param Verdict $verdict
+     * @return void
+     */
     public function onAction(Verdict $verdict)
     {
-        $entityGuid = $verdict->getReport()->getEntityGuid();
+        $entityUrn = $verdict->getReport()->getEntityUrn();
+        $entityGuid = $this->urn->setUrn($entityUrn)->getNss();
+
         $entity = $this->entitiesBuilder->single($entityGuid);
 
-        $readableAction = 'removed';
+        if ($verdict->isUpheld()) {
+            $readableAction = 'removed';
 
-        switch ($verdict->getAction()) {
-            case '2.1':
-            case '2.2':
-            case '2.3':
-            case '2.4':
-            case '2.5':
-                $readableAction = 'marked as nsfw';
-                break;
-            case 'overturn':
-                if (!$verdict->getReport()->isAppeal()) {
-                    return;
-                }
-                $readableAction = 'restored';
-                break;
+            switch ($verdict->getReport()->getReasonCode()) {
+                case 2:
+                    $readableAction = 'marked as nsfw';
+                    break;
+            }
+        } else {
+            $readableAction = 'restored';
+            if (!$verdict->getReport()->isAppeal()) {
+                return; // Not notifiable
+            }
         }
 
         if ($verdict->getReport()->isAppeal()) {

@@ -7,6 +7,7 @@ namespace Minds\Core\Reports\Verdict\Delegates;
 use Minds\Core\Security\ACL;
 use Minds\Core\Reports\Verdict\Verdict;
 use Minds\Core\Di\Di;
+use Minds\Common\Urn;
 
 class ActionDelegate
 {
@@ -16,43 +17,74 @@ class ActionDelegate
     /** @var Actions $actions */
     private $actions;
 
+    /** @var Urn $urn */
+    private $urn;
+
     public function __construct(
         $entitiesBuilder = null,
-        $actions = null
+        $actions = null,
+        $urn = null
     )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
         $this->actions = $actions ?: Di::_()->get('Reports\Actions');
+        $this->urn = $urn ?: new Urn;
     }
 
     public function onAction(Verdict $verdict)
     {
+        $report = $verdict->getReport();
+
         // Disable ACL 
         ACL::$ignore = true;
-        $entityGuid = $verdict->getReport()->getEntityGuid();
+        $entityUrn = $verdict->getReport()->getEntityUrn();
+        $entityGuid = $this->urn->setUrn($entityUrn)->getNss();
 
         $entity = $this->entitiesBuilder->single($entityGuid);
 
-        switch ($verdict->getAction()) {
-            case '1.1':
-            case '1.2': // Should be fully removed?
-            case '1.3':
-            case '1.4':
+        switch ($report->getReasonCode()) {
+            case 1: // Illegal (not appealable)
                 $this->actions->setDeletedFlag($entity, true);
+                // TODO: ban the owner of the post too
                 break;
-            case '2.1':
-            case '2.2':
-            case '2.4':
-                //Mark as explicit
-                $nsfw = explode('.', $verdict->getAction())[1];
-                $entity->setNsfw([$nsfw]);
+            case 2: // NSFW
+                $nsfw = $report->getSubReasonCode();
+                $entity->setNsfw(array_merge([$nsfw], $entity->getNsfw()));
                 $entity->save();
+                // Apply a strike to the owner
                 break;
-            case 'uphold':
-            case 'overturn':
-                break;
-            default: //Remove is the default
+            case 3: // Incites violence
                 $this->actions->setDeletedFlag($entity, true);
+                // Apply a strike to the owner
+                break;
+            case 4:  // Threatens, harasses or bullies
+                $this->actions->setDeletedFlag($entity, true);
+                // Apply a strike to the owner
+                break;
+            case 5: // Personal and confidential information (not appelable)
+                $this->actions->setDeletedFlag($entity, true);
+                // Ban the owner of the post too
+                break;
+            case 7: // Impersonates
+                // Ban
+                break;
+            case 8: // Spam
+                $this->actions->setDeletedFlag($entity, true);
+                // Apply a strike to the owner
+                break;
+            case 12: // Incorrect use of hashtags
+                // De-index post
+                // Apply a strike to the owner
+                break;
+            case 13: // Malware
+                $this->actions->setDeletedFlag($entity, true);
+                // Ban the owner
+                break;
+            case 14: // Strikes
+                // Ban the user
+                break;
+            case 16: // Token manipulation
+                // Ban
                 break;
         }
 

@@ -84,64 +84,63 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBe(null);
     }
 
-    function it_should_return_the_verdict_action_as_explicit(Verdict $verdict)
+    function it_should_return_the_verdict_action_as_upheld_for_initial_jury(Verdict $verdict, Report $report)
     {
-        $report = new Report();
-        $verdict->getReport()
-            ->willReturn($report);
-
-        $verdict->isAppeal()
+        $report->isAppeal()
             ->shouldBeCalled()
             ->willReturn(false);
+
+        $verdict->getReport()
+            ->willReturn($report);
 
         $verdict->getDecisions()
             ->shouldBeCalled()
             ->willReturn([
                 (new Decision)
-                    ->setAction('2.2'),
+                    ->setUphold(true),
             ]);
 
-        $this->getAction($verdict)
-            ->shouldBe('2.2');
+        $this->isUpheld($verdict)
+            ->shouldBe(true);
     }
 
-    function it_should_return_the_appeal_verdict_action_as_explicit()
+    function it_should_return_the_appeal_verdict_action_as_upheld()
     {
         $report = new Report();
         $report->setAppeal(true);
 
         $report->setAppealJuryDecisions([
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
             ]);
 
         $verdict = new Verdict;
         $verdict->setReport($report);
 
-        $this->getAction($verdict)
-            ->shouldBe('uphold');
+        $this->isUpheld($verdict)
+            ->shouldBe(true);
     }
 
     function it_should_return_the_appeal_verdict_action_as_overturned()
@@ -151,36 +150,36 @@ class ManagerSpec extends ObjectBehavior
 
         $report->setAppealJuryDecisions([
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
             ]);
 
         $verdict = new Verdict;
         $verdict->setReport($report);
 
-        $this->getAction($verdict)
-            ->shouldBe('overturn');
+        $this->isUpheld($verdict)
+            ->shouldBe(false);
     }
 
     function it_should_return_the_appeal_verdict_action_as_null()
@@ -190,15 +189,15 @@ class ManagerSpec extends ObjectBehavior
 
         $report->setAppealJuryDecisions([
                 (new Decision)
-                    ->setAction('uphold'),
+                    ->setUphold(true),
                 (new Decision)
-                    ->setAction('overturn'),
+                    ->setUphold(false),
             ]);
 
         $verdict = new Verdict;
         $verdict->setReport($report);
 
-        $this->getAction($verdict)
+        $this->isUpheld($verdict)
             ->shouldBe(null);
     }
 

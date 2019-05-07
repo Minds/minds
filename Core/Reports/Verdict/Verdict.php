@@ -10,7 +10,7 @@ use Minds\Traits\MagicAttributes;
  * @method Report getReport(): Report
  * @method Report getDecisions(): array<Decision>
  * @method Report isAppeal(): boolean
- * @method Report isAccepted(): boolean
+ * @method Report isUphold(): boolean
  * @method Report getAction(): string
  * @method Report getInitialJuryAction(): string
  * @method Report getTimestamp: int
@@ -25,8 +25,8 @@ class Verdict
     /** @var Report $report */
     private $report;
 
-    /** @var boolean $accept */
-    private $accepted = false;
+    /** @var boolean $uphold */
+    private $uphold = false;
 
     /** @var string $action */
     private $action;
@@ -53,6 +53,15 @@ class Verdict
     public function isAppeal()
     {
         return (bool) $this->report->isAppeal();
+    }
+
+    /**
+     * Return if the report is upheld
+     * @return bool
+     */
+    public function isUpheld()
+    {
+        return $this->uphold;
     }
 
     /**

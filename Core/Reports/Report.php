@@ -10,6 +10,7 @@ use Minds\Traits\MagicAttributes;
 /**
  * Class Report
  * @method Report getEntityGuid(): long
+ * @method Report getEntityUrn(): string
  * @method Report getReports(): []
  * @method Report getEntity(): Entity
  * @method Report isAppeal(): boolean

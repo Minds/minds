@@ -34,16 +34,22 @@ class ActionDelegateSpec extends ObjectBehavior
     function it_should_apply_nsfw_flags(Entity $entity)
     {
         $report = new Report;
-        $report->setEntityGuid(123);
+        $report->setEntityUrn('urn:activity:123')
+            ->setReasonCode(2)
+            ->setSubReasonCode(1);
         $verdict = new Verdict;
         $verdict->setReport($report)
-            ->setAction('2.1');
+            ->setUphold(true);
 
         $this->entitiesBuilder->single(123)
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $entity->setNsfw([ 1 ])
+        $entity->getNsfw()
+            ->shouldBeCalled()
+            ->willReturn([ 2 ]);
+
+        $entity->setNsfw([ 1, 2 ])
             ->shouldBeCalled();
         $entity->save()
             ->shouldBeCalled();
@@ -54,7 +60,10 @@ class ActionDelegateSpec extends ObjectBehavior
     function it_should_removed_if_illegal(Entity $entity)
     {
         $report = new Report;
-        $report->setEntityGuid(123);
+        $report->setEntityUrn('urn:activity:123')
+            ->setReasonCode(1)
+            ->setSubReasonCode(1);
+
         $verdict = new Verdict;
         $verdict->setReport($report)
             ->setAction('1.2');
@@ -63,7 +72,8 @@ class ActionDelegateSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $this->actions->setDeletedFlag(Argument::type(Entity::class), true);
+        $this->actions->setDeletedFlag(Argument::type(Entity::class), true)
+            ->shouldBeCalled();
 
         $this->onAction($verdict);
     }
@@ -71,7 +81,9 @@ class ActionDelegateSpec extends ObjectBehavior
     function it_should_removed_if_spam(Entity $entity)
     {
         $report = new Report;
-        $report->setEntityGuid(123);
+        $report->setEntityUrn('urn:activity:123')
+            ->setReasonCode(4);
+
         $verdict = new Verdict;
         $verdict->setReport($report)
             ->setAction('4');
@@ -80,7 +92,8 @@ class ActionDelegateSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $this->actions->setDeletedFlag(Argument::type(Entity::class), true);
+        $this->actions->setDeletedFlag(Argument::type(Entity::class), true)
+            ->shouldBeCalled();
 
         $this->onAction($verdict);
     }

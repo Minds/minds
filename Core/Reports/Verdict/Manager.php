@@ -97,11 +97,11 @@ class Manager
      */
     public function decide($verdict)
     {
-        $action = $this->getAction($verdict);
-        $verdict->setAction($action);
+        $uphold = $this->isUpheld($verdict);
+        $verdict->setUphold($uphold);
         $verdict->setTimestamp(round(microtime(true) * 1000));
 
-        if (!$verdict->getAction()) {
+        if ($verdict->isUpheld() === null) {
             error_log("{$verdict->getReport()->getEntityGuid()} not actionable");
             return false;
         } else {
@@ -135,24 +135,21 @@ class Manager
      * @param Verdict $verdict
      * @return string
      */
-    public function getAction(Verdict $verdict)
+    public function isUpheld(Verdict $verdict)
     {
-        $requiredAction = $verdict->getReport()->isAppeal() ? 'uphold' : null;
-        $upheldCount = 0;
+        $upholdCount = 0;
+        $overturnCount = 0;
         $totalCount = 0;
         $jurySize = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_SIZE : static::INITIAL_JURY_SIZE;
-        $uphealdCountRequired = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
+        $overturnCountRequired = $verdict->getReport()->isAppeal() ? static::APPEAL_JURY_MAJORITY : static::INITIAL_JURY_MAJORITY;
 
         foreach ($verdict->getDecisions() as $decision) {
             $totalCount++;
 
-            if ($requiredAction && $requiredAction === $decision->getAction()) {
-                $upheldCount++;
-            }
-
-            if (!$verdict->isAppeal() && !$requiredAction) {
-                $upheldCount++;
-                $requiredAction = $decision->getAction();
+            if ($decision->isUpheld()) {
+                ++$upholdCount;
+            } else {
+                ++$overturnCount;
             }
         }
 
@@ -160,11 +157,11 @@ class Manager
             return null; // not ready yet
         }
 
-        if ($upheldCount >= $uphealdCountRequired) {
-            return $requiredAction;
+        if ($overturnCount >= $overturnCountRequired) {
+            return false;
         }
 
-        return 'overturn';
+        return true;
     }
 
 }

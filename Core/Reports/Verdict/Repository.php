@@ -6,7 +6,7 @@ use Cassandra;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
-use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Data\Cassandra\Prepared\Custom as Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
@@ -17,15 +17,15 @@ use Minds\Core\Reports\Repository as ReportsRepository;
 
 class Repository
 {
-    /** @var Data\ElasticSearch\Client $es */
-    protected $es;
+    /** @var Data\Cassandra\Client $cql */
+    protected $cql;
 
     /** @var ReportsRepository $reportsRepository */
     private $reportsRepository;
 
-    public function __construct($es = null, $reportsRepository = null)
+    public function __construct($cql = null, $reportsRepository = null)
     {
-        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
         $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
@@ -36,63 +36,7 @@ class Repository
      */
     public function getList(array $opts = [])
     {
-        $opts = array_merge([
-            'limit' => 12,
-            'offset' => '',
-            'state' => '',
-            'owner' => null,
-            'juryType' => 'initial',
-        ], $opts);
-
-        $must = [];
-        $must_not = [];
-
-        if ($opts['entity_guid']) {
-            $must[] = [
-                'match' => [
-                    'entity_guid' => $opts['entity_guid'],
-                ],
-            ];
-        }
-
-        if (!in_array($opts['juryType'], [ 'initial', 'appeal' ])) {
-            throw new \Exception('Jury type must be initial or appeal');
-        }
-
-        if ($opts['juryType'] === 'initial') {
-            $must_not[] = [
-                'exists' => [
-                    'field' => '@initial_jury_decided_timestamp',
-                ],
-            ];
-        } else {
-            $must[] = [
-                'exists' => [
-                    'field' => '@initial_jury_decided_timestamp',
-                ],
-            ];
-            $must_not[] = [
-                'exists' => [
-                    'field' => '@appeal_jury_decided_timestamp',
-                ],
-            ];
-        }
-
-        $response = new Response;
-
-        $opts['must'] = $must;
-        $opts['must_not'] = $must_not;
-
-        $reports = $this->reportsRepository->getList($opts);
-
-        foreach ($reports as $report) {
-            $verdict = new Verdict();
-            $verdict->setReport($report);
-
-            $response[] = $verdict;
-        }
-
-        return $response;
+        return new Response;
     }
 
     /**
@@ -101,17 +45,6 @@ class Repository
      */
     public function get($entity_guid)
     {
-        $response = $this->getList([
-            'entity_guid' => $entity_guid,
-        ]);
-
-        if ($response[0] 
-            && $response[0]->getReport()
-            && $response[0]->getReport()->getEntityGuid() == $entity_guid
-        ) {
-            return $response[0];
-        }
-
         return null;
     }
 
@@ -122,56 +55,24 @@ class Repository
      */
     public function add(Verdict $verdict)
     {
-        $reportStage = $verdict->isAppeal() ? 'appeal_jury_' : 'initial_jury_';
-        $body = [
-            'doc' => [
-                "@{$reportStage}decided_timestamp" => (int) $verdict->getTimestamp(),
-                $reportStage . 'action' => $verdict->getAction(),
-            ],
-            'doc_as_upsert' => true,
+
+        $statement = "UPDATE moderation_reports
+            SET state = ?
+            WHERE entity_urn = ?
+            AND reason_code = ?
+            AND sub_reason_code = ?";
+
+        $values = [
+            $verdict->isAppeal() ? 'appeal_jury_decided' : 'initial_jury_decided',
+            $verdict->getReport()->getEntityUrn(),
+            $verdict->getReport()->getReasonCode(),
+            $verdict->getReport()->getSubReasonCode(),
         ];
 
-        $query = [
-            'index' => 'minds-moderation',
-            'type' => 'reports',
-            'id' => $verdict->getReport()->getEntityGuid(),
-            'body' => $body,
-        ];
+        $prepared = new Prepared;
+        $prepared->query($statement, $values);
 
-        $prepared = new Prepared\Update();
-        $prepared->query($query);
-
-        return (bool) $this->es->request($prepared);
-    }
-
-    private function buildDecisions($row)
-    {
-        $jurorGuids = [];
-
-        $return = [];
-
-        $reports = $row['_source']['@initial_jury_decided_timestamp'] 
-            ? $row['_source']['appeal_jury']
-            : $row['_source']['initial_jury'];
-
-        foreach ($reports as $row) {
-            if (!isset($row[0]['action'])) {
-                continue; // Something didn't save properly
-            }
-            if (isset($jurorGuids[$row[0]['juror_guid']])) {
-                continue; // avoid duplicate reports
-            }
-            $jurorGuids[$row[0]['juror_guid']] = true; 
-
-            $decision = new Decision();
-            $decision
-                ->setTimestamp($row[0]['@timestamp'])
-                ->setEntityGuid($row['_source']['entity_guid'])
-                ->setJurorGuid($row[0]['juror_guid'])
-                ->setAction($row[0]['action']);
-            $return[] = $decision;
-        }
-        return $return;
+        return (bool) $this->cql->request($prepared);
     }
 
 }
