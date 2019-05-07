@@ -126,6 +126,11 @@ class Mock
         return (double) $this->a;
     }
 
+    public function toFloat()
+    {
+        return $this->a;
+    }
+
     public function value()
     {
         return (string) $this->a;

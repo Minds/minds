@@ -6,6 +6,14 @@ namespace Minds\Core\Reports\Strikes;
 
 use Minds\Traits\MagicAttributes;
 
+/**
+ * Class Strike
+ * @method Strike getUserGuid(): long
+ * @method Strike getTimestamp(): int
+ * @method Strike getReasonCode(): float
+ * @method Strike getSubReasonCode(): float
+ * @method Strike getReportUrn(): string
+ */
 class Strike
 {
     use MagicAttributes;
@@ -16,10 +24,10 @@ class Strike
     /** @var int $timestamp */
     private $timestamp;
 
-    /** @var int $reasonCode */
+    /** @var float $reasonCode */
     private $reasonCode;
 
-    /** @var int $subReasonCode */
+    /** @var float $subReasonCode */
     private $subReasonCode;
 
     /** @var string $reportUrn */
