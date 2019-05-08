@@ -26,4 +26,15 @@ class Queue
 
         return true;
     }
+
+    public function queueCleanup($entity)
+    {
+        Core\Queue\Client::build()
+            ->setQueue('SearchCleanupDispatcher')
+            ->send([
+                'entity' => serialize($entity)
+            ]);
+
+        return true;
+    }
 }

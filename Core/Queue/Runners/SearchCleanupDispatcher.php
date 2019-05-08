@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Search Index Dispatcher
+ * Search Index Cleanup
  *
  * @author emi
  */
@@ -13,7 +13,7 @@ use Minds\Core\Di\Di;
 use Minds\Core\Queue;
 use Minds\Core\Queue\Interfaces\QueueRunner;
 
-class SearchIndexDispatcher implements QueueRunner
+class SearchCleanupDispatcher implements QueueRunner
 {
     /**
      * Runs the queue
@@ -23,13 +23,15 @@ class SearchIndexDispatcher implements QueueRunner
         $client = Queue\Client::build();
 
         $client
-            ->setQueue("SearchIndexDispatcher")
+            ->setQueue("SearchCleanupDispatcher")
             ->receive(function (Queue\Message $message) {
                 /** @var Core\Events\Dispatcher $dispatcher */
                 $dispatcher = Di::_()->get('EventsDispatcher');
 
+                var_dump($message);
+
                 $data = $message->getData();
-                $dispatcher->trigger('search:index:dispatch', 'all', $data);
+                $dispatcher->trigger('search:cleanup:dispatch', 'all', $data);
             });
     }
 }

@@ -16,7 +16,7 @@ class Events
         /** @var Core\Events\Dispatcher $dispatcher */
         $dispatcher = Di::_()->get('EventsDispatcher');
 
-        // Index
+        // -- Indexing
 
         $dispatcher->register('search:index', 'all', function (Event $event) {
             try {
@@ -91,6 +91,81 @@ class Events
             }
         });
 
+        // -- Cleanup
+
+        $dispatcher->register('search:cleanup', 'all', function (Event $event) {
+            try {
+                $params = array_merge([
+                    'entity' => null,
+                    'immediate' => false
+                ], $event->getParameters());
+
+                if (!$params['entity']) {
+                    return;
+                }
+
+                /** @var Core\Events\Dispatcher $dispatcher */
+                $dispatcher = Di::_()->get('EventsDispatcher');
+
+                if ($params['immediate']) {
+                    $dispatcher->trigger('search:cleanup:dispatch', 'all', [
+                        'entity' => $params['entity']
+                    ]);
+                } else {
+                    $dispatcher->trigger('search:cleanup:queue', 'all', [
+                        'entity' => $params['entity']
+                    ]);
+                }
+
+            } catch (\Exception $e) {
+                error_log('[Search/Events/search:cleanup] ' . get_class($e) . ': ' . $e->getMessage());
+            }
+        });
+
+        // Queue cleanup
+
+        $dispatcher->register('search:cleanup:queue', 'all', function (Event $event) {
+            try {
+                $params = array_merge([
+                    'entity' => null
+                ], $event->getParameters());
+
+                if (!$params['entity']) {
+                    return;
+                }
+
+                Di::_()->get('Search\Queue')
+                    ->queueCleanup($params['entity']);
+
+            } catch (\Exception $e) {
+                error_log('[Search/Events/search:cleanup:queue] ' . get_class($e) . ': ' . $e->getMessage());
+            }
+        });
+
+        // Dispatch cleanup (sync or from queue)
+
+        $dispatcher->register('search:cleanup:dispatch', 'all', function (Event $event) {
+            try {
+                $params = array_merge([
+                    'entity' => null
+                ], $event->getParameters());
+
+                if (!$params['entity']) {
+                    return;
+                }
+
+                Di::_()->get('Search\Cleanup')
+                    ->prune(
+                        is_string($params['entity']) ?
+                            unserialize($params['entity']) :
+                            $params['entity']
+                    );
+
+            } catch (\Exception $e) {
+                error_log('[Search/Events/search:cleanup:dispatch] ' . get_class($e) . ': ' . $e->getMessage());
+            }
+        });
+
         // Minds hooks
 
         $entityLifecycleHook = function ($hook, $type, $entity, array $params = []) {
@@ -126,5 +201,41 @@ class Events
 
         $dispatcher->register('create', 'all', $entityLifecycleHook);
         $dispatcher->register('update', 'all', $entityLifecycleHook);
+
+        // Deletion Cleanup
+
+        $dispatcher->register('delete', 'all', function (Event $event) {
+            $params = $event->getParameters();
+            $entity = $params['entity'];
+
+            if (!$entity) {
+                return;
+            }
+
+            $allowedTypes = [
+                'activity',
+                'user',
+                'group',
+                'object:blog',
+                'object:image',
+                'object:album',
+                'object:video'
+            ];
+
+            $key = $entity->type;
+
+            if ($entity->subtype) {
+                $key .= ':' . $entity->subtype;
+            }
+
+            if (in_array($key, $allowedTypes)) {
+                /** @var Core\Events\Dispatcher $dispatcher */
+                $dispatcher = Di::_()->get('EventsDispatcher');
+
+                $dispatcher->trigger('search:cleanup', $key, [
+                    'entity' => $entity
+                ]);
+            }
+        });
     }
 }

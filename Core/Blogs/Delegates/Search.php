@@ -42,7 +42,7 @@ class Search
      */
     public function prune(Blog $blog)
     {
-        $this->eventsDispatcher->trigger('search:prune', 'object:blog', [
+        $this->eventsDispatcher->trigger('search:cleanup', 'object:blog', [
             'entity' => $blog,
         ]);
     }
