@@ -24,23 +24,35 @@ class ManagerSpec extends ObjectBehavior
     /** @var Delegates\Feeds */
     protected $feeds;
 
+    /** @var Spam */
+    protected $spam;
+
+    /** @var Delegates\Search */
+    protected $search;
+
     function let(
         Repository $repository,
         Delegates\PaywallReview $paywallReview,
         Delegates\Slug $slug,
-        Delegates\Feeds $feeds
+        Delegates\Feeds $feeds,
+        Spam $spam,
+        Delegates\Search $search
     ) {
         $this->beConstructedWith(
             $repository,
             $paywallReview,
             $slug,
-            $feeds
+            $feeds,
+            $spam,
+            $search
         );
 
         $this->repository = $repository;
         $this->paywallReview = $paywallReview;
         $this->slug = $slug;
         $this->feeds = $feeds;
+        $this->spam = $spam;
+        $this->search = $search;
     }
 
     function it_is_initializable()
@@ -130,17 +142,9 @@ class ManagerSpec extends ObjectBehavior
             ->duringGetNext($blog, 'notimplemented');
     }
 
-    function it_should_add(
-        Blog $blog,
-        Repository $repository,
-        Delegates\PaywallReview $paywallReview,
-        Delegates\Slug $slug,
-        Delegates\Feeds $feeds,
-        Spam $spam
-    ) {
-        $this->beConstructedWith($repository, $paywallReview, $slug, $feeds, $spam);
+    function it_should_add(Blog $blog) {
 
-        $spam->check($blog)
+        $this->spam->check($blog)
             ->shouldBeCalled();
 
         $blog->setTimeCreated(Argument::type('int'))
@@ -179,6 +183,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $this->search->index($blog)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this->paywallReview->queue($blog)
             ->shouldBeCalled()
             ->willReturn(true);
@@ -191,6 +199,10 @@ class ManagerSpec extends ObjectBehavior
     function it_should_update(Blog $blog)
     {
         $blog->isDirty('deleted')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $blog->isDeleted()
             ->shouldBeCalled()
             ->willReturn(false);
 
@@ -218,6 +230,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
+        $this->search->index($blog)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this
             ->update($blog)
             ->shouldReturn(true);
@@ -233,6 +249,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(null);
 
+        $this->search->prune($blog)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this
             ->delete($blog)
             ->shouldReturn(true);
@@ -240,6 +260,15 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_abort_if_spam(Blog $blog)
     {
+        $this->beConstructedWith(
+            $this->repository,
+            $this->paywallReview,
+            $this->slug,
+            $this->feeds,
+            null,
+            $this->search
+        );
+
         $blog->getBody()
             ->shouldBeCalled()
             ->willReturn('movieblog.tumblr.com');

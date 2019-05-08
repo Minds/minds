@@ -7,10 +7,12 @@ use Minds\Cli;
 use Minds\Interfaces;
 use Minds\Entities\User;
 use Minds\Core\Email\Campaigns\UserRetention\GoneCold;
+use Minds\Core\Email\Campaigns\WhenBoost;
 use Minds\Core\Email\Campaigns\WireReceived;
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeComplete;
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeIncomplete;
 use Minds\Core\Suggestions\Manager;
+use Minds\Core\Analytics\Timestamps;
 use Minds\Core\Di\Di;
 
 class Email extends Cli\Controller implements Interfaces\CliControllerInterface
@@ -22,6 +24,12 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
     public function help($command = null)
     {
         switch ($command) {
+            case 'exec':
+                $this->out(file_get_contents(dirname(__FILE__).'/Help/Email/exec.txt'));
+                break;
+            case 'testWhenBoost':
+                $this->out(file_get_contents(dirname(__FILE__).'/Help/Email/testWhenBoost.txt'));
+                break;
             case 'testGoneCold':
                 $this->out(file_get_contents(dirname(__FILE__).'/Help/Email/testGoneCold.txt'));
                 break;
@@ -36,7 +44,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
                 break;
             default:
                 $this->out('Utilities for testing emails and sending them manually');
-                $this->out('try `cli email {command} --help');
+                $this->out('try `cli Email {command} --help');
                 $this->displayCommandHelp();
         }
     }
@@ -48,12 +56,16 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
 
         $batch = $this->getOpt('batch');
         $dry = $this->getOpt('dry-run') ?: false;
+        $from = (strtotime('midnight', $this->getOpt('from')) ?: Timestamps::get(['day'])['day']);
+
         $offset = $this->getOpt('offset') ?: '';
         $subject = $this->getOpt('subject') ?: '';
         $template = $this->getOpt('template') ?: '';
 
-        $campaign = Core\Email\Batches\Factory::build($batch);
-        $campaign->setDryRun($dry)
+        $batchRunner = Core\Email\Batches\Factory::build($batch);
+
+        $batchRunner->setFrom($from)
+            ->setDryRun($dry)
             ->setOffset($offset)
             ->setSubject($subject)
             ->setTemplateKey($template)
@@ -217,7 +229,7 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
         $repository = Di::_()->get('Wire\Repository');
 
         if (!$entityGuid) {
-            $this->out('--entity=guid required');
+            $this->out('--guid=wire guid required');
             exit;
         }
 
@@ -253,6 +265,49 @@ class Email extends Cli\Controller implements Interfaces\CliControllerInterface
 
         if ($send) {
             $campaign->send();
+        }
+
+        if ($output) {
+            file_put_contents($output, $message->buildHtml());
+        } else {
+            $this->out($message->buildHtml());
+        }
+    }
+
+    public function testWhenBoost()
+    {
+        $output = $this->getOpt('output');
+        $entityGuid = $this->getOpt('guid');
+        $boostType = $this->getOpt('type');
+        $send = $this->getOpt('send');
+
+        $manager = Di::_()->get('Boost\Network\Manager');
+
+        if (!$entityGuid) {
+            $this->out('--guid=boost guid required');
+            exit;
+        }
+
+        if (!$boostType) {
+            $this->out('--type=boost type required');
+            exit;
+        }
+
+        $boost = $manager->get("urn:boost:{$boostType}:{$entityGuid}", [ 'hydrate' => true ]);
+
+        if (!$boost) {
+            $this->out('Boost not found');
+            exit;
+        }
+
+        $campaign = (new WhenBoost())
+            ->setUser($boost->getOwner())
+            ->setBoost($boost->export());
+
+        $message = $campaign->build();
+
+        if ($send) {
+            Core\Events\Dispatcher::trigger('boost:completed', 'boost', ['boost' => $boost]);
         }
 
         if ($output) {

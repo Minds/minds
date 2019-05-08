@@ -376,3 +376,4 @@ $CONFIG->set('tags', [
 
 $CONFIG->set('steward_guid', '');
 $CONFIG->set('steward_autoconfirm', false);
+$CONFIG->set('development_mode', false);

@@ -1,24 +1,27 @@
 <?php
 
-
 namespace Minds\Core\Email\Batches;
 
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
+use Minds\Traits\MagicAttributes;
 
 class News implements EmailBatchInterface
 {
+    use MagicAttributes;
     protected $offset;
     protected $templateKey;
     protected $subject;
 
     /**
      * @param string $offset
+     *
      * @return Promotion
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
@@ -27,25 +30,27 @@ class News implements EmailBatchInterface
         return $this;
     }
 
-
     /**
      * @param string $templateKey
+     *
      * @return Promotion
      */
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
-        return $this;
 
+        return $this;
     }
 
     /**
      * @param string $subject
+     *
      * @return Promotion
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -75,8 +80,8 @@ class News implements EmailBatchInterface
                 echo "\n[$i]: $user->guid ($iterator->offset) bounced";
                 continue;
             }
-            $i++;
-            
+            ++$i;
+
             $campaign = new Campaigns\News();
 
             $campaign

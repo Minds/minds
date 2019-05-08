@@ -1,18 +1,19 @@
 <?php
 
-
 namespace Minds\Core\Email\Batches;
 
 use Minds\Core\Email\Campaigns;
 use Minds\Core\Email\EmailSubscribersIterator;
+use Minds\Traits\MagicAttributes;
 
 class Announcement implements EmailBatchInterface
 {
+    use MagicAttributes;
 
-    /** @var boolean $dyrRun **/
+    /** @var bool $dyrRun * */
     protected $dryRun = false;
 
-    /** @var Campaign $campaign **/
+    /** @var Campaign $campaign * */
     protected $campaign;
 
     protected $offset;
@@ -21,49 +22,56 @@ class Announcement implements EmailBatchInterface
 
     public function __construct($campaign = null)
     {
-        $this->campaign = $campaign ?: new Campaigns\Announcement;
+        $this->campaign = $campaign ?: new Campaigns\Announcement();
     }
 
-
     /**
-     * Run the batch as a test or not
+     * Run the batch as a test or not.
+     *
      * @param $dryRun
+     *
      * @return $this
      */
     public function setDryRun($dryRun)
     {
         $this->dryRun = $dryRun;
+
         return $this;
     }
 
     /**
      * @param string $offset
+     *
      * @return Announcement
      */
     public function setOffset($offset)
     {
         $this->offset = $offset;
+
         return $this;
     }
 
     /**
      * @param string $templateKey
+     *
      * @return Announcement
      */
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
-        return $this;
 
+        return $this;
     }
 
     /**
      * @param string $subject
+     *
      * @return Announcement
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -94,10 +102,9 @@ class Announcement implements EmailBatchInterface
                 ->setTemplateKey($this->templateKey)
                 ->setSubject($this->subject)
                 ->send();
-            $queued++;
-            echo "\r [emails]: $queued queued | " . date('d-m-Y', $user->time_created) . " | $user->guid ";
+            ++$queued;
+            echo "\r [emails]: $queued queued | ".date('d-m-Y', $user->time_created)." | $user->guid ";
         }
         echo "[emails]: Completed ($queued queued) \n";
     }
-
 }

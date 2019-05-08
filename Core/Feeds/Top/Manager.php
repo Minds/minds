@@ -2,6 +2,7 @@
 
 namespace Minds\Core\Feeds\Top;
 
+use Minds\Common\Repository\Response;
 use Minds\Common\Urn;
 use Minds\Core\Feeds\FeedSyncEntity;
 use Minds\Core\Di\Di;
@@ -14,9 +15,6 @@ class Manager
 {
     /** @var Repository */
     protected $repository;
-
-    /** @var CachedRepository */
-    protected $cachedRepository;
 
     /** @var Search */
     private $search;
@@ -35,13 +33,11 @@ class Manager
     public function __construct(
         $repository = null,
         $entitiesBuilder = null,
-        $cachedRepository = null,
         $search = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder;
-        $this->cachedRepository = $cachedRepository ?: new CachedRepository;
         $this->search = $search ?: Di::_()->get('Search\Search');
 
         $this->from = strtotime('-7 days') * 1000;
@@ -70,7 +66,7 @@ class Manager
 
     /**
      * @param array $opts
-     * @return Entity[]
+     * @return Response
      * @throws \Exception
      */
     public function getList(array $opts = [])
@@ -80,25 +76,28 @@ class Manager
             'cache_key' => null,
             'user_guid' => null,
             'container_guid' => null,
+            'owner_guid' => null,
+            'subscriptions' => null,
+            'access_id' => null,
             'custom_type' => null,
             'offset' => 0,
             'limit' => 12,
-            'rating' => 2,
             'type' => null,
             'sync' => false,
+            'from_timestamp' => null,
             'query' => null,
-            'nsfw' => [ ],
+            'nsfw' => null,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
-            return $this->search($opts);
+            $result = $this->search($opts);
+
+            $response = new Response($result);
+            return $response;
         }
 
         $feedSyncEntities = [];
         $scores = [];
-
-        $this->cachedRepository
-            ->setKey($opts['cache_key']);
 
         foreach ($this->repository->getList($opts) as $scoredGuid) {
             if (!$scoredGuid->getGuid()) {
@@ -108,13 +107,20 @@ class Manager
             $feedSyncEntities[] = (new FeedSyncEntity())
                 ->setGuid($scoredGuid->getGuid())
                 ->setOwnerGuid($scoredGuid->getOwnerGuid())
-                ->setUrn(new Urn($scoredGuid->getGuid()));
+                ->setUrn(new Urn($scoredGuid->getGuid()))
+                ->setTimestamp($scoredGuid->getTimestamp());
 
             $scores[(string) $scoredGuid->getGuid()] = $scoredGuid->getScore();
         }
 
         $entities = [];
+        $next = '';
+
         if (count($feedSyncEntities) > 0) {
+           $next = (string) (array_reduce($feedSyncEntities, function($carry, FeedSyncEntity $feedSyncEntity) {
+               return min($feedSyncEntity->getTimestamp() ?: INF, $carry);
+           }, INF) - 1);
+
             if (!$opts['sync']) {
                 $guids = array_map(function (FeedSyncEntity $feedSyncEntity) {
                     return $feedSyncEntity->getGuid();
@@ -140,7 +146,10 @@ class Manager
             });
         }
 
-        return $entities;
+        $response = new Response($entities);
+        $response->setPagingToken($next ?: '');
+
+        return $response;
     }
 
     /**
@@ -161,7 +170,9 @@ class Manager
             foreach ($response as $row) {
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid($row['guid'])
-                    ->setOwnerGuid($row['guid']);
+                    ->setOwnerGuid($row['guid'])
+                    ->setUrn(new Urn($row['guid']))
+                    ->setTimestamp($row['time_created'] * 1000);
             }
         }
 
@@ -169,16 +180,16 @@ class Manager
             $options = [
                 'text' => $opts['query'],
                 'taxonomies' => 'group',
-                //'mature' => count($opts['nsfw']) > 0,
                 'sort' => 'relevant',
-                'rating' => count($opts['nsfw']) > 0 ? 3 : 2,
             ];
 
             $response = $this->search->query($options, $opts['limit'], $opts['offset']);
             foreach ($response as $row) {
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid($row)
-                    ->setOwnerGuid(-1);
+                    ->setOwnerGuid(-1)
+                    ->setUrn(new Urn($row))
+                    ->setTimestamp(0);
             }
         }
 

@@ -66,7 +66,8 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['last_action'] = NULL;
 		$this->attributes['enabled'] = "yes";
 		$this->attributes['tags'] = null;
-        $this->attributes['nsfw'] = [];
+		$this->attributes['nsfw'] = [];
+		$this->attributes['nsfw_lock'] = [];
 
 	}
 
@@ -1374,7 +1375,8 @@ abstract class ElggEntity extends ElggData implements
 			'site_guid',
 			'access_id',
             'tags',
-            'nsfw',
+			'nsfw',
+			'nsfw_lock'
 		);
 	}
 
@@ -1387,7 +1389,8 @@ abstract class ElggEntity extends ElggData implements
 		}
 		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), []) ?: []);
         $export = \Minds\Helpers\Export::sanitize($export);
-        $export['nsfw'] = $this->getNsfw();
+		$export['nsfw'] = $this->getNsfw();
+		$export['nsfw_lock'] = $this->getNsfwLock();
 		return $export;
 	}
 
@@ -1572,8 +1575,49 @@ abstract class ElggEntity extends ElggData implements
             if ($reason < 1 || $reason > 6) {
                 throw \Exception('Incorrect NSFW value provided');
             }
+    	}
+		
+		$this->nsfw = $array;
+		return $this;
+	}
+
+	 /**
+     * Get NSFW Lock options.
+     *
+     * @return array
+     */
+    public function getNsfwLock()
+    {
+        $array = [];
+        if (!$this->nsfwLock) {
+            return $array;
         }
-        $this->nsfw = $array;
+        foreach ($this->nsfwLock as $reason) {
+            $array[] = (int) $reason;
+        }
+
+        return $array;
+	}
+	
+	/**
+     * Set NSFW lock tags for administrators. Users cannot remove these themselves.
+     *
+     * @param array $array
+     *
+     * @return $this
+     */
+    public function setNsfwLock($array)
+    {
+        $array = array_unique($array);
+        foreach ($array as $reason) {
+            if ($reason < 1 || $reason > 6) {
+                throw \Exception('Incorrect NSFW value provided');
+            }
+        }
+        $this->nsfwLock = $array;
+
         return $this;
     }
+
+
 }

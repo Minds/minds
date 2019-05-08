@@ -7,7 +7,21 @@ Back-end system for Minds. Please run inside of [the Minds repo](https://github.
 ## Documentation
 Documentation for Minds can be found at [minds.org/docs](https://www.minds.org/docs)
 
+
 ## Tasks
+Running CLI jobs. They must be run inside a container.
+
+* run ```docker exec -it minds_php-fpm_1 php '/var/www/Minds/engine/cli.php' controller_name task``
+
+Help files and parameters are available for some tasks.
+
+## Default admin user
+
+Minds ships with a local user ready to roll. 
+* username: minds
+* password: Pa$$w0rd
+
+To enable admin functionality, set 'development_mode' to **true** in your settings.php post installation.
 
 ### Syncing the newsfeed
 

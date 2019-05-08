@@ -19,6 +19,8 @@ use Minds\Helpers\Counters;
 use Minds\Interfaces;
 use Minds\Interfaces\Flaggable;
 use Minds\Core\Di\Di;
+use Minds\Core\Entities\Actions\Save;
+
 
 class newsfeed implements Interfaces\Api
 {
@@ -175,7 +177,7 @@ class newsfeed implements Interfaces\Api
             try {
                 $limit = isset($_GET['access_token']) && $_GET['offset'] ? 2 : 1;
                 //$limit = 2;
-                $cacher = Core\Data\cache\factory::build('apcu');
+                $cacher = Core\Data\cache\factory::build('Redis');
                 $offset =  $cacher->get(Core\Session::getLoggedinUser()->guid . ':boost-offset:newsfeed');
 
                 /** @var Core\Boost\Network\Iterator $iterator */
@@ -263,6 +265,7 @@ class newsfeed implements Interfaces\Api
     public function post($pages)
     {
         Factory::isLoggedIn();
+        $save = new Save();
 
         //factory::authorize();
         switch ($pages[0]) {
@@ -306,6 +309,8 @@ class newsfeed implements Interfaces\Api
                 }*/
 
                 $activity = new Activity();
+                $activity->setNSFW($embeded->getNSFW());
+
                 switch ($embeded->type) {
                     case 'activity':
                         if ($message) {
@@ -313,11 +318,13 @@ class newsfeed implements Interfaces\Api
                         }
 
                         if ($embeded->remind_object) {
-                            $activity->setRemind($embeded->remind_object)->save();
+                            $activity->setRemind($embeded->remind_object);
                             Counters::increment($embeded->remind_object['guid'], 'remind');
                         } else {
-                            $activity->setRemind($embeded->export())->save();
+                            $activity->setRemind($embeded->export());
                         }
+                        $save->setEntity($activity)
+                            ->save();
                         break;
                     default:
                         /**
@@ -332,8 +339,7 @@ class newsfeed implements Interfaces\Api
                                         ->setURL($embeded->getURL())
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setFromEntity($embeded)
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 } else {
                                     $activity->setRemind((new Activity())
                                         ->setTimeCreated($embeded->time_created)
@@ -343,9 +349,10 @@ class newsfeed implements Interfaces\Api
                                         ->setThumbnail($embeded->getIconUrl())
                                         ->setFromEntity($embeded)
                                         ->export())
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 }
+                                $save->setEntity($activity)
+                                    ->save();
                                 break;
                             case 'video':
                                 if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
@@ -357,8 +364,7 @@ class newsfeed implements Interfaces\Api
                                         ])
                                         ->setTitle($embeded->title)
                                         ->setBlurb($embeded->description)
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 } else {
                                     $activity = new Activity();
                                     $activity->setRemind(
@@ -375,9 +381,10 @@ class newsfeed implements Interfaces\Api
                                             ->setBlurb($embeded->description)
                                             ->export()
                                         )
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 }
+                                $save->setEntity($activity)
+                                    ->save();
                                 break;
                             case 'image':
                                 if ($embeded->owner_guid == Core\Session::getLoggedInUserGuid()) {
@@ -392,8 +399,7 @@ class newsfeed implements Interfaces\Api
                                         ->setFromEntity($embeded)
                                         ->setTitle($embeded->title)
                                         ->setBlurb($embeded->description)
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 } else {
                                     $activity->setRemind(
                                         (new Activity())
@@ -411,9 +417,10 @@ class newsfeed implements Interfaces\Api
                                             ->setBlurb($embeded->description)
                                             ->export()
                                         )
-                                        ->setMessage($message)
-                                        ->save();
+                                        ->setMessage($message);
                                 }
+                                $save->setEntity($activity)
+                                    ->save();
                                 break;
                         }
                 }
@@ -446,28 +453,6 @@ class newsfeed implements Interfaces\Api
                     ->follow();
 
                 return Factory::response(array('guid' => $activity->guid));
-                break;
-            case 'pin':
-                if (isset($pages[1])) {
-                    /** @var Activity $activity */
-                    $activity = Entities\Factory::build($pages[1]);
-                    $user = Core\Session::getLoggedinUser();
-                    $user->addPinned($activity->guid);
-                    $user->save();
-
-                    return Factory::response([]);
-                }
-                break;
-            case 'unpin':
-                if (isset($pages[1])) {
-                    /** @var Activity $activity */
-                    $activity = Entities\Factory::build($pages[1]);
-                    $user = Core\Session::getLoggedinUser();
-                    $user->removePinned($activity->guid);
-                    $user->save();
-
-                    return Factory::response([]);
-                }
                 break;
 
             default:
@@ -528,7 +513,10 @@ class newsfeed implements Interfaces\Api
 
                     $activity->indexes = ["activity:$activity->owner_guid:edits"]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
-                    $activity->save();
+                    
+                    $save->setEntity($activity)
+                        ->save();
+
                     $activity->setExportContext(true);
                     return Factory::response(array('guid' => $activity->guid, 'activity' => $activity->export(), 'edited' => true));
                 }
@@ -668,7 +656,7 @@ class newsfeed implements Interfaces\Api
                 $activity->setNsfw($nsfw);
 
                 try {
-                    $guid = $activity->save();
+                    $guid = $save->setEntity($activity)->save();
                 } catch (\Exception $e) {
                     return Factory::response([
                         'status' => 'error',

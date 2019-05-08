@@ -38,15 +38,18 @@ class Repository
             'offset' => 0,
             'limit' => 12,
             'container_guid' => null,
+            'owner_guid' => null,
+            'subscriptions' => null,
+            'access_id' => null,
             'custom_type' => null,
             'hashtags' => [],
             'filter_hashtags' => true,
             'type' => null,
             'period' => null,
             'algorithm' => null,
-            'rating' => 1,
             'query' => null,
-            'nsfw' => [ ],
+            'nsfw' => null,
+            'from_timestamp' => null,
         ], $opts);
 
         if (!$opts['type']) {
@@ -65,8 +68,10 @@ class Repository
             '_source' => array_unique([
                 'guid',
                 'owner_guid',
+                '@timestamp',
                 'time_created',
-                $this->getSourceField($opts['type'])
+                'access_id',
+                $this->getSourceField($opts['type']),
             ]),
             'query' => [
                 'function_score' => [
@@ -79,12 +84,12 @@ class Repository
                     'functions' => [
                         [
                             'filter' => [
-                                'match_all' => (object) []
+                                'match_all' => (object) [],
                             ],
-                            'weight' => 1
-                        ]
+                            'weight' => 1,
+                        ],
                     ],
-                ]
+                ],
             ],
             'sort' => [],
         ];
@@ -94,8 +99,8 @@ class Repository
                 $body['query']['function_score']['query']['bool']['must_not'] = [];
             }
             $body['query']['function_score']['query']['bool']['must_not'][] = [
-                'term' => [
-                    'access_id' => '2',
+                'terms' => [
+                    'access_id' => ['0', '1', '2'],
                 ],
             ];
         } elseif ($opts['type'] === 'user') {
@@ -142,6 +147,46 @@ class Repository
             ];
         }
 
+        if ($opts['owner_guid']) {
+            $ownerGuids = Text::buildArray($opts['owner_guid']);
+
+            if (!isset($body['query']['function_score']['query']['bool']['must'])) {
+                $body['query']['function_score']['query']['bool']['must'] = [];
+            }
+
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'terms' => [
+                    'owner_guid' => $ownerGuids,
+                ],
+            ];
+        } elseif ($opts['subscriptions']) {
+            if (!isset($body['query']['function_score']['query']['bool']['must'])) {
+                $body['query']['function_score']['query']['bool']['must'] = [];
+            }
+
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'bool' => [
+                    'should' => [
+                        [
+                            'terms' => [
+                                'owner_guid' => [
+                                    'index' => 'minds-graph',
+                                    'type' => 'subscriptions',
+                                    'id' => (string) $opts['subscriptions'],
+                                    'path' => 'guids',
+                                ],
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'owner_guid' => (string) $opts['subscriptions'],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         if ($opts['custom_type']) {
             $customTypes = Text::buildArray($opts['custom_type']);
 
@@ -156,31 +201,41 @@ class Repository
             ];
         }
 
-        /*if ($opts['rating']) {
-            $body['query']['function_score']['query']['bool']['must'][] = [
-                'range' => [
-                    'rating' => [
-                        'lte' => (int) $opts['rating'],
-                    ],
-                ],
-            ];
-        }*/
-
-        $nsfw = array_diff([ 1, 2, 3, 4, 5, 6 ], $opts['nsfw']);
-        if ($nsfw) {
-            $body['query']['function_score']['query']['bool']['must_not'][] = [
-                'terms' => [
-                    'nsfw' => array_values($nsfw),
-                ],
-            ];
-
-            if (in_array(6, $nsfw)) { // 6 is legacy 'mature'
+        if ($opts['nsfw'] !== null) {
+            $nsfw = array_diff([1, 2, 3, 4, 5, 6], $opts['nsfw']);
+            if ($nsfw) {
                 $body['query']['function_score']['query']['bool']['must_not'][] = [
-                    'term' => [
-                        'mature' => true,
+                    'terms' => [
+                        'nsfw' => array_values($nsfw),
                     ],
                 ];
+
+                if (in_array(6, $nsfw)) { // 6 is legacy 'mature'
+                    $body['query']['function_score']['query']['bool']['must_not'][] = [
+                        'term' => [
+                            'mature' => true,
+                        ],
+                    ];
+                }
             }
+        }
+
+        if ($opts['type'] !== 'group' && $opts['access_id'] !== null) {
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'terms' => [
+                    'access_id' => Text::buildArray($opts['access_id']),
+                ],
+            ];
+        }
+
+        if ($opts['from_timestamp']) {
+            $body['query']['function_score']['query']['bool']['must'][] = [
+                'range' => [
+                    '@timestamp' => [
+                        'lte' => (int) $opts['from_timestamp'],
+                    ],
+                ],
+            ];
         }
 
         //
@@ -191,28 +246,18 @@ class Repository
                 $body['query']['function_score']['query']['bool']['must'][] = [
                     'multi_match' => [
                         'query' => $opts['query'],
-                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^64']
-                    ]
+                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^64'],
+                    ],
                 ];
             } else {
-               $body['query']['function_score']['query']['bool']['must'][] = [
+                $body['query']['function_score']['query']['bool']['must'][] = [
                     'multi_match' => [
                         'query' => $opts['query'],
                         'type' => 'phrase',
-                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^16']
-                    ]
-                ]; 
+                        'fields' => ['name^2', 'title^12', 'message^12', 'description^12', 'brief_description^8', 'username^8', 'tags^16'],
+                    ],
+                ];
             }
-
-            /*$body['query']['function_score']['functions'][] = [
-                'filter' => [
-                    'multi_match' => [
-                        'query' => $opts['query'],
-                        'fields' => ['tags']
-                    ]
-                ],
-                'weight' => 100
-            ];*/
         } elseif ($opts['hashtags']) {
             if ($opts['filter_hashtags'] || $algorithm instanceof SortingAlgorithms\Chronological) {
                 if (!isset($body['query']['function_score']['query']['bool']['must'])) {
@@ -230,25 +275,6 @@ class Repository
                         'tags' => $opts['hashtags'],
                     ],
                 ];
-                // Really in slow in ES 6.x
-                /*$body['query']['function_score']['functions'][] = [
-                    'filter' => [
-                        'multi_match' => [
-                            'query' => implode(' ', $opts['hashtags']),
-                            'fields' => ['tags']
-                        ]
-                    ],
-                    'weight' => 100
-                ];
-                $body['query']['function_score']['functions'][] = [
-                    'filter' => [
-                        'multi_match' => [
-                            'query' => implode(' ', $opts['hashtags']),
-                            'fields' => ['message']
-                        ]
-                    ],
-                    'weight' => 10
-                ];*/
             }
         }
 
@@ -266,13 +292,14 @@ class Repository
             $body['query']['function_score']['functions'][] = [
                 'script_score' => [
                     'script' => [
-                        'source' => $esScript
-                    ]
-                ]
+                        'source' => $esScript,
+                    ],
+                ],
             ];
         }
 
         //
+
         $esSort = $algorithm->getSort();
         if ($esSort) {
             $body['sort'][] = $esSort;
@@ -287,7 +314,7 @@ class Repository
             'size' => $opts['limit'],
             'from' => $opts['offset'],
         ];
-        
+
         $prepared = new Prepared\Search();
         $prepared->query($query);
 
@@ -303,7 +330,8 @@ class Repository
             yield (new ScoredGuid())
                 ->setGuid($doc['_source'][$this->getSourceField($opts['type'])])
                 ->setScore($algorithm->fetchScore($doc))
-                ->setOwnerGuid($doc['_source']['owner_guid']);
+                ->setOwnerGuid($doc['_source']['owner_guid'])
+                ->setTimestamp($doc['_source']['@timestamp']);
         }
     }
 

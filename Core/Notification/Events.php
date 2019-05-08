@@ -192,8 +192,9 @@ class Events
 
             foreach ($params['to'] as $to_user) {
 
-                if ($notification->getFromGuid() 
-                    && Core\Security\ACL\Block::_()->isBlocked($notification->getFromGuid(), $notification->getToGuid())
+                if (
+                    $notification->getFromGuid() &&
+                    Core\Security\ACL\Block::_()->isBlocked($notification->getFromGuid(), $to_user)
                 ) {
                     continue;
                 }

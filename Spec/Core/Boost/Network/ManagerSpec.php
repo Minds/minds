@@ -10,6 +10,7 @@ use Minds\Core\EntitiesBuilder;
 use Minds\Core\GuidBuilder;
 use Minds\Entities\Activity;
 use Minds\Entities\User;
+use Minds\Common\Repository\Response;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -41,22 +42,35 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_return_a_list_of_boosts_to_review()
     {
+        $response = new Response([
+            (new Boost)
+                ->setGuid(1)
+                ->setEntityGuid(123)
+                ->setImpressions(1000)
+                ->setOwnerGuid(1),
+            (new Boost)
+                ->setGuid(2)
+                ->setEntityGuid(456)
+                ->setImpressions(100)
+                ->setOwnerGuid(2)
+        ]);
+
         $this->elasticRepository->getList([
             'state' => 'review',
             'hydrate' => true,
             'useElastic' => true,
         ])
             ->shouldBeCalled()
-            ->willReturn([
-                (new Boost)
-                    ->setEntityGuid(123)
-                    ->setImpressions(1000)
-                    ->setOwnerGuid(1),
-                (new Boost)
-                    ->setEntityGuid(456)
-                    ->setImpressions(100)
-                    ->setOwnerGuid(2)
-            ]);
+            ->willReturn($response);
+
+        $this->repository->getList([
+            'state' => 'review',
+            'hydrate' => true,
+            'useElastic' => true,
+            'guids' => [ 1, 2 ],
+        ])
+            ->shouldBeCalled()
+            ->willReturn($response);
 
         $this->entitiesBuilder->single(123)
             ->shouldBeCalled()

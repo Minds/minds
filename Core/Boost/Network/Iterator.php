@@ -146,9 +146,15 @@ class Iterator implements \Iterator
         }
 
         $return = [];
+        $i = 0;
+        $declareOffsetFrom = $this->limit >= 2 ? 2 : 1;
         foreach ($boosts as $boost) {
             if (count($return) >= $this->limit) {
                 break;
+            }
+
+            if (++$i === $declareOffsetFrom) {
+                $boosts->setPagingToken($boost->getCreatedTimestamp());
             }
 
             if ($this->hydrate) {
@@ -163,7 +169,9 @@ class Iterator implements \Iterator
 
                 if ($count > $impressions) {
                     // Grab the main storage to prevent issues with elastic formatted data
-                    $boost = $this->manager->get("urn:boost:{$boost->getType()}:{$boost->getGuid()}");
+                    $boost = $this->manager->get("urn:boost:{$boost->getType()}:{$boost->getGuid()}", [ 
+                        'hydrate' => true,
+                    ]);
                     $this->expire->setBoost($boost);
                     $this->expire->expire();
                     continue; //max count met
@@ -175,13 +183,14 @@ class Iterator implements \Iterator
             } else {
                 $return[] = $boost;
             }
-
-            $this->offset = $boost->getReviewedTimestamp();
         }
+
+        $this->offset = $boosts->getPagingToken();
 
         if ($this->hydrate) {
             if (empty($return) && $this->tries++ <= 1) {
-                return null;
+                $this->offset = 0;
+                return $this->getList();
             }
 
             $return = $this->filterBlocked($return);

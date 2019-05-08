@@ -102,11 +102,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $entity->get('guid')
+        /*$entity->get('guid')
             ->shouldBeCalled()
-            ->willReturn(5000);
+            ->willReturn(5000);*/
 
-        $this->acl->interact(5000, $owner, 'comment')
+        $this->acl->interact($entity, $owner, 'comment')
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -169,11 +169,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $entity->get('guid')
+        /*$entity->get('guid')
             ->shouldBeCalled()
-            ->willReturn(100);
+            ->willReturn(100);*/
 
-        $this->acl->interact(100, $owner, "comment")
+        $this->acl->interact($entity, $owner, "comment")
             ->shouldBeCalled()
             ->willReturn(false);
 
@@ -204,11 +204,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($entity);
 
-        $entity->get('guid')
+        /*$entity->get('guid')
             ->shouldBeCalled()
-            ->willReturn(100);
+            ->willReturn(100);*/
 
-        $this->acl->interact(100, $owner, "comment")
+        $this->acl->interact($entity, $owner, "comment")
             ->shouldBeCalled()
             ->willReturn(true);
 

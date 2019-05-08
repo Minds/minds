@@ -7,18 +7,23 @@ use Minds\Core\Di\Di;
 use Minds\Core\Email\EmailSubscription;
 use Minds\Core\Email\Repository;
 use Minds\Entities\User;
+use Minds\Traits\MagicAttributes;
 
 class Subscribe implements EmailBatchInterface
 {
+    use MagicAttributes;
+
     protected $offset;
 
     /**
      * @param mixed $offset
+     *
      * @return Subscribe
      */
     public function setOffset($offset)
     {
         $this->offset = isset($offset) ?: '';
+
         return $this;
     }
 
@@ -40,14 +45,12 @@ class Subscribe implements EmailBatchInterface
             }
 
             foreach ($guids as $guid => $ts) {
-
                 if ($sFails > 5) {
-                    $this->out("Too many failures [pausing for 5 seconds]");
+                    $this->out('Too many failures [pausing for 5 seconds]');
                     sleep(5);
                 }
 
                 try {
-
                     $user = new User($guid);
 
                     if ($user && !$user->getDeleted() && !$user->getSpam()) {
@@ -57,19 +60,17 @@ class Subscribe implements EmailBatchInterface
                         }
                         echo "\r{$user->guid}…";
 
-                        echo " [done]";
+                        echo ' [done]';
                         $sFails = 0;
                     }
                 } catch (\Exception $e) {
-                    echo " [failed]";
-                    $sFails++;
+                    echo ' [failed]';
+                    ++$sFails;
                 }
-
             }
 
             end($guids);
             $this->offset = key($guids);
         }
-
     }
 }

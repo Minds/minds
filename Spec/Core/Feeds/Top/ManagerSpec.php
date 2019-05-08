@@ -2,13 +2,14 @@
 
 namespace Spec\Minds\Core\Feeds\Top;
 
+use Minds\Common\Repository\Response;
 use Minds\Core\EntitiesBuilder;
-use Minds\Core\Feeds\Top\CachedRepository;
 use Minds\Core\Feeds\Top\Manager;
 use Minds\Core\Feeds\Top\Repository;
 use Minds\Core\Feeds\Top\ScoredGuid;
 use Minds\Core\Search\Search;
 use Minds\Entities\Entity;
+use PhpSpec\Exception\Example\FailureException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -21,24 +22,19 @@ class ManagerSpec extends ObjectBehavior
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
-    /** @var CachedRepository */
-    protected $cachedRepository;
-
     /** @var Search */
     protected $search;
 
     function let(
         Repository $repository,
         EntitiesBuilder $entitiesBuilder,
-        CachedRepository $cachedRepository,
         Search $search
     )
     {
         $this->repository = $repository;
         $this->entitiesBuilder = $entitiesBuilder;
-        $this->cachedRepository = $cachedRepository;
         $this->search = $search;
-        $this->beConstructedWith($repository, $entitiesBuilder, $cachedRepository, $search);
+        $this->beConstructedWith($repository, $entitiesBuilder, $search);
     }
 
     function it_is_initializable()
@@ -65,6 +61,10 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1000);
 
+        $scoredGuid1->getTimestamp()
+            ->shouldBeCalled()
+            ->willReturn(2);
+
         $entity1->get('guid')
             ->shouldBeCalled()
             ->willReturn(5000);
@@ -80,6 +80,10 @@ class ManagerSpec extends ObjectBehavior
         $scoredGuid2->getOwnerGuid()
             ->shouldBeCalled()
             ->willReturn(1000);
+
+        $scoredGuid2->getTimestamp()
+            ->shouldBeCalled()
+            ->willReturn(1);
 
         $entity2->get('guid')
             ->shouldBeCalled()
@@ -97,6 +101,25 @@ class ManagerSpec extends ObjectBehavior
             ->getList([
                 'cache_key' => 'phpspec',
             ])
-            ->shouldReturn([$entity2, $entity1]);
+            ->shouldBeAResponse([$entity2, $entity1]);
+    }
+
+    function getMatchers()
+    {
+        $matchers = [];
+
+        $matchers['beAResponse'] = function ($subject, $elements = null) {
+            if (!($subject instanceof Response)) {
+                throw new FailureException("Subject should be a Response");
+            }
+
+            if ($elements !== null && $elements !== $subject->toArray()) {
+                throw new FailureException("Subject elements don't match");
+            }
+
+            return true;
+        };
+
+        return $matchers;
     }
 }

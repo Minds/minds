@@ -306,6 +306,7 @@ class Events
             'reworkedgames.eu',
             'mp3gain.sourceforge.net',
             'pages10.com',
+            'nudegirIs.info',
             ];
     }
 

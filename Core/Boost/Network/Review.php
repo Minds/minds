@@ -202,7 +202,7 @@ class Review implements BoostReviewInterface
             'type' => $this->type,
             'state' => 'review',
             'limit' => $limit,
-            'token' => $offset,
+            'offset' => $offset,
         ]);
     }
 

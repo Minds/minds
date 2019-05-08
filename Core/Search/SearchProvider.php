@@ -23,6 +23,10 @@ class SearchProvider extends Provider
             return new Index();
         }, ['useFactory' => true]);
 
+        $this->di->bind('Search\Cleanup', function ($di) {
+            return new Cleanup();
+        }, ['useFactory' => true]);
+
         $this->di->bind('Search\Search', function ($di) {
             return new Search();
         }, ['useFactory' => true]);

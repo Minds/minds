@@ -139,6 +139,9 @@ class Manager
             return $uuid;
         } catch (\Exception $e) {
             error_log($e);
+            if (php_sapi_name() === 'cli') {
+                exit;
+            }
         }
     }
 
