@@ -17,6 +17,8 @@ use Minds\Traits\MagicAttributes;
  * @method FeedSyncEntity setGuid(int|string $guid)
  * @method int|string getOwnerGuid()
  * @method FeedSyncEntity setOwnerGuid(int|string $ownerGuid)
+ * @method int getTimestamp()
+ * @method FeedSyncEntity setTimestamp(int $timestamp)
  * @method string getUrn()
  * @method FeedSyncEntity setUrn(string $urn)
  */
@@ -31,6 +33,9 @@ class FeedSyncEntity
     /** @var int|string */
     protected $ownerGuid;
 
+    /** @var int */
+    protected $timestamp;
+
     /** @var string */
     protected $urn;
 
@@ -44,6 +49,7 @@ class FeedSyncEntity
             'urn',
             'guid',
             'ownerGuid',
+            'timestamp',
         ];
     }
 }

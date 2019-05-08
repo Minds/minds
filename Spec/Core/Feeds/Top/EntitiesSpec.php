@@ -7,6 +7,7 @@ use Minds\Core\EntitiesBuilder;
 use Minds\Core\Feeds\Top\Entities;
 use Minds\Entities\Activity;
 use Minds\Entities\Image;
+use Minds\Entities\User;
 use Minds\Entities\Video;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -25,6 +26,172 @@ class EntitiesSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType(Entities::class);
+    }
+
+    function it_should_filter_a_public_entity_if_guest(
+        Activity $activity
+    )
+    {
+        $activity->getAccessID()
+            ->shouldBeCalled()
+            ->willReturn(2);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor(null)
+            ->filter($activity)
+            ->shouldReturn(true);
+    }
+
+    function it_should_filter_a_public_entity_logged_in(
+        User $actor,
+        Activity $activity
+    )
+    {
+        $actor->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('owner_guid')
+            ->shouldBeCalled()
+            ->willReturn(1001);
+
+        $activity->getAccessID()
+            ->shouldBeCalled()
+            ->willReturn(2);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(true);
+    }
+
+    function it_should_filter_an_unlisted_entity_if_owner(
+        User $actor,
+        Activity $activity
+    )
+    {
+        $actor->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('owner_guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(true);
+    }
+
+    function it_should_filter_out_an_unlisted_entity_if_guest(
+        Activity $activity
+    )
+    {
+        $activity->getAccessID()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor(null)
+            ->filter($activity)
+            ->shouldReturn(false);
+    }
+
+    function it_should_filter_out_an_unlisted_entity_if_not_owner(
+        User $actor,
+        Activity $activity
+    )
+    {
+        $actor->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('owner_guid')
+            ->shouldBeCalled()
+            ->willReturn(1001);
+
+        $activity->getAccessID()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(false);
+    }
+
+    function it_should_filter_a_pending_group_activity_if_owner(
+        User $actor,
+        Activity $activity
+    )
+    {
+        $actor->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('owner_guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->getAccessID()
+            ->willReturn(2000);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(true);
+    }
+
+    function it_should_filter_out_a_pending_group_activity_if_not_owner(
+        User $actor,
+        Activity $activity
+    )
+    {
+        $actor->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $activity->get('owner_guid')
+            ->shouldBeCalled()
+            ->willReturn(1001);
+
+        $activity->getAccessID()
+            ->shouldBeCalled()
+            ->willReturn(2000);
+
+        $activity->get('pending')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(false);
     }
 
     function it_should_not_cast_an_activity(Activity $activity)

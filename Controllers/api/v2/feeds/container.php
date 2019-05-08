@@ -1,6 +1,6 @@
 <?php
 
-namespace Minds\Controllers\api\v2;
+namespace Minds\Controllers\api\v2\feeds;
 
 use Minds\Api\Exportable;
 use Minds\Api\Factory;
@@ -10,45 +10,43 @@ use Minds\Entities\Factory as EntitiesFactory;
 use Minds\Entities\User;
 use Minds\Interfaces;
 
-class feeds implements Interfaces\Api
+class container implements Interfaces\Api
 {
     /**
-     * Gets a list of suggested hashtags, including the ones the user has opted in
+     * Equivalent to HTTP GET method
      * @param array $pages
+     * @return mixed|null
      * @throws \Exception
      */
     public function get($pages)
     {
-        Factory::isLoggedIn();
-
         /** @var User $currentUser */
         $currentUser = Core\Session::getLoggedinUser();
 
-        $filter = $pages[0] ?? null;
+        //
 
-        if (!$filter) {
+        $container_guid = $pages[0] ?? null;
+
+        if (!$container_guid) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'Invalid filter'
+                'message' => 'Invalid container',
             ]);
         }
 
-        $algorithm = $pages[1] ?? null;
+        $container = EntitiesFactory::build($container_guid);
 
-        if (!$algorithm) {
+        if (!$container || !Core\Security\ACL::_()->read($container, $currentUser)) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'Invalid algorithm'
+                'message' => 'Forbidden',
             ]);
         }
 
         $type = '';
-        switch ($pages[2]) {
+        switch ($pages[1]) {
             case 'activities':
                 $type = 'activity';
-                break;
-            case 'channels':
-                $type = 'user';
                 break;
             case 'images':
                 $type = 'object:image';
@@ -56,30 +54,14 @@ class feeds implements Interfaces\Api
             case 'videos':
                 $type = 'object:video';
                 break;
-            case 'groups':
-                $type = 'group';
-                break;
             case 'blogs':
                 $type = 'object:blog';
                 break;
         }
 
-        $period = $_GET['period'] ?? '12h';
-
-        if ($algorithm === 'hot') {
-            $period = '12h';
-        } elseif ($algorithm === 'latest') {
-            $period = '1y';
-        }
-
         //
 
-        $hardLimit = 600;
-
-        if ($currentUser && $currentUser->isAdmin()) {
-            $hardLimit = 5000;
-        }
-
+        $hardLimit = 5000;
         $offset = 0;
 
         if (isset($_GET['offset'])) {
@@ -107,38 +89,21 @@ class feeds implements Interfaces\Api
 
         //
 
-        $hashtag = null;
-        if (isset($_GET['hashtag'])) {
-            $hashtag = $_GET['hashtag'];
-        }
-
-        $all = false;
-        if (!$hashtag && isset($_GET['all']) && $_GET['all']) {
-            $all = true;
-        }
-
         $sync = (bool) ($_GET['sync'] ?? false);
+
+        $fromTimestamp = $_GET['from_timestamp'] ?? 0;
 
         $asActivities = (bool) ($_GET['as_activities'] ?? true);
 
+        $forcePublic = (bool) ($_GET['force_public'] ?? false);
+
         $query = null;
+
         if (isset($_GET['query'])) {
             $query = $_GET['query'];
         }
 
-        $container_guid = $_GET['container_guid'] ?? null;
         $custom_type = isset($_GET['custom_type']) && $_GET['custom_type'] ? [$_GET['custom_type']] : null;
-
-        if ($container_guid) {
-            $container = EntitiesFactory::build($container_guid);
-
-            if (!$container || !Core\Security\ACL::_()->read($container)) {
-                return Factory::response([
-                    'status' => 'error',
-                    'message' => 'Forbidden'
-                ]);
-            }
-        }
 
         /** @var Core\Feeds\Top\Manager $manager */
         $manager = Di::_()->get('Feeds\Top\Manager');
@@ -146,42 +111,30 @@ class feeds implements Interfaces\Api
         /** @var Core\Feeds\Top\Entities $entities */
         $entities = new Core\Feeds\Top\Entities();
 
+        $isOwner = false;
+
+        if ($currentUser) {
+            $entities->setActor($currentUser);
+            $isOwner = $currentUser->guid == $container_guid;
+        }
+
         $opts = [
-            'cache_key' => Core\Session::getLoggedInUserGuid(),
+            'cache_key' => $currentUser ? $currentUser->guid : null,
             'container_guid' => $container_guid,
-            'access_id' => 2,
+            'access_id' => $isOwner && !$forcePublic ? [0, 1, 2, $container_guid] : [2, $container_guid],
             'custom_type' => $custom_type,
             'limit' => $limit,
-            'offset' => $offset,
             'type' => $type,
-            'algorithm' => $algorithm,
-            'period' => $period,
+            'algorithm' => 'latest',
+            'period' => '1y',
             'sync' => $sync,
-            'query' => $query ?? null,
+            'from_timestamp' => $fromTimestamp,
+            'query' => $query,
         ];
 
-        $nsfw = $_GET['nsfw'] ?? '';
-        $opts['nsfw'] = explode(',', $nsfw);
-
-        if ($hashtag) {
-            $opts['hashtags'] = [$hashtag];
-            $opts['filter_hashtags'] = true;
-        } elseif (isset($_GET['hashtags']) && $_GET['hashtags']) {
-            $opts['hashtags'] = explode(',', $_GET['hashtags']);
-            $opts['filter_hashtags'] = true;
-        } elseif (!$all) {
-            /** @var Core\Hashtags\User\Manager $hashtagsManager */
-            $hashtagsManager = Di::_()->get('Hashtags\User\Manager');
-            $hashtagsManager->setUser(Core\Session::getLoggedInUser());
-
-            $result = $hashtagsManager->get([
-                'limit' => 50,
-                'trending' => false,
-                'defaults' => false,
-            ]);
-
-            $opts['hashtags'] = array_column($result ?: [], 'value');
-            $opts['filter_hashtags'] = false;
+        if (isset($_GET['nsfw'])) {
+            $nsfw = $_GET['nsfw'] ?? '';
+            $opts['nsfw'] = explode(',', $nsfw);
         }
 
         try {
@@ -201,7 +154,7 @@ class feeds implements Interfaces\Api
             return Factory::response([
                 'status' => 'success',
                 'entities' => Exportable::_($result),
-                'load-next' => $limit + $offset,
+                'load-next' => $result->getPagingToken(),
             ]);
         } catch (\Exception $e) {
             error_log($e);
@@ -209,16 +162,31 @@ class feeds implements Interfaces\Api
         }
     }
 
+    /**
+     * Equivalent to HTTP POST method
+     * @param array $pages
+     * @return mixed|null
+     */
     public function post($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP PUT method
+     * @param array $pages
+     * @return mixed|null
+     */
     public function put($pages)
     {
         return Factory::response([]);
     }
 
+    /**
+     * Equivalent to HTTP DELETE method
+     * @param array $pages
+     * @return mixed|null
+     */
     public function delete($pages)
     {
         return Factory::response([]);

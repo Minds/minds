@@ -21,9 +21,22 @@ class Entities
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
+    /** @var User */
+    protected $actor = null;
+
     public function __construct($entitiesBuilder = null)
     {
         $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
+    }
+
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function setActor(User $user = null)
+    {
+        $this->actor = $user;
+        return $this;
     }
 
     /**
@@ -32,7 +45,10 @@ class Entities
      */
     public function filter($entity)
     {
-        return $entity->getAccessId() != 0;
+        $isOwner = $this->actor && $entity->owner_guid && $this->actor->guid == $entity->owner_guid;
+        $isPending = $entity instanceof Activity && $entity->pending;
+
+        return $isOwner || ($entity->getAccessId() > 0 && !$isPending);
     }
 
     /**

@@ -84,7 +84,7 @@ class Index
             $result = (bool) $this->client->request($prepared);
 
             // if hashtags were found, index them separately
-            if(in_array('tags', $body)) {
+            if (in_array('tags', $body) && is_array($body['tags'])) {
                 foreach($body['tags'] as $tag) {
                     $this->hashtagsManager->index($tag);
                 }
