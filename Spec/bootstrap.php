@@ -106,6 +106,11 @@ class Mock
 
     }
 
+    public static function timestamp()
+    {
+
+    }
+
     public function uuid()
     {
         return (string) $this->a;
@@ -206,13 +211,76 @@ class MockMap
 
     public function set($key, $value)
     {
-        $this->kv[$key] = $value;
+        $md5 = md5($key);
+        $hashTable[$md5] = $key;
+        $this->kv[$md5] = new Mock($value);
         return $this;
     }
 
     public function values()
     {
-        return $this->kv;
+        return new MockCollectionValues($this->kv);
+    }
+}
+
+class MockCollectionValues implements ArrayAccess
+{
+    private $values;
+
+    public function __construct($values)
+    {
+        $this->values = $values;
+    }
+
+    public function __get($key)
+    {
+        $key = md5($key);
+        return $this->values[$key];
+    }
+
+    public function offsetExists($offset)
+    {
+        $key = md5($offset);
+        return isset($this->values[$key]);
+    }
+
+    public function offsetGet($offset)
+    {
+        $key = md5($offset);
+        return $this->values[$key];
+    }
+
+    public function offsetSet($offset, $value)
+    {
+
+    }
+    
+    public function offsetUnset($offset)
+    {
+
+    }
+
+}
+
+class MockSet
+{
+    private $valueType;
+    private $values;
+
+    public function __construct($valueType)
+    {
+        $this->valueType = $valueType;
+    }
+
+    public function set($value)
+    {
+        $this->values[] = new Mock($value);
+        return $this;
+    }
+
+    public function values()
+    {
+        return array_values($this->values);
     }
 }
 
@@ -222,7 +290,7 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Varint');
     class_alias('Mock', 'Cassandra\Timestamp');
     class_alias('Mock', 'Cassandra\Type');
-    class_alias('Mock', 'Cassandra\Type\Set');
+    class_alias('MockSet', 'Cassandra\Type\Set');
     class_alias('MockMap', 'Cassandra\Type\Map');
     class_alias('Mock', 'Cassandra\Decimal');
     class_alias('Mock', 'Cassandra\Bigint');
@@ -231,6 +299,7 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Set');
     class_alias('Mock', 'Cassandra\Map');
     class_alias('Mock', 'Cassandra\Uuid');
+    class_alias('Mock', 'Cassandra\Boolean');
     class_alias('Mock', 'MongoDB\BSON\UTCDateTime');
     class_alias('Mock', 'Cassandra\RetryPolicy\Logging');
     class_alias('Mock', 'Cassandra\RetryPolicy\DowngradingConsistency');

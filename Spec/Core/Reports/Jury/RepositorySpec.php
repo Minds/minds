@@ -9,7 +9,10 @@ use Minds\Core\Data\Cassandra\Client;
 use Minds\Entities\User;
 use Cassandra\Type\Set;
 use Cassandra\Type\Map;
+use Cassandra\Type;
 use Cassandra\Float_;
+use Cassandra\Bigint;
+use Cassandra\Timestamp;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -45,18 +48,32 @@ class RepositorySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 [
-                    'user_hashes' => (new Set())
+                    'user_hashes' => (new Set(Type::text()))
                         ->set('hash'),
                     'entity_urn' => 'urn:activity:123',
+                    'entity_owner_guid' => new Bigint(456),
                     'reason_code' => new Float_(2),
                     'sub_reason_code' => new Float_(5),
+                    'timestamp' => new Timestamp(time() * 1000),
+                    'state' => 'reported',
+                    'state_changes' => (new Map(Type::text(), Type::timestamp()))
+                        ->set('reported', time() * 1000),
+                    'reports' => (new Set(Type::bigint()))
+                        ->set(789),
                 ],
                 [
-                    'user_hashes' => (new Set())
+                    'user_hashes' => (new Set(Type::text()))
                         ->set('hash'),
                     'entity_urn' => 'urn:activity:456',
+                    'entity_owner_guid' => new Bigint(456),
                     'reason_code' => new Float_(2),
                     'sub_reason_code' => new Float_(5),
+                    'timestamp' => new Timestamp(time() * 1000),
+                    'state' => 'reported',
+                    'state_changes' => (new Map(Type::text(), Type::timestamp()))
+                        ->set('reported', time() * 1000),
+                    'reports' => (new Set(Type::bigint()))
+                        ->set(789),
                 ],
             ]);
         
@@ -96,8 +113,8 @@ class RepositorySpec extends ObjectBehavior
             $values = $prepared->build()['values'];
             $statement = $prepared->build()['string'];
             return strpos($statement, 'SET initial_jury') !== FALSE
-                && $values[0]->values()[456] === true
-                && $values[1]->values()[0] === '0xqj1'
+                && $values[0]->values()[456]->value() == true
+                && $values[1]->values()[0]->value() === '0xqj1'
                 && $values[2] === 'urn:activity:123'
                 && (float) $values[3] === (float) 2
                 && (float) $values[4] === (float) 5;
@@ -138,8 +155,8 @@ class RepositorySpec extends ObjectBehavior
             $values = $prepared->build()['values'];
             $statement = $prepared->build()['string'];
             return strpos($statement, 'SET appeal_jury') !== FALSE
-                && $values[0]->values()[456] === true
-                && $values[1]->values()[0] === '0xqj1'
+                && $values[0]->values()[456]->value() == true
+                && $values[1]->values()[0]->value() === '0xqj1'
                 && $values[2] === 'urn:activity:123'
                 && (float) $values[3] === (float) 2
                 && (float) $values[4] === (float) 5;

@@ -12,7 +12,7 @@ use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Core\Reports\Report;
 use Minds\Common\Repository\Response;
-use Minds\Core\Reports\Repository as ReportsManager;
+use Minds\Core\Reports\Repository as ReportsRepository;
 
 
 class Repository
@@ -20,13 +20,13 @@ class Repository
     /** @var Data\Cassandra\Client $cql */
     protected $cql;
 
-    /** @var ReportsManager $reportsManager */
-    private $reportsManager;
+    /** @var ReportsRepository $reportsRepository */
+    private $reportsRepository;
 
-    public function __construct($cql = null, $reportsManager = null)
+    public function __construct($cql = null, $reportsRepository = null)
     {
         $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
-        $this->reportsManager = $reportsManager ?: new ReportsManager;
+        $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
     /**
@@ -73,11 +73,8 @@ class Repository
                 continue; // Already interacted with
             }
 
-            $report = new Report();
-            $report->setEntityUrn($row['entity_urn'])
-                ->setReasonCode($row['reason_code']->value())
-                ->setSubReasonCode($row['sub_reason_code']->value());
-                
+            $report = $this->reportsRepository->buildFromRow($row);
+
             $response[] = $report;
         }
 

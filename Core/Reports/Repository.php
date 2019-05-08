@@ -121,28 +121,16 @@ class Repository
         
     }
 
-    private function buildReports($source)
+    private function buildReports($set)
     {
-        $reporterGuids = [];
-
         $return = [];
 
-        $reports = $source['reports'];
-
-        foreach ($reports as $row) {
-            if (isset($reportGuids[$row[0]['reporter_guid']])) {
-                continue; // avoid duplicate reports
-            }
-            $reporterGuids[$row[0]['reporter_guid']] = true; 
-
+        foreach ($set as $userGuid) {
             $return[] = $report = new UserReport();
             $report
-                ->setTimestamp($row[0]['@timestamp'])
-                ->setEntityGuid($source['entity_guid'])
-                ->setReporterGuid($row[0]['reporter_guid'])
-                ->setReasonCode($row[0]['reason'])
-                ->setSubReasonCode($row[0]['sub_reason'] ?? null);
-            
+                //->setTimestamp($row[0]['@timestamp'])
+                //->setEntityUrn($source['entity_guid'])
+                ->setReporterGuid($userGuid->value());
         }
         return $return;
     }
@@ -175,6 +163,40 @@ class Repository
             $return[] = $decision;
         }
         return $return;
+    }
+
+    /**
+     * Build from a row 
+     * @param array $row
+     * @return Report
+     */
+    public function buildFromRow($row)
+    {
+        $report = new Report;
+        $report->setEntityUrn((string) $row['entity_urn'])
+            ->setEntityOwnerGuid($row['entity_owner_guid']->value())
+            ->setReasonCode($row['reason_code']->toFloat())
+            ->setSubReasonCode($row['sub_reason_code']->toFloat())
+            ->setTimestamp($row['timestamp']->time())
+            ->setState((string) $row['state'])
+            ->setUphold(isset($row['uphold']) ? (bool) $row['uphold'] : null)
+            ->setStateChanges($row['state_changes']->values())
+            ->setAppealNote(isset($row['appeal_note']) ? (string) $row['appeal_note'] : '')
+            ->setReports(
+                $this->buildReports($row['reports']->values())
+            )
+            ->setInitialJuryDecisions(
+                isset($row['initial_jury']) ?
+                    $this->buildDecisions($row['initial_jury']->values())
+                    : null
+            )
+            ->setAppealJuryDecision(
+                isset($row['appeal_jury']) ?
+                    $this->buildDecisions($row['appeal_jury']->values())
+                    : null
+            )
+            ->setUserHashes($row['user_hashes']->values());
+        return $report;
     }
 
 }

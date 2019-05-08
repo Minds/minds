@@ -55,9 +55,9 @@ class ActionDelegate
                 break;
             case 3: // Incites violence
                 $this->actions->setDeletedFlag($entity, true);
-                // Apply a strike to the owner
+                // Ban the owner of the post
                 break;
-            case 4:  // Threatens, harasses or bullies
+            case 4:  // Harrasment
                 $this->actions->setDeletedFlag($entity, true);
                 // Apply a strike to the owner
                 break;
@@ -65,26 +65,32 @@ class ActionDelegate
                 $this->actions->setDeletedFlag($entity, true);
                 // Ban the owner of the post too
                 break;
-            case 7: // Impersonates
+            case 7: // Impersonates (channel level)
                 // Ban
                 break;
             case 8: // Spam
                 $this->actions->setDeletedFlag($entity, true);
                 // Apply a strike to the owner
                 break;
-            case 12: // Incorrect use of hashtags
+            //case 12: // Incorrect use of hashtags
                 // De-index post
                 // Apply a strike to the owner
-                break;
+            //    break;
             case 13: // Malware
                 $this->actions->setDeletedFlag($entity, true);
                 // Ban the owner
                 break;
             case 14: // Strikes
-                // Ban the user
+                // Ban the user or make action
+
+                // Token manipulation => Ban
+                // Spam => Ban
+                // Harrasment => Ban
+                // NSFW => Lock
+
                 break;
             case 16: // Token manipulation
-                // Ban
+                // Strike
                 break;
         }
 

@@ -16,6 +16,7 @@ use Minds\Traits\MagicAttributes;
  * @method Report isAppeal(): boolean
  * @method Report getInitialJuryDecisions: []
  * @method Report getAppealJuryDecisions: []
+ * @method Report getAppealTimestamp: int
  * @method Report getReasonCode(): int
  * @method Report getSubReasonCode(): int
  */
@@ -65,6 +66,15 @@ class Report
     /** @var int $subReasonCode */
     private $subReasonCode;
 
+    /** @var array $userHashes */
+    private $userHashes;
+
+    /** @var string $state */
+    private $state;
+
+    /** @var array $stateChanges */
+    private $stateChanges;
+    
     /**
      * Return the URN of this case
      * @return string

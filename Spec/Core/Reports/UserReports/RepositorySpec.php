@@ -31,8 +31,8 @@ class RepositorySpec extends ObjectBehavior
                 $query = $prepared->build();
                 $values = $query['values'];
 
-                return $values[0]->value() == 456
-                    && $values[1]->value() == 'hash'
+                return $values[0]->values()[0]->value() == 456
+                    && $values[1]->values()[0]->value() == 'hash'
                     && $values[2] === 'urn:activity:123'
                     && $values[3]->value() == 2
                     && $values[4]->value() == 4

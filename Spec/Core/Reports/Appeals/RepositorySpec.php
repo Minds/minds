@@ -8,18 +8,25 @@ use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Repository as ReportsRepository;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Minds\Core\Data\ElasticSearch\Client;
+use Minds\Core\Data\Cassandra\Client;
+use Cassandra\Bigint;
+use Cassandra\Float_;
+use Cassandra\Timestamp;
+use Cassandra\Type;
+use Cassandra\Type\Map;
+use Cassandra\Type\Set;
+use Cassandra\Boolean;
 
 class RepositorySpec extends ObjectBehavior
 {
-    private $es;
+    private $cql;
     private $reportsRepository;
 
-    function let(Client $es, ReportsRepository $reportsRepository)
+    function let(Client $cql, ReportsRepository $reportsRepository)
     {
-        $this->beConstructedWith($es, $reportsRepository);
-        $this->es = $es;
-        $this->reportsRepository = $reportsRepository;
+        $this->beConstructedWith($cql);
+        $this->cql = $cql;
+        //$this->reportsRepository = $reportsRepository;
     }
 
     function it_is_initializable()
@@ -29,53 +36,103 @@ class RepositorySpec extends ObjectBehavior
 
     function it_should_return_a_list_of_appealable_reports()
     {
-        $this->reportsRepository->getList(Argument::that(function($opts) {
-            return $opts['must_not'][1]['exists']['field'] === '@appeal_jury_decided_timestamp'
-                && $opts['must_not'][2]['exists']['field'] === '@appeal_timestamp';
+        $this->cql->request(Argument::that(function($prepared) {
+            return true;
         }))
             ->shouldBeCalled()
             ->willReturn([
-                new Report(),
-                new Report(),
+                [
+                    'entity_urn' => 'urn:activity:123',
+                    'entity_owner_guid' => new Bigint(456),
+                    'reason_code' => new Float_(2),
+                    'sub_reason_code' => new Float_(5),
+                    'timestamp' => new Timestamp(1549451597000),
+                    'state' => 'initial_jury_decided',
+                    'state_changes' => (new Map(Type::text(), Type::timestamp()))
+                        ->set('reported', new Timestamp(1549451597000)),
+                    'appeal_note' => null,
+                    'reports' => (new Set(Type::bigint()))
+                        ->set(new Bigint(789)),
+                    'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
+                        ->set(new Bigint(101112), new Boolean(true)),
+                    'appeal_jury' => (new Map(Type::bigint(), Type::boolean())),
+                    'user_hashes' => (new Set(Type::text()))
+                        ->set('hashFor789'),
+                ],
+                [
+                    'entity_urn' => 'urn:activity:1234',
+                    'entity_owner_guid' => new Bigint(456),
+                    'reason_code' => new Float_(2),
+                    'sub_reason_code' => new Float_(5),
+                    'timestamp' => new Timestamp(1549451597000),
+                    'state' => 'initial_jury_decided',
+                    'state_changes' => (new Map(Type::text(), Type::timestamp()))
+                        ->set('reported', new Timestamp(1549451597000)),
+                    'appeal_note' => null,
+                    'reports' => (new Set(Type::bigint()))
+                        ->set(new Bigint(789)),
+                    'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
+                        ->set(new Bigint(101112), new Boolean(true)),
+                    'appeal_jury' => (new Map(Type::bigint(), Type::boolean())),
+                    'user_hashes' => (new Set(Type::text()))
+                        ->set('hashFor789'),
+                ],
             ]);
 
-        $response = $this->getList([ 'owner_guid' => 123 ]);
+        $response = $this->getList([ 'owner_guid' => 456 ]);
         $response->shouldHaveCount(2);
     }
 
     function it_should_return_a_list_of_appealed_reports()
     {
-        $this->reportsRepository->getList(Argument::that(function($opts) {
-            return $opts['must'][2]['exists']['field'] === '@appeal_timestamp';
+        $this->cql->request(Argument::that(function($prepared) {
+            return true;
         }))
             ->shouldBeCalled()
             ->willReturn([
-                (new Report())
-                    ->setAppealNote('first note'),
-                (new Report())
-                    ->setAppealNote('second note'),
+                [
+                    'entity_urn' => 'urn:activity:123',
+                    'entity_owner_guid' => new Bigint(456),
+                    'reason_code' => new Float_(2),
+                    'sub_reason_code' => new Float_(5),
+                    'timestamp' => new Timestamp(1549451597000),
+                    'state' => 'initial_jury_decided',
+                    'state_changes' => (new Map(Type::text(), Type::timestamp()))
+                        ->set('reported', new Timestamp(1549451597000)),
+                    'appeal_note' => 'hello world',
+                    'reports' => (new Set(Type::bigint()))
+                        ->set(new Bigint(789)),
+                    'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
+                        ->set(new Bigint(101112), new Boolean(true)),
+                    'appeal_jury' => (new Map(Type::bigint(), Type::boolean()))
+                        ->set(new Bigint(101113), new Boolean(true)),
+                    'user_hashes' => (new Set(Type::text()))
+                        ->set('hashFor789'),
+                ],
             ]);
 
-        $response = $this->getList([ 
-            'owner_guid' => 123,
-            'showAppealed' => true 
+        $response = $this->getList([
+            'owner_guid' => 456,
+            'showAppealed' => true,
         ]);
-        $response->shouldHaveCount(2);
+        $response->shouldHaveCount(1);
         $response[0]->getNote()
-            ->shouldBe('first note');
-        $response[1]->getNote()
-            ->shouldBe('second note');
+            ->shouldBe('hello world');
+        $response[0]->getReport()
+            ->getEntityUrn()
+            ->shouldBe('urn:activity:123');
     }
 
     function it_should_add_an_appeal(Appeal $appeal)
     {
         $ts = (int) microtime(true);
-        $this->es->request(Argument::that(function($prepared) use ($ts) {
-                $query = $prepared->build();
-                $doc = $query['body']['doc'];
-                return $doc['@appeal_timestamp'] === $ts
-                    && $doc['appeal_note'] === 'Should not be reported because this is a test'
-                    && $query['id'] === 123;
+        $this->cql->request(Argument::that(function($prepared) use ($ts) {
+                $values = $prepared->build()['values'];
+                return $values[0] == 'Should not be reported because this is a test'
+                    && $values[1] == 'appealed'
+                    && $values[3] == 'urn:activity:123'
+                    && $values[4] == 2
+                    && $values[5] == 5;
             }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -85,7 +142,9 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn($ts);
 
         $report = new Report();
-        $report->setEntityGuid(123);
+        $report->setEntityUrn('urn:activity:123')
+            ->setReasonCode(2)
+            ->setSubReasonCode(5);
 
         $appeal->getReport()
             ->shouldBeCalled()
