@@ -30,7 +30,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        $scopes = new Set(Type\Set::text());
+        $scopes = new Set(Type::text());
         foreach ($accessTokenEntity->getScopes() as $scope) {
             $scopes->add($scopes);
         }

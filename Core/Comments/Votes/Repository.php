@@ -42,7 +42,7 @@ class Repository
         $comment = $vote->getEntity();
 
         $field = "votes_{$vote->getDirection()}";
-        $set = new Set(Type\Set::varint());
+        $set = new Set(Type::varint());
         $set->add(new Varint($vote->getActor()->guid));
         
         $cql = "UPDATE comments
@@ -79,7 +79,7 @@ class Repository
         $comment = $vote->getEntity();
 
         $field = "votes_{$vote->getDirection()}";
-        $set = new Set(Type\Set::varint());
+        $set = new Set(Type::varint());
         $set->add(new Varint($vote->getActor()->guid));
 
         $cql = "UPDATE comments
