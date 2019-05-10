@@ -79,7 +79,7 @@ class ManagerSpec extends ObjectBehavior
 
         $scoredGuid2->getOwnerGuid()
             ->shouldBeCalled()
-            ->willReturn(1000);
+            ->willReturn(1001);
 
         $scoredGuid2->getTimestamp()
             ->shouldBeCalled()

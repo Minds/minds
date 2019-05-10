@@ -88,6 +88,7 @@ class Manager
             'query' => null,
             'nsfw' => null,
             'single_owner_threshold' => 36,
+	    'filter_hashtags' => false,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
