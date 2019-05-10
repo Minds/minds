@@ -87,6 +87,7 @@ class Manager
             'from_timestamp' => null,
             'query' => null,
             'nsfw' => null,
+            'single_owner_threshold' => 36,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
@@ -94,15 +95,25 @@ class Manager
 
             $response = new Response($result);
             return $response;
-        }
+        } 
 
         $feedSyncEntities = [];
         $scores = [];
+        $owners = [];
+        $i = 0;
 
         foreach ($this->repository->getList($opts) as $scoredGuid) {
             if (!$scoredGuid->getGuid()) {
                 continue;
             }
+
+            if (++$i < $opts['single_owner_threshold']
+                && isset($owners[$scoredGuid->getOwnerGuid()])
+                && !$opts['filter_hashtags']
+            ) {
+                continue;
+            }
+            $owners[$scoredGuid->getOwnerGuid()] = true;
 
             $feedSyncEntities[] = (new FeedSyncEntity())
                 ->setGuid($scoredGuid->getGuid())
