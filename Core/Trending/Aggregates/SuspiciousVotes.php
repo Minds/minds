@@ -6,15 +6,12 @@ namespace Minds\Core\Trending\Aggregates;
 
 use Minds\Core\Data\ElasticSearch;
 
-class Votes extends Aggregate
+class SuspiciousVotes extends Aggregate
 {
 
     protected $multiplier = 1;
 
-    private $page = -1;
-    private $partitions = 20;
-
-    public function fetch()
+    public function get()
     {
         $filter = [ 
             'term' => [
@@ -33,7 +30,7 @@ class Votes extends Aggregate
             ]
         ];
         
-        if ($this->type && $this->type != 'group' && $this->type != 'user') {
+        if ($this->type && $this->type != 'group') {
             $must[]['match'] = [
                 'entity_type' => $this->type
             ];
@@ -56,12 +53,8 @@ class Votes extends Aggregate
                 'entity_access_id' => [
                   'gte' => 3, //would be group
                   'lt' => null,
-                ],
+                ]
             ];
-        }
-
-        if ($this->type === 'user') {
-            $field = 'entity_owner_guid';
         }
 
         //$must[]['match'] = [
@@ -80,23 +73,11 @@ class Votes extends Aggregate
                     ]
                 ],
                 'aggs' => [
-                    'entities' => [
-                        'terms' => [ 
+                    'suspicious' => [
+                        'significant_terms' => [ 
                             'field' => "$field.keyword",
                             'size' => $this->limit,
-                            'include' => [
-                                'partition' => $this->page,
-                                'num_partitions' => $this->partitions,
-                            ],
-                            // 'order' => [ 'uniques' => 'DESC' ],
-                        ],
-                        'aggs' => [
-                            'uniques' => [
-                                'cardinality' => [
-                                    'field' => "$cardinality_field.keyword",
-                                    //'precision_threshold' => 40000
-                                ]
-                            ]
+//                            'order' => [ 'uniques' => 'DESC' ],
                         ]
                     ]
                 ]
@@ -105,18 +86,14 @@ class Votes extends Aggregate
 
         $prepared = new ElasticSearch\Prepared\Search();
         $prepared->query($query);
-    
-        return $this->client->request($prepared);
-    }
 
-    public function get()
-    {
-        while ($this->page++ < $this->partitions - 1) {
-            $result = $this->fetch();
-            foreach ($result['aggregations']['entities']['buckets'] as $entity) {
-                yield $entity['key'] => ($entity['uniques']['value'] ?: 1) * $this->multiplier;
-            }
+        $result = $this->client->request($prepared);
+
+        $entities = [];
+        foreach ($result['aggregations']['entities']['buckets'] as $entity) {
+            $entities[$entity['key']] = $entity['uniques']['value'] * $this->multiplier;
         }
+        return $entities;
     }
 
 }

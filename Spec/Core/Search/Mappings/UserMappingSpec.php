@@ -43,6 +43,7 @@ class UserMappingSpec extends ObjectBehavior
         $user->getMatureContent()->willReturn(false);
         $user->getGroupMembership()->willReturn([ 2000 ]);
         $user->getNsfw()->willReturn([ 1 ]);
+        $user->getTags()->willReturn([ 'spaceiscool' ]);
 
         $this
             ->setEntity($user)
@@ -73,6 +74,7 @@ class UserMappingSpec extends ObjectBehavior
                 '@timestamp' => $now * 1000,
                 'taxonomy' => 'user',
                 'public' => true,
+                'tags' => [ 'spaceiscool' ],
                 'nsfw' => [ 1 ],
                 'group_membership' => [ 2000 ],
             ]);

@@ -94,7 +94,7 @@ class Repository
             'sort' => [],
         ];
 
-        if ($opts['type'] === 'group') {
+        /*if ($opts['type'] === 'group' && false) {
             if (!isset($body['query']['function_score']['query']['bool']['must_not'])) {
                 $body['query']['function_score']['query']['bool']['must_not'] = [];
             }
@@ -109,7 +109,7 @@ class Repository
                     'access_id' => '2',
                 ],
             ];
-        }
+        }*/
 
         //
 
@@ -309,7 +309,7 @@ class Repository
 
         $query = [
             'index' => $this->index,
-            'type' => in_array($opts['type'], ['user', 'group']) ? 'activity' : $opts['type'],
+            'type' => $opts['type'],
             'body' => $body,
             'size' => $opts['limit'],
             'from' => $opts['offset'],
@@ -338,12 +338,12 @@ class Repository
     private function getSourceField(string $type)
     {
         switch ($type) {
-            case 'user':
-                return 'owner_guid';
-                break;
-            case 'group':
-                return 'container_guid';
-                break;
+            //case 'user':
+            //    return 'owner_guid';
+            //    break;
+            //case 'group':
+            //    return 'container_guid';
+            //    break;
             default:
                 return 'guid';
                 break;
