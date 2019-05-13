@@ -75,10 +75,13 @@ class Index
                 'index' => $this->esIndex,
                 'type' => $mapper->getType(),
                 'id' => $mapper->getId(),
-                'body' => $body
+                'body' => [
+                    'doc' => $body,
+                    'doc_as_upsert' => true,
+                ],
             ];
 
-            $prepared = new Prepared\Index();
+            $prepared = new Prepared\Update();
             $prepared->query($query);
 
             $result = (bool) $this->client->request($prepared);
