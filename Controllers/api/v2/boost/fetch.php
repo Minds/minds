@@ -93,8 +93,8 @@ class fetch implements Interfaces\Api
                     foreach ($iterator as $boost) {
                             $feedSyncEntity = new Core\Feeds\FeedSyncEntity();
                             $feedSyncEntity
-                                ->setGuid($boost->getGuid())
-                                ->setOwnerGuid($boost->getOwnerGuid())
+                                ->setGuid((string) $boost->getGuid())
+                                ->setOwnerGuid((string) $boost->getOwnerGuid())
                                 ->setUrn(new Urn("urn:boost:{$boost->getType()}:{$boost->getGuid()}"));
 
                             $boosts[] = $feedSyncEntity;
