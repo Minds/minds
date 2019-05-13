@@ -130,6 +130,7 @@ class container implements Interfaces\Api
             'sync' => $sync,
             'from_timestamp' => $fromTimestamp,
             'query' => $query,
+            'single_owner_threshold' => 0,
         ];
 
         if (isset($_GET['nsfw'])) {
