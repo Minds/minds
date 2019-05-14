@@ -375,3 +375,7 @@ $CONFIG->set('tags', [
 ]);
 
 $CONFIG->set('development_mode', false);
+
+$CONFIG->set('max_video_length', 900);
+
+$CONFIG->set('max_video_length_plus', 1860);
