@@ -111,6 +111,7 @@ class Manager
             if (++$i < $opts['single_owner_threshold']
                 && isset($owners[$scoredGuid->getOwnerGuid()])
                 && !$opts['filter_hashtags']
+                && !in_array($opts['type'], [ 'user', 'group' ])
             ) {
                 continue;
             }
