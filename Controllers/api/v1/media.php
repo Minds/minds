@@ -15,6 +15,7 @@ use Minds\Helpers;
 use Minds\Interfaces;
 use Minds\Core\Events\Dispatcher;
 use Minds\Api\Factory;
+use Minds\Core\Entities\Actions\Save;
 
 class media implements Interfaces\Api, Interfaces\ApiIgnorePam
 {
@@ -221,6 +222,7 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
     private function _upload($clientType, array $data = [], array $media = [])
     {
         $user = Core\Session::getLoggedInUser();
+        $save = new Save();
 
         // @note: Sometimes images are uploaded as videos. Polyfill:
         $mimeIsImage = strpos($media['type'], 'image/') !== false;
@@ -267,7 +269,10 @@ class media implements Interfaces\Api, Interfaces\ApiIgnorePam
         $entity->setAssets($assets->upload($media, $data));
 
         // Save initial entity
-        $success = $entity->save(true);
+       
+        $success =  $save
+            ->setEntity($entity)
+            ->save(true);
 
         if (!$success) {
             throw new \Exception('Error saving media entity');
