@@ -1619,5 +1619,13 @@ abstract class ElggEntity extends ElggData implements
         return $this;
     }
 
+	/**
+	 * Return a preferred urn
+	 * @return string
+	 */
+	public function getUrn()
+	{
+		return "urn:entity:{$this->getGuid()}";
+	}
 
 }

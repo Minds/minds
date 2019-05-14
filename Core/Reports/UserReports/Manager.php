@@ -11,6 +11,7 @@ use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Core\Reports\Manager as ReportsManager;
 
 class Manager
 {
@@ -23,15 +24,20 @@ class Manager
     /** @var Delegates\NotificationDelegate $notificationDelegate */
     private $notificationDelegate;
 
+    /** @var ReportsManager $reportsManager */
+    private $reportsManager;
+
     public function __construct(
         $repository = null,
         $elasticRepository = null,
-        $notificationDelegate = null
+        $notificationDelegate = null,
+        $reportsManager = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->elasticRepository = $elasticRepository ?: new ElasticRepository;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
+        $this->reportsManager = $reportsManager ?: Di::_()->get('Moderation\Manager');
     }
 
     /**
@@ -49,14 +55,27 @@ class Manager
 
     /**
      * Add a report
-     * @param Report $report
+     * @param UserReport $userReport
      * @return boolean
      */
-    public function add(UserReport $report)
+    public function add(UserReport $userReport)
     {
-        $this->repository->add($report);
-        $this->elasticRepository->add($report);
-        $this->notificationDelegate->onAction($report);
+        // Return the latest report, or the same supplied report if none exist
+        $report = $this->reportsManager->getLatestReport($userReport->getReport());
+
+        if ($report->getState() !== 'reported' 
+            && !in_array($report->getEntity()->type, [ 'user', 'group' ])
+        ) {
+            return; // Already past report threshold
+        } elseif ($report->getState() === 'closed') {
+            $report->setTimestamp(round(microtime(true) * 1000));
+        }
+
+        $userReport->setReport($report);
+
+        $this->repository->add($userReport);
+        //$this->elasticRepository->add($report);
+        $this->notificationDelegate->onAction($userReport);
         return true;
     }
 

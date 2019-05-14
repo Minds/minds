@@ -31,7 +31,7 @@ class report implements Interfaces\Api
             ]);
         }
 
-        $manager = Di::_()->get('Moderation\Reports\Manager');
+        $manager = Di::_()->get('Moderation\UserReports\Manager');
 
         if (!isset($_POST['entity_guid'])) {
             return Factory::response([
@@ -57,19 +57,20 @@ class report implements Interfaces\Api
         }
 
         $report = new Reports\Report();
-        $report->setEntityGuid($_POST['entity_guid'])
-            ->setEntityOwnerGuid($entity->getOwnerGuid());
+        $report->setEntityUrn($entity->getUrn())
+            ->setEntity($entity)
+            ->setEntityOwnerGuid($entity->getOwnerGuid())
+            ->setReasonCode((int) $_POST['reason_code'])
+            ->setSubReasonCode($_POST['sub_reason_code'] ?? null);
 
         $userReport = new Reports\UserReports\UserReport();
         $userReport
             ->setReport($report)
             ->setReporterGuid($user->getGuid())
-            ->setReasonCode((int) $_POST['reason_code'])
-            ->setSubReasonCode($_POST['sub_reason_code'] ?? null)
             ->setTimestamp(round(microtime(true) * 1000));
 
         if (!$manager->add($userReport)) {
-            Factory::response([
+            return Factory::response([
                 'status' => 'error',
                 'message' => 'Report could not be saved',
             ]);

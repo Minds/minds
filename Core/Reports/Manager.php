@@ -55,4 +55,17 @@ class Manager
         return $this->repository->add($report);
     }
 
+    /**
+     * Indempotent fucntion to return the latest report found 
+     * or supplied
+     * @param Report $report
+     * @return Report
+     */
+    public function getLatestReport($report)
+    {
+        $report->setState('reported')
+            ->setTimestamp(round(microtime(true) * 1000));
+        return $report;
+    }
+
 }

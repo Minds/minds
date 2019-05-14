@@ -3,9 +3,10 @@ namespace Minds\Core\Reports\UserReports;
 
 use Cassandra;
 use Cassandra\Type;
+use Cassandra\Tinyint;
 use Cassandra\Bigint;
-use Cassandra\Float_ as FloatInt;
-use Cassandra\Type\Set;
+use Cassandra\Decimal;
+use Cassandra\Set;
 use Cassandra\Timestamp;
 
 use Minds\Core;
@@ -50,24 +51,31 @@ class Repository
     public function add(UserReport $report)
     {
         $statement = "UPDATE moderation_reports
-            SET reports += ?,
-                user_hashes += ?,
-            WHERE entity_urn = ?
+            SET reports += ?";
+        
+        $set = new Set(Type::bigint());
+        $set->add(new Bigint($report->getReporterGuid()));
+        $values = [
+            $set,
+        ];
+
+        if ($report->getReporterHash()) {
+            $statement .= ", user_hashes += ?";
+            $values[] = (new Set(Type::text()))
+                ->add($report->getReporterHash());
+        }
+
+        $statement .=" WHERE entity_urn = ?
             AND reason_code = ?
             AND sub_reason_code = ?
             AND timestamp = ?";
+        $values[] = $report->getReport()->getEntityUrn();
+        $values[] = new Tinyint($report->getReport()->getReasonCode());
+        $values[] = new Decimal($report->getReport()->getSubReasonCode());
+        $values[] = new Timestamp($report->getReport()->getTimestamp());
         
         $prepared = new Prepared;
-        $prepared->query($statement, [
-                (new Set(Type::bigint()))
-                    ->set($report->getReporterGuid()),
-                (new Set(Type::bigint()))
-                    ->set($report->getReporterHash()),
-                $report->getReport()->getEntityUrn(),
-                new FloatInt($report->getReasonCode()),
-                new FloatInt($report->getSubReasonCode()),
-                new Timestamp($report->getReport()->getTimestamp()),
-            ]);
+        $prepared->query($statement, $values);
 
         return (bool) $this->cql->request($prepared);
     }

@@ -53,6 +53,8 @@ class UserMapping extends EntityMapping implements MappingInterface
             $map['group_membership'] = [];
         }
 
+        $map['tags'] = array_unique(array_merge($map['tags'], $this->entity->getTags()));
+
         return $map;
     }
 

@@ -687,4 +687,13 @@ class Activity extends Entity
         return $this->ownerObj;
     }
 
+    /**
+     * Return a preferred urn
+     * @return string
+     */
+    public function getUrn()
+    {
+        return "urn:activity:{$this->getGuid()}";
+    }
+
 }
