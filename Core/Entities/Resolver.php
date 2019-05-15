@@ -116,8 +116,8 @@ class Resolver
 
         $sorted = [];
 
-        foreach ($this->urns as $urn) {
-            $sorted[] = $resolvedMap[$urn->getUrn()] ?? null;
+        foreach ($resolvedMap as $entity) {
+            $sorted[] = $entity ?? null;
         }
 
         // Filter out invalid entities
@@ -140,5 +140,12 @@ class Resolver
         //
 
         return $sorted;
+    }
+
+    public function single($urn)
+    {
+        $this->urns = [ $urn ];
+        $entities = $this->fetch();
+        return $entities[0];
     }
 }

@@ -51,21 +51,25 @@ class Repository
     public function add(UserReport $report)
     {
         $statement = "UPDATE moderation_reports
-            SET reports += ?";
+            SET reports += ?,
+            state = 'reported',
+            entity_owner_guid = ?";
         
         $set = new Set(Type::bigint());
         $set->add(new Bigint($report->getReporterGuid()));
         $values = [
             $set,
+            new Bigint($report->getReport()->getEntityOwnerGuid()),
         ];
 
         if ($report->getReporterHash()) {
             $statement .= ", user_hashes += ?";
-            $values[] = (new Set(Type::text()))
-                ->add($report->getReporterHash());
+            $hashesSet = new Set(Type::text());
+            $hashesSet->add($report->getReporterHash());
+            $values[] = $hashesSet; 
         }
 
-        $statement .=" WHERE entity_urn = ?
+        $statement .= " WHERE entity_urn = ?
             AND reason_code = ?
             AND sub_reason_code = ?
             AND timestamp = ?";

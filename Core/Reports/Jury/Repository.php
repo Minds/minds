@@ -3,6 +3,13 @@ namespace Minds\Core\Reports\Jury;
 
 use Cassandra;
 use Cassandra\Type;
+use Cassandra\Map;
+use Cassandra\Set;
+use Cassandra\Bigint;
+use Cassandra\Tinyint;
+use Cassandra\Decimal;
+use Cassandra\Timestamp;
+
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
@@ -25,7 +32,7 @@ class Repository
 
     public function __construct($cql = null, $reportsRepository = null)
     {
-        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
@@ -46,7 +53,7 @@ class Repository
         ], $opts);
 
         if (!$opts['user']->getPhoneNumberHash()) {
-            return null;
+            //return null;
         }
 
         $statement = "SELECT * FROM moderation_reports_by_state
@@ -64,7 +71,8 @@ class Repository
         $response = new Response;
 
         foreach ($result as $row) {
-            if (in_array($opts['user']->getPhoneNumberHash(), 
+            if ($row['user_hashes']
+                && in_array($opts['user']->getPhoneNumberHash(), 
                     array_map(function ($hash) {
                         return $hash;
                     }, $row['user_hashes']->values())
@@ -89,29 +97,35 @@ class Repository
     public function add(Decision $decision)
     {
         $statement = "UPDATE moderation_reports
-            SET initial_jury += ?
-            SET user_hashes += ?
+            SET initial_jury += ?,
+            user_hashes += ?
             WHERE entity_urn = ?
             AND reason_code = ?
-            AND sub_reason_code = ?";
+            AND sub_reason_code = ?
+            AND timestamp = ?";
 
         if ($decision->isAppeal()) {
             $statement = "UPDATE moderation_reports
-                SET appeal_jury += ?
-                SET user_hashes += ?
+                SET appeal_jury += ?,
+                user_hashes += ?
                 WHERE entity_urn = ?
                 AND reason_code = ?
-                AND sub_reason_code = ?";
+                AND sub_reason_code = ?
+                AND timestamp = ?";
         }
 
+        $map = new Map(Type::bigint(), Type::boolean());
+        $map->set(new Bigint($decision->getJurorGuid()), $decision->isUpheld());
+
+        $set = new Set(Type::text());
+        $set->add($decision->getJurorHash() ?? 'testing');
         $params = [
-            (new Type\Map(Type::bigint(), Type::boolean()))
-                ->set($decision->getJurorGuid(), $decision->isUpheld()),
-            (new Type\Set(Type::text()))
-                ->set($decision->getJurorHash()),
+            $map,
+            $set,
             $decision->getReport()->getEntityUrn(),
-            (float) $decision->getReport()->getReasonCode(),
-            (float) $decision->getReport()->getSubReasonCode(),
+            new Tinyint($decision->getReport()->getReasonCode()),
+            new Decimal($decision->getReport()->getSubReasonCode()),
+            new Timestamp($decision->getReport()->getTimestamp()),
         ];
 
         $prepared = new Prepared();

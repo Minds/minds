@@ -24,7 +24,7 @@ class RepositorySpec extends ObjectBehavior
         $this->shouldHaveType(Repository::class);
     }
 
-    function it_should_add_a_report(UserReport $report)
+    function it_should_add_a_report(UserReport $userReport)
     {
         $ts = (int) microtime(true);
         $this->cql->request(Argument::that(function($prepared) use ($ts) {
@@ -32,38 +32,33 @@ class RepositorySpec extends ObjectBehavior
                 $values = $query['values'];
 
                 return $values[0]->values()[0]->value() == 456
-                    && $values[1]->values()[0]->value() == 'hash'
-                    && $values[2] === 'urn:activity:123'
-                    && $values[3]->value() == 2
-                    && $values[4]->value() == 4
-                    && $values[5]->time() == $ts;
+                    && $values[2]->values()[0]->value() == 'hash'
+                    && $values[3] === 'urn:activity:123'
+                    && $values[4]->value() == 2
+                    && $values[5]->value() == 4
+                    && $values[6]->time() == $ts;
             }))
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $report->getReport()
+        $userReport->getReport()
             ->shouldBeCalled()
             ->willReturn((new Report)
                 ->setEntityUrn("urn:activity:123")
-                ->setTimestamp($ts));
+                ->setTimestamp($ts)
+                ->setReasonCode(2)
+                ->setSubReasonCode(4)
+            );
         
-        $report->getReporterGuid()
+        $userReport->getReporterGuid()
             ->shouldBeCalled()
             ->willReturn(456);
         
-        $report->getReporterHash()
+        $userReport->getReporterHash()
             ->shouldBeCalled()
             ->willReturn('hash');
 
-        $report->getReasonCode()
-            ->shouldBeCalled()
-            ->willReturn(2);
-
-        $report->getSubReasonCode()
-            ->shouldBeCalled()
-            ->willReturn(4);
-
-        $this->add($report)
+        $this->add($userReport)
             ->shouldBe(true);
     }
 

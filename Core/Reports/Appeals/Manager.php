@@ -11,6 +11,8 @@ use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Core\Entities\Resolver as EntitiesResolver;
+use Minds\Common\Urn;
 
 class Manager
 {
@@ -21,17 +23,17 @@ class Manager
     /** @var NotificationDelegate $notificationDelegate */
     private $notificationDelegate;
 
-    /** @var EntitiesBuilder $entitesBuilder */
-    private $entitesBuilder;
+    /** @var EntitiesResolver $entitiesResolver */
+    private $entitiesResolver;
 
     public function __construct(
         $repository = null,
-        $entitesBuilder = null,
+        $entitiesResolver = null,
         $notificationDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
-        $this->entitiesBuilder = $entitesBuilder ?: Di::_()->get('EntitiesBuilder');
+        $this->entitiesResolver = $entitiesResolver ?: new EntitiesResolver;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
@@ -51,7 +53,9 @@ class Manager
         if ($opts['hydrate']) {
             foreach ($response as $appeal) {
                 $report = $appeal->getReport();
-                $entity = $this->entitiesBuilder->single($report->getEntityGuid());
+                $entity = $this->entitiesResolver->single(
+                    (new Urn())->setUrn($report->getEntityUrn())
+                );
                 $report->setEntity($entity);
                 $appeal->setReport($report);
             }

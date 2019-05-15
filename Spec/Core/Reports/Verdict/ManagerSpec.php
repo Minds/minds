@@ -16,17 +16,20 @@ class ManagerSpec extends ObjectBehavior
 {
     private $repository;
     private $actionDelegate;
+    private $reverseDelegate;
     private $notificationDelegate;
 
     function let(
         Repository $repository,
         Delegates\ActionDelegate $actionDelegate,
+        Delegates\ReverseActionDelegate $reverseDelegate,
         Delegates\NotificationDelegate $notificationDelegate
     )
     {
-        $this->beConstructedWith($repository, $actionDelegate, $notificationDelegate);
+        $this->beConstructedWith($repository, $actionDelegate, $reverseDelegate, $notificationDelegate);
         $this->repository = $repository;
         $this->actionDelegate = $actionDelegate;
+        $this->reverseDelegate = $reverseDelegate;
         $this->notificationDelegate = $notificationDelegate;
 
     }
@@ -36,8 +39,17 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType(Manager::class);
     }
 
-    function it_should_add_verdict_to_repository(Verdict $verdict)
+    function it_should_add_verdict_to_repository(Verdict $verdict, Report $report)
     {
+        $verdict->isAppeal()
+            ->willReturn(false);
+
+        $verdict->isUpheld()
+            ->willReturn(false);
+
+        $verdict->getReport()
+            ->willReturn($report);
+
         $this->repository->add($verdict)
             ->shouldBeCalled()
             ->willReturn(true);

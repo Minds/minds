@@ -56,7 +56,7 @@ class Manager
     }
 
     /**
-     * Indempotent fucntion to return the latest report found 
+     * Indempotent function to return the latest report found 
      * or supplied
      * @param Report $report
      * @return Report
@@ -65,7 +65,18 @@ class Manager
     {
         $report->setState('reported')
             ->setTimestamp(round(microtime(true) * 1000));
-        return $report;
+
+        $reports = $this->getList([
+            'entity_urn' => $report->getEntityUrn(),
+            'reason_code' => $report->getReasonCode(),
+            'sub_reason_code' => $report->getSubReasonCode(),
+        ]);
+
+        if (!$reports || !count($reports)) {
+            return $report;
+        }
+
+        return $reports[0];
     }
 
 }

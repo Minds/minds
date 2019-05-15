@@ -19,7 +19,7 @@ class jury implements Interfaces\Api
         $juryType = $pages[0] ?? 'appeal';
 
         if ($juryType !== 'appeal' && !Core\Session::isAdmin()) {
-            exit;
+            //exit;
         }
 
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
@@ -40,7 +40,7 @@ class jury implements Interfaces\Api
     {
         $juryType = $pages[0] ?? null;
         $entityGuid = $pages[1] ?? null;
-        $action = $_POST['decision'] ?? null;
+        $uphold = $_POST['uphold'] ?? null;
 
         if (!$juryType) {
             return Factory::response([
@@ -56,14 +56,14 @@ class jury implements Interfaces\Api
             ]);
         }
 
-        if (!$action) {
+        if (!isset($uphold)) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'decision must be supplied in POST body',
+                'message' => 'uphold must be supplied in POST body',
             ]);
         }
 
-        if (!Core\Session::getLoggedInUser()->getPhoneNumberHash()) {
+        if (!Core\Session::getLoggedInUser()->getPhoneNumberHash() && false) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'juror must be in the rewards program',
@@ -77,7 +77,7 @@ class jury implements Interfaces\Api
         $decision = new Decision();
         $decision
             ->setAppeal($juryType === 'appeal')
-            ->setAction($action)
+            ->setUphold($uphold)
             ->setReport($report)
             ->setTimestamp(round(microtime(true) * 1000))
             ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid())

@@ -52,12 +52,12 @@ class RepositorySpec extends ObjectBehavior
                         ->set('reported', new Timestamp(1549451597000)),
                     'appeal_note' => null,
                     'reports' => (new Set(Type::bigint()))
-                        ->set(new Bigint(789)),
+                        ->add(new Bigint(789)),
                     'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
                         ->set(new Bigint(101112), new Boolean(true)),
                     'appeal_jury' => (new Map(Type::bigint(), Type::boolean())),
                     'user_hashes' => (new Set(Type::text()))
-                        ->set('hashFor789'),
+                        ->add('hashFor789'),
                 ],
                 [
                     'entity_urn' => 'urn:activity:1234',
@@ -70,12 +70,12 @@ class RepositorySpec extends ObjectBehavior
                         ->set('reported', new Timestamp(1549451597000)),
                     'appeal_note' => null,
                     'reports' => (new Set(Type::bigint()))
-                        ->set(new Bigint(789)),
+                        ->add(new Bigint(789)),
                     'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
                         ->set(new Bigint(101112), new Boolean(true)),
                     'appeal_jury' => (new Map(Type::bigint(), Type::boolean())),
                     'user_hashes' => (new Set(Type::text()))
-                        ->set('hashFor789'),
+                        ->add('hashFor789'),
                 ],
             ]);
 
@@ -101,13 +101,13 @@ class RepositorySpec extends ObjectBehavior
                         ->set('reported', new Timestamp(1549451597000)),
                     'appeal_note' => 'hello world',
                     'reports' => (new Set(Type::bigint()))
-                        ->set(new Bigint(789)),
+                        ->add(new Bigint(789)),
                     'initial_jury' => (new Map(Type::bigint(), Type::boolean()))
                         ->set(new Bigint(101112), new Boolean(true)),
                     'appeal_jury' => (new Map(Type::bigint(), Type::boolean()))
                         ->set(new Bigint(101113), new Boolean(true)),
                     'user_hashes' => (new Set(Type::text()))
-                        ->set('hashFor789'),
+                        ->add('hashFor789'),
                 ],
             ]);
 
@@ -131,8 +131,8 @@ class RepositorySpec extends ObjectBehavior
                 return $values[0] == 'Should not be reported because this is a test'
                     && $values[1] == 'appealed'
                     && $values[3] == 'urn:activity:123'
-                    && $values[4] == 2
-                    && $values[5] == 5;
+                    && $values[4]->value() == 2
+                    && $values[5]->value() == 5;
             }))
             ->shouldBeCalled()
             ->willReturn(true);

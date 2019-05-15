@@ -2,6 +2,13 @@
 namespace Minds\Core\Reports\Verdict;
 
 use Cassandra;
+use Cassandra\Type;
+use Cassandra\Map;
+use Cassandra\Set;
+use Cassandra\Bigint;
+use Cassandra\Tinyint;
+use Cassandra\Decimal;
+use Cassandra\Timestamp;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -25,7 +32,7 @@ class Repository
 
     public function __construct($cql = null, $reportsRepository = null)
     {
-        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
@@ -57,16 +64,25 @@ class Repository
     {
 
         $statement = "UPDATE moderation_reports
-            SET state = ?
+            SET state = ?,
+                state_changes += ?
             WHERE entity_urn = ?
             AND reason_code = ?
-            AND sub_reason_code = ?";
+            AND sub_reason_code = ?
+            AND timestamp = ?";
+
+        $state = $verdict->isAppeal() ? 'appeal_jury_decided' : 'initial_jury_decided';
+            
+        $stateChangesMap = new Map(Type::text(), Type::timestamp());
+        $stateChangesMap->set($state, new Timestamp(microtime(true)));
 
         $values = [
-            $verdict->isAppeal() ? 'appeal_jury_decided' : 'initial_jury_decided',
+            $state,
+            $stateChangesMap,
             $verdict->getReport()->getEntityUrn(),
-            $verdict->getReport()->getReasonCode(),
-            $verdict->getReport()->getSubReasonCode(),
+            new Tinyint($verdict->getReport()->getReasonCode()),
+            new Decimal($verdict->getReport()->getSubReasonCode()),
+            new Timestamp($verdict->getReport()->getTimestamp()),
         ];
 
         $prepared = new Prepared;

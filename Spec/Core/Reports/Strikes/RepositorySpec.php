@@ -8,7 +8,8 @@ use Minds\Core\Data\Cassandra\Client;
 use Minds\Common\Urn;
 use Cassandra\Bigint;
 use Cassandra\Timestamp;
-use Cassandra\Float_;
+use Cassandra\Tinyint;
+use Cassandra\Decimal;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -38,8 +39,8 @@ class RepositorySpec extends ObjectBehavior
                 [
                     'user_guid' => new Bigint(123),
                     'timestamp' => new Timestamp(1557226524000),
-                    'reason_code' => new Float_(2),
-                    'sub_reason_code' => new Float_(5),
+                    'reason_code' => new Tinyint(2),
+                    'sub_reason_code' => new Decimal(5),
                     'report_urn' => 'urn:goes:here',
                 ]
             ]);
@@ -70,15 +71,15 @@ class RepositorySpec extends ObjectBehavior
                 [
                     'user_guid' => new Bigint(123),
                     'timestamp' => new Timestamp(1557226524000),
-                    'reason_code' => new Float_(2),
-                    'sub_reason_code' => new Float_(5),
+                    'reason_code' => new Tinyint(2),
+                    'sub_reason_code' => new Decimal(5),
                     'report_urn' => 'urn:goes:here',
                 ],
                 [
                     'user_guid' => new Bigint(123),
                     'timestamp' => new Timestamp(1567226524000),
-                    'reason_code' => new Float_(2),
-                    'sub_reason_code' => new Float_(3),
+                    'reason_code' => new Tinyint(2),
+                    'sub_reason_code' => new Decimal(3),
                     'report_urn' => 'urn:goes:here',
                 ]
             ]);
@@ -115,8 +116,8 @@ class RepositorySpec extends ObjectBehavior
             $values = $prepared->build()['values'];
             return $values[0]->value() == 123
                 && $values[1]->time() == 1549451597000
-                && $values[2] == 2
-                && $values[3] == 3
+                && $values[2]->value() == 2
+                && $values[3]->value() == 3
                 && $values[4] == 'urn:report:(urn:activity:123)-2-3-1549451597000';
         }))
             ->shouldBeCalled()

@@ -6,6 +6,11 @@ namespace Minds\Core\Reports\Strikes;
 
 class Manager
 {
+
+    //const STRIKE_TIME_WINDOW = (60 * 60) * 24; // 24 hours
+    const STRIKE_TIME_WINDOW = 60;
+    const STRIKE_RETENTION_WINDOW = (60 * 60) * 24 * 90; // 90 days
+
     /** @var Repository $repository */
     private $repository;
 
@@ -46,6 +51,23 @@ class Manager
     public function add($strike)
     {
         return $this->repository->add($strike);
+    }
+
+    /**
+     * Return if a strike exists in the configured time window
+     * @param Strike $strike
+     * @return int
+     */
+    public function countStrikesInTimeWindow($strike, $window)
+    {
+        $strikes = $this->repository->getList([
+            'user_guid' => $strike->getUserGuid(),
+            'reason_code' => $strike->getReasonCode(),
+            'sub_reason_code' => $strike->getSubReasonCode(),
+            'from' => time() - $window,
+        ]);
+
+        return count($strikes);
     }
 
 }

@@ -24,6 +24,7 @@ class appeals implements Interfaces\Api
         $appeals = $appealManager->getList([
             'hydrate' => true,
             'showAppealed' => ($pages[0] ?? 'review') === 'pending',
+            'state' => $pages[0],
             'owner_guid' => Core\Session::getLoggedInUser()->getGuid(),
         ]);
 

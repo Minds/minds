@@ -19,6 +19,11 @@ use Minds\Traits\MagicAttributes;
  * @method Report getAppealTimestamp: int
  * @method Report getReasonCode(): int
  * @method Report getSubReasonCode(): int
+ * @method Report setState(string $string)
+ * @method Report getState(): string
+ * @method Report setTimestamp(int $timestamp)
+ * @method Report setReasonCode(int $value)
+ * @method Report setSubReasonCode(int $value)
  */
 class Report
 {
@@ -69,12 +74,22 @@ class Report
     /** @var array $userHashes */
     private $userHashes;
 
-    /** @var string $state */
-    private $state;
-
     /** @var array $stateChanges */
     private $stateChanges;
     
+    /**
+     * Return the state of the report from the state changes
+     */
+    public function getState()
+    {
+        if (!$this->stateChanges) {
+            return 'reported';
+        }
+        $sortedStates = $this->stateChanges;
+        arsort($sortedStates);
+        return key($sortedStates);
+    }
+
     /**
      * Return the URN of this case
      * @return string
@@ -97,15 +112,16 @@ class Report
     {
         $export = [
             'urn' => $this->getUrn(),
-            'entity_guid' => $this->entityGuid,
+            'entity_urn' => $this->entityUrn,
             'entity' => $this->entity ? $this->entity->export() : null,
             /*'reports' => $this->reports ? array_map(function($report){
                 return $report->export();
              }, $this->reports) : [],*/
             'is_appeal' => (bool) $this->isAppeal(),
             'appeal_note' => $this->getAppealNote(),
-            'reason_code' => $this->getReasonCode(),
-            'sub_reason_code' => $this->getSubReasonCode(),
+            'reason_code' => (int) $this->getReasonCode(),
+            'sub_reason_code' => (int) $this->getSubReasonCode(),
+            'state' => $this->getState(),
         ];
 
         return $export;

@@ -7,6 +7,8 @@ use Minds\Core\Reports\UserReports\Repository;
 use Minds\Core\Reports\UserReports\ElasticRepository;
 use Minds\Core\Reports\UserReports\UserReport;
 use Minds\Core\Reports\UserReports\Delegates;
+use Minds\Core\Reports\Report;
+use Minds\Core\Reports\Manager as ReportsManager;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -15,17 +17,20 @@ class ManagerSpec extends ObjectBehavior
     private $repository;
     private $elasticRepository;
     private $notificationDelegate;
+    private $reportsManager;
 
     function let(
         Repository $repository,
         ElasticRepository $elasticRepository,
-        Delegates\NotificationDelegate $notificationDelegate
+        Delegates\NotificationDelegate $notificationDelegate,
+        ReportsManager $reportsManager
     )
     {
-        $this->beConstructedWith($repository, $elasticRepository, $notificationDelegate);
+        $this->beConstructedWith($repository, $elasticRepository, $notificationDelegate, $reportsManager);
         $this->repository = $repository;
         $this->elasticRepository = $elasticRepository;
         $this->notificationDelegate = $notificationDelegate;
+        $this->reportsManager = $reportsManager;
     }
 
     function it_is_initializable()
@@ -39,14 +44,15 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $this->elasticRepository->add(Argument::type(UserReport::class))
+        $this->reportsManager->getLatestReport(Argument::type(Report::class))
             ->shouldBeCalled()
-            ->willReturn(true);
+            ->willReturn(new Report);
         
         $this->notificationDelegate->onAction(Argument::type(UserReport::class))
             ->shouldBeCalled();
 
         $userReport = new UserReport;
+        $userReport->setReport(new Report);
         $this->add($userReport)
             ->shouldReturn(true);
     }

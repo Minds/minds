@@ -12,6 +12,8 @@ use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Common\Repository\Response;
+use Minds\Common\Urn;
+use Minds\Core\Entities\Resolver as EntitiesResolver;
 
 class Manager
 {
@@ -19,8 +21,8 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var EntitiesBuilder $entitiesBuilder */
-    private $entitiesBuilder;
+    /** @var EntitiesBuilder $entitiesResolver */
+    private $entitiesResolver;
 
     /** @var VerdictManager $verdictManager */
     private $verdictManager;
@@ -33,12 +35,12 @@ class Manager
 
     public function __construct(
         $repository = null,
-        $entitiesBuilder = null,
+        $entitiesResolver = null,
         $verdictManager = null
     )
     {
         $this->repository = $repository ?: new Repository;
-        $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
+        $this->entitiesResolver = $entitiesResolver  ?: new EntitiesResolver;
         $this->verdictManager = $verdictManager ?: Di::_()->get('Moderation\Verdict\Manager');
     }
 
@@ -93,7 +95,9 @@ class Manager
 
         if ($opts['hydrate']) {
             foreach ($response as $report) {
-                $entity = $this->entitiesBuilder->single($report->getEntityGuid());
+                $entity = $this->entitiesResolver->single(
+                    (new Urn())->setUrn($report->getEntityUrn())
+                );
                 $report->setEntity($entity);
             }
         }

@@ -11,6 +11,8 @@ use Minds\Common\Urn;
 use Minds\Common\Repository\Response;
 use Cassandra\Timestamp;
 use Cassandra\Bigint;
+use Cassandra\Tinyint;
+use Cassandra\Decimal;
 
 class Repository
 {
@@ -22,7 +24,7 @@ class Repository
 
     public function __construct($cql = null, $urn = null)
     {
-        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->urn = $urn ?: new Urn();
     }
 
@@ -55,12 +57,12 @@ class Repository
 
         if ($opts['reason_code']) {
             $statement .= " AND reason_code = ?";
-            $values[] = (float) $opts['reason_code'];
+            $values[] = new Tinyint($opts['reason_code']);
         }
 
         if ($opts['sub_reason_code']) {
             $statement .= " AND sub_reason_code = ?";
-            $values[] = (float) $opts['sub_reason_code'];
+            $values[] = new Decimal($opts['sub_reason_code']);
         }
 
         if ($opts['timestamp']) {
@@ -78,6 +80,10 @@ class Repository
             $values[] = new Timestamp($opts['to'] * 1000);
         }
 
+        if (!$opts['reason_code'] && !$opts['sub_reason_code']) {
+            $statement .= " ALLOW FILTERING";
+        }
+
         $prepared = new Prepared;
         $prepared->query($statement, $values);
 
@@ -90,8 +96,8 @@ class Repository
             $strike
                 ->setUserGuid($row['user_guid']->value())
                 ->setTimestamp($row['timestamp']->time())
-                ->setReasonCode($row['reason_code']->toFloat())
-                ->setSubReasonCode($row['sub_reason_code']->toFloat())
+                ->setReasonCode((int) $row['reason_code']->value())
+                ->setSubReasonCode((int) $row['sub_reason_code']->value())
                 ->setReportUrn($row['report_urn']);
             $response[] = $strike;
         }
@@ -134,8 +140,8 @@ class Repository
         $values = [
             new Bigint($strike->getUserGuid()),
             new Timestamp($strike->getTimestamp()),
-            (float) $strike->getReasonCode(),
-            (float) $strike->getSubReasonCode(),
+            new Tinyint($strike->getReasonCode()),
+            new Decimal($strike->getSubReasonCode()),
             $strike->getReportUrn(),
         ];
 

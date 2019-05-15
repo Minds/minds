@@ -7,26 +7,27 @@ use Minds\Core\Reports\Appeals\Repository;
 use Minds\Core\Reports\Appeals\Appeal;
 use Minds\Core\Reports\Appeals\Delegates;
 use Minds\Core\Reports\Report;
-use Minds\Core\EntitiesBuilder;
+use Minds\Core\Entities\Resolver as EntitiesResolver;
 use Minds\Entities\Entity;
+use Minds\Common\Urn;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
     private $repository;
-    private $entitiesBuilder;
+    private $entitiesResolver;
     private $notificationDelegate;
 
     function let(
         Repository $repository,
-        EntitiesBuilder $entitiesBuilder,
+        EntitiesResolver $entitiesResolver,
         Delegates\NotificationDelegate $notificationDelegate
     )
     {
-        $this->beConstructedWith($repository, $entitiesBuilder, $notificationDelegate);
+        $this->beConstructedWith($repository, $entitiesResolver, $notificationDelegate);
         $this->repository = $repository;
-        $this->entitiesBuilder = $entitiesBuilder;
+        $this->entitiesResolver = $entitiesResolver;
         $this->notificationDelegate = $notificationDelegate;
     }
 
@@ -45,27 +46,31 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn([
                 (new Appeal)
                     ->setReport((new Report)
-                        ->setEntityGuid(123)),
+                        ->setEntityUrn('urn:activity:123')),
                 (new Appeal)
                     ->setReport((new Report)
-                        ->setEntityGuid(456)),
+                        ->setEntityUrn('urn:activity:456')),
             ]);
 
-        $this->entitiesBuilder->single(123)
+        $this->entitiesResolver->single(Argument::that(function ($urn) {
+            return $urn->getNss() == 123;
+        }))
             ->shouldBeCalled()
             ->willReturn((new Entity)->set('guid', 123));
-        $this->entitiesBuilder->single(456)
+        $this->entitiesResolver->single(Argument::that(function ($urn) {
+            return $urn->getNss() == 456;
+        }))
             ->shouldBeCalled()
             ->willReturn((new Entity)->set('guid', 456));
 
         $response = $this->getList([ 'hydrate' => true ]);
         $response->shouldHaveCount(2);
-        $response[0]->getReport()->getEntityGuid()
-            ->shouldBe(123);
+        $response[0]->getReport()->getEntityUrn()
+            ->shouldBe('urn:activity:123');
         $response[0]->getReport()->getEntity()->getGuid()
             ->shouldBe(123);
-        $response[1]->getReport()->getEntityGuid()
-            ->shouldBe(456);
+        $response[1]->getReport()->getEntityUrn()
+            ->shouldBe('urn:activity:456');
         $response[1]->getReport()->getEntity()->getGuid()
             ->shouldBe(456);
     }

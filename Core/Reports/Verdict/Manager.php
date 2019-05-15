@@ -26,17 +26,22 @@ class Manager
     /** @var Delegates\ActionDelegate $actionDelegate */
     private $actionDelegate;
 
+    /** @var Delegates\ReverseActionDelegate $reverseActionDelegate */
+    private $reverseActionDelegate;
+
     /** @var Delegates\NotificationDelegate $notificationDelegate */
     private $notificationDelegate;
 
     public function __construct(
         $repository = null,
         $actionDelegate = null,
+        $reverseActionDelegate = null,
         $notificationDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->actionDelegate = $actionDelegate ?: new Delegates\ActionDelegate;
+        $this->reverseActionDelegate = $reverseActionDelegate ?: new Delegates\ReverseActionDelegate;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
     }
 
@@ -121,6 +126,9 @@ class Manager
         
         // Make the action
         $this->actionDelegate->onAction($verdict);
+
+        // Reverse the action (if appeal)
+        $this->reverseActionDelegate->onReverse($verdict);
 
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);

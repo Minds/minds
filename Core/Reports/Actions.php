@@ -5,6 +5,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Reports\Report;
 
 class Actions
 {

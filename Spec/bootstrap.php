@@ -211,15 +211,13 @@ class MockMap
 
     public function set($key, $value)
     {
-        $md5 = md5($key);
-        $hashTable[$md5] = $key;
-        $this->kv[$md5] = new Mock($value);
+        $this->kv[(string) $key] = new Mock($value);
         return $this;
     }
 
     public function values()
     {
-        return new MockCollectionValues($this->kv);
+        return ($this->kv);
     }
 }
 
@@ -265,14 +263,14 @@ class MockCollectionValues implements ArrayAccess
 class MockSet
 {
     private $valueType;
-    private $values;
+    private $values = [];
 
     public function __construct($valueType)
     {
         $this->valueType = $valueType;
     }
 
-    public function set($value)
+    public function add($value)
     {
         $this->values[] = new Mock($value);
         return $this;
@@ -296,8 +294,8 @@ if (!class_exists('Cassandra')) {
     class_alias('Mock', 'Cassandra\Bigint');
     class_alias('Mock', 'Cassandra\Float_');
     class_alias('Mock', 'Cassandra\Tinyint');
-    class_alias('Mock', 'Cassandra\Set');
-    class_alias('Mock', 'Cassandra\Map');
+    class_alias('MockSet', 'Cassandra\Set');
+    class_alias('MockMap', 'Cassandra\Map');
     class_alias('Mock', 'Cassandra\Uuid');
     class_alias('Mock', 'Cassandra\Boolean');
     class_alias('Mock', 'MongoDB\BSON\UTCDateTime');

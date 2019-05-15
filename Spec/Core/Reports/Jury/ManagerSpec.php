@@ -7,21 +7,21 @@ use Minds\Core\Reports\Verdict\Manager as VerdictManager;
 use Minds\Core\Reports\Jury\Repository;
 use Minds\Core\Reports\Jury\Decision;
 use Minds\Core\Reports\Report;
-use Minds\Core\EntitiesBuilder;
+use Minds\Core\Entities\Resolver as EntitiesResolver;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class ManagerSpec extends ObjectBehavior
 {
     private $repository;
-    private $entitiesBuilder;
+    private $entitiesResolver;
     private $verdictManager;
 
-    function let(Repository $repository, EntitiesBuilder $entitiesBuilder, VerdictManager $verdictManager)
+    function let(Repository $repository, EntitiesResolver $entitiesResolver, VerdictManager $verdictManager)
     {
-        $this->beConstructedWith($repository, $entitiesBuilder, $verdictManager);
+        $this->beConstructedWith($repository, $entitiesResolver, $verdictManager);
         $this->repository = $repository;
-        $this->entitiesBuilder = $entitiesBuilder;
+        $this->entitiesResolver = $entitiesResolver;
         $this->verdictManager = $verdictManager;
     }
 
@@ -36,14 +36,18 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([
                 (new Report)
-                    ->setEntityGuid(123),
+                    ->setEntityUrn('urn:activity:123'),
                 (new Report)
-                    ->setEntityGuid(456),
+                    ->setEntityUrn('urn:activity:456'),
             ]);
         
-        $this->entitiesBuilder->single(123)
+        $this->entitiesResolver->single(Argument::that(function ($urn) {
+            return $urn->getNss() == 123;
+        }))
             ->shouldBeCalled();
-        $this->entitiesBuilder->single(456)
+        $this->entitiesResolver->single(Argument::that(function ($urn) {
+            return $urn->getNss() == 456;
+        }))
             ->shouldBeCalled();
         
         $response = $this->getUnmoderatedList([ 'hydrate' => true ]);

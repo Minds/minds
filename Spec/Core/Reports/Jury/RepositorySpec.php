@@ -49,7 +49,7 @@ class RepositorySpec extends ObjectBehavior
             ->willReturn([
                 [
                     'user_hashes' => (new Set(Type::text()))
-                        ->set('hash'),
+                        ->add('hash'),
                     'entity_urn' => 'urn:activity:123',
                     'entity_owner_guid' => new Bigint(456),
                     'reason_code' => new Float_(2),
@@ -59,11 +59,11 @@ class RepositorySpec extends ObjectBehavior
                     'state_changes' => (new Map(Type::text(), Type::timestamp()))
                         ->set('reported', time() * 1000),
                     'reports' => (new Set(Type::bigint()))
-                        ->set(789),
+                        ->add(789),
                 ],
                 [
                     'user_hashes' => (new Set(Type::text()))
-                        ->set('hash'),
+                        ->add('hash'),
                     'entity_urn' => 'urn:activity:456',
                     'entity_owner_guid' => new Bigint(456),
                     'reason_code' => new Float_(2),
@@ -73,7 +73,7 @@ class RepositorySpec extends ObjectBehavior
                     'state_changes' => (new Map(Type::text(), Type::timestamp()))
                         ->set('reported', time() * 1000),
                     'reports' => (new Set(Type::bigint()))
-                        ->set(789),
+                        ->add(789),
                 ],
             ]);
         
@@ -116,8 +116,8 @@ class RepositorySpec extends ObjectBehavior
                 && $values[0]->values()[456]->value() == true
                 && $values[1]->values()[0]->value() === '0xqj1'
                 && $values[2] === 'urn:activity:123'
-                && (float) $values[3] === (float) 2
-                && (float) $values[4] === (float) 5;
+                && $values[3]->value() == 2
+                && $values[4]->value() == 5;
         }))
             ->shouldBeCalled()
             ->willReturn(true);
@@ -158,8 +158,8 @@ class RepositorySpec extends ObjectBehavior
                 && $values[0]->values()[456]->value() == true
                 && $values[1]->values()[0]->value() === '0xqj1'
                 && $values[2] === 'urn:activity:123'
-                && (float) $values[3] === (float) 2
-                && (float) $values[4] === (float) 5;
+                && $values[3]->value() == 2
+                && $values[4]->value() == 5;
         }))
             ->shouldBeCalled()
             ->willReturn(true);

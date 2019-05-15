@@ -3,8 +3,10 @@ namespace Minds\Core\Reports\Appeals;
 
 use Cassandra;
 use Cassandra\Bigint;
+use Cassandra\Tinyint;
+use Cassandra\Decimal;
 use Cassandra\Type;
-use Cassandra\Type\Map;
+use Cassandra\Map;
 use Cassandra\Timestamp;
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -27,7 +29,7 @@ class Repository
 
     public function __construct($cql = null, $reportsRepository = null)
     {
-        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Client');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
         $this->reportsRepository = $reportsRepository ?: new ReportsRepository;
     }
 
@@ -62,6 +64,36 @@ class Repository
 
         foreach ($results as $row) {
             $report = $this->reportsRepository->buildFromRow($row);
+
+            // TODO: make this on the query level
+            $skip = false;
+            switch ($opts['state']) {
+                case 'review': 
+                    if ($report->getState() != 'initial_jury_decided') {
+                        $skip = true;
+                    }
+                    break;
+                case 'pending': 
+                    if ($report->getState() != 'appealed') {
+                        $skip = true;
+                    }
+                    break;
+                case 'approved':
+                    if ($report->getState() != 'appeal_jury_decided' && $report->isUpheld() === false) {
+                        $skip = true;
+                    }
+                    break;
+                case 'rejected':
+                    if ($report->getState() != 'appeal_jury_decided' && $report->isUpheld() === true) {
+                        $skip = true;
+                    }
+                    break;
+            }
+
+            if ($skip) { 
+                continue;
+            }
+
             $appeal = new Appeal;
             $appeal
                 ->setTimestamp($report->getAppealTimestamp())
@@ -80,22 +112,24 @@ class Repository
     public function add(Appeal $appeal)
     {
         $statement = "UPDATE moderation_reports
-            SET appeal_note = ?
-            SET state = ?
-            SET state_changes += ?
+            SET appeal_note = ?,
+            state = ?,
+            state_changes += ?
             WHERE entity_urn = ?
             AND reason_code = ?
             AND sub_reason_code = ?
             AND timestamp = ?";
 
+        $stateChanges = new Map(Type::text(), Type::timestamp());
+        $stateChanges->set('appealed', new Timestamp($appeal->getTimestamp()));
+
         $values = [
             $appeal->getNote(),
             'appealed',
-            (new Map(Type::text(), Type::bigint()))
-                ->set('appealed', $appeal->getTimestamp()),
+            $stateChanges,
             $appeal->getReport()->getEntityUrn(),
-            (float) $appeal->getReport()->getReasonCode(),
-            (float) $appeal->getReport()->getSubReasonCode(),
+            new Tinyint($appeal->getReport()->getReasonCode()),
+            new Decimal($appeal->getReport()->getSubReasonCode()),
             new Timestamp($appeal->getReport()->getTimestamp()),
         ];
 

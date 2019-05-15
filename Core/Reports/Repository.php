@@ -2,26 +2,34 @@
 namespace Minds\Core\Reports;
 
 use Cassandra;
+use Cassandra\Decimal;
+use Cassandra\Timestamp;
+use Cassandra\Tinyint;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Data;
-use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Common\Repository\Response;
 use Minds\Core\Reports\UserReports\UserReport;
 use Minds\Core\Reports\ReportedEntity;
+use Minds\Common\Urn;
 
 class Repository
 {
-    /** @var Data\ElasticSearch\Client $es */
-    protected $es;
+    /** @var Data\Cassandra\Client $cql */
+    protected $cql;
 
-    public function __construct($es = null)
+    /** @var Urn $urn */
+    protected $urn;
+
+    public function __construct($cql = null, $urn = null)
     {
-        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->urn = $urn ?: new Urn;
     }
 
     /**
@@ -40,9 +48,10 @@ class Repository
             'user' => null,
             'must' => [],
             'must_not' => [],
+            'timestamp' => null
         ], $opts);
 
-        $must = $opts['must'];
+        /*$must = $opts['must'];
         $must_not = $opts['must_not'];
 
         $body = [
@@ -81,6 +90,46 @@ class Repository
                 ->setInitialJuryDecidedTimestamp($row['_source']['@appeal_jury_decided_timestamp'] ?? null);
 
             $response[] = $report;
+        }*/
+
+        $response = new Response;
+
+        $statement = "SELECT * FROM moderation_reports";
+
+        $where = [];
+        $values = [];
+
+        if ($opts['entity_urn']) {
+            $where[] = "entity_urn = ?";
+            $values[] = $opts['entity_urn'];
+        }
+
+        if ($opts['reason_code']) {
+            $where[] = "reason_code = ?";
+            $values[] = new Tinyint($opts['reason_code']);
+        }
+
+        if ($opts['sub_reason_code']) {
+            $where[] = "sub_reason_code = ?";
+            $values[] = new Decimal($opts['sub_reason_code']);
+        }
+
+        if ($opts['timestamp']) {
+            $where[] = "timestamp = ?";
+            $values[] = new Timestamp($opts['timestamp']);
+        }
+
+        if ($where) {
+            $statement .= " WHERE " . implode(' AND ', $where);
+        }
+
+        $prepared = new Prepared\Custom();
+        $prepared->query($statement, $values);
+
+        $rows = $this->cql->request($prepared);
+
+        foreach ($rows as $row) {
+            $response[] = $this->buildFromRow($row);
         }
 
         return $response;
@@ -88,29 +137,31 @@ class Repository
 
     /**
      * Return a single report
-     * @param int $entity_guid
+     * @param string $urn
      * @return ReportEntity
      */
-    public function get($entity_guid)
+    public function get($urn)
     {
-        $prepared = new Prepared\Document();
-        $prepared->query([
-            'index' => 'minds-moderation',
-            'type' => 'reports',
-            'id' => $entity_guid,
+        $parts = explode('-', $this->urn->setUrn($urn)->getNss());
+
+        $entityUrn = substr($parts[0], 1, -1); // Remove the parenthases
+        $reasonCode = $parts[1];
+        $subReasonCode = $parts[2];
+        $timestamp = $parts[3];
+        
+
+        $response = $this->getList([
+            'entity_urn' => $entityUrn,
+            'reason_code' => $reasonCode,
+            'sub_reason_code' => $subReasonCode,
+            'timestamp' => $timestamp,
         ]);
 
-        $result = $this->es->request($prepared);
+        if (!$response[0]) {
+            return null;
+        }
 
-        $report = new Report();
-        $report
-            ->setEntityGuid($result['_source']['entity_guid'])
-            ->setReports($this->buildReports($result['_source']))
-            ->setAppeal(isset($result['_source']['@initial_jury_decided_timestamp']))
-            ->setInitialJuryDecisions($this->buildDecisions($result, 'initial'))
-            ->setAppealJuryDecisions($this->buildDecisions($result, 'appeal'));
-
-        return $report;
+        return $response[0];
     }
 
     /**
@@ -141,28 +192,29 @@ class Repository
 
         $return = [];
 
-        $reports = $juryType === 'appeal'
-            ? ($row['_source']['appeal_jury'] ?? [])
-            : ($row['_source']['initial_jury'] ?? []);
-
-        foreach ($reports as $row) {
-            if (!isset($row[0]['action'])) {
-                continue; // Something didn't save properly
-            }
-            if (isset($jurorGuids[$row[0]['juror_guid']])) { //TODO: change to juror_hash
+        foreach ($row as $jurorGuid => $uphold) {
+            if (isset($jurorGuids[$jurorGuid])) { //TODO: change to juror_hash
                 continue; // avoid duplicate reports
             }
-            $jurorGuids[$row[0]['juror_guid']] = true; 
+
+            $jurorGuids[$jurorGuids] = true; 
 
             $decision = new Jury\Decision();
             $decision
-                ->setTimestamp($row[0]['@timestamp'])
-                ->setEntityGuid($row['_source']['entity_guid'])
-                ->setJurorGuid($row[0]['juror_guid'])
-                ->setAction($row[0]['action']);
+                ->setJurorGuid($jurorGuid)
+                ->setUphold($uphold);
             $return[] = $decision;
         }
         return $return;
+    }
+
+    private function mapToAssoc($map)
+    {
+        $assoc = [];
+        foreach ($map as $k => $v) {
+            $assoc[(string) $k] = $v;
+        }
+        return $assoc;
     }
 
     /**
@@ -174,28 +226,36 @@ class Repository
     {
         $report = new Report;
         $report->setEntityUrn((string) $row['entity_urn'])
-            ->setEntityOwnerGuid($row['entity_owner_guid']->value())
-            ->setReasonCode($row['reason_code']->toFloat())
-            ->setSubReasonCode($row['sub_reason_code']->toFloat())
+            ->setEntityOwnerGuid(isset($row['entity_owner_guid']) ? $row['entity_owner_guid']->value() : null)
+            ->setReasonCode($row['reason_code']->value())
+            ->setSubReasonCode($row['sub_reason_code']->value())
             ->setTimestamp($row['timestamp']->time())
-            ->setState((string) $row['state'])
+            //->setState((string) $row['state'])
             ->setUphold(isset($row['uphold']) ? (bool) $row['uphold'] : null)
-            ->setStateChanges($row['state_changes']->values())
+            ->setStateChanges(isset($row['state_changes']) ? 
+                array_map(function ($timestamp) {
+                    return $timestamp->microtime(true);
+                }, $this->mapToAssoc($row['state_changes']))
+                : null
+            )
+            ->setAppeal(isset($row['appeal_note']) ? true : false)
             ->setAppealNote(isset($row['appeal_note']) ? (string) $row['appeal_note'] : '')
             ->setReports(
                 $this->buildReports($row['reports']->values())
             )
             ->setInitialJuryDecisions(
                 isset($row['initial_jury']) ?
-                    $this->buildDecisions($row['initial_jury']->values())
+                    $this->buildDecisions($this->mapToAssoc($row['initial_jury']))
                     : null
             )
             ->setAppealJuryDecision(
                 isset($row['appeal_jury']) ?
-                    $this->buildDecisions($row['appeal_jury']->values())
+                    $this->buildDecisions($this->mapToAssoc($row['appeal_jury']))
                     : null
             )
-            ->setUserHashes($row['user_hashes']->values());
+            ->setUserHashes(isset($row['user_hashes']) ? 
+                $row['user_hashes']->values() : null
+            );
         return $report;
     }
 
