@@ -88,7 +88,7 @@ class Manager
             'query' => null,
             'nsfw' => null,
             'single_owner_threshold' => 36,
-	    'filter_hashtags' => false,
+            'filter_hashtags' => false,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
@@ -108,18 +108,20 @@ class Manager
                 continue;
             }
 
+            $ownerGuid = $scoredGuid->getOwnerGuid() ?: $scoredGuid->getGuid();
+
             if (++$i < $opts['single_owner_threshold']
-                && isset($owners[$scoredGuid->getOwnerGuid()])
+                && isset($owners[$ownerGuid])
                 && !$opts['filter_hashtags']
                 && !in_array($opts['type'], [ 'user', 'group' ])
             ) {
                 continue;
             }
-            $owners[$scoredGuid->getOwnerGuid()] = true;
+            $owners[$ownerGuid] = true;
 
             $feedSyncEntities[] = (new FeedSyncEntity())
-                ->setGuid($scoredGuid->getGuid())
-                ->setOwnerGuid($scoredGuid->getOwnerGuid())
+                ->setGuid((string) $scoredGuid->getGuid())
+                ->setOwnerGuid((string) $ownerGuid)
                 ->setUrn(new Urn($scoredGuid->getGuid()))
                 ->setTimestamp($scoredGuid->getTimestamp());
 
@@ -182,8 +184,8 @@ class Manager
             $response = $this->search->suggest('user', $opts['query'], $opts['limit']);
             foreach ($response as $row) {
                 $feedSyncEntities[] = (new FeedSyncEntity())
-                    ->setGuid($row['guid'])
-                    ->setOwnerGuid($row['guid'])
+                    ->setGuid((string) $row['guid'])
+                    ->setOwnerGuid((string) $row['guid'])
                     ->setUrn(new Urn($row['guid']))
                     ->setTimestamp($row['time_created'] * 1000);
             }
