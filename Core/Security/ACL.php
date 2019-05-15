@@ -148,6 +148,13 @@ class ACL
         }
 
         /**
+         * If the user is banned or in a limited state
+         */
+        if ($user->isBanned() || !$user->isEnabled()) {
+            return false;
+        }
+
+        /**
          * Does the user own the entity, or is it the container?
          */
         if ($entity->owner_guid
@@ -224,6 +231,13 @@ class ACL
          * Logged out users can not interact
          */
         if (!$user) {
+            return false;
+        }
+
+        /**
+         * If the user is banned or in a limited state
+         */
+        if ($user->isBanned() || !$user->isEnabled()) {
             return false;
         }
 

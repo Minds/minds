@@ -104,12 +104,12 @@ class Repository
             $values[] = $opts['entity_urn'];
         }
 
-        if ($opts['reason_code']) {
+        if (isset($opts['reason_code'])) {
             $where[] = "reason_code = ?";
             $values[] = new Tinyint($opts['reason_code']);
         }
 
-        if ($opts['sub_reason_code']) {
+        if (isset($opts['sub_reason_code'])) {
             $where[] = "sub_reason_code = ?";
             $values[] = new Decimal($opts['sub_reason_code']);
         }
@@ -156,7 +156,7 @@ class Repository
             'sub_reason_code' => $subReasonCode,
             'timestamp' => $timestamp,
         ]);
-
+        
         if (!$response[0]) {
             return null;
         }

@@ -10,6 +10,7 @@ use Minds\Core\Di\Di;
 use Minds\Common\Urn;
 use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Strikes\Strike;
+use Minds\Core\Entities\Actions\Save as SaveAction;
 
 class ActionDelegate
 {
@@ -18,6 +19,9 @@ class ActionDelegate
 
     /** @var Actions $actions */
     private $actions;
+
+    /** @var SaveAction $saveAction */
+    private $saveAction;
 
     /** @var Urn $urn */
     private $urn;
@@ -29,18 +33,21 @@ class ActionDelegate
         $entitiesBuilder = null,
         $actions = null,
         $urn = null,
-        $strikesManager = null
+        $strikesManager = null,
+        $saveAction = null
     )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
         $this->actions = $actions ?: Di::_()->get('Reports\Actions');
         $this->urn = $urn ?: new Urn;
         $this->strikesManager = $strikesManager ?: Di::_()->get('Moderation\Strikes\Manager');
+        $this->saveAction = $saveAction ?: new SaveAction;
     }
 
     public function onAction(Verdict $verdict)
     {
-        if ($verdict->isAppeal()) {
+        if ($verdict->isAppeal() || !$verdict->isUpheld()) {
+            error_log('Not upheld so no action');
             return; // Can not 
         }
 
@@ -56,6 +63,7 @@ class ActionDelegate
         switch ($report->getReasonCode()) {
             case 1: // Illegal (not appealable)
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post too
                 $this->applyBan($report);
                 break;
@@ -63,22 +71,25 @@ class ActionDelegate
                 $nsfw = $report->getSubReasonCode();
                 $entity->setNsfw(array_merge([$nsfw], $entity->getNsfw()));
                 $entity->setNsfwLock(array_merge([$nsfw], $entity->getNsfwLock()));
-                $entity->save();
+                $this->saveAction->setEntity($entity)->save();
                 // Apply a strike to the owner
                 $this->applyStrike($report);
                 break;
             case 3: // Incites violence
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post
                 $this->applyBan($report);
                 break;
             case 4:  // Harrasment
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
                 // Apply a strike to the owner
                 $this->applyStrike($report);
                 break;
             case 5: // Personal and confidential information (not appelable)
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post too
                 $this->applyBan($report);
                 break;
@@ -88,6 +99,8 @@ class ActionDelegate
                 break;
             case 8: // Spam
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
+                error_log('marked as spam');
                 // Apply a strike to the owner
                 $this->applyStrike($report);
                 break;
@@ -97,6 +110,7 @@ class ActionDelegate
             //    break;
             case 13: // Malware
                 $this->actions->setDeletedFlag($entity, true);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner
                 $this->applyBan($report);
                 break;

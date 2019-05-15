@@ -65,7 +65,8 @@ class Repository
 
         $statement = "UPDATE moderation_reports
             SET state = ?,
-                state_changes += ?
+              state_changes += ?,
+              uphold = ?
             WHERE entity_urn = ?
             AND reason_code = ?
             AND sub_reason_code = ?
@@ -79,6 +80,7 @@ class Repository
         $values = [
             $state,
             $stateChangesMap,
+            (bool) $verdict->isUpheld(),
             $verdict->getReport()->getEntityUrn(),
             new Tinyint($verdict->getReport()->getReasonCode()),
             new Decimal($verdict->getReport()->getSubReasonCode()),

@@ -7,8 +7,8 @@ namespace Minds\Core\Reports\Strikes;
 class Manager
 {
 
-    //const STRIKE_TIME_WINDOW = (60 * 60) * 24; // 24 hours
-    const STRIKE_TIME_WINDOW = 60;
+    const STRIKE_TIME_WINDOW = (60 * 60) * 24; // 24 hours
+    //const STRIKE_TIME_WINDOW = 60;
     const STRIKE_RETENTION_WINDOW = (60 * 60) * 24 * 90; // 90 days
 
     /** @var Repository $repository */
@@ -68,6 +68,16 @@ class Manager
         ]);
 
         return count($strikes);
+    }
+
+    /**
+     * Delete a strike
+     * @param Strike $strike
+     * @return bool
+     */
+    public function delete($strike)
+    {
+        return $this->repository->delete($strike);
     }
 
 }

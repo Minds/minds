@@ -19,7 +19,7 @@ class jury implements Interfaces\Api
         $juryType = $pages[0] ?? 'appeal';
 
         if ($juryType !== 'appeal' && !Core\Session::isAdmin()) {
-            //exit;
+            exit;
         }
 
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
@@ -39,7 +39,7 @@ class jury implements Interfaces\Api
     public function post($pages)
     {
         $juryType = $pages[0] ?? null;
-        $entityGuid = $pages[1] ?? null;
+        $urn = $pages[1] ?? null;
         $uphold = $_POST['uphold'] ?? null;
 
         if (!$juryType) {
@@ -49,10 +49,10 @@ class jury implements Interfaces\Api
             ]);
         }
         
-        if (!$entityGuid) {
+        if (!$urn) {
             return Factory::response([
                 'status' => 'error',
-                'message' => 'You must supply the entity guid in the URI like /:juryType/:entityGuid',
+                'message' => 'You must supply the entity urn in the URI like /:juryType/:urn',
             ]);
         }
 
@@ -63,7 +63,7 @@ class jury implements Interfaces\Api
             ]);
         }
 
-        if (!Core\Session::getLoggedInUser()->getPhoneNumberHash() && false) {
+        if (!Core\Session::getLoggedInUser()->getPhoneNumberHash()) {
             return Factory::response([
                 'status' => 'error',
                 'message' => 'juror must be in the rewards program',
@@ -72,7 +72,7 @@ class jury implements Interfaces\Api
 
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
         $moderationManager = Di::_()->get('Moderation\Manager');
-        $report = $moderationManager->getReport($entityGuid);
+        $report = $moderationManager->getReport($urn);
 
         $decision = new Decision();
         $decision

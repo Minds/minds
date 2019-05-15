@@ -69,6 +69,10 @@ class report implements Interfaces\Api
             ->setReporterGuid($user->getGuid())
             ->setTimestamp(round(microtime(true) * 1000));
 
+        if ($user->getPhoneNumberHash()) {
+            $userReport->setReporterHash($user->getPhoneNumberHash());
+        }
+
         if (!$manager->add($userReport)) {
             return Factory::response([
                 'status' => 'error',

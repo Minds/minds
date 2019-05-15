@@ -40,9 +40,9 @@ class Manager
         return $this->repository->getList($opts);
     }
 
-    public function getReport($entity_guid)
+    public function getReport($urn)
     {
-        return $this->repository->get($entity_guid);
+        return $this->repository->get($urn);
     }
 
     /**

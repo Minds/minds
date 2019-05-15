@@ -55,12 +55,12 @@ class Repository
             new Bigint($opts['user_guid']),
         ];
 
-        if ($opts['reason_code']) {
+        if (isset($opts['reason_code'])) {
             $statement .= " AND reason_code = ?";
             $values[] = new Tinyint($opts['reason_code']);
         }
 
-        if ($opts['sub_reason_code']) {
+        if (isset($opts['sub_reason_code'])) {
             $statement .= " AND sub_reason_code = ?";
             $values[] = new Decimal($opts['sub_reason_code']);
         }
@@ -80,7 +80,7 @@ class Repository
             $values[] = new Timestamp($opts['to'] * 1000);
         }
 
-        if (!$opts['reason_code'] && !$opts['sub_reason_code']) {
+        if (!isset($opts['reason_code']) && !isset($opts['sub_reason_code'])) {
             $statement .= " ALLOW FILTERING";
         }
 
