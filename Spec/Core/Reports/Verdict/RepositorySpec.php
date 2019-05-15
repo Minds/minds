@@ -48,6 +48,9 @@ class RepositorySpec extends ObjectBehavior
         $verdict->isAppeal()
             ->shouldBeCalled()
             ->willReturn(false);
+
+        $verdict->isUpheld()
+            ->willReturn(true);
         
         $this->add($verdict)
             ->shouldBe(true);
@@ -73,6 +76,9 @@ class RepositorySpec extends ObjectBehavior
         $verdict->isAppeal()
             ->shouldBeCalled()
             ->willReturn(false);
+
+        $verdict->isUpheld()
+            ->willReturn(true);
         
         $this->add($verdict)
             ->shouldBe(true);
@@ -97,6 +103,9 @@ class RepositorySpec extends ObjectBehavior
 
         $verdict->isAppeal()
             ->shouldBeCalled()
+            ->willReturn(true);
+
+        $verdict->isUpheld()
             ->willReturn(true);
         
         $this->add($verdict)
@@ -123,6 +132,9 @@ class RepositorySpec extends ObjectBehavior
         $verdict->isAppeal()
             ->shouldBeCalled()
             ->willReturn(true);
+
+        $verdict->isUpheld()
+            ->willReturn(false);
         
         $this->add($verdict)
             ->shouldBe(true);

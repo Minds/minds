@@ -9,6 +9,7 @@ use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Actions;
 use Minds\Core\Reports\Strikes\Manager as StrikesManager;
 use Minds\Entities\Entity;
+use Minds\Core\Entities\Actions\Save as SaveAction;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -17,17 +18,20 @@ class ActionDelegateSpec extends ObjectBehavior
     private $entitiesBuilder;
     private $actions;
     private $strikesManager;
+    private $saveAction;
 
     function let(
         EntitiesBuilder $entitiesBuilder,
         Actions $actions,
-        StrikesManager $strikesManager
+        StrikesManager $strikesManager,
+        SaveAction $saveAction
     )
     {
-        $this->beConstructedWith($entitiesBuilder, $actions, null, $strikesManager);
+        $this->beConstructedWith($entitiesBuilder, $actions, null, $strikesManager, $saveAction);
         $this->entitiesBuilder = $entitiesBuilder;
         $this->actions = $actions;
         $this->strikesManager = $strikesManager;
+        $this->saveAction = $saveAction;
     }
 
     function it_is_initializable()
@@ -64,7 +68,10 @@ class ActionDelegateSpec extends ObjectBehavior
         $entity->setNsfwLock([ 1 ])
             ->shouldBeCalled();
 
-        $entity->save()
+        $this->saveAction->setEntity($entity)
+            ->willReturn($this->saveAction);
+        
+        $this->saveAction->save()
             ->shouldBeCalled();
 
         $this->strikesManager->countStrikesInTimeWindow(Argument::any(), Argument::any())
@@ -87,7 +94,7 @@ class ActionDelegateSpec extends ObjectBehavior
 
         $verdict = new Verdict;
         $verdict->setReport($report)
-            ->setAction('1.2');
+            ->setUphold(true);
 
         $this->entitiesBuilder->single(123)
             ->shouldBeCalled()
@@ -97,7 +104,13 @@ class ActionDelegateSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn($user);
 
-        $this->actions->setDeletedFlag(Argument::type(Entity::class), true)
+        $this->actions->setDeletedFlag($entity, true)
+            ->shouldBeCalled();
+
+        $this->saveAction->setEntity($entity)
+            ->willReturn($this->saveAction);
+        
+        $this->saveAction->save()
             ->shouldBeCalled();
 
         $this->onAction($verdict);
@@ -111,6 +124,7 @@ class ActionDelegateSpec extends ObjectBehavior
 
         $verdict = new Verdict;
         $verdict->setReport($report)
+            ->setUphold(true)
             ->setAction('4');
 
         $this->entitiesBuilder->single(123)
@@ -118,6 +132,12 @@ class ActionDelegateSpec extends ObjectBehavior
             ->willReturn($entity);
 
         $this->actions->setDeletedFlag(Argument::type(Entity::class), true)
+            ->shouldBeCalled();
+
+        $this->saveAction->setEntity($entity)
+            ->willReturn($this->saveAction);
+        
+        $this->saveAction->save()
             ->shouldBeCalled();
 
         $this->onAction($verdict);
