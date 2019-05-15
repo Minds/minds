@@ -50,6 +50,16 @@ class Top extends Cli\Controller implements Interfaces\CliControllerInterface
         return $this->syncBy('object', 'blog', $this->getOpt('period') ?? null, $this->getOpt('metric') ?? null);
     }
 
+    public function sync_groups()
+    {
+        return $this->syncBy('group', null, $this->getOpt('period') ?? null, $this->getOpt('metric') ?? null);
+    }
+
+    public function sync_channels()
+    {
+        return $this->syncBy('user', null, $this->getOpt('period') ?? null, $this->getOpt('metric') ?? null);
+    }
+
     protected function syncBy($type, $subtype, $period, $metric)
     {
         if (!$period) {

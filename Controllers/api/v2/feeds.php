@@ -158,6 +158,7 @@ class feeds implements Interfaces\Api
             'period' => $period,
             'sync' => $sync,
             'query' => $query ?? null,
+            'single_owner_threshold' => Core\Session::isAdmin() ? 0 : 36,
         ];
 
         $nsfw = $_GET['nsfw'] ?? '';

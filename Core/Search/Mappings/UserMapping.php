@@ -33,9 +33,9 @@ class UserMapping extends EntityMapping implements MappingInterface
     {
         $map = parent::map($defaultValues);
 
-        if (isset($map['tags'])) {
-            unset($map['tags']);
-        }
+        //if (isset($map['tags'])) {
+        //    unset($map['tags']);
+        //}
 
         if ($this->entity->isBanned() == 'yes') {
             throw new BannedException('User is banned');
@@ -53,7 +53,7 @@ class UserMapping extends EntityMapping implements MappingInterface
             $map['group_membership'] = [];
         }
 
-        $map['tags'] = array_unique(array_merge($map['tags'], $this->entity->getTags()));
+        $map['tags'] = array_unique($this->entity->getTags());
 
         return $map;
     }
@@ -95,7 +95,7 @@ class UserMapping extends EntityMapping implements MappingInterface
         if (strlen($username) > 30) {
             $map['weight'] = 1; //spammy username
         }
-
+        
         return $map;
     }
 

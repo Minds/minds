@@ -91,7 +91,7 @@ class RepositorySpec extends ObjectBehavior
 
         $this->client->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['type'] === 'activity' && in_array('owner_guid', $query['body']['_source']);
+            return $query['type'] === 'user' && in_array('guid', $query['body']['_source']);
         }))
             ->shouldBeCalled()
             ->willReturn([
@@ -139,7 +139,7 @@ class RepositorySpec extends ObjectBehavior
 
         $this->client->request(Argument::that(function ($query) {
             $query = $query->build();
-            return $query['type'] === 'activity' && in_array('container_guid', $query['body']['_source']);
+            return $query['type'] === 'group' && in_array('guid', $query['body']['_source']);
         }))
             ->shouldBeCalled()
             ->willReturn([

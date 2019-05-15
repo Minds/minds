@@ -4,6 +4,7 @@ namespace Spec\Minds\Core\Search;
 
 use Minds\Core\Data\ElasticSearch\Client;
 use Minds\Core\Data\ElasticSearch\Prepared\Index;
+use Minds\Core\Data\ElasticSearch\Prepared\Update;
 use Minds\Core\Di\Di;
 use Minds\Core\Search\Mappings\Factory;
 use Minds\Core\Search\Mappings\MappingInterface;
@@ -66,7 +67,7 @@ class IndexSpec extends ObjectBehavior
             ->willReturn('1000');
 
         $this->_client->request(Argument::that(function ($prepared) {
-            if (!($prepared instanceof Index)) {
+            if (!($prepared instanceof Update)) {
                 return false;
             }
 
@@ -77,9 +78,9 @@ class IndexSpec extends ObjectBehavior
                 $query['type'] == 'test' &&
                 $query['id'] == '1000' &&
                 isset($query['body']) &&
-                $query['body']['guid'] == '1000' &&
-                $query['body']['type'] == 'test' &&
-                isset($query['body']['suggest'])
+                $query['body']['doc']['guid'] == '1000' &&
+                $query['body']['doc']['type'] == 'test' &&
+                isset($query['body']['doc']['suggest'])
             ;
         }))
             ->shouldBeCalled()

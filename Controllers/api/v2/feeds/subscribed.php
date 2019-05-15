@@ -104,6 +104,7 @@ class subscribed implements Interfaces\Api
             'from_timestamp' => $fromTimestamp,
             'query' => $query ?? null,
             'nsfw' => null,
+            'single_owner_threshold' => 0,
         ];
 
         try {
