@@ -20,26 +20,32 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var NotificationDelegate $notificationDelegate */
-    private $notificationDelegate;
-
     /** @var EntitiesResolver $entitiesResolver */
     private $entitiesResolver;
+
+    /** @var Delegates\NotificationDelegate $notificationDelegate */
+    private $notificationDelegate;
+
+    /** @var Delegates\SummonDelegate $summonDelegate */
+    private $summonDelegate;
 
     public function __construct(
         $repository = null,
         $entitiesResolver = null,
-        $notificationDelegate = null
+        $notificationDelegate = null,
+        $summonDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesResolver = $entitiesResolver ?: new EntitiesResolver;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
+        $this->summonDelegate = $summonDelegate ?: new Delegates\SummonDelegate();
     }
 
     /**
      * @param array $opts
      * @return Response
+     * @throws \Exception
      */
     public function getList($opts = [])
     {
@@ -77,6 +83,7 @@ class Manager
 
         $added = $this->repository->add($appeal);
 
+        $this->summonDelegate->onAppeal($appeal);
         $this->notificationDelegate->onAction($appeal);
 
         return $added;

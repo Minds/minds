@@ -18,17 +18,20 @@ class ManagerSpec extends ObjectBehavior
     private $repository;
     private $entitiesResolver;
     private $notificationDelegate;
+    private $summonDelegate;
 
     function let(
         Repository $repository,
         EntitiesResolver $entitiesResolver,
-        Delegates\NotificationDelegate $notificationDelegate
+        Delegates\NotificationDelegate $notificationDelegate,
+        Delegates\SummonDelegate $summonDelegate
     )
     {
-        $this->beConstructedWith($repository, $entitiesResolver, $notificationDelegate);
+        $this->beConstructedWith($repository, $entitiesResolver, $notificationDelegate, $summonDelegate);
         $this->repository = $repository;
         $this->entitiesResolver = $entitiesResolver;
         $this->notificationDelegate = $notificationDelegate;
+        $this->summonDelegate = $summonDelegate;
     }
 
     function it_is_initializable()
@@ -82,6 +85,10 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(true);
 
         $this->notificationDelegate->onAction($appeal)
+            ->shouldBeCalled();
+
+        $this->summonDelegate
+            ->onAppeal(Argument::type(Appeal::class))
             ->shouldBeCalled();
 
         $appeal->getReport()

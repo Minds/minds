@@ -41,5 +41,9 @@ class Provider extends DiProvider
         $this->di->bind('Moderation\Strikes\Manager', function ($di) {
             return new Strikes\Manager;
         }, [ 'useFactory'=> true ]);
+
+        $this->di->bind('Moderation\Summons\Manager', function ($di) {
+            return new Summons\Manager();
+        }, [ 'useFactory'=> true ]);
     }
 }
