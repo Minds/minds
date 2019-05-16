@@ -66,9 +66,9 @@ class Manager
         if ($report->getState() !== 'reported' 
             && !in_array($report->getEntity()->type, [ 'user', 'group' ])
         ) {
-            return; // Already past report threshold
-        } elseif ($report->getState() === 'closed') {
-            $report->setTimestamp(round(microtime(true) * 1000));
+            return true; // Already past report threshold
+        } elseif ($report->getState() === 'initial_jury_decided') {
+            $report->setTimestamp(time());
         }
 
         $userReport->setReport($report);

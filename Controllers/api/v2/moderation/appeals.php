@@ -58,7 +58,7 @@ class appeals implements Interfaces\Api
         $appeal = new Appeal();
         $appeal->setNote($_POST['note'])
             ->setReport($report)
-            ->setTimestamp(round(microtime(true) * 1000));
+            ->setTimestamp(time());
 
         $success = $appealManager->appeal($appeal);
 

@@ -234,7 +234,7 @@ class Repository
             ->setUphold(isset($row['uphold']) ? (bool) $row['uphold'] : null)
             ->setStateChanges(isset($row['state_changes']) ? 
                 array_map(function ($timestamp) {
-                    return $timestamp->microtime(true);
+                    return $timestamp->time();
                 }, $this->mapToAssoc($row['state_changes']))
                 : null
             )

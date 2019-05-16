@@ -79,7 +79,7 @@ class jury implements Interfaces\Api
             ->setAppeal($juryType === 'appeal')
             ->setUphold($uphold)
             ->setReport($report)
-            ->setTimestamp(round(microtime(true) * 1000))
+            ->setTimestamp(time())
             ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid())
             ->setJurorHash(Core\Session::getLoggedInUser()->getPhoneNumberHash());
 

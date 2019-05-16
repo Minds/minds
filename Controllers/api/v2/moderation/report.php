@@ -67,7 +67,7 @@ class report implements Interfaces\Api
         $userReport
             ->setReport($report)
             ->setReporterGuid($user->getGuid())
-            ->setTimestamp(round(microtime(true) * 1000));
+            ->setTimestamp(time());
 
         if ($user->getPhoneNumberHash()) {
             $userReport->setReporterHash($user->getPhoneNumberHash());

@@ -79,12 +79,12 @@ class Repository
                     }
                     break;
                 case 'approved':
-                    if ($report->getState() !== 'appeal_jury_decided' || $report->isUpheld() === false) {
+                    if ($report->getState() !== 'appeal_jury_decided' || $report->isUpheld() === true) {
                         $skip = true;
                     }
                     break;
                 case 'rejected':
-                    if ($report->getState() !== 'appeal_jury_decided' || $report->isUpheld() === true) {
+                    if ($report->getState() !== 'appeal_jury_decided' || $report->isUpheld() === false) {
                         $skip = true;
                     }
                     break;

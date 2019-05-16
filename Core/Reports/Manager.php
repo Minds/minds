@@ -64,7 +64,7 @@ class Manager
     public function getLatestReport($report)
     {
         $report->setState('reported')
-            ->setTimestamp(round(microtime(true) * 1000));
+            ->setTimestamp(time());
 
         $reports = $this->getList([
             'entity_urn' => $report->getEntityUrn(),

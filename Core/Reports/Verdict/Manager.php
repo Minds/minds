@@ -104,7 +104,7 @@ class Manager
     {
         $uphold = $this->isUpheld($verdict);
         $verdict->setUphold($uphold);
-        $verdict->setTimestamp(round(microtime(true) * 1000));
+        $verdict->setTimestamp(time());
 
         if ($verdict->isUpheld() === null) {
             error_log("{$verdict->getReport()->getEntityGuid()} not actionable");
