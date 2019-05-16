@@ -15,7 +15,7 @@ use Minds\Core\Reports\Summons\Summon as SummonEntity;
 use Minds\Core\Session;
 use Minds\Interfaces;
 
-class summon implements Interfaces\Api
+class summons implements Interfaces\Api
 {
     /**
      * Equivalent to HTTP GET method
@@ -43,8 +43,8 @@ class summon implements Interfaces\Api
         /** @var Manager $summonsManager */
         $summonsManager = Di::_()->get('Moderation\Summons\Manager');
 
-        /** @var ReportsRepository $reportsRepository */
-        $reportsRepository = Di::_()->get('Reports\Repository');
+        /** @var ReportsManager $reportsManager */
+        $reportsManager = Di::_()->get('Moderation\Manager');
 
         $summon = new SummonEntity();
         try {
@@ -75,7 +75,9 @@ class summon implements Interfaces\Api
         ];
 
         if ($summon->isAccepted()) {
-            $response['report'] = $reportsRepository->get($summon->getReportUrn());
+            $response['report'] = $reportsManager
+                ->getReport($summon->getReportUrn())
+                ->export();
         }
 
         return Factory::response($response);

@@ -63,9 +63,19 @@ class Manager
         return $response;
     }
 
+    /**
+     * Return a single report
+     * @param string $urn
+     * @return Report
+     */
     public function getReport($urn)
     {
-        return $this->repository->get($urn);
+        $report = $this->repository->get($urn);
+        $entity = $this->entitiesResolver->single(
+            (new Urn())->setUrn($report->getEntityUrn())
+        );
+        $report->setEntity($entity);
+        return $report;
     }
 
     /**
