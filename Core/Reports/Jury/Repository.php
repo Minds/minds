@@ -53,7 +53,7 @@ class Repository
         ], $opts);
 
         if (!$opts['user']->getPhoneNumberHash()) {
-            //return null;
+            return null;
         }
 
         $statement = "SELECT * FROM moderation_reports_by_state
@@ -88,6 +88,18 @@ class Repository
 
         return $response;
     }
+
+    /**
+     * Return a single report
+     * @param string $urn
+     * @return Report
+     */
+    public function get($urn)
+    {
+        // TODO: Do not return if we no longer meet criteria
+        return $this->reportsRepository->get($urn);
+    }
+
 
     /**
      * Add a decision for a report
