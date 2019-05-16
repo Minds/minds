@@ -138,7 +138,8 @@ class Repository
     /**
      * Return a single report
      * @param string $urn
-     * @return ReportEntity
+     * @return Report
+     * @throws \Exception
      */
     public function get($urn)
     {

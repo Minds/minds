@@ -4,25 +4,27 @@
  */
 namespace Minds\Core\Reports\Appeals;
 
+use Minds\Core\Reports\Report;
 use Minds\Traits\MagicAttributes;
 
 /**
- * @method Report getOwnerGuid(): long
- * @method Report getReport(): Report
- * @method Report getTimestamp: int
- * @method Report getNote(): int
+ * @method int|string getOwnerGuid()
+ * @method Report getReport()
+ * @method Appeal setReport(Report $report)
+ * @method int getTimestamp
+ * @method string getNote()
  */
 class Appeal
 {
     use MagicAttributes;
 
-    /** @var long $timestamp -< in ms*/
+    /** @var int $timestamp -< in ms*/
     private $timestamp;
 
     /** @var Report $report  */
     private $report;
 
-    /** @var int $note */
+    /** @var string $note */
     private $note;
 
     /**

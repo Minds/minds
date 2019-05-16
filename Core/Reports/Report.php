@@ -4,23 +4,24 @@
  */
 namespace Minds\Core\Reports;
 
-use Minds\Core\Reports\UserReport;
+use Minds\Core\Reports\Jury\Decision;
+use Minds\Core\Reports\UserReports\UserReport;
+use Minds\Entities\Entity;
 use Minds\Traits\MagicAttributes;
 
 /**
  * Class Report
- * @method Report getEntityGuid(): long
- * @method Report getEntityUrn(): string
- * @method Report getReports(): []
- * @method Report getEntity(): Entity
- * @method Report isAppeal(): boolean
- * @method Report getInitialJuryDecisions: []
- * @method Report getAppealJuryDecisions: []
- * @method Report getAppealTimestamp: int
- * @method Report getReasonCode(): int
- * @method Report getSubReasonCode(): int
+ * @method int getEntityGuid()
+ * @method string getEntityUrn()
+ * @method UserReport[] getReports()
+ * @method Entity getEntity()
+ * @method boolean isAppeal()
+ * @method Decision[] getInitialJuryDecisions()
+ * @method Decision[] getAppealJuryDecisions()
+ * @method int getAppealTimestamp()
+ * @method int getReasonCode()
+ * @method int getSubReasonCode()
  * @method Report setState(string $string)
- * @method Report getState(): string
  * @method Report setTimestamp(int $timestamp)
  * @method Report setReasonCode(int $value)
  * @method Report setSubReasonCode(int $value)
