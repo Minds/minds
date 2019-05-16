@@ -75,7 +75,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBe(456);
     }
 
-    function it_should_add_appeal_to_repository(Appeal $appeal)
+    function it_should_add_appeal_to_repository(Appeal $appeal, Report $report)
     {
         $this->repository->add($appeal)
             ->shouldBeCalled()
@@ -84,8 +84,33 @@ class ManagerSpec extends ObjectBehavior
         $this->notificationDelegate->onAction($appeal)
             ->shouldBeCalled();
 
+        $appeal->getReport()
+            ->willReturn($report);
+
+        $report->getState()
+            ->willReturn('initial_jury_decided');
+
         $this->appeal($appeal)
             ->shouldBe(true);
+    }
+
+    function it_should_NOT_add_appeal_to_repository_if_not_been_to_initial_jury(Appeal $appeal, Report $report)
+    {
+        $this->repository->add($appeal)
+            ->shouldNotBeCalled()
+            ->willReturn(true);
+
+        $this->notificationDelegate->onAction($appeal)
+            ->shouldNotBeCalled();
+
+        $appeal->getReport()
+            ->willReturn($report);
+
+        $report->getState()
+            ->willReturn('reported');
+
+        $this->shouldThrow('Minds\Core\Reports\Appeals\NotAppealableException')
+            ->duringAppeal($appeal);
     }
 
 }

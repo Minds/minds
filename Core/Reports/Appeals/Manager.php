@@ -71,6 +71,10 @@ class Manager
      */
     public function appeal(Appeal $appeal)
     {
+        if ($appeal->getReport()->getState() !== 'initial_jury_decided') {
+            throw new NotAppealableException();
+        }
+
         $added = $this->repository->add($appeal);
 
         $this->notificationDelegate->onAction($appeal);
