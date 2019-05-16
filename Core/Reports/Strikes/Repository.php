@@ -157,7 +157,22 @@ class Repository
 
     public function delete(Strike $strike)
     {
+        $statement = "DELETE FROM moderation_strikes 
+            WHERE user_guid = ?
+            AND reason_code = ?
+            AND sub_reason_code = ?
+            AND timestamp = ?";
 
+        $values = [
+            new Bigint($strike->getUserGuid()),
+            new Tinyint($strike->getReasonCode()),
+            new Decimal($strike->getSubReasonCode()),
+            new Timestamp($strike->getTimestamp()),
+        ];
+
+        $prepared = new Prepared();
+        $prepared->query($statement, $values);
+        return (bool) $this->cql->request($prepared);
     }
 
 }

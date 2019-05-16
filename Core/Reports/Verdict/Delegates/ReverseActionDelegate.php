@@ -10,6 +10,7 @@ use Minds\Core\Di\Di;
 use Minds\Common\Urn;
 use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Strikes\Strike;
+use Minds\Core\Entities\Actions\Save as SaveAction;
 
 class ReverseActionDelegate
 {
@@ -18,6 +19,9 @@ class ReverseActionDelegate
 
     /** @var Actions $actions */
     private $actions;
+
+    /** @var SaveAction $saveAction */
+    private $saveAction;
 
     /** @var Urn $urn */
     private $urn;
@@ -29,18 +33,20 @@ class ReverseActionDelegate
         $entitiesBuilder = null,
         $actions = null,
         $urn = null,
-        $strikesManager = null
+        $strikesManager = null,
+        $saveAction = null
     )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
         $this->actions = $actions ?: Di::_()->get('Reports\Actions');
         $this->urn = $urn ?: new Urn;
         $this->strikesManager = $strikesManager ?: Di::_()->get('Moderation\Strikes\Manager');
+        $this->saveAction = $saveAction ?: new SaveAction();
     }
 
     public function onReverse(Verdict $verdict)
     {
-        if (!$verdict->isAppeal() && $verdict->isUpheld()) {
+        if (!$verdict->isAppeal() || $verdict->isUpheld()) {
             return; // Can not be reversed
         }
 
@@ -56,6 +62,7 @@ class ReverseActionDelegate
         switch ($report->getReasonCode()) {
             case 1: // Illegal (not appealable)
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post too
                 $this->unBan($report);
                 break;
@@ -63,22 +70,25 @@ class ReverseActionDelegate
                 $nsfw = $report->getSubReasonCode();
                 $entity->setNsfw(array_diff([$nsfw], $entity->getNsfw()));
                 $entity->setNsfwLock(array_diff([$nsfw], $entity->getNsfwLock()));
-                $entity->save();
+                $this->saveAction->setEntity($entity)->save();
                 // Apply a strike to the owner
                 $this->removeStrike($report);
                 break;
             case 3: // Incites violence
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post
                 $this->unBan($report);
                 break;
             case 4:  // Harrasment
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Apply a strike to the owner
                 $this->removeStrike($report);
                 break;
             case 5: // Personal and confidential information (not appelable)
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner of the post too
                 $this->unBan($report);
                 break;
@@ -88,6 +98,7 @@ class ReverseActionDelegate
                 break;
             case 8: // Spam
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Apply a strike to the owner
                 $this->removeStrike($report);
                 break;
@@ -97,6 +108,7 @@ class ReverseActionDelegate
             //    break;
             case 13: // Malware
                 $this->actions->setDeletedFlag($entity, false);
+                $this->saveAction->setEntity($entity)->save();
                 // Ban the owner
                 $this->unBan($report);
                 break;
@@ -125,17 +137,15 @@ class ReverseActionDelegate
             ->setUserGuid($report->getEntityOwnerGuid())
             ->setReasonCode($report->getReasonCode())
             ->setSubReasonCode($report->getSubReasonCode())
-            ->setTimestamp(round(microtime(true) * 1000));
+            ->setTimestamp($report->getTimestamp()); // Strike is recored for date of first report
 
         $this->strikesManager->delete($strike);
 
-        // If 3 or more strikes, ban or apply NSFW lock
-        if ($this->strikesManager->countStrikesInTimeWindow($strike, $this->strikesManager::STRIKE_RETENTION_WINDOW) >= 3) {
-            if ($report->getReasonCode() === 2) {
-                $this->removeNsfwLock($report);
-            } else {
-                $this->unBan($report);
-            }
+        // Remove any bans or nsfw locks
+        if ($report->getReasonCode() === 2) {
+            $this->removeNsfwLock($report);
+        } else {
+            $this->unBan($report);
         }
     }
 
