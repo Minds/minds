@@ -67,10 +67,24 @@ class Manager
             && !in_array($report->getEntity()->type, [ 'user', 'group' ])
         ) {
             return true; // Already past report threshold
-        } elseif ($report->getState() === 'initial_jury_decided') {
-            $report->setTimestamp(time());
+        } 
+        
+        if ($report->getState() === 'initial_jury_decided' && $report->isUpheld()) {
+            return true; // Until appealed, don't accept any more reports
         }
 
+        if ($report->getState() === 'appealed') {
+            return true; // Do not accept further reports while awaiting appeal jury decision
+        }
+
+        if ($report->getState() === 'appeal_jury_decided' && $report->isUpheld()) {
+            return true; // Do not accept further reports if appeal jury uphols
+        }
+
+        if ($report->getState() !== 'reported') {
+            $report->setTimestamp(time()); // Create a new report
+        }
+        
         $userReport->setReport($report);
 
         $this->repository->add($userReport);

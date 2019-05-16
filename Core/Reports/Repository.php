@@ -146,7 +146,7 @@ class Repository
 
         $entityUrn = substr($parts[0], 1, -1); // Remove the parenthases
         $reasonCode = $parts[1];
-        $subReasonCode = $parts[2];
+        $subReasonCode = $parts[2] ?? 0;
         $timestamp = $parts[3];
         
 

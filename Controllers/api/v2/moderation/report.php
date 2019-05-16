@@ -61,7 +61,7 @@ class report implements Interfaces\Api
             ->setEntity($entity)
             ->setEntityOwnerGuid($entity->getOwnerGuid())
             ->setReasonCode((int) $_POST['reason_code'])
-            ->setSubReasonCode($_POST['sub_reason_code'] ?? null);
+            ->setSubReasonCode($_POST['sub_reason_code'] ?? 0);
 
         $userReport = new Reports\UserReports\UserReport();
         $userReport

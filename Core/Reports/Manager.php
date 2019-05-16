@@ -11,6 +11,8 @@ use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Core\Entities\Resolver as EntitiesResolver;
+use Minds\Common\Urn;
 
 class Manager
 {
@@ -21,10 +23,18 @@ class Manager
     /** @var PreFeb2019Repository $preFeb2019Repository */
     private $preFeb2019Repository;    
 
-    public function __construct($repository = null, $preFeb2019Repository = null)
+    /** @var EntitiesResolver $entitiesResolver */
+    private $entitiesResolver;
+
+    public function __construct(
+        $repository = null,
+        $preFeb2019Repository = null, 
+        $entitiesResolver = null
+    )
     {
         $this->repository = $repository ?: new Repository;
         $this->preFeb2019Repository = $preFeb2019Repository ?: new PreFeb2019Repository();
+        $this->entitiesResolver = $entitiesResolver ?: new EntitiesResolver;
     }
 
     /**
@@ -37,7 +47,20 @@ class Manager
             'hydrate' => false,
         ], $opts);
 
-        return $this->repository->getList($opts);
+        $response = $this->repository->getList($opts);
+
+        $response = $this->repository->getList($opts);
+
+        if ($opts['hydrate']) {
+            foreach ($response as $report) {
+                $entity = $this->entitiesResolver->single(
+                    (new Urn())->setUrn($report->getEntityUrn())
+                );
+                $report->setEntity($entity);
+            }
+        }
+
+        return $response;
     }
 
     public function getReport($urn)
@@ -70,6 +93,7 @@ class Manager
             'entity_urn' => $report->getEntityUrn(),
             'reason_code' => $report->getReasonCode(),
             'sub_reason_code' => $report->getSubReasonCode(),
+            'hydrate' => true,
         ]);
 
         if (!$reports || !count($reports)) {
