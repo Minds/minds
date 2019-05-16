@@ -106,15 +106,37 @@ class Manager
     }
 
     /**
+     * Return a single report
+     * @param string $urn
+     * @return Report
+     */
+    public function getReport($urn)
+    {
+        $report = $this->repository->get($urn);
+        if ($report) {
+            $entity = $this->entitiesResolver->single(
+                (new Urn())->setUrn($report->getEntityUrn())
+            );
+            $report->setEntity($entity);
+        }
+        return $report;
+    }
+
+    /**
      * Cast a decision
      * @param Decision $decision
      * @return boolean
      */
     public function cast(Decision $decision)
     {
+        $report = $decision->getReport();
+
+        if (!in_array($report->getState(), [ 'reported', 'appealed' ])) {
+            throw new JuryClosedException();
+        }
+
         $success = $this->repository->add($decision);
 
-        $report = $decision->getReport();
         if ($decision->isAppeal()) {
             $decisions = $report->getAppealJuryDecisions();
             $decisions[] = $decision;

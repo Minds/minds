@@ -11,6 +11,7 @@ use Minds\Entities\Activity;
 use Minds\Interfaces;
 use Minds\Core\Di\Di;
 use Minds\Core\Reports\Jury\Decision;
+use Minds\Core\Reports\Jury\JuryClosedException;
 
 class jury implements Interfaces\Api
 {
@@ -25,6 +26,13 @@ class jury implements Interfaces\Api
         $juryManager = Di::_()->get('Moderation\Jury\Manager');
         $juryManager->setJuryType($juryType)
             ->setUser(Core\Session::getLoggedInUser());
+
+        if (isset($pages[1])) {
+            $report = $juryManager->getReport($pages[1]);
+            return Factory::response([
+                'report' => $report ? $report->export() : null,
+            ]);
+        }
 
         $reports = $juryManager->getUnmoderatedList([
             'limit' => 12,
@@ -83,7 +91,14 @@ class jury implements Interfaces\Api
             ->setJurorGuid(Core\Session::getLoggedInUser()->getGuid())
             ->setJurorHash(Core\Session::getLoggedInUser()->getPhoneNumberHash());
 
-        $juryManager->cast($decision);
+        try {
+            $juryManager->cast($decision);
+        } catch (JuryClosedException $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'The jury has already closed'
+            ]);
+        }
         
         return Factory::response([]);
     }
