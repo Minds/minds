@@ -63,8 +63,8 @@ class RepositorySpec extends ObjectBehavior
         $this->cql->request(Argument::that(function($prepared) {
             $values = $prepared->build()['values'];
             return $values[0]->value() == 123
-                && round($values[1]->time(), 5) == round(strtotime('-90 days') * 1000, 5)
-                && round($values[2]->time(), 5) == round(time() * 1000, 5);
+                && round($values[1]->time(), 5) == round(strtotime('-90 days'), 5)
+                && round($values[2]->time(), 5) == round(time(), 5);
         }))
             ->shouldBeCalled()
             ->willReturn([
