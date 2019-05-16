@@ -61,9 +61,11 @@ class ActionDelegate
         $entity = $this->entitiesBuilder->single($entityGuid);
 
         switch ($report->getReasonCode()) {
-            case 1: // Illegal (not appealable)
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
+           case 1: // Illegal (not appealable)
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post too
                 $this->applyBan($report);
                 break;
@@ -76,20 +78,26 @@ class ActionDelegate
                 $this->applyStrike($report);
                 break;
             case 3: // Incites violence
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post
                 $this->applyBan($report);
                 break;
             case 4:  // Harrasment
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Apply a strike to the owner
                 $this->applyStrike($report);
                 break;
             case 5: // Personal and confidential information (not appelable)
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post too
                 $this->applyBan($report);
                 break;
@@ -98,9 +106,10 @@ class ActionDelegate
                 $this->applyBan($report);
                 break;
             case 8: // Spam
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
-                error_log('marked as spam');
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Apply a strike to the owner
                 $this->applyStrike($report);
                 break;
@@ -109,8 +118,10 @@ class ActionDelegate
                 // Apply a strike to the owner
             //    break;
             case 13: // Malware
-                $this->actions->setDeletedFlag($entity, true);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, true);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner
                 $this->applyBan($report);
                 break;
@@ -157,7 +168,7 @@ class ActionDelegate
             ->setUserGuid($report->getEntityOwnerGuid())
             ->setReasonCode($report->getReasonCode())
             ->setSubReasonCode($report->getSubReasonCode())
-            ->setTimestamp(round(microtime(true) * 1000));
+            ->setTimestamp($report->getTimestamp()); // Strike is recored for date of first report
 
         $count = $this->strikesManager->countStrikesInTimeWindow($strike, $this->strikesManager::STRIKE_TIME_WINDOW);
 
