@@ -72,12 +72,12 @@ class Repository
 
         if ($opts['from']) {
             $statement .= " AND timestamp > ?";
-            $values[] = new Timestamp($opts['from'] * 1000);
+            $values[] = new Timestamp($opts['from']);
         }
 
         if ($opts['to']) {
             $statement .= " AND timestamp < ?";
-            $values[] = new Timestamp($opts['to'] * 1000);
+            $values[] = new Timestamp($opts['to']);
         }
 
         if (!isset($opts['reason_code']) && !isset($opts['sub_reason_code'])) {
