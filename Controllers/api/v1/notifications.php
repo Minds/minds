@@ -43,7 +43,6 @@ class notifications implements Interfaces\Api
     {
         Factory::isLoggedIn();
         $response = [];
-        return;
 
         if (!isset($pages[0])) {
             $pages = ['list'];
