@@ -61,8 +61,10 @@ class ReverseActionDelegate
 
         switch ($report->getReasonCode()) {
             case 1: // Illegal (not appealable)
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post too
                 $this->unBan($report);
                 break;
@@ -75,20 +77,26 @@ class ReverseActionDelegate
                 $this->removeStrike($report);
                 break;
             case 3: // Incites violence
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post
                 $this->unBan($report);
                 break;
             case 4:  // Harrasment
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Apply a strike to the owner
                 $this->removeStrike($report);
                 break;
             case 5: // Personal and confidential information (not appelable)
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner of the post too
                 $this->unBan($report);
                 break;
@@ -97,8 +105,10 @@ class ReverseActionDelegate
                 $this->unBan($report);
                 break;
             case 8: // Spam
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Apply a strike to the owner
                 $this->removeStrike($report);
                 break;
@@ -107,8 +117,10 @@ class ReverseActionDelegate
                 // Apply a strike to the owner
             //    break;
             case 13: // Malware
-                $this->actions->setDeletedFlag($entity, false);
-                $this->saveAction->setEntity($entity)->save();
+                if ($entity->type !== 'user') {
+                    $this->actions->setDeletedFlag($entity, false);
+                    $this->saveAction->setEntity($entity)->save();
+                }
                 // Ban the owner
                 $this->unBan($report);
                 break;
