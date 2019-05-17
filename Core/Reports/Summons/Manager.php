@@ -13,6 +13,7 @@ use Minds\Core\Queue\Client;
 use Minds\Core\Queue\Runners\ReportsAppealSummon;
 use Minds\Core\Reports\Appeals\Appeal;
 use Minds\Core\Reports\Summons\Delegates;
+use Minds\Core\Reports\Manager as ReportsManager;
 
 class Manager
 {
@@ -21,6 +22,9 @@ class Manager
 
     /** @var Repository $repository */
     protected $repository;
+
+    /** @var ReportsManager $reportsManager */
+    protected $reportsManager;
 
     /** @var QueueClient */
     protected $queueClient;
@@ -39,12 +43,14 @@ class Manager
     public function __construct(
         $cohort = null,
         $repository = null,
+        $reportsManager = null,
         $queueClient = null,
         $socketDelegate = null
     )
     {
         $this->cohort = $cohort ?: new Cohort();
         $this->repository = $repository ?: new Repository();
+        $this->reportsManager = $reportsManager ?: new ReportsManager;
         $this->queueClient = $queueClient ?: Client::build();
         $this->socketDelegate = $socketDelegate ?: new Delegates\SocketDelegate();
     }
@@ -57,21 +63,33 @@ class Manager
      */
     public function summon(Appeal $appeal, $cohort = null)
     {
-        $reportUrn = $appeal->getReport()->getUrn();
+        // Get a fresh report to collect completed jurors
+        $report = $report = $this->reportsManager->getReport($appeal->getReport()->getUrn());
+        $reportUrn = $report->getUrn();
         $juryType = 'appeal_jury';
 
         $missing = 0;
 
         if (!$cohort) {
-            $jury = iterator_to_array($this->repository->getList([
+            $summonses = iterator_to_array($this->repository->getList([
                 'report_urn' => $reportUrn,
                 'jury_type' => $juryType,
             ]));
 
+            $completedJurorGuids = array_map(function($decision) {
+                return $decision->getJurorGuid();
+            }, array_merge($report->getAppealJuryDecisions(), $report->getInitialJuryDecisions()));
+
+            // Remove the summons of jurors who have already voted
+
+            $summonses = array_filter($summonses, function (Summon $summons) use ($completedJurorGuids) {
+                return !in_array($summons->getJurorGuid(), $completedJurorGuids);
+            });
+
             // Check how many are missing
 
-            $notDeclined = array_filter($jury, function (Summon $summon) {
-                return $summon->isAccepted() || $summon->isAwaiting();
+            $notDeclined = array_filter($summonses, function (Summon $summons) {
+                return $summons->isAccepted() || $summons->isAwaiting();
             });
 
             $missing = 12 - count($notDeclined);
@@ -84,14 +102,14 @@ class Manager
 
             // Reduce jury to juror guids and try to pick up to missing size
 
-            $juryGuids = array_map(function (Summon $summon) {
-                return (string) $summon->getJurorGuid();
-            }, $jury);
+            $pendingJurorGuids = array_map(function (Summon $summons) {
+                return (string) $summons->getJurorGuid();
+            }, $summonses);
 
             $cohort = $this->cohort->pick([
                 'size' => $missing,
                 'for' => $appeal->getOwnerGuid(),
-                'except' => $juryGuids,
+                'except' => $pendingJurorGuids,
                 'active_threshold' => 5 * 60,
             ]);
         }

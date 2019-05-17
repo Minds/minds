@@ -198,7 +198,7 @@ class Repository
                 continue; // avoid duplicate reports
             }
 
-            $jurorGuids[$jurorGuids] = true; 
+            $jurorGuids[$jurorGuid] = true; 
 
             $decision = new Jury\Decision();
             $decision
