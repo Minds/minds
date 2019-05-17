@@ -37,6 +37,7 @@ class config implements Interfaces\Api, Interfaces\ApiIgnorePam
             "features" => (object) (Minds\Core\Config::_()->get('features') ?: []),
             "blockchain" => (object) Minds\Core\Di\Di::_()->get('Blockchain\Manager')->getPublicSettings(),
             "plus" => Minds\Core\Config::_()->get('plus'),
+            "report_reasons" => Minds\Core\Config::_()->get('report_reasons'),
         ];
 
         return Factory::response($minds);
