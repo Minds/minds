@@ -7,149 +7,91 @@
 
 namespace Minds\Core\Reports\Summons;
 
-use Minds\Core\Data\ElasticSearch\Client as ElasticsearchClient;
-use Minds\Core\Data\ElasticSearch\Prepared\Search;
-use Minds\Core\Di\Di;
-use Minds\Helpers\Text;
+use Exception;
 
 class Cohort
 {
-    /** @var ElasticsearchClient */
-    protected $elasticsearch;
+    /** @var Repository */
+    protected $repository;
 
-    /** @var string */
-    protected $index;
+    /** @var Pool */
+    protected $pool;
 
     /**
-     * Repository constructor.
-     * @param ElasticsearchClient $elasticsearch
-     * @param string $index
+     * Cohort constructor.
+     * @param Repository $repository
+     * @param Pool $pool
      */
     public function __construct(
-        $elasticsearch = null,
-        $index = null
+        $repository = null,
+        $pool = null
     )
     {
-        $this->elasticsearch = $elasticsearch ?: Di::_()->get('Database\ElasticSearch');
-        $this->index = $index ?: 'minds-metrics-*';
+        $this->repository = $repository ?: new Repository();
+        $this->pool = $pool ?: new Pool();
     }
 
     /**
      * @param array $opts
-     * @return \Generator
-     * @yields string
+     * @return string[]
+     * @throws Exception
      */
-    public function getList(array $opts = [])
+    public function pick($opts)
     {
         $opts = array_merge([
+            'size' => 0,
             'for' => null,
-            'active_threshold' => 0,
-            'platform' => null,
-            'validated' => false,
-            'limit' => 10,
-            'offset' => 0,
+            'except' => [],
+            'active_threshold' => null,
         ], $opts);
 
-        $now = (int) (microtime(true) * 1000);
-        $fromTimestamp = $now - ($opts['active_threshold'] * 1000);
+        $cohort = [];
 
-        $body = [
-            '_source' => [
-                'user_guid',
-            ],
-            'query' => [
-                'bool' => [
-                    'must' => [
-                        [
-                            'range' => [
-                                '@timestamp' => [
-                                    'gte' => $fromTimestamp,
-                                ],
-                            ],
-                        ],
-                        [
-                            'term' => [
-                                'type' => 'action',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'aggs' => [
-                'entities' => [
-                    'terms' => [
-                        'field' => 'user_guid.keyword',
-                        'size' => $opts['limit'],
-                    ],
-                ],
-            ],
-            'size' => 0,
-        ];
+        // Uncomment below to scale
+        // $poolSize = $opts['size'] * 5;
+        // $max_pages = 20; // NOTE: Normally capped to 20.
 
-        if ($opts['platform']) {
-            $body['query']['bool']['must'][] = [
-                'terms' => [
-                    'platform' => Text::buildArray($opts['platform']),
-                ],
-            ];
-        }
+        $poolSize = 400;
+        $max_pages = 1; // NOTE: Normally capped to 20.
+        $page = 0;
 
-        if ($opts['for']) {
-            if (!isset($body['query']['bool']['must_not'])) {
-                $body['query']['bool']['must_not'] = [];
+        while (true) {
+            if ($page > $max_pages) {
+                // Max = PoolSize * MaxPages
+                error_log('Cannot gather a cohort');
+                break;
             }
 
-            $body['query']['bool']['must_not'][] = [
-                'term' => [
-                    'user_guid' => (string) $opts['for'],
-                ],
-            ];
+            $pool = $this->pool->getList([
+                'active_threshold' => $opts['active_threshold'],
+                'platform' => 'browser',
+                'for' => $opts['for'],
+                'except' => $opts['except'],
+                'validated' => false,
+                'size' => $poolSize,
+                'page' => $page,
+                'max_pages' => $max_pages,
+            ]);
 
-            $body['query']['bool']['must_not'][] = [
-                'terms' => [
-                    'user_guid' => [
-                        'index' => 'minds-graph',
-                        'type' => 'subscriptions',
-                        'id' => (string) $opts['for'],
-                        'path' => 'guids',
-                    ],
-                ],
-            ];
-        }
+            $j = 0;
+            foreach ($pool as $userGuid) {
+                $j++;
 
-        if ($opts['validated']) {
-            $body['query']['bool']['must'][] = [
-                'exists' => [
-                    'field' => 'user_phone_number_hash',
-                ],
-            ];
+                // TODO: Check subs
+                $cohort[] = $userGuid;
 
-            if (!isset($body['query']['bool']['must_not'])) {
-                $body['query']['bool']['must_not'] = [];
+                if (count($cohort) >= $opts['size']) {
+                    break;
+                }
             }
 
-            $body['query']['bool']['must_not'][] = [
-                'term' => [
-                    'user_phone_number_hash' => '',
-                ],
-            ];
+            if ($j === 0 || count($cohort) >= $opts['size']) {
+                break;
+            }
+
+            $page++;
         }
 
-        $query = [
-            'index' => $this->index,
-            'type' => 'action',
-            'body' => $body,
-            'size' => $opts['limit'],
-            'from' => $opts['offset'],
-        ];
-
-        $prepared = new Search();
-        $prepared->query($query);
-
-        $result = $this->elasticsearch->request($prepared);
-
-        foreach ($result['aggregations']['entities']['buckets'] as $bucket) {
-            yield $bucket['key'];
-        }
+        return $cohort;
     }
 }

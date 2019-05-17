@@ -7,6 +7,8 @@
 
 namespace Minds\Core\Reports\Summons;
 
+use Exception;
+use JsonSerializable;
 use Minds\Traits\MagicAttributes;
 
 /**
@@ -22,7 +24,7 @@ use Minds\Traits\MagicAttributes;
  * @method int getTtl()
  * @method Summon setTtl(int $ttl)
  */
-class Summon implements \JsonSerializable
+class Summon implements JsonSerializable
 {
     use MagicAttributes;
 
@@ -44,12 +46,12 @@ class Summon implements \JsonSerializable
     /**
      * @param string $status
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function setStatus($status)
     {
         if (!in_array($status, ['awaiting', 'accepted', 'declined'])) {
-            throw new \Exception('Invalid status');
+            throw new Exception('Invalid status');
         }
 
         $this->status = $status;

@@ -12,6 +12,7 @@ use Minds\Core\Queue\Message;
 use Minds\Core\Queue\Client;
 use Minds\Core\Queue\Interfaces\QueueClient;
 use Minds\Core\Queue\Interfaces\QueueRunner;
+use Minds\Core\Reports\Appeals\Appeal;
 use Minds\Core\Reports\Summons\Manager;
 
 class ReportsAppealSummon implements QueueRunner
@@ -31,7 +32,10 @@ class ReportsAppealSummon implements QueueRunner
             ->receive(function (Message $data) {
                 $params = $data->getData();
 
+                /** @var Appeal $appeal */
                 $appeal = $params['appeal'] ?? null;
+
+                /** @var string[] $cohort */
                 $cohort = $params['cohort'] ?? null;
 
                 if (!$appeal) {
@@ -39,9 +43,18 @@ class ReportsAppealSummon implements QueueRunner
                     return;
                 }
 
+                echo "Summoning for {$appeal->getReport()->getUrn()}..." . PHP_EOL;
+
                 /** @var Manager $manager */
                 $manager = Di::_()->get('Moderation\Summons\Manager');
-                $manager->summon($appeal, $cohort);
+                $missing = $manager->summon($appeal, $cohort);
+
+                if ($missing > 0) {
+                    echo "Missing {$missing} juror(s). Deferring..." . PHP_EOL;
+                    $manager->defer($appeal);
+                }
+
+                echo "Done!" . PHP_EOL;
             });
     }
 }

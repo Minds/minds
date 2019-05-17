@@ -7,6 +7,7 @@
 
 namespace Minds\Core\Reports\Summons\Delegates;
 
+use Exception;
 use Minds\Core\Reports\Summons\Summon;
 use Minds\Core\Sockets\Events as SocketEvents;
 
@@ -28,7 +29,7 @@ class SocketDelegate
 
     /**
      * @param Summon $summon
-     * @throws \Exception
+     * @throws Exception
      */
     public function onSummon(Summon $summon)
     {
