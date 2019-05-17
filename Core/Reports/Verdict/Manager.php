@@ -112,10 +112,10 @@ class Manager
         $verdict->setTimestamp(time());
 
         if ($verdict->isUpheld() === null) {
-            error_log("{$verdict->getReport()->getEntityGuid()} not actionable");
+            error_log("{$verdict->getReport()->getEntityUrn()} not actionable");
             return false;
         } else {
-            error_log("{$verdict->getReport()->getEntityGuid()} decided with {$verdict->getAction()}");
+            error_log("{$verdict->getReport()->getEntityUrn()} decided with {$verdict->getAction()}");
             return $this->cast($verdict);
         }
     }

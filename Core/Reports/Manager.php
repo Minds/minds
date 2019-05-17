@@ -13,6 +13,7 @@ use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
 use Minds\Common\Urn;
+use Minds\Core\Security\ACL;
 
 class Manager
 {
@@ -26,15 +27,20 @@ class Manager
     /** @var EntitiesResolver $entitiesResolver */
     private $entitiesResolver;
 
+    /** @var ACL $acl */
+    private $acl;
+
     public function __construct(
         $repository = null,
         $preFeb2019Repository = null, 
-        $entitiesResolver = null
+        $entitiesResolver = null,
+        $acl = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->preFeb2019Repository = $preFeb2019Repository ?: new PreFeb2019Repository();
         $this->entitiesResolver = $entitiesResolver ?: new EntitiesResolver;
+        $this->acl = $acl ?: new ACL;
     }
 
     /**
@@ -49,13 +55,13 @@ class Manager
 
         $response = $this->repository->getList($opts);
 
-        $response = $this->repository->getList($opts);
-
         if ($opts['hydrate']) {
             foreach ($response as $report) {
+                $ignore = $this->acl->setIgnore(true);
                 $entity = $this->entitiesResolver->single(
                     (new Urn())->setUrn($report->getEntityUrn())
                 );
+                $this->acl->setIgnore($ignore);
                 $report->setEntity($entity);
             }
         }
@@ -71,9 +77,11 @@ class Manager
     public function getReport($urn)
     {
         $report = $this->repository->get($urn);
+        $ignore = $this->acl->setIgnore(true);
         $entity = $this->entitiesResolver->single(
             (new Urn())->setUrn($report->getEntityUrn())
         );
+        $this->acl->setIgnore($ignore);
         $report->setEntity($entity);
         return $report;
     }

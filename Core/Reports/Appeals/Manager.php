@@ -13,6 +13,7 @@ use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
 use Minds\Common\Urn;
+use Minds\Core\Security\ACL;
 
 class Manager
 {
@@ -29,17 +30,22 @@ class Manager
     /** @var Delegates\SummonDelegate $summonDelegate */
     private $summonDelegate;
 
+    /** @var ACL $acl */
+    private $acl;
+
     public function __construct(
         $repository = null,
         $entitiesResolver = null,
         $notificationDelegate = null,
-        $summonDelegate = null
+        $summonDelegate = null,
+        $acl = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesResolver = $entitiesResolver ?: new EntitiesResolver;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
         $this->summonDelegate = $summonDelegate ?: new Delegates\SummonDelegate();
+        $this->acl = $acl ?: new ACL();
     }
 
     /**
@@ -59,9 +65,11 @@ class Manager
         if ($opts['hydrate']) {
             foreach ($response as $appeal) {
                 $report = $appeal->getReport();
+                $ignore = $this->acl->setIgnore(true);
                 $entity = $this->entitiesResolver->single(
                     (new Urn())->setUrn($report->getEntityUrn())
                 );
+                $this->acl->setIgnore($ignore); // Restore ACL
                 $report->setEntity($entity);
                 $appeal->setReport($report);
             }

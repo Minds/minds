@@ -128,8 +128,8 @@ class Resolver
         // Filter out forbidden entities
 
         $sorted = array_filter($sorted, function($entity) { 
-            return $this->acl->read($entity, $this->user)
-                && !Flags::shouldFail($entity);
+            return $this->acl->read($entity, $this->user);
+                //&& !Flags::shouldFail($entity);
         });
 
         // Filter out pending activities

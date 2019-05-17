@@ -16,6 +16,7 @@ use Minds\Common\Urn;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
 use Minds\Core\Reports\Summons\SummonsNotFoundException;
 use Minds\Core\Reports\Summons\Summon as SummonsEntity;
+use Minds\Core\Security\ACL;
 
 class Manager
 {
@@ -32,6 +33,9 @@ class Manager
     /** @var SummonsManager $summonsManager */
     private $summonsManager;
 
+    /** @var ACL $acl */
+    private $acl;
+
     /** @var string $juryType */
     private $juryType;
 
@@ -42,13 +46,15 @@ class Manager
         $repository = null,
         $entitiesResolver = null,
         $verdictManager = null,
-        $summonsManager = null
+        $summonsManager = null,
+        $acl = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesResolver = $entitiesResolver  ?: new EntitiesResolver;
         $this->verdictManager = $verdictManager ?: Di::_()->get('Moderation\Verdict\Manager');
         $this->summonsManager = $summonsManager ?: Di::_()->get('Moderation\Summons\Manager');
+        $this->acl = $acl ?: new ACL;
     }
 
     /**
@@ -121,9 +127,11 @@ class Manager
     {
         $report = $this->repository->get($urn);
         if ($report) {
+            $ignore = $this->acl->setIgnore(true);
             $entity = $this->entitiesResolver->single(
                 (new Urn())->setUrn($report->getEntityUrn())
             );
+            $this->acl->setIgnore($ignore);
             $report->setEntity($entity);
         }
         return $report;
