@@ -232,9 +232,9 @@ class ManagerSpec extends ObjectBehavior
                     ->setAction('2.2'),
             ]);
         
-        $report->getEntityGuid()
+        $report->getEntityUrn()
             ->shouldBeCalled()
-            ->willReturn(123);
+            ->willReturn('urn:activity:123');
 
         $this->repository->add(Argument::type(Verdict::class))
             ->shouldBeCalled()

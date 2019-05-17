@@ -6,6 +6,7 @@ use Minds\Core\Reports\Jury\Manager;
 use Minds\Core\Reports\Verdict\Manager as VerdictManager;
 use Minds\Core\Reports\Jury\Repository;
 use Minds\Core\Reports\Jury\Decision;
+use Minds\Core\Reports\Summons\Manager as SummonsManager;
 use Minds\Core\Reports\Report;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
 use PhpSpec\ObjectBehavior;
@@ -16,13 +17,20 @@ class ManagerSpec extends ObjectBehavior
     private $repository;
     private $entitiesResolver;
     private $verdictManager;
+    private $summonsManager;
 
-    function let(Repository $repository, EntitiesResolver $entitiesResolver, VerdictManager $verdictManager)
+    function let(
+        Repository $repository,
+        EntitiesResolver $entitiesResolver,
+        VerdictManager $verdictManager,
+        SummonsManager $summonsManager
+    )
     {
-        $this->beConstructedWith($repository, $entitiesResolver, $verdictManager);
+        $this->beConstructedWith($repository, $entitiesResolver, $verdictManager, $summonsManager);
         $this->repository = $repository;
         $this->entitiesResolver = $entitiesResolver;
         $this->verdictManager = $verdictManager;
+        $this->summonsManager = $summonsManager;
     }
 
     function it_is_initializable()
