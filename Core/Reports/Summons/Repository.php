@@ -33,7 +33,7 @@ class Repository
     /**
      * @param array $opts
      * @return Generator
-     * @yields array
+     * @yields Summons[]
      * @throws Exception
      */
     public function getList(array $opts = [])
@@ -82,15 +82,15 @@ class Repository
             $rows = $this->db->request($prepared);
 
             foreach ($rows as $row) {
-                $summon = new Summon();
-                $summon
+                $summons = new Summons();
+                $summons
                     ->setReportUrn($row['report_urn'])
                     ->setJuryType($row['jury_type'])
                     ->setJurorGuid($row['juror_guid']->toInt())
                     ->setStatus($row['status'])
                     ->setTtl($row['expires'] - time());
 
-                yield $summon;
+                yield $summons;
             }
         } catch (Exception $e) {
             error_log($e);
@@ -99,21 +99,21 @@ class Repository
     }
 
     /**
-     * @param Summon $summon
+     * @param Summons $summons
      * @return bool
      */
-    public function add(Summon $summon)
+    public function add(Summons $summons)
     {
-        $expires = time() + ((int) $summon->getTtl());
+        $expires = time() + ((int) $summons->getTtl());
 
         $cql = "INSERT INTO moderation_summons (report_urn, jury_type, juror_guid, status, expires) VALUES (?, ?, ?, ?, ?) USING TTL ?";
         $values = [
-            $summon->getReportUrn(),
-            $summon->getJuryType(),
-            new Bigint($summon->getJurorGuid()),
-            $summon->getStatus(),
+            $summons->getReportUrn(),
+            $summons->getJuryType(),
+            new Bigint($summons->getJurorGuid()),
+            $summons->getStatus(),
             $expires,
-            (int) $summon->getTtl(),
+            (int) $summons->getTtl(),
         ];
 
         $prepared = new Custom();
@@ -128,16 +128,16 @@ class Repository
     }
 
     /**
-     * @param Summon $summon
+     * @param Summons $summons
      * @return bool
      */
-    public function exists(Summon $summon)
+    public function exists(Summons $summons)
     {
         $cql = "SELECT COUNT(*) as total FROM moderation_summons WHERE report_urn = ? AND jury_type = ? AND juror_guid = ?";
         $values = [
-            $summon->getReportUrn(),
-            $summon->getJuryType(),
-            new Bigint($summon->getJurorGuid()),
+            $summons->getReportUrn(),
+            $summons->getJuryType(),
+            new Bigint($summons->getJurorGuid()),
         ];
 
         $prepared = new Custom();
@@ -154,16 +154,16 @@ class Repository
     }
 
     /**
-     * @param Summon $summon
+     * @param Summons $summons
      * @return bool
      * @throws Exception
      */
-    public function delete(Summon $summon)
+    public function delete(Summons $summons)
     {
         return $this->deleteAll([
-            'report_urn' => $summon->getReportUrn(),
-            'jury_type' => $summon->getJuryType(),
-            'juror_guid' => $summon->getJurorGuid(),
+            'report_urn' => $summons->getReportUrn(),
+            'jury_type' => $summons->getJuryType(),
+            'juror_guid' => $summons->getJurorGuid(),
         ]);
     }
 

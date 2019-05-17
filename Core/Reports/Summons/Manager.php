@@ -82,13 +82,13 @@ class Manager
 
             // Remove the summons of jurors who have already voted
 
-            $summonses = array_filter($summonses, function (Summon $summons) use ($completedJurorGuids) {
+            $summonses = array_filter($summonses, function (Summons $summons) use ($completedJurorGuids) {
                 return !in_array($summons->getJurorGuid(), $completedJurorGuids);
             });
 
             // Check how many are missing
 
-            $notDeclined = array_filter($summonses, function (Summon $summons) {
+            $notDeclined = array_filter($summonses, function (Summons $summons) {
                 return $summons->isAccepted() || $summons->isAwaiting();
             });
 
@@ -102,7 +102,7 @@ class Manager
 
             // Reduce jury to juror guids and try to pick up to missing size
 
-            $pendingJurorGuids = array_map(function (Summon $summons) {
+            $pendingJurorGuids = array_map(function (Summons $summons) {
                 return (string) $summons->getJurorGuid();
             }, $summonses);
 
@@ -115,47 +115,47 @@ class Manager
         }
 
         foreach ($cohort as $juror) {
-            $summon = new Summon();
-            $summon
+            $summons = new Summons();
+            $summons
                 ->setReportUrn($reportUrn)
                 ->setJuryType($juryType)
                 ->setJurorGuid($juror)
                 ->setTtl(120)
                 ->setStatus('awaiting');
 
-            $this->repository->add($summon);
-            $this->socketDelegate->onSummon($summon);
+            $this->repository->add($summons);
+            $this->socketDelegate->onSummon($summons);
         }
 
         return $missing;
     }
 
     /**
-     * @param Summon $summon
+     * @param Summons $summons
      * @return bool
      */
-    public function isSummoned(Summon $summon)
+    public function isSummoned(Summons $summons)
     {
-        return $this->repository->exists($summon);
+        return $this->repository->exists($summons);
     }
 
     /**
-     * @param Summon $summon
-     * @return Summon
+     * @param Summons $summons
+     * @return Summons
      * @throws Exception
      */
-    public function respond(Summon $summon)
+    public function respond(Summons $summons)
     {
-        if (!$this->isSummoned($summon)) {
+        if (!$this->isSummoned($summons)) {
             throw new Exception('User is not summoned');
         }
 
-        $summon
+        $summons
             ->setTtl(10 * 60);
 
-        $this->repository->add($summon);
+        $this->repository->add($summons);
 
-        return $summon;
+        return $summons;
     }
 
     /**

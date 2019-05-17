@@ -15,7 +15,7 @@ use Minds\Common\Repository\Response;
 use Minds\Common\Urn;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
 use Minds\Core\Reports\Summons\SummonsNotFoundException;
-use Minds\Core\Reports\Summons\Summon as SummonsEntity;
+use Minds\Core\Reports\Summons\Summons as SummonsEntity;
 use Minds\Core\Security\ACL;
 
 class Manager

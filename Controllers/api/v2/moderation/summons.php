@@ -9,9 +9,9 @@ namespace Minds\Controllers\api\v2\moderation;
 
 use Minds\Api\Factory;
 use Minds\Core\Di\Di;
-use Minds\Core\Reports\Repository as ReportsRepository;
+use Minds\Core\Reports\Manager as ReportsManager;
 use Minds\Core\Reports\Summons\Manager;
-use Minds\Core\Reports\Summons\Summon as SummonEntity;
+use Minds\Core\Reports\Summons\Summons as SummonsEntity;
 use Minds\Core\Session;
 use Minds\Interfaces;
 
@@ -46,15 +46,15 @@ class summons implements Interfaces\Api
         /** @var ReportsManager $reportsManager */
         $reportsManager = Di::_()->get('Moderation\Manager');
 
-        $summon = new SummonEntity();
+        $summons = new SummonsEntity();
         try {
-            $summon
+            $summons
                 ->setReportUrn($reportUrn)
                 ->setJuryType($juryType)
                 ->setJurorGuid((string) $userGuid)
                 ->setStatus($status);
 
-            $summonsManager->respond($summon);
+            $summonsManager->respond($summons);
         } catch (\Exception $e) {
             return Factory::response([
                 'status' => 'error',
@@ -63,13 +63,13 @@ class summons implements Interfaces\Api
         }
 
         $response = [
-            'summon' => $summon->getStatus(),
-            'expires_in' => $summon->getTtl(),
+            'summon' => $summons->getStatus(),
+            'expires_in' => $summons->getTtl(),
         ];
 
-        if ($summon->isAccepted()) {
+        if ($summons->isAccepted()) {
             $response['report'] = $reportsManager
-                ->getReport($summon->getReportUrn())
+                ->getReport($summons->getReportUrn())
                 ->export();
         }
 
