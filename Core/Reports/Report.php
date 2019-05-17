@@ -92,6 +92,15 @@ class Report
     }
 
     /**
+     * Return if upheld
+     * @return boolean | null
+     */
+    public function isUpheld()
+    {
+        return $this->uphold;
+    }
+
+    /**
      * Return the URN of this case
      * @return string
      */
