@@ -5,6 +5,7 @@ namespace Minds\Controllers\Cli;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Cli;
+use Minds\Core\Reports\Summons\Summon;
 use Minds\Interfaces;
 use Minds\Entities;
 
@@ -47,9 +48,16 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
 
         $userId = $this->getOpt('user');
         $reportUrn = $this->getOpt('report');
+        $juryType = $this->getOpt('jury-type') ?? null;
+        $respond = $this->getOpt('respond') ?? null;
 
         if (!$userId || !$reportUrn) {
-            $this->out('Usage: cli.php moderation summon --user=<username_or_guid> --report=<report_urn>');
+            $this->out([
+                'Usage:',
+                '- Summoning: cli.php moderation summon --user=<username_or_guid> --report=<report_urn>',
+                '- Responding: cli.php moderation summon --user=<username_or_guid> --report=<report_urn> --jury-type=<initial_jury|appeal_jury> --respond=<accepted|declined>',
+            ]);
+
             exit(1);
         }
 
@@ -60,6 +68,54 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
             exit(1);
         }
 
+        if (!$respond) {
+            $report = $reportsRepository->get($reportUrn);
+
+            if (!$report) {
+                $this->out('Error: Invalid report');
+                exit(1);
+            }
+
+            $appeal = new Core\Reports\Appeals\Appeal();
+            $appeal->setReport($report);
+
+            $summonsManager->summon($appeal, [ $user->guid ]);
+
+            $this->out("Summoned {$user->guid} to {$reportUrn}");
+        } else {
+            $summon = new Summon();
+            $summon
+                ->setReportUrn($reportUrn)
+                ->setJuryType($juryType)
+                ->setJurorGuid((string) $user->guid)
+                ->setStatus($respond);
+
+                $summonsManager->respond($summon);
+
+            $this->out("Responded to {$user->guid}'s summon to {$reportUrn} with {$respond}");
+        }
+    }
+
+    public function dev_only_simulate_summon()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        /** @var Core\Reports\Repository $reportsRepository */
+        $reportsRepository = Di::_()->get('Reports\Repository');
+
+        /** @var Core\Reports\Summons\Manager $summonsManager */
+        $summonsManager = Di::_()->get('Moderation\Summons\Manager');
+
+        $reportUrn = $this->getOpt('report');
+
+        if (!$reportUrn) {
+            $this->out([
+                'Usage: cli.php moderation dev_only_simulate_summon --report=<report_urn>',
+            ]);
+
+            exit(1);
+        }
         $report = $reportsRepository->get($reportUrn);
 
         if (!$report) {
@@ -68,8 +124,12 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
         }
 
         $appeal = new Core\Reports\Appeals\Appeal();
-        $appeal->setReport($report);
+        $appeal
+            ->setReport($report)
+            ->setOwnerGuid($report->getEntityOwnerGuid());
 
-        $summonsManager->summon($appeal, [ $user->guid ]);
+        $cohort = $summonsManager->summon($appeal, null);
+
+        var_dump($cohort);
     }
 }

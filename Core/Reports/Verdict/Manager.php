@@ -32,17 +32,22 @@ class Manager
     /** @var Delegates\NotificationDelegate $notificationDelegate */
     private $notificationDelegate;
 
+    /** @var Delegates\ReleaseSummonsesDelegate $releaseSummonsesDelegate */
+    private $releaseSummonsesDelegate;
+
     public function __construct(
         $repository = null,
         $actionDelegate = null,
         $reverseActionDelegate = null,
-        $notificationDelegate = null
+        $notificationDelegate = null,
+        $releaseSummonsesDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->actionDelegate = $actionDelegate ?: new Delegates\ActionDelegate;
         $this->reverseActionDelegate = $reverseActionDelegate ?: new Delegates\ReverseActionDelegate;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
+        $this->releaseSummonsesDelegate = $releaseSummonsesDelegate ?: new Delegates\ReleaseSummonsesDelegate;
     }
 
     /**
@@ -119,6 +124,7 @@ class Manager
      * Cast a verdict
      * @param Verdict $verdict
      * @return boolean
+     * @throws \Exception
      */
     public function cast(Verdict $verdict)
     {
@@ -132,6 +138,9 @@ class Manager
 
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);
+
+        // Release summonses
+        $this->releaseSummonsesDelegate->onCast($verdict);
 
         // Send rewards to reporters
 

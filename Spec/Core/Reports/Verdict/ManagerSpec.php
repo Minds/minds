@@ -18,19 +18,22 @@ class ManagerSpec extends ObjectBehavior
     private $actionDelegate;
     private $reverseDelegate;
     private $notificationDelegate;
+    private $releaseSummonsesDelegate;
 
     function let(
         Repository $repository,
         Delegates\ActionDelegate $actionDelegate,
         Delegates\ReverseActionDelegate $reverseDelegate,
-        Delegates\NotificationDelegate $notificationDelegate
+        Delegates\NotificationDelegate $notificationDelegate,
+        Delegates\ReleaseSummonsesDelegate $releaseSummonsesDelegate
     )
     {
-        $this->beConstructedWith($repository, $actionDelegate, $reverseDelegate, $notificationDelegate);
+        $this->beConstructedWith($repository, $actionDelegate, $reverseDelegate, $notificationDelegate, $releaseSummonsesDelegate);
         $this->repository = $repository;
         $this->actionDelegate = $actionDelegate;
         $this->reverseDelegate = $reverseDelegate;
         $this->notificationDelegate = $notificationDelegate;
+        $this->releaseSummonsesDelegate = $releaseSummonsesDelegate;
 
     }
 
@@ -58,6 +61,9 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->notificationDelegate->onAction($verdict)
+            ->shouldBeCalled();
+
+        $this->releaseSummonsesDelegate->onCast($verdict)
             ->shouldBeCalled();
 
         $this->cast($verdict->getWrappedObject());

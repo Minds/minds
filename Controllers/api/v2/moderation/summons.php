@@ -53,21 +53,14 @@ class summons implements Interfaces\Api
                 ->setJuryType($juryType)
                 ->setJurorGuid((string) $userGuid)
                 ->setStatus($status);
+
+            $summonsManager->respond($summon);
         } catch (\Exception $e) {
             return Factory::response([
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ]);
         }
-
-        if (!$summonsManager->isSummoned($summon)) {
-            return Factory::response([
-                'status' => 'error',
-                'message' => 'You\'re not summoned',
-            ]);
-        }
-
-        $summonsManager->respond($summon);
 
         $response = [
             'summon' => $summon->getStatus(),

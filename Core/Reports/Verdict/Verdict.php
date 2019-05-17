@@ -4,16 +4,16 @@
  */
 namespace Minds\Core\Reports\Verdict;
 
+use Minds\Core\Reports\Jury\Decision;
+use Minds\Core\Reports\Report;
 use Minds\Traits\MagicAttributes;
 
 /**
- * @method Report getReport(): Report
- * @method Report getDecisions(): array<Decision>
- * @method Report isAppeal(): boolean
- * @method Report isUphold(): boolean
- * @method Report getAction(): string
- * @method Report getInitialJuryAction(): string
- * @method Report getTimestamp: int
+ * @method Report getReport()
+ * @method boolean isUphold()
+ * @method string getAction()
+ * @method string getInitialJuryAction()
+ * @method int getTimestamp()
  */
 class Verdict
 {
@@ -36,7 +36,7 @@ class Verdict
 
     /**
      * Decisions
-     * @return array<Decision>
+     * @return Decision[]
      */
     public function getDecisions()
     {
