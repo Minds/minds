@@ -2,16 +2,17 @@
 namespace Minds\Core\Reports\Stats\Aggregates;
 
 use Minds\Core\Di\Di;
-use Minds\Core\Data\ElasticSearch\Prepared;
+use Minds\Core\Data\Cassandra\Prepared;
+use Cassandra\Timestamp;
 
 class TotalAppealsAggregate implements ModerationStatsAggregateInterface
 {
-    /** @var Client $es */
-    private $es;
+    /** @var Client $cql */
+    private $cql;
 
-    public function __construct($es = null)
+    public function __construct($cql = null)
     {
-        $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
     }
 
     /**
@@ -19,35 +20,16 @@ class TotalAppealsAggregate implements ModerationStatsAggregateInterface
      */
     public function get(): int
     {
-        $body = [
-            'query' => [
-                    'bool' => [
-                        'must' => [
-                            [
-                                'range' => [
-                                    '@appeal_timestamp' => [
-                                        'gte' => strtotime('midnight -30 days') * 1000,
-                                        'lte' => time() * 1000,
-                                        'format' => 'epoch_millis',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-        ];
+        $statement = "SELECT count(*) as total FROM moderation_reports_by_state
+            WHERE state IN ('appealed', 'appeal_jury_decided')
+              AND timestamp > ?";
+        $values = [ new Timestamp(strtotime('-30 days', time())) ];
 
-        $query = [
-            'index' => 'minds-moderation',
-            'body' => $body,
-            'size' => 0,
-        ];
+        $prepared = new Prepared\Custom();
+        $prepared->query($statement, $values);
+        $result = $this->cql->request($prepared);
 
-        $prepared = new Prepared\Search();
-        $prepared->query($query);
-        $result = $this->es->request($prepared);
-        
-        return $result['hits']['total'];
+        return (int) $result[0]['total']->value();
     }
 
 }
