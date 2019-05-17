@@ -35,12 +35,16 @@ class Manager
     /** @var Delegates\ReleaseSummonsesDelegate $releaseSummonsesDelegate */
     private $releaseSummonsesDelegate;
 
+    /** @var Delegates\MetricsDelegate $metricsDelegate */
+    private $metricsDelegate;
+
     public function __construct(
         $repository = null,
         $actionDelegate = null,
         $reverseActionDelegate = null,
         $notificationDelegate = null,
-        $releaseSummonsesDelegate = null
+        $releaseSummonsesDelegate = null,
+        $metricsDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
@@ -48,6 +52,7 @@ class Manager
         $this->reverseActionDelegate = $reverseActionDelegate ?: new Delegates\ReverseActionDelegate;
         $this->notificationDelegate = $notificationDelegate ?: new Delegates\NotificationDelegate;
         $this->releaseSummonsesDelegate = $releaseSummonsesDelegate ?: new Delegates\ReleaseSummonsesDelegate;
+        $this->metricsDelegate = $metricsDelegate ?: new Delegates\MetricsDelegate;
     }
 
     /**
@@ -135,6 +140,9 @@ class Manager
 
         // Reverse the action (if appeal)
         $this->reverseActionDelegate->onReverse($verdict);
+
+        // Save metrics (for contributions)
+        $this->metricsDelegate->onCast($verdict);
 
         // Send a notification to the reported user
         $this->notificationDelegate->onAction($verdict);

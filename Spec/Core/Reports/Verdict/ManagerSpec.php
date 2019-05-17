@@ -19,21 +19,31 @@ class ManagerSpec extends ObjectBehavior
     private $reverseDelegate;
     private $notificationDelegate;
     private $releaseSummonsesDelegate;
+    private $metricsDelegate;
 
     function let(
         Repository $repository,
         Delegates\ActionDelegate $actionDelegate,
         Delegates\ReverseActionDelegate $reverseDelegate,
         Delegates\NotificationDelegate $notificationDelegate,
-        Delegates\ReleaseSummonsesDelegate $releaseSummonsesDelegate
+        Delegates\ReleaseSummonsesDelegate $releaseSummonsesDelegate,
+        Delegates\MetricsDelegate $metricsDelegate
     )
     {
-        $this->beConstructedWith($repository, $actionDelegate, $reverseDelegate, $notificationDelegate, $releaseSummonsesDelegate);
+        $this->beConstructedWith(
+            $repository,
+            $actionDelegate,
+            $reverseDelegate,
+            $notificationDelegate,
+            $releaseSummonsesDelegate,
+            $metricsDelegate);
+
         $this->repository = $repository;
         $this->actionDelegate = $actionDelegate;
         $this->reverseDelegate = $reverseDelegate;
         $this->notificationDelegate = $notificationDelegate;
         $this->releaseSummonsesDelegate = $releaseSummonsesDelegate;
+        $this->metricsDelegate = $metricsDelegate;
 
     }
 
@@ -58,6 +68,9 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(true);
 
         $this->actionDelegate->onAction($verdict)
+            ->shouldBeCalled();
+
+        $this->metricsDelegate->onCast($verdict)
             ->shouldBeCalled();
 
         $this->notificationDelegate->onAction($verdict)
