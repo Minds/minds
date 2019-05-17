@@ -249,7 +249,7 @@ class Repository
                     $this->buildDecisions($this->mapToAssoc($row['initial_jury']))
                     : null
             )
-            ->setAppealJuryDecision(
+            ->setAppealJuryDecisions(
                 isset($row['appeal_jury']) ?
                     $this->buildDecisions($this->mapToAssoc($row['appeal_jury']))
                     : null
