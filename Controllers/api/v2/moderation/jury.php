@@ -12,6 +12,7 @@ use Minds\Interfaces;
 use Minds\Core\Di\Di;
 use Minds\Core\Reports\Jury\Decision;
 use Minds\Core\Reports\Jury\JuryClosedException;
+use Minds\Core\Reports\Summons\SummonsNotFoundException;
 
 class jury implements Interfaces\Api
 {
@@ -19,7 +20,7 @@ class jury implements Interfaces\Api
     {
         $juryType = $pages[0] ?? 'appeal';
 
-        if ($juryType !== 'appeal' && !Core\Session::isAdmin()) {
+        if ($juryType === 'appeal' || !Core\Session::isAdmin()) {
             exit;
         }
 
@@ -97,6 +98,11 @@ class jury implements Interfaces\Api
             return Factory::response([
                 'status' => 'error',
                 'message' => 'The jury has already closed'
+            ]);
+        } catch (SummonsNotFoundException $e) {
+            return Factory::response([
+                'status' => 'error',
+                'message' => 'A summons could not be found'
             ]);
         }
         

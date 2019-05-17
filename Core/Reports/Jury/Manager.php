@@ -14,6 +14,8 @@ use Minds\Entities\NormalizedEntity;
 use Minds\Common\Repository\Response;
 use Minds\Common\Urn;
 use Minds\Core\Entities\Resolver as EntitiesResolver;
+use Minds\Core\Reports\Summons\SummonsNotFoundException;
+use Minds\Core\Reports\Summons\Summon as SummonsEntity;
 
 class Manager
 {
@@ -27,6 +29,9 @@ class Manager
     /** @var VerdictManager $verdictManager */
     private $verdictManager;
 
+    /** @var SummonsManager $summonsManager */
+    private $summonsManager;
+
     /** @var string $juryType */
     private $juryType;
 
@@ -36,12 +41,14 @@ class Manager
     public function __construct(
         $repository = null,
         $entitiesResolver = null,
-        $verdictManager = null
+        $verdictManager = null,
+        $summonsManager = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesResolver = $entitiesResolver  ?: new EntitiesResolver;
         $this->verdictManager = $verdictManager ?: Di::_()->get('Moderation\Verdict\Manager');
+        $this->summonsManager = $summonsManager ?: Di::_()->get('Moderation\Summons\Manager');
     }
 
     /**
@@ -135,6 +142,10 @@ class Manager
             throw new JuryClosedException();
         }
 
+        if ($decision->isAppeal() && !$this->hasSummons($decision)) {
+            throw new SummonsNotFoundException();
+        }
+
         $success = $this->repository->add($decision);
 
         if ($decision->isAppeal()) {
@@ -150,6 +161,20 @@ class Manager
         $this->verdictManager->decideFromReport($report);
   
         return $success;
+    }
+
+    /**
+     * Return if a summons exists
+     * @param Decision $decision
+     * @return boolean
+     */
+    private function hasSummons(Decision $decision)
+    {
+        $summons = new SummonsEntity();
+        $summons->setReportUrn($decision->getReport()->getUrn())
+            ->setJurorGuid($decision->getJurorGuid())
+            ->setJuryType('appeal_jury');
+        return $this->summonsManager->isSummoned($summons);
     }
 
 }
