@@ -67,7 +67,7 @@ class Cohort
                 'platform' => 'browser',
                 'for' => $opts['for'],
                 'except' => $opts['except'],
-                'validated' => false,
+                'validated' => true,
                 'size' => $poolSize,
                 'page' => $page,
                 'max_pages' => $max_pages,
