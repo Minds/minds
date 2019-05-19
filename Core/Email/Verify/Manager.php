@@ -21,6 +21,7 @@ class Manager
         'emailweb.xyz',
         'buydiscountdeal.com',
         'palantirmails.com',
+	'vincentralpark.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
