@@ -22,6 +22,7 @@ class Manager
         'buydiscountdeal.com',
         'palantirmails.com',
 	'vincentralpark.com',
+        'clickmail.info',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
