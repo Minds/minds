@@ -7,6 +7,7 @@
 
 namespace Minds\Core\Reports\Verdict\Delegates;
 
+use Exception;
 use Minds\Core\Di\Di;
 use Minds\Core\Reports\Summons\Manager;
 use Minds\Core\Reports\Verdict\Verdict;
@@ -29,7 +30,7 @@ class ReleaseSummonsesDelegate
 
     /**
      * @param Verdict $verdict
-     * @throws \Exception
+     * @throws Exception
      */
     public function onCast(Verdict $verdict)
     {

@@ -8,7 +8,7 @@
 namespace Minds\Core\Reports\Summons\Delegates;
 
 use Exception;
-use Minds\Core\Reports\Summons\Summon;
+use Minds\Core\Reports\Summons\Summons;
 use Minds\Core\Sockets\Events as SocketEvents;
 
 class SocketDelegate
@@ -28,13 +28,13 @@ class SocketDelegate
     }
 
     /**
-     * @param Summon $summon
+     * @param Summons $summons
      * @throws Exception
      */
-    public function onSummon(Summon $summon)
+    public function onSummon(Summons $summons)
     {
         $this->socketEvents
-            ->setUser($summon->getJurorGuid())
-            ->emit('moderation_summon', json_encode($summon));
+            ->setUser($summons->getJurorGuid())
+            ->emit('moderation_summon', json_encode($summons));
     }
 }

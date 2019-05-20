@@ -5,7 +5,7 @@ namespace Minds\Controllers\Cli;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Cli;
-use Minds\Core\Reports\Summons\Summon;
+use Minds\Core\Reports\Summons\Summons;
 use Minds\Interfaces;
 use Minds\Entities;
 
@@ -83,16 +83,16 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
 
             $this->out("Summoned {$user->guid} to {$reportUrn}");
         } else {
-            $summon = new Summon();
-            $summon
+            $summons = new Summons();
+            $summons
                 ->setReportUrn($reportUrn)
                 ->setJuryType($juryType)
                 ->setJurorGuid((string) $user->guid)
                 ->setStatus($respond);
 
-                $summonsManager->respond($summon);
+                $summonsManager->respond($summons);
 
-            $this->out("Responded to {$user->guid}'s summon to {$reportUrn} with {$respond}");
+            $this->out("Responded to {$user->guid}'s summons to {$reportUrn} with {$respond}");
         }
     }
 

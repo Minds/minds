@@ -15,16 +15,16 @@ use Minds\Traits\MagicAttributes;
  * Class Summon
  * @package Minds\Core\Reports\Summons
  * @method string getReportUrn()
- * @method Summon setReportUrn(string $reportUrn)
+ * @method Summons setReportUrn(string $reportUrn)
  * @method string getJuryType()
- * @method Summon setJuryType(string $juryType)
+ * @method Summons setJuryType(string $juryType)
  * @method int|string getJurorGuid()
- * @method Summon setJurorGuid(int|string $jurorGuid)
+ * @method Summons setJurorGuid(int|string $jurorGuid)
  * @method string getStatus()
  * @method int getTtl()
- * @method Summon setTtl(int $ttl)
+ * @method Summons setTtl(int $ttl)
  */
-class Summon implements JsonSerializable
+class Summons implements JsonSerializable
 {
     use MagicAttributes;
 

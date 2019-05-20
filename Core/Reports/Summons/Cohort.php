@@ -17,18 +17,30 @@ class Cohort
     /** @var Pool */
     protected $pool;
 
+    /** @var int */
+    protected $poolSize;
+
+    /** @var int */
+    protected $maxPages;
+
     /**
      * Cohort constructor.
      * @param Repository $repository
      * @param Pool $pool
+     * @param int $poolSize
+     * @param int $maxPages
      */
     public function __construct(
         $repository = null,
-        $pool = null
+        $pool = null,
+        $poolSize = null,
+        $maxPages = null
     )
     {
         $this->repository = $repository ?: new Repository();
         $this->pool = $pool ?: new Pool();
+        $this->poolSize = $poolSize ?: 400;
+        $this->maxPages = $maxPages ?: 1; // NOTE: Normally capped to 20.
     }
 
     /**
@@ -47,16 +59,10 @@ class Cohort
 
         $cohort = [];
 
-        // Uncomment below to scale
-        // $poolSize = $opts['size'] * 5;
-        // $max_pages = 20; // NOTE: Normally capped to 20.
-
-        $poolSize = 400;
-        $max_pages = 1; // NOTE: Normally capped to 20.
         $page = 0;
 
         while (true) {
-            if ($page > $max_pages) {
+            if ($page > $this->maxPages) {
                 // Max = PoolSize * MaxPages
                 error_log('Cannot gather a cohort');
                 break;
@@ -67,10 +73,10 @@ class Cohort
                 'platform' => 'browser',
                 'for' => $opts['for'],
                 'except' => $opts['except'],
-                'validated' => false,
-                'size' => $poolSize,
+                'validated' => true,
                 'page' => $page,
-                'max_pages' => $max_pages,
+                'size' => $this->poolSize,
+                'max_pages' => $this->maxPages,
             ]);
 
             $j = 0;
