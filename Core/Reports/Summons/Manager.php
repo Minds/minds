@@ -150,8 +150,10 @@ class Manager
             throw new Exception('User is not summoned');
         }
 
-        $summons
-            ->setTtl(10 * 60);
+        if (!$summons->isDeclined()) {
+            $summons
+                ->setTtl(10 * 60);
+        }
 
         $this->repository->add($summons);
 
