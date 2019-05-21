@@ -39,7 +39,11 @@ class Expire
         }
 
         if ($this->boost->getState() == 'completed') {
-            return true; //already completed
+            // Re-sync ElasticSearch
+            $this->manager->resync($this->boost);
+
+            // Already completed
+            return true;
         }
 
         $this->boost->setCompletedTimestamp(round(microtime(true) * 1000));
