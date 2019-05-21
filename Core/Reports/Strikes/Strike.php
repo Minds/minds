@@ -13,6 +13,8 @@ use Minds\Traits\MagicAttributes;
  * @method Strike getReasonCode(): float
  * @method Strike getSubReasonCode(): float
  * @method Strike getReportUrn(): string
+ * @method Strike getAppeal(): Appeal
+ * @method Strike setAppeal(Appeal $appeal): Strike
  */
 class Strike
 {
@@ -35,6 +37,9 @@ class Strike
 
     /** @var Report $report */
     private $report;
+
+    /** @var Appeal $appeal */
+    private $appeal;
 
     /**
      * Return preferred urn
@@ -67,6 +72,10 @@ class Strike
 
         if ($this->report) {
             $output['report'] = $this->report->export();
+        }
+
+        if ($this->appeal) {
+            $output['appeal'] = $this->appeal->export();
         }
 
         return $output;

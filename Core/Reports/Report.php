@@ -132,6 +132,7 @@ class Report
             'reason_code' => (int) $this->getReasonCode(),
             'sub_reason_code' => (int) $this->getSubReasonCode(),
             'state' => $this->getState(),
+            'upheld' => $this->isUpheld(),
         ];
 
         return $export;

@@ -7,6 +7,7 @@ namespace Minds\Core\Reports\Strikes;
 use Minds\Common\Repository\Response;
 use Minds\Common\Urn;
 use Minds\Core\Reports\Manager as ReportsManager;
+use Minds\Core\Reports\Appeals\Appeal;
 
 class Manager
 {
@@ -60,6 +61,13 @@ class Manager
                 try {
                     $report = $this->reportsManager->getReport($strike->getReportUrn());
                     $strike->setReport($report);
+
+                    $appeal = new Appeal;
+                    $appeal
+                        ->setTimestamp($report->getAppealTimestamp())
+                        ->setReport($report)
+                        ->setNote($report->getAppealNote());
+                    $strike->setAppeal($appeal);
                 } catch (\Exception $e) { }
 
                 return $strike;
