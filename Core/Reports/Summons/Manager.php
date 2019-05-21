@@ -208,6 +208,6 @@ class Manager
             ->setQueue('ReportsAppealSummon')
             ->send([
                 'appeal' => $appeal,
-            ], 600);
+            ], 70);
     }
 }
