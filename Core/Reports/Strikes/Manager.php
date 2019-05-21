@@ -22,13 +22,18 @@ class Manager
     /** @var ReportsManager */
     private $reportsManager;
 
+    /** @var Delegates\EmailDelegate */
+    private $emailDelegate;
+
     public function __construct(
         $repository = null,
-        $reportsManager = null
+        $reportsManager = null,
+        $emailDelegate = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->reportsManager = $reportsManager ?: new ReportsManager();
+        $this->emailDelegate = $emailDelaget ?: new Delegates\EmailDelegate();
     }
 
     /**
@@ -84,7 +89,11 @@ class Manager
      */
     public function add($strike)
     {
-        return $this->repository->add($strike);
+        $success = $this->repository->add($strike);
+
+        $this->emailDelegate->onStrike($strike);
+
+        return $success;
     }
 
     /**
