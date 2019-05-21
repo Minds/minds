@@ -43,9 +43,12 @@ class Pool
     public function getList(array $opts = [])
     {
         $opts = array_merge([
-            'for' => null,
             'active_threshold' => 0,
             'platform' => null,
+            'for' => null,
+            'except' => null,
+            'except_hashes' => null,
+            'include_only' => null,
             'validated' => false,
             'size' => 10,
             'page' => 0,
@@ -123,10 +126,34 @@ class Pool
             ];
         }
 
+        if ($opts['include_only']) {
+            $body['query']['bool']['must'][] = [
+                'terms' => [
+                    'user_guid' => $opts['include_only'],
+                ],
+            ];
+        }
+
         if ($opts['except']) {
+            if (!isset($body['query']['bool']['must_not'])) {
+                $body['query']['bool']['must_not'] = [];
+            }
+
             $body['query']['bool']['must_not'][] = [
                 'terms' => [
                     'user_guid' => $opts['except'],
+                ],
+            ];
+        }
+
+        if ($opts['except_hashes']) {
+            if (!isset($body['query']['bool']['must_not'])) {
+                $body['query']['bool']['must_not'] = [];
+            }
+
+            $body['query']['bool']['must_not'][] = [
+                'terms' => [
+                    'user_phone_number_hash' => $opts['except_hashes'],
                 ],
             ];
         }

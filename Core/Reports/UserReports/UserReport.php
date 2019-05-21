@@ -4,28 +4,29 @@
  */
 namespace Minds\Core\Reports\UserReports;
 
+use Minds\Entities\Report;
 use Minds\Traits\MagicAttributes;
 
 /**
- * @method UserReport getReport(): Report
- * @method UserReport getReportUrn(): string
- * @method UserReport getReporterGuid(): long
- * @method UserReport getReporterHash(): string
- * @method UserReport getReasonCode(): int
- * @method UserReport getSubReasonCode(): int
- * @method UserReport getTimestamp: int
+ * @method Report getReport()
+ * @method string getReportUrn()
+ * @method int getReporterGuid()
+ * @method string getReporterHash()
+ * @method int getReasonCode()
+ * @method int getSubReasonCode()
+ * @method int getTimestamp()
  */
 class UserReport
 {
     use MagicAttributes;
 
-    /** @var long $timestamp -< in ms*/
+    /** @var int $timestamp -< in ms*/
     private $timestamp;
 
-    /** @var long $reporterGuid */
+    /** @var int $reporterGuid */
     private $reporterGuid;
 
-    /** @var long $reporterHash */
+    /** @var int $reporterHash */
     private $reporterHash;
 
     /** @var Report $report  */
