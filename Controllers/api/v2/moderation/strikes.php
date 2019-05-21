@@ -4,6 +4,7 @@
  */
 namespace Minds\Controllers\api\v2\moderation;
 
+use Minds\Api\Exportable;
 use Minds\Api\Factory;
 use Minds\Core;
 use Minds\Entities;
@@ -20,6 +21,7 @@ class strikes implements Interfaces\Api
             return Factory::response([ ]);
         }
 
+        /** @var Core\Reports\Strikes\Manager $strikesManager */
         $strikesManager = Di::_()->get('Moderation\Strikes\Manager');
         $strikes = $strikesManager->getList([
             'hydrate' => true,
@@ -27,7 +29,7 @@ class strikes implements Interfaces\Api
         ]);
 
         return Factory::response([
-            'strikes' => Factory::exportable($strikes),
+            'strikes' => Exportable::_($strikes),
         ]);
     }
 

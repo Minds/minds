@@ -5,6 +5,7 @@ namespace Minds\Controllers\Cli;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Cli;
+use Minds\Core\Reports\Strikes\Strike;
 use Minds\Core\Reports\Summons\Summons;
 use Minds\Interfaces;
 use Minds\Entities;
@@ -136,5 +137,43 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
         $cohort = $summonsManager->summon($appeal);
 
         var_dump($cohort);
+    }
+
+    public function dev_only_add_strike()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        /** @var Core\Reports\Repository $reportsRepository */
+        $reportsRepository = Di::_()->get('Reports\Repository');
+
+        /** @var Core\Reports\Strikes\Manager $strikesManager */
+        $strikesManager = Di::_()->get('Moderation\Strikes\Manager');
+
+        $reportUrn = $this->getOpt('report');
+
+        if (!$reportUrn) {
+            $this->out([
+                'Usage: cli.php moderation dev_only_add_strike --report=<report_urn>',
+            ]);
+
+            exit(1);
+        }
+        $report = $reportsRepository->get($reportUrn);
+
+        if (!$report) {
+            $this->out('Error: Invalid report');
+            exit(1);
+        }
+
+        $strike = new Strike;
+        $strike->setReport($report)
+            ->setReportUrn($report->getUrn())
+            ->setUserGuid($report->getEntityOwnerGuid())
+            ->setReasonCode($report->getReasonCode())
+            ->setSubReasonCode($report->getSubReasonCode())
+            ->setTimestamp($report->getTimestamp()); // Strike is recored for date of first report
+
+        var_dump($strikesManager->add($strike));
     }
 }

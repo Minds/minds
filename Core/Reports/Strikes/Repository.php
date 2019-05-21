@@ -32,6 +32,7 @@ class Repository
      * List of strikes
      * @param array $opts
      * @return Response
+     * @throws \Exception
      */
     public function getList($opts = [])
     {
