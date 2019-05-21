@@ -2,6 +2,7 @@
 
 namespace Spec\Minds\Core\Reports\Strikes;
 
+use Minds\Core\Reports\Manager as ReportsManager;
 use Minds\Core\Reports\Strikes\Manager;
 use Minds\Core\Reports\Strikes\Repository;
 use Minds\Core\Reports\Strikes\Strike;
@@ -12,11 +13,13 @@ use Prophecy\Argument;
 class ManagerSpec extends ObjectBehavior
 {
     private $repository;
+    private $reportsManager;
 
-    function let(Repository $repository) 
+    function let(Repository $repository, ReportsManager $reportsManager)
     {
-        $this->beConstructedWith($repository);
+        $this->beConstructedWith($repository, $reportsManager);
         $this->repository = $repository;
+        $this->reportsManager = $reportsManager;
     }
 
     function it_is_initializable()

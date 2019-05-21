@@ -57,13 +57,19 @@ class Strike
      */
     public function export()
     {
-        return [
+        $output = [
             'report_urn' => $this->reportUrn,
             'user_guid' => (string) $this->userGuid,
             'reason_code' => $this->reasonCode,
             'sub_reason_code' => $this->subReasonCode,
             '@timestamp' => $this->timestamp,
         ];
+
+        if ($this->report) {
+            $output['report'] = $this->report->export();
+        }
+
+        return $output;
     }
 
 }

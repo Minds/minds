@@ -4,6 +4,10 @@
  */
 namespace Minds\Core\Reports\Strikes;
 
+use Minds\Common\Repository\Response;
+use Minds\Common\Urn;
+use Minds\Core\Reports\Manager as ReportsManager;
+
 class Manager
 {
 
@@ -14,15 +18,23 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    public function __construct($repository = null)
+    /** @var ReportsManager */
+    private $reportsManager;
+
+    public function __construct(
+        $repository = null,
+        $reportsManager = null
+    )
     {
         $this->repository = $repository ?: new Repository;
+        $this->reportsManager = $reportsManager ?: new ReportsManager();
     }
 
     /**
      * Return a list of strikes
      * @param array $opts
      * @return Response
+     * @throws \Exception
      */
     public function getList(array $opts = [])
     {
@@ -32,6 +44,7 @@ class Manager
             'sub_reason_code' => null,
             'from' => strtotime('-90 days'),
             'to' => time(),
+            'hydrate' => false,
         ], $opts);
 
         if (!$opts['user']) {
@@ -40,7 +53,20 @@ class Manager
 
         $opts['user_guid'] = $opts['user']->getGuid();
 
-        return $this->repository->getList($opts);
+        $response = $this->repository->getList($opts);
+
+        if ($opts['hydrate']) {
+            $response = $response->map(function (Strike $strike) {
+                try {
+                    $report = $this->reportsManager->getReport($strike->getReportUrn());
+                    $strike->setReport($report);
+                } catch (\Exception $e) { }
+
+                return $strike;
+            });
+        }
+
+        return $response;
     }
 
     /**
