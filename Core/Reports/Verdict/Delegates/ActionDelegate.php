@@ -29,12 +29,16 @@ class ActionDelegate
     /** @var StrikesManager $strikesManager */
     private $strikesManager;
 
+    /** @var EmailDelegate $emailDelegate */
+    private $emailDelegate;
+
     public function __construct(
         $entitiesBuilder = null,
         $actions = null,
         $urn = null,
         $strikesManager = null,
-        $saveAction = null
+        $saveAction = null,
+        $emailDelegate = null
     )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
@@ -42,6 +46,7 @@ class ActionDelegate
         $this->urn = $urn ?: new Urn;
         $this->strikesManager = $strikesManager ?: Di::_()->get('Moderation\Strikes\Manager');
         $this->saveAction = $saveAction ?: new SaveAction;
+        $this->emailDelegate = $emailDelegate ?: new EmailDelegate;
     }
 
     public function onAction(Verdict $verdict)
@@ -217,6 +222,8 @@ class ActionDelegate
         $user->banned = 'yes';
         $user->ban_reason = implode('.', [ $report->getReasonCode(), $report->getSubReasonCode() ]);
         $user->save();
+
+        $this->emailDelegate->onBan($report);
     }
 
 }

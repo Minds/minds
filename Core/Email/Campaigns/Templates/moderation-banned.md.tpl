@@ -1,0 +1,1 @@
+Your channel has been banned because it was determined to violate our Content Policy. Due to this violation, your channel has been banned. To appeal this decision, please reply to this email. More can be learned about how the Appeals process works [here](https://www.minds.com/content-policy).
