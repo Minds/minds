@@ -20,7 +20,7 @@ class NotificationDelegate
 
     public function onAction(UserReport $userReport)
     {
-        $message = "Thanks for your report, and for making Minds a safer place";
+        $message = "Thank you for submitting your report. The reported content or channel will be reviewed as soon as possible.";
         $this->dispatcher->trigger('notification', 'all', [
             'to' => [$userReport->getReporterGuid()],
             'from' => 100000000000000519,
