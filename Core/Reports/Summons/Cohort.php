@@ -40,7 +40,7 @@ class Cohort
         $this->repository = $repository ?: new Repository();
         $this->pool = $pool ?: new Pool();
         $this->poolSize = $poolSize ?: 400;
-        $this->maxPages = $maxPages ?: 1; // NOTE: Normally capped to 20.
+        $this->maxPages = $maxPages ?: 2; // NOTE: Normally capped to 20.
     }
 
     /**
@@ -54,6 +54,8 @@ class Cohort
             'size' => 0,
             'for' => null,
             'except' => [],
+            'except_hashes' => [],
+            'include_only' => null,
             'active_threshold' => null,
         ], $opts);
 
@@ -62,9 +64,9 @@ class Cohort
         $page = 0;
 
         while (true) {
-            if ($page > $this->maxPages) {
+            if ($page >= $this->maxPages) {
                 // Max = PoolSize * MaxPages
-                error_log('Cannot gather a cohort');
+                error_log("Warning: Cannot gather a full cohort on {$this->maxPages} partitions");
                 break;
             }
 
@@ -73,16 +75,15 @@ class Cohort
                 'platform' => 'browser',
                 'for' => $opts['for'],
                 'except' => $opts['except'],
+                'except_hashes' => $opts['except_hashes'],
+                'include_only' => $opts['include_only'],
                 'validated' => true,
-                'page' => $page,
                 'size' => $this->poolSize,
+                'page' => $page,
                 'max_pages' => $this->maxPages,
             ]);
 
-            $j = 0;
             foreach ($pool as $userGuid) {
-                $j++;
-
                 // TODO: Check subs
                 $cohort[] = $userGuid;
 
@@ -91,7 +92,7 @@ class Cohort
                 }
             }
 
-            if ($j === 0 || count($cohort) >= $opts['size']) {
+            if (count($cohort) >= $opts['size']) {
                 break;
             }
 

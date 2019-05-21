@@ -47,7 +47,9 @@ class ReportsAppealSummon implements QueueRunner
 
                 /** @var Manager $manager */
                 $manager = Di::_()->get('Moderation\Summons\Manager');
-                $missing = $manager->summon($appeal, $cohort);
+                $missing = $manager->summon($appeal, [
+                    'include_only' => $cohort ?: null,
+                ]);
 
                 if ($missing > 0) {
                     echo "Missing {$missing} juror(s). Deferring..." . PHP_EOL;

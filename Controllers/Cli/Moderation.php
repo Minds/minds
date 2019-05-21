@@ -50,6 +50,7 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
         $reportUrn = $this->getOpt('report');
         $juryType = $this->getOpt('jury-type') ?? null;
         $respond = $this->getOpt('respond') ?? null;
+        $activeThreshold = $this->getOpt('active-threshold') ?? 5 * 60;
 
         if (!$userId || !$reportUrn) {
             $this->out([
@@ -79,9 +80,13 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
             $appeal = new Core\Reports\Appeals\Appeal();
             $appeal->setReport($report);
 
-            $summonsManager->summon($appeal, [ $user->guid ]);
+            $missing = $summonsManager->summon($appeal, [
+                'include_only' => [ (string) $user->guid ],
+                'active_threshold' => (int) $activeThreshold,
+            ]);
 
             $this->out("Summoned {$user->guid} to {$reportUrn}");
+            $this->out("${missing} juror(s) missing.");
         } else {
             $summons = new Summons();
             $summons
@@ -128,7 +133,7 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
             ->setReport($report)
             ->setOwnerGuid($report->getEntityOwnerGuid());
 
-        $cohort = $summonsManager->summon($appeal, null);
+        $cohort = $summonsManager->summon($appeal);
 
         var_dump($cohort);
     }
