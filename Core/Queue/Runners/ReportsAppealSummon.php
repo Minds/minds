@@ -28,7 +28,7 @@ class ReportsAppealSummon implements QueueRunner
         $client = Client::build();
 
         $client
-            ->setQueue(static::class)
+            ->setQueue('ReportsAppealSummon')
             ->receive(function (Message $data) {
                 $params = $data->getData();
 

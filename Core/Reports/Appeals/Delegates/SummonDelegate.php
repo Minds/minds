@@ -27,7 +27,7 @@ class SummonDelegate
     public function onAppeal(Appeal $appeal)
     {
         $this->queue
-            ->setQueue(ReportsAppealSummon::class)
+            ->setQueue('ReportsAppealSummon')
             ->send([
                 'appeal' => $appeal,
                 'cohort' => null, // TODO: It can be an array of user guids. For development purposes only.

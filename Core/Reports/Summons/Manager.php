@@ -205,7 +205,7 @@ class Manager
     public function defer(Appeal $appeal)
     {
         $this->queueClient
-            ->setQueue(ReportsAppealSummon::class)
+            ->setQueue('ReportsAppealSummon')
             ->send([
                 'appeal' => $appeal,
             ], 600);

@@ -29,7 +29,7 @@ class SummonDelegateSpec extends ObjectBehavior
 
     function it_should_queue_on_appeal(Appeal $appeal)
     {
-        $this->queue->setQueue(ReportsAppealSummon::class)
+        $this->queue->setQueue('ReportsAppealSummon')
             ->shouldBeCalled()
             ->willReturn($this->queue);
 
