@@ -69,7 +69,7 @@ class Repository
             $skip = false;
             switch ($opts['state']) {
                 case 'review': 
-                    if ($report->getState() != 'initial_jury_decided') {
+                    if ($report->getState() != 'initial_jury_decided' || $report->isUpheld() === false) {
                         $skip = true;
                     }
                     break;
