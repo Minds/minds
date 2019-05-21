@@ -258,6 +258,14 @@ class ManagerSpec extends ObjectBehavior
         $this->elasticRepository->update($boost, [ '@timestamp' ])
             ->shouldBeCalled();
 
-        $this->update($boost, [ '@timestamp'] );
+        $this->update($boost, [ '@timestamp' ] );
+    }
+
+    function it_should_resync_a_boost_on_elasticsearch(Boost $boost)
+    {
+        $this->elasticRepository->update($boost, [ '@timestamp' ])
+            ->shouldBeCalled();
+
+        $this->resync($boost, [ '@timestamp' ] );
     }
 }

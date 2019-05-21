@@ -123,7 +123,11 @@ class Manager
     public function update($boost, $fields = [])
     {
         $this->repository->update($boost, $fields);
-        $this->elasticRepository->update($boost, $fields);
+        $this->resync($boost, $fields);
     }
 
+    public function resync($boost, $fields = [])
+    {
+        $this->elasticRepository->update($boost, $fields);
+    }
 }
