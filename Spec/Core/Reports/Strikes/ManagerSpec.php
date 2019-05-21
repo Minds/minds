@@ -4,6 +4,7 @@ namespace Spec\Minds\Core\Reports\Strikes;
 
 use Minds\Core\Reports\Manager as ReportsManager;
 use Minds\Core\Reports\Strikes\Manager;
+use Minds\Core\Reports\Strikes\Delegates;
 use Minds\Core\Reports\Strikes\Repository;
 use Minds\Core\Reports\Strikes\Strike;
 use Minds\Entities\User;
@@ -14,12 +15,18 @@ class ManagerSpec extends ObjectBehavior
 {
     private $repository;
     private $reportsManager;
+    private $emailDelegate;
 
-    function let(Repository $repository, ReportsManager $reportsManager)
+    function let(
+        Repository $repository,
+        ReportsManager $reportsManager,
+        Delegates\EmailDelegate $emailDelegate
+    )
     {
-        $this->beConstructedWith($repository, $reportsManager);
+        $this->beConstructedWith($repository, $reportsManager, $emailDelegate);
         $this->repository = $repository;
         $this->reportsManager = $reportsManager;
+        $this->emailDelegate = $emailDelegate;
     }
 
     function it_is_initializable()

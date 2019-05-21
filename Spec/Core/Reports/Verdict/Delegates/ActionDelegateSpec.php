@@ -5,6 +5,7 @@ namespace Spec\Minds\Core\Reports\Verdict\Delegates;
 use Minds\Core\Reports\Verdict\Delegates\ActionDelegate;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Reports\Verdict\Verdict;
+use Minds\Core\Reports\Verdict\Delegates\EmailDelegate;
 use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Actions;
 use Minds\Core\Reports\Strikes\Manager as StrikesManager;
@@ -19,19 +20,22 @@ class ActionDelegateSpec extends ObjectBehavior
     private $actions;
     private $strikesManager;
     private $saveAction;
+    private $emailDelegate;
 
     function let(
         EntitiesBuilder $entitiesBuilder,
         Actions $actions,
         StrikesManager $strikesManager,
-        SaveAction $saveAction
+        SaveAction $saveAction,
+        EmailDelegate $emailDelegate
     )
     {
-        $this->beConstructedWith($entitiesBuilder, $actions, null, $strikesManager, $saveAction);
+        $this->beConstructedWith($entitiesBuilder, $actions, null, $strikesManager, $saveAction, $emailDelegate);
         $this->entitiesBuilder = $entitiesBuilder;
         $this->actions = $actions;
         $this->strikesManager = $strikesManager;
         $this->saveAction = $saveAction;
+        $this->emailDelegate = $emailDelegate;
     }
 
     function it_is_initializable()

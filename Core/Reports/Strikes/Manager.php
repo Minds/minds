@@ -33,7 +33,7 @@ class Manager
     {
         $this->repository = $repository ?: new Repository;
         $this->reportsManager = $reportsManager ?: new ReportsManager();
-        $this->emailDelegate = $emailDelaget ?: new Delegates\EmailDelegate();
+        $this->emailDelegate = $emailDelegate ?: new Delegates\EmailDelegate();
     }
 
     /**

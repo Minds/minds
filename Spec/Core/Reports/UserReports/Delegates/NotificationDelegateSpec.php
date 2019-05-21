@@ -20,7 +20,7 @@ class NotificationDelegateSpec extends ObjectBehavior
         $this->beConstructedWith($eventsDispatcher);
         $eventsDispatcher->trigger('notification', 'all', Argument::that(function($arr) {
             return $arr['to'] === [ 123 ]
-                && $arr['message'] === 'Thanks for your report, and for making Minds a safer place';
+                && $arr['message'] === 'Thank you for submitting your report. The reported content or channel will be reviewed as soon as possible.';
         }))
             ->shouldBeCalled();
 
