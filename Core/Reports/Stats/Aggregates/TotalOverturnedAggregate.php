@@ -23,7 +23,7 @@ class TotalOverturnedAggregate implements ModerationStatsAggregateInterface
         $statement = "SELECT count(*) as total FROM moderation_reports_by_state
             WHERE state IN ('appeal_jury_decided')
               AND timestamp > ?
-              AND uphold = true
+              AND uphold = false
               ALLOW FILTERING";
         $values = [ new Timestamp(strtotime('-30 days', time())) ];
 
