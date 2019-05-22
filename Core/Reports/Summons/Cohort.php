@@ -8,6 +8,9 @@
 namespace Minds\Core\Reports\Summons;
 
 use Exception;
+use Minds\Core\Channels\Subscriptions;
+use Minds\Core\Di\Di;
+use Minds\Entities\User;
 
 class Cohort
 {
@@ -16,6 +19,9 @@ class Cohort
 
     /** @var Pool */
     protected $pool;
+
+    /** @var Subscriptions */
+    protected $subscriptions;
 
     /** @var int */
     protected $poolSize;
@@ -27,18 +33,21 @@ class Cohort
      * Cohort constructor.
      * @param Repository $repository
      * @param Pool $pool
+     * @param Subscriptions $subscriptions
      * @param int $poolSize
      * @param int $maxPages
      */
     public function __construct(
         $repository = null,
         $pool = null,
+        $subscriptions = null,
         $poolSize = null,
         $maxPages = null
     )
     {
         $this->repository = $repository ?: new Repository();
         $this->pool = $pool ?: new Pool();
+        $this->subscriptions = $subscriptions ?: new Subscriptions();
         $this->poolSize = $poolSize ?: 400;
         $this->maxPages = $maxPages ?: 2; // NOTE: Normally capped to 20.
     }
@@ -63,6 +72,14 @@ class Cohort
 
         $page = 0;
 
+        if ($opts['for']) {
+            $user = new User();
+            $user->set('guid', $opts['for']);
+
+            $this->subscriptions
+                ->setUser($user);
+        }
+
         while (true) {
             if ($page >= $this->maxPages) {
                 // Max = PoolSize * MaxPages
@@ -84,7 +101,16 @@ class Cohort
             ]);
 
             foreach ($pool as $userGuid) {
-                // TODO: Check subs
+                if ($opts['for']) {
+                    try {
+                        if ($this->subscriptions->hasSubscription($userGuid)) {
+                            continue;
+                        }
+                    } catch (Exception $e) {
+                        error_log("Cannot double-check subscriptions {$userGuid}");
+                    }
+                }
+
                 $cohort[] = $userGuid;
 
                 if (count($cohort) >= $opts['size']) {

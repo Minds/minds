@@ -44,6 +44,61 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
         /** @var Core\Reports\Repository $reportsRepository */
         $reportsRepository = Di::_()->get('Reports\Repository');
 
+        /** @var Core\Queue\Interfaces\QueueClient $queueClient */
+        $queueClient = Core\Queue\Client::build();
+
+        $reportUrn = $this->getOpt('report');
+        $cohort = $this->getOpt('cohort');
+
+        if (!$reportUrn || !$cohort) {
+            $this->out([
+                'Usage:',
+                ' - cli.php moderation summon --report=<report_urn> --cohort=<guid1, guid2, ..., guidN>',
+                ' - cli.php moderation summon --report=<report_urn> --cohort=auto',
+            ]);
+
+            exit(1);
+        }
+
+        $guids = null;
+
+        if ($cohort !== 'auto') {
+            $guids = explode(',', $cohort);
+        }
+
+        $report = $reportsRepository->get($reportUrn);
+
+        if (!$report) {
+            $this->out('Error: Invalid report');
+            exit(1);
+        } elseif($report->getState() !== 'initial_jury_decided') {
+            $this->out("Error: Report is not appealable. State is [{$report->getState()}].");
+            exit(1);
+        }
+
+        $appeal = new Core\Reports\Appeals\Appeal();
+        $appeal
+            ->setReport($report)
+            ->setOwnerGuid($report->getEntityOwnerGuid());
+
+        $queueClient
+            ->setQueue('ReportsAppealSummon')
+            ->send([
+                'appeal' => $appeal,
+                'cohort' => $guids ?: null,
+            ]);
+
+        $this->out('Sent to summon queue!');
+    }
+
+    public function dev_only_summon_individual()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        /** @var Core\Reports\Repository $reportsRepository */
+        $reportsRepository = Di::_()->get('Reports\Repository');
+
         /** @var Core\Reports\Summons\Manager $summonsManager */
         $summonsManager = Di::_()->get('Moderation\Summons\Manager');
 
@@ -56,8 +111,8 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
         if (!$userId || !$reportUrn) {
             $this->out([
                 'Usage:',
-                '- Summoning: cli.php moderation summon --user=<username_or_guid> --report=<report_urn>',
-                '- Responding: cli.php moderation summon --user=<username_or_guid> --report=<report_urn> --jury-type=<initial_jury|appeal_jury> --respond=<accepted|declined>',
+                '- Summoning: cli.php moderation dev_only_summon_individual --user=<username_or_guid> --report=<report_urn>',
+                '- Responding: cli.php moderation dev_only_summon_individual --user=<username_or_guid> --report=<report_urn> --jury-type=<initial_jury|appeal_jury> --respond=<accepted|declined>',
             ]);
 
             exit(1);
@@ -100,80 +155,5 @@ class Moderation extends Cli\Controller implements Interfaces\CliControllerInter
 
             $this->out("Responded to {$user->guid}'s summons to {$reportUrn} with {$respond}");
         }
-    }
-
-    public function dev_only_simulate_summon()
-    {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
-        /** @var Core\Reports\Repository $reportsRepository */
-        $reportsRepository = Di::_()->get('Reports\Repository');
-
-        /** @var Core\Reports\Summons\Manager $summonsManager */
-        $summonsManager = Di::_()->get('Moderation\Summons\Manager');
-
-        $reportUrn = $this->getOpt('report');
-
-        if (!$reportUrn) {
-            $this->out([
-                'Usage: cli.php moderation dev_only_simulate_summon --report=<report_urn>',
-            ]);
-
-            exit(1);
-        }
-        $report = $reportsRepository->get($reportUrn);
-
-        if (!$report) {
-            $this->out('Error: Invalid report');
-            exit(1);
-        }
-
-        $appeal = new Core\Reports\Appeals\Appeal();
-        $appeal
-            ->setReport($report)
-            ->setOwnerGuid($report->getEntityOwnerGuid());
-
-        $cohort = $summonsManager->summon($appeal);
-
-        var_dump($cohort);
-    }
-
-    public function dev_only_add_strike()
-    {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
-        /** @var Core\Reports\Repository $reportsRepository */
-        $reportsRepository = Di::_()->get('Reports\Repository');
-
-        /** @var Core\Reports\Strikes\Manager $strikesManager */
-        $strikesManager = Di::_()->get('Moderation\Strikes\Manager');
-
-        $reportUrn = $this->getOpt('report');
-
-        if (!$reportUrn) {
-            $this->out([
-                'Usage: cli.php moderation dev_only_add_strike --report=<report_urn>',
-            ]);
-
-            exit(1);
-        }
-        $report = $reportsRepository->get($reportUrn);
-
-        if (!$report) {
-            $this->out('Error: Invalid report');
-            exit(1);
-        }
-
-        $strike = new Strike;
-        $strike->setReport($report)
-            ->setReportUrn($report->getUrn())
-            ->setUserGuid($report->getEntityOwnerGuid())
-            ->setReasonCode($report->getReasonCode())
-            ->setSubReasonCode($report->getSubReasonCode())
-            ->setTimestamp($report->getTimestamp()); // Strike is recored for date of first report
-
-        var_dump($strikesManager->add($strike));
     }
 }
