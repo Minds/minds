@@ -46,6 +46,91 @@ $CONFIG->set('oauth', [
     'encryption_key' => '{{ jwt-secret }}',
 ]);
 
+$CONFIG->set('report_reasons',
+[
+    [
+      'value' => 1,
+      'label' => 'Illegal',
+      'hasMore' => true,
+      'reasons' => [
+        [ 'value' => 1, 'label' => 'Terrorism' ],
+        [ 'value' => 2, 'label' => 'Paedophilia' ],
+        [ 'value' => 3, 'label' => 'Extortion' ],
+        [ 'value' => 4, 'label' => 'Fraud' ],
+        [ 'value' => 5, 'label' => 'Revenge Porn' ],
+        [ 'value' => 6, 'label' => 'Sex trafficking' ],
+      ],
+    ],
+    [
+      'value' => 2,
+      'label' => 'NSFW (not safe for work)',
+      'hasMore' => true,
+      'reasons' => [ // Explicit reasons
+        [ 'value' => 1, 'label' => 'Nudity' ],
+        [ 'value' => 2, 'label' => 'Pornography' ],
+        [ 'value' => 3, 'label' => 'Profanity' ],
+        [ 'value' => 4, 'label' => 'Violance and Gore' ],
+        [ 'value' => 5, 'label' => 'Race, Religion, Gender' ],
+      ],
+    ],
+    [
+      'value' => 3,
+      'label' => 'Encourages or incites violence',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 4,
+      'label' => 'Harassment',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 5,
+      'label' => 'Personal and confidential information',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 7,
+      'label' => 'Impersonates',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 8,
+      'label' => 'Spam',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 10,
+      'label' => 'Infringes my copyright',
+      'hasMore' => true,
+    ],
+    [
+      'value' => 12,
+      'label' => 'Incorrect use of hashtags',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 13,
+      'label' => 'Malware',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 15,
+      'label' => 'Trademark infringement',
+      'hasMore' => false,
+    ],
+    [
+      'value' => 16,
+      'label' => 'Token manipulation',
+      'hasMore' => false,
+    ],
+    [ 'value' => 11,
+     'label' => 'Another reason',
+     'hasMore' => true,
+    ],
+  ]
+);
+
+
 /**
  * Other Elgg Settings
  */
@@ -233,7 +318,7 @@ $CONFIG->set('blockchain', [
     'rpc_endpoints' => [
         'https://mainnet.infura.io/v3/708b51690a43476092936f9818f8c4fa',
     ],
-    
+
     //'network_address' => 'https://rinkeby.infura.io/',
     'proxy_rpc_endpoint' => 'https://mainnet.infura.io/v3/708b51690a43476092936f9818f8c4fa',
 
