@@ -129,7 +129,7 @@ class Pool
         if ($opts['include_only']) {
             $body['query']['bool']['must'][] = [
                 'terms' => [
-                    'user_guid' => $opts['include_only'],
+                    'user_guid' => Text::buildArray($opts['include_only']),
                 ],
             ];
         }
@@ -141,7 +141,7 @@ class Pool
 
             $body['query']['bool']['must_not'][] = [
                 'terms' => [
-                    'user_guid' => $opts['except'],
+                    'user_guid' => Text::buildArray($opts['except']),
                 ],
             ];
         }
@@ -153,7 +153,7 @@ class Pool
 
             $body['query']['bool']['must_not'][] = [
                 'terms' => [
-                    'user_phone_number_hash' => $opts['except_hashes'],
+                    'user_phone_number_hash' => Text::buildArray($opts['except_hashes']),
                 ],
             ];
         }
