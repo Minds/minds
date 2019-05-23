@@ -388,9 +388,9 @@ class Defaults
                 'description' => 'Everything you need to know about Minds Tokens',
                 'image' => 'assets/photos/canyon.jpg',
             ],
-            'moderation' => [
-                'title' => 'Community Moderation',
-                'description' => 'Community Moderation on Minds. Join the jury',
+            'content-policy' => [
+                'title' => 'Content Policy',
+                'description' => 'The goal of Minds is to have fair, transparent and ethical moderation practices',
                 'image' => 'assets/photos/canyon.jpg',
             ],
             'help' => [
