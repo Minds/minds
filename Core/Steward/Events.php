@@ -25,13 +25,11 @@ class Events implements ModuleInterface
     public function register()
     {
         Dispatcher::register('create', 'elgg/event/activity', function ($event, $namespace, $entity) {
-            error_log("Steward: {$event} {$namespace}: ".var_export($entity, true));
-            $this->autoReporter->validate($entity);
+            //$this->autoReporter->validate($entity);
         });
 
         Dispatcher::register('update', 'elgg/event/activity', function ($event, $namespace, $entity) {
-            error_log("Steward: {$event} {$namespace}: ".var_export($entity, true));
-            $this->autoReporter->validate($entity);
+            //$this->autoReporter->validate($entity);
         });
     }
 }
