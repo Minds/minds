@@ -152,7 +152,7 @@ class ActionDelegate
                 break;
             case 16: // Token manipulation
                 // Strike
-                $this->applyStrike($report);
+                $this->applyBan($report);
                 break;
         }
 

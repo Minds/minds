@@ -128,7 +128,7 @@ class ReverseActionDelegate
                 break;
             case 16: // Token manipulation
                 // Strike
-                $this->removeStrike($report);
+                $this->removeBan($report);
                 break;
         }
 
