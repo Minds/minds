@@ -126,6 +126,11 @@ class Analytics
                         ],
                         [
                             'exists' => [
+                                'field' => '@revoked',
+                            ],
+                        ],
+                        [
+                            'exists' => [
                                 'field' => '@rejected',
                             ],
                         ],
