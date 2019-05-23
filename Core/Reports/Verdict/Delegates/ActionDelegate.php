@@ -114,9 +114,13 @@ class ActionDelegate
                 if ($entity->type !== 'user') {
                     $this->actions->setDeletedFlag($entity, true);
                     $this->saveAction->setEntity($entity)->save();
+
+                    // Apply a strike to the owner
+                    $this->applyStrike($report);
+                } else {
+                    // Apply a strike to the owner
+                    $this->applyBan($report);
                 }
-                // Apply a strike to the owner
-                $this->applyStrike($report);
                 break;
             //case 12: // Incorrect use of hashtags
                 // De-index post
