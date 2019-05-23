@@ -26,10 +26,21 @@ class SummonDelegate
 
     public function onAppeal(Appeal $appeal)
     {
+        switch ($appeal->getReport()->getReasonCode()) {
+            case 1: // Illegal
+            case 3: // Encourages or incites violence
+            case 5: // Personal and confidential information
+            case 15: // Trademark infringement
+            case 10: // Copyright
+            case 16: // Token manipulation
+            case 13: // Malware
+                return; // Can not have community jury
+        }
+
         $this->queue
             ->setQueue('ReportsAppealSummon')
             ->send([
-                'appeal' => $appeal,
+                'appeal' => serialize($appeal),
                 'cohort' => null, // TODO: It can be an array of user guids. For development purposes only.
             ]);
     }

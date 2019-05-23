@@ -207,7 +207,7 @@ class Manager
         $this->queueClient
             ->setQueue('ReportsAppealSummon')
             ->send([
-                'appeal' => $appeal,
-            ], 70);
+                'appeal' => serialize($appeal),
+            ], 10); // loop every 10 seconds
     }
 }
