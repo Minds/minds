@@ -389,7 +389,7 @@ class Defaults
                 'image' => 'assets/photos/canyon.jpg',
             ],
             'content-policy' => [
-                'title' => 'Content Policy',
+                'title' => 'The Jury System',
                 'description' => 'The goal of Minds is to have fair, transparent and ethical moderation practices',
                 'image' => 'assets/photos/canyon.jpg',
             ],
