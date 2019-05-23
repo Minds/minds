@@ -388,6 +388,11 @@ class Defaults
                 'description' => 'Everything you need to know about Minds Tokens',
                 'image' => 'assets/photos/canyon.jpg',
             ],
+            'moderation' => [
+                'title' => 'Community Moderation',
+                'description' => 'Community Moderation on Minds. Join the jury',
+                'image' => 'assets/photos/canyon.jpg',
+            ],
             'help' => [
                 'title' => 'Helpdesk',
                 'description' => 'Everything you need to know about Minds',

@@ -459,6 +459,8 @@ $CONFIG->set('tags', [
     'art', 'music', 'journalism', 'blockchain', 'freespeech', 'news', 'gaming', 'myphoto', 'nature', 'photography', 'politics', 'top', 'bitcoin', 'technology', 'food', 'animals', 'health', 'science', 'philosophy', 'comedy', 'film', 'minds'
 ]);
 
+$CONFIG->set('steward_guid', '');
+$CONFIG->set('steward_autoconfirm', false);
 $CONFIG->set('development_mode', false);
 
 $CONFIG->set('max_video_length', 900);

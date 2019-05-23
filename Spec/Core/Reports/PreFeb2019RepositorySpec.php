@@ -12,7 +12,7 @@ use Minds\Entities;
 
 use Spec\Minds\Mocks;
 
-class RepositorySpec extends ObjectBehavior
+class PreFeb2019RepositorySpec extends ObjectBehavior
 {
     protected $_client;
 
@@ -25,7 +25,7 @@ class RepositorySpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Minds\Core\Reports\Repository');
+        $this->shouldHaveType('Minds\Core\Reports\PreFeb2019Repository');
     }
 
     // getAll()

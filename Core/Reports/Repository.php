@@ -2,6 +2,9 @@
 namespace Minds\Core\Reports;
 
 use Cassandra;
+use Cassandra\Decimal;
+use Cassandra\Timestamp;
+use Cassandra\Tinyint;
 
 use Minds\Core;
 use Minds\Core\Di\Di;
@@ -10,286 +13,251 @@ use Minds\Core\Data\Cassandra\Prepared;
 use Minds\Entities;
 use Minds\Entities\DenormalizedEntity;
 use Minds\Entities\NormalizedEntity;
+use Minds\Common\Repository\Response;
+use Minds\Core\Reports\UserReports\UserReport;
+use Minds\Core\Reports\ReportedEntity;
+use Minds\Common\Urn;
 
 class Repository
 {
-    /**
-     * @var Data\Cassandra\Client
-     */
-    protected $db;
+    /** @var Data\Cassandra\Client $cql */
+    protected $cql;
 
-    public function __construct($db = null)
+    /** @var Urn $urn */
+    protected $urn;
+
+    public function __construct($cql = null, $urn = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->cql = $cql ?: Di::_()->get('Database\Cassandra\Cql');
+        $this->urn = $urn ?: new Urn;
     }
 
     /**
+     * Return the reports available to a jury
      * @param array $options 'limit', 'offset', 'state'
-     * @return array
+     * @return Response
      */
-    public function getAll(array $options = [])
+    public function getList(array $opts = [])
     {
-        $options = array_merge([
+        $opts = array_merge([
             'limit' => 12,
             'offset' => '',
             'state' => '',
-            'owner' => null
-        ], $options);
+            'owner' => null,
+            'juryType' => 'appeal',
+            'user' => null,
+            'must' => [],
+            'must_not' => [],
+            'timestamp' => null
+        ], $opts);
 
-        $template = "SELECT * FROM reports";
+        /*$must = $opts['must'];
+        $must_not = $opts['must_not'];
+
+        $body = [
+            'query' => [
+                'bool' => [
+                    'must' => $must,
+                    'must_not' => $must_not,
+                ]
+            ],
+            'size' => $opts['limit'],
+        ];
+
+        $response = new Response;
+
+        $prepared = new Prepared\Search();
+        $prepared->query([
+            'index' => 'minds-moderation',
+            'type' => 'reports',
+            'body' => $body,
+            'size' => $opts['limit'],
+        ]);
+
+        $result = $this->es->request($prepared);
+
+        foreach ($result['hits']['hits'] as $row) {
+            $report = new Report();
+            $report
+                ->setEntityGuid($row['_source']['entity_guid'])
+                ->setReports($this->buildReports($row['_source']))
+                ->setAppeal(isset($row['_source']['@initial_jury_decided_timestamp']))
+                ->setAppealNote($row['_source']['appeal_note'] ?? '')
+                ->setAppealTimestamp($row['_source']['@appeal_timestamp'] ?? null)
+                ->setInitialJuryDecisions($this->buildDecisions($row, 'initial'))
+                ->setInitialJuryDecidedTimestamp($row['_source']['@initial_jury_decided_timestamp'] ?? null)
+                ->setAppealJuryDecisions($this->buildDecisions($row, 'appeal'))
+                ->setInitialJuryDecidedTimestamp($row['_source']['@appeal_jury_decided_timestamp'] ?? null);
+
+            $response[] = $report;
+        }*/
+
+        $response = new Response;
+
+        $statement = "SELECT * FROM moderation_reports";
+
+        $where = [];
         $values = [];
-        $cqlOpts = [];
-        $allowFiltering = false;
 
-        if ($options['owner']) {
-            $owner_guid = $options['owner'];
-
-            if (is_object($owner_guid)) {
-                $owner_guid = $owner_guid->guid;
-            } elseif (is_array($owner_guid)) {
-                $owner_guid = $owner_guid['guid'];
-            }
-
-            $template = "SELECT * FROM reports_by_owner WHERE owner_guid = ?";
-            $values = [ new Cassandra\Varint($owner_guid) ];
-
-            if ($options['state']) {
-                $template .= " AND state = ?";
-                $values[] = (string) $options['state'];
-                $allowFiltering = true;
-            }
-        } elseif ($options['state']) {
-            $template = "SELECT * FROM reports_by_state WHERE state = ?";
-            if ($options['state'] === 'archived') {
-                $template .= ' ORDER BY guid DESC';
-            }
-            $values = [(string)$options['state']];
+        if ($opts['entity_urn']) {
+            $where[] = "entity_urn = ?";
+            $values[] = $opts['entity_urn'];
         }
 
-        if ($allowFiltering) {
-            $template .= " ALLOW FILTERING";
+        if (isset($opts['reason_code'])) {
+            $where[] = "reason_code = ?";
+            $values[] = new Tinyint($opts['reason_code']);
         }
 
-        if ($options['offset']) {
-            $cqlOpts['paging_state_token'] = base64_decode($options['offset']);
+        if (isset($opts['sub_reason_code'])) {
+            $where[] = "sub_reason_code = ?";
+            $values[] = new Decimal($opts['sub_reason_code']);
         }
 
-        if ($options['limit']) {
-            $cqlOpts['page_size'] = (int) $options['limit'];
+        if ($opts['timestamp']) {
+            $where[] = "timestamp = ?";
+            $values[] = new Timestamp($opts['timestamp']);
         }
 
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-        $query->setOpts($cqlOpts);
-
-        $reports = [];
-        $pagingToken = '';
-
-        try {
-            $result = $this->db->request($query);
-            $pagingToken = base64_encode($result->pagingStateToken());
-
-            foreach ($result as $row) {
-                $report = new Entities\Report();
-                $report->loadFromArray($row);
-                $reports[] = $report;
-            }
-        } catch (\Exception $e) {
-            // TODO: Log or warning
+        if ($where) {
+            $statement .= " WHERE " . implode(' AND ', $where);
         }
 
-        return [
-            'data' => $reports,
-            'next' => $pagingToken
-        ];
+        $prepared = new Prepared\Custom();
+        $prepared->query($statement, $values);
+
+        $rows = $this->cql->request($prepared);
+
+        foreach ($rows as $row) {
+            $response[] = $this->buildFromRow($row);
+        }
+
+        return $response;
     }
 
     /**
-     * @param string|int $guid
-     * @return Entities\Report|false
-     */
-    public function getRow($guid)
-    {
-        if (!$guid) {
-            return false;
-        }
-
-        $template = "SELECT * FROM reports WHERE guid = ? LIMIT ?";
-        $values = [
-            new Cassandra\Varint($guid),
-            1
-        ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        $entity = false;
-
-        try {
-            $result = $this->db->request($query);
-
-            if (isset($result[0]) && $result[0]) {
-                $entity = new Entities\Report();
-                $entity->loadFromArray($result[0]);
-            }
-        } catch (\Exception $e) {
-            // TODO: Log or warning
-        }
-
-        return $entity;
-    }
-
-    /**
-     * @param \ElggEntity|NormalizedEntity|DenormalizedEntity|string|integer $entity
-     * @param Entities\User|string|integer $reporter
-     * @param string|integer $reason
-     * @param string $reason_note
-     * @return bool
+     * Return a single report
+     * @param string $urn
+     * @return Report
      * @throws \Exception
      */
-    public function create($entity, $reporter, $reason, $reason_note = '')
+    public function get($urn)
     {
-        if (
-            !$entity ||
-            !$reporter
-        ) {
-            return false;
+        $parts = explode('-', $this->urn->setUrn($urn)->getNss());
+
+        $entityUrn = substr($parts[0], 1, -1); // Remove the parenthases
+        $reasonCode = $parts[1];
+        $subReasonCode = $parts[2] ?? 0;
+        $timestamp = $parts[3];
+        
+
+        $response = $this->getList([
+            'entity_urn' => $entityUrn,
+            'reason_code' => $reasonCode,
+            'sub_reason_code' => $subReasonCode,
+            'timestamp' => $timestamp,
+        ]);
+        
+        if (!$response[0]) {
+            return null;
         }
 
-        if (is_numeric($entity) || Core\Luid::isValid($entity)) {
-            $entity = Entities\Factory::build($entity);
-        }
-
-        if (is_object($entity)) {
-            $entity_guid = $entity->guid;
-            $owner_guid = $entity->owner_guid;
-        } elseif (is_array($entity)) {
-            $entity_guid = $entity['guid'];
-            $owner_guid = $entity['owner_guid'];
-        } else {
-            throw new \Exception('Missing entity');
-        }
-
-        if (is_object($reporter)) {
-            $reporter = $reporter->guid;
-        } elseif (is_array($reporter)) {
-            $reporter = $reporter['guid'];
-        }
-
-        $guid = Core\Guid::build();
-
-        $template = "INSERT INTO reports (
-            guid,
-            entity_guid,
-            time_created,
-            reporter_guid,
-            entity_luid,
-            owner_guid,
-            state,
-            reason,
-            reason_note
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        $values = [
-            new Cassandra\Varint($guid),
-            new Cassandra\Varint($entity_guid),
-            new Cassandra\Timestamp(time()),
-            new Cassandra\Varint($reporter),
-            method_exists($entity, 'getLuid') ? (string) $entity->getLuid() : '',
-            new Cassandra\Varint($owner_guid),
-            'review',
-            (string) $reason,
-            (string) $reason_note
-        ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $success = $this->db->request($query);
-        } catch (\Exception $e) {
-            $success = false;
-        }
-
-        return (bool) $success;
+        return $response[0];
     }
 
     /**
-     * @param string|int $guid
-     * @param array $set values to be set as field => value. Some fields will be auto-casted to Cassandra's types
-     * @return bool
+     * void
      */
-    public function update($guid, array $set)
+    public function add(Report $report)
     {
-        if (!$guid) {
-            return false;
+        
+    }
+
+    private function buildReports($set)
+    {
+        $return = [];
+
+        foreach ($set as $userGuid) {
+            $return[] = $report = new UserReport();
+            $report
+                //->setTimestamp($row[0]['@timestamp'])
+                //->setEntityUrn($source['entity_guid'])
+                ->setReporterGuid($userGuid->value());
         }
+        return $return;
+    }
 
-        if (isset($set['guid'])) {
-            unset($set['guid']);
-        }
+    private function buildDecisions($row, $juryType = 'initial')
+    {
+        $jurorGuids = [];
 
-        if (!$set) {
-            return true;
-        }
+        $return = [];
 
-        $template = "UPDATE reports SET";
-        $values = [];
-
-        $updates = [];
-        foreach ($set as $key => $value) {
-            if (in_array($key, [ 'reporter_guid', 'entity_guid', 'owner_guid' ])) {
-                $value = new Cassandra\Varint($value);
-            } elseif (in_array($key, [ 'time_created' ])) {
-                $values = new Cassandra\Timestamp($value);
+        foreach ($row as $jurorGuid => $uphold) {
+            if (isset($jurorGuids[$jurorGuid])) { //TODO: change to juror_hash
+                continue; // avoid duplicate reports
             }
 
-            $updates[] = "{$key} = ?";
-            $values[] = $value;
+            $jurorGuids[$jurorGuid] = true; 
+
+            $decision = new Jury\Decision();
+            $decision
+                ->setJurorGuid($jurorGuid)
+                ->setUphold($uphold);
+            $return[] = $decision;
         }
+        return $return;
+    }
 
-        $template .= ' ' . implode(", ", $updates);
-
-        $template .= " WHERE guid = ?";
-        $values[] = new Cassandra\Varint($guid);
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $success = $this->db->request($query);
-        } catch (\Exception $e) {
-            return false;
+    private function mapToAssoc($map)
+    {
+        $assoc = [];
+        foreach ($map as $k => $v) {
+            $assoc[(string) $k] = $v;
         }
-
-        return (bool) $success;
+        return $assoc;
     }
 
     /**
-     * @param string|int $guid
-     * @return bool
+     * Build from a row 
+     * @param array $row
+     * @return Report
      */
-    public function delete($guid)
+    public function buildFromRow($row)
     {
-        if (!$guid) {
-            return false;
-        }
-
-        $template = "DELETE FROM reports WHERE guid = ? LIMIT ?";
-        $values = [
-            new Cassandra\Varint($guid),
-            1
-        ];
-
-        $query = new Prepared\Custom();
-        $query->query($template, $values);
-
-        try {
-            $success = $this->db->request($query);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return (bool) $success;
+        $report = new Report;
+        $report->setEntityUrn((string) $row['entity_urn'])
+            ->setEntityOwnerGuid(isset($row['entity_owner_guid']) ? $row['entity_owner_guid']->value() : null)
+            ->setReasonCode($row['reason_code']->value())
+            ->setSubReasonCode($row['sub_reason_code']->value())
+            ->setTimestamp($row['timestamp']->time())
+            //->setState((string) $row['state'])
+            ->setUphold(isset($row['uphold']) ? (bool) $row['uphold'] : null)
+            ->setStateChanges(isset($row['state_changes']) ? 
+                array_map(function ($timestamp) {
+                    return $timestamp->time();
+                }, $this->mapToAssoc($row['state_changes']))
+                : null
+            )
+            ->setAppeal(isset($row['appeal_note']) ? true : false)
+            ->setAppealNote(isset($row['appeal_note']) ? (string) $row['appeal_note'] : '')
+            ->setReports(
+                $this->buildReports($row['reports']->values())
+            )
+            ->setInitialJuryDecisions(
+                isset($row['initial_jury']) ?
+                    $this->buildDecisions($this->mapToAssoc($row['initial_jury']))
+                    : null
+            )
+            ->setAppealJuryDecisions(
+                isset($row['appeal_jury']) ?
+                    $this->buildDecisions($this->mapToAssoc($row['appeal_jury']))
+                    : null
+            )
+            ->setUserHashes(isset($row['user_hashes']) ? 
+                $row['user_hashes']->values() : null
+            );
+        return $report;
     }
+
 }

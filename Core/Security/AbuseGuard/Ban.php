@@ -7,6 +7,7 @@ namespace Minds\Core\Security\AbuseGuard;
 use Minds\Core;
 use Minds\Core\Events\Dispatcher;
 use Minds\Entities;
+use Minds\Core\Di\Di;
 
 class Ban
 {
@@ -15,11 +16,20 @@ class Ban
     private $recover;
     private $events = true;
 
-    public function __construct($sessions = null, $recover = null, $events = true)
+    /** @var EventsDispatcher $eventsDispatcher */
+    private $eventsDispatcher;
+
+    public function __construct(
+        $sessions = null,
+        $recover = null,
+        $events = true,
+        $eventsDispatcher = null
+    )
     {
         $this->sessions = $sessions ?: new Core\Data\Sessions();
         $this->recover = $recover ?: new Recover();
         $this->events = $events;
+        $this->eventsDispatcher = $eventsDispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     public function setAccused($accused)
@@ -46,7 +56,7 @@ class Ban
         $this->sessions->destroyAll($user->guid);
 
         //@todo make this a dependency too
-        Dispatcher::trigger('ban', 'user', $user);
+        $this->eventsDispatcher->trigger('ban', 'user', $user);
 
         $this->recover->setAccused($this->accused)
             ->recover();

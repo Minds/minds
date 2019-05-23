@@ -1,0 +1,43 @@
+{
+	"mappings": {
+		"reports": {
+			"dynamic": false,
+			"properties": {
+				"entity_guid": { "type": "long" },
+				"action": { "type": "keyword" },
+				"@initial_jury_decided_timestamp": { "type": "date" },
+				"initial_jury_action": { "type": "keyword" },
+				"@appeal_jury_decided_timestamp": { "type": "date" },
+				"appeal_jury_action": { "type": "keyword" },
+				"@appeal_timestamp": { "type": "date" },
+				"appeal_note": { "type": "boolean" },
+				"reports": {
+					"type": "nested",
+					"properties": {
+						"@timestamp": { "type": "date" },
+						"reporter_guid": { "type": "long" },
+						"reason": { "type": "integer" }
+					}
+				},
+				"initial_jury": {
+					"type": "nested",
+					"properties": {
+						"@timestamp": { "type": "date" },
+						"juror_guid": { "type": "long" },
+						"accepted": { "type": "boolean" }
+					}
+				},
+				"appeal_jury": {
+					"type": "nested",
+					"properties": {
+						"@timestamp": { "type": "date" },
+						"juror_guid": { "type": "long" },
+						"accepted": { "type": "boolean" }
+					}
+				}
+			}
+		}
+		
+	}
+	
+}

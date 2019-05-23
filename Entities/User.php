@@ -1035,4 +1035,13 @@ class User extends \ElggUser
         return $this;
     }
 
+    /**
+     * Preferred urn
+     * @return string
+     */
+    public function getUrn()
+    {
+        return "urn:user:{$this->getGuid()}";
+    }
+
 }

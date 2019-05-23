@@ -25,7 +25,7 @@ class ActionsSpec extends ObjectBehavior
 
     function let(
         Core\Entities\Actions\Save $saveAction,
-        Core\Reports\Repository $repository,
+        Core\Reports\PreFeb2019Repository $repository,
         EntitiesFactory $factory,
         Core\Events\EventsDispatcher $dispatcher
     ) {

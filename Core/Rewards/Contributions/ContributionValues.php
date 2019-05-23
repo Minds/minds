@@ -11,6 +11,7 @@ class ContributionValues
         'subscribers' => 4,
         'referrals' => 10,
         'checkin' => 2,
+        'jury_duty' => 25,
     ];
 
 }

@@ -7,6 +7,7 @@
 
 namespace Minds\Core\Channels;
 
+use Exception;
 use Minds\Core\Data\Cassandra\Client as CassandraClient;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
@@ -44,7 +45,7 @@ class Subscriptions
     /**
      * @param $opts
      * @return string[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function getList($opts)
     {
@@ -53,7 +54,7 @@ class Subscriptions
         ], $opts);
 
         if (!$this->user) {
-            throw new \Exception('Invalid user');
+            throw new Exception('Invalid user');
         }
 
         $cql = "SELECT * FROM friends WHERE key = ? LIMIT ?";
@@ -75,9 +76,30 @@ class Subscriptions
             }
 
             return $result;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             error_log($e);
             return [];
         }
+    }
+
+    /**
+     * @param string|int $guid
+     * @return bool
+     */
+    public function hasSubscription($guid)
+    {
+        $cql = "SELECT COUNT(*) as count FROM friends WHERE key = ? AND column1 = ? LIMIT 1";
+        $values = [
+            (string) $this->user->guid,
+            (string) $guid,
+        ];
+
+        $prepared = new Custom();
+        $prepared->query($cql, $values);
+
+        $rows = $this->db->request($prepared);
+        // Should throw if needed.
+
+        return isset($rows[0]['count']) && $rows[0]['count'] > 0;
     }
 }

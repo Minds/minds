@@ -113,6 +113,16 @@ class UsersIterator implements \Iterator
             $field = 'user_guid.keyword';
         }
 
+        if ($this->action == 'jury_duty') {
+            $bool['filter'] = [
+                'term' => [
+                    'action' => 'jury_duty'
+                ]
+            ];
+
+            $field = 'user_guid.keyword';
+        }
+
         $query = [
             'index' => 'minds-metrics-*',
             'type' => 'action',

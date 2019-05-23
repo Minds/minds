@@ -9,6 +9,7 @@ use Minds\Core\Data\Sessions;
 use Minds\Entities\User;
 use Minds\Core\Security\AbuseGuard\AccusedEntity;
 use Minds\Core\Security\AbuseGuard\Recover;
+use Minds\Core\Events\EventsDispatcher;
 
 class BanSpec extends ObjectBehavior
 {
@@ -23,9 +24,15 @@ class BanSpec extends ObjectBehavior
         $this->setAccused($accused)->shouldReturn($this);
     }
 
-    function it_should_ban_a_user(AccusedEntity $accused, User $user, Sessions $sessions, Recover $recover)
+    function it_should_ban_a_user(
+        AccusedEntity $accused,
+        User $user,
+        Sessions $sessions,
+        Recover $recover,
+        EventsDispatcher $eventsDispatcher
+    )
     {
-        $this->beConstructedWith($sessions, $recover, false);
+        $this->beConstructedWith($sessions, $recover, false, $eventsDispatcher);
 
         $user->get('guid')->willReturn(123);
         $user->set('ban_reason', 'spam')->shouldBeCalled();
@@ -40,6 +47,9 @@ class BanSpec extends ObjectBehavior
 
         $recover->setAccused($accused)->willReturn($recover);
         $recover->recover()->willReturn(true);
+
+        $eventsDispatcher->trigger('ban', 'user', $user)
+            ->shouldBeCalled();
 
         $this->ban()->shouldBe(true);
 

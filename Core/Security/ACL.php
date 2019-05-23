@@ -7,6 +7,7 @@ namespace Minds\Core\Security;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Core\Security\RateLimits\Manager as RateLimitsManager;
+use Minds\Helpers\Flags;
 
 class ACL
 {
@@ -29,9 +30,16 @@ class ACL
         ACL\Block::_()->listen();
     }
 
+    /**
+     * Override the ACL and return the previous status
+     * @param boolean $ignore
+     * @return boolean
+     */
     public function setIgnore($ignore = false)
     {
+        $previous = self::$ignore;
         self::$ignore = $ignore;
+        return $previous;
     }
 
     /**
@@ -49,6 +57,10 @@ class ACL
 
         if (self::$ignore == true) {
             return true;
+        }
+
+        if (Flags::shouldFail($entity)) {
+            return false;
         }
 
         // If logged out and public and not container        
@@ -148,6 +160,13 @@ class ACL
         }
 
         /**
+         * If the user is banned or in a limited state
+         */
+        if ($user->isBanned() || !$user->isEnabled()) {
+            return false;
+        }
+
+        /**
          * Does the user own the entity, or is it the container?
          */
         if ($entity->owner_guid
@@ -224,6 +243,13 @@ class ACL
          * Logged out users can not interact
          */
         if (!$user) {
+            return false;
+        }
+
+        /**
+         * If the user is banned or in a limited state
+         */
+        if ($user->isBanned() || !$user->isEnabled()) {
             return false;
         }
 

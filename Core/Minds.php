@@ -14,12 +14,14 @@ class Minds extends base
     public static $booted = false;
 
     private $modules = [
+        Events\Module::class,
         Email\Module::class,
         Experiments\Module::class,
         Helpdesk\Module::class,
         Onboarding\Module::class,
         Subscriptions\Module::class,
         Suggestions\Module::class,
+        Reports\Module::class,
         VideoChat\Module::class,
     ];
 
@@ -65,7 +67,6 @@ class Minds extends base
         (new Sessions\SessionsProvider())->register();
         (new Boost\BoostProvider())->register();
         (new Data\DataProvider())->register();
-        (new Events\EventsProvider())->register();
         //(new Core\Notification\NotificationProvider())->register();
         (new Pages\PagesProvider())->register();
         (new Payments\PaymentsProvider())->register();
@@ -83,7 +84,6 @@ class Minds extends base
         (new Trending\TrendingProvider())->register();
         (new Media\MediaProvider())->register();
         (new Notification\NotificationProvider())->register();
-        (new Reports\ReportsProvider())->register();
         (new Groups\GroupsProvider())->register();
         (new Search\SearchProvider())->register();
         (new Votes\VotesProvider())->register();

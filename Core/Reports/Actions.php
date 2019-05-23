@@ -5,6 +5,7 @@ use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Entities;
 use Minds\Core\Events\Dispatcher;
+use Minds\Core\Reports\Report;
 
 class Actions
 {
@@ -472,7 +473,7 @@ class Actions
      * @param bool $value
      * @return bool
      */
-    protected function setDeletedFlag($entity = null, $value = false)
+    public function setDeletedFlag($entity = null, $value = false)
     {
         if (!$entity || !is_object($entity)) {
             return false;

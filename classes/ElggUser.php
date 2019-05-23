@@ -734,7 +734,8 @@ class ElggUser extends ElggEntity
 			'icontime',
 			'legacy_guid',
             'featured_id',
-            'banned'
+            'banned',
+            'ban_reason',
 		));
 	}
 

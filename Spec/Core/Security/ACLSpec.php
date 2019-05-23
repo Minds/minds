@@ -42,6 +42,7 @@ class ACLSpec extends ObjectBehavior
         $entity->get('access_id')->willReturn(2);
         $entity->get('container_guid')->willReturn(123);
         $entity->get('owner_guid')->willReturn(123);
+        $entity->get('type')->willReturn('activity');
         $this->read($entity)->shouldReturn(true);
     }
 
@@ -49,6 +50,8 @@ class ACLSpec extends ObjectBehavior
     {
         $entity->getType()->willReturn('specy');
         $entity->get('access_id')->willReturn(0);
+        $entity->get('owner_guid')->willReturn(123);
+        $entity->get('type')->willReturn('activity');
         $this->read($entity)->shouldReturn(false);
     }
 

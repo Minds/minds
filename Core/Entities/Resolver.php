@@ -14,6 +14,7 @@ use Minds\Core\Entities\Delegates\ResolverDelegate;
 use Minds\Core\Security\ACL;
 use Minds\Entities\Activity;
 use Minds\Entities\User;
+use Minds\Helpers\Flags;
 
 class Resolver
 {
@@ -116,8 +117,8 @@ class Resolver
 
         $sorted = [];
 
-        foreach ($this->urns as $urn) {
-            $sorted[] = $resolvedMap[$urn->getUrn()] ?? null;
+        foreach ($resolvedMap as $entity) {
+            $sorted[] = $entity ?? null;
         }
 
         // Filter out invalid entities
@@ -126,7 +127,10 @@ class Resolver
 
         // Filter out forbidden entities
 
-        $sorted = array_filter($sorted, function($entity) { return $this->acl->read($entity, $this->user); });
+        $sorted = array_filter($sorted, function($entity) { 
+            return $this->acl->read($entity, $this->user);
+                //&& !Flags::shouldFail($entity);
+        });
 
         // Filter out pending activities
 
@@ -140,5 +144,12 @@ class Resolver
         //
 
         return $sorted;
+    }
+
+    public function single($urn)
+    {
+        $this->urns = [ $urn ];
+        $entities = $this->fetch();
+        return $entities[0];
     }
 }

@@ -34,7 +34,7 @@ class EntityGuidResolverDelegate implements ResolverDelegate
      */
     public function shouldResolve(Urn $urn)
     {
-        return $urn->getNid() === 'entity';
+        return $urn->getNid() === 'entity' || $urn->getNid() === 'activity' || $urn->getNid() === 'user';
     }
 
     /**
@@ -88,6 +88,10 @@ class EntityGuidResolverDelegate implements ResolverDelegate
     {
         if (!$entity) {
             return null;
+        }
+
+        if ($entity->getUrn()) {
+            return $entity->getUrn();
         }
 
         if (method_exists($entity, '_magicAttributes') || method_exists($entity, 'getGuid')) {
