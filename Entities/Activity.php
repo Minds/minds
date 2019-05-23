@@ -245,6 +245,9 @@ class Activity extends Entity
             $export['thumbs:up:count'] = Helpers\Counters::get($this->entity_guid, 'thumbs:up');
             $export['thumbs:down:count'] = Helpers\Counters::get($this->entity_guid, 'thumbs:down');
         } elseif ($this->remind_object) {
+            $export['remind_object']['nsfw'] = array_map(function($reason) {
+                return (int) $reason;
+            }, $export['remind_object']['nsfw'] ?? []);
             if ($this->remind_object['entity_guid']) {
                 $export['thumbs:up:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:up');
                 $export['thumbs:down:count'] = Helpers\Counters::get($this->remind_object['entity_guid'], 'thumbs:down');
