@@ -109,7 +109,7 @@ class feeds implements Interfaces\Api
 
         $hashtag = null;
         if (isset($_GET['hashtag'])) {
-            $hashtag = $_GET['hashtag'];
+            $hashtag = strtolower($_GET['hashtag']);
         }
 
         $all = false;
@@ -123,7 +123,7 @@ class feeds implements Interfaces\Api
 
         $query = null;
         if (isset($_GET['query'])) {
-            $query = $_GET['query'];
+            $query = strtolower($_GET['query']);
         }
 
         $container_guid = $_GET['container_guid'] ?? null;
