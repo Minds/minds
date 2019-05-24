@@ -1365,3 +1365,9 @@ CREATE TABLE minds.video_chat_leases (
     last_refreshed timestamp,
     secret text
 );
+
+CREATE TABLE minds.sendwyre_accounts (
+    user_guid varint,
+    sendwyre_account_id text,
+    PRIMARY KEY (user_guid)
+);

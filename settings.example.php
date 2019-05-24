@@ -44,7 +44,7 @@ $CONFIG->set('oauth', [
         ],
     ],
     'encryption_key' => '{{ jwt-secret }}',
-]);
+ ]);
 
 $CONFIG->set('report_reasons',
 [
@@ -148,6 +148,7 @@ $CONFIG->site_url = 'http://{{domain}}/';
 $CONFIG->cdn_url = 'http://{{domain}}/en/';
 $CONFIG->cdn_assets_url = 'http://{{domain}}/en/';
 $CONFIG->zmq_server = 'localhost';
+$CONFIG->checkout_url = 'http://{{checkout_domain}}/';
 
 /**
  * Overrides default system cache path from inside data root to custom location.
@@ -288,7 +289,7 @@ $CONFIG->set('payouts', [
     'retentionDays' => 40,
     'minimumAmount' => 100,
     'userPercentage' => 0.8
-]);
+ ]);
 
 $CONFIG->set('payments', [
     'stripe' => [

@@ -20,6 +20,7 @@ class Minds extends base
         Helpdesk\Module::class,
         Onboarding\Module::class,
         Subscriptions\Module::class,
+        SendWyre\Module::class,
         Suggestions\Module::class,
         Reports\Module::class,
         VideoChat\Module::class,
