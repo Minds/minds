@@ -68,14 +68,14 @@ class EmailRewards
             break;
           case "global":
               $topic = $_GET['topic'];
-              if ($topic != 'minds_news') {
+              if ($topic != 'exclusive_promotions') {
                   return;
               }
               $validator = $_GET['validator'];
-              $key = 'rogan.md';
-              return;
-              if ($validator == sha1($campaign . 'rogan.md' . $topic . $user->guid . Config::_()->get('emails_secret'))) {
-                  $tokens = 3 * (10 ** 18);
+              //$key = '.md';
+              //return;
+              if ($validator == sha1($campaign . 'gift-24-05-19.md' . $topic . $user->guid . Config::_()->get('emails_secret'))) {
+                  $tokens = 5 * (10 ** 18);
                   $campaign = $validator; //hack
               } else {
                 return;
