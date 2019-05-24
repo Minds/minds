@@ -1,7 +1,8 @@
 <?php
 /**
- * Minds OAuth ScopeRepository
+ * Minds OAuth ScopeRepository.
  */
+
 namespace Minds\Core\OAuth\Repositories;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -21,6 +22,9 @@ class ScopeRepository implements ScopeRepositoryInterface
             ],
             'email' => [
                 'description' => 'Your email address',
+            ],
+            'checkout' => [
+                'description' => 'Wyre transactions',
             ],
         ];
 

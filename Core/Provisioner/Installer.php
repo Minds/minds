@@ -1,4 +1,5 @@
 <?php
+
 namespace Minds\Core\Provisioner;
 
 use Minds\Core;
@@ -48,6 +49,7 @@ class Installer
             'site-name' => 'Minds',
             'no-https' => false,
             'sns-secret' => '',
+            'checkout_domain' => 'localhost:8081',
         ];
 
         usleep(mt_rand(1, 9999));
@@ -60,12 +62,14 @@ class Installer
     public function setApp($app)
     {
         $this->app = $app;
+
         return $this;
     }
 
     public function setOptions(array $options = [])
     {
         $this->options = array_merge($this->defaults, $options);
+
         return $this;
     }
 
@@ -74,8 +78,9 @@ class Installer
     public function checkOptions()
     {
         $isInstallOnly = isset($this->options['only']);
-        if (!$isInstallOnly || $this->options['only'] === "site"){
+        if (!$isInstallOnly || $this->options['only'] === 'site') {
             $this->checkSiteOptions();
+
             return;
         }
         // TODO: Check all database parameters.
@@ -155,11 +160,11 @@ class Installer
     public function buildConfig(array $flags = [])
     {
         $flags = array_merge([
-            'returnResult' => false
+            'returnResult' => false,
         ], $flags);
 
-        $source = $this->app->root . DIRECTORY_SEPARATOR . 'settings.example.php';
-        $target = $this->app->root . DIRECTORY_SEPARATOR . 'settings.php';
+        $source = $this->app->root.DIRECTORY_SEPARATOR.'settings.example.php';
+        $target = $this->app->root.DIRECTORY_SEPARATOR.'settings.php';
 
         if (is_file($target) && !isset($this->options['overwrite-settings'])) {
             throw new ProvisionException('Minds is already installed');
@@ -169,7 +174,7 @@ class Installer
 
         // Build options
         if (!isset($this->options['path'])) {
-            $this->options['path'] = dirname($this->app->root) . DIRECTORY_SEPARATOR;
+            $this->options['path'] = dirname($this->app->root).DIRECTORY_SEPARATOR;
         }
 
         if (!isset($this->options['jwt-domain'])) {
@@ -180,11 +185,11 @@ class Installer
         if (!isset($this->options['socket-server-uri'])) {
             $domain = $this->options['domain'];
             $domainParts = parse_url($domain);
-            $this->options['socket-server-uri'] = $domainParts['scheme'] . $domainParts['host'] . ':8010';
+            $this->options['socket-server-uri'] = $domainParts['scheme'].$domainParts['host'].':8010';
         }
 
         if (!isset($this->options['site-name'])) {
-            $this->options['site-name'] = "Minds";
+            $this->options['site-name'] = 'Minds';
         }
 
         if (!isset($this->options['site-email'])) {
@@ -215,7 +220,7 @@ class Installer
 
     public function checkSettingsFile()
     {
-        $target = $this->app->root . DIRECTORY_SEPARATOR . 'settings.php';
+        $target = $this->app->root.DIRECTORY_SEPARATOR.'settings.php';
 
         if (!is_file($target)) {
             throw new ProvisionException('Minds settings file is missing');
@@ -231,13 +236,15 @@ class Installer
     }
 
     public function provisionCassandra(Provisioners\ProvisionerInterface $cassandraStorage = null,
-                                       $cleanData = false) {
+                                       $cleanData = false)
+    {
         $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
         $cassandraStorage->provision($cleanData);
     }
 
     public function provisionCockroach(Provisioners\ProvisionerInterface $cockroachProvisioner = null,
-                                       $cleanData = false) {
+                                       $cleanData = false)
+    {
         $cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
         $cockroachProvisioner->provision($cleanData);
     }
@@ -302,7 +309,7 @@ class Installer
             $siteUrl = $config->get('site_url');
         } else {
             $siteUrl = $this->options['no-https'] ? 'http' : 'https';
-            $siteUrl .= '://' . $this->options['domain'] . '/';
+            $siteUrl .= '://'.$this->options['domain'].'/';
         }
 
         return $siteUrl;

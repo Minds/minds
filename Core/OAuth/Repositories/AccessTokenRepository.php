@@ -1,7 +1,8 @@
 <?php
 /**
- * Minds OAuth AccessTokenRepository
+ * Minds OAuth AccessTokenRepository.
  */
+
 namespace Minds\Core\OAuth\Repositories;
 
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
@@ -32,13 +33,13 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     {
         $scopes = new Set(Type::text());
         foreach ($accessTokenEntity->getScopes() as $scope) {
-            $scopes->add($scopes);
+            $scopes->add($scope->getIdentifier());
         }
-        $prepared = new Prepared;
-        $prepared->query("
+        $prepared = new Prepared();
+        $prepared->query('
             INSERT INTO oauth_access_tokens (token_id, client_id, user_id, expires, last_active, scopes)
             VALUES (?, ?, ?, ?, ?, ?)
-            ", [
+            ', [
                 $accessTokenEntity->getIdentifier(),
                 $accessTokenEntity->getClient()->getIdentifier(),
                 new Varint($accessTokenEntity->getUserIdentifier()),
@@ -46,6 +47,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
                 new Timestamp(time()), //now
                 $scopes,
             ]);
+
         $this->client->request($prepared);
     }
 
@@ -54,9 +56,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        $prepared = new Prepared;
-        $prepared->query("DELETE FROM oauth_access_tokens where token_id = ?", [
-            $tokenId
+        $prepared = new Prepared();
+        $prepared->query('DELETE FROM oauth_access_tokens where token_id = ?', [
+            $tokenId,
         ]);
         $this->client->request($prepared);
     }
@@ -66,9 +68,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        $prepared = new Prepared;
-        $prepared->query("SELECT * FROM oauth_access_tokens where token_id = ?", [
-            $tokenId
+        $prepared = new Prepared();
+        $prepared->query('SELECT * FROM oauth_access_tokens where token_id = ?', [
+            $tokenId,
         ]);
         $this->client->request($prepared);
         $response = $this->client->request($prepared);

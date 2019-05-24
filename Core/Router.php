@@ -20,7 +20,7 @@ class Router
       '/api/v1/archive/thumbnails' => 'Minds\\Controllers\\api\\v1\\media\\thumbnails',
 
       '/oauth2/token' => 'Minds\\Controllers\\oauth2\\token',
-
+      '/oauth2/implicit' => 'Minds\\Controllers\\oauth2\\implicit',
       '/icon' => 'Minds\\Controllers\\icon',
       '//icon' => 'Minds\\Controllers\\icon',
       '/api' => 'Minds\\Controllers\\api\\api',
@@ -31,9 +31,9 @@ class Router
         //  "/app" => "minds\\pages\\app",
       '/emails/unsubscribe' => 'Minds\\Controllers\\emails\\unsubscribe',
       '/sitemap' => 'Minds\\Controllers\\sitemap',
-
       '/apple-app-site-association' => '\\Minds\\Controllers\\deeplinks',
       '/sitemaps' => '\\Minds\\Controllers\\sitemaps',
+      '/checkout' => '\\Minds\\Controllers\\checkout',
     );
 
     /**
@@ -70,6 +70,16 @@ class Router
         $request = ServerRequestFactory::fromGlobals();
         $response = new JsonResponse([]);
 
+        if ($request->getMethod() === 'OPTIONS') {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Max-Age: 86400');
+            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With,X-No-Cache');
+
+            return null;
+        }
+
         // Sessions
         // TODO: Support middleware
         $session = Di::_()->get('Sessions\Manager');
@@ -102,7 +112,6 @@ class Router
         if (isset($_GET['referrer'])) {
             Helpers\Campaigns\Referrals::register($_GET['referrer']);
         }
-
         $loop = count($segments);
         while ($loop >= 0) {
             $offset = $loop - 1;

@@ -1,17 +1,16 @@
 <?php
 /**
- * Minds OAuth ClientRepository
+ * Minds OAuth ClientRepository.
  */
+
 namespace Minds\Core\OAuth\Repositories;
 
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use Minds\Core\OAuth\Entities\ClientEntity;
 use Minds\Core\Di\Di;
-use Minds\Core\Security\XSRF;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-
     /** @var Client $client */
     private $client;
 
@@ -26,16 +25,19 @@ class ClientRepository implements ClientRepositoryInterface
 
     /**
      * {@inheritdoc}
-     * TODO: Implement clients for 3rd party apps
+     * TODO: Implement clients for 3rd party apps.
      */
     public function getClientEntity($clientIdentifier, $grantType = null, $clientSecret = null, $mustValidateSecret = true)
     {
         $clients = [
             'mobile' => [
-                'secret'          => $this->config->get('oauth')['clients']['mobile']['secret'],
-                'name'            => 'Mobile',
-                'redirect_uri'    => '',
+                'secret' => $this->config->get('oauth')['clients']['mobile']['secret'],
+                'name' => 'Mobile',
+                'redirect_uri' => '',
                 'is_confidential' => $grantType === 'password' || $grantType === 'refresh_token' ? false : true,
+            ],
+            'checkout' => [
+                'redirect_uri' => $this->config->get('checkout_url'),
             ],
         ];
 
@@ -59,5 +61,4 @@ class ClientRepository implements ClientRepositoryInterface
 
         return $client;
     }
-
 }
