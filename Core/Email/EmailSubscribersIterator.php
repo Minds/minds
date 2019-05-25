@@ -125,7 +125,7 @@ class EmailSubscribersIterator implements \Iterator
         $users = $this->builder->get(['guids' => $guids]);
 
         if (!$users) {
-            $this->valid = false;
+            return $this->getSubscribers();
             return;
         }
 
