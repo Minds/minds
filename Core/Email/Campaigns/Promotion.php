@@ -53,7 +53,8 @@ class Promotion extends EmailCampaign
             throw new \Exception('You must set a templatePath');
         }
         $this->template->setTemplate('default.tpl');
-
+        $this->template->toggleMarkdown(true);
+            
         $this->template->setBody("./Templates/$this->templateKey.tpl");
 
         $this->template->set('user', $this->user);
@@ -65,7 +66,7 @@ class Promotion extends EmailCampaign
         $this->template->set('topic', $this->topic);
 
         //do not reward twice
-        $validatorHash = sha1($this->campaign . $this->topic . $this->user->guid . Config::_()->get('emails_secret'));
+        $validatorHash = sha1($this->campaign . $this->templateKey . $this->topic . $this->user->guid . Config::_()->get('emails_secret'));
         $this->template->set('validator', $validatorHash);
 
         $message = new Message();
@@ -76,8 +77,7 @@ class Promotion extends EmailCampaign
             ->setHtml($this->template);
 
         //send email
-        $this->mailer->queue($message);
-        exit;
+        $this->mailer->send($message);
     }
 
 }
