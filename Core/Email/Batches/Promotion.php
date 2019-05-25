@@ -93,7 +93,13 @@ class Promotion implements EmailBatchInterface
         $i = 0;
         foreach ($iterator as $user) {
             ++$i;
-            echo "\n[$i]:$user->guid ";
+//            $user = new \Minds\Entities\User('markna');
+//            $user->bounced = false;
+
+            if ($user->bounced) {
+                echo "\n[$i]: $user->guid ($iterator->offset) bounced";
+                continue;
+            }
 
             $campaign = new Campaigns\Promotion();
 
@@ -103,7 +109,8 @@ class Promotion implements EmailBatchInterface
                 ->setSubject($this->subject)
                 ->send();
 
-            echo ' (queued)';
+            echo "\n[$i]:$user->guid ($iterator->offset)";
+//            exit;
         }
     }
 }
