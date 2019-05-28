@@ -43,6 +43,9 @@ class Manager
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
+    /** @var Security\Spam */
+    protected $spam;
+
     /**
      * Manager constructor.
      * @param Repository|null $repository
@@ -55,7 +58,8 @@ class Manager
         $threadNotifications = null,
         $createEventDispatcher = null,
         $countCache = null,
-        $entitiesBuilder = null
+        $entitiesBuilder = null,
+        $spam = null
     )
     {
         $this->repository = $repository ?: new Repository();
@@ -66,6 +70,7 @@ class Manager
         $this->createEventDispatcher = $createEventDispatcher ?: new Delegates\CreateEventDispatcher();
         $this->countCache = $countCache ?: new Delegates\CountCache();
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
+        $this->spam = $spam ?: Di::_()->get('Security\Spam');
     }
 
     public function get($entity_guid, $parent_path, $guid)
@@ -129,6 +134,8 @@ class Manager
         if (!$this->acl->interact($entity, $owner, "comment")) {
             throw new \Exception();
         }
+
+        $this->spam->check($comment);
 
         if (
             !$comment->getOwnerGuid() ||

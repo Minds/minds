@@ -12,6 +12,7 @@ use Minds\Core\Comments\Repository;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Luid;
 use Minds\Core\Security\ACL;
+use Minds\Core\Security\Spam;
 use Minds\Entities\Entity;
 use Minds\Entities\User;
 use Minds\Exceptions\BlockedUserException;
@@ -44,6 +45,9 @@ class ManagerSpec extends ObjectBehavior
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
+    /** @var Security\Spam */
+    protected $spam;
+
     function let(
         Repository $repository,
         LegacyRepository $legacyRepository,
@@ -52,7 +56,8 @@ class ManagerSpec extends ObjectBehavior
         ThreadNotifications $threadNotifications,
         CreateEventDispatcher $createEventDispatcher,
         CountCache $countCache,
-        EntitiesBuilder $entitiesBuilder
+        EntitiesBuilder $entitiesBuilder,
+        Spam $spam
     ) {
         $this->beConstructedWith(
             $repository,
@@ -62,7 +67,8 @@ class ManagerSpec extends ObjectBehavior
             $threadNotifications,
             $createEventDispatcher,
             $countCache,
-            $entitiesBuilder
+            $entitiesBuilder,
+            $spam
         );
 
         $this->repository = $repository;
@@ -73,6 +79,7 @@ class ManagerSpec extends ObjectBehavior
         $this->createEventDispatcher = $createEventDispatcher;
         $this->countCache = $countCache;
         $this->entitiesBuilder = $entitiesBuilder;
+        $this->spam = $spam;
     }
 
     function it_is_initializable()
