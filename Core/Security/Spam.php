@@ -401,6 +401,7 @@ class Spam
             'pornopoisk.info',
             'localmodels.online',
             'kaikki-mallit.com',
+            'hotswishes.com',
         ];
     }
 
