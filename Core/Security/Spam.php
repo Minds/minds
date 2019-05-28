@@ -393,6 +393,14 @@ class Spam
             '/media4.picsearch.com',
             'slotsbonus777.com',
             'nudegirls.info',
+            'aidagirls.com',
+            'alsoloves.com',
+            'hotswishes.com',
+            'instaphoto.club',
+            'intimspace.com',
+            'pornopoisk.info',
+            'localmodels.online',
+            'kaikki-mallit.com',
         ];
     }
 
