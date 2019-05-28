@@ -70,7 +70,7 @@ class Manager
             'include_only' => null,
             'active_threshold' => 5 * 60,
             'jury_size' => 12,
-            'awaiting_ttl' => 120,
+            'awaiting_ttl' => 300,
         ], $opts);
 
         // Get a fresh report to collect completed jurors
@@ -99,7 +99,7 @@ class Manager
         // Check how many are missing
 
         $missing = $opts['jury_size'] - count(array_filter($summonses, function (Summons $summons) {
-            return $summons->isAccepted() || $summons->isAwaiting();
+            return $summons->isAccepted();
         }));
 
         // If we have a full jury, don't summon
@@ -107,6 +107,12 @@ class Manager
         if ($missing <= 0) {
             return 0;
         }
+
+        // Check how many accepted or are awaiting, it's needed to know the approximate pool size
+
+        $poolSize = $opts['jury_size'] - count(array_filter($summonses, function (Summons $summons) {
+            return $summons->isAccepted() || $summons->isAwaiting();
+        }));
 
         // Create an array of channel GUIDs that are involved in this case
 
@@ -127,7 +133,7 @@ class Manager
         // Pick up to missing size
 
         $cohort = $this->cohort->pick([
-            'size' => $missing,
+            'size' => $poolSize,
             'for' => $appeal->getOwnerGuid(),
             'except' => $alreadyInvolvedGuids,
             'except_hashes' => $alreadyInvolvedPhoneHashes,

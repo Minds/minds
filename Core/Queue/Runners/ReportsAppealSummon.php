@@ -51,8 +51,8 @@ class ReportsAppealSummon implements QueueRunner
                     'include_only' => $cohort ?: null,
                 ]);
 
-                if ($missing > 0) {
-                    echo "Missing {$missing} juror(s). Deferring..." . PHP_EOL;
+                if ($missing > 0 || $appeal->getReport()->getState() === 'appealed') {
+                    echo "There are {$missing} juror(s). Deferring until case is out of `appealed` state..." . PHP_EOL;
                     $manager->defer($appeal);
                 }
 
