@@ -217,12 +217,14 @@ class channel implements Interfaces\Api
                     $owner->$field = $update['tags'];
                 }
 
-                /*try {
-                    $spam = new Core\Security\Spam();
-                    $spam->check($owner);
-                } catch (\Exception $e) {
-                    return Factory::response(['status'=>'error', 'message' => $e->getMessage() ]);
-                }*/
+                if ($owner->time_created > 1559032594) {
+                    try {
+                        $spam = new Core\Security\Spam();
+                        $spam->check($owner);
+                    } catch (\Exception $e) {
+                        return Factory::response(['status'=>'error', 'message' => $e->getMessage() ]);
+                    }
+                }
 
                 if (isset($_POST['social_profiles']) && is_array($_POST['social_profiles'])) {
                     $profiles = [];
