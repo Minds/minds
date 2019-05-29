@@ -16,17 +16,17 @@ use Minds\Entities\Boost\BoostEntityInterface;
 class BoostGuidResolverDelegate implements ResolverDelegate
 {
     /**
-     * @var Repository
+     * @var Manager 
      */
-    protected $repository;
+    protected $manager;
 
     /**
      * BoostGuidResolverDelegate constructor.
-     * @param Repository $repository
+     * @param Manager $manager 
      */
-    public function __construct($repository = null)
+    public function __construct($manager = null)
     {
-        $this->repository = $repository ?: Di::_()->get('Boost\Repository');
+        $this->manager = $manager ?: Di::_()->get('Boost\Network\Manager');
     }
 
     /**
@@ -45,15 +45,11 @@ class BoostGuidResolverDelegate implements ResolverDelegate
      */
     public function resolve(array $urns, array $opts = [])
     {
-        $meta = array_map(function (Urn $urn) {
-            return explode(':', $urn->getNss(), 2);
-        }, $urns);
-
         $entities = [];
 
-        foreach ($meta as list($type, $guid)) {
+        foreach ($urns as $urn) {
             /** @var BoostEntityInterface $boost */
-            $boost = $this->repository->getEntity($type, $guid);
+            $boost = $this->manager->get($urn, [ 'hydrate' => true ]);
 
             $entities[] = $boost;
         }
@@ -72,6 +68,7 @@ class BoostGuidResolverDelegate implements ResolverDelegate
         if ($boostedEntity) {
             $boostedEntity->boosted = true;
             $boostedEntity->boosted_guid = $entity->getGuid();
+            $boostedEntity->boosted_onchain = $entity->isOnChain();
             $boostedEntity->urn = $urn;
         }
 
@@ -88,6 +85,6 @@ class BoostGuidResolverDelegate implements ResolverDelegate
             return null;
         }
 
-        return "urn:boost:{$entity->getHandler()}:{$entity->getGuid()}";
+        return "urn:boost:{$entity->getType()}:{$entity->getGuid()}";
     }
 }

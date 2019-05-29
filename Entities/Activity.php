@@ -236,6 +236,7 @@ class Activity extends Entity
         if ($this->boosted_guid) {
             $export['boosted'] = (bool) $this->boosted;
             $export['boosted_guid'] = (string) $this->boosted_guid;
+            $export['boosted_onchain'] = $this->boosted_onchain;
         }
 
         $export['impressions'] = $this->getImpressions();

@@ -126,6 +126,15 @@ class Boost
     }
 
     /**
+     * Return if the boost is an onchain boost
+     * @return boolean
+     */
+    public function isOnChain()
+    {
+        return (strpos($this->getTransactionId(), '0x', 0) === 0);
+    }
+
+    /**
      * Export
      * @param array $fields
      * @return array
