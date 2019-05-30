@@ -110,6 +110,7 @@ class container implements Interfaces\Api
 
         /** @var Core\Feeds\Top\Entities $entities */
         $entities = new Core\Feeds\Top\Entities();
+        $entities->setActor($currentUser);
 
         $isOwner = false;
 

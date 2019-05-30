@@ -5,6 +5,7 @@ namespace Spec\Minds\Core\Feeds\Top;
 use Minds\Core\Blogs\Blog;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Feeds\Top\Entities;
+use Minds\Core\Security\ACL;
 use Minds\Entities\Activity;
 use Minds\Entities\Image;
 use Minds\Entities\User;
@@ -17,10 +18,17 @@ class EntitiesSpec extends ObjectBehavior
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
-    function let(EntitiesBuilder $entitiesBuilder)
+    /** @var ACL */
+    protected $acl;
+
+    function let(
+        EntitiesBuilder $entitiesBuilder,
+        ACL $acl
+    )
     {
+        $this->beConstructedWith($entitiesBuilder, $acl);
         $this->entitiesBuilder = $entitiesBuilder;
-        $this->beConstructedWith($entitiesBuilder);
+        $this->acl = $acl;
     }
 
     function it_is_initializable()
@@ -28,136 +36,12 @@ class EntitiesSpec extends ObjectBehavior
         $this->shouldHaveType(Entities::class);
     }
 
-    function it_should_filter_a_public_entity_if_guest(
-        Activity $activity
-    )
-    {
-        $activity->getAccessID()
-            ->shouldBeCalled()
-            ->willReturn(2);
-
-        $activity->get('pending')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this
-            ->setActor(null)
-            ->filter($activity)
-            ->shouldReturn(true);
-    }
-
-    function it_should_filter_a_public_entity_logged_in(
+    function it_should_filter_a_readable_entity(
         User $actor,
         Activity $activity
     )
     {
-        $actor->get('guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->get('owner_guid')
-            ->shouldBeCalled()
-            ->willReturn(1001);
-
-        $activity->getAccessID()
-            ->shouldBeCalled()
-            ->willReturn(2);
-
-        $activity->get('pending')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this
-            ->setActor($actor)
-            ->filter($activity)
-            ->shouldReturn(true);
-    }
-
-    function it_should_filter_an_unlisted_entity_if_owner(
-        User $actor,
-        Activity $activity
-    )
-    {
-        $actor->get('guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->get('owner_guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->get('pending')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this
-            ->setActor($actor)
-            ->filter($activity)
-            ->shouldReturn(true);
-    }
-
-    function it_should_filter_out_an_unlisted_entity_if_guest(
-        Activity $activity
-    )
-    {
-        $activity->getAccessID()
-            ->shouldBeCalled()
-            ->willReturn(0);
-
-        $activity->get('pending')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this
-            ->setActor(null)
-            ->filter($activity)
-            ->shouldReturn(false);
-    }
-
-    function it_should_filter_out_an_unlisted_entity_if_not_owner(
-        User $actor,
-        Activity $activity
-    )
-    {
-        $actor->get('guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->get('owner_guid')
-            ->shouldBeCalled()
-            ->willReturn(1001);
-
-        $activity->getAccessID()
-            ->shouldBeCalled()
-            ->willReturn(0);
-
-        $activity->get('pending')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this
-            ->setActor($actor)
-            ->filter($activity)
-            ->shouldReturn(false);
-    }
-
-    function it_should_filter_a_pending_group_activity_if_owner(
-        User $actor,
-        Activity $activity
-    )
-    {
-        $actor->get('guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->get('owner_guid')
-            ->shouldBeCalled()
-            ->willReturn(1000);
-
-        $activity->getAccessID()
-            ->willReturn(2000);
-
-        $activity->get('pending')
+        $this->acl->read($activity, $actor)
             ->shouldBeCalled()
             ->willReturn(true);
 
@@ -167,29 +51,46 @@ class EntitiesSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_filter_out_a_pending_group_activity_if_not_owner(
+    function it_should_filter_out_a_unreadable_entity(
         User $actor,
         Activity $activity
     )
     {
-        $actor->get('guid')
+        $this->acl->read($activity, $actor)
             ->shouldBeCalled()
-            ->willReturn(1000);
+            ->willReturn(false);
 
-        $activity->get('owner_guid')
-            ->shouldBeCalled()
-            ->willReturn(1001);
+        $this
+            ->setActor($actor)
+            ->filter($activity)
+            ->shouldReturn(false);
+    }
 
-        $activity->getAccessID()
-            ->shouldBeCalled()
-            ->willReturn(2000);
 
-        $activity->get('pending')
+    function it_should_filter_a_readable_entity_being_guest(
+        Activity $activity
+    )
+    {
+        $this->acl->read($activity, null)
             ->shouldBeCalled()
             ->willReturn(true);
 
         $this
-            ->setActor($actor)
+            ->setActor(null)
+            ->filter($activity)
+            ->shouldReturn(true);
+    }
+
+    function it_should_filter_out_a_unreadable_entity_being_guest(
+        Activity $activity
+    )
+    {
+        $this->acl->read($activity, null)
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->setActor(null)
             ->filter($activity)
             ->shouldReturn(false);
     }

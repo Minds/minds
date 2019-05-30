@@ -12,7 +12,6 @@ use Minds\Core\Entities\Delegates\EntityGuidResolverDelegate;
 use Minds\Core\Entities\Delegates\BoostGuidResolverDelegate;
 use Minds\Core\Entities\Delegates\ResolverDelegate;
 use Minds\Core\Security\ACL;
-use Minds\Entities\Activity;
 use Minds\Entities\User;
 use Minds\Helpers\Flags;
 
@@ -130,15 +129,6 @@ class Resolver
         $sorted = array_filter($sorted, function($entity) { 
             return $this->acl->read($entity, $this->user);
                 //&& !Flags::shouldFail($entity);
-        });
-
-        // Filter out pending activities
-
-        $sorted = array_filter($sorted, function($entity) {
-            $isOwner = $this->user && $this->user->guid == $entity->owner_guid;
-            $isPending = $entity instanceof Activity && $entity->getPending();
-
-            return $isOwner || !$isPending;
         });
 
         //

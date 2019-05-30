@@ -36,7 +36,13 @@ class Events
             $group = $entity->getContainerEntity();
 
             if ($group instanceof GroupEntity) {
+                /** @var Membership $membership */
                 $membership = Membership::_($group);
+
+                if ($entity instanceof Activity && $entity->getPending()) {
+                    $e->setResponse($group->isOwner($user->guid));
+                    return;
+                }
 
                 $e->setResponse($group->isPublic() || $membership->isMember($user->guid));
             }

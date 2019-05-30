@@ -145,6 +145,7 @@ class feeds implements Interfaces\Api
 
         /** @var Core\Feeds\Top\Entities $entities */
         $entities = new Core\Feeds\Top\Entities();
+        $entities->setActor($currentUser);
 
         $opts = [
             'cache_key' => Core\Session::getLoggedInUserGuid(),
