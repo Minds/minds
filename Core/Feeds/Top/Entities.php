@@ -10,6 +10,7 @@ namespace Minds\Core\Feeds\Top;
 use Minds\Core\Blogs\Blog;
 use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
+use Minds\Core\Security\ACL;
 use Minds\Entities\Activity;
 use Minds\Entities\Group;
 use Minds\Entities\Image;
@@ -21,12 +22,23 @@ class Entities
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
+    /** @var ACL */
+    protected $acl;
+
     /** @var User */
     protected $actor = null;
 
-    public function __construct($entitiesBuilder = null)
+    /**
+     * Entities constructor.
+     * @param EntitiesBuilder $entitiesBuilder
+     * @param ACL $acl
+     */
+    public function __construct(
+        $entitiesBuilder = null, $acl = null
+    )
     {
         $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
+        $this->acl = $acl ?: ACL::_();
     }
 
     /**
@@ -45,10 +57,7 @@ class Entities
      */
     public function filter($entity)
     {
-        $isOwner = $this->actor && $entity->owner_guid && $this->actor->guid == $entity->owner_guid;
-        $isPending = $entity instanceof Activity && $entity->pending;
-
-        return $isOwner || ($entity->getAccessId() > 0 && !$isPending);
+        return $this->acl->read($entity, $this->actor ?: null);
     }
 
     /**
