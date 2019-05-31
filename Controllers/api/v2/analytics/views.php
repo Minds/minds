@@ -21,6 +21,8 @@ class views implements Interfaces\Api
 
     public function post($pages)
     {
+        $viewsManager = new Core\Analytics\Views\Manager();
+
         switch ($pages[0]) {
             case 'boost':
                 $expire = Di::_()->get('Boost\Network\Expire');
@@ -46,6 +48,18 @@ class views implements Interfaces\Api
 
                 Counters::increment($boost->getEntity()->guid, "impression");
                 Counters::increment($boost->getEntity()->owner_guid, "impression");
+
+                try {
+                    // TODO: Ensure client_meta campaign matches this boost
+
+                    $viewsManager->record(
+                        (new Core\Analytics\Views\View())
+                            ->setEntityUrn($boost->getEntity()->getUrn())
+                            ->setClientMeta($_POST['client_meta'] ?? [])
+                    );
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
 
                 return Factory::response([
                     'status' => 'success',
@@ -88,6 +102,17 @@ class views implements Interfaces\Api
                 } catch (\Exception $e) {
                     error_log($e->getMessage());
                 }
+
+                try {
+                    $viewsManager->record(
+                        (new Core\Analytics\Views\View())
+                            ->setEntityUrn($activity->getUrn())
+                            ->setClientMeta($_POST['client_meta'] ?? [])
+                    );
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
+
                 break;
         }
 
