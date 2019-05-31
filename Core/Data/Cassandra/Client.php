@@ -24,6 +24,7 @@ class Client implements Interfaces\ClientInterface
 
         $this->cluster = Driver::cluster()
            ->withContactPoints(... $options['cql_servers'])
+           ->withCredentials($options['username'], $options['password'])
            ->withLatencyAwareRouting(true)
            ->withDefaultConsistency(Driver::CONSISTENCY_QUORUM)
            ->withRetryPolicy(new Driver\RetryPolicy\Logging($retry_policy))
