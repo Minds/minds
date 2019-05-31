@@ -10,6 +10,7 @@ namespace Minds\Core\Entities\Actions;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
+use Minds\Helpers\MagicAttributes;
 
 class Save
 {
@@ -96,12 +97,22 @@ class Save
         if (method_exists($this->entity, 'getOwnerEntity') && $this->entity->getOwnerEntity()) {
             $nsfwReasons = array_merge($nsfwReasons, $this->entity->getOwnerEntity()->getNSFW());
             $nsfwReasons = array_merge($nsfwReasons, $this->entity->getOwnerEntity()->getNSFWLock());
+            // Legacy explicit follow through
+            if ($this->entity->getOwnerEntity()->isMature()) {
+                $nsfwReasons = array_merge($nsfwReasons, [ 6 ]);
+                if (MagicAttributes::setterExists($this->entity, 'setMature')) {
+                    $this->entity->setMature(true);
+                } elseif (method_exists($this->entity, 'setFlag')) {
+                    $this->entity->setFlag('mature', true);
+                }
+            }
         }
+
         if (method_exists($this->entity, 'getContainerEntity') && $this->entity->getContainerEntity()) {
             $nsfwReasons = array_merge($nsfwReasons, $this->entity->getContainerEntity()->getNSFW());
             $nsfwReasons = array_merge($nsfwReasons, $this->entity->getContainerEntity()->getNSFWLock());
         }
-    
+
         $this->entity->setNSFW($nsfwReasons);
     }
 }

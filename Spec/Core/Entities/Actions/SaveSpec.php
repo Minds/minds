@@ -90,6 +90,10 @@ class SaveSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn([]);
 
+        $owner->isMature()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
         $activity->getOwnerEntity()
             ->shouldBeCalled()
             ->willReturn($owner);
@@ -127,6 +131,10 @@ class SaveSpec extends ObjectBehavior
         $owner->getNsfwLock()
             ->shouldBeCalled()
             ->willReturn($nsfw);
+
+        $owner->isMature()
+            ->shouldBeCalled()
+            ->willReturn(false);
 
         $activity->getOwnerEntity()
             ->shouldBeCalled()

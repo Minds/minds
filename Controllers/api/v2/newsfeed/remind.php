@@ -11,6 +11,7 @@ use Minds\Helpers;
 use Minds\Helpers\Counters;
 use Minds\Interfaces;
 use Minds\Interfaces\Flaggable;
+use Minds\Core\Entities\Actions\Save;
 
 class remind implements Interfaces\Api
 {
@@ -59,6 +60,7 @@ class remind implements Interfaces\Api
             }
         }*/
 
+        $save = new Save();
         $activity = new Activity();
         $activity->setNSFW($embedded->getNSFW());
 
@@ -74,7 +76,7 @@ class remind implements Interfaces\Api
                 } else {
                     $activity->setRemind($embedded->export())->save();
                 }
-                $activity->save();
+                $save->setEntity($activity)->save();
                 break;
             default:
                 /**
@@ -89,8 +91,8 @@ class remind implements Interfaces\Api
                                 ->setURL($embedded->getURL())
                                 ->setThumbnail($embedded->getIconUrl())
                                 ->setFromEntity($embedded)
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         } else {
                             $activity->setRemind((new Activity())
                                 ->setTimeCreated($embedded->getTimeCreated())
@@ -100,8 +102,8 @@ class remind implements Interfaces\Api
                                 ->setThumbnail($embedded->getIconUrl())
                                 ->setFromEntity($embedded)
                                 ->export())
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         }
                         break;
                     case 'video':
@@ -114,8 +116,8 @@ class remind implements Interfaces\Api
                                 ])
                                 ->setTitle($embedded->title)
                                 ->setBlurb($embedded->description)
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         } else {
                             $activity = new Activity();
                             $activity->setRemind(
@@ -132,8 +134,8 @@ class remind implements Interfaces\Api
                                     ->setBlurb($embedded->description)
                                     ->export()
                             )
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         }
                         break;
                     case 'image':
@@ -150,8 +152,8 @@ class remind implements Interfaces\Api
                                 ->setFromEntity($embedded)
                                 ->setTitle($embedded->title)
                                 ->setBlurb($embedded->description)
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         } else {
                             $activity->setRemind(
                                 (new Activity())
@@ -171,8 +173,8 @@ class remind implements Interfaces\Api
                                     ->setBlurb($embedded->description)
                                     ->export()
                             )
-                                ->setMessage($message)
-                                ->save();
+                                ->setMessage($message);
+                            $save->setEntity($activity)->save();
                         }
                         break;
                 }
