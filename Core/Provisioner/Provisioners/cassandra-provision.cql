@@ -1371,3 +1371,19 @@ CREATE TABLE minds.sendwyre_accounts (
     sendwyre_account_id text,
     PRIMARY KEY (user_guid)
 );
+
+CREATE TABLE minds.views (
+  year int,
+  month tinyint,
+  day tinyint,
+  uuid timeuuid,
+  entity_urn text,
+  page_token text,
+  position int,
+  platform text,
+  source text,
+  medium text,
+  campaign text,
+  delta int,
+  PRIMARY KEY (year, month, day, uuid, entity_urn, page_token)
+);
