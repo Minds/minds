@@ -63,7 +63,7 @@ class SitemapTrending extends SitemapModule
                     $route = $entity->username;
                     break;
                 case 'blogs':
-                    $route = 'blog/view/' . $entity->guid;
+                    $route = $entity->getUrl(true);
                     break;
                 case 'groups':
                     $route = 'groups/profile' . $entity->guid;
