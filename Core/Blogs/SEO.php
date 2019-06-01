@@ -114,7 +114,7 @@ class SEO
             $body = substr($body, 0, 139) . '…';
         }
 
-        $url = $blog->getPermaURL();
+        $url = $blog->getPermaURL() ?: $blog->getUrl();
         $ssl = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
             (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
 
