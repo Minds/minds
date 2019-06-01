@@ -82,7 +82,7 @@ class SitemapTrending extends SitemapModule
 
         $result = $this->topManager->getList([
             'type' => $key,
-            'limit' => 1000,
+            'limit' => 500,
             'sync' => false,
             'algorithm' => 'top',
             'period' => $period,
