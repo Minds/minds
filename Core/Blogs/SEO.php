@@ -129,7 +129,7 @@ class SEO
         $allowIndexing = Counters::get($blog->getGuid(), 'thumbs:up') >= 2;
 
         return $meta = array(
-            'title' => $custom_meta['title'] ?: $blog->getTitle(),
+            'title' => ($custom_meta['title'] ?: $blog->getTitle()) . ' | ' .  Core\Di\Di::_()->get('Config')->site_name,
             'description' => $custom_meta['description'] ?: $body,
             'author' => $custom_meta['author'] ?: '@' . $blog->getOwnerObj()['username'],
             'og:title' => $custom_meta['title'] ?: $blog->getTitle(),
