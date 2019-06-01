@@ -5,16 +5,16 @@ namespace Minds\Core\SEO\Sitemaps\Modules;
 use Minds\Core\Di\Di;
 use Minds\Core\Entities;
 use Minds\Core\SEO\Sitemaps\SitemapModule;
-use Minds\Core\Trending\Repository;
+use Minds\Core\Feeds\Top\Manager;
 
 class SitemapTrending extends SitemapModule
 {
-    /** @var Repository */
-    protected $trendingRepository;
+    /** @var Manager */
+    protected $topManager;
 
     public function __construct()
     {
-        $this->trendingRepository = Di::_()->get('Trending\Repository');
+        $this->topManager = Di::_()->get('Feeds\Top\Manager');
     }
 
     public function collect($pages, $segments)
@@ -24,28 +24,37 @@ class SitemapTrending extends SitemapModule
         } else {
             $param = $segments[0];
         }
+
+        $period = $pages[1] ?? '24h';
+
         switch ($param) {
+            case 'activity':
+              $key = 'activity';
+              break;
             case 'channels':
-                $key = 'channels';
+                $key = 'user';
                 break;
             case 'images':
-                $key = 'images';
+                $key = 'object:image';
                 break;
             case 'videos':
-                $key = 'videos';
+                $key = 'object:video';
                 break;
             case 'blogs':
-                $key = 'blogs';
+                $key = 'object:blog';
                 break;
             case 'groups':
-                $key = 'groups';
+                $key = 'group';
                 break;
         }
 
-        $entities = $this->getEntities($key);
+        $entities = $this->getEntities($key, $period);
         foreach ($entities as $entity) {
             $route = '';
             switch ($param) {
+                case 'activity':
+                    $route = 'newsfeed/' . $entity->guid;
+                    break;
                 case 'images':
                 case 'videos':
                     $route = 'media/' . $entity->guid;
@@ -61,21 +70,24 @@ class SitemapTrending extends SitemapModule
                     break;
             }
 
-            $this->addOrUpdateRoute($route, time());
+            $this->addOrUpdateRoute($route, $entity->time_updated);
         }
     }
 
-    private function getEntities($key)
+    private function getEntities($key, $period = '24h')
     {
         if (!isset($key)) {
             return [];
         }
 
-        $result = $this->trendingRepository->getList(['type' => $key, 'limit' => 50]);
-        if (!$result) {
-            return [];
-        }
-        $guids = $result['guids'];
-        return Entities::get(['guids' => $guids]);
+        $result = $this->topManager->getList([
+            'type' => $key,
+            'limit' => 1000,
+            'sync' => false,
+            'algorithm' => 'top',
+            'period' => $period,
+        ]);
+        
+        return $result; 
     }
 }
