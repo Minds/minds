@@ -5,6 +5,7 @@ namespace Minds\Core\Blogs;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
+use Minds\Helpers\Counters;
 
 class SEO
 {
@@ -123,6 +124,10 @@ class SEO
 
         $custom_meta = $blog->getCustomMeta();
 
+        // More than 2 votes allows indexing to search engines (prevents spam)
+
+        $allowIndexing = Counters::get($blog->getGuid(), 'thumbs:up') >= 2;
+
         return $meta = array(
             'title' => $custom_meta['title'] ?: $blog->getTitle(),
             'description' => $custom_meta['description'] ?: $body,
@@ -136,7 +141,7 @@ class SEO
             'og:image:height' => 1000,
             'al:ios:url' => 'minds://blog/view/' . $blog->getGuid(),
             'al:android:url' => 'minds://blog/view/' . $blog->getGuid(),
-            'robots' => $blog->getRating() == 1 ? 'all' : 'noindex',
+            'robots' => $allowIndexing ? 'all' : 'noindex',
         );
     }
 }

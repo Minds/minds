@@ -8,6 +8,7 @@ namespace Minds\Core\SEO;
 use Minds\Core;
 use Minds\Entities;
 use Minds\Helpers;
+use Minds\Helpers\Counters;
 
 class Defaults
 {
@@ -109,6 +110,10 @@ class Defaults
                     $activity = new Entities\Activity($activity->remind_object);
                 }
 
+                // More than 2 votes allows indexing to search engines (prevents spam)
+
+                $allowIndexing = Counters::get($activity->getGuid(), 'thumbs:up') >= 2;
+
                 $meta = [
                   'title' => $activity->title ?: $activity->message,
                   'description' => $activity->blurb ?: "@{$activity->ownerObj['username']} on {$this->config->site_name}",
@@ -122,7 +127,7 @@ class Defaults
                   'twitter:card' => 'summary',
                   'al:ios:url' => 'minds://activity/' . $activity->guid,
                   'al:android:url' => 'minds://minds/activity/' . $activity->guid,
-                  'robots' => $activity->getRating() == 1 ? 'all' : 'noindex',
+                  'robots' => $allowIndexing ? 'all' : 'noindex',
                 ];
 
                 if ($activity->custom_type == 'video') {
