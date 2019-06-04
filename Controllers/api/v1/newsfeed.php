@@ -596,7 +596,7 @@ class newsfeed implements Interfaces\Api
 
                     $attachment->setNsfw($activity->getNsfw());
 
-                    $attachment->save();
+                    $save->setEntity($attachment)->save();
 
                     switch ($attachment->subtype) {
                         case "image":
@@ -644,7 +644,7 @@ class newsfeed implements Interfaces\Api
 
                     if ($activity->getPending() && $attachment) {
                         $attachment->access_id = 0;
-                        $attachment->save();
+                        $save->setEntity($attachment)->save();
                     }
                 }
 
