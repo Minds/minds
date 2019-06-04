@@ -147,6 +147,12 @@ class ManagerSpec extends ObjectBehavior
         $this->spam->check($blog)
             ->shouldBeCalled();
 
+        $blog->getType()
+            ->willReturn('object');
+
+        $blog->getSubtype()
+            ->willReturn('blog');
+
         $blog->setTimeCreated(Argument::type('int'))
             ->shouldBeCalled()
             ->willReturn($blog);
@@ -268,6 +274,12 @@ class ManagerSpec extends ObjectBehavior
             null,
             $this->search
         );
+
+        $blog->getType()
+            ->willReturn('object');
+
+        $blog->getSubtype()
+            ->willReturn('blog');
 
         $blog->getBody()
             ->shouldBeCalled()
