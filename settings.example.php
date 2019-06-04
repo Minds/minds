@@ -9,7 +9,9 @@ $CONFIG->minds_debug = true;
 $CONFIG->cassandra = (object) [
     'keyspace'    => '{{cassandra-keyspace}}',
     'servers'     => [ '{{cassandra-server}}' ],
-    'cql_servers' => [ '{{cassandra-server}}' ]
+    'cql_servers' => [ '{{cassandra-server}}' ],
+    'username' => 'cassandra',
+    'password' => 'cassandra',
 ];
 
 $CONFIG->database = [
