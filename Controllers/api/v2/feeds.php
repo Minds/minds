@@ -121,10 +121,7 @@ class feeds implements Interfaces\Api
 
         $asActivities = (bool) ($_GET['as_activities'] ?? true);
 
-        $query = null;
-        if (isset($_GET['query'])) {
-            $query = strtolower($_GET['query']);
-        }
+        $query = $_GET['query'] ?? null;
 
         $container_guid = $_GET['container_guid'] ?? null;
         $custom_type = isset($_GET['custom_type']) && $_GET['custom_type'] ? [$_GET['custom_type']] : null;

@@ -91,6 +91,10 @@ class Manager
             'filter_hashtags' => false,
         ], $opts);
 
+        if (isset($opts['query'])) {
+            $opts['query'] = str_replace('#', '', strtolower($opts['query']));
+        }
+
         if (isset($opts['query']) && $opts['query'] && in_array($opts['type'], ['user', 'group'])) {
             $result = $this->search($opts);
 
