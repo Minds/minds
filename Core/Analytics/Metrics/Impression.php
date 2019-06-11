@@ -1,7 +1,7 @@
 <?php
 /**
-* Impression Metric
-*/
+ * Impression Metric
+ */
 namespace Minds\Core\Analytics\Metrics;
 
 use Minds\Helpers;

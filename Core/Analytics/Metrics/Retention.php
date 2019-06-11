@@ -70,7 +70,7 @@ class Retention implements AnalyticsMetric
             foreach ($signups as $signup => $ts) {
                 if ($this->wasActive($signup, $now)) {
                     $this->db->insert("{$this->namespace}:$x:$now", [$signup=>time()]);
-                    echo "\r $x: $signup (active) $offset"; 
+                    echo "\r $x: $signup (active) $offset";
                 } else {
                     echo "\r $x: $signup (not active) $offset";
                 }
@@ -168,7 +168,7 @@ class Retention implements AnalyticsMetric
         if ($result['hits']['total'] >= 1) {
             return true;
         }
-        
+
         return false;
     }
 

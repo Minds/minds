@@ -135,12 +135,12 @@ class Active implements AnalyticsMetric
 
             ]
         ];
-        
+
         $prepared = new Core\Data\ElasticSearch\Prepared\Search();
         $prepared->query($query);
 
         $result = $this->client->request($prepared);
-        
+
         $data = [];
         foreach ($result['aggregations']['counts']['buckets'] as $count) {
             $data[] = [
