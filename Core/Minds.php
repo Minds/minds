@@ -98,6 +98,7 @@ class Minds extends base
         (new Plus\PlusProvider())->register();
         (new Hashtags\HashtagsProvider())->register();
         (new Feeds\FeedsProvider())->register();
+        (new Analytics\AnalyticsProvider())->register();
     }
 
     /**

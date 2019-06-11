@@ -1372,6 +1372,13 @@ CREATE TABLE minds.sendwyre_accounts (
     PRIMARY KEY (user_guid)
 );
 
+CREATE TABLE analytics_graphs (
+  key text,
+  last_synced timestamp,
+  data text,
+  PRIMARY KEY(key)
+); 
+
 CREATE TABLE minds.views (
   year int,
   month tinyint,
