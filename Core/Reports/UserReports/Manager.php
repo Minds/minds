@@ -80,6 +80,13 @@ class Manager
         if ($report->getState() === 'appeal_jury_decided' && $report->isUpheld()) {
             return true; // Do not accept further reports if appeal jury uphols
         }
+        
+        if ($report->getReasonCode() == 2
+            && $report->getEntity()->getNsfw()
+            && in_array($report->getSubReasonCode(), $report->getEntity()->getNsfw())
+        ) {
+            return true; // If the post is NSFW and tagged, do not allow report
+        }
 
         if ($report->getState() !== 'reported') {
             $report->setTimestamp(time()); // Create a new report

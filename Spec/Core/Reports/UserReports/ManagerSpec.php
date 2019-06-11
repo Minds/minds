@@ -9,6 +9,7 @@ use Minds\Core\Reports\UserReports\UserReport;
 use Minds\Core\Reports\UserReports\Delegates;
 use Minds\Core\Reports\Report;
 use Minds\Core\Reports\Manager as ReportsManager;
+use Minds\Entities\Activity;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -53,6 +54,39 @@ class ManagerSpec extends ObjectBehavior
 
         $userReport = new UserReport;
         $userReport->setReport(new Report);
+        $this->add($userReport)
+            ->shouldReturn(true);
+    }
+
+    function it_should_not_double_report_marked_nsfw_repository(Report $report)
+    {
+        $entity = new Activity();
+        $entity->setNsfw([ 3 ]);
+
+        $report->getReasonCode()
+            ->willReturn(2);
+        
+        $report->getSubReasonCode()
+            ->willReturn(3);
+            
+        $report->getEntity()
+            ->willReturn($entity);
+
+        $report->getState()
+            ->willReturn('reported');
+
+        $this->repository->add(Argument::type(UserReport::class))
+            ->shouldNotBeCalled();
+
+        $this->reportsManager->getLatestReport(Argument::type(Report::class))
+            ->shouldBeCalled()
+            ->willReturn($report);
+        
+        $this->notificationDelegate->onAction(Argument::type(UserReport::class))
+            ->shouldNotBeCalled();
+
+        $userReport = new UserReport;
+        $userReport->setReport($report);
         $this->add($userReport)
             ->shouldReturn(true);
     }
