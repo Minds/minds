@@ -104,6 +104,68 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeAResponse([$entity2, $entity1]);
     }
 
+    public function it_should_get_list_by_query(
+        ScoredGuid $scoredGuid1,
+        ScoredGuid $scoredGuid2,
+        Entity $entity1,
+        Entity $entity2
+    )
+    {
+        $scoredGuid1->getGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $scoredGuid1->getScore()
+            ->shouldBeCalled()
+            ->willReturn(500);
+
+        $scoredGuid1->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $scoredGuid1->getTimestamp()
+            ->shouldBeCalled()
+            ->willReturn(2);
+
+        $entity1->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $scoredGuid2->getGuid()
+            ->shouldBeCalled()
+            ->willReturn(5001);
+
+        $scoredGuid2->getScore()
+            ->shouldBeCalled()
+            ->willReturn(800);
+
+        $scoredGuid2->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1001);
+
+        $scoredGuid2->getTimestamp()
+            ->shouldBeCalled()
+            ->willReturn(1);
+
+        $entity2->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(5001);
+
+        $this->repository->getList(Argument::withEntry('query', 'activity with hashtags'))
+            ->shouldBeCalled()
+            ->willReturn([$scoredGuid1, $scoredGuid2]);
+
+        $this->entitiesBuilder->get(['guids' => [5000, 5001]])
+            ->shouldBeCalled()
+            ->willReturn([$entity1, $entity2]);
+
+        $this
+            ->getList([
+                'query' => 'Activity with #hashtags',
+            ])
+            ->shouldBeAResponse([$entity2, $entity1]);
+    }
+
     function getMatchers()
     {
         $matchers = [];

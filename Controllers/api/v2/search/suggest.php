@@ -34,10 +34,12 @@ class suggest implements Interfaces\Api, Interfaces\ApiIgnorePam
         $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 12;
         $hydrate = isset($_GET['hydrate']) && $_GET['hydrate'];
 
+        $query = str_replace('#', '', $_GET['q']);
+
         // TODO: get strict taxonomy from pages[0] when multiple suggests are implemented
 
         try {
-            $entities = $search->suggest('user', $_GET['q'], $limit);
+            $entities = $search->suggest('user', $query, $limit);
             $entities = array_values(array_filter($entities, function ($entity) {
                 return isset($entity['guid']);
             }));
