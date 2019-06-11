@@ -91,7 +91,7 @@ class Manager
             'filter_hashtags' => false,
         ], $opts);
 
-        if (isset($opts['query'])) {
+        if (isset($opts['query']) && $opts['query']) {
             $opts['query'] = str_replace('#', '', strtolower($opts['query']));
         }
 
