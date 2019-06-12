@@ -114,7 +114,7 @@ class Manager
 
             $ownerGuid = $scoredGuid->getOwnerGuid() ?: $scoredGuid->getGuid();
 
-            if (++$i < $opts['single_owner_threshold']
+            if ($i < $opts['single_owner_threshold']
                 && isset($owners[$ownerGuid])
                 && !$opts['filter_hashtags']
                 && !in_array($opts['type'], [ 'user', 'group' ])
@@ -122,6 +122,8 @@ class Manager
                 continue;
             }
             $owners[$ownerGuid] = true;
+
+            ++$i; // Update here as we don't want to count skipped
 
             $feedSyncEntities[] = (new FeedSyncEntity())
                 ->setGuid((string) $scoredGuid->getGuid())
