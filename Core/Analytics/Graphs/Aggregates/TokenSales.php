@@ -599,11 +599,11 @@ class TokenSales implements AggregateInterface
             [
                 "match_phrase" => [
                     "transactionCategory" => [
-                        "query" => "wire"
+                        "query" => "sale"
                     ]
                 ]
             ],
-            [
+            /*[
                 "match_phrase" => [
                     "isTokenTransaction" => [
                         "query" => true
@@ -616,7 +616,7 @@ class TokenSales implements AggregateInterface
                         "query" => "approveAndCall"
                     ]
                 ]
-            ]
+            ]*/
         ];
 
         $query = [
