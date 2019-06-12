@@ -76,6 +76,7 @@ class AutoReporterSpec extends ObjectBehavior
                 ->setAppeal(null)
                 ->setAction('uphold')
                 ->setReport($report)
+                ->setUphold(true)
                 ->setTimestamp(1)
                 ->setJurorGuid($this->stewardUser->guid)
                 ->setJurorHash(null);

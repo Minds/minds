@@ -100,6 +100,21 @@ class DataProvider extends Provider
             return new PubSub\Redis\Client();
         }, ['useFactory'=>true]);
         /**
+         * Redis
+         */
+        $this->di->bind('Redis', function ($di) {
+            $master = $di->get('Config')->redis['master'];
+            $client = new Redis\Client();
+            $client->connect($master);
+            return $client;
+        }, ['useFactory'=>true]);
+        $this->di->bind('Redis\Slave', function ($di) {
+            $slave = $di->get('Config')->redis['slave'];
+            $client = new Redis\Client();
+            $client->connect($slave);
+            return $client;
+        }, ['useFactory'=>true]);
+        /**
          * Prepared statements
          */
         $this->di->bind('Prepared\MonetizationLedger', function ($di) {

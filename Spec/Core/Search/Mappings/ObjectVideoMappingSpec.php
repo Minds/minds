@@ -39,6 +39,8 @@ class ObjectVideoMappingSpec extends ObjectBehavior
 
         $video->getFlag('mature')->willReturn(false);
         $video->getFlag('paywall')->willReturn(false);
+        $video->get('moderator_guid')->willReturn('123');
+        $video->get('time_moderated')->willReturn($now);
         $video->getNsfw()->willReturn([ 1 ]);
 
         $this
@@ -71,6 +73,8 @@ class ObjectVideoMappingSpec extends ObjectBehavior
                 'public' => true,
                 'tags' => [ 'test', 'hashtag' ],
                 'nsfw' => [ 1 ],
+                'moderator_guid' => '123',
+                '@moderated' => $now * 1000
             ]);
     }
 }

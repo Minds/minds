@@ -38,6 +38,22 @@ class Client
         return $this->redis->delete(...$args);
     }
 
+    public function sAdd(...$args)
+    {
+        return $this->redis->sAdd(...$args);
+    }
+
+    public function sMembers(...$args)
+    {
+        return $this->redis->sMembers(...$args);
+    }
+
+    public function sRem(...$args)
+    {
+        return $this->redis->sRem(...$args);
+    }
+
+
     public function __call($function, $arguments)
     {
         return $this->redis->$function(...$arguments);

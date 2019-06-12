@@ -50,6 +50,8 @@ class Repository
             'query' => null,
             'nsfw' => null,
             'from_timestamp' => null,
+            'exclude_moderated' => false,
+            'moderation_reservations' => null
         ], $opts);
 
         if (!$opts['type']) {
@@ -71,6 +73,7 @@ class Repository
                 '@timestamp',
                 'time_created',
                 'access_id',
+                'moderator_guid',
                 $this->getSourceField($opts['type']),
             ]),
             'query' => [
@@ -276,6 +279,21 @@ class Repository
                     ],
                 ];
             }
+        }
+
+
+        // firehose options
+
+        if ($opts['exclude_moderated']) {
+            $body['query']['function_score']['query']['bool']['must_not'][] = ['exists' => ['field' => 'moderator_guid']];
+        }
+       
+        if ($opts['moderation_reservations']) {
+            $body['query']['function_score']['query']['bool']['must_not'][] = [
+                'terms' => [
+                    'guid' => $opts['moderation_reservations'], 
+                ],
+            ];
         }
 
         //

@@ -68,7 +68,10 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['tags'] = null;
 		$this->attributes['nsfw'] = [];
 		$this->attributes['nsfw_lock'] = [];
-
+		$this->attributes['nsfw'] = [];
+		$this->attributes['nsfw_lock'] = [];
+		$this->attributes['moderator_guid'] = null;
+		$this->attributes['time_moderated'] = null;
 	}
 
 	/**
@@ -1628,4 +1631,21 @@ abstract class ElggEntity extends ElggData implements
 		return "urn:entity:{$this->getGuid()}";
 	}
 
+	/**
+	 * Marks the user as moderated by a user
+	 * @param int $moderatorGuid the moderator
+	 */
+	public function setModeratorGuid($moderatorGuid)
+    {
+        $this->moderator_guid = $moderatorGuid;
+    }
+
+	/**
+	 * Marks the time as when an entity was moderated
+	 * @param int $timeModerated unix timestamp when the entity was moderated
+	 */
+    public function setTimeModerated($timeModerated)
+    {
+        $this->time_moderated = $timeModerated;
+    }
 }

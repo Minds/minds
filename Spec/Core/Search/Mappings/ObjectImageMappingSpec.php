@@ -39,6 +39,8 @@ class ObjectImageMappingSpec extends ObjectBehavior
 
         $image->getFlag('mature')->willReturn(false);
         $image->getFlag('paywall')->willReturn(false);
+        $image->get('moderator_guid')->willReturn('123');
+        $image->get('time_moderated')->willReturn($now);
         $image->getNsfw()->willReturn([ 1 ]);
 
         $this
@@ -71,6 +73,8 @@ class ObjectImageMappingSpec extends ObjectBehavior
                 'public' => true,
                 'tags' => [ 'test', 'hashtag' ],
                 'nsfw' => [ 1 ],
+                'moderator_guid' => '123',
+                '@moderated' => $now * 1000
             ]);
     }
 }
