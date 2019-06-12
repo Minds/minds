@@ -1,22 +1,22 @@
 <?php
 /**
- * Minds FFMpeg
+ * Minds FFMpeg.
  */
 
 namespace Minds\Core\Media\Services;
 
-use Aws\ElasticTranscoder\ElasticTranscoderClient;
 use Aws\S3\S3Client;
 use FFMpeg\FFMpeg as FFMpegClient;
 use FFMpeg\FFProbe as FFProbeClient;
 use FFMpeg\Filters\Video\ResizeFilter;
 use Minds\Core;
 use Minds\Core\Config;
+use Minds\Entities\Video;
 use Minds\Core\Di\Di;
+use Minds\Core\Media\TranscodingStatus;
 
 class FFMpeg implements ServiceInterface
 {
-
     /** @var Queue $queue */
     private $queue;
 
@@ -44,21 +44,20 @@ class FFMpeg implements ServiceInterface
         $ffprobe = null,
         $s3 = null,
         $config = null
-    )
-    {
+    ) {
         $this->config = $config ?: Di::_()->get('Config');
         $this->queue = $queue ?: Core\Queue\Client::build();
         $this->ffmpeg = $ffmpeg ?: FFMpegClient::create([
-            'ffmpeg.binaries'  => '/usr/bin/ffmpeg',
+            'ffmpeg.binaries' => '/usr/bin/ffmpeg',
             'ffprobe.binaries' => '/usr/bin/ffprobe',
-            'ffmpeg.threads'   => $this->config->get('transcoder')['threads'],
+            'ffmpeg.threads' => $this->config->get('transcoder')['threads'],
         ]);
         $this->ffprobe = $ffprobe ?: FFProbeClient::create([
             'ffprobe.binaries' => '/usr/bin/ffprobe',
         ]);
         $awsConfig = $this->config->get('aws');
         $opts = [
-            'region' => $awsConfig['region']
+            'region' => $awsConfig['region'],
         ];
 
         if (!isset($awsConfig['useRoles']) || !$awsConfig['useRoles']) {
@@ -68,13 +67,14 @@ class FFMpeg implements ServiceInterface
             ];
         }
 
-        $this->s3 = $s3 ?: new S3Client(array_merge([ 'version' => '2006-03-01' ], $opts));
+        $this->s3 = $s3 ?: new S3Client(array_merge(['version' => '2006-03-01'], $opts));
         $this->dir = $this->config->get('transcoder')['dir'];
     }
 
     public function setKey($key)
     {
         $this->key = $key;
+
         return $this;
     }
 
@@ -82,8 +82,7 @@ class FFMpeg implements ServiceInterface
     {
         try {
             if (is_string($file)) {
-
-                $result =  $this->s3->putObject([
+                $result = $this->s3->putObject([
                   'ACL' => 'public-read',
                   'Bucket' => 'cinemr',
                   'Key' => "$this->dir/$this->key/source",
@@ -91,28 +90,29 @@ class FFMpeg implements ServiceInterface
                   //'ContentLength' => filesize($file),
                   'Body' => fopen($file, 'r'),
                   ]);
+
                 return $this;
-
             } elseif (is_resource($file)) {
-
-                $result =  $this->client->putObject([
+                $result = $this->client->putObject([
                   'ACL' => 'public-read',
                   'Bucket' => 'cinemr',
                   'Key' => "$this->dir/$this->key/source",
                   'ContentLength' => $_SERVER['CONTENT_LENGTH'],
-                  'Body' => $file
+                  'Body' => $file,
                 ]);
-                return $this;
 
+                return $this;
             }
         } catch (\Exception $e) {
-            var_dump($e->getMessage()); exit;
+            var_dump($e->getMessage());
+            exit;
         }
         throw new \Exception('Sorry, only strings and stream resource are accepted');
     }
 
     /**
-     * Queue the video to be transcoded
+     * Queue the video to be transcoded.
+     *
      * @return $this
      */
     public function transcode()
@@ -121,13 +121,14 @@ class FFMpeg implements ServiceInterface
         $this->queue
             ->setQueue('Transcode')
             ->send([
-                "key" => $this->key
+                'key' => $this->key,
             ]);
+
         return $this;
     }
 
     /**
-     * Called when the queue is running
+     * Called when the queue is running.
      */
     public function onQueue()
     {
@@ -152,21 +153,21 @@ class FFMpeg implements ServiceInterface
 
             // get video metadata
             $tags = $videostream->get('tags');
-        } catch (\Exception $e)  {
+        } catch (\Exception $e) {
             error_log('Error getting videostream information');
         }
 
         try {
-            $thumbnailsDir = $sourcePath . '-thumbnails';
+            $thumbnailsDir = $sourcePath.'-thumbnails';
             @mkdir($thumbnailsDir, 0600, true);
 
             //create thumbnails
             $length = round((int) $this->ffprobe->format($sourcePath)->get('duration'));
-            $secs = [ 0, 1, round($length/2), $length -1, $length ];
+            $secs = [0, 1, round($length / 2), $length - 1, $length];
             foreach ($secs as $sec) {
                 $frame = $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
                 $pad = str_pad($sec, 5, '0', STR_PAD_LEFT);
-                $path = $thumbnailsDir . '/' . "thumbnail-$pad.png";
+                $path = $thumbnailsDir.'/'."thumbnail-$pad.png";
                 $frame->save($path);
                 @$this->uploadTranscodedFile($path, "thumbnail-$pad.png");
                 //cleanup uploaded file
@@ -175,10 +176,10 @@ class FFMpeg implements ServiceInterface
 
             //cleanup thumbnails director
             @unlink($thumbnailsDir);
-        } catch (\Exception $e)  {
+        } catch (\Exception $e) {
         }
 
-        $rotated = isset($tags['rotate']) && in_array($tags['rotate'], [270,90]);
+        $rotated = isset($tags['rotate']) && in_array($tags['rotate'], [270, 90]);
 
         $outputs = [];
         $presets = $this->config->get('transcoder')['presets'];
@@ -189,13 +190,13 @@ class FFMpeg implements ServiceInterface
                 'prefix' => null,
                 'width' => '720',
                 'height' => '480',
-                'formats' => [ 'mp4', 'webm' ],
+                'formats' => ['mp4', 'webm'],
             ], $opts);
 
             if ($rotated) {
                 $ratio = $videostream->get('width') / $videostream->get('height');
                 $width = round($opts['height'] * $ratio);
-                $opts['width']  = $opts['height'];
+                $opts['width'] = $opts['height'];
                 $opts['height'] = $width;
             }
 
@@ -206,13 +207,13 @@ class FFMpeg implements ServiceInterface
 
             $formatMap = [
                 'mp4' => (new \FFMpeg\Format\Video\X264())
-                    ->setAudioCodec("aac"),
+                    ->setAudioCodec('aac'),
                 'webm' => new \FFMpeg\Format\Video\WebM(),
             ];
 
             foreach ($opts['formats'] as $format) {
-                $pfx = ($rotated ? $opts['width'] : $opts['height']) . "." . $format;
-                $path = $sourcePath . '-' . $pfx;
+                $pfx = ($rotated ? $opts['width'] : $opts['height']).'.'.$format;
+                $path = $sourcePath.'-'.$pfx;
                 try {
                     echo "\nTranscoding: $path ($this->key)";
                     $formatMap[$format]
@@ -249,4 +250,20 @@ class FFMpeg implements ServiceInterface
         ]);
     }
 
+    /**
+     * @param Video $entity
+     *
+     * Queries S3 in the cinemr bucket for all keys matching dir/guid
+     * Uses the AWS/Result object to construct a transcodingStatus based on the content of the key
+     */
+    public function verify(Video $video)
+    {
+        $awsResult = $this->s3->listObjects([
+            'Bucket' => 'cinemr',
+            'Prefix' => "{$this->dir}/{$video->guid}",
+        ]);
+        $status = new TranscodingStatus($video, $awsResult);
+
+        return $status;
+    }
 }
