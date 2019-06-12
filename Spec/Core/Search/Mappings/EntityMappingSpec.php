@@ -107,6 +107,8 @@ class EntityMappingSpec extends ObjectBehavior
         $entity->get('paywall')->willReturn(false);
         $entity->get('tags')->willReturn(['test', 'hashtag']);
         $entity->get('rating')->willReturn(1);
+        $entity->get('moderator_guid')->willReturn('123');
+        $entity->get('time_moderated')->willReturn($now);
         $entity->getNsfw()->willReturn([ 1 ]);
 
         $this
@@ -138,6 +140,8 @@ class EntityMappingSpec extends ObjectBehavior
                 'public' => true,
                 'tags' => [ 'test', 'hashtag' ],
                 'nsfw' => [ 1 ],
+                'moderator_guid' => '123',
+                '@moderated' => $now * 1000
             ]);
     }
 

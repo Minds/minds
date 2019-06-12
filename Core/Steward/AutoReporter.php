@@ -192,6 +192,7 @@ class AutoReporter
         $decision
             ->setAppeal(null)
             ->setAction('uphold')
+            ->setUphold(true)
             ->setReport($report)
             ->setTimestamp($time)
             ->setJurorGuid($stewardUser->getGuid())

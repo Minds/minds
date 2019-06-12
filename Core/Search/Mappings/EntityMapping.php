@@ -188,6 +188,13 @@ class EntityMapping implements MappingInterface
 
         $map['nsfw'] = array_unique($this->entity->getNsfw());
 
+        if (isset($this->entity->moderator_guid) && !empty($this->entity->moderator_guid)) {
+            $map['moderator_guid'] = $this->entity->moderator_guid;
+        }
+        if (isset($this->entity->time_moderated) && $this->entity->time_moderated) {
+            $map['@moderated'] = $this->entity->time_created * 1000;
+        }
+
         //
 
         return $map;

@@ -13,9 +13,16 @@ use Minds\Core\Session;
 
 class Manager
 {
-
     /** @var User $user */
     private $user;
+
+    /** @var Config $config */
+    private $config;
+    
+    public function __construct($config = null)
+    {
+        $this->config = $config ?: Di::_()->get('Config');
+    }
 
     /**
      * Set the user
@@ -35,7 +42,7 @@ class Manager
      */
     public function has($feature)
     {
-        $features = Di::_()->get('Config')->get('features') ?: [];
+        $features = $this->config->get('features') ?: [];
 
         if (!isset($features[$feature])) {
             error_log("[Features\Manager] Feature '{$feature}' is not declared. Assuming true.");
@@ -56,6 +63,6 @@ class Manager
      */
     public function export()
     {
-        return Di::_()->get('Config')->get('features') ?: [];
+        return $this->config->get('features') ?: [];
     }
 }

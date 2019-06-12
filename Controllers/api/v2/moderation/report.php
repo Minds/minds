@@ -12,6 +12,7 @@ use Minds\Entities;
 use Minds\Entities\Activity;
 use Minds\Interfaces;
 use Minds\Core\Reports;
+use Minds\Core\Reports\Jury\Decision;
 
 class report implements Interfaces\Api
 {
@@ -80,6 +81,20 @@ class report implements Interfaces\Api
             ]);
         }
         
+        // Auto accept admin reports
+        if ($user->isAdmin()) {
+            $decision = new Decision();
+            $decision->setAppeal(null)
+                ->setAction('uphold')
+                ->setUphold(true)
+                ->setReport($report)
+                ->setTimestamp(time())
+                ->setJurorGuid($user->getGuid())
+                ->setJurorHash($user->getPhoneNumberHash());
+            
+            $juryManager = Di::_()->get('Moderation\Jury\Manager');
+            $juryManager->cast($decision);
+        }
         return Factory::response([]);
     }
 

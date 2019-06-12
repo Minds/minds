@@ -15,10 +15,7 @@ class ManagerSpec extends ObjectBehavior
 
     function let(Config $config)
     {
-        Di::_()->bind('Config', function ($di) use ($config) {
-            return $config->getWrappedObject();
-        });
-
+        $this->beConstructedWith($config);
         $this->config = $config;
     }
 
@@ -47,59 +44,18 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_check_if_a_user_is_active_for_an_admin_and_return_true(User $user)
     {
-        $user = new User();
-        $user->guid = '1234';
-        $user->admin = true;
-
-        //remove ip whitelist check
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.56.0.1';
-
-        $this->setUser($user);
-
-        $this->config->get('development_mode')
-            ->shouldBeCalled()
-            ->willReturn(false);
-
-        $this->config->get('features')
-            ->shouldBeCalled()
-            ->willReturn(['plus' => true, 'wire' => 'admin']);
-
-        $this->config->get('last_tos_update')
-            ->shouldBeCalled()
-            ->willReturn(123456);
-
-        $this->config->get('admin_ip_whitelist')
-            ->shouldBeCalled()
-            ->willReturn([ '10.56.0.1' ]);
-
-        $this->has('wire')->shouldReturn(true);
-    }
-
-    function it_should_check_if_a_user_is_active_for_an_admin_and_return_true_development_node(User $user)
-    {
-        $user = new User();
-        $user->guid = '1234';
-        $user->admin = true;
-
-        //remove ip whitelist check
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.56.0.1';
-
-        $this->setUser($user);
-
-        $this->config->get('development_mode')
+        $user->isAdmin()
             ->shouldBeCalled()
             ->willReturn(true);
 
+        //remove ip whitelist check
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.56.0.1';
+
+        $this->setUser($user);
+
         $this->config->get('features')
             ->shouldBeCalled()
             ->willReturn(['plus' => true, 'wire' => 'admin']);
-
-        $this->config->get('last_tos_update')
-            ->shouldBeCalled()
-            ->willReturn(123456);
-
-        $this->config->get('admin_ip_whitelist')
-            ->shouldNotBeCalled();
 
         $this->has('wire')->shouldReturn(true);
     }
