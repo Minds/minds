@@ -85,7 +85,6 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
     }
 
     public function sync_graphs()
-    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -129,5 +128,31 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
         }
 
         $this->out('Completed caching site metrics');
+   }
+
+    public function syncViews()
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        
+        $from = $this->getOpt('from') ?: strtotime('-7 days');
+
+        $opts = [
+            'from' => $from,
+            'day' => (int) date('d', $from),
+        ];
+
+        $manager = new Core\Analytics\Views\Manager();
+
+        $i = 0;
+        $start = time();
+        foreach ($manager->syncToElastic($opts) as $view) {
+            $time = (new \Cassandra\Timeuuid($view->getUuid()))->time();
+            $date = date('d-m-Y h:i', $time);
+            $rps = (++$i) / ((time() - $start) ?: 1);
+            $this->out($i . "-{$view->getUuid()} {$date} ($rps/sec)");
+        }
+        $this->out('Done');
     }
+
 }

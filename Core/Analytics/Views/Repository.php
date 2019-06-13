@@ -42,13 +42,42 @@ class Repository
         $opts = array_merge([
             'limit' => 500,
             'offset' => '',
+            'year' => null,
+            'month' => null,
+            'day' => null,
+            'from' => null,
         ], $opts) ;
 
         $cql = "SELECT * FROM views";
         $values = [];
         $cqlOpts = [];
+        $where = [];
 
         // TODO: Implement constraints (by year/month/day/timeuuid)
+
+        if ($opts['year']) {
+            $where[] = 'year = ?';
+            $values[] = (int) $opts['year'];
+        }
+
+        if ($opts['month']) {
+            $where[] = 'month = ?';
+            $values[] = new Tinyint($opts['month']);
+        }
+
+        if ($opts['day']) {
+            $where[] = 'day = ?';
+            $values[] = new Tinyint($opts['day']);
+        }
+
+        if ($opts['from']) {
+            $where[] = 'uuid > ?';
+            $values[] = new Timeuuid($opts['from'] * 1000);
+        }
+
+        if (count($where)) {
+            $cql .= " WHERE " . implode(' AND ', $where);
+        }
 
         if ($opts['limit']) {
             $cqlOpts['page_size'] = (int) $opts['limit'];
@@ -60,7 +89,7 @@ class Repository
 
         $prepared = new Custom();
         $prepared->query($cql, $values);
-        $prepared->setOpts($opts);
+        $prepared->setOpts($cqlOpts);
 
         $response = new Response();
 
