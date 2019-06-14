@@ -58,6 +58,14 @@ class ElasticRepository
             ];
         }
 
+        if ($opts['entity_guid']) {
+            $must[] = [
+                'term' => [
+                    'entity_guid' => $opts['entity_guid']
+                ]
+            ];
+        }
+
         if ($opts['state'] === 'approved') {
             $must[] = [
                 'exists' => [
@@ -79,7 +87,7 @@ class ElasticRepository
                     'field' => '@reviewed',
                 ],
             ];
-            $sort = [ '@timestamp' => 'asc' ];
+            $sort = ['@timestamp' => 'asc'];
         }
 
         if ($opts['state'] === 'approved' || $opts['state'] === 'review') {
@@ -164,6 +172,7 @@ class ElasticRepository
      * Add a boost
      * @param Boost $boost
      * @return bool
+     * @throws \Exception
      */
     public function add($boost)
     {
@@ -223,6 +232,7 @@ class ElasticRepository
      * Update a boost
      * @param Boost $boost
      * @return bool
+     * @throws \Exception
      */
     public function update($boost, $fields = [])
     {

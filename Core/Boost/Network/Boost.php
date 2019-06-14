@@ -11,6 +11,7 @@ use Minds\Traits\MagicAttributes;
  * @package Minds\Core\Boost\Network
  * @method Boost setGuid(long $guid)
  * @method long getGuid()
+ * @method string getEntityGuid()
  * @method Boost setEntiyGuid()
  * @method Boost setEntity()
  * @method Entity getEntity()
@@ -30,7 +31,9 @@ use Minds\Traits\MagicAttributes;
  * @method Boost setRejectedTimestamp(int $ts)
  * @method Boost setCreatedTimestamp(int $ts)
  * @method Boost setRevokedTimestamp(int $ts)
- * @method string getState()
+ * @method array getTags()
+ * @method Boost setTags(array $value)
+ * @method string getType()
  */
 class Boost
 {
