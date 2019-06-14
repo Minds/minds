@@ -2,15 +2,16 @@
 
 namespace Spec\Minds\Core\Boost\Network;
 
-use Minds\Core\Boost\Network\Manager;
+use Minds\Common\Repository\Response;
+use Minds\Core\Boost\Exceptions\EntityAlreadyBoostedException;
 use Minds\Core\Boost\Network\Boost;
-use Minds\Core\Boost\Network\Repository;
 use Minds\Core\Boost\Network\ElasticRepository;
+use Minds\Core\Boost\Network\Manager;
+use Minds\Core\Boost\Network\Repository;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\GuidBuilder;
 use Minds\Entities\Activity;
 use Minds\Entities\User;
-use Minds\Common\Repository\Response;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -67,7 +68,7 @@ class ManagerSpec extends ObjectBehavior
             'state' => 'review',
             'hydrate' => true,
             'useElastic' => true,
-            'guids' => [ 1, 2 ],
+            'guids' => [1, 2],
         ])
             ->shouldBeCalled()
             ->willReturn($response);
@@ -81,7 +82,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn((new User)
                 ->set('guid', 1));
-         
+
         $this->entitiesBuilder->single(456)
             ->shouldBeCalled()
             ->willReturn((new Activity)
@@ -139,7 +140,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn((new User)
                 ->set('guid', 1));
-         
+
         $this->entitiesBuilder->single(456)
             ->shouldBeCalled()
             ->willReturn((new Activity)
@@ -174,7 +175,7 @@ class ManagerSpec extends ObjectBehavior
     {
         $this->repository->getList([
             'state' => null,
-            'guids' => [ 123, 456 ],
+            'guids' => [123, 456],
             'hydrate' => true,
             'useElastic' => false,
         ])
@@ -199,7 +200,7 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn((new User)
                 ->set('guid', 1));
-         
+
         $this->entitiesBuilder->single(456)
             ->shouldBeCalled()
             ->willReturn((new Activity)
@@ -211,7 +212,7 @@ class ManagerSpec extends ObjectBehavior
                 ->set('guid', 2));
 
         $response = $this->getList([
-            'guids' => [ 123, 456 ],
+            'guids' => [123, 456],
         ]);
 
         $response[0]->getEntity()->getGuid()
@@ -231,10 +232,22 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_add_a_boost(Boost $boost)
     {
+        $boost->getType()
+            ->shouldBeCalled()
+            ->willReturn('network');
+
+        $boost->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn('2');
+
+        $this->elasticRepository->getList(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(new Response());
+
         $this->guidBuilder->build()
             ->shouldBeCalled()
             ->willReturn(1);
-    
+
         $boost->getGuid()
             ->shouldbeCalled()
             ->willReturn(null);
@@ -251,21 +264,42 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
+    function it_should_not_add_a_boost_if_the_entity_has_already_been_boosted(Boost $boost, Boost $oldBoost)
+    {
+        $boost->getType()
+            ->shouldBeCalled()
+            ->willReturn('network');
+
+        $boost->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn('2');
+
+        $this->elasticRepository->getList(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(new Response([$oldBoost]));
+
+        $this->repository->getList(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(new Response([$oldBoost]));
+
+        $this->shouldThrow(new EntityAlreadyBoostedException())->during('add', [$boost]);
+    }
+
     function it_should_update_a_boost(Boost $boost)
     {
-        $this->repository->update($boost, [ '@timestamp' ])
+        $this->repository->update($boost, ['@timestamp'])
             ->shouldBeCalled();
-        $this->elasticRepository->update($boost, [ '@timestamp' ])
+        $this->elasticRepository->update($boost, ['@timestamp'])
             ->shouldBeCalled();
 
-        $this->update($boost, [ '@timestamp' ] );
+        $this->update($boost, ['@timestamp']);
     }
 
     function it_should_resync_a_boost_on_elasticsearch(Boost $boost)
     {
-        $this->elasticRepository->update($boost, [ '@timestamp' ])
+        $this->elasticRepository->update($boost, ['@timestamp'])
             ->shouldBeCalled();
 
-        $this->resync($boost, [ '@timestamp' ] );
+        $this->resync($boost, ['@timestamp']);
     }
 }
