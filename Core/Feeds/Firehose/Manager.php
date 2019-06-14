@@ -60,14 +60,14 @@ class Manager
     /**
      * Marks an entity as moderated.
      *
-     * @param Entity $entity       the entity to mark as moderated
+     * @param $entity         the entity to mark as moderated, typeless because images do not inherit entity
      * @param User   $user         the moderator
      * @param int    $reasonCode   providing a reason code will cause it be reported
      * @param int    $subreaonCode report subreason
      * @param int    $time
      */
     public function save(
-        Entity $entity,
+        $entity,
         User $moderator,
         int $reasonCode = null,
         int $subreasonCode = null,

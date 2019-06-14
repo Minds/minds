@@ -141,7 +141,6 @@ class firehose implements Interfaces\Api, Interfaces\ApiAdminPam
         if (isset($_POST['subreason_code'])) {
             $reasonCode = $_POST['subreason'];
         }
-        
         $manager->save($entity, $moderator, $reasonCode, $subReasonCode);
         return Factory::response([]);
     }
