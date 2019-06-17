@@ -3,7 +3,6 @@
 namespace Spec\Minds\Core\Boost\Network;
 
 use Minds\Common\Repository\Response;
-use Minds\Core\Boost\Exceptions\EntityAlreadyBoostedException;
 use Minds\Core\Boost\Network\Boost;
 use Minds\Core\Boost\Network\ElasticRepository;
 use Minds\Core\Boost\Network\Manager;
@@ -232,18 +231,6 @@ class ManagerSpec extends ObjectBehavior
 
     function it_should_add_a_boost(Boost $boost)
     {
-        $boost->getType()
-            ->shouldBeCalled()
-            ->willReturn('network');
-
-        $boost->getEntityGuid()
-            ->shouldBeCalled()
-            ->willReturn('2');
-
-        $this->elasticRepository->getList(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(new Response());
-
         $this->guidBuilder->build()
             ->shouldBeCalled()
             ->willReturn(1);
@@ -264,27 +251,6 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
-    function it_should_not_add_a_boost_if_the_entity_has_already_been_boosted(Boost $boost, Boost $oldBoost)
-    {
-        $boost->getType()
-            ->shouldBeCalled()
-            ->willReturn('network');
-
-        $boost->getEntityGuid()
-            ->shouldBeCalled()
-            ->willReturn('2');
-
-        $this->elasticRepository->getList(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(new Response([$oldBoost]));
-
-        $this->repository->getList(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(new Response([$oldBoost]));
-
-        $this->shouldThrow(new EntityAlreadyBoostedException())->during('add', [$boost]);
-    }
-
     function it_should_update_a_boost(Boost $boost)
     {
         $this->repository->update($boost, ['@timestamp'])
@@ -301,5 +267,33 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->resync($boost, ['@timestamp']);
+    }
+
+    function it_should_check_if_the_entity_was_already_boosted(Boost $boost)
+    {
+        $this->elasticRepository->getList([
+            'useElastic' => true,
+            'state' => 'review',
+            'type' => 'newsfeed',
+            'entity_guid' => '123',
+            'limit' => 1,
+            'hydrate' => true,
+        ])
+            ->shouldBeCalled()
+            ->willReturn(new Response([$boost], ''));
+
+        $this->repository->getList(Argument::any())
+            ->shouldBeCalled()
+            ->willReturn(new Response([$boost]));
+
+        $boost->getType()
+            ->shouldBeCalled()
+            ->willReturn('newsfeed');
+
+        $boost->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn('123');
+
+        $this->checkExisting($boost)->shouldReturn(true);
     }
 }

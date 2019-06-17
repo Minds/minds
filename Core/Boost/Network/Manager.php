@@ -121,18 +121,6 @@ class Manager
      */
     public function add($boost)
     {
-        $existingBoost = $this->getList([
-            'useElastic' => true,
-            'state' => 'review',
-            'type' => $boost->getType(),
-            'entity_guid' => $boost->getEntityGuid(),
-            'limit' => 1
-        ]);
-
-        if ($existingBoost->count() > 0) {
-            throw new EntityAlreadyBoostedException();
-        }
-
         if (!$boost->getGuid()) {
             $boost->setGuid($this->guidBuilder->build());
         }
@@ -150,5 +138,23 @@ class Manager
     public function resync($boost, $fields = [])
     {
         $this->elasticRepository->update($boost, $fields);
+    }
+
+    /**
+     * Checks if a boost already exists for a given entity
+     * @param $boost
+     * @return bool
+     */
+    public function checkExisting($boost)
+    {
+        $existingBoost = $this->getList([
+            'useElastic' => true,
+            'state' => 'review',
+            'type' => $boost->getType(),
+            'entity_guid' => $boost->getEntityGuid(),
+            'limit' => 1
+        ]);
+
+        return $existingBoost->count() > 0;
     }
 }
