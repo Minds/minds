@@ -8,6 +8,9 @@ use Minds\Entities\Boost\BoostEntityInterface;
 use Minds\Entities\Boost\Network;
 use Minds\Helpers\MagicAttributes;
 use Minds\Interfaces\BoostReviewInterface;
+use Minds\Core\Boost\Delegates;
+use Minds\Core\Boost\Delegates\OnchainBadgeDelegate;
+
 use MongoDB\BSON;
 
 class Review implements BoostReviewInterface
@@ -18,16 +21,20 @@ class Review implements BoostReviewInterface
     /** @var Manager $manager */
     protected $manager;
 
+    /** @var OnchainBadgeDelegate $onchainBadge */
+    protected $onchainBadge;
+
     /** @var Analytics $analaytics */
     protected $analytics;
 
     /** @var string $type */
     protected $type;
 
-    public function __construct($manager = null, $analytics = null)
+    public function __construct($manager = null, $analytics = null, $onchainBadge = null)
     {
         $this->manager = $manager ?: new Manager;
         $this->analytics = $analytics ?: new Analytics;
+        $this->onchainBadge = $onchainBadge ?: new OnchainBadgeDelegate;
     }
 
     /**
@@ -64,11 +71,13 @@ class Review implements BoostReviewInterface
         }
         $success = Core\Di\Di::_()->get('Boost\Payment')->charge($this->boost);
         if ($success) {
+            if ($this->boost->isOnChain()) {
+                $this->onchainBadge->dispatch($this->boost);
+            }
             $this->boost->setReviewedTimestamp(round(microtime(true) * 1000));
             return $this->manager->update($this->boost);
-        } else {
-            throw new \Exception('error while accepting the boost');
         }
+        throw new \Exception('error while accepting the boost');
     }
 
     /**
