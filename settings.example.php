@@ -147,7 +147,7 @@ $CONFIG->site_name = '{{site-name}}';
 $CONFIG->__site_secret__ = '{{site-secret}}';
 // $CONFIG->cdn_url = 'http://{{domain}}/';
 $CONFIG->site_url = 'http://{{domain}}/';
-$CONFIG->cdn_url = 'http://{{domain}}/en/';
+$CONFIG->cdn_url = 'http://{{domain}}/';
 $CONFIG->cdn_assets_url = 'http://{{domain}}/en/';
 $CONFIG->zmq_server = 'localhost';
 $CONFIG->checkout_url = 'http://{{checkout_domain}}/';
@@ -469,3 +469,10 @@ $CONFIG->set('development_mode', false);
 $CONFIG->set('max_video_length', 900);
 
 $CONFIG->set('max_video_length_plus', 1860);
+
+$CONFIG->set('features', [
+    'es-feeds' => false,
+    'helpdesk' => true,
+    'top-feeds' => true,
+    'dark-mode' => true,
+]);

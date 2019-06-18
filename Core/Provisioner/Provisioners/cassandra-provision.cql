@@ -1372,7 +1372,7 @@ CREATE TABLE minds.sendwyre_accounts (
     PRIMARY KEY (user_guid)
 );
 
-CREATE TABLE analytics_graphs (
+CREATE TABLE minds.analytics_graphs (
   key text,
   last_synced timestamp,
   data text,
@@ -1380,17 +1380,28 @@ CREATE TABLE analytics_graphs (
 ); 
 
 CREATE TABLE minds.views (
-  year int,
-  month tinyint,
-  day tinyint,
-  uuid timeuuid,
-  entity_urn text,
-  page_token text,
-  position int,
-  platform text,
-  source text,
-  medium text,
-  campaign text,
-  delta int,
-  PRIMARY KEY (year, month, day, uuid, entity_urn, page_token)
+    year int,
+    month tinyint,
+    day tinyint,
+    uuid timeuuid,
+    entity_urn text,
+    page_token text,
+    position int,
+    platform text,
+    source text,
+    medium text,
+    campaign text,
+    delta int,
+    PRIMARY KEY (year, month, day, uuid, entity_urn, page_token)
+);
+
+CREATE TABLE minds.update_markers (
+    user_guid varint,
+    entity_type text,
+    entity_guid varint,
+    marker text,
+    disabled boolean,
+    read_timestamp timestamp,
+    updated_timestamp timestamp,
+    PRIMARY KEY (user_guid, entity_type, entity_guid, marker)
 );

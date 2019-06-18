@@ -10,7 +10,7 @@ echo "Setting up Keys"
 echo "Running install"
 
 php /var/www/Minds/engine/cli.php install \
-    --domain=http://localhost:8080 \
+    --domain=localhost:8080 \
     --username=minds \
     --password="Pa\$\$w0rd" \
     --email=minds@minds.com \
