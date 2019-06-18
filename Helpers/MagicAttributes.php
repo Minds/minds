@@ -40,7 +40,7 @@ class MagicAttributes
      */
     public static function getterExists($class, $getter)
     {
-        $prop = lcfirst(preg_replace('/^get/', '', $getter));
+        $prop = lcfirst(preg_replace('/^(get|is)/', '', $getter));
         return method_exists($class, $getter) || (static::used($class) && property_exists($class, $prop));
     }
 }

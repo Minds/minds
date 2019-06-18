@@ -381,6 +381,8 @@ class Blog extends RepositoryEntity
             'author' => FILTER_SANITIZE_SPECIAL_CHARS
         ]);
 
+        $this->markAsDirty('customMeta');
+
         return $this;
     }
 
