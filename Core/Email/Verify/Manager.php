@@ -23,6 +23,8 @@ class Manager
         'palantirmails.com',
 	'vincentralpark.com',
         'clickmail.info',
+        'marketlink.info',
+        'atnextmail.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)

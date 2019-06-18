@@ -74,9 +74,11 @@ class conversations implements Interfaces\Api
             $blocked = false;
             $unavailable = false;
 
-            if (is_array($response['participants']) && false) {
+            if (is_array($response['participants'])) {
                 foreach ($response['participants'] as $participant) {
-                    if (!Security\ACL::_()->interact(Core\Session::getLoggedInUser(), $participant['guid'])) {
+                    if (Core\Security\ACL\Block::_()->isBlocked($participant['guid'])
+                        || !Security\ACL::_()->interact(Core\Session::getLoggedInUser(), $participant['guid'])
+                    ) {
                         $blocked = true;
                         break;
                     }

@@ -28,7 +28,8 @@ class Thresholds
         }
 
         $isPaywall = false;
-        if (method_exists($entity, 'isPaywall') && $entity->isPaywall()) {
+
+        if ((MagicAttributes::getterExists($entity, 'isPaywall') || method_exists($entity, 'isPaywall')) && $entity->isPaywall()) {
             $isPaywall = true;
         } elseif (method_exists($entity, 'getFlag') && $entity->getFlag('paywall')) {
             $isPaywall = true;
@@ -48,9 +49,15 @@ class Thresholds
 
             $amount = 0;
 
+            if (MagicAttributes::getterExists($entity, 'getOwnerGuid')) {
+                $ownerGuid = $entity->getOwnerGuid();
+            } else {
+                $ownerGuid = $entity->getOwnerGUID();
+            }
+
             /** @var Sums $sums */
             $sums = Di::_()->get('Wire\Sums');
-            $sums->setReceiver($entity->getOwnerGUID())
+            $sums->setReceiver($ownerGuid)
                 ->setSender($user->guid)
                 ->setFrom((new \DateTime('midnight'))->modify("-30 days")->getTimestamp());
 
@@ -76,10 +83,8 @@ class Thresholds
                     return true;
                 }
             }
-
             return false;
         }
-
         return true;
     }
 }

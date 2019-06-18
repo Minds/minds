@@ -98,6 +98,9 @@ class channel implements Interfaces\Api
             $guid = Core\Session::getLoggedinUser()->legacy_guid;
         }
 
+        /** @var Core\Media\Imagick\Manager $manager */
+        $manager = Core\Di\Di::_()->get('Media\Imagick\Manager');
+
         $response = [];
 
         switch ($pages[0]) {
@@ -107,15 +110,17 @@ class channel implements Interfaces\Api
                 // so we can do clean up if one fails.
                 $files = array();
                 foreach ($icon_sizes as $name => $size_info) {
-                    $resized = get_resized_image_from_uploaded_file('file', $size_info['w'], $size_info['h'], $size_info['square'], $size_info['upscale']);
+                    $manager->setImage($_FILES['file']['tmp_name'])
+                        ->autorotate()
+                        ->resize($size_info['w'], $size_info['h'], $size_info['upscale'], $size_info['square']);
 
-                    if ($resized) {
+                    if ($blob = $manager->getJpeg()) {
                         //@todo Make these actual entities.  See exts #348.
                         $file = new ElggFile();
                         $file->owner_guid = Core\Session::getLoggedinUser()->guid;
                         $file->setFilename("profile/{$guid}{$name}.jpg");
                         $file->open('write');
-                        $file->write($resized);
+                        $file->write($blob);
                         $file->close();
                         $files[] = $file;
                     } else {
@@ -157,12 +162,15 @@ class channel implements Interfaces\Api
                 $item->save();
 
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
+                    $manager->setImage($_FILES['file']['tmp_name'])
+                        ->autorotate()
+                        ->resize(2000, 10000);
+
                     $file = new Entities\File();
                     $file->owner_guid = $item->owner_guid;
                     $file->setFilename("banners/{$item->guid}.jpg");
                     $file->open('write');
-                    $file->write($resized);
+                    $file->write($manager->getJpeg());
                     $file->close();
 
                     $response['uploaded'] = true;
@@ -183,12 +191,15 @@ class channel implements Interfaces\Api
               );
 
               if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                  $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
+                  $manager->setImage($_FILES['file']['tmp_name'])
+                      ->autorotate()
+                      ->resize(2000, 10000);
+
                   $file = new Entities\File();
                   $file->owner_guid = $item->owner_guid;
                   $file->setFilename("banners/{$item->guid}.jpg");
                   $file->open('write');
-                  $file->write($resized);
+                  $file->write($manager->getJpeg());
                   $file->close();
 
                   $response['uploaded'] = true;

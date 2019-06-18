@@ -204,7 +204,7 @@ class blog implements Interfaces\Api
         }
 
         if (isset($_POST['tags']) && $_POST['tags'] !== '') {
-            $tags = !is_array($_POST['tags']) ? explode(',', $_POST['tags']) : $_POST['tags'];
+            $tags = !is_array($_POST['tags']) ? json_decode($_POST['tags']) : $_POST['tags'];
             $blog->setTags($tags);
         }
 
@@ -213,7 +213,8 @@ class blog implements Interfaces\Api
         }
 
         if (isset($_POST['wire_threshold'])) {
-            $blog->setWireThreshold($_POST['wire_threshold']);
+            $threshold = is_string($_POST['wire_threshold']) ? json_decode($_POST['wire_threshold']) : $_POST['wire_threshold'];
+            $blog->setWireThreshold($threshold);
         }
 
         if (isset($_POST['published'])) {
@@ -228,8 +229,12 @@ class blog implements Interfaces\Api
             $blog->setSlug($_POST['slug']);
         }
 
-        if (isset($_POST['custom_meta']) && is_array($_POST['custom_meta'])) {
-            $blog->setCustomMeta($_POST['custom_meta']);
+        if (isset($_POST['custom_meta'])) {
+            $meta = is_string($_POST['custom_meta']) ? json_decode($_POST['custom_meta'], true) : $_POST['custom_meta'];
+
+            if (is_array($meta)) {
+                $blog->setCustomMeta($meta);
+            }
         }
 
         //draft
@@ -315,8 +320,14 @@ class blog implements Interfaces\Api
         }
 
         if ($saved && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $image = get_resized_image_from_uploaded_file('file', 2000, 10000);
-            $header->write($blog, $image, isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
+
+            /** @var Core\Media\Imagick\Manager $manager */
+            $manager = Core\Di\Di::_()->get('Media\Imagick\Manager');
+
+            $manager->setImage($_FILES['file']['tmp_name'])
+                ->resize(2000, 1000);
+
+            $header->write($blog, $manager->getJpeg(), isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
         }
 
         if ($saved) {
@@ -359,8 +370,10 @@ class blog implements Interfaces\Api
         }
 
         if (is_uploaded_file($_FILES['header']['tmp_name'])) {
-            $image = get_resized_image_from_uploaded_file('header', 2000, 10000);
-            $header->write($blog, $image, isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
+            $manager->setImage($_FILES['header']['tmp_name'])
+                ->resize(2000, 1000);
+
+            $header->write($blog, $manager->getJpeg(), isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
         }
 
         return Factory::response([]);

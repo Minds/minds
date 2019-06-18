@@ -56,6 +56,14 @@ class CreateActivitySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(false);
 
+        $blog->getWireThreshold()
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $blog->isPaywall()
+            ->shouldBeCalled()
+            ->willReturn(false);
+
         $user->export()
             ->shouldBeCalled()
             ->willReturn([]);

@@ -275,6 +275,7 @@ class boost implements Interfaces\Api
                         $state = 'pending';
                     }
 
+                    /** @var Network\Manager $manager */
                     $manager = Di::_()->get('Boost\Network\Manager');
 
                     $boost = (new Network\Boost())
@@ -288,6 +289,13 @@ class boost implements Interfaces\Api
                         ->setCreatedTimestamp(round(microtime(true) * 1000))
                         ->setType(lcfirst($pages[0]))
                         ->setPriority(false);
+
+                if ($manager->checkExisting($boost)) {
+                    return Factory::response([
+                        'status' => 'error',
+                        'message' => "There's already an ongoing boost for this entity"
+                    ]);
+                }
 
                     // Pre-set GUID
 

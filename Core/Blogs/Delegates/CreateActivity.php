@@ -42,7 +42,9 @@ class CreateActivity
             ->setThumbnail($blog->getIconUrl())
             ->setFromEntity($blog)
             ->setMature($blog->isMature())
-            ->setOwner($owner->export());
+            ->setOwner($owner->export())
+            ->setWireThreshold($blog->getWireThreshold())
+            ->setPaywall($blog->isPaywall());
 
         $activity->container_guid = $owner->guid;
         $activity->owner_guid = $owner->guid;

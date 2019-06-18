@@ -35,4 +35,18 @@ class UserSpec extends ObjectBehavior
         $this->isAdmin()->shouldBe(true);
     }
 
+    function it_should_assign_the_onchain_booster_status() {
+        $this->setOnchainBooster(123);
+        $this->getOnchainBooster()->shouldReturn(123);
+    }
+
+    function it_should_recognise_a_user_is_in_the_onchain_booster_timeframe() {
+        $this->setOnchainBooster(20601923579999);
+        $this->isOnchainBooster()->shouldReturn(true);
+    }
+
+    function it_should_recognise_a_user_is_not_in_the_onchain_booster_timeframe() {
+        $this->setOnchainBooster(1560192357);
+        $this->isOnchainBooster()->shouldReturn(false);
+    }
 }

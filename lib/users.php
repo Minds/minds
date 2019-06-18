@@ -1145,18 +1145,14 @@ function set_last_action($user_guid) {
 /**
  * Sets the last logon time of the given user to right now.
  *
- * @param int $user_guid The user GUID
+ * @param User $User
  *
  * @return void
  */
-function set_last_login($user_guid) {
-	$user_guid = (int) $user_guid;
-	global $CONFIG;
-	$time = time();
+function set_last_login($user) {
+    $time = time();
 
-	$user = new ElggUser($user_guid);
-	$user->last_login = $time;
-	$user->ip = $_SERVER['REMOTE_ADDR'];
-	$user->save();
-	//execute_delayed_write_query($query);
+    $user->last_login = $time;
+    $user->ip = $_SERVER['REMOTE_ADDR'];
+    $user->save();
 }

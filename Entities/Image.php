@@ -154,10 +154,10 @@ class Image extends File
                     continue;
             }
 
-            /** @var Core\Media\Proxy\Autorotate $autorotate */
+            /** @var Core\Media\Imagick\Autorotate $autorotate */
             $autorotate = Core\Di\Di::_()->get('Media\Imagick\Autorotate');
 
-            /** @var Core\Media\Proxy\Resize $resize */
+            /** @var Core\Media\Imagick\Resize $resize */
             $resize = Core\Di\Di::_()->get('Media\Imagick\Resize');
 
             $image = new \Imagick($master);

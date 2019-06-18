@@ -88,7 +88,8 @@ class subscribe implements Interfaces\Api
                     }
 
                     $users = array_values(array_filter($users, function ($user) {
-                        return ($user->enabled != 'no' && $user->banned != 'yes');
+                        return ($user->enabled != 'no' && $user->banned != 'yes')
+                                && $user->guid && $user->username;
                     }));
 
                     $response['users'] = factory::exportable($users);
