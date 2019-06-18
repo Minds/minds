@@ -78,11 +78,15 @@ class pages extends Controller implements Interfaces\Api, Interfaces\ApiIgnorePa
               if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                   $fs = Di::_()->get('Storage');
                   $dir = Di::_()->get('Config')->get('staticStorageFolder') ?: 'pages';
+                  /** @var Core\Media\Imagick\Manager $manager */
+                  $manager = Core\Di\Di::_()->get('Media\Imagick\Manager');
 
-                  $resized = get_resized_image_from_uploaded_file('file', 2000, 10000);
+                  $manager->setImage($_FILES['file']['tmp_name'])
+                      ->autorotate()
+                      ->resize(2000, 10000);
 
                   $fs->open("$dir/page_banners/{$page->getPath()}.jpg", '');
-                  $fs->write($resized);
+                  $fs->write($manager->getJpeg());
               }
 
               $page->setHeader(true)

@@ -320,8 +320,14 @@ class blog implements Interfaces\Api
         }
 
         if ($saved && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $image = get_resized_image_from_uploaded_file('file', 2000, 10000);
-            $header->write($blog, $image, isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
+
+            /** @var Core\Media\Imagick\Manager $manager */
+            $manager = Core\Di\Di::_()->get('Media\Imagick\Manager');
+
+            $manager->setImage($_FILES['file']['tmp_name'])
+                ->resize(2000, 1000);
+
+            $header->write($blog, $manager->getJpeg(), isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
         }
 
         if ($saved) {
@@ -364,8 +370,10 @@ class blog implements Interfaces\Api
         }
 
         if (is_uploaded_file($_FILES['header']['tmp_name'])) {
-            $image = get_resized_image_from_uploaded_file('header', 2000, 10000);
-            $header->write($blog, $image, isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
+            $manager->setImage($_FILES['header']['tmp_name'])
+                ->resize(2000, 1000);
+
+            $header->write($blog, $manager->getJpeg(), isset($_POST['header_top']) ? (int) $_POST['header_top'] : 0);
         }
 
         return Factory::response([]);

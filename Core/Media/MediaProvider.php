@@ -55,5 +55,9 @@ class MediaProvider extends Provider
         $this->di->bind('Media\Imagick\Resize', function ($di) {
             return new Imagick\Resize();
         }, ['useFactory' => true]);
+
+        $this->di->bind('Media\Imagick\Manager', function ($di) {
+            return new Imagick\Manager();
+        }, ['useFactory' => false]);
     }
 }
