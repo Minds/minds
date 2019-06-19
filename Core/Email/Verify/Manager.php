@@ -25,6 +25,9 @@ class Manager
         'clickmail.info',
         'marketlink.info',
         'atnextmail.com',
+        'hostguru.top',
+        'daymailonline.com',
+        'uber-mail.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
