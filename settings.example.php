@@ -476,3 +476,5 @@ $CONFIG->set('features', [
     'top-feeds' => true,
     'dark-mode' => true,
 ]);
+
+$CONFIG->set('last_tos_update', 1);
