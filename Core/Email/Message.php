@@ -26,7 +26,7 @@ class Message
     {
         $this->from = [
           'name' => 'Minds',
-          'email' => 'info@minds.com',
+          'email' => 'no-reply@minds.com',
         ];
     }
 
