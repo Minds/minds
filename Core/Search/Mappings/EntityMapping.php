@@ -33,6 +33,8 @@ class EntityMapping implements MappingInterface
         'nsfw' => [ 'type' => 'integer' ],
         'paywall' => [ 'type' => 'boolean', '$exportField' => 'paywall' ],
         'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
+        'moderator_guid' => [ 'type' => 'text'],
+        '@moderated' => [ 'type' => 'date'],
     ];
 
     /** @var mixed $entity */

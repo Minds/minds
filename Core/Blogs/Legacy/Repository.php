@@ -246,7 +246,6 @@ class Repository
      */
     public function update(Blog $blog)
     {
-        error_log(var_export($blog->getDirtyAttributes(), true));
         return $this->add($blog, $blog->getDirtyAttributes());
     }
 

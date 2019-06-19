@@ -145,7 +145,7 @@ class Manager
      */
     public function update(Blog $blog)
     {
-        $shouldReindex = $blog->isDirty('deleted');
+        $shouldReindex = $blog->isDirty('deleted') || $blog->isDirty('moderatorGuid');
 
         $blog
             ->setTimeUpdated(time())

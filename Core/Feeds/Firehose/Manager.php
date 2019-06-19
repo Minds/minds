@@ -67,16 +67,14 @@ class Manager
         }
 
         return $response->filter(function ($entity) {
-            error_log($entity->getGuid());
-            error_log($entity->getModeratorGuid());
-            return $entity->getModeratorGuid() === null;
+            return empty($entity->getModeratorGuid());
         });
     }
 
     /**
      * Marks an entity as moderated.
      *
-     * @param $entity         the entity to mark as moderated, typeless because images do not inherit entity
+     * @param $entity the entity to mark as moderated, typeless because images do not inherit entity
      * @param User $user the moderator
      * @param int  $time
      */

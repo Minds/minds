@@ -36,7 +36,8 @@ class ObjectBlogMappingSpec extends ObjectBehavior
         $blog->getTags()->willReturn([ 'art' ]);
         $blog->getRating()->willReturn(1);
         $blog->getNsfw()->willReturn([ 1 ]);
-
+        $blog->getModeratorGuid()->willReturn('3');
+        $blog->getTimeModerated()->willReturn($now);
         $this
             ->setEntity($blog)
             ->map([
@@ -64,6 +65,8 @@ class ObjectBlogMappingSpec extends ObjectBehavior
                 'public' => true,
                 'tags' => [ 'art', 'test', 'hashtag' ],
                 'rating' => 1,
+                'moderator_guid' => '3',
+                '@moderated' => $now * 1000
             ]);
     }
 }

@@ -226,7 +226,14 @@ class Blog extends RepositoryEntity
     /** @var array */
     protected $nsfw = [];
 
+    /** @var array */
     protected $nsfwLock = [];
+
+    /** @var int */
+    protected $moderatorGuid;
+
+    /** @var int */
+    protected $timeModerated;
 
     /**
      * Blog constructor.
