@@ -89,6 +89,10 @@ use Minds\Traits\MagicAttributes;
  * @method bool isEphemeral()
  * @method Blog setHidden(bool $value)
  * @method bool isHidden()
+ * @method Blog setModeratorGuid(int $moderatorGuid)
+ * @method int getModeratorGuid()
+ * @method Blog setTimeModerated(int $timeModerated)
+ * @method int getTimeModerated()
  */
 class Blog extends RepositoryEntity
 {

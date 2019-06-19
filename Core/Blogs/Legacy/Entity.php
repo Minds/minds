@@ -49,6 +49,8 @@ class Entity
         'boostRejectionReason' => 'boost_rejection_reason',
         'ownerObj' => 'ownerObj',
         'nsfw' => 'nsfw',
+        'moderatorGuid' => 'moderator_guid',
+        'timeModerated' => 'time_moderated'
     ];
 
     static $jsonEncodedFields = [
@@ -124,7 +126,6 @@ class Entity
         }
 
         $blog->markAllAsPristine();
-
         return $blog;
     }
 

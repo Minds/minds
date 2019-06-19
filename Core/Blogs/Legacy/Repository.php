@@ -220,6 +220,7 @@ class Repository
         }
 
         $requests = [];
+    
 
         foreach ($fields as $column1 => $value) {
             $requests[] = [
@@ -245,6 +246,7 @@ class Repository
      */
     public function update(Blog $blog)
     {
+        error_log(var_export($blog->getDirtyAttributes(), true));
         return $this->add($blog, $blog->getDirtyAttributes());
     }
 
