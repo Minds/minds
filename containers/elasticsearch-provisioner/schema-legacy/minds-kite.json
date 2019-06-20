@@ -1,0 +1,54 @@
+{
+    "mappings": {
+        "user-state": {
+            "_all": {
+                "enabled": true
+            },
+            "properties": {
+                "activity_percentage": {
+                    "type": "double"
+                },
+                "previous_state": {
+                    "type": "text"
+                },
+                "reference_date": {
+                    "type": "date"
+                },
+                "state": {
+                    "type": "keyword"
+                },
+                "user_guid": {
+                    "type": "long"
+                }
+            }
+        },
+        "active_user": {
+            "_all": {
+                "enabled": true
+            },
+            "properties": {
+                "activity_percentage": {
+                    "type": "double"
+                },
+                "previous_state": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "reference_date": {
+                    "type": "date"
+                },
+                "state": {
+                    "type": "keyword"
+                },
+                "user_guid": {
+                    "type": "long"
+                }
+            }
+        }
+    }
+}

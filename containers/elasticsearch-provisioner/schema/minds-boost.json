@@ -1,0 +1,59 @@
+{
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "@completed": {
+                    "type": "date"
+                },
+                "@rejected": {
+                    "type": "date"
+                },
+                "@reviewed": {
+                    "type": "date"
+                },
+                "@revoked": {
+                    "type": "date"
+                },
+                "@timestamp": {
+                    "type": "date"
+                },
+                "bid": {
+                    "type": "double"
+                },
+                "bid_type": {
+                    "type": "keyword"
+                },
+                "entity_guid": {
+                    "type": "long"
+                },
+                "impressions": {
+                    "type": "long"
+                },
+                "impressions_met": {
+                    "type": "long"
+                },
+                "nsfw": {
+                    "type": "keyword"
+                },
+                "owner_guid": {
+                    "type": "long"
+                },
+                "priority": {
+                    "type": "boolean"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "keyword"
+                },
+                "token_method": {
+                    "type": "keyword"
+                },
+                "type": {
+                    "type": "keyword"
+                }
+            }
+        }
+    }
+}

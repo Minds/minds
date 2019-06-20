@@ -22,12 +22,22 @@ Minds is split into multiple repositories:
 
 **Enabling full installation**
 
-By default, we try not to eat your machine by running the full stack. You'll be able to run the app, but you won't have search and indexing. If you need everthing, be sure to uncomment the ```depends_on``` services in
+### Setting up elasticsearch
 
-* runners
-* php-fpm
+** Linux users **
+To get elasticsearch 6 to run, you must make a settings change on the host machine.
 
-Then you can run:
+Run ```sudo sysctl -w vm.max_map_count=262144```
+
+To make it permanent, modify the variable in /etc/sysctl.conf
+
+#### Build the elasticsearch indexes
+
+1. Make sure nothing is running: `docker-compose down`
+2. Run the legacy provisioner: `docker-compose up elasticsearch-legacy-provisioner`
+3. Run the legacy provisioner: `docker-compose up elasticsearch-provisioner`
+
+### Running the stack the first time
 
 1. Run `sh init.sh` in order to install the front and engine repositories
 2. Run `docker-compose up -d nginx`
@@ -35,7 +45,7 @@ Then you can run:
 4. Run `docker-compose up front-build` 
 5. Navigate to `http://localhost:8080`
 
-### Troubleshooting
+# Troubleshooting
 
 - Minds is already installed
   - Ensure engine/settings.php does not exist and re-run `docker-compose up installer`

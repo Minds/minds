@@ -1,0 +1,47 @@
+{
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "@timestamp": {
+                    "type": "date"
+                },
+                "amount": {
+                    "type": "double"
+                },
+                "boost_guid": {
+                    "type": "long"
+                },
+                "boost_handlder": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "boost_handler": {
+                    "type": "keyword"
+                },
+                "contract": {
+                    "type": "keyword"
+                },
+                "tx": {
+                    "type": "keyword"
+                },
+                "user_guid": {
+                    "type": "long"
+                },
+                "wire_entity_guid": {
+                    "type": "long"
+                },
+                "wire_receiver_guid": {
+                    "type": "long"
+                },
+                "wire_sender_guid": {
+                    "type": "long"
+                }
+            }
+        }
+    }
+}
