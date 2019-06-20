@@ -1,0 +1,87 @@
+{
+    "mappings": {
+        "reports": {
+            "dynamic": "false",
+            "properties": {
+                "@appeal_jury_decided_timestamp": {
+                    "type": "date"
+                },
+                "@appeal_timestamp": {
+                    "type": "date"
+                },
+                "@initial_jury_decided_timestamp": {
+                    "type": "date"
+                },
+                "action": {
+                    "type": "keyword"
+                },
+                "appeal_jury": {
+                    "type": "nested",
+                    "properties": {
+                        "@timestamp": {
+                            "type": "date"
+                        },
+                        "accepted": {
+                            "type": "boolean"
+                        },
+                        "juror_guid": {
+                            "type": "long"
+                        },
+                        "juror_hash": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "appeal_jury_action": {
+                    "type": "keyword"
+                },
+                "appeal_note": {
+                    "type": "keyword"
+                },
+                "entity_guid": {
+                    "type": "long"
+                },
+                "entity_owner_guid": {
+                    "type": "long"
+                },
+                "initial_jury": {
+                    "type": "nested",
+                    "properties": {
+                        "@timestamp": {
+                            "type": "date"
+                        },
+                        "accepted": {
+                            "type": "boolean"
+                        },
+                        "juror_guid": {
+                            "type": "long"
+                        },
+                        "juror_hash": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "initial_jury_action": {
+                    "type": "keyword"
+                },
+                "reports": {
+                    "type": "nested",
+                    "properties": {
+                        "@timestamp": {
+                            "type": "date"
+                        },
+                        "reason": {
+                            "type": "integer"
+                        },
+                        "reporter_guid": {
+                            "type": "long"
+                        },
+                        "reporter_hash": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

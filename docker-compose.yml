@@ -32,13 +32,33 @@ services:
     networks:
       - app
 
+  elasticsearch-legacy:
+    image: elasticsearch:5.6-alpine
+    entrypoint: /clear-data-and-start.sh
+    environment: 
+      - "xpack.security.enabled=false"
+      - "http.host=0.0.0.0"
+      - "transport.host=127.0.0.1"
+    networks:
+      - app
+    ports: 
+      - "9200:9200"
+    volumes:
+      - ./.data/elasticsearch:/usr/share/elasticsearch/data
+      - ./containers/elasticsearch-legacy/clear-data-and-start.sh:/clear-data-and-start.sh
+
   elasticsearch:
     image: elasticsearch:6.6.2
+    entrypoint: /set-permissions-and-start.sh
     mem_limit: 512MB # keep an eye
     ulimits:
+      nproc: 65536
       memlock:
-        soft: -1
-        hard: -1
+        soft: 65536
+        hard: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
     networks:
@@ -47,6 +67,7 @@ services:
       - "9200:9200"
     volumes:
       - ./.data/elasticsearch:/usr/share/elasticsearch/data
+      - ./containers/elasticsearch/set-permissions-and-start.sh:/set-permissions-and-start.sh
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.6.2
@@ -78,8 +99,8 @@ services:
     depends_on:
       - cassandra
       - cockroachdb
-      #- mongo
-      #- elasticsearch
+      - mongo
+      - elasticsearch
       - rabbitmq
       - redis
     networks:
@@ -96,9 +117,9 @@ services:
       dockerfile: ./containers/php-runners/Dockerfile
     depends_on:
       - cassandra
-    #  - mongo
-    #  - elasticsearch
-    #  - rabbitmq
+      - mongo
+      - elasticsearch
+      - rabbitmq
       - redis
     networks:
       - app
@@ -136,6 +157,27 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
+
+  elasticsearch-legacy-provisioner:
+    build:
+      context:
+          ./containers/elasticsearch-provisioner
+    entrypoint: sh /provisioner/provision-elasticsearch-legacy.sh
+    networks:
+      - app
+    depends_on:
+      - elasticsearch-legacy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  elasticsearch-provisioner:
+    build:
+      context:
+        ./containers/elasticsearch-provisioner
+    networks:
+      - app
+    depends_on:
+      - elasticsearch
 
   front-build:
     image: markharding/minds-front-base
