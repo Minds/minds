@@ -81,6 +81,20 @@ class Events
             $e->setResponse(($group->isOwner($user->guid) || $group->isModerator($user->guid)) && $group->isMember($user->guid));
         });
 
+        Dispatcher::register('acl:interact', 'activity', function ($e) {
+            $params = $e->getParameters();
+            $activity = $params['entity'];
+            $user = $params['user'];
+
+            if ($activity instanceof Activity && $activity->container_guid && $activity->container_guid !== $activity->owner_guid) {
+                $container = EntitiesFactory::build($activity->container_guid);
+
+                if ($container->type === 'group') {
+                    $e->setResponse($container->isMember($user->guid));
+                }
+            }
+        });
+
         Dispatcher::register('acl:interact', 'group', function ($e) {
             $params = $e->getParameters();
             $group = $params['entity'];
