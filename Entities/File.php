@@ -163,15 +163,31 @@ class File extends \ElggFile implements Flaggable
         return $this->moderator_guid;
     }
 
+     /**
+     * Sets the user who moderated
+     * @param int $moderatorGuid
+     * @return File
+     */
     public function setModeratorGuid(int $moderatorGuid) {
         $this->moderator_guid = $moderatorGuid;
         return $this;
     }
 
+     /**
+     * Returns when the file was moderated
+     * @return int time_moderated timestamp
+     */
     public function getTimeModerated() {
         return $this->time_moderated;
     }
-    public function setTimeModerated(int $time) {
-        $this->time_moderated = $time;
+
+     /**
+     * Sets when the file was moderated
+     * @param int $timeModerated
+     * @return File
+     */
+    public function setTimeModerated(int $timeModerated) {
+        $this->time_moderated = $timeModerated;
+        return $this;
     }
 }

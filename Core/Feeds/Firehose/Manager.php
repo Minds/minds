@@ -67,7 +67,7 @@ class Manager
         }
 
         return $response->filter(function ($entity) {
-            return empty($entity->getModeratorGuid());
+            return (!$entity->getModeratorGuid());
         });
     }
 
@@ -90,7 +90,10 @@ class Manager
         //Save the entity
         $this->saveEntity($entity, $moderator, $time);
 
-        if ($entity->getType() == 'activity' && $entity->get('entity_guid')) {
+        if (method_exists($entity, 'getType') 
+            && $entity->getType() == 'activity'
+            && $entity->get('entity_guid')
+        ) {
             $attachment = $this->entitiesBuilder->single($entity->get('entity_guid'));
             $this->saveEntity($attachment, $moderator, $time);
         }

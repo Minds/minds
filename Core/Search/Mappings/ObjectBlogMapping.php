@@ -33,8 +33,8 @@ class ObjectBlogMapping extends EntityMapping implements MappingInterface
         'license' => [ 'type' => 'text', '$exportGetter' => 'getLicense' ],
         'rating' => [ 'type' => 'integer', '$exportField' => 'rating' ],
         'nsfw' => [ 'type' => 'array', '$exportGetter' => 'getNsfw' ],
-        'moderator_guid' => [ 'type' => 'text'],
-        '@moderated' => [ 'type' => 'date'],
+        'moderator_guid' => [ 'type' => 'text' ],
+        '@moderated' => [ 'type' => 'date' ],
     ];
 
     /** @var Blog $entity */
