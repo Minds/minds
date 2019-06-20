@@ -70,8 +70,8 @@ class register implements Interfaces\Api, Interfaces\ApiIgnorePam
             $user = register_user($_POST['username'], $_POST['password'], $_POST['username'], $_POST['email'], false);
             $guid = $user->guid;
 
-            if (isset($_POST['Homepage121118'])) {
-                $user->expHomepage121818 = $_POST['Homepage121118'];
+            if (isset($_POST['Homepage200619'])) {
+                $user->expHomepage200619 = $_POST['Homepage200619'];
                 $user->save();
             }
 
