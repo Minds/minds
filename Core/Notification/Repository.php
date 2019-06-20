@@ -151,6 +151,7 @@ class Repository
         }
 
         $query = 'INSERT INTO notifications (
+            uuid,
             to_guid,
             from_guid,
             entity_guid,
@@ -162,6 +163,7 @@ class Repository
         $values = [];
         foreach ($notifications as $notification) {
             $values = array_merge($values, [
+                $notification->getUuid(),
                 $notification->getToGuid(),
                 $notification->getFromGuid(),
                 $notification->getEntityGuid(),
@@ -171,7 +173,7 @@ class Repository
             ]);
         }
 
-        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?,?)'));
+        $query .= implode(',', array_fill(0, count($notifications), '(?,?,?,?,?,?,?)'));
 
         $query .= ' RETURNING UUID';
 
