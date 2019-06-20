@@ -75,6 +75,7 @@ class Events
                 ->setToGuid($params['to'])
                 ->setFromGuid($from_user->getGuid())
                 ->setEntityGuid($entityGuid)
+                ->setEntityUrn($entity->getUrn())
                 ->setType($params['notification_view'])
                 ->setData($data);
             

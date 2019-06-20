@@ -905,26 +905,28 @@ CREATE TABLE minds.translations (
     AND speculative_retry = '99PERCENTILE';
 
 CREATE TABLE minds.notifications (
-    owner_guid varint,
-    guid varint,
-    data text,
+    to_guid bigint,
+    uuid timeuuid,
     type text,
-    PRIMARY KEY (owner_guid, guid)
-) WITH CLUSTERING ORDER BY (guid DESC)
-    AND bloom_filter_fp_chance = 0.01
-    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
-    AND comment = ''
-    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
-    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
-    AND crc_check_chance = 1.0
-    AND dclocal_read_repair_chance = 0.1
-    AND default_time_to_live = 0
-    AND gc_grace_seconds = 864000
-    AND max_index_interval = 2048
-    AND memtable_flush_period_in_ms = 0
-    AND min_index_interval = 128
-    AND read_repair_chance = 0.0
-    AND speculative_retry = '99PERCENTILE';
+    type_group text,
+    from_guid bigint,
+    entity_guid text,
+    entity_urn text,
+    created_timestamp timestamp,
+    read_timestamp timestamp,
+    data text,
+    PRIMARY KEY (to_guid, uuid)
+)  WITH CLUSTERING ORDER BY (uuid DESC);
+
+CREATE MATERIALIZED VIEW minds.notifications_by_type_group AS
+    SELECT *
+    FROM minds.notifications
+    WHERE to_guid IS NOT NULL 
+    AND uuid IS NOT NULL
+    AND type_group IS NOT NULL
+    PRIMARY KEY (to_guid, type_group, uuid)
+    WITH CLUSTERING ORDER BY (type_group DESC, uuid DESC);
+
 
 CREATE TABLE minds.friendsof (
     key text,

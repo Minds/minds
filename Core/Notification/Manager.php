@@ -9,6 +9,7 @@ use Minds\Common\Repository\Response;
 use Minds\Core\Config;
 use Minds\Core\Di\Di;
 use Minds\Entities\User;
+use Minds\Core\Features\Manager as FeaturesManager;
 
 class Manager
 {
@@ -19,17 +20,26 @@ class Manager
     /** @var Repository $repository */
     private $repository;
 
-    /** @var LegacyRepository $legacyRepository */
-    private $legacyRepository;
+    /** @var CassandraRepository $cassandraRepository */
+    private $cassandraRepository;
+
+    /** @var FeaturesManager $features */
+    private $features;
 
     /** @var User $user */
     private $user;
 
-    public function __construct($config = null, $repository = null, $legacyRepository = null)
+    public function __construct(
+        $config = null,
+        $repository = null,
+        $cassandraRepository = null,
+        $features = null
+    )
     {
         $this->config = $config ?: Di::_()->get('Config');
         $this->repository = $repository ?: new Repository;
-        $this->legacyRepository = $legacyRepository ?: new LegacyRepository;
+        $this->cassandraRepository = $cassandraRepository ?: new CassandraRepository;
+        $this->features = $features ?: new FeaturesManager;
     }
 
     /**
@@ -45,12 +55,15 @@ class Manager
 
     /**
      * Return a single notification
-     * @param $uuid
+     * @param $urn
      * @return Notification
      */
-    public function getSingle($uuid)
+    public function getSingle($urn)
     {
-        return $this->repository->get($uuid);
+        if (strpos($urn, 'urn:') !== FALSE) {
+            return $this->cassandraRepository->get($urn);
+        }
+        return $this->repository->get($urn);
     }
 
     /**
@@ -67,6 +80,8 @@ class Manager
             'limit' => 12,
             'offset' => '',
         ], $opts);
+
+        $opts['type_group'] = $opts['type'];
 
         switch ($opts['type']) {
             case "tags":
@@ -123,6 +138,10 @@ class Manager
                 break;
         }
 
+        if ($this->features->has('cassandra-notifications')) {
+            return $this->cassandraRepository->getList($opts);
+        }
+
         return $this->repository->getList($opts);
     }
 
@@ -134,6 +153,7 @@ class Manager
     public function add($notification)
     {
         try {
+            $this->cassandraRepository->add($notification);
             $uuid = $this->repository->add($notification);
 
             return $uuid;
@@ -143,6 +163,55 @@ class Manager
                 exit;
             }
         }
+    }
+
+    /**
+     * @param $type
+     * @return string
+     */
+    public static function getGroupFromType($type)
+    {
+        switch ($type) {
+            case 'tag':
+                return 'tags';
+                break;
+            case 'friends':
+            case 'welcome_chat':
+            case 'welcome_discover':
+                return 'subscriptions';
+                break;
+            case 'group_invite':
+            case 'group_kick':
+            case 'group_activity':
+                return 'groups';
+                break;
+            case 'comment':
+                return 'comments';
+                break;
+            case 'like':
+            case 'downvote':
+                return 'votes';
+                break;
+            case 'remind':
+                return 'reminds';
+                break;
+            case 'boost_gift':
+            case 'boost_submitted':
+            case 'boost_submitted_p2p':
+            case 'boost_request':
+            case 'boost_rejected':
+            case 'boost_revoked':
+            case 'boost_accepted':
+            case 'boost_completed':
+            case 'boost_peer_request':
+            case 'boost_peer_accepted':
+            case 'boost_peer_rejected':
+            case 'welcome_points':
+            case 'welcome_boost':
+                return 'boosts';
+                break;
+        }
+        return 'unknown';
     }
 
 }
