@@ -18,6 +18,7 @@ class Manager
     /** @param array $experiments */
     private $experiments = [
         'Homepage121118' => Hypotheses\Homepage121118::class,
+        'Homepage200619' => Hypotheses\Homepage200619::class,
     ];
 
     public function __construct($sampler = null)
