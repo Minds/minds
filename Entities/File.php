@@ -7,6 +7,15 @@ use Minds\Interfaces\Flaggable;
 /**
  * File Entity
  * @todo Do not inherit from ElggFile
+ * @package Minds\Entities\File
+ * @method array getExportableValues()
+ * @method mixed|null getFlag(string $flag)
+ * @method File setFlag(string $flag, mixed $value)
+ * @method void save(bool $index)
+ * @method array getWireTotals()
+ * @method mixed getWireThreshold()
+ * @method File setWireThreshold(int $wire_threshold)
+ * @method int getModeratorGUID()
  */
 class File extends \ElggFile implements Flaggable
 {
@@ -21,6 +30,8 @@ class File extends \ElggFile implements Flaggable
 
         $this->attributes['flags'] = [];
         $this->attributes['wire_threshold'] = 0;
+        $this->attributes['moderator_guid'] = null;
+        $this->attributes['time_moderated'] = null;
     }
 
     /**
@@ -31,7 +42,9 @@ class File extends \ElggFile implements Flaggable
     {
         return array_merge(parent::getExportableValues(), [
             'flags',
-            'wire_threshold'
+            'wire_threshold',
+            'moderator_guid',
+            'time_moderated'
         ]);
     }
 
@@ -139,6 +152,42 @@ class File extends \ElggFile implements Flaggable
     public function setWireThreshold($wire_threshold)
     {
         $this->wire_threshold = $wire_threshold;
+        return $this;
+    }
+
+    /**
+     * Returns the user who moderated
+     * @return int moderator guid
+     */
+    public function getModeratorGuid() {
+        return $this->moderator_guid;
+    }
+
+     /**
+     * Sets the user who moderated
+     * @param int $moderatorGuid
+     * @return File
+     */
+    public function setModeratorGuid(int $moderatorGuid) {
+        $this->moderator_guid = $moderatorGuid;
+        return $this;
+    }
+
+     /**
+     * Returns when the file was moderated
+     * @return int time_moderated timestamp
+     */
+    public function getTimeModerated() {
+        return $this->time_moderated;
+    }
+
+     /**
+     * Sets when the file was moderated
+     * @param int $timeModerated
+     * @return File
+     */
+    public function setTimeModerated(int $timeModerated) {
+        $this->time_moderated = $timeModerated;
         return $this;
     }
 }

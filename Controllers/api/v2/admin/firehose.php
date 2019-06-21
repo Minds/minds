@@ -135,14 +135,8 @@ class firehose implements Interfaces\Api, Interfaces\ApiAdminPam
 
         $moderator = Session::getLoggedinUser();
         $manager = Di::_()->get('Feeds\Firehose\Manager');
-        if (isset($_POST['reason'])) {
-            $reasonCode = $_POST['reason'];
-        }
-        if (isset($_POST['subreason_code'])) {
-            $reasonCode = $_POST['subreason'];
-        }
         
-        $manager->save($entity, $moderator, $reasonCode, $subReasonCode);
+        $manager->save($entity, $moderator);
         return Factory::response([]);
     }
 

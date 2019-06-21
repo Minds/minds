@@ -15,6 +15,8 @@
  * @property int    $access_id      Specifies the visibility level of this entity
  * @property int    $time_created   A UNIX timestamp of when the entity was created (read-only, set on first save)
  * @property int    $time_updated   A UNIX timestamp of when the entity was last updated (automatically updated on save)
+ * @property int    $moderator_guid The GUID of the moderator
+ * @property int    $moderated_at   A UNIX timestamp of when the entity was moderated
  * @property-read string $enabled
  */
 abstract class ElggEntity extends ElggData implements
@@ -1631,11 +1633,19 @@ abstract class ElggEntity extends ElggData implements
 		return "urn:entity:{$this->getGuid()}";
 	}
 
+	/** gets the guid of the moderator
+	 * @return int
+	 */
+	public function getModeratorGuid() {
+		return $this->moderator_guid;
+	}
+
+
 	/**
 	 * Marks the user as moderated by a user
 	 * @param int $moderatorGuid the moderator
 	 */
-	public function setModeratorGuid($moderatorGuid)
+	public function setModeratorGuid(int $moderatorGuid)
     {
         $this->moderator_guid = $moderatorGuid;
     }
@@ -1644,8 +1654,16 @@ abstract class ElggEntity extends ElggData implements
 	 * Marks the time as when an entity was moderated
 	 * @param int $timeModerated unix timestamp when the entity was moderated
 	 */
-    public function setTimeModerated($timeModerated)
+    public function setTimeModerated(int $timeModerated)
     {
         $this->time_moderated = $timeModerated;
-    }
+	}
+	
+	/**
+	 * Gets the time moderated
+	 * @return int
+	 */
+	public function getTimeModerated() {
+		return $this->time_moderated;
+	}
 }
