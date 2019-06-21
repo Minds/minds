@@ -182,6 +182,10 @@ class notifications implements Interfaces\Api
         $return = [];
         // Formatting for legacy notification handling in frontend
         foreach ($notifications as $key => $entity) {
+            if ($entity->getToGuid() != Core\Session::getLoggedInUser()->guid) {
+                error_log('[notification]: Mismatch of to_guid with uuid ' . $entity->getUuid());
+                continue;
+            }
             $entityObj = Entities\Factory::build($entity->getEntityGuid());
             $fromObj = Entities\Factory::build($entity->getFromGuid());
             $toObj = Core\Session::getLoggedInUser();
