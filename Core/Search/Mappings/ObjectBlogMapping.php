@@ -209,6 +209,7 @@ class ObjectBlogMapping extends EntityMapping implements MappingInterface
                     $map[$key] = $this->entity->{$getter}();
             }
         }
+
         return $map;
     }
 }

@@ -126,6 +126,7 @@ class Entity
         }
 
         $blog->markAllAsPristine();
+
         return $blog;
     }
 

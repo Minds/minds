@@ -220,7 +220,6 @@ class Repository
         }
 
         $requests = [];
-    
 
         foreach ($fields as $column1 => $value) {
             $requests[] = [
