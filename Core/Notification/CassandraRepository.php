@@ -122,7 +122,7 @@ class CassandraRepository
     public function add($notification)
     {
         if (!$notification->getUuid()) {
-            $notification->setUuid((new Timeuuid($notification->getUuid() ?? null))->uuid());
+            $notification->setUuid((new Timeuuid())->uuid());
         }
 
         $statement = 'INSERT INTO notifications (
