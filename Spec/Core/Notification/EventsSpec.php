@@ -27,7 +27,7 @@ class EventsSpec extends ObjectBehavior
         expect(Dispatcher::trigger('notification', 'mock', [
             'to' => [ $to_user_a->guid, $to_user_b->guid ],
             'from' => $from_user,
-            'entity' => $entity,
+            'entity' => $entity->getWrappedObject(),
             'notification_view' => 'mock_test',
             'description' => 'I am a mock',
             'params' => [ 'message' => 'I am foobar' ],
