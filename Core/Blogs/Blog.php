@@ -642,4 +642,13 @@ class Blog extends RepositoryEntity
 
         return $output;
     }
+
+    /**
+     * Return the URN
+     * @return string
+     */
+    public function getUrn()
+    {
+        return "urn:blog:{$this->getGuid()}";
+    }
 }
