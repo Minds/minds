@@ -85,6 +85,7 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
     }
 
     public function sync_graphs()
+    {
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
@@ -120,11 +121,14 @@ class Analytics extends Cli\Controller implements Interfaces\CliControllerInterf
 
         foreach ($aggregates as $aggregate) {
             $this->out("Syncing {$aggregate}");
-            
-            $manager->sync([
-                'aggregate' => $aggregate,
-                'all' => true,
-            ]);
+
+            try { 
+                $manager->sync([
+                    'aggregate' => $aggregate,
+                    'all' => true,
+                ]);
+            } catch (\Exception $e) {
+            }
         }
 
         $this->out('Completed caching site metrics');

@@ -122,15 +122,6 @@ class ActiveUsers implements AggregateInterface
         $query = [
             'index' => $this->index,
             'size' => 0,
-            "stored_fields" => [
-                "*"
-            ],
-            "docvalue_fields" => [
-                (object) [
-                    "field" => "@timestamp",
-                    "format" => "date_time"
-                ]
-            ],
             'body' => [
                 'query' => [
                     'bool' => [
@@ -226,15 +217,6 @@ class ActiveUsers implements AggregateInterface
         $query = [
             'index' => $this->index,
             'size' => 0,
-            "stored_fields" => [
-                "*"
-            ],
-            "docvalue_fields" => [
-                (object) [
-                    "field" => "@timestamp",
-                    "format" => "date_time"
-                ]
-            ],
             'body' => [
                 'query' => [
                     'bool' => [
@@ -301,9 +283,6 @@ class ActiveUsers implements AggregateInterface
     {
         $must = [
             [
-                "match_all" => (object) []
-            ],
-            [
                 "range" => [
                     "@timestamp" => [
                         "gte" => $from->getTimestamp() * 1000,
@@ -324,15 +303,6 @@ class ActiveUsers implements AggregateInterface
         $query = [
             'index' => $this->index,
             'size' => 0,
-            "stored_fields" => [
-                "*"
-            ],
-            "docvalue_fields" => [
-                (object) [
-                    "field" => "@timestamp",
-                    "format" => "date_time"
-                ]
-            ],
             'body' => [
                 'query' => [
                     'bool' => [
@@ -344,7 +314,7 @@ class ActiveUsers implements AggregateInterface
                         "date_histogram" => [
                             "field" => "@timestamp",
                             "interval" => "1M",
-                            "min_doc_count" => 1
+                            //"min_doc_count" => 1
                         ],
                         "aggs" => [
                             "mau_logged_in" => [
@@ -352,7 +322,7 @@ class ActiveUsers implements AggregateInterface
                                     "field" => "user_guid.keyword"
                                 ]
                             ],
-                            "mau_unique" => [
+                           "mau_unique" => [
                                 "cardinality" => [
                                     "field" => "cookie_id.keyword"
                                 ]
@@ -386,7 +356,7 @@ class ActiveUsers implements AggregateInterface
         $prepared->query($query);
 
         $result = $this->client->request($prepared);
-
+ 
         $response = [
             [
                 'name' => 'MAU',
