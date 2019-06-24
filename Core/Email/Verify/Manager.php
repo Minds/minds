@@ -29,6 +29,7 @@ class Manager
         'daymailonline.com',
         'uber-mail.com',
         'mailmetal.com',
+        'email-24x7.com',
     ];
 
     public function __construct($service = null, $spamBlocksManager = null)
