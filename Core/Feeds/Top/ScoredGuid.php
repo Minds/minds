@@ -28,6 +28,9 @@ class ScoredGuid
     /** @var int|string */
     protected $guid;
 
+    /** @var string */
+    protected $type;
+
     /** @var float */
     protected $score;
 

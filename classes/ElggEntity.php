@@ -1370,7 +1370,7 @@ abstract class ElggEntity extends ElggData implements
 	 */
 	public function getExportableValues() {
 		return array(
-			'guid',
+            'guid',
 			'type',
 			'subtype',
 			'time_created',
@@ -1395,7 +1395,8 @@ abstract class ElggEntity extends ElggData implements
 		$export = array_merge($export, \Minds\Core\Events\Dispatcher::trigger('export:extender', 'all', array('entity'=>$this), []) ?: []);
         $export = \Minds\Helpers\Export::sanitize($export);
 		$export['nsfw'] = $this->getNsfw();
-		$export['nsfw_lock'] = $this->getNsfwLock();
+        $export['nsfw_lock'] = $this->getNsfwLock();
+        $export['urn']= $this->getUrn();
 		return $export;
 	}
 

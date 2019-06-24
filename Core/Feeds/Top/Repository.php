@@ -347,6 +347,7 @@ class Repository
             $guids[$guid] = true;
             yield (new ScoredGuid())
                 ->setGuid($doc['_source'][$this->getSourceField($opts['type'])])
+                ->setType($doc['_type'])
                 ->setScore($algorithm->fetchScore($doc))
                 ->setOwnerGuid($doc['_source']['owner_guid'])
                 ->setTimestamp($doc['_source']['@timestamp']);
