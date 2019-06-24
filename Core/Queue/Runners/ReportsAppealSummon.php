@@ -43,10 +43,20 @@ class ReportsAppealSummon implements QueueRunner
                     return;
                 }
 
-                echo "Summoning for {$appeal->getReport()->getUrn()}..." . PHP_EOL;
+                // Reydrate each loop
+                $reportsManager = Di::_()->get('Moderation\Manager');
+                $appeal->setReport($reportsManager->getReport($appeal->getReport()->getUrn()));
 
+                if ($appeal->getReport()->getState() !== 'appealed') {
+                    echo "{$appeal->getReport()->getUrn()} is already appealed..." . PHP_EOL;
+                    return;
+                }
+
+                echo "Summoning for {$appeal->getReport()->getUrn()}..." . PHP_EOL;
+                
                 /** @var Manager $manager */
                 $manager = Di::_()->get('Moderation\Summons\Manager');
+
                 $missing = $manager->summon($appeal, [
                     'include_only' => $cohort ?: null,
                 ]);
