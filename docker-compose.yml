@@ -86,6 +86,12 @@ services:
     networks:
       - app
 
+  redis_pubsub:
+    image: redis:4.0-alpine
+    mem_limit: 100MB # keep an eye
+    networks:
+      - app
+
   rabbitmq:
     image: rabbitmq:3.6-alpine
     networks:
