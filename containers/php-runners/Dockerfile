@@ -8,10 +8,6 @@ ADD --chown=www-data . /var/www/Minds/engine
 
 RUN rm -f /var/www/Minds/engine/settings.php
 
-# Install awscli
-
-RUN apk update && apk add --no-cache py-pip && pip install --upgrade pip && pip install awscli
-
 # Setup our supervisor service
 
 RUN apk add --no-cache \
