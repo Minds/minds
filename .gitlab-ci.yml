@@ -6,6 +6,7 @@ services:
 stages:
   - build
   - test
+  - prepare
   - deploy
 
 cache:
@@ -35,14 +36,32 @@ test:
     - docker-php-ext-install gd
     - bin/phpspec run
 
+prepare:fpm:
+  stage: prepare
+  image: minds/ci:latest
+  script:
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker build -t $REPOSITORY_URL_FPM-$CI_BUILD_REF -f containers/php-fpm/Dockerfile .
+    - docker push $REPOSITORY_URL_FPM-$CI_BUILD_REF
+  environment:
+    name: staging
+
+prepare:runners:
+  stage: prepare
+  image: minds/ci:latest
+  script:
+    - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker build -t $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF -f containers/php-runners/Dockerfile .
+    - docker push $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF
+  environment:
+    name: staging
+
 deploy:fpm:
   stage: deploy
-  image: docker:latest
+  image: minds/ci:latest
   script:
-    - apk add --no-cache curl jq python py-pip
-    - pip install awscli
-    - docker build -t $REPOSITORY_URL_FPM -f containers/php-fpm/Dockerfile .
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker tag $REPOSITORY_URL_FPM-$CI_BUILD_REF $REPOSITORY_URL_FPM
     - docker push $REPOSITORY_URL_FPM
     - aws ecs update-service --service=$SERVICE_FPM --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
@@ -54,12 +73,10 @@ deploy:fpm:
 
 deploy:runners:
   stage: deploy
-  image: docker:latest
+  image: minds/ci:latest
   script:
-    - apk add --no-cache curl jq python py-pip
-    - pip install awscli
-    - docker build -t $REPOSITORY_URL_RUNNERS -f containers/php-runners/Dockerfile .
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker tag $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF $REPOSITORY_URL_RUNNERS
     - docker push $REPOSITORY_URL_RUNNERS
     - aws ecs update-service --service=$SERVICE_RUNNERS --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
