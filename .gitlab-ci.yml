@@ -29,21 +29,17 @@ build:
 
 test:
   stage: test
-  image: php:7.1.11-fpm-alpine3.4 # TODO: Fix cassandra driver conflicts
+  image: minds/php-tests:latest
   script:
-    - apk update && apk add libpng-dev freetype-dev libjpeg-turbo-dev
-    - docker-php-ext-install mbstring
-    - docker-php-ext-install bcmath
-    - docker-php-ext-install gd
     - bin/phpspec run
 
 prepare:fpm:
   stage: prepare
   image: minds/ci:latest
   script:
-    - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker build -t $REPOSITORY_URL_FPM-$CI_BUILD_REF -f containers/php-fpm/Dockerfile .
-    - docker push $REPOSITORY_URL_FPM-$CI_BUILD_REF
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY} 
+    - docker build -t $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF -f containers/php-fpm/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
   environment:
     name: staging
 
@@ -51,39 +47,57 @@ prepare:runners:
   stage: prepare
   image: minds/ci:latest
   script:
-    - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker build -t $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF -f containers/php-runners/Dockerfile .
-    - docker push $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker build -t $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF -f containers/php-runners/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
   environment:
     name: staging
 
 staging:start:
   stage: staging
-  image: minds/ci:latest
+  image: minds/helm-eks:latest
   script:
-    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | awk -F'-subdomain:' '{print $2}')
+    - aws eks update-kubeconfig --name=sandbox
+    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | sed -n 's/.* -subdomain=\([^ ]*\).*/\1/p')
     - echo "Subdomain will be setup at $STAGING_SUBDOMAIN"
+    - git clone --branch=sandbox-wip https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/minds/helm-charts.git
+    - "helm upgrade \
+        --install \
+        --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
+	      --set phpfpm.image.tag=$CI_BUILD_REF \
+        --set domain=$STAGING_SUBDOMAIN.$STAGING_DOMAIN \
+        --wait \
+        $STAGING_SUBDOMAIN \
+        ./helm-charts/minds"
   only:
     variables:
       - $CI_COMMIT_MESSAGE =~ /-subdomain/
+  environment:
+    name: staging
 
 staging:stop:
   stage: staging
-  image: minds/ci:latest
+  image: minds/helm-eks:latest
   script:
-    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | awk -F'-subdomain:' '{print $2}') 
+    - aws eks update-kubeconfig --name=sandbox
+    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | sed -n 's/.* -subdomain=\([^ ]*\).*/\1/p')
     - echo "TODO tear down $STAGING_SUBDOMAIN"
+    - helm del --purge $STAGING_SUBDOMAIN
   when: manual
   only:
     variables:
       - $CI_COMMIT_MESSAGE =~ /-subdomain/
+  environment:
+    name: staging
 
 deploy:fpm:
   stage: deploy
   image: minds/ci:latest
   script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker tag $REPOSITORY_URL_FPM-$CI_BUILD_REF $REPOSITORY_URL_FPM
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker pull $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
+    - docker tag $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF $REPOSITORY_URL_FPM
     - docker push $REPOSITORY_URL_FPM
     - aws ecs update-service --service=$SERVICE_FPM --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
@@ -98,7 +112,9 @@ deploy:runners:
   image: minds/ci:latest
   script:
     - $(aws ecr get-login --no-include-email --region us-east-1)
-    - docker tag $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF $REPOSITORY_URL_RUNNERS
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker pull $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
+    - docker tag $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF $REPOSITORY_URL_RUNNERS
     - docker push $REPOSITORY_URL_RUNNERS
     - aws ecs update-service --service=$SERVICE_RUNNERS --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
