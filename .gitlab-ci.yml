@@ -7,6 +7,7 @@ stages:
   - build
   - test
   - prepare
+  - staging
   - deploy
 
 cache:
@@ -55,6 +56,27 @@ prepare:runners:
     - docker push $REPOSITORY_URL_RUNNERS-$CI_BUILD_REF
   environment:
     name: staging
+
+staging:start:
+  stage: staging
+  image: minds/ci:latest
+  script:
+    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | awk -F'-subdomain:' '{print $2}')
+    - echo "Subdomain will be setup at $STAGING_SUBDOMAIN"
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /-subdomain/
+
+staging:stop:
+  stage: staging
+  image: minds/ci:latest
+  script:
+    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | awk -F'-subdomain:' '{print $2}') 
+    - echo "TODO tear down $STAGING_SUBDOMAIN"
+  when: manual
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /-subdomain/
 
 deploy:fpm:
   stage: deploy
