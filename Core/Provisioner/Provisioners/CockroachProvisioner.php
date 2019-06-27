@@ -41,8 +41,12 @@ class CockroachProvisioner implements ProvisionerInterface
             if (trim($query) === '') {
                 continue;
             }
-            $statement = $adminDb->prepare($query);
-            $statement->execute();
+            try {
+                $statement = $adminDb->prepare($query);
+                $statement->execute();
+            } catch (\Exception $ex) {
+                error_log("Error running cockroach statement: " . $ex->getMessage());
+            }
         }
     }
 }
