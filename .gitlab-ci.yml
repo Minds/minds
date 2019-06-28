@@ -102,8 +102,12 @@ deploy:fpm:
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - docker pull $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
+    # Push to production registry
     - docker tag $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF $REPOSITORY_URL_FPM
     - docker push $REPOSITORY_URL_FPM
+    # Push to gitlab register
+    - docker tag $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF $CI_REGISTRY_IMAGE/fpm:latest
+    - docker push $CI_REGISTRY_IMAGE/fpm:latest
     - aws ecs update-service --service=$SERVICE_FPM --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
     refs:
@@ -119,8 +123,12 @@ deploy:runners:
     - $(aws ecr get-login --no-include-email --region us-east-1)
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - docker pull $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
+    # Push to production register
     - docker tag $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF $REPOSITORY_URL_RUNNERS
     - docker push $REPOSITORY_URL_RUNNERS
+    # Push gitlab registry
+    - docker tag $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF $CI_REGISTRY_IMAGE/runners:latest
+    - docker push $CI_REGISTRY_IMAGE/runners:latest
     - aws ecs update-service --service=$SERVICE_RUNNERS --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
     refs:
