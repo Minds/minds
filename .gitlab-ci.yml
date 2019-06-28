@@ -59,6 +59,7 @@ staging:start:
     - git clone --branch=sandbox-wip https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/minds/helm-charts.git
     - "helm upgrade \
         --install \
+        --reuse-values \
         --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
 	      --set phpfpm.image.tag=$CI_BUILD_REF \
         --set domain=$STAGING_SUBDOMAIN.$STAGING_DOMAIN \
