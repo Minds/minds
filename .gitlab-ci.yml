@@ -40,8 +40,6 @@ prepare:fpm:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY} 
     - docker build -t $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF -f containers/php-fpm/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
-  environment:
-    name: staging
 
 prepare:runners:
   stage: prepare
@@ -50,8 +48,6 @@ prepare:runners:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
     - docker build -t $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF -f containers/php-runners/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
-  environment:
-    name: staging
 
 staging:start:
   stage: staging
@@ -74,6 +70,10 @@ staging:start:
       - $CI_COMMIT_MESSAGE =~ /-subdomain/
   environment:
     name: staging
+  except: 
+    refs:
+      - master
+      - test/gitlab-ci
 
 staging:stop:
   stage: staging
@@ -89,6 +89,10 @@ staging:stop:
       - $CI_COMMIT_MESSAGE =~ /-subdomain/
   environment:
     name: staging
+  except: 
+    refs:
+      - master
+      - test/gitlab-ci
 
 deploy:fpm:
   stage: deploy
