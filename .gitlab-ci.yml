@@ -61,8 +61,9 @@ staging:start:
         --install \
         --reuse-values \
         --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
-	      --set phpfpm.image.tag=$CI_BUILD_REF \
+        --set phpfpm.image.tag=$CI_BUILD_REF \
         --set domain=$STAGING_SUBDOMAIN.$STAGING_DOMAIN \
+        --set elasticsearch.clusterName=$STAGING_SUBDOMAIN \
         --wait \
         $STAGING_SUBDOMAIN \
         ./helm-charts/minds"
