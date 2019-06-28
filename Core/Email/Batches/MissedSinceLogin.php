@@ -94,11 +94,11 @@ class MissedSinceLogin implements EmailBatchInterface
             ->setValue(true)
             ->setOffset($this->offset);
 
-        $blogs = $this->getTrendingBlogs();
+        //$blogs = $this->getTrendingBlogs();
 
         $i = 0;
         foreach ($iterator as $user) {
-            $user = new \Minds\Entities\User('ottman');
+            $user = new \Minds\Entities\User('mark');
             ++$i;
             echo "\n[$i]: $user->guid ($iterator->offset)";
 
@@ -107,13 +107,13 @@ class MissedSinceLogin implements EmailBatchInterface
             //    return true;
             //}
 
-            $campaign = new Campaigns\WithBlogs();
+            $campaign = new Campaigns\MissedSinceLogin();
 
             $campaign
                 ->setUser($user)
-                //->setTemplateKey($this->templatePath)
-                //->setSubject($this->subject)
-                ->setBlogs($blogs)
+                ->setTemplateKey($this->templatePath)
+                ->setSubject($this->subject)
+                //->setBlogs($blogs)
                 ->send();
 
             echo ' sent';

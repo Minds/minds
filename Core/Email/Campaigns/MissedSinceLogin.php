@@ -64,6 +64,7 @@ class MissedSinceLogin extends EmailCampaign
         $this->template->setTemplate('default.tpl');
 
         $this->template->setBody("./Templates/$this->templateKey.tpl");
+        $this->template->toggleMarkdown(true);
 
         $this->template->set('user', $this->user);
         $this->template->set('username', $this->user->username);
@@ -75,7 +76,6 @@ class MissedSinceLogin extends EmailCampaign
 
         $this->template->set('entities', $this->entities);
 
-        $this->user = new \Minds\Entities\User('jack');
         $message = new Message();
         $message->setTo($this->user)
             ->setMessageId(implode('-',
