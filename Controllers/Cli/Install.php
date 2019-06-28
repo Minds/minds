@@ -91,9 +91,13 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
                 $provisioner->setupSite();
                 $this->out('OK');
 
-                $this->out('- Setting up administrative user (ignore warnings, if any):', $this::OUTPUT_INLINE);
-                $provisioner->setupFirstAdmin();
-                $this->out('OK');
+                try {
+                    $this->out('- Setting up administrative user (ignore warnings, if any):', $this::OUTPUT_INLINE);
+                    $provisioner->setupFirstAdmin();
+                    $this->out('OK');
+                } catch (\Exception $ex) {
+                    $this->out('Could not setup initial user');
+                }
             }
 
             $this->out(['Done!', 'Open your browser and go to ' . $provisioner->getSiteUrl()], $this::OUTPUT_PRE);
