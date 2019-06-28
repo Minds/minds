@@ -4,3 +4,5 @@ Please login to check your token balance. Remember, 1 token = 1,000 extra views 
 |:--:|
 | [![Read More](https://cdn-assets.minds.com/emails/view-balance.png){=150x}](https://ndl.minds.com/wallet/tokens/transactions?__e_ct_guid=<?= $vars['guid']?>&campaign=<?= $vars['campaign']?>&topic=<?= $vars['topic'] ?>&validator=<?= $vars['validator']?>){=50x} |
 | |
+
+Thank you for your contribution!
