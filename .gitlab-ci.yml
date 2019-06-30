@@ -7,7 +7,7 @@ stages:
   - build
   - test
   - prepare
-  - staging
+  - review
   - deploy
 
 cache:
@@ -49,48 +49,44 @@ prepare:runners:
     - docker build -t $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF -f containers/php-runners/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
 
-staging:start:
-  stage: staging
+review:start:
+  stage: review
   image: minds/helm-eks:latest
   script:
     - aws eks update-kubeconfig --name=sandbox
-    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | sed -n 's/.* -subdomain=\([^ ]*\).*/\1/p')
-    - echo "Subdomain will be setup at $STAGING_SUBDOMAIN"
     - git clone --branch=sandbox-wip https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/minds/helm-charts.git
     - "helm upgrade \
         --install \
         --reuse-values \
         --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
         --set phpfpm.image.tag=$CI_BUILD_REF \
-        --set domain=$STAGING_SUBDOMAIN.$STAGING_DOMAIN \
-        --set elasticsearch.clusterName=$STAGING_SUBDOMAIN-elasticsearch \
+        --set domain=$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN \
+        --set elasticsearch.clusterName=$CI_BUILD_REF_SLUG-elasticsearch \
         --wait \
-        $STAGING_SUBDOMAIN \
+        $CI_BUILD_REF_SLUG \
         ./helm-charts/minds"
-  only:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /-subdomain/
   environment:
-    name: staging
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN
+    on_stop: review:stop
   except: 
     refs:
       - master
       - test/gitlab-ci
 
-staging:stop:
-  stage: staging
+review:stop:
+  stage: review
   image: minds/helm-eks:latest
   script:
     - aws eks update-kubeconfig --name=sandbox
-    - STAGING_SUBDOMAIN=$(echo $CI_COMMIT_MESSAGE | sed -n 's/.* -subdomain=\([^ ]*\).*/\1/p')
-    - echo "TODO tear down $STAGING_SUBDOMAIN"
-    - helm del --purge $STAGING_SUBDOMAIN
-  when: manual
-  only:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /-subdomain/
+    - helm del --purge $CI_BUILD_REF_SLUG
   environment:
-    name: staging
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN
+    action: stop
+  variables:
+    GIT_STRATEGY: none
+  when: manual
   except: 
     refs:
       - master
