@@ -50,6 +50,10 @@ class Counters
      */
     public function getCount(array $options = [])
     {
+        // return Helpers\Counters::get($this->user, 'notifications:count', false);
+
+        // TODO: Remove below once settled
+
         $query = "SELECT uuid, read_timestamp FROM notifications
                     WHERE to_guid = ?
                     ORDER BY created_timestamp DESC
@@ -86,7 +90,7 @@ class Counters
      */
     public function increaseCounter()
     {
-        //Helpers\Counters::increment($this->user, 'notifications:count');
+        Helpers\Counters::increment($this->user, 'notifications:count');
     }
 
     /**
@@ -96,6 +100,10 @@ class Counters
      */
     public function resetCounter()
     {
+        Helpers\Counters::clear($this->user, 'notifications:count');
+
+        // TODO: Remove below once settled
+
         $query = "BEGIN;
                     UPDATE notifications
                         SET read_timestamp = NOW()
