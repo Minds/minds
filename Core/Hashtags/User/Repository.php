@@ -24,7 +24,7 @@ class Repository
     public function __construct($db = null, $legacyRepository = null, $config = null)
     {
         $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
-        $this->legacyRepository = $legacyRepository ?: new LegacyRepository();
+        // $this->legacyRepository = $legacyRepository ?: new LegacyRepository();
         $this->config = $config ?: Di::_()->get('Config');
     }
 
@@ -35,20 +35,6 @@ class Repository
      */
     public function getAll($opts = [])
     {
-        // Legacy fallback
-        if ($this->config->get('user_hashtags_legacy_read')) {
-            $rows = $this->legacyRepository->getAll($opts);
-            $response = new Response();
-
-            foreach ($rows as $row) {
-                $response[] = (new HashtagEntity())
-                    ->setGuid($opts['user_guid'])
-                    ->setHashtag($row['hashtag']);
-            }
-
-            return $response;
-        }
-
         $opts = array_merge([
             'user_guid' => null
         ], $opts);
@@ -112,10 +98,6 @@ class Repository
             }
         }
 
-        if ($this->config->get('user_hashtags_migration')) {
-            $this->legacyRepository->add($hashtags);
-        }
-
         return true;
     }
 
@@ -146,10 +128,6 @@ class Repository
         } catch (\Exception $e) {
             error_log(static::class . '::remove() CQL Exception ' . $e->getMessage());
             return false;
-        }
-
-        if ($this->config->get('user_hashtags_migration')) {
-            $this->legacyRepository->remove($userGuid, $hashtagValues);
         }
 
         return true;

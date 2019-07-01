@@ -30,7 +30,7 @@ class Manager
     public function __construct($repository = null, $trendingRepository = null, $cacher = null, $config = null)
     {
         $this->repository = $repository ?: new Repository;
-        $this->trendingRepository = $trendingRepository ?: new TrendingRepository;
+        // $this->trendingRepository = $trendingRepository ?: new TrendingRepository;
         $this->cacher = $cacher ?: Di::_()->get('Cache');
         $this->config = $config ?: Di::_()->get('Config');
     }
@@ -79,25 +79,6 @@ class Manager
                     })->toArray();
 
                     $this->cacher->set($this->getCacheKey(), json_encode($selected), 7 * 24 * 60 * 60); // 1 week (busted on changes)
-                }
-            }
-        }
-
-        // Trending hashtags
-
-        $trending = [];
-
-        if ($opts['trending']) {
-            $cached = $this->cacher->get($this->getCacheKey('trending'));
-
-            if ($cached !== false) {
-                $trending = json_decode($cached, true);
-            } else {
-                $results = $this->trendingRepository->getList($opts);
-
-                if ($results) {
-                    $trending = $results;
-                    $this->cacher->set($this->getCacheKey('trending'), json_encode($trending), 60 * 15); // 15 minutes
                 }
             }
         }
