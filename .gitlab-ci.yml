@@ -60,6 +60,8 @@ review:start:
         --reuse-values \
         --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
         --set phpfpm.image.tag=$CI_BUILD_REF \
+        --set runners.image.repository=$CI_REGISTRY_IMAGE/runners \
+        --set runners.image.tag=$CI_BUILD_REF \
         --set domain=$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN \
         --set elasticsearch.clusterName=$CI_BUILD_REF_SLUG-elasticsearch \
         --wait \
