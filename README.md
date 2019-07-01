@@ -14,11 +14,30 @@ Minds is split into multiple repositories:
 
 ## Development System Requirements
 
-- > 10GB RAM
+- > 10GB RAM (be sure to set it in your docker settings)
 - > 100GB Disk space
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ## Development Installation
+
+**Enabling full installation**
+
+### Setting up elasticsearch
+
+** Linux users **
+To get elasticsearch 6 to run, you must make a settings change on the host machine.
+
+Run ```sudo sysctl -w vm.max_map_count=262144```
+
+To make it permanent, modify the variable in /etc/sysctl.conf
+
+#### Build the elasticsearch indexes
+
+1. Make sure nothing is running: `docker-compose down`
+2. Run the legacy provisioner: `docker-compose up elasticsearch-legacy-provisioner`
+3. Run the legacy provisioner: `docker-compose up elasticsearch-provisioner`
+
+### Running the stack the first time
 
 1. Run `sh init.sh` in order to install the front and engine repositories
 2. Run `docker-compose up -d nginx`
@@ -26,7 +45,7 @@ Minds is split into multiple repositories:
 4. Run `docker-compose up front-build` 
 5. Navigate to `http://localhost:8080`
 
-### Troubleshooting
+# Troubleshooting
 
 - Minds is already installed
   - Ensure engine/settings.php does not exist and re-run `docker-compose up installer`
@@ -34,6 +53,33 @@ Minds is split into multiple repositories:
 - Cassandra will not boot
   - Ensure thrift is enabled
   - Cassandra requires at least 4GB of memory to operate. You can start Cassandra manually by running `docker-compose up cassandra`
+
+### Nuclear Option
+
+With dockerized enviroments, it's sometimes best to start from scratch. If you want to delete your data, these steps will completely **delete** your data. You will be starting fresh.
+
+```
+  #Remove your settings file
+  rm engine/settings.php 
+  
+  #Stop your stack
+  docker-compose down
+
+  #Delete your data cache
+  rm -rf .data
+
+  #Purge all volumes
+  docker volume prune
+
+  ```
+
+  That will remove all of your locally cached data. You can either rebuild the containers manually by using ```docker-compose up --build``` or delete everything to start fresh.
+
+```
+  # Delete all containers
+  docker rm $(docker ps -a -q)
+
+```
 
 ## Production System Requirements
 

@@ -1,0 +1,30 @@
+{
+    "mappings": {
+        "pass": {
+            "_all": {
+                "enabled": true
+            },
+            "properties": {
+                "guids": {
+                    "type": "long"
+                },
+                "user_guid": {
+                    "type": "long"
+                }
+            }
+        },
+        "subscriptions": {
+            "_all": {
+                "enabled": true
+            },
+            "properties": {
+                "guids": {
+                    "type": "long"
+                },
+                "user_guid": {
+                    "type": "long"
+                }
+            }
+        }
+    }
+}

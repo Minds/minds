@@ -31,4 +31,4 @@ node_modules
 !.editorconfig
 
 !.data
-
+!/.gitlab

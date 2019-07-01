@@ -1,0 +1,65 @@
+{
+    "mappings": {
+        "_doc": {
+            "properties": {
+                "@timestamp": {
+                    "type": "date"
+                },
+                "blockHash": {
+                    "type": "keyword"
+                },
+                "blockNumber": {
+                    "type": "long"
+                },
+                "contractAddress": {
+                    "type": "keyword"
+                },
+                "ethUsdRate": {
+                    "type": "float"
+                },
+                "ethValue": {
+                    "type": "float"
+                },
+                "from": {
+                    "type": "keyword"
+                },
+                "function": {
+                    "type": "keyword"
+                },
+                "gas": {
+                    "type": "long"
+                },
+                "gasPriceEth": {
+                    "type": "float"
+                },
+                "gasUsed": {
+                    "type": "long"
+                },
+                "hash": {
+                    "type": "keyword"
+                },
+                "isTokenTransaction": {
+                    "type": "boolean"
+                },
+                "to": {
+                    "type": "keyword"
+                },
+                "tokenValue": {
+                    "type": "float"
+                },
+                "transactionCategory": {
+                    "type": "keyword"
+                },
+                "transactionDirection": {
+                    "type": "keyword"
+                },
+                "transactionType": {
+                    "type": "keyword"
+                },
+                "usdValue": {
+                    "type": "float"
+                }
+            }
+        }
+    }
+}
