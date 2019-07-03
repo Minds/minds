@@ -15,6 +15,8 @@ class Activity extends Entity
 
     protected $dirtyIndexes = false;
 
+    protected $hide_impressions = false;
+
     /**
      * Initialize entity attributes
      * @return null
@@ -215,6 +217,7 @@ class Activity extends Entity
                 'pending',
                 'rating',
                 'ephemeral',
+                'hide_impressions',
             ));
     }
 
@@ -271,6 +274,10 @@ class Activity extends Entity
         $export['rating'] = $this->getRating();
         $export['ephemeral'] = $this->getEphemeral();
         $export['ownerObj'] = $this->getOwnerObj();
+
+        if ($this->hide_impressions) {
+            $export['hide_impressions'] = $this->hide_impressions;
+        }
 
         switch($this->custom_type) {
             case 'video':
@@ -678,6 +685,24 @@ class Activity extends Entity
     public function setBoostRejectionReason($reason)
     {
         $this->boost_rejection_reason = (int) $reason;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHideImpressions()
+    {
+        return (bool) $this->hide_impressions;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setHideImpressions($value)
+    {
+        $this->hide_impressions = (bool) $value;
         return $this;
     }
 
