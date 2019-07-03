@@ -32,5 +32,4 @@ class HashtagEntity
             'hashtag' => $this->getHashtag(),
         ];
     }
-
 }

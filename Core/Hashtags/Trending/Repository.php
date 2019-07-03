@@ -2,6 +2,11 @@
 
 namespace Minds\Core\Hashtags\Trending;
 
+use Cassandra\Timestamp;
+use Cassandra\Bigint;
+use Minds\Core\Data\Cassandra\Client as CassandraClient;
+use Minds\Core\Data\Cassandra\Prepared\Custom;
+use Minds\Core\Data\ElasticSearch\Client as ElasticSearchClient;
 use Minds\Core\Di\Di;
 use Minds\Core\Data\ElasticSearch\Prepared\Search as Prepared;
 use Minds\Common\Repository\Response;
@@ -11,15 +16,15 @@ use Minds\Common\Repository\Response;
  */
 class Repository
 {
-    /** @var \PDO $db */
+    /** @var CassandraClient $db */
     protected $db;
 
-    /** @var ElasticSearch $es */
+    /** @var ElasticSearchClient $es */
     protected $es;
 
-    public function __construct(\PDO $db = null, $es = null)
+    public function __construct($db = null, $es = null)
     {
-        $this->db = $db ?: Di::_()->get('Database\PDO');
+        $this->db = $db ?: Di::_()->get('Database\Cassandra\Cql');
         $this->es = $es ?: Di::_()->get('Database\ElasticSearch');
     }
 
@@ -122,7 +127,7 @@ class Repository
     }
 
     /**
-     * Return a confifdence score
+     * Return a confidence score
      * TODO: Move to global helper
      * @param int $positive
      * @param int $total
@@ -138,113 +143,101 @@ class Repository
     }
 
     /**
-     * Get trending hashtags
-     *
-     * @param array $opts
-     * @return array
-     */
-    public function getTrending(array $opts = [])
-    {
-        $opts = array_merge([
-            'from_date' => date('c', strtotime('24 hours ago')),
-            'limit' => 20
-        ], $opts);
-
-        $query = "SELECT entity_hashtags.hashtag, COUNT(*) as hashCount
-                    FROM entity_hashtags
-                    JOIN suggested ON suggested.guid = entity_hashtags.guid
-                    LEFT JOIN hidden_hashtags ON hidden_hashtags.hashtag = entity_hashtags.hashtag
-                    WHERE suggested.lastsynced >= ? AND hidden_hashtags.hashtag IS NULL
-                    GROUP BY entity_hashtags.hashtag
-                    ORDER BY hashCount Desc
-                    LIMIT ?";
-       
-        $statement = $this->db->prepare($query);
-
-        $statement->execute([$opts['from_date'], $opts['limit']]);
-
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    /**
      * Hide a tag from trending list
      *
      * @param string $tag
      * @param string $admin_guid
-     * @return void
+     * @return bool
      */
     public function hide($tag, $admin_guid)
     {
-        $query = "INSERT INTO hidden_hashtags(hashtag, hidden_since, admin_guid) VALUES (?, ?, ?)";
+        $cql = "INSERT INTO hidden_hashtags (hashtag, hidden_since, admin_guid) VALUES (?, ?, ?)";
+        $values = [
+            $tag,
+            new Timestamp(time()),
+            new Bigint($admin_guid),
+        ];
+
+        $prepared = new Custom();
+        $prepared->query($cql, $values);
 
         try {
-            $statement = $this->db->prepare($query);
-
-            return $statement->execute([$tag, date('c'), $admin_guid]);
+            return (bool) $this->db->request($prepared, true);
         } catch (\Exception $e) {
             error_log($e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
     /**
      * Unhide a tag from trending list
      *
      * @param string $tag
-     * @return void
+     * @return bool
      */
     public function unhide($tag)
     {
-        $query = "DELETE FROM hidden_hashtags WHERE hashtag = ?";
+        $cql = "DELETE FROM hidden_hashtags WHERE hashtag = ?";
+        $values = [
+            $tag
+        ];
+
+        $prepared = new Custom();
+        $prepared->query($cql, $values);
 
         try {
-            $statement = $this->db->prepare($query);
-
-            return $statement->execute([$tag]);
+            return (bool) $this->db->request($prepared, true);
         } catch (\Exception $e) {
             error_log($e->getMessage());
+            return false;
         }
-
-        return false;
     }
 
     /**
      * Return hidden hashtags list
+     * @param array $opts
+     * @return array
      */
-    public function getHidden($opts = [])
+    public function getHidden(array $opts = [])
     {
         $opts = array_merge([
             'limit' => 500
         ], $opts);
 
-        $query = "SELECT hashtag, admin_guid, hidden_since FROM hidden_hashtags LIMIT ?";
-        $params = [$opts['limit']];
+        $cql = "SELECT hashtag, hidden_since, admin_guid FROM hidden_hashtags";
 
-        $statement = $this->db->prepare($query);
+        $prepared = new Custom();
+        $prepared->query($cql);
+        $prepared->setOpts([
+            'page_size' => (int) $opts['limit'],
+        ]);
 
-        $statement->execute($params);
+        $rows = $this->db->request($prepared);
+        $response = [];
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            $response[] = $row;
+        }
+
+        return $response;
     }
 
     /**
      * Clear trending hidden table
-     *
-     * @return void
+     * @return bool
      */
     public function clearHidden()
     {
-        $query = "TRUNCATE TABLE hidden_hashtags";
+        $cql = "TRUNCATE TABLE hidden_hashtags";
+
+        $prepared = new Custom();
+        $prepared->query($cql);
 
         try {
-            $statement = $this->db->prepare($query);
-
-            return $statement->execute();
+            return (bool) $this->db->request($prepared, true);
         } catch (\Exception $e) {
             error_log($e->getMessage());
+            return false;
         }
-
-        return false;
     }
 }
