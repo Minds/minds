@@ -37,9 +37,12 @@ class Manager
     )
     {
         $this->config = $config ?: Di::_()->get('Config');
-        $this->repository = $repository ?: new Repository;
         $this->cassandraRepository = $cassandraRepository ?: new CassandraRepository;
         $this->features = $features ?: new FeaturesManager;
+
+        if (!$this->features->has('cassandra-notifications')) {
+            $this->repository = $repository ?: new Repository;
+        }
     }
 
     /**
@@ -60,10 +63,13 @@ class Manager
      */
     public function getSingle($urn)
     {
-        if (strpos($urn, 'urn:') !== FALSE) {
-            return $this->cassandraRepository->get($urn);
+        if (strpos($urn, 'urn:') === FALSE) {
+            $urn = "urn:notification:" . implode('-', [
+                    $this->user->getGuid(),
+                    $urn
+                ]);
         }
-        return $this->repository->get($urn);
+        return $this->cassandraRepository->get($urn);
     }
 
     /**
@@ -154,7 +160,10 @@ class Manager
     {
         try {
             $this->cassandraRepository->add($notification);
-            $uuid = $this->repository->add($notification);
+
+            if (!$this->features->has('cassandra-notifications')) {
+                $uuid = $this->repository->add($notification);
+            }
 
             return $uuid;
         } catch (\Exception $e) {

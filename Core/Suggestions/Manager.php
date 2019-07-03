@@ -23,12 +23,10 @@ class Manager
     public function __construct(
         $repository = null,
         $entitiesBuilder = null,
-        $suggestedFeedsManager = null,
         $subscriptionsManager = null
     ) {
         $this->repository = $repository ?: new Repository();
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder();
-        //$this->suggestedFeedsManager = $suggestedFeedsManager ?: Di::_()->get('Feeds\Suggested\Manager');
         $this->subscriptionsManager = $subscriptionsManager ?: Di::_()->get('Subscriptions\Manager');
     }
 
@@ -105,14 +103,6 @@ class Manager
         ], $opts);
 
         $response = new Response();
-
-        //$result = $this->suggestedFeedsManager->getFeed($opts);
-
-        //foreach ($result as $user) {
-        //    $suggestion = new Suggestion();
-        //    $suggestion->setEntityGuid($user->guid);
-        //    $response[] = $suggestion;
-        //}
 
         $guids = [
             626772382194872329,

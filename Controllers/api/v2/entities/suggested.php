@@ -68,9 +68,6 @@ class suggested implements Interfaces\Api
             $hashtag = $_GET['hashtag'];
         }
 
-        /** @var Core\Feeds\Suggested\Manager $repo */
-        $repo = Di::_()->get('Feeds\Suggested\Manager');
-
         $opts = [
             'user_guid' => Core\Session::getLoggedInUserGuid(),
             'rating' => $rating,
@@ -84,17 +81,19 @@ class suggested implements Interfaces\Api
             $opts['hashtag'] = $hashtag;
         }
 
-        $result = $repo->getFeed($opts);
+        // @deprecated
+        $result = [];
 
-        // Remove all unlisted content if it appears
-        $result = array_values(array_filter($result, function($entity) {
-            return $entity->getAccessId() != 0;
-        }));
+        // @deprecated
+        // // Remove all unlisted content if it appears
+        // $result = array_values(array_filter($result, function($entity) {
+        //     return $entity->getAccessId() != 0;
+        // }));
 
         return Factory::response([
             'status' => 'success',
             'entities' => Factory::exportable($result),
-            'load-next' => $limit + $offset,
+            'load-next' => '',
         ]);
     }
 
