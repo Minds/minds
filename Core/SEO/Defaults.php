@@ -403,6 +403,11 @@ class Defaults
                 'description' => 'Everything you need to know about Minds',
                 'image' => 'assets/photos/balloon.jpg',
             ],
+            'mobile' => [
+                'title' => 'Minds Mobile App',
+                'description' => 'Download the Minds mobile app for Android & iOS.',
+                'image' => 'assets/photos/mobile-app.jpg',
+            ]
         ];
 
         foreach ($marketing as $uri => $page) {
