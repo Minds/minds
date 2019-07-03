@@ -154,7 +154,7 @@ class Resize
 
         $this->output->setImageBackgroundColor('white');
 
-        $this->output = $this->output->flattenImages();
+        $this->output = $this->output->mergeImageLayers($this->image::LAYERMETHOD_FLATTEN);
 
         $this->output->setImageCompression($quality);
         $this->output->setImageFormat('jpg');
