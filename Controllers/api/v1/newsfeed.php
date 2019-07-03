@@ -394,6 +394,7 @@ class newsfeed implements Interfaces\Api
                                         'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
                                         'width' => $embeded->width,
                                         'height' => $embeded->height,
+                                        'gif' => (bool) $embeded->gif ?? false,
                                     ]])
                                         ->setMature($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false)
                                         ->setFromEntity($embeded)
@@ -410,6 +411,7 @@ class newsfeed implements Interfaces\Api
                                                 'mature' => $embeded instanceof Flaggable ? $embeded->getFlag('mature') : false,
                                                 'width' => $embeded->width,
                                                 'height' => $embeded->height,
+                                                'gif' => (bool) $embeded->gif ?? false,
                                             ]])
                                             ->setMature($embeded instanceof Flaggable ? $embeded->getFlag('mature') : false)
                                             ->setFromEntity($embeded)
@@ -606,6 +608,7 @@ class newsfeed implements Interfaces\Api
                                 'mature' => $attachment instanceof Flaggable ? $attachment->getFlag('mature') : false,
                                 'width' => $attachment->width,
                                 'height' => $attachment->height,
+                                'gif' => (bool) $attachment->gif ?? false,
                             ]])
                                 ->setFromEntity($attachment)
                                 ->setTitle($attachment->message);
