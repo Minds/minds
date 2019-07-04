@@ -6,10 +6,10 @@ Minds is an open-source, encrypted and reward-based social networking platform. 
 
 Minds is split into multiple repositories:
 
-- [Engine](https://github.com/Minds/engine) - Backend code & APIs
-- [Front](https://github.com/Minds/front) - Client side Angular2 web app
-- [Sockets](https://github.com/Minds/sockets) - WebSocket server for real-time communication
-- [Mobile](https://github.com/Minds/mobile-native) - React Native mobile apps
+- [Engine](https://gitlab.com/minds/engine) - Backend code & APIs
+- [Front](https://gitlab.com/minds/front) - Client side Angular2 web app
+- [Sockets](https://gitlab.com/minds/sockets) - WebSocket server for real-time communication
+- [Mobile](https://gitlab.com/minds/mobile-native) - React Native mobile apps
 
 
 ## Development System Requirements
