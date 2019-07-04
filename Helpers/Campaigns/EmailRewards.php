@@ -74,7 +74,7 @@ class EmailRewards
               $validator = $_GET['validator'];
               //$key = '.md';
               //return;
-              if ($validator == sha1($campaign . 'gift-24-05-19.md' . $topic . $user->guid . Config::_()->get('emails_secret'))) {
+              if ($validator == sha1($campaign . 'gift-25-06-19.mdl' . $topic . $user->guid . Config::_()->get('emails_secret'))) {
                   $tokens = 5 * (10 ** 18);
                   $campaign = $validator; //hack
               } else {

@@ -187,7 +187,10 @@ class Pool
 
         $result = $this->elasticsearch->request($prepared);
 
-        foreach ($result['aggregations']['entities']['buckets'] as $bucket) {
+        $buckets = $result['aggregations']['entities']['buckets'];
+        shuffle($buckets);
+        echo "\n" . count($buckets) . " returned";
+        foreach ($buckets as $bucket) {
             yield $bucket['key'];
         }
     }

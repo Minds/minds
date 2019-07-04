@@ -32,7 +32,7 @@ class Manager
     public function __construct($items = null, $config = null)
     {
         $this->items = $items ?: [
-            'creator_frequency' => new Delegates\CreatorFrequencyDelegate(),
+            // 'creator_frequency' => new Delegates\CreatorFrequencyDelegate(),
             'suggested_hashtags' => new Delegates\SuggestedHashtagsDelegate(),
             'suggested_channels' => new Delegates\SuggestedChannelsDelegate(),
             // 'suggested_groups' => new Delegates\SuggestedGroupsDelegate(),

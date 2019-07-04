@@ -9,6 +9,7 @@ use Minds\Core\Notification\Notification;
 use Minds\Core\Notification\Repository;
 use Minds\Core\Notification\CassandraRepository;
 use Minds\Core\Features\Manager as FeaturesManager;
+use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -46,9 +47,13 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType(Manager::class);
     }
 
-    function it_should_get_a_single_notification(Notification $notification)
+    function it_should_get_a_single_notification(Notification $notification, User $user)
     {
-        $this->repository->get('1234')
+        $this->setUser($user);
+        $user->getGUID()
+            ->willReturn(456);
+
+        $this->cassandraRepository->get('urn:notification:456-1234')
             ->shouldBeCalled()
             ->willReturn($notification);
 

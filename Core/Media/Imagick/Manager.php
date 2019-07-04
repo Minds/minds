@@ -42,7 +42,7 @@ class Manager
 
         $this->image->setImageBackgroundColor('white');
 
-        $this->image = $this->image->flattenImages();
+        $this->image = $this->image->mergeImageLayers($this->image::LAYERMETHOD_FLATTEN);
 
         $this->image->setImageCompression($quality);
         $this->image->setImageFormat('jpg');

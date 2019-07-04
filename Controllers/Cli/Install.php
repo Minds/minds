@@ -62,7 +62,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
 
             try {
                 if ($installType == "all" || $installType == "cassandra") {
-                    $this->out('- Provisioning Cassandra: ', $this::OUTPUT_INLINE);
+                    $this->out('- Provisioning Cassandra:',  $this::OUTPUT_INLINE);
                     $isCleanCassandra = $this->getopt("cleanCassandra") != null;
                     $provisioner->provisionCassandra(null, $isCleanCassandra);
                     $this->out('OK');
@@ -71,44 +71,33 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
                     $provisioner->reloadStorage();
                     $this->out('OK');
                 }
-            } catch (Exception $e) {
-                // REVNOTE: This seems unused, currently. None of the database provisioners currently
-                // throw ProvisionException. We should maybe catch general exceptions (log them) and continue,
-                // and not ProvisionExceptions. I considered removing this altogether, but it is useful to continue
-                // past server errors in an setup.
-                if ($this->getOpt('graceful-storage-provision')) {
-                    $this->out($e->getMessage());
-                    $this->out('Error in cassandra setup. Continuing.');
-                } else {
-                    throw $e;
-                }
+            } catch (Exception $ex) {
+                $this->out('Something BAD happened while provisioning Cassandra' . $ex->getMessage()); 
             }
 
             try {
                 if ($installType == "all" || $installType == "cockroach") {
-                    $this->out('- Provisioning Cockroach:', $this::OUTPUT_INLINE);
+                    $this->out('- Provisioning Cockroach:');
                     $isCleanCockroach = $this->getopt("cleanCockroach") != null;
                     $provisioner->provisionCockroach(null, $isCleanCockroach);
                     $this->out('OK');
                 }
-            } catch (Exception $e) {
-                // See REVNOTE above.
-                if ($this->getOpt('graceful-storage-provision')) {
-                    $this->out($e->getMessage());
-                    $this->out('Error in cockroach setup. Continuing.');
-                } else {
-                    throw $e;
-                }
-            }
+            } catch (Exception $ex) {
+                $this->out('Something BAD happened while provisioning Cockroach' . $ex->getMessage()); 
+            } 
 
             if (($installType == "all") || ($installType == "site")) {
                 $this->out('- Setting up site:', $this::OUTPUT_INLINE);
                 $provisioner->setupSite();
                 $this->out('OK');
 
-                $this->out('- Setting up administrative user (ignore warnings, if any):', $this::OUTPUT_INLINE);
-                $provisioner->setupFirstAdmin();
-                $this->out('OK');
+                try {
+                    $this->out('- Setting up administrative user (ignore warnings, if any):', $this::OUTPUT_INLINE);
+                    $provisioner->setupFirstAdmin();
+                    $this->out('OK');
+                } catch (\Exception $ex) {
+                    $this->out('Could not setup initial user');
+                }
             }
 
             $this->out(['Done!', 'Open your browser and go to ' . $provisioner->getSiteUrl()], $this::OUTPUT_PRE);

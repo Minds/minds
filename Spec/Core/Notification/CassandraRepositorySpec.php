@@ -95,7 +95,7 @@ class CassandraRepositorySpec extends ObjectBehavior
             ->willReturn(null);
 
         $this->add($notification)
-            ->shouldReturn(true);
+            ->shouldNotReturn(false);
     }
 
     function it_should_load_notification_for_user()

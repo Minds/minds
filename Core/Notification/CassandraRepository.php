@@ -74,6 +74,10 @@ class CassandraRepository
             return false;
         }
 
+        if (!$result) {
+            return false;
+        }
+
         $response = new Response();
         foreach ($result as $row) {
             $notification = new Notification();
@@ -100,8 +104,8 @@ class CassandraRepository
      */
     public function get($urn)
     {
-        list ($to_guid, $uuid) = explode('-', $this->urn->setUrn($urn)->getNss());
-        
+        list ($to_guid, $uuid) = explode('-', $this->urn->setUrn($urn)->getNss(), 2);
+
         $response = $this->getList([
             'to_guid' => $to_guid,
             'uuid' => $uuid,
@@ -122,7 +126,7 @@ class CassandraRepository
     public function add($notification)
     {
         if (!$notification->getUuid()) {
-            $notification->setUuid((new Timeuuid($notification->getUuid() ?? time() * 1000))->uuid());
+            $notification->setUuid((new Timeuuid())->uuid());
         }
 
         $statement = 'INSERT INTO notifications (
@@ -162,7 +166,7 @@ class CassandraRepository
             return false;
         }
 
-        return $success;
+        return $notification->getUuid();
     }
 
     // TODO

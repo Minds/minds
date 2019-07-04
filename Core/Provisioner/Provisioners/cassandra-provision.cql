@@ -1407,3 +1407,10 @@ CREATE TABLE minds.update_markers (
     updated_timestamp timestamp,
     PRIMARY KEY (user_guid, entity_type, entity_guid, marker)
 );
+
+CREATE TABLE minds.hidden_hashtags (
+    hashtag text,
+    admin_guid bigint,
+    hidden_since timestamp,
+    PRIMARY KEY (hashtag)
+);

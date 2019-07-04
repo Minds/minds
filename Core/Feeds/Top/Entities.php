@@ -101,7 +101,8 @@ class Entities
         ];
 
         $activity = new Activity();
-        $activity->setEphemeral(true);
+        $activity->setEphemeral(true)
+            ->setHideImpressions(true);
 
         if ($entity instanceof Blog) {
             // New entities

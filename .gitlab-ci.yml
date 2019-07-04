@@ -6,6 +6,8 @@ services:
 stages:
   - build
   - test
+  - prepare
+  - review
   - deploy
 
 cache:
@@ -27,23 +29,84 @@ build:
 
 test:
   stage: test
-  image: php:7.1.11-fpm-alpine3.4 # TODO: Fix cassandra driver conflicts
+  image: minds/php-tests:latest
   script:
-    - apk update && apk add libpng-dev freetype-dev libjpeg-turbo-dev
-    - docker-php-ext-install mbstring
-    - docker-php-ext-install bcmath
-    - docker-php-ext-install gd
     - bin/phpspec run
+
+prepare:fpm:
+  stage: prepare
+  image: minds/ci:latest
+  script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY} 
+    - docker build -t $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF -f containers/php-fpm/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
+
+prepare:runners:
+  stage: prepare
+  image: minds/ci:latest
+  script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker build -t $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF -f containers/php-runners/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
+
+review:start:
+  stage: review
+  image: minds/helm-eks:latest
+  script:
+    - aws eks update-kubeconfig --name=sandbox
+    - git clone --branch=sandbox-wip https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/minds/helm-charts.git
+    - "helm upgrade \
+        --install \
+        --reuse-values \
+        --set phpfpm.image.repository=$CI_REGISTRY_IMAGE/fpm \
+        --set phpfpm.image.tag=$CI_BUILD_REF \
+        --set runners.image.repository=$CI_REGISTRY_IMAGE/runners \
+        --set runners.image.tag=$CI_BUILD_REF \
+        --set domain=$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN \
+        --set elasticsearch.clusterName=$CI_BUILD_REF_SLUG-elasticsearch \
+        --wait \
+        $CI_BUILD_REF_SLUG \
+        ./helm-charts/minds"
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN
+    on_stop: review:stop
+  except: 
+    refs:
+      - master
+      - test/gitlab-ci
+
+review:stop:
+  stage: review
+  image: minds/helm-eks:latest
+  script:
+    - aws eks update-kubeconfig --name=sandbox
+    - helm del --purge $CI_BUILD_REF_SLUG
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_BUILD_REF_SLUG.$KUBE_INGRESS_BASE_DOMAIN
+    action: stop
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  except: 
+    refs:
+      - master
+      - test/gitlab-ci
 
 deploy:fpm:
   stage: deploy
-  image: docker:latest
+  image: minds/ci:latest
   script:
-    - apk add --no-cache curl jq python py-pip
-    - pip install awscli
-    - docker build -t $REPOSITORY_URL_FPM -f containers/php-fpm/Dockerfile .
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker pull $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF
+    # Push to production registry
+    - docker tag $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF $REPOSITORY_URL_FPM
     - docker push $REPOSITORY_URL_FPM
+    # Push to gitlab register
+    - docker tag $CI_REGISTRY_IMAGE/fpm:$CI_BUILD_REF $CI_REGISTRY_IMAGE/fpm:latest
+    - docker push $CI_REGISTRY_IMAGE/fpm:latest
     - aws ecs update-service --service=$SERVICE_FPM --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
     refs:
@@ -54,13 +117,17 @@ deploy:fpm:
 
 deploy:runners:
   stage: deploy
-  image: docker:latest
+  image: minds/ci:latest
   script:
-    - apk add --no-cache curl jq python py-pip
-    - pip install awscli
-    - docker build -t $REPOSITORY_URL_RUNNERS -f containers/php-runners/Dockerfile .
     - $(aws ecr get-login --no-include-email --region us-east-1)
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker pull $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF
+    # Push to production register
+    - docker tag $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF $REPOSITORY_URL_RUNNERS
     - docker push $REPOSITORY_URL_RUNNERS
+    # Push gitlab registry
+    - docker tag $CI_REGISTRY_IMAGE/runners:$CI_BUILD_REF $CI_REGISTRY_IMAGE/runners:latest
+    - docker push $CI_REGISTRY_IMAGE/runners:latest
     - aws ecs update-service --service=$SERVICE_RUNNERS --force-new-deployment --region us-east-1 --cluster=$CLUSTER
   only:
     refs:

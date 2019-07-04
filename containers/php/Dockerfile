@@ -84,6 +84,10 @@ RUN apk add --update --no-cache nodejs
 
 RUN apk add --no-cache ffmpeg
 
+# Install awscli
+
+RUN apk update && apk add --no-cache py-pip && pip install --upgrade pip && pip install awscli
+
 # PHP INI
 
 COPY php.ini /usr/local/etc/php/
