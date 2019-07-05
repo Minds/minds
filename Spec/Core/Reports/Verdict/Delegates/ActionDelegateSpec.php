@@ -11,6 +11,7 @@ use Minds\Core\Reports\Actions;
 use Minds\Core\Reports\Strikes\Manager as StrikesManager;
 use Minds\Entities\Entity;
 use Minds\Core\Entities\Actions\Save as SaveAction;
+use Minds\Core\Channels\Ban;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -21,21 +22,32 @@ class ActionDelegateSpec extends ObjectBehavior
     private $strikesManager;
     private $saveAction;
     private $emailDelegate;
+    private $channelsBanManager;
 
     function let(
         EntitiesBuilder $entitiesBuilder,
         Actions $actions,
         StrikesManager $strikesManager,
         SaveAction $saveAction,
-        EmailDelegate $emailDelegate
+        EmailDelegate $emailDelegate,
+        Ban $channelsBanManager
     )
     {
-        $this->beConstructedWith($entitiesBuilder, $actions, null, $strikesManager, $saveAction, $emailDelegate);
+        $this->beConstructedWith(
+            $entitiesBuilder,
+            $actions,
+            null,
+            $strikesManager,
+            $saveAction,
+            $emailDelegate,
+            $channelsBanManager
+        );
         $this->entitiesBuilder = $entitiesBuilder;
         $this->actions = $actions;
         $this->strikesManager = $strikesManager;
         $this->saveAction = $saveAction;
         $this->emailDelegate = $emailDelegate;
+        $this->channelsBanManager = $channelsBanManager;
     }
 
     function it_is_initializable()
@@ -107,6 +119,12 @@ class ActionDelegateSpec extends ObjectBehavior
         $this->entitiesBuilder->single(456)
             ->shouldBeCalled()
             ->willReturn($user);
+
+        $this->channelsBanManager->setUser($user)
+            ->shouldBeCalled()
+            ->willReturn($this->channelsBanManager);
+        $this->channelsBanManager->ban('1.1')
+            ->shouldBeCalled();
 
         $this->actions->setDeletedFlag($entity, true)
             ->shouldBeCalled();

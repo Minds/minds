@@ -5,12 +5,11 @@
  * @author Mark
  */
 
-namespace Minds\Core\Comments;
+namespace Minds\Core\Channels;
 
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Events\Event;
-use Minds\Core\Votes\Vote;
 
 class Events
 {
@@ -27,17 +26,17 @@ class Events
      */
     public function __construct($manager = null, $eventsDispatcher = null)
     {
-        $this->manager = $manager ?: new Manager();
+        $this->manager = $manager ?: Di::_()->get('Channels\Manager');
         $this->eventsDispatcher = $eventsDispatcher ?: Di::_()->get('EventsDispatcher');
     }
 
     public function register()
     {
-        // Entity save
+        // User entity deletion
         $this->eventsDispatcher->register('entity:delete', 'user', function (Event $event) {
             $user = $event->getParameters()['entity'];
 
-            $event->setResponse($this->manager->delete($comment));
+            $event->setResponse($this->manager->setUser($user)->delete());
         });
     }
 

@@ -8,10 +8,11 @@ class Rows implements \IteratorAggregate, \ArrayAccess
     public $_pagingStateToken = '';
     public $_isLastPage = false;
 
-    public function __construct(array $items, $pagingStateToken)
+    public function __construct(array $items, $pagingStateToken, $isLastPage = false)
     {
         $this->_items = $items;
         $this->_pagingStateToken = $pagingStateToken;
+        $this->_isLastPage = $isLastPage;
     }
 
     public function getIterator()

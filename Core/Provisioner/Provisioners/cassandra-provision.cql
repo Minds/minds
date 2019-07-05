@@ -471,7 +471,7 @@ CREATE TABLE minds.comments (
     votes_down set<varint>,
     votes_up set<varint>,
     PRIMARY KEY (entity_guid, parent_guid_l1, parent_guid_l2, parent_guid_l3, guid)
-) WITH CLUSTERING ORDER BY (parent_guid_l1 ASC, parent_guid_l2 ASC, parent_guid_l3 ASC, guid DESC)
+) WITH CLUSTERING ORDER BY (parent_guid_l1 ASC, parent_guid_l2 ASC, parent_guid_l3 ASC, guid DESC);
 
 CREATE TABLE minds.recurring_subscriptions (
     type text,
@@ -1338,7 +1338,7 @@ CREATE TABLE minds.spam_blocks (
     key text,
     value text,
     PRIMARY KEY (key, value)
-) WITH CLUSTERING ORDER BY (value ASC)
+) WITH CLUSTERING ORDER BY (value ASC);
 
 
 CREATE TABLE minds.user_hashtags (
@@ -1414,3 +1414,11 @@ CREATE TABLE minds.hidden_hashtags (
     hidden_since timestamp,
     PRIMARY KEY (hashtag)
 );
+
+CREATE TABLE minds.user_snapshots (
+  user_guid varint,
+  type text,
+  key text,
+  json_data text,
+  PRIMARY KEY (user_guid, type, key)
+) WITH CLUSTERING ORDER BY (type ASC, key ASC);

@@ -3,7 +3,7 @@
 namespace Spec\Minds\Core\Channels;
 
 use Minds\Core\Channels\Delegates\Artifacts\ArtifactsDelegateInterface;
-use Minds\Core\Channels\Manager;
+use Minds\Core\Channels\Ban;
 use Minds\Core\Channels\Delegates;
 use Minds\Core\Channels\Delegates\Artifacts;
 use Minds\Core\Queue\Interfaces\QueueClient;
@@ -12,7 +12,7 @@ use Minds\Entities\User;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class ManagerSpec extends ObjectBehavior
+class BanSpec extends ObjectBehavior
 {
     /** @var string[] */
     protected $artifactsDelegates;
@@ -23,32 +23,77 @@ class ManagerSpec extends ObjectBehavior
     /** @var Delegates\Logout */
     protected $logoutDelegate;
 
+    /** @var Delegates\Ban */
+    protected $banDelegate;
+
+    /** @var  Delegates\Unban */
+    protected $unbanDelegate;
+
     /** @var  QueueClient */
     protected $queueClient;
 
     function let(
         Delegates\Artifacts\Factory $artifactsDelegatesFactory,
         Delegates\Logout $logoutDelegate,
+        Delegates\Ban $banDelegate,
+        Delegates\Unban $unbanDelegate,
         QueueClient $queueClient
     )
     {
         $this->beConstructedWith(
             $artifactsDelegatesFactory,
             $logoutDelegate,
+            $banDelegate,
+            $unbanDelegate,
             $queueClient
         );
 
         $this->artifactsDelegatesFactory = $artifactsDelegatesFactory;
         $this->logoutDelegate = $logoutDelegate;
+        $this->banDelegate = $banDelegate;
+        $this->unbanDelegate = $unbanDelegate;
         $this->queueClient = $queueClient;
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(Manager::class);
+        $this->shouldHaveType(Ban::class);
     }
 
-    function it_should_snapshot_a_channel(
+    function it_should_ban_a_channel(
+        User $user
+    )
+    {
+        $this->banDelegate->ban($user, 'phpspec')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->logoutDelegate->logout($user)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->queueClient->setQueue('ChannelDeferredOps')
+            ->shouldBeCalled()
+            ->willReturn($this->queueClient);
+
+        $user->get('guid')
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $this->queueClient->send([
+            'type' => 'ban',
+            'user_guid' => 1000
+        ])
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this
+            ->setUser($user)
+            ->ban('phpspec')
+            ->shouldReturn(true);
+    }
+
+    function it_should_clean_up_a_banned_channel(
         User $user,
         ArtifactsDelegateInterface $artifactsDelegateMock
     )
@@ -57,10 +102,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1000);
 
+        $user->isBanned()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $deletionDelegates = [
-            Artifacts\EntityDelegate::class,
-            Artifacts\LookupDelegate::class,
-            Artifacts\UserIndexesDelegate::class,
             Artifacts\UserEntitiesDelegate::class,
             Artifacts\SubscribersDelegate::class,
             Artifacts\SubscriptionsDelegate::class,
@@ -78,42 +124,46 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalledTimes(count($deletionDelegates))
             ->willReturn(true);
 
+        $artifactsDelegateMock->hide(1000)
+            ->shouldBeCalledTimes(count($deletionDelegates))
+            ->willReturn(true);
+
         $this
             ->setUser($user)
-            ->snapshot()
+            ->banCleanup()
             ->shouldReturn(true);
     }
 
-    function it_should_delete_a_channel(
+    function it_should_unban_a_channel(
         User $user
     )
     {
-        $user->get('guid')
+        $this->unbanDelegate->unban($user)
             ->shouldBeCalled()
-            ->willReturn(1000);
+            ->willReturn(true);
 
         $this->queueClient->setQueue('ChannelDeferredOps')
             ->shouldBeCalled()
             ->willReturn($this->queueClient);
 
-        $this->queueClient->send([
-            'type' => 'delete',
-            'user_guid' => 1000,
-        ])
+        $user->get('guid')
             ->shouldBeCalled()
-            ->willReturn(true);
+            ->willReturn(1000);
 
-        $this->logoutDelegate->logout($user)
+        $this->queueClient->send([
+            'type' => 'unban',
+            'user_guid' => 1000
+        ])
             ->shouldBeCalled()
             ->willReturn(true);
 
         $this
             ->setUser($user)
-            ->delete()
+            ->unban()
             ->shouldReturn(true);
     }
 
-    function it_should_cleanup_a_deleted_channel(
+    function it_should_restore_an_unbanned_channel(
         User $user,
         ArtifactsDelegateInterface $artifactsDelegateMock
     )
@@ -122,45 +172,11 @@ class ManagerSpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(1000);
 
-        $deletionDelegates = [
-            Artifacts\EntityDelegate::class,
-            Artifacts\LookupDelegate::class,
-            Artifacts\UserIndexesDelegate::class,
-            Artifacts\UserEntitiesDelegate::class,
-            Artifacts\SubscribersDelegate::class,
-            Artifacts\SubscriptionsDelegate::class,
-            Artifacts\ElasticsearchDocumentsDelegate::class,
-            Artifacts\CommentsDelegate::class,
-        ];
-
-        foreach ($deletionDelegates as $deletionDelegate) {
-            $this->artifactsDelegatesFactory->build($deletionDelegate)
-                ->shouldBeCalled()
-                ->willReturn($artifactsDelegateMock);
-        }
-
-        $artifactsDelegateMock->delete(1000)
-            ->shouldBeCalledTimes(count($deletionDelegates))
-            ->willReturn(true);
-
-        $this->logoutDelegate->logout($user)
+        $user->isBanned()
             ->shouldBeCalled()
-            ->willReturn(true);
+            ->willReturn(false);
 
-        $this
-            ->setUser($user)
-            ->deleteCleanup()
-            ->shouldReturn(true);
-    }
-
-    function it_should_restore_a_channel(
-        ArtifactsDelegateInterface $artifactsDelegateMock
-    )
-    {
         $deletionDelegates = [
-            Artifacts\EntityDelegate::class,
-            Artifacts\LookupDelegate::class,
-            Artifacts\UserIndexesDelegate::class,
             Artifacts\UserEntitiesDelegate::class,
             Artifacts\SubscribersDelegate::class,
             Artifacts\SubscriptionsDelegate::class,
@@ -179,7 +195,8 @@ class ManagerSpec extends ObjectBehavior
             ->willReturn(true);
 
         $this
-            ->restore(1000)
+            ->setUser($user)
+            ->unbanRestore()
             ->shouldReturn(true);
     }
 }

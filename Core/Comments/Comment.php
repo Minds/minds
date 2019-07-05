@@ -28,7 +28,6 @@ use Minds\Helpers\Unknown;
  * @method Comment setTimeUpdated(int $value)
  * @method int getTimeUpdated()
  * @method Comment setBody(string $value)
- * @method string getBody()
  * @method Comment setAttachments(array $value)
  * @method array getAttachments()
  * @method Comment setMature(bool $value)
@@ -105,6 +104,7 @@ class Comment extends RepositoryEntity
     /** @var array */
     protected $votesDown;
 
+    /** @var bool */
     protected $groupConversation = false;
 
     /** @var bool */
@@ -120,6 +120,10 @@ class Comment extends RepositoryEntity
         return $this->entityGuid;
     }
 
+    /**
+     * @return Luid
+     * @throws \Minds\Exceptions\InvalidLuidException
+     */
     public function getLuid()
     {
         $luid = new Luid();
@@ -173,6 +177,7 @@ class Comment extends RepositoryEntity
     /**
      * Gets (hydrates if necessary) the owner object
      * @return array
+     * @throws \Exception
      */
     public function getOwnerObj()
     {
@@ -185,6 +190,9 @@ class Comment extends RepositoryEntity
         return $this->ownerObj;
     }
 
+    /**
+     * @return string
+     */
     public function getBody()
     {
         if (strlen($this->body) > 1500) {
@@ -322,6 +330,7 @@ class Comment extends RepositoryEntity
     /**
      * @param array $export
      * @return array
+     * @throws \Minds\Exceptions\InvalidLuidException
      */
     protected function _extendExport(array $export)
     {

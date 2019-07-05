@@ -148,6 +148,9 @@ class Defaults
 
         // Comments events
         (new Core\Comments\Events())->register();
+
+        // Channels events
+        (new Core\Channels\Events())->register();
     }
 
     public static function _()

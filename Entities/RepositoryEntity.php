@@ -11,12 +11,22 @@ namespace Minds\Entities;
 use Minds\Traits\Exportable;
 use Minds\Traits\MagicAttributes;
 use Minds\Traits\DirtyChecking;
+use Minds\Traits\Snapshotable;
 
 abstract class RepositoryEntity extends LegacyEntityCompat implements \JsonSerializable
 {
     use MagicAttributes;
     use Exportable;
     use DirtyChecking;
+    use Snapshotable;
+
+    /**
+     * @return bool
+     */
+    public function getSnapshotable()
+    {
+        return false;
+    }
 
     /**
      * Returns if the entity can be edited by the current user

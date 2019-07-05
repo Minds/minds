@@ -28,7 +28,8 @@ class delete implements Interfaces\Api
             return Factory::response(['status' => 'failed']);
         }
 
-        $manager = new Core\Channels\Manager();
+        /** @var Core\Channels\Manager $manager */
+        $manager = Di::_()->get('Channels\Manager');
         $manager
             ->setUser(Core\Session::getLoggedinUser())
             ->delete();

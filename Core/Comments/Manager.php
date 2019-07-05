@@ -123,7 +123,7 @@ class Manager
      * @param Comment $comment
      * @return bool
      * @throws BlockedUserException
-     * @throws \Exception
+     * @throws \Minds\Exceptions\StopEventException
      */
     public function add(Comment $comment)
     {
@@ -173,7 +173,6 @@ class Manager
      * Updates a comment and triggers updating events
      * @param Comment $comment
      * @return bool
-     * @throws \Exception
      */
     public function update(Comment $comment)
     {
@@ -184,11 +183,48 @@ class Manager
         return $this->repository->update($comment, $comment->getDirtyAttributes());
     }
 
+
+    /**
+     * Restores a comment that was deleted from the database
+     * @param Comment $comment
+     * @return bool
+     * @throws BlockedUserException
+     */
+    public function restore(Comment $comment)
+    {
+        $entity = $this->entitiesBuilder->single($comment->getEntityGuid());
+
+        $owner = $comment->getOwnerEntity(false);
+
+        if (
+            !$comment->getOwnerGuid() ||
+            !$this->acl->interact($entity, $owner)
+        ) {
+            throw new BlockedUserException();
+        }
+
+        try {
+            if ($this->legacyRepository->isFallbackEnabled()) {
+                $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false);
+            }
+        } catch (\Exception $e) {
+            error_log("[Comments\Repository::restore/legacy] {$e->getMessage()} > " . get_class($e));
+        }
+
+        $success = $this->repository->add($comment);
+
+        if ($success) {
+            $this->countCache->destroy($comment);
+        }
+
+        return $success;
+    }
+
     /**
      * Deletes a comment and triggers deletion events
      * @param Comment $comment
+     * @param array $opts
      * @return bool
-     * @throws \Exception
      */
     public function delete(Comment $comment, $opts = [])
     {

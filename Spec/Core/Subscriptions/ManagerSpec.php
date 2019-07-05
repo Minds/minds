@@ -36,7 +36,8 @@ class ManagerSpec extends ObjectBehavior
             $sendNotificationDelegate,
             $cacheDelegate,
             $eventsDelegate,
-            $feedsDelegate
+            $feedsDelegate,
+            true
         );
         $this->repository = $repository;
         $this->copyToElasticSearchDelegate = $copyToElasticSearchDelegate;

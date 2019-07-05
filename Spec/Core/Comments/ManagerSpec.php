@@ -253,6 +253,85 @@ class ManagerSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
+
+    function it_should_restore(
+        Comment $comment,
+        Entity $entity,
+        User $owner
+    )
+    {
+        $comment->getOwnerEntity(false)
+            ->shouldBeCalled()
+            ->willReturn($owner);
+
+        $comment->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $this->entitiesBuilder->single(5000)
+            ->shouldBeCalled()
+            ->willReturn($entity);
+
+        $this->acl->interact($entity, $owner)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->legacyRepository->isFallbackEnabled()
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->legacyRepository->add($comment, Repository::$allowedEntityAttributes, false)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->repository->add($comment)
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->countCache->destroy($comment)
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $this
+            ->restore($comment)
+            ->shouldReturn(true);
+    }
+
+    function it_should_throw_if_blocked_user_during_restore(
+        Comment $comment,
+        Entity $entity,
+        User $owner
+    )
+    {
+        $comment->getOwnerEntity(false)
+            ->shouldBeCalled()
+            ->willReturn($owner);
+
+        $comment->getOwnerGuid()
+            ->shouldBeCalled()
+            ->willReturn(1000);
+
+        $comment->getEntityGuid()
+            ->shouldBeCalled()
+            ->willReturn(5000);
+
+        $this->entitiesBuilder->single(5000)
+            ->shouldBeCalled()
+            ->willReturn($entity);
+
+        $this->acl->interact($entity, $owner)
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this
+            ->shouldThrow(BlockedUserException::class)
+            ->duringRestore($comment);
+    }
+
     function it_should_delete(
         Comment $comment
     )
