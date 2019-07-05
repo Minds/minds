@@ -14,6 +14,7 @@ use Cassandra\Varint;
 use Minds\Core\Data\Cassandra\Client;
 use Minds\Core\Data\Cassandra\Prepared\Custom;
 use Minds\Core\Di\Di;
+use Minds\Core\Util\BigNumber;
 
 class Repository
 {
@@ -124,7 +125,7 @@ class Repository
                 ->setPaymentMethod($row['payment_method'])
                 ->setEntity((string) $row['entity_guid'])
                 ->setUser((string) $row['user_guid'])
-                ->setAmount($row['amount']->toDouble())
+                ->setAmount((string) BigNumber::_($row['amount']))
                 ->setInterval($row['interval'])
                 ->setLastBilling($row['last_billing']->time())
                 ->setNextBilling($row['next_billing']->time())

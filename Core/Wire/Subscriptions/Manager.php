@@ -76,8 +76,14 @@ class Manager
     {
         $this->cancelSubscription();
 
+        $urn = "urn:subscription:" . implode('-', [
+            $this->address, //offchain or onchain wallet
+            $this->sender->getGuid(),
+            $this->receiver->getGuid(),
+        ]);
+
         $subscription = (new Core\Payments\Subscriptions\Subscription())
-            ->setId($this->address)
+            ->setId($urn)
             ->setPlanId('wire')
             ->setPaymentMethod('tokens')
             ->setAmount($this->amount)
