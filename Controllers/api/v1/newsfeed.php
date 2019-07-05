@@ -515,6 +515,9 @@ class newsfeed implements Interfaces\Api
 
                     $activity->indexes = ["activity:$activity->owner_guid:edits"]; //don't re-index on edit
                     (new Core\Translation\Storage())->purge($activity->guid);
+
+                    $attachmentPaywallDelegate = new Core\Feeds\Activity\Delegates\AttachmentPaywallDelegate();
+                    $attachmentPaywallDelegate->onUpdate($activity);
                     
                     $save->setEntity($activity)
                         ->save();
