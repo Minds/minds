@@ -271,7 +271,7 @@ class ManagerSpec extends ObjectBehavior
 
         $subscription->getId()
             ->shouldBeCalled()
-            ->willReturn('0x123');
+            ->willReturn('urn:subscription:0x123-1234-5678');
 
         $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
             '0x123',
@@ -328,7 +328,7 @@ class ManagerSpec extends ObjectBehavior
 
         $subscription->getId()
             ->shouldBeCalled()
-            ->willReturn('offchain');
+            ->willReturn('urn:subscription:offchain-1234-5678');
 
         $this->cap->setUser(Argument::any())
             ->shouldBeCalled()

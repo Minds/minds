@@ -336,7 +336,7 @@ class Manager
         }
 
         $urn = new Urn($id);
-        list ($address, $sender, $receiver) = explode('-', $urn->getNss());
+        list ($address, , ,) = explode('-', $urn->getNss());
 
         if ($address === 'offchain') {
             $this->setPayload([
