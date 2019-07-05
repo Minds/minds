@@ -55,6 +55,11 @@ class Plus
         $user = $this->entitiesBuilder->single($user->getGuid(), [
             'cache' => false,
         ]);
+
+        if (!$user) {
+            return $wire;
+        }
+
         $user->setPlusExpires(strtotime('+30 days', $wire->getTimestamp()));
         $user->save();
 

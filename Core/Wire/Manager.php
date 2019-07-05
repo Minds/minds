@@ -14,6 +14,7 @@ use Minds\Core\Guid;
 use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire\Exceptions\WalletNotSetupException;
 use Minds\Core\Wire\Subscriptions\Manager as SubscriptionsManager;
+use Minds\Common\Urn;
 use Minds\Entities;
 use Minds\Entities\User;
 
@@ -328,7 +329,16 @@ class Manager
         $receiver = new User($subscription->getEntity()->guid);
         $amount = $subscription->getAmount();
 
-        if ($subscription->getId() === 'offchain') {
+        $id = $subscription->getId();
+        if (strpos($id, 'urn:', 0) !== 0)  {
+            error_log("[wire][recurring]: $id was expecting a urn");
+            return false;
+        }
+
+        $urn = new Urn($id);
+        list ($address, $sender, $receiver) = explode('-', $urn->getNss());
+
+        if ($address === 'offchain') {
             $this->setPayload([
                 'method' => 'offchain',
             ]);
@@ -339,14 +349,14 @@ class Manager
                     'to' => $this->config->get('blockchain')['contracts']['wire']['contract_address'],
                     'gasLimit' => BigNumber::_(200000)->toHex(true),
                     'data' => $this->client->encodeContractMethod('wireFromDelegate(address,address,uint256)', [
-                        $subscription->getId(),
+                        $address,
                         $receiver->getEthWallet(),
                         BigNumber::_($this->token->toTokenUnit($amount))->toHex(true),
                     ]),
                 ]);
             $this->setPayload([
                 'method' => 'onchain',
-                'address' => $subscription->getId(), //sender address
+                'address' => $address, //sender address
                 'receiver' => $receiver->getEthWallet(),
                 'txHash' => $txHash,
             ]);
