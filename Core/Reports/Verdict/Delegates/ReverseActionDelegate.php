@@ -29,12 +29,16 @@ class ReverseActionDelegate
     /** @var StrikesManager $strikesManager */
     private $strikesManager;
 
+    /** @var Core\Channels\Ban $channelsBanManager */
+    private $channelsBanManager;
+
     public function __construct(
         $entitiesBuilder = null,
         $actions = null,
         $urn = null,
         $strikesManager = null,
-        $saveAction = null
+        $saveAction = null,
+        $channelsBanManager = null
     )
     {
         $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
@@ -42,6 +46,7 @@ class ReverseActionDelegate
         $this->urn = $urn ?: new Urn;
         $this->strikesManager = $strikesManager ?: Di::_()->get('Moderation\Strikes\Manager');
         $this->saveAction = $saveAction ?: new SaveAction();
+        $this->channelsBanManager = $channelsBanManager ?: Di::_()->get('Channels\Ban');
     }
 
     public function onReverse(Verdict $verdict)
@@ -185,9 +190,10 @@ class ReverseActionDelegate
     private function unBan($report)
     {
         $user = $this->entitiesBuilder->single($report->getEntityOwnerGuid());
-        $user->banned = 'no';
-        $user->ban_reason = '';
-        $user->save();
+       
+        $this->channelsBanManager
+            ->setUser($user)
+            ->unBan();
     }
 
 }

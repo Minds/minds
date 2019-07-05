@@ -4,6 +4,7 @@ namespace Minds\Cli;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Minds\Exceptions\CliException;
 
 /**
  * CLI Controller.
@@ -156,6 +157,16 @@ class Controller
     public function getAllOpts()
     {
         return $this->opts;
+    }
+
+    public function gatekeeper($message = '')
+    {
+        $this->out(trim("{$message} Start operation?"), $this::OUTPUT_INLINE);
+        $answer = trim(readline('[y/N] '));
+
+        if ($answer != 'y') {
+            throw new CliException('Cancelled by user');
+        }
     }
 
     /**

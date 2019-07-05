@@ -99,6 +99,7 @@ class Minds extends base
         (new Hashtags\HashtagsProvider())->register();
         (new Feeds\FeedsProvider())->register();
         (new Analytics\AnalyticsProvider())->register();
+        (new Channels\ChannelsProvider())->register();
     }
 
     /**

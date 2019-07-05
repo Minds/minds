@@ -4,6 +4,8 @@
  */
 namespace Minds\Core\Subscriptions;
 
+use Minds\Entities\User;
+
 class Manager
 {
 
@@ -28,6 +30,9 @@ class Manager
     /** @var FeedsDelegate $feedsDelegate */
     private $feedsDelegate;
 
+    /** @var bool */
+    private $sendEvents = true;
+
     public function __construct(
         $repository = null,
         $copyToElasticSearchDelegate = null,
@@ -48,6 +53,16 @@ class Manager
     public function setSubscriber($user)
     {
         $this->subscriber = $user;
+        return $this;
+    }
+
+    /**
+     * @param bool $sendEvents
+     * @return Manager
+     */
+    public function setSendEvents($sendEvents)
+    {
+        $this->sendEvents = $sendEvents;
         return $this;
     }
 
@@ -78,11 +93,14 @@ class Manager
 
         $subscription = $this->repository->add($subscription);
 
-        $this->sendNotificationDelegate->send($subscription);
         $this->eventsDelegate->trigger($subscription);
         $this->feedsDelegate->copy($subscription);
         $this->copyToElasticSearchDelegate->copy($subscription);
         $this->cacheDelegate->cache($subscription);
+
+        if ($this->sendEvents) {
+            $this->sendNotificationDelegate->send($subscription);
+        }
 
         return $subscription;
     }

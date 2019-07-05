@@ -37,6 +37,9 @@ class DataProvider extends Provider
         $this->di->bind('Database\Cassandra\Cql', function ($di) {
             return new Cassandra\Client();
         }, ['useFactory'=>true]);
+        $this->di->bind('Database\Cassandra\Cql\Scroll', function ($di) {
+            return new Cassandra\Scroll();
+        }, ['useFactory'=>true]);
         $this->di->bind('Database\Cassandra\Entities', function ($di) {
             return new Call('entities');
         }, ['useFactory'=>false]);

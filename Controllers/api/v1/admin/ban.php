@@ -57,35 +57,15 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
 
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
+        $ban_reason = $data['note'] ?: $data['subject']['label'];
 
-        $user->ban_reason = $data['note'] ?: $data['subject']['label'];
+        /** @var Core\Channels\Ban $channelsBanManager */
+        $channelsBanManager = Di::_()->get('Channels\Ban');
 
-        $user->banned = 'yes';
-        $user->code = '';
-        $user->save();
+        $channelsBanManager
+            ->setUser($user)
+            ->ban($ban_reason);
 
-        \cache_entity($user);
-
-        (new Core\Data\Sessions())->destroyAll($user->guid);
-
-        try {
-            $params = [
-                'index' => Config::_()->elasticsearch['index'],
-                'type' => 'user',
-                'id' => $user->guid
-            ];
-
-            /** @var Core\Data\ElasticSearch\Client $elastic */
-            $elastic = Di::_()->get('Database\ElasticSearch');
-
-            $elastic->getClient()->delete($params);
-
-        } catch (\Exception $e) {
-            error_log(print_r($e->getMessage()));
-        }
-
-        Dispatcher::trigger('ban', 'user', $user);
-        
         return Factory::response([
             'done' => true
         ]);
@@ -110,11 +90,12 @@ class ban implements Interfaces\Api, Interfaces\ApiAdminPam
                 'error' => true
             ];
         }
-        
-        $user->banned = 'no';
-        $user->save();
 
-        \cache_entity($user);
+        /** @var Core\Channels\Ban $channelsBanManager */
+        $channelsBanManager = Di::_()->get('Channels\Ban');
+        $channelsBanManager
+            ->setUser($user)
+            ->unban();
 
         return Factory::response([
             'done' => true
