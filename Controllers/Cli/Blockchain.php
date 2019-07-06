@@ -153,7 +153,7 @@ while (true) {
             ->get();
 
         $eth = round($ethPrice->getNearestPrice(strtotime('1 minute ago')));
-        $usd = 0.15;
+        $usd = 1.25;
 
         $rate = round($eth/$usd);
         if ($rate % 2 !== 0) {
