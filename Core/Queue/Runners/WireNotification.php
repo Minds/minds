@@ -10,6 +10,7 @@ use Minds\Core\Queue;
 use Minds\Core\Queue\Interfaces;
 use Minds\Core\Util\BigNumber;
 use Minds\Core\Wire;
+use Minds\Entities;
 
 class WireNotification implements Interfaces\QueueRunner
 {
@@ -23,6 +24,10 @@ class WireNotification implements Interfaces\QueueRunner
 
                 $wire = isset($data['wire']) ? unserialize($data['wire']) : null;
                 $entity = isset($data['entity']) ? unserialize($data['entity']) : null;
+
+                if (is_numeric($entity)) {
+                    $entity = Entities\Factory::build($entity);
+                }
 
                 if (!$entity || !is_object($entity)) {
                     return;
