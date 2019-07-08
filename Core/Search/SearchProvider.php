@@ -9,7 +9,6 @@
 namespace Minds\Core\Search;
 
 use Minds\Core\Di\Provider;
-use Minds\Core\Search\Hashtags\Manager;
 
 class SearchProvider extends Provider
 {
@@ -40,7 +39,11 @@ class SearchProvider extends Provider
         }, ['useFactory' => true]);
 
         $this->di->bind('Search\Hashtags\Manager', function ($di) {
-            return new Manager();
+            return new Hashtags\Manager();
+        }, ['useFactory' => true]);
+
+        $this->di->bind('Search\RetryQueue\Manager', function ($di) {
+            return new RetryQueue\Manager();
         }, ['useFactory' => true]);
     }
 }
