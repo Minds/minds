@@ -6,6 +6,7 @@ echo "Waiting for elastic search to come online..."
 echo "Putting mappings"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch_1:9200/minds-views -d @./schema/minds-views.json --header "Content-Type: application/json"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch_1:9200/minds-boost -d @./schema/minds-boost.json --header "Content-Type: application/json"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch_1:9200/minds-boost -d @./schema/minds-boost-campaigns.json --header "Content-Type: application/json"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch_1:9200/minds-offchain -d @./schema/minds-offchain.json --header "Content-Type: application/json"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch_1:9200/minds-transactions-onchain -d @./schema/minds-transactions-onchain.json --header "Content-Type: application/json"
 

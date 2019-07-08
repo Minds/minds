@@ -1,0 +1,71 @@
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "type": {
+          "type": "keyword"
+        },
+        "guid": {
+          "type": "keyword"
+        },
+        "owner_guid": {
+          "type": "keyword"
+        },
+        "name": {
+          "type": "keyword"
+        },
+        "entity_urns": {
+          "type": "keyword"
+        },
+        "hashtags": {
+          "type": "keyword"
+        },
+        "nsfw": {
+          "type": "keyword"
+        },
+        "start": {
+          "type": "date"
+        },
+        "end": {
+          "type": "date"
+        },
+        "budget": {
+          "type": "double"
+        },
+        "budget_type": {
+          "type": "keyword"
+        },
+        "impressions": {
+          "type": "long"
+        },
+        "impressions_met": {
+          "type": "long"
+        },
+        "rating": {
+          "type": "byte"
+        },
+        "quality": {
+          "type": "byte"
+        },
+        "@timestamp": {
+          "type": "date"
+        },
+        "@reviewed": {
+          "type": "date"
+        },
+        "@rejected": {
+          "type": "date"
+        },
+        "@revoked": {
+          "type": "date"
+        },
+        "@completed": {
+          "type": "date"
+        }
+      }
+    }
+  },
+  "settings": {
+    "index.number_of_shards": 1
+  }
+}
