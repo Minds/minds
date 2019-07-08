@@ -1379,7 +1379,7 @@ CREATE TABLE minds.analytics_graphs (
   last_synced timestamp,
   data text,
   PRIMARY KEY(key)
-); 
+);
 
 CREATE TABLE minds.views (
     year int,
@@ -1413,6 +1413,13 @@ CREATE TABLE minds.hidden_hashtags (
     admin_guid bigint,
     hidden_since timestamp,
     PRIMARY KEY (hashtag)
+);
+
+CREATE TABLE minds.search_dispatcher_queue (
+    entity_urn text,
+    last_retry timestamp,
+    retries int,
+    PRIMARY KEY (entity_urn)
 );
 
 CREATE TABLE minds.user_snapshots (

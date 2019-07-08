@@ -4,10 +4,10 @@
  */
 namespace Minds\Core\Search;
 
+use Exception;
 use Minds\Core;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Event;
-use Minds\Entities;
 
 class Events
 {
@@ -79,12 +79,30 @@ class Events
                     return;
                 }
 
-                Di::_()->get('Search\Index')
-                    ->index(
-                        is_string($params['entity']) ?
-                            unserialize($params['entity']) :
-                            $params['entity']
-                    );
+                $entity = is_string($params['entity']) ?
+                    unserialize($params['entity']) :
+                    $params['entity'];
+
+                try {
+                    $wasIndexed = (bool) Di::_()->get('Search\Index')
+                        ->index($entity);
+                } catch (Exception $e) {
+                    error_log("[Search/Events/search:index:dispatch] {$e}");
+                    $wasIndexed = false;
+                }
+
+                // BannedException will return null (which is also falsy)
+                // So we should retry only on non-null responses from index()
+                if ($wasIndexed !== null) {
+                    /** @var Core\Search\RetryQueue\Manager $retryQueueManager */
+                    $retryQueueManager = Di::_()->get('Search\RetryQueue\Manager');
+
+                    if ($wasIndexed) {
+                        $retryQueueManager->prune($entity);
+                    } else {
+                        $retryQueueManager->retry($entity);
+                    }
+                }
 
             } catch (\Exception $e) {
                 error_log('[Search/Events/search:index:dispatch] ' . get_class($e) . ': ' . $e->getMessage());
