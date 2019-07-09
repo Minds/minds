@@ -56,7 +56,8 @@ class RepositorySpec extends ObjectBehavior
                                 'time_created' => 1,
                                 '@timestamp' => 1000,
                             ],
-                            '_score' => 100
+                            '_score' => 100,
+                            '_type' => 'activity',
                         ],
                         [
                             '_source' => [
@@ -65,7 +66,8 @@ class RepositorySpec extends ObjectBehavior
                                 'time_created' => 1,
                                 '@timestamp' => 1000,
                             ],
-                            '_score' => 50
+                            '_score' => 50,
+                            '_type' => 'activity',
                         ],
                     ]
                 ]
@@ -104,7 +106,8 @@ class RepositorySpec extends ObjectBehavior
                                 'time_created' => 1,
                                 '@timestamp' => 1000,
                             ],
-                            '_score' => 100
+                            '_score' => 100,
+                            '_type' => 'user',
                         ],
                         [
                             '_source' => [
@@ -113,7 +116,8 @@ class RepositorySpec extends ObjectBehavior
                                 'time_created' => 2,
                                 '@timestamp' => 2000,
                             ],
-                            '_score' => 50
+                            '_score' => 50,
+                            '_type' => 'user',
                         ],
                     ]
                 ]
@@ -153,7 +157,8 @@ class RepositorySpec extends ObjectBehavior
                                 '@timestamp' => 1000,
                                 'container_guid' => '1',
                             ],
-                            '_score' => 100
+                            '_score' => 100,
+                            '_type' => 'group',
                         ],
                         [
                             '_source' => [
@@ -163,7 +168,8 @@ class RepositorySpec extends ObjectBehavior
                                 '@timestamp' => 2000,
                                 'container_guid' => '2',
                             ],
-                            '_score' => 50
+                            '_score' => 50,
+                            '_type' => 'group',
                         ],
                     ]
                 ]
