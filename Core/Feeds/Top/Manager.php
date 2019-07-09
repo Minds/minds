@@ -241,18 +241,22 @@ class Manager
             }
         }
 
+        $entities =  [];
+
         $hydrateGuids = array_map(function (FeedSyncEntity $feedSyncEntity) {
             return $feedSyncEntity->getGuid();
         }, array_slice($feedSyncEntities, 0, 12)); // hydrate the first 12
 
-        $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
+        if ($hydrateGuids) {
+            $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
 
-        foreach ($hydratedEntities as $entity) {
-            $entities[] = (new FeedSyncEntity)
-                             ->setGuid($entity->getGuid())
-                             ->setOwnerGuid($entity->getOwnerGuid())
-                             ->setUrn($entity->getUrn())
-                             ->setEntity($entity);
+            foreach ($hydratedEntities as $entity) {
+                $entities[] = (new FeedSyncEntity)
+                                 ->setGuid($entity->getGuid())
+                                 ->setOwnerGuid($entity->getOwnerGuid())
+                                 ->setUrn($entity->getUrn())
+                                 ->setEntity($entity);
+            }
         }
 
         // TODO: Optimize this
