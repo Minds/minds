@@ -228,11 +228,9 @@ class Installer
     }
 
     public function setupStorage(Provisioners\ProvisionerInterface $cassandraStorage = null,
-                                 Provisioners\ProvisionerInterface $cockroachProvisioner = null,
                                  $cleanData = false)
     {
         $this->provisionCassandra($cassandraStorage, $cleanData);
-        $this->provisionCockroach($cockroachProvisioner, $cleanData);
     }
 
     public function provisionCassandra(Provisioners\ProvisionerInterface $cassandraStorage = null,
@@ -240,13 +238,6 @@ class Installer
     {
         $cassandraStorage = $cassandraStorage ?: new Provisioners\CassandraProvisioner();
         $cassandraStorage->provision($cleanData);
-    }
-
-    public function provisionCockroach(Provisioners\ProvisionerInterface $cockroachProvisioner = null,
-                                       $cleanData = false)
-    {
-        $cockroachProvisioner = $cockroachProvisioner ?: new Provisioners\CockroachProvisioner();
-        $cockroachProvisioner->provision($cleanData);
     }
 
     public function reloadStorage()
