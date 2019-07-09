@@ -89,6 +89,7 @@ class Manager
             'nsfw' => null,
             'single_owner_threshold' => 36,
             'filter_hashtags' => false,
+            'pinned_guids' => null,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query']) {
@@ -125,9 +126,14 @@ class Manager
 
             ++$i; // Update here as we don't want to count skipped
 
+            $entityType = $scoredGuid->getType() ?? 'entity';
+            if (strpos($entityType, 'object:', 0) === 0) {
+                $entityType = str_replace('object:', '', $entityType);
+            }
+ 
             $urn = implode(':', [
                 'urn',
-                $scoredGuid->getType() ?? 'entity',
+                $entityType, 
                 $scoredGuid->getGuid(),
             ]);
 
@@ -155,6 +161,9 @@ class Manager
            $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
 
            foreach ($hydratedEntities as $entity) {
+               if ($opts['pinned_guids'] && in_array($entity->getGuid(), $opts['pinned_guids'])) {
+                   $entity->pinned = true;
+               }
                $entities[] = (new FeedSyncEntity)
                                 ->setGuid($entity->getGuid())
                                 ->setOwnerGuid($entity->getOwnerGuid())
@@ -210,7 +219,7 @@ class Manager
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid((string) $row['guid'])
                     ->setOwnerGuid((string) $row['guid'])
-                    ->setUrn(new Urn($row['guid']))
+                    ->setUrn("urn:user:{$row['guid']}")
                     ->setTimestamp($row['time_created'] * 1000);
             }
         }
@@ -227,12 +236,31 @@ class Manager
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid($row)
                     ->setOwnerGuid(-1)
-                    ->setUrn(new Urn($row))
+                    ->setUrn("urn:group:{$row['guid']}")
                     ->setTimestamp(0);
             }
         }
 
-        return $feedSyncEntities;
+        $hydrateGuids = array_map(function (FeedSyncEntity $feedSyncEntity) {
+            return $feedSyncEntity->getGuid();
+        }, array_slice($feedSyncEntities, 0, 12)); // hydrate the first 12
+
+        $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
+
+        foreach ($hydratedEntities as $entity) {
+            $entities[] = (new FeedSyncEntity)
+                             ->setGuid($entity->getGuid())
+                             ->setOwnerGuid($entity->getOwnerGuid())
+                             ->setUrn($entity->getUrn())
+                             ->setEntity($entity);
+        }
+
+        // TODO: Optimize this
+        foreach (array_slice($feedSyncEntities, 12) as $entity) {
+            $entities[] = $entity;
+        }
+
+        return $entities;
     }
 
     public function run($opts = [])

@@ -220,6 +220,7 @@ class Image extends File
         $export['width'] = $this->width ?: 0;
         $export['height'] = $this->height ?: 0;
         $export['gif'] = (bool) $this->gif;
+        $export['urn'] = $this->getUrn();
 
         if (!Helpers\Flags::shouldDiscloseStatus($this) && isset($export['flags']['spam'])) {
             unset($export['flags']['spam']);
@@ -351,5 +352,10 @@ class Image extends File
     public function getBoostRejectionReason()
     {
         return $this->boost_rejection_reason;
+    }
+
+    public function getUrn()
+    {
+        return "urn:image:{$this->guid}";
     }
 }

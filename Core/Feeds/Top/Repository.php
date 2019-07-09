@@ -51,7 +51,8 @@ class Repository
             'nsfw' => null,
             'from_timestamp' => null,
             'exclude_moderated' => false,
-            'moderation_reservations' => null
+            'moderation_reservations' => null,
+            'pinned_guids' => null,
         ], $opts);
 
         if (!$opts['type']) {
@@ -338,6 +339,20 @@ class Repository
 
         $response = $this->client->request($prepared);
 
+        if ($opts['pinned_guids']) { // Hack the response so we can have pinned posts
+            foreach ($opts['pinned_guids'] as $pinned_guid) {
+                array_unshift($response['hits']['hits'], [
+                    '_type' => 'activity',
+                    '_source' => [
+                        'guid' => $pinned_guid,
+                        'owner_guid' => null,
+                        'score' => 0,
+                        'timestamp' => 0,
+                    ],
+                ]);
+            }
+        }
+ 
         $guids = [];
         foreach ($response['hits']['hits'] as $doc) {
             $guid = $doc['_source'][$this->getSourceField($opts['type'])];

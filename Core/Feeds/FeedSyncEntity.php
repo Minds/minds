@@ -49,7 +49,7 @@ class FeedSyncEntity
     {
         return [
             'guid' => (string) $this->guid,
-            'owner_guid' =>  (string) $this->owner_guid,
+            'owner_guid' =>  (string) $this->ownerGuid,
             'timestamp' => $this->timestamp,
             'urn' => $this->urn,
             'entity' => $this->entity ? $this->entity->export() : null,

@@ -635,6 +635,8 @@ class Blog extends RepositoryEntity
             unset($output['deleted']);
         }
 
+        $output['urn'] = $this->getUrn();
+
         $output = array_merge(
             $output,
             $this->_eventsDispatcher->trigger('export:extender', 'blog', [ 'entity' => $this ], [])

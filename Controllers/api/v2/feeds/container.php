@@ -132,6 +132,7 @@ class container implements Interfaces\Api
             'from_timestamp' => $fromTimestamp,
             'query' => $query,
             'single_owner_threshold' => 0,
+            'pinned_guids' => $type === 'activity' ? $container->getPinnedPosts() : null,
         ];
 
         if (isset($_GET['nsfw'])) {
