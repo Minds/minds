@@ -16,15 +16,8 @@ aws s3 cp $S3_BUCKET/var/secure/oauth-pub.key /var/secure/oauth-pub.key
 aws s3 cp $S3_BUCKET/var/secure/sessions-priv.key /var/secure/sessions-priv.key
 aws s3 cp $S3_BUCKET/var/secure/sessions-pub.key /var/secure/sessions-pub.key
 
-# Cockroach
-aws s3 cp $S3_BUCKET/var/secure/cockroachdb /var/secure/cockroachdb --recursive
-chown -R www-data /var/secure/cockroachdb/
-
 aws s3 cp $S3_BUCKET/var/secure/google.sheets.key.json /var/secure/google.sheets.key.json
 
 chmod -xr /var/secure/
-
-# Cockroachdb permissions
-chmod -R 600 /var/secure/cockroachdb/
 
 echo "PULLED SECRETS";

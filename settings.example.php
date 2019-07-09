@@ -14,12 +14,6 @@ $CONFIG->cassandra = (object) [
     'password' => 'cassandra',
 ];
 
-$CONFIG->database = [
-    'host' => 'cockroachdb',
-    'user' => 'php',
-    'sslmode' => 'disable',
-];
-
 $CONFIG->redis = [
     'master' => 'redis',
     'slave' => 'redis'
@@ -474,7 +468,87 @@ $CONFIG->set('features', [
     'es-feeds' => false,
     'helpdesk' => true,
     'top-feeds' => true,
+    'cassandra-notifications' => true,
     'dark-mode' => true,
 ]);
+
+$CONFIG->set('email', [ 
+    'smtp' => [
+        'host' => '',
+        'username' => '',
+        'password' => '',
+        'port' => 465
+    ]
+]);
+
+$CONFIG->set('max_video_length', 900);
+
+$CONFIG->set('max_video_length_plus', 1860);
+
+$CONFIG->set('aws', [
+    'key' => '',
+    'secret' => '',
+    'useRoles' => false,
+    'bucket' => 'cinemr',
+    'staticStorage' => 'cinemr_dev',
+    'region' => 'us-east-1',
+    'account_id' => '324044571751',
+    'elastic_transcoder' => [
+        'pipeline_id' => '1401290942976-efm3xj',
+        'presets' => [
+            "360.mp4" => "1351620000001-000040",
+            "720.mp4" => "1351620000001-000010",
+            "360.webm" => "1404848610623-0blc5v",
+            "720.webm" => "1404852762051-zzvwfq"
+        ],
+        'dir' => 'cinemr_dev'
+    ],
+    'queue' => [
+        'namespace' => 'EmiDev',
+        'wait_seconds' => 3,
+    ]
+]);
+
+$CONFIG->set('transcode', [
+    //'free_threshold' => 900, // 15 minutes
+    'free_threshold' => 2,
+    'hd_price' => 1, // tokens
+    'fhd_price' => 1.5,  // tokens
+]);
+
+$CONFIG->set('transcoder', [
+    'threads' => 4,
+    'dir' => 'cinemr_dev',
+    'presets' => [
+        [
+            'width' => 640,
+            'height' => 360,
+            'bitrate' => 500,
+            'audio_bitrate' => 80,
+            'formats' => [ 'mp4', 'webm' ],
+            'charge' => false,
+        ],
+        [
+            'width' => 1280,
+            'height' => 720,
+            'bitrate' => 2000,
+            'audio_bitrate' => 128,
+            'formats' => [ 'mp4', 'webm' ],
+            'charge' => false,
+        ],
+        [
+            'width' => 1920,
+            'height' => 1080,
+            'bitrate' => 2000,
+            'audio_bitrate' => 128,
+            'formats' => [ 'mp4', 'webm' ],
+            'charge' => true,
+        ],
+    ]
+]);
+
+$CONFIG->cinemr_url = 'https://cinemr.s3.amazonaws.com/cinemr_dev/';
+
+$CONFIG->mongodb_servers = ['minds_mongo_1'];
 
 $CONFIG->set('last_tos_update', 1);

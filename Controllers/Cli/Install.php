@@ -18,8 +18,8 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
     {
         $this->out('Configures web server and provisions and sets up databases for the minds application.');
         $this->out('use-existing-settings: uses the existing settings in settings.php.');
-        $this->out('only=[keys|site|cassandra|cockroach] to set up individual components.');
-        $this->out('cleanCassandra cleanCockroach: deletes and recreates db.');
+        $this->out('only=[keys|site|cassandra|] to set up individual components.');
+        $this->out('cleanCassandra: deletes and recreates db.');
         $this->out('graceful-storage-provision: causes installation to proceed past storage (db) failures.');
     }
 
@@ -52,7 +52,7 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
             $provisioner->checkOptions();
             $this->out('OK');
 
-            // only=[keys|cassandra|cockroach|site]
+            // only=[keys|cassandra|site]
             $installOnly = $this->getopt('only');
             $installType = $installOnly ? $installOnly : "all";
 
@@ -74,17 +74,6 @@ class Install extends Cli\Controller implements Interfaces\CliControllerInterfac
             } catch (Exception $ex) {
                 $this->out('Something BAD happened while provisioning Cassandra' . $ex->getMessage()); 
             }
-
-            try {
-                if ($installType == "all" || $installType == "cockroach") {
-                    $this->out('- Provisioning Cockroach:');
-                    $isCleanCockroach = $this->getopt("cleanCockroach") != null;
-                    $provisioner->provisionCockroach(null, $isCleanCockroach);
-                    $this->out('OK');
-                }
-            } catch (Exception $ex) {
-                $this->out('Something BAD happened while provisioning Cockroach' . $ex->getMessage()); 
-            } 
 
             if (($installType == "all") || ($installType == "site")) {
                 $this->out('- Setting up site:', $this::OUTPUT_INLINE);
