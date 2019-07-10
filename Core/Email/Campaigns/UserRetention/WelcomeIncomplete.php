@@ -75,6 +75,7 @@ class WelcomeIncomplete extends EmailCampaign
         //send email
         if ($this->canSend()) {
             $this->mailer->queue($this->build());
+            $this->saveCampaignLog();
         }
     }
 }

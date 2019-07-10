@@ -70,11 +70,13 @@ class WelcomeComplete extends EmailCampaign
         return $message;
     }
 
-    public function send()
+    public function send($time = null)
     {
+        $time = $time ?: time();
         //send email
         if ($this->canSend()) {
             $this->mailer->queue($this->build());
+            $this->saveCampaignLog($time);
         }
     }
 }
