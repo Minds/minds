@@ -1429,3 +1429,10 @@ CREATE TABLE minds.user_snapshots (
   json_data text,
   PRIMARY KEY (user_guid, type, key)
 ) WITH CLUSTERING ORDER BY (type ASC, key ASC);
+
+CREATE TABLE minds.email_campaign_logs (
+  receiver_guid varint,
+  time_sent timestamp,
+  email_campaign_id text,
+  PRIMARY KEY (receiver_guid, time_sent)
+) WITH CLUSTERING ORDER BY (time_sent desc);

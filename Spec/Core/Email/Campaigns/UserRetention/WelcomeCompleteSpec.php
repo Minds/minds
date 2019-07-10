@@ -8,6 +8,7 @@ use Minds\Core\Email\Mailer;
 use Minds\Core\Email\Manager;
 use Minds\Core\Email\EmailSubscription;
 use Minds\Core\Suggestions\Suggestion;
+use Minds\Core\Email\CampaignLogs\CampaignLog;
 use Minds\Entities\User;
 use Prophecy\Argument;
 
@@ -66,6 +67,15 @@ class WelcomeCompleteSpec extends ObjectBehavior
             ->setTopic('minds_tips')
             ->setValue(true);
 
+        
+        $time = time();
+
+        $campaignLog = (new CampaignLog())
+            ->setReceiverGuid($this->testGUID)
+            ->setTimeSent($time)
+            ->setEmailCampaignId($this->getEmailCampaignId()->getWrappedObject());
+
+        $this->manager->saveCampaignLog($campaignLog)->shouldBeCalled();
         $this->manager->isSubscribed($testEmailSubscription)->shouldBeCalled()->willReturn(true);
         $this->send();
     }

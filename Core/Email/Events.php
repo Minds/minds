@@ -8,11 +8,13 @@ namespace Minds\Core\Email;
 use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Core\Analytics\UserStates\UserActivityBuckets;
-use Minds\Core\Email\Campaigns\UserRetention\GoneCold;
+
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeComplete;
 use Minds\Core\Email\Campaigns\UserRetention\WelcomeIncomplete;
 use Minds\Entities\User;
+use Minds\Core\Email\Manager;
 use Minds\Core\Suggestions\Manager as SuggestionManager;
+use Minds\Interfaces\SenderInterface;
 
 class Events
 {
@@ -36,6 +38,7 @@ class Events
 
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_NEW, function ($opts) {
             error_log('user_state_change new');
+            $this->sendCampaign(new Delegates\WelcomeSender(), $opts->getParameters());
         });
 
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_RESURRECTED, function ($opts) {
@@ -43,37 +46,17 @@ class Events
         });
 
         Dispatcher::register('user_state_change', UserActivityBuckets::STATE_COLD, function ($opts) {
-            error_log('user_state_change cold');
-            $params = $opts->getParameters();
-            $user = new User($params['user_guid']);
-            $manager = new SuggestionManager();
-            $manager->setUser($user);
-            $suggestions = $manager->getList();
-            $campaign = (new GoneCold())
-                ->setUser($user)
-                ->setSuggestions($suggestions);
-            $campaign->send();
+            $this->sendCampaign(new Delegates\GoneColdSender(), $opts->getParameters()); 
         });
 
         Dispatcher::register('welcome_email', 'all', function ($opts) {
-            error_log('welcome_email');
-            $params = $opts->getParameters();
-            $user = new User($params['user_guid']);
-            $onboardingManager = Di::_()->get('Onboarding\Manager');
-            $onboardingManager->setUser($user);
-
-            if ($onboardingManager->isComplete()) {
-                $campaign = (new WelcomeComplete());
-                $suggestionManager = Di::_()->get('Suggestions\Manager');
-                $suggestionManager->setUser($user);
-                $suggestions = $suggestionManager->getList();
-                $campaign->setSuggestions($suggestions);
-            } else {
-                $campaign = (new WelcomeIncomplete());
-                error_log('Sending Welcome Incomplete');
-            }
-            $campaign->setUser($user);
-            $campaign->send();
+            $this->sendCampaign(new Delegates\WelcomeSender(), $opts->getParameters());
         });
+
+    }
+
+    private function sendCampaign (SenderInterface $sender, $params) {
+        $user = new User($params['user_guid']);
+        $sender->send($user);
     }
 }
