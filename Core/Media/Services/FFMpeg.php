@@ -78,6 +78,20 @@ class FFMpeg implements ServiceInterface
         return $this;
     }
 
+    /**
+     * Create a PresignedUr for client based uploads
+     * @return string
+     */
+    public function getPresignedUrl()
+    {
+        $cmd = $this->s3->getCommand('PutObject', [
+            'Bucket' => 'cinemr',
+            'Key' => "$this->dir/$this->key/source",
+        ]);
+
+        return (string) $this->s3->createPresignedRequest($cmd, '+20 minutes')->getUri();
+    }
+
     public function saveToFilestore($file)
     {
         try {
