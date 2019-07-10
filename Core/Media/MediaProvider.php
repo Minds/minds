@@ -59,5 +59,17 @@ class MediaProvider extends Provider
         $this->di->bind('Media\Imagick\Manager', function ($di) {
             return new Imagick\Manager();
         }, ['useFactory' => false]);
+
+        // ClientUpload
+
+        $this->di->bind('Media\ClientUpload\Manager', function ($di) {
+            return new ClientUpload\Manager();
+        }, ['useFactory' => true]);
+
+        // Services
+
+        $this->di->bind('Media\Services\FFMpeg', function ($di) {
+            return new Services\FFMpeg();
+        }, ['useFactory' => false]);
     }
 }
