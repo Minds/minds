@@ -60,9 +60,13 @@ class Manager
 
         $response = $this->topFeedsManager->getList($opts);
 
+        $response = $response->map(function($entity) {
+            return $entity->getEntity();
+        });
+
         if ($opts['moderation_user']) {
             foreach ($response->toArray() as $entity) {
-                $this->moderationCache->store($entity->getEntity()->guid, $opts['moderation_user']);
+                $this->moderationCache->store($entity->guid, $opts['moderation_user']);
             }
         }
 
