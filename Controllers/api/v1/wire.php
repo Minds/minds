@@ -52,6 +52,10 @@ class wire implements Interfaces\Api
             return Factory::response(['status' => 'error', 'message' => 'You cannot send a wire to yourself!']);
         }
 
+        if (Core\Security\ACL\Block::_()->isBlocked(Core\Session::getLoggedInUserGuid(), $user->guid)) {
+            return Factory::response(['status' => 'error', 'message' => 'You cannot send a wire to a user who has blocked you.']);
+        }
+
         $amount = BigNumber::_($_POST['amount']);
 
         $recurring = isset($_POST['recurring']) ? $_POST['recurring'] : false;
