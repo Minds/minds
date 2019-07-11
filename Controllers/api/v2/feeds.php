@@ -157,6 +157,7 @@ class feeds implements Interfaces\Api
             'sync' => $sync,
             'query' => $query ?? null,
             'single_owner_threshold' => 36,
+            'as_activities' => $asActivities,
         ];
 
         $nsfw = $_GET['nsfw'] ?? '';

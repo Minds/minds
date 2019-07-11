@@ -22,6 +22,9 @@ class Manager
     /** @var EntitiesBuilder */
     protected $entitiesBuilder;
 
+    /** @var Entities */
+    protected $entities;
+
     private $from;
 
     private $to;
@@ -33,11 +36,13 @@ class Manager
     public function __construct(
         $repository = null,
         $entitiesBuilder = null,
+        $entities = null,
         $search = null
     )
     {
         $this->repository = $repository ?: new Repository;
         $this->entitiesBuilder = $entitiesBuilder ?: new EntitiesBuilder;
+        $this->entities = $entities ?: new Entities;
         $this->search = $search ?: Di::_()->get('Search\Search');
 
         $this->from = strtotime('-7 days') * 1000;
@@ -90,6 +95,7 @@ class Manager
             'single_owner_threshold' => 36,
             'filter_hashtags' => false,
             'pinned_guids' => null,
+            'as_activities' => false,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query']) {
@@ -130,7 +136,11 @@ class Manager
             if (strpos($entityType, 'object:', 0) === 0) {
                 $entityType = str_replace('object:', '', $entityType);
             }
- 
+
+            if ($opts['as_activities'] && !in_array($opts['type'], [ 'user', 'group' ])) {
+                $entityType = 'activity';
+            }
+
             $urn = implode(':', [
                 'urn',
                 $entityType, 
@@ -163,6 +173,9 @@ class Manager
            foreach ($hydratedEntities as $entity) {
                if ($opts['pinned_guids'] && in_array($entity->getGuid(), $opts['pinned_guids'])) {
                    $entity->pinned = true;
+               }
+               if ($opts['as_activities']) {
+                   $entity = $this->entities->cast($entity);
                }
                $entities[] = (new FeedSyncEntity)
                                 ->setGuid($entity->getGuid())
