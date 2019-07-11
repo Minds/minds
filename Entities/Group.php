@@ -839,8 +839,16 @@ class Group extends NormalizedEntity
         $export['is:creator'] = $userIsAdmin || $this->isCreator(Core\Session::getLoggedInUser());
         $export['is:awaiting'] = $this->isAwaiting(Core\Session::getLoggedInUser());
 
+        $export['urn'] = $this->getUrn();
+
         $export = array_merge($export, Dispatcher::trigger('export:extender', 'group', [ 'entity' => $this ], []));
 
         return $export;
     }
+
+    public function getUrn()
+    {
+        return "urn:group:{$this->guid}";
+    }
+
 }

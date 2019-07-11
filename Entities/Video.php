@@ -260,4 +260,9 @@ class Video extends Object
     {
         return $this->boost_rejection_reason;
     }
+
+    public function getUrn()
+    {
+        return "urn:video:{$this->getGuid()}";
+    }
 }

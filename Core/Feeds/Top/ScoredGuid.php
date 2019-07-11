@@ -20,6 +20,8 @@ use Minds\Traits\MagicAttributes;
  * @method ScoredGuid setOwnerGuid(int|string $ownerGuid)
  * @method int getTimestamp()
  * @method ScoredGuid setTimestamp(int $timestamp)
+ * @method string getType()
+ * @method ScoredGuid setType(string $type)
  */
 class ScoredGuid
 {
@@ -27,6 +29,9 @@ class ScoredGuid
 
     /** @var int|string */
     protected $guid;
+
+    /** @var string */
+    protected $type;
 
     /** @var float */
     protected $score;

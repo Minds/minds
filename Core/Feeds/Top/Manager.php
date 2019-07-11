@@ -89,6 +89,7 @@ class Manager
             'nsfw' => null,
             'single_owner_threshold' => 36,
             'filter_hashtags' => false,
+            'pinned_guids' => null,
         ], $opts);
 
         if (isset($opts['query']) && $opts['query']) {
@@ -125,10 +126,21 @@ class Manager
 
             ++$i; // Update here as we don't want to count skipped
 
+            $entityType = $scoredGuid->getType() ?? 'entity';
+            if (strpos($entityType, 'object:', 0) === 0) {
+                $entityType = str_replace('object:', '', $entityType);
+            }
+ 
+            $urn = implode(':', [
+                'urn',
+                $entityType, 
+                $scoredGuid->getGuid(),
+            ]);
+
             $feedSyncEntities[] = (new FeedSyncEntity())
                 ->setGuid((string) $scoredGuid->getGuid())
                 ->setOwnerGuid((string) $ownerGuid)
-                ->setUrn(new Urn($scoredGuid->getGuid()))
+                ->setUrn(new Urn($urn))
                 ->setTimestamp($scoredGuid->getTimestamp());
 
             $scores[(string) $scoredGuid->getGuid()] = $scoredGuid->getScore();
@@ -142,29 +154,44 @@ class Manager
                return min($feedSyncEntity->getTimestamp() ?: INF, $carry);
            }, INF) - 1);
 
-            if (!$opts['sync']) {
-                $guids = array_map(function (FeedSyncEntity $feedSyncEntity) {
-                    return $feedSyncEntity->getGuid();
-                }, $feedSyncEntities);
+           $hydrateGuids = array_map(function (FeedSyncEntity $feedSyncEntity) {
+               return $feedSyncEntity->getGuid();
+           }, array_slice($feedSyncEntities, 0, 12)); // hydrate the first 12
 
-                $entities = $this->entitiesBuilder->get(['guids' => $guids]);
-            } else {
-                $entities = $feedSyncEntities;
-            }
+           $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
 
-            usort($entities, function ($a, $b) use ($scores) {
-                $aGuid = $a instanceof FeedSyncEntity ? $a->getGuid() : $a->guid;
-                $bGuid = $b instanceof FeedSyncEntity ? $b->getGuid() : $b->guid;
+           foreach ($hydratedEntities as $entity) {
+               if ($opts['pinned_guids'] && in_array($entity->getGuid(), $opts['pinned_guids'])) {
+                   $entity->pinned = true;
+               }
+               $entities[] = (new FeedSyncEntity)
+                                ->setGuid($entity->getGuid())
+                                ->setOwnerGuid($entity->getOwnerGuid())
+                                ->setUrn($entity->getUrn())
+                                ->setEntity($entity);
+           }
 
-                $aScore = $scores[(string) $aGuid];
-                $bScore = $scores[(string) $bGuid];
+           // TODO: Optimize this
+           foreach (array_slice($feedSyncEntities, 12) as $entity) {
+               $entities[] = $entity;
+           }
 
-                if ($aScore === $bScore) {
-                    return 0;
-                }
+           // TODO: confirm if the following is actually necessary
+           // especially after the first 12
 
-                return $aScore < $bScore ? 1 : -1;
-            });
+           /*usort($entities, function ($a, $b) use ($scores) {
+               $aGuid = $a instanceof FeedSyncEntity ? $a->getGuid() : $a->guid;
+               $bGuid = $b instanceof FeedSyncEntity ? $b->getGuid() : $b->guid;
+
+               $aScore = $scores[(string) $aGuid];
+               $bScore = $scores[(string) $bGuid];
+
+               if ($aScore === $bScore) {
+                   return 0;
+               }
+
+               return $aScore < $bScore ? 1 : -1;
+           });*/
         }
 
         $response = new Response($entities);
@@ -192,7 +219,7 @@ class Manager
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid((string) $row['guid'])
                     ->setOwnerGuid((string) $row['guid'])
-                    ->setUrn(new Urn($row['guid']))
+                    ->setUrn("urn:user:{$row['guid']}")
                     ->setTimestamp($row['time_created'] * 1000);
             }
         }
@@ -209,12 +236,35 @@ class Manager
                 $feedSyncEntities[] = (new FeedSyncEntity())
                     ->setGuid($row)
                     ->setOwnerGuid(-1)
-                    ->setUrn(new Urn($row))
+                    ->setUrn("urn:group:{$row['guid']}")
                     ->setTimestamp(0);
             }
         }
 
-        return $feedSyncEntities;
+        $entities =  [];
+
+        $hydrateGuids = array_map(function (FeedSyncEntity $feedSyncEntity) {
+            return $feedSyncEntity->getGuid();
+        }, array_slice($feedSyncEntities, 0, 12)); // hydrate the first 12
+
+        if ($hydrateGuids) {
+            $hydratedEntities = $this->entitiesBuilder->get(['guids' => $hydrateGuids]);
+
+            foreach ($hydratedEntities as $entity) {
+                $entities[] = (new FeedSyncEntity)
+                                 ->setGuid($entity->getGuid())
+                                 ->setOwnerGuid($entity->getOwnerGuid())
+                                 ->setUrn($entity->getUrn())
+                                 ->setEntity($entity);
+            }
+        }
+
+        // TODO: Optimize this
+        foreach (array_slice($feedSyncEntities, 12) as $entity) {
+            $entities[] = $entity;
+        }
+
+        return $entities;
     }
 
     public function run($opts = [])

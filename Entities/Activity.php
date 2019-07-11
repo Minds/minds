@@ -218,6 +218,7 @@ class Activity extends Entity
                 'rating',
                 'ephemeral',
                 'hide_impressions',
+                'pinned',
             ));
     }
 

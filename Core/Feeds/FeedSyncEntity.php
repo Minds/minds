@@ -25,7 +25,6 @@ use Minds\Traits\MagicAttributes;
 class FeedSyncEntity
 {
     use MagicAttributes;
-    use Exportable;
 
     /** @var int|string */
     protected $guid;
@@ -39,17 +38,21 @@ class FeedSyncEntity
     /** @var string */
     protected $urn;
 
+    /** @var Entity */
+    protected $entity;
+
     /**
-     * Specifies the exportable properties
-     * @return array<string|\Closure>
+     * Export to public API
+     * @return array
      */
-    public function getExportable()
+    public function export()
     {
         return [
-            'urn',
-            'guid',
-            'ownerGuid',
-            'timestamp',
+            'guid' => (string) $this->guid,
+            'owner_guid' =>  (string) $this->ownerGuid,
+            'timestamp' => $this->timestamp,
+            'urn' => $this->urn,
+            'entity' => $this->entity ? $this->entity->export() : null,
         ];
     }
 }
