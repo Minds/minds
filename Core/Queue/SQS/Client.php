@@ -116,12 +116,14 @@ class Client implements QueueClient
         return $response;
     }
 
-    public function receive($callback)
+    public function receive($callback, $opts = [])
     {
         $config = $this->config->get('aws');
 
-        $maxMessages = isset($config['queue']['max_messages']) ? $config['queue']['max_messages'] : 10;
-        $waitSeconds = isset($config['queue']['wait_seconds']) ? $config['queue']['wait_seconds'] : 20;
+        $opts = array_merge([
+            'max_messages' => $config['queue']['max_messages'] ?? 10,
+            'wait_seconds' => $config['queue']['wait_seconds'] ?? 20,
+        ], $opts);
 
         // All values should be read here because
         // queue calls within $callback can introduce
@@ -130,8 +132,8 @@ class Client implements QueueClient
         $queueUrl = $this->getQueueUrl();
         $queueOpts = [
             'QueueUrl' => $queueUrl,
-            'MaxNumberOfMessages' => $maxMessages,
-            'WaitTimeSeconds' => $waitSeconds,
+            'MaxNumberOfMessages' => $opts['max_messages'],
+            'WaitTimeSeconds' => $opts['wait_seconds'],
         ];
 
         echo 'Queue Options: '.print_r($queueOpts, 1);
