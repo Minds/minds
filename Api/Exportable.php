@@ -118,6 +118,10 @@ class Exportable implements \JsonSerializable
                 $exported['ownerObj']['guid'] = (string) $exported['ownerObj']['guid'];
             }
 
+            if (isset($exported['urn']) && isset($_SERVER['HTTP_APP_VERSION'])) {
+                $exported['urn'] = "urn:entity:{$exported['guid']}";
+            }
+
             foreach ($this->exceptions as $exception) {
                 $exported[$exception] = $item->{$exception};
             }
