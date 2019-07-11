@@ -62,7 +62,7 @@ class Manager
 
         if ($opts['moderation_user']) {
             foreach ($response->toArray() as $entity) {
-                $this->moderationCache->store($entity->guid, $opts['moderation_user']);
+                $this->moderationCache->store($entity->getEntity()->guid, $opts['moderation_user']);
             }
         }
 
