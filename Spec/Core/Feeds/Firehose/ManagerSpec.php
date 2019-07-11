@@ -15,6 +15,7 @@ use Minds\Core\Feeds\Firehose\ModerationCache;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Data\Call;
 use Minds\Core\Entities\Actions\Save;
+use Minds\Core\Feeds\FeedSyncEntity;
 
 class ManagerSpec extends ObjectBehavior
 {
@@ -94,7 +95,9 @@ class ManagerSpec extends ObjectBehavior
 
         $this->getList([
             'moderation_user' => $this->user,
-        ])->shouldBeLike($response);
+        ])->shouldBeLike($response->map(function($entity) {
+            return $entity->getEntity();
+        }));
     }
 
     public function it_should_return_results_without_a_user()
@@ -112,7 +115,9 @@ class ManagerSpec extends ObjectBehavior
         ->shouldBeCalled()
         ->willReturn($response);
 
-        $this->getList()->shouldBeLike($response);
+        $this->getList()->shouldBeLike($response->map(function($entity) {
+            return $entity->getEntity();
+        }));
     }
 
     public function it_should_save_moderated_activites(Entity $activity)
@@ -197,13 +202,15 @@ class ManagerSpec extends ObjectBehavior
     {
         $entities = [];
 
-        $entity = new Activity();
-        $entity->guid = 123;
-        $entities[] = $entity;
+        $entity = new FeedSyncEntity();
+        $activity = new Activity();
+        $activity->guid = 123;
+        $entities[] = $entity->setEntity($activity);
 
-        $entity = new Activity();
-        $entity->guid = 456;
-        $entities[] = $entity;
+        $entity = new FeedSyncEntity();
+        $activity = new Activity();
+        $activity->guid = 456;
+        $entities[] = $entity->setEntity($activity);
 
         return $entities;
     }
