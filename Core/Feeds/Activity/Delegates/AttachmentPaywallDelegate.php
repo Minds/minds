@@ -52,7 +52,12 @@ class AttachmentPaywallDelegate implements ActivityDelegateInterface
 
             if ($attachment->owner_guid == $activity->owner_guid) {
                 $attachment->access_id = $activity->isPaywall() ? 0 : 2;
-                $attachment->hidden = $activity->isPaywall();
+           
+                if ($attachment->getSubtype() === 'blog') {
+                    $attachment->setHidden($activity->isPaywall());
+                } else {
+                    $attachment->hidden = $activity->isPaywall();
+                }
 
                 if (method_exists($attachment, 'setFlag')) {
                     $attachment->setFlag('paywall', (bool) $activity->isPaywall());
