@@ -186,7 +186,7 @@ class EntityMapping implements MappingInterface
             $map['tags'] = [];
         }
 
-        $map['tags'] = array_unique(array_merge($map['tags'], array_map('strtolower', $tags)));
+        $map['tags'] = array_values(array_unique(array_merge($map['tags'], array_map('strtolower', $tags))));
 
         $map['nsfw'] = array_unique($this->entity->getNsfw());
 
