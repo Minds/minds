@@ -6,26 +6,18 @@ services:
     image: cassandra:3.11.1
     environment:
       - CASSANDRA_START_RPC=true
-      - MAX_HEAP_SIZE=256M
-      - HEAP_NEWSIZE=32M
+      - MAX_HEAP_SIZE=768M
+      - HEAP_NEWSIZE=512M
     networks:
       - app
     mem_limit: 1024MB
     volumes:
-      - "./.data/cassandra:/var/lib/cassandra"
+      - cassandra-data:/var/lib/cassandra:delegated
     healthcheck:
       test: "cqlsh -e 'DESC TABLE system.batches'"
       retries: 10
       timeout: 5s
       interval: 15s
-
-  cockroachdb:
-    image: cockroachdb/cockroach
-    command: start --insecure
-    networks:
-        - app
-    volumes:
-      - ./.data/cockroachdb:/cockroach/cockroach-data
 
   mongo:
     image: mongo:3.4
@@ -44,7 +36,7 @@ services:
     ports: 
       - "9200:9200"
     volumes:
-      - ./.data/elasticsearch:/usr/share/elasticsearch/data
+      - elasticsearch-data:/usr/share/elasticsearch/data:delegated
       - ./containers/elasticsearch-legacy/clear-data-and-start.sh:/clear-data-and-start.sh
 
   elasticsearch:
@@ -66,8 +58,8 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - ./.data/elasticsearch:/usr/share/elasticsearch/data
       - ./containers/elasticsearch/set-permissions-and-start.sh:/set-permissions-and-start.sh
+      - elasticsearch-data:/usr/share/elasticsearch/data:delegated
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.6.2
@@ -98,18 +90,19 @@ services:
     mem_limit: 512MB
     depends_on:
       - cassandra
-      - cockroachdb
       - mongo
       - elasticsearch
       - rabbitmq
       - redis
+      - sync-front
+      - sync-engine
     networks:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front"
-      - "./engine/:/var/www/Minds/engine"
-      - "./.dev/:/.dev/"
+      - front-dir:/var/www/Minds/front:delegated
+      - engine-dir:/var/www/Minds/engine:delegated
+      - keys:/.dev:delegated
 
   runners:
     build:
@@ -124,10 +117,10 @@ services:
     networks:
       - app
     volumes:
-      - "./front/:/var/www/Minds/front:cached"
+      - front-dir:/var/www/Minds/front:delegated
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
-      - "./engine/:/var/www/Minds/engine"
+      - engine-dir:/var/www/Minds/engine:delegated
 
   nginx:
     build:
@@ -142,7 +135,35 @@ services:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - "./front/:/var/www/Minds/front"
+      - front-dir:/var/www/Minds/front:delegated
+
+  sync-front:
+    build:
+      context: ./containers/alpine-rsync
+    command: [
+      'watch',
+      '-n5',
+      'rsync -avz --no-perms --progress /front-dir-host/dist/ /front-dir/dist/'
+    ]
+    networks:
+      - app
+    volumes:
+      - front-dir:/front-dir
+      - ./front:/front-dir-host
+
+  sync-engine:
+    build:
+      context: ./containers/alpine-rsync
+    command: [
+      'watch',
+      '-n5',
+      'rsync -avz --no-perms --progress /engine-dir-host/ /engine-dir/ --exclude .git'
+    ]
+    networks:
+      - app
+    volumes:
+      - engine-dir:/engine-dir
+      - ./engine:/engine-dir-host
 
   installer:
     build:
@@ -153,7 +174,7 @@ services:
     volumes:
       - "./engine/:/var/www/Minds/engine"
       - "./front/:/var/www/Minds/front"
-      - "./.dev/:/.dev/"
+      - keys:/.dev:delegated
     depends_on:
       cassandra:
         condition: service_healthy
@@ -189,6 +210,13 @@ services:
       - "cd /var/www/Minds/front && echo 'Building frontend, please wait...(this can take a long time)' && npm install && npm run postinstall && npm rebuild node-sass && npm run build-dev && touch /var/www/Minds/front/dist/index.php"
     volumes:
       - "./front/:/var/www/Minds/front"
+
+volumes:
+  cassandra-data:
+  elasticsearch-data:
+  keys:
+  front-dir:
+  engine-dir:
 
 networks:
   app:

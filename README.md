@@ -45,6 +45,9 @@ To make it permanent, modify the variable in /etc/sysctl.conf
 4. Run `docker-compose up front-build` 
 5. Navigate to `http://localhost:8080`
 
+6. docker-compose up sync-engine
+7. docker-compose up sync-front
+
 # Troubleshooting
 
 - Minds is already installed
