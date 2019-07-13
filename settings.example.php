@@ -552,3 +552,13 @@ $CONFIG->cinemr_url = 'https://cinemr.s3.amazonaws.com/cinemr_dev/';
 $CONFIG->mongodb_servers = ['minds_mongo_1'];
 
 $CONFIG->set('last_tos_update', 1);
+
+$CONFIG->set('gitlab', [
+    'project_id' => [
+        'mobile' => '10171280', // project id mobile
+        'front' => '10152778', // project id front
+    ],
+    'private_key' => '{{private-key}}'
+]);
+
+
