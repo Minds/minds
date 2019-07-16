@@ -19,6 +19,7 @@ class Minds extends base
         Experiments\Module::class,
         Helpdesk\Module::class,
         Onboarding\Module::class,
+        Permissions\Module::class,
         Subscriptions\Module::class,
         SendWyre\Module::class,
         Suggestions\Module::class,

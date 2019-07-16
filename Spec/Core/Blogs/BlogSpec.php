@@ -239,4 +239,10 @@ class BlogSpec extends ObjectBehavior
         $export = $this->export()->getWrappedObject();
         expect($export['published'])->toBe(false);
     }
+
+    function it_should_allow_comments() {
+        $this->getAllowComments()->shouldBe(true);
+        $this->setAllowComments(false);
+        $this->getAllowComments()->shouldBe(false);
+    }
 }

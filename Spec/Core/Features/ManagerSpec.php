@@ -24,13 +24,13 @@ class ManagerSpec extends ObjectBehavior
         $this->shouldHaveType(Manager::class);
     }
 
-    function it_should_check_if_a_feature_exists_unsuccessfully_and_assume_its_active()
+    function it_should_check_if_a_feature_exists_unsuccessfully_and_assume_its_inactive()
     {
         $this->config->get('features')
             ->shouldBeCalled()
             ->willReturn(['plus' => true, 'wire' => false]);
 
-        $this->has('boost')->shouldReturn(true);
+        $this->has('boost')->shouldReturn(false);
     }
 
     function it_should_check_if_a_feature_exists_and_return_its_deactivated()

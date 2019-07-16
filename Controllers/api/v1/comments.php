@@ -157,6 +157,13 @@ class comments implements Interfaces\Api
                 ]);
             }
 
+            if (!$entity->getAllowComments()) {
+                return Factory::response([
+                    'status' => 'error',
+                    'message' => 'Comments are disabled for this post'
+                ]);
+            } 
+
             if (!$_POST['comment'] && !$_POST['attachment_guid']) {
                 return Factory::response([
                   'status' => 'error',

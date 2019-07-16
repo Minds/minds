@@ -470,6 +470,7 @@ $CONFIG->set('features', [
     'top-feeds' => true,
     'cassandra-notifications' => true,
     'dark-mode' => true,
+    'allow-comments-toggle' => false
 ]);
 
 $CONFIG->set('email', [ 
