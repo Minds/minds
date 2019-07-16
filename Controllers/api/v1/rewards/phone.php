@@ -77,7 +77,8 @@ class phone implements Interfaces\Api
             return Factory::response(['status' => 'success', 'message' => 'voip phones not allowed']);
         }
 
-        $sms->send($phone, $code);
+        $message = 'From Minds.com: Your code is '. $code;
+        $sms->send($phone, $message);
 
         return Factory::response(['status' => 'success', 'secret' => $secret]);
     }
