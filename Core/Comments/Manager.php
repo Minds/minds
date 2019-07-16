@@ -8,6 +8,7 @@
 
 namespace Minds\Core\Comments;
 
+use Minds\Common\Urn;
 use Minds\Core\Di\Di;
 use Minds\Core\EntitiesBuilder;
 use Minds\Core\Luid;
@@ -69,7 +70,7 @@ class Manager
         $this->threadNotifications = $threadNotifications ?: new Delegates\ThreadNotifications();
         $this->createEventDispatcher = $createEventDispatcher ?: new Delegates\CreateEventDispatcher();
         $this->countCache = $countCache ?: new Delegates\CountCache();
-        $this->entitiesBuilder = $entitiesBuilder  ?: Di::_()->get('EntitiesBuilder');
+        $this->entitiesBuilder = $entitiesBuilder ?: Di::_()->get('EntitiesBuilder');
         $this->spam = $spam ?: Di::_()->get('Security\Spam');
     }
 
@@ -95,7 +96,7 @@ class Manager
         }
 
         $response = $this->repository->getList($opts);
-        
+
         if ($opts['is_focused'] === true && $opts['offset']) {
             $count = count($response);
             $diff = $opts['limit'] - $count;
@@ -229,8 +230,8 @@ class Manager
     public function delete(Comment $comment, $opts = [])
     {
         $opts = array_merge([
-                    'force' => false,
-                ], $opts);
+            'force' => false,
+        ], $opts);
 
         if (!$this->acl->write($comment) && !$opts['force']) {
             return false; //TODO throw exception
@@ -269,6 +270,34 @@ class Manager
         }
 
         return null;
+    }
+
+    /**
+     * @param string|Urn $urn
+     * @return Comment|null
+     * @throws \Exception
+     */
+    public function getByUrn($urn)
+    {
+        if (is_string($urn)) {
+            $urn = new Urn($urn);
+        }
+        $components = explode(':', $urn->getNss());
+
+        if (count($components) !== 5) {
+            error_log("[CommentsManager]: Invalid Comment URN (${$components})");
+            return null;
+        }
+
+        $entityGuid = $components[0];
+        $parentPath = "{$components[1]}:{$components[2]}:{$components[3]}";
+        $guid = $components[4];
+
+        if ($this->legacyRepository->isLegacy($entityGuid)) {
+            return $this->legacyRepository->getByGuid($guid);
+        }
+
+        return $this->repository->get($entityGuid, $parentPath, $guid);
     }
 
     /**

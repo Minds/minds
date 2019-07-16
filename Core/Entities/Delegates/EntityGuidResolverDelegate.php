@@ -79,6 +79,7 @@ class EntityGuidResolverDelegate implements ResolverDelegate
     }
 
     /**
+     * @param $urn
      * @param mixed $entity
      * @return mixed
      */
