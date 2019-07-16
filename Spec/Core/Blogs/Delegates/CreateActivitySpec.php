@@ -3,6 +3,7 @@
 namespace Spec\Minds\Core\Blogs\Delegates;
 
 use Minds\Core\Blogs\Blog;
+use Minds\Core\Data\Call;
 use Minds\Core\Entities\Actions\Save;
 use Minds\Entities\Activity;
 use Minds\Entities\User;
@@ -14,12 +15,16 @@ class CreateActivitySpec extends ObjectBehavior
     /** @var Save */
     protected $saveAction;
 
-    function let(
-        Save $saveAction
-    ) {
-        $this->beConstructedWith($saveAction);
+    /** @var Call */
+    protected $db;
 
+    function let(
+        Save $saveAction,
+        Call $db
+    ) {
+        $this->beConstructedWith($saveAction, $db);
         $this->saveAction = $saveAction;
+        $this->db = $db;
     }
 
     function it_is_initializable()
@@ -27,7 +32,7 @@ class CreateActivitySpec extends ObjectBehavior
         $this->shouldHaveType('Minds\Core\Blogs\Delegates\CreateActivity');
     }
 
-    function it_should_save(
+    function it_should_save_when_no_activity(
         Blog $blog,
         User $user
     )
@@ -64,6 +69,10 @@ class CreateActivitySpec extends ObjectBehavior
             ->shouldBeCalled()
             ->willReturn(false);
 
+        $blog->getGuid()
+            ->shouldBeCalled()
+            ->willReturn(9999);
+
         $user->export()
             ->shouldBeCalled()
             ->willReturn([]);
@@ -71,6 +80,10 @@ class CreateActivitySpec extends ObjectBehavior
         $user->get('guid')
             ->shouldBeCalled()
             ->willReturn(1000);
+
+        $this->db->getRow("activity:entitylink:9999")
+            ->shouldBeCalled()
+            ->willReturn([]);
 
         $this->saveAction->setEntity(Argument::type(Activity::class))
             ->shouldBeCalled()
@@ -82,7 +95,23 @@ class CreateActivitySpec extends ObjectBehavior
 
         $this
             ->save($blog)
-            ->shouldNotThrow();
+            ->shouldReturn(true);
+    }
 
+    function it_should_not_save_when_previous_activity(
+        Blog $blog
+    )
+    {
+        $blog->getGuid()
+            ->shouldBeCalled()
+            ->willReturn(9999);
+
+        $this->db->getRow("activity:entitylink:9999")
+            ->shouldBeCalled()
+            ->willReturn(['activity1']);
+
+        $this
+            ->save($blog)
+            ->shouldReturn(false);
     }
 }
