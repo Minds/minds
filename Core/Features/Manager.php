@@ -45,9 +45,9 @@ class Manager
         $features = $this->config->get('features') ?: [];
 
         if (!isset($features[$feature])) {
-            error_log("[Features\Manager] Feature '{$feature}' is not declared. Assuming true.");
+            error_log("[Features\Manager] Feature '{$feature}' is not declared. Assuming false.");
 
-            return true;
+            return false;
         }
 
         if ($features[$feature] === 'admin' && $this->user->isAdmin()) {

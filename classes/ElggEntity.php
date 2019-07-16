@@ -17,6 +17,7 @@
  * @property int    $time_updated   A UNIX timestamp of when the entity was last updated (automatically updated on save)
  * @property int    $moderator_guid The GUID of the moderator
  * @property int    $moderated_at   A UNIX timestamp of when the entity was moderated
+ * @property bool   $allow_comments A boolean value that turns off comments for an entity
  * @property-read string $enabled
  */
 abstract class ElggEntity extends ElggData implements
@@ -74,6 +75,7 @@ abstract class ElggEntity extends ElggData implements
 		$this->attributes['nsfw_lock'] = [];
 		$this->attributes['moderator_guid'] = null;
 		$this->attributes['time_moderated'] = null;
+		$this->attributes['allow_comments'] = true;
 	}
 
 	/**
@@ -1381,7 +1383,8 @@ abstract class ElggEntity extends ElggData implements
 			'access_id',
             'tags',
 			'nsfw',
-			'nsfw_lock'
+            'nsfw_lock',
+            'allow_comments'
 		);
 	}
 
@@ -1651,20 +1654,36 @@ abstract class ElggEntity extends ElggData implements
         $this->moderator_guid = $moderatorGuid;
     }
 
-	/**
-	 * Marks the time as when an entity was moderated
-	 * @param int $timeModerated unix timestamp when the entity was moderated
-	 */
+    /**
+     * Marks the time as when an entity was moderated
+     * @param int $timeModerated unix timestamp when the entity was moderated
+     */
     public function setTimeModerated(int $timeModerated)
     {
         $this->time_moderated = $timeModerated;
-	}
+    }
 	
-	/**
-	 * Gets the time moderated
-	 * @return int
-	 */
+    /**
+     * Gets the time moderated
+     * @return int
+     */
 	public function getTimeModerated() {
-		return $this->time_moderated;
+        return $this->time_moderated;
+	}
+
+    /**
+     * Sets the flag for allowing comments on an entity
+     * @param bool $allowComments
+     */
+    public function setAllowComments(bool $allowComments) {
+        $this->allow_comments = $allowComments;
+        return $this;
+    }
+
+    /**
+     * Gets the flag for allowing comments on an entity
+     */
+    public function getAllowComments() {
+        return $this->allow_comments;
 	}
 }

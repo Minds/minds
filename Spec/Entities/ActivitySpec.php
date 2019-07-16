@@ -31,4 +31,10 @@ class ActivitySpec extends ObjectBehavior
             'tokens' => 10
         ]);
     }
+
+    public function it_allows_comments() {
+        $this->getAllowComments()->shouldBe(true);
+        $this->setAllowComments(false);
+        $this->getAllowComments()->shouldBe(false);
+    }
 }

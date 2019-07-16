@@ -12,6 +12,11 @@ use Minds\Core\Di\Di;
 use Minds\Core\Events\Dispatcher;
 use Minds\Helpers\MagicAttributes;
 
+/**
+ * Save Action
+ * @method Save setEntity($entity)
+ * @method bool save(...$args)
+ */
 class Save
 {
     /** @var Dispatcher */
