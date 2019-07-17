@@ -43,7 +43,7 @@ class User extends \ElggUser
 		$this->attributes['briefdescription'] = '';
 		$this->attributes['rating'] = 1;
 		$this->attributes['p2p_media_enabled'] = 0;
-		$this->attributes['is_mature'] = 0;
+        $this->attributes['is_mature'] = 0;
 		$this->attributes['mature_lock'] = 0;
 		$this->attributes['opted_in_hashtags'] = 0;
         $this->attributes['last_accepted_tos'] = Core\Config::_()->get('last_tos_update');
@@ -52,6 +52,7 @@ class User extends \ElggUser
         $this->attributes['last_avatar_upload'] = 0;
         $this->attributes['canary'] = 0;
         $this->attributes['onchain_booster'] = null;
+        $this->attributes['toaster_notifications'] = 1;
 
         parent::initializeAttributes();
     }
@@ -739,6 +740,7 @@ class User extends \ElggUser
         $export['is_admin'] = $this->attributes['admin'] == 'yes';
         $export['theme'] = $this->getTheme();
         $export['onchain_booster'] = $this->getOnchainBooster();
+        $export['toaster_notifications'] = $this->getToasterNotifications();
 
         if (is_string($export['social_profiles'])) {
             $export['social_profiles'] = json_decode($export['social_profiles']);
@@ -987,7 +989,8 @@ class User extends \ElggUser
             'last_avatar_upload',
             'canary',
             'theme',
-            'onchain_booster'
+            'onchain_booster',
+            'toaster_notifications'
         ));
     }
 
@@ -1074,5 +1077,22 @@ class User extends \ElggUser
     {
         $this->onchain_booster = (int) $time;
         return $this;
+    }
+
+    /**
+     * Returns toaster notifications state.
+     * @return boolean true if toaster notifications is enabled.
+     */
+    public function getToasterNotifications()
+    {
+        return (bool) $this->toaster_notifications;
+    }
+
+    /**
+     * Set on/off toaster notifications
+     */
+    public function setToasterNotifications($enabled = true)
+    {
+        $this->toaster_notifications = $enabled ? 1 : 0;
     }
 }
