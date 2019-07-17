@@ -44,9 +44,8 @@ To make it permanent, modify the variable in /etc/sysctl.conf
 3. Run `docker-compose up installer` (one time only.. initial username: minds / password: Pa$$w0rd)
 4. Run `docker-compose up front-build` 
 5. Navigate to `http://localhost:8080`
-
-6. docker-compose up sync-engine
-7. docker-compose up sync-front
+6. Run `docker-compose up sync-engine`to sync engine
+7. Run `docker-compose up sync-front` 
 
 # Troubleshooting
 
