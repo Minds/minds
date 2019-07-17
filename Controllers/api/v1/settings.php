@@ -43,6 +43,8 @@ class settings implements Interfaces\Api
         $response['channel']['email'] = $user->getEmail();
         $response['channel']['boost_rating'] = $user->getBoostRating();
         $response['channel']['disabled_emails'] = $user->disabled_emails;
+        $response['channel']['toaster_notifications'] = $user->getToasterNotifications();
+
 
         $sessionsManager = Di::_()->get('Sessions\Manager');
         $sessionsManager->setUser($user);
@@ -138,6 +140,10 @@ class settings implements Interfaces\Api
 
         if (isset($_POST['language']) && in_array($_POST['language'], $allowedLanguages)) {
             $user->setLanguage($_POST['language']);
+        }
+
+        if (isset($_POST['toaster_notifications'])) {
+            $user->setToasterNotifications((bool) $_POST['toaster_notifications']);
         }
 
         $response = [];
