@@ -211,6 +211,23 @@ services:
     volumes:
       - "./front/:/var/www/Minds/front"
 
+  sockets:
+    image: minds/sockets
+    environment:
+      - PORT=3030
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=<!!! set this to jwt-token in your engine/settings.php !!!>
+      - CASSANDRA_SERVERS=cassandra
+      - CASSANDRA_KEYSPACE=minds
+    networks:
+      - app
+    depends_on:
+      - redis
+      - cassandra
+    ports:
+      - 8010:3030
+
 volumes:
   cassandra-data:
   elasticsearch-data:
