@@ -12,10 +12,10 @@ echo "Putting minds-graph"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-graph -d @./schema-legacy/minds-graph.json --header "Content-Type: application/json"
 
 echo "Putting minds-helpdesk"
-curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-helpdesk-2019 -d @./schema-legacy/minds-helpdesk.json --header "Content-Type: application/json"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-helpdesk -d @./schema-legacy/minds-helpdesk.json --header "Content-Type: application/json"
 
 echo "Putting minds-kite"
-curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-kite-2019 -d @./schema-legacy/minds-kite.json --header "Content-Type: application/json"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-kite -d @./schema-legacy/minds-kite.json --header "Content-Type: application/json"
 
 echo "Putting minds-metrics"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://minds_elasticsearch-legacy_1:9200/minds-metrics-06-2019 -d @./schema-legacy/minds-metrics.json --header "Content-Type: application/json"
