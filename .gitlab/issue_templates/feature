@@ -1,0 +1,29 @@
+<!---
+Please read this!
+
+Before opening a new issue, make sure to search for keywords in the issues
+filtered by the "feature" label and verify the feature you're about to submit isn't a duplicate.
+--->
+
+### Summary
+
+(Summarize the feature concisely.)
+
+### Detailed Description
+
+(Please be as detailed and precise as possible. )
+
+### Mockups
+
+(Include drawings, photos, or other media of the suggested feature)
+
+### Links
+
+(Include any relevant links, including examples of a site that has this
+feature, or to Minds posts related to this feature request.)
+
+### Other
+
+(Include any other information you think would be helpful.)
+
+/label ~ "feature"
