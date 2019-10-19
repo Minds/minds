@@ -94,15 +94,14 @@ services:
       - elasticsearch
       - rabbitmq
       - redis
-      - sync-front
       - sync-engine
     networks:
       - app
     volumes:
       ## The following is for development environments only. Comment out on production. ##
-      - front-dir:/var/www/Minds/front:delegated
-      - engine-dir:/var/www/Minds/engine:delegated
-      - keys:/.dev:delegated
+      - ./front/:/var/www/Minds/front:delegated
+      - engine-dir:/var/www/Minds/engine
+      - keys:/.dev
 
   runners:
     build:
@@ -117,7 +116,7 @@ services:
     networks:
       - app
     volumes:
-      - front-dir:/var/www/Minds/front:delegated
+      - ./front/:/var/www/Minds/front:delegated
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
       - engine-dir:/var/www/Minds/engine:delegated
@@ -134,22 +133,7 @@ services:
     networks:
       - app
     volumes:
-      ## The following is for development environments only. Comment out on production. ##
-      - front-dir:/var/www/Minds/front:delegated
-
-  sync-front:
-    build:
-      context: ./containers/alpine-rsync
-    command: [
-      'watch',
-      '-n5',
-      'rsync -avz --no-perms --progress /front-dir-host/dist/ /front-dir/dist/'
-    ]
-    networks:
-      - app
-    volumes:
-      - front-dir:/front-dir
-      - ./front:/front-dir-host
+      - ./front/:/var/www/Minds/front:delegated
 
   sync-engine:
     build:
@@ -200,17 +184,6 @@ services:
     depends_on:
       - elasticsearch
 
-  front-build:
-    image: markharding/minds-front-base
-    networks:
-      - app
-    entrypoint: 
-      - sh
-      - -c
-      - "cd /var/www/Minds/front && echo 'Building frontend, please wait...(this can take a long time)' && npm install && npm run postinstall && npm rebuild node-sass && npm run build-dev && touch /var/www/Minds/front/dist/index.php"
-    volumes:
-      - "./front/:/var/www/Minds/front"
-
   sockets:
     image: minds/sockets
     environment:
@@ -232,7 +205,6 @@ volumes:
   cassandra-data:
   elasticsearch-data:
   keys:
-  front-dir:
   engine-dir:
 
 networks:
