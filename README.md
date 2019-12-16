@@ -2,6 +2,9 @@ Minds
 =====
 Minds is an open-source, encrypted and reward-based social networking platform. https://minds.com
 
+## Docs
+Full documentation can be found at [https://developers.minds.com/](https://developers.minds.com/)
+
 ## Repositories
 
 Minds is split into multiple repositories:
