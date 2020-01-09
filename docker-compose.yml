@@ -1,4 +1,5 @@
 # Using v2.2 because v3+ is meant for swarm operations
+# and removes health check conditions and memory limits
 version: "2.2"
 
 services:
@@ -27,13 +28,13 @@ services:
   elasticsearch-legacy:
     image: elasticsearch:5.6-alpine
     entrypoint: /clear-data-and-start.sh
-    environment: 
+    environment:
       - "xpack.security.enabled=false"
       - "http.host=0.0.0.0"
       - "transport.host=127.0.0.1"
     networks:
       - app
-    ports: 
+    ports:
       - "9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data:delegated
@@ -100,7 +101,7 @@ services:
     volumes:
       ## The following is for development environments only. Comment out on production. ##
       - ./front/:/var/www/Minds/front:delegated
-      - engine-dir:/var/www/Minds/engine
+      - ./engine:/var/www/Minds/engine:delegated
       - keys:/.dev
 
   runners:
@@ -109,7 +110,6 @@ services:
       dockerfile: ./containers/php-runners/Dockerfile
     depends_on:
       - cassandra
-      - mongo
       - elasticsearch
       - rabbitmq
       - redis
@@ -119,7 +119,16 @@ services:
       - ./front/:/var/www/Minds/front:delegated
       - "./plugins/:/var/www/Minds/plugins"
       - "./languages/:/var/www/Minds/languages"
-      - engine-dir:/var/www/Minds/engine:delegated
+      - ./engine:/var/www/Minds/engine:delegated
+
+  front:
+    image: node:13-alpine
+    working_dir: /var/www/Minds/front/
+    entrypoint: "node /var/www/Minds/front/dist/server"
+    networks:
+      - app
+    volumes:
+      - ./front/:/var/www/Minds/front:delegated
 
   nginx:
     build:
@@ -127,22 +136,26 @@ services:
       dockerfile: ./Dockerfile.dev
     mem_limit: 512MB
     depends_on:
+      - front
       - php-fpm
     ports:
       - "8080:80"
     networks:
-      - app
+      app:
+        aliases:
+          - minds.local
     volumes:
       - ./front/:/var/www/Minds/front:delegated
 
   sync-engine:
     build:
       context: ./containers/alpine-rsync
-    command: [
-      'watch',
-      '-n5',
-      'rsync -avz --no-perms --progress /engine-dir-host/ /engine-dir/ --exclude .git'
-    ]
+    command:
+      [
+        "watch",
+        "-n5",
+        "rsync -avz --no-perms --progress /engine-dir-host/ /engine-dir/ --exclude .git",
+      ]
     networks:
       - app
     volumes:
@@ -165,8 +178,7 @@ services:
 
   elasticsearch-legacy-provisioner:
     build:
-      context:
-          ./containers/elasticsearch-provisioner
+      context: ./containers/elasticsearch-provisioner
     entrypoint: sh /provisioner/provision-elasticsearch-legacy.sh
     networks:
       - app
@@ -177,8 +189,7 @@ services:
 
   elasticsearch-provisioner:
     build:
-      context:
-        ./containers/elasticsearch-provisioner
+      context: ./containers/elasticsearch-provisioner
     networks:
       - app
     depends_on:
