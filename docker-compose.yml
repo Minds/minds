@@ -122,21 +122,21 @@ services:
       - ./engine:/var/www/Minds/engine:delegated
 
   front:
-    image: node:13-alpine
-    working_dir: /var/www/Minds/front/
-    entrypoint: "node /var/www/Minds/front/dist/server"
+    build:
+      context: ./front/dist
+      dockerfile: ../containers/server/Dockerfile
     networks:
       - app
     volumes:
-      - ./front/:/var/www/Minds/front:delegated
+      - ./front/dist:/dist:delegated
 
   nginx:
     build:
       context: ./containers/nginx
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile.dev # Change to ./Dockerfile.dev-ssr to use SSR locally
     mem_limit: 512MB
     depends_on:
-      - front
+      # - front # Uncomment out this line if you want to use SSR locally
       - php-fpm
     ports:
       - "8080:80"
