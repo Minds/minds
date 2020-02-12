@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+npx npm-install-if-needed --package npm-install-if-needed@1.0 1> /dev/null
+NODE_OPTIONS=--max_old_space_size=4096 node cli.js $@

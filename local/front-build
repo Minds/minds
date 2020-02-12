@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+cd ../front && NODE_OPTIONS=--max_old_space_size=4096 npm run build:dev

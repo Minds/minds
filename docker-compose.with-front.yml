@@ -1,0 +1,33 @@
+version: "2.2"
+
+services:
+
+  ## EXTRA DEPENDENCY FOR WEB SERVER
+
+  nginx:
+    depends_on:
+      - front-live-server
+
+  ## WEB APP
+
+  front-live-server:
+    build:
+      context: ./front/containers/live-server
+      dockerfile: ./Dockerfile
+    mem_limit: 2GB
+    depends_on:
+      - front-live-server-compiler
+    networks:
+      - app
+    volumes:
+      - ./front/:/var/www/Minds/front:cached
+
+  front-live-server-compiler:
+    build:
+      context: ./front/containers/live-server-compiler
+      dockerfile: ./Dockerfile
+    mem_limit: 2GB
+    networks:
+      - app
+    volumes:
+      - ./front/:/var/www/Minds/front:delegated

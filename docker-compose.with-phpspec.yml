@@ -1,0 +1,13 @@
+# PHPSpec docker-compose
+version: "2.2"
+services:
+  phpspec:
+    build:
+      context: ./engine
+      dockerfile: ./containers/phpspec/Dockerfile
+    volumes:
+      - ./front/:/var/www/Minds/front:cached
+      - ./engine/:/var/www/Minds/engine:cached
+      - keys:/.dev
+    networks:
+      - app
