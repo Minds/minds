@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+cd ../front && npx nodemon --delay 3 --watch "server.ts" --watch "dist/en/**/*" --ext js,css,jpg,png,svg,mp4,webp,webm --exec "npm" run build:ssr:dev

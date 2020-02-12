@@ -18,6 +18,7 @@
 
 # Declare files that will always have CRLF line endings on checkout.
 *.bat eol=crlf
+*.ps1 eol=crlf
 
 # Declare files that will always have LF line endings on checkout.
 *.pem eol=lf

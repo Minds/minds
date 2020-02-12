@@ -4,10 +4,12 @@ map $http_upgrade $connection_upgrade {
 }
 
 server {
+    resolver ${DOCKER_RESOLVER} ipv6=off;
+
     listen 80;
     listen [::]:80 default ipv6only=on;
     listen 8080;
-    root /var/www/Minds/front/dist;
+    root /var/www/Minds/front/dist/en;
 
     index index.php index.html;
     server_name _;
@@ -26,12 +28,14 @@ server {
     sendfile off;
 
     location / {
+        set $upstream http://${UPSTREAM_ENDPOINT};
+
         port_in_redirect off;
 
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
+        proxy_set_header Host nginx;
         proxy_set_header X-NginX-Proxy true;
-        proxy_pass http://front:4200/;
+        proxy_pass $upstream;
         proxy_redirect off;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -49,12 +53,12 @@ server {
         rewrite ^(.+)$ /index.php last;
     }
 
-    location ~* \.(png|jpg|jpeg|gif|ico|js|css)$ {
+    location ~* \.(png|jpg|jpeg|svg|gif|ico|js|css)$ {
         expires 1y;
         log_not_found off;
     }
 
-    location ~ (.woff|.tff) {
+    location ~* \.(woff|woff2|ttf|eot) {
         add_header 'Access-Control-Allow-Origin' *;
     }
 
@@ -106,7 +110,7 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 
-    location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml)$ {
+    location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml|woff|woff2|ttf|eot|svg)$ {
         expires           5d;
     }
 
