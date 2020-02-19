@@ -1,42 +1,31 @@
 const exec = require('./exec');
 
-let upstreamUrl;
-let useFrontContainer;
+let upstreamEndpoint;
 
 switch (process.platform) {
   case 'win32':
   case 'darwin':
-    upstreamUrl = 'host.docker.internal:4200';
-    useFrontContainer = false;
+    upstreamEndpoint = 'host.docker.internal:4200';
     break;
 
   default:
-    upstreamUrl = 'front-live-server:4200';
-    useFrontContainer = true;
+    upstreamEndpoint = '$remote_addr:4200';
+    useFrontContainer = false;
     break;
 }
 
 function buildDefaultArgs() {
-  const args = [
+  return [
     '-f',
     'docker-compose.yml',
     '-f',
     'docker-compose.with-phpspec.yml',
-];
-
-  if (useFrontContainer) {
-    args.push(
-      '-f',
-      'docker-compose.with-front.yml'
-    );
-  }
-
-  return args;
+  ];
 }
 
 function buildEnv() {
   return {
-    UPSTREAM_ENDPOINT: upstreamUrl,
+    UPSTREAM_ENDPOINT: upstreamEndpoint,
   };
 }
 
@@ -45,4 +34,4 @@ module.exports = function (...args) {
     ...buildDefaultArgs(),
     ...args
   ], buildEnv());
-}
+};

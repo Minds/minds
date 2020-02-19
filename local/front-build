@@ -3,4 +3,4 @@ set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-cd ../front && NODE_OPTIONS=--max_old_space_size=4096 npm run build:dev
+cd ../front && NODE_OPTIONS=--max_old_space_size=4096 npm run build:dev -- --delete-output-path=false
