@@ -22,42 +22,6 @@ services:
     volumes:
       - ./front/:/var/www/Minds/front:cached
 
-  ## WEB APP
-
-  front-live-server:
-    build:
-      context: ./front/containers/live-server
-      dockerfile: ./Dockerfile
-    mem_limit: 2GB
-    depends_on:
-      - front-live-server-compiler
-    networks:
-      - app
-    volumes:
-      - ./front/:/var/www/Minds/front:delegated
-
-  front-live-server-compiler:
-    build:
-      context: ./front/containers/live-server-compiler
-      dockerfile: ./Dockerfile
-    mem_limit: 2GB
-    networks:
-      - app
-    volumes:
-      - ./front/:/var/www/Minds/front:delegated
-
-  # UNUSED (for now)
-  # - Disabled because docker complains if there's no dist/ folder
-  #  front:
-  #    # Static server
-  #    build:
-  #      context: ./front/dist
-  #      dockerfile: ../containers/server/Dockerfile
-  #    networks:
-  #      - app
-  #    volumes:
-  #      - ./front/dist/:/dist:cached
-
   ## APP ENGINE
 
   php-fpm:

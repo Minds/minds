@@ -1,4 +1,3 @@
-
 Push-Location $PSScriptRoot\..\front
 
 try {

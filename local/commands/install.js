@@ -10,6 +10,10 @@ module.exports.handler = async argv => {
     renderer = 'silent'
   }
 
+  if (process.platform === 'win32') {
+    console.log('\nWARNING: Close any tool that might be watching Minds folder (e.g. VSCode, TortoiseGit, etc.)\n');
+  }
+
   const prompt = await prompts([
     {
       type: 'toggle',
