@@ -257,6 +257,9 @@
                 "paywall": {
                     "type": "boolean"
                 },
+                "pending": {
+                    "type": "boolean"
+                },
                 "public": {
                     "type": "boolean"
                 },
