@@ -1,0 +1,115 @@
+issues:
+  title: Issues Dashboard
+  charts:
+    - title: Issues created per month
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: all
+        group_by: month
+    - title: Issues closed per month
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: closed
+        group_by: month
+    - title: Superhero Calls
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: all
+        filter_labels:
+          - Type::Superhero
+        group_by: month
+    - title: Regressions per month by environment
+      type: stacked-bar
+      query:
+        issuable_type: issue
+        issuable_state: all
+        filter_labels:
+          - Type::Regression
+        collection_labels:
+          - Regression::Production
+          - Regression::Canary
+          - Regression::Staging
+        group_by: month
+    - title: Bugs created per month by Priority
+      type: stacked-bar
+      query:
+        issuable_type: issue
+        issuable_state: all
+        filter_labels:
+          - Type::Bug
+        collection_labels:
+          - Priority::0 - Urgent
+          - Priority::1 - High
+          - Priority::2 - Normal
+          - Priority::3 - Nice to have
+          - Priority::4 - Trivial
+        group_by: month
+    - title: All open issues by Priority
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: open
+        collection_labels:
+          - Priority::0 - Urgent
+          - Priority::1 - High
+          - Priority::2 - Normal
+          - Priority::3 - Nice to have
+          - Priority::4 - Trivial
+    - title: All open bugs by Priority
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: open
+        filter_labels:
+          - Type::Bug
+        collection_labels:
+          - Priority::0 - Urgent
+          - Priority::1 - High
+          - Priority::2 - Normal
+          - Priority::3 - Nice to have
+          - Priority::4 - Trivial
+    - title: All open issues by Type
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: open
+        collection_labels:
+          - Type::Bug
+          - Type::Superhero
+          - Type::Feature
+          - Type::Chore
+          - Type::Regression
+          - Type::E2E
+          - Type::Refactor
+          - Type::LowEnergyHighImpact
+          - Type::QA
+    # - title: Bugs created per month by Severity
+    #   type: stacked-bar
+    #   query:
+    #     issuable_type: issue
+    #     filter_labels:
+    #       - bug
+    #     collection_labels:
+    #       - S::1
+    #       - S::2
+    #       - S::3
+    #       - S::4
+    #     group_by: month
+mergeRequests:
+  title: Merge Requests Dashboard
+  charts:
+    - title: Merge Requests merged per week
+      type: bar
+      query:
+        issuable_type: merge_request
+        issuable_state: merged
+        group_by: week
+    - title: Merge Requests merged per month
+      type: bar
+      query:
+        issuable_type: merge_request
+        issuable_state: merged
+        group_by: month
