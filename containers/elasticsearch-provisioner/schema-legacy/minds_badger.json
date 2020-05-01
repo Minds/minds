@@ -2469,6 +2469,15 @@
                 },
                 "moderator_guid": {
                     "type": "keyword"
+                },
+                "youtube_id": {
+                    "type": "keyword"
+                },
+                "youtube_channel_id": {
+                    "type": "keyword"
+                },
+                "transcoding_status": {
+                    "type": "keyword"
                 }
             }
         }
