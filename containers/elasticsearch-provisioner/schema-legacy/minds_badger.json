@@ -275,6 +275,9 @@
                         }
                     }
                 },
+                "pending": {
+                    "type": "boolean"
+                },
                 "public": {
                     "type": "boolean"
                 },
@@ -2618,6 +2621,15 @@
                     "type": "date"
                 },
                 "moderator_guid": {
+                    "type": "keyword"
+                },
+                "youtube_id": {
+                    "type": "keyword"
+                },
+                "youtube_channel_id": {
+                    "type": "keyword"
+                },
+                "transcoding_status": {
                     "type": "keyword"
                 }
             }
