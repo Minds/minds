@@ -90,13 +90,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -267,13 +261,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "pending": {
                     "type": "boolean"
@@ -438,13 +426,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -639,13 +621,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -763,13 +739,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -863,13 +833,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1053,13 +1017,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1207,13 +1165,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1358,13 +1310,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1503,13 +1449,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1606,13 +1546,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1790,13 +1724,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -1954,13 +1882,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -2078,13 +2000,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -2271,13 +2187,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -2425,13 +2335,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
@@ -2525,13 +2429,7 @@
                     "type": "boolean"
                 },
                 "wire_support_tier": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "public": {
                     "type": "boolean"
