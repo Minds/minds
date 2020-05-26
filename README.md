@@ -23,68 +23,20 @@ Minds is split into multiple repositories:
 
 ## Development Installation
 
-**Enabling full installation**
+[See our local setup guide](local/README.md)
 
-### Setting up elasticsearch
+## Troubleshooting
 
-** Linux users **
-To get elasticsearch 6 to run, you must make a settings change on the host machine.
+The local setup guide sets up the tools to both run and rebuild the stack.
 
-Run ```sudo sysctl -w vm.max_map_count=262144```
+### Is everything running?
+```minds up```
 
-To make it permanent, modify the variable in /etc/sysctl.conf
+### Needs a kick?
+```minds restart```
 
-#### Build the elasticsearch indexes
-
-1. Make sure nothing is running: `docker-compose down`
-2. Run the legacy provisioner: `docker-compose up elasticsearch-legacy-provisioner`
-3. Run the legacy provisioner: `docker-compose up elasticsearch-provisioner`
-
-### Running the stack the first time
-
-1. Run `sh init.sh` in order to install the front and engine repositories
-2. Run `docker-compose up -d nginx`
-3. Run `docker-compose up installer` (one time only.. initial username: minds / password: Pa$$w0rd)
-4. Run `docker-compose up front-build` 
-5. Navigate to `http://localhost:8080`
-6. Run `docker-compose up sync-engine`to sync engine
-7. Run `docker-compose up sync-front` 
-
-# Troubleshooting
-
-- Minds is already installed
-  - Ensure engine/settings.php does not exist and re-run `docker-compose up installer`
-
-- Cassandra will not boot
-  - Ensure thrift is enabled
-  - Cassandra requires at least 4GB of memory to operate. You can start Cassandra manually by running `docker-compose up cassandra`
-
-### Nuclear Option
-
-With dockerized enviroments, it's sometimes best to start from scratch. If you want to delete your data, these steps will completely **delete** your data. You will be starting fresh.
-
-```
-  #Remove your settings file
-  rm engine/settings.php 
-  
-  #Stop your stack
-  docker-compose down
-
-  #Delete your data cache
-  rm -rf .data
-
-  #Purge all volumes
-  docker volume prune
-
-  ```
-
-  That will remove all of your locally cached data. You can either rebuild the containers manually by using ```docker-compose up --build``` or delete everything to start fresh.
-
-```
-  # Delete all containers
-  docker rm $(docker ps -a -q)
-
-```
+### When in doubt, re-run the local stack installation. 
+```minds install```
 
 ## Production System Requirements
 
