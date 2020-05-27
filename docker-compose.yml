@@ -177,6 +177,7 @@ services:
       - elasticsearch-legacy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./engine/Core/Provisioner/Provisioners/ElasticSearchIndices/minds_badger.json:/es-mapping/minds_badger.json
 
   elasticsearch-provisioner:
     build:

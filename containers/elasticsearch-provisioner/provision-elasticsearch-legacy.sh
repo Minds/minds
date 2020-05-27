@@ -9,7 +9,7 @@ echo "Waiting for legacy elastic search to come online..."
 
 echo "Putting mappings"
 echo "Putting minds_badger"
-curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds_badger -d @./schema-legacy/minds_badger.json --header "Content-Type: application/json"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds_badger -d @/minds_badger.json --header "Content-Type: application/json"
 
 
 echo "Putting minds-graph"
