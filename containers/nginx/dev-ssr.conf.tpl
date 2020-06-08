@@ -9,7 +9,6 @@ server {
     listen 80;
     listen [::]:80 default ipv6only=on;
     listen 8080;
-    root /var/www/Minds/front/dist/en;
 
     index index.php index.html;
     server_name _;
@@ -27,48 +26,7 @@ server {
 
     sendfile off;
 
-    location / {
-        set $upstream http://${UPSTREAM_ENDPOINT};
-
-        port_in_redirect off;
-
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host localhost:8080;
-        proxy_set_header X-NginX-Proxy true;
-        proxy_pass $upstream;
-        proxy_redirect off;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_redirect off;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe) {
-        add_header 'Access-Control-Allow-Origin' "$http_origin";
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
-        add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With,X-No-Cache';
-
-        rewrite ^(.+)$ /index.php last;
-    }
-
-    location ~* \.(png|jpg|jpeg|svg|gif|ico|js|css)$ {
-        expires 1y;
-        log_not_found off;
-    }
-
-    location ~* \.(woff|woff2|ttf|eot) {
-        add_header 'Access-Control-Allow-Origin' *;
-    }
-
-    location ~ (composer.json|composer.lock|.travis.yml){
-        deny all;
-    }
-
-    location @rewrite {
-        rewrite ^(.+)$ /index.php last;
-    }
+    root /var/www/Minds/front/dist/browser/$locale;
 
     # Do not cache by default
     set $no_cache 1;
@@ -86,6 +44,76 @@ server {
     # Do not cache if we have a logged in cookie
     if ($cookie_minds_sess) {
         set $no_cache 1;
+    }
+
+    location @nossr {
+        try_files /index.html =404;
+    }
+
+    location / {
+        root /var/www/Minds/front/dist/browser/$locale;
+
+        error_page 418 = @nossr;
+        error_page 502 = @nossr;
+        error_page 504 = @nossr;
+        recursive_error_pages on;
+        set $nossr 0;
+
+        #if ($no_cache) {
+        #    set $nossr 1;
+        #}
+
+        if ($http_cookie ~* "nossr") {
+            set $nossr 1;
+        }
+
+        if ($nossr = 1) {
+            return 418;
+        }
+
+        set $upstream http://${UPSTREAM_ENDPOINT};
+
+        port_in_redirect off;
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host localhost:8080;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass $upstream;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_redirect off;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Dev mode uses the dist/browser location
+    # Prod mode will proxy an s3 bucket (see minds.conf)
+    location /static/ {
+        alias /var/www/Minds/front/dist/browser/;
+        expires 1y;
+        log_not_found off;
+    }
+
+    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe) {
+        add_header 'Access-Control-Allow-Origin' "$http_origin";
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With,X-No-Cache';
+
+        rewrite ^(.+)$ /index.php last;
+    }
+
+    location ~* \.(woff|woff2|ttf|eot) {
+        add_header 'Access-Control-Allow-Origin' *;
+    }
+
+    location ~ (composer.json|composer.lock|.travis.yml){
+        deny all;
+    }
+
+    location @rewrite {
+        rewrite ^(.+)$ /index.php last;
     }
 
     # pass the PHP scripts to FastCGI server listening on socket
@@ -108,10 +136,6 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME /var/www/Minds/engine/index.php;
         fastcgi_param PATH_INFO $fastcgi_path_info;
-    }
-
-    location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml|woff|woff2|ttf|eot|svg)$ {
-        expires           5d;
     }
 
     location ~ /\. {
