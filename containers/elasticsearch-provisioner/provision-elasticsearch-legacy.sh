@@ -33,6 +33,6 @@ curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-metric
 echo "Putting minds-moderation"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-moderation -d @./schema-legacy/minds-moderation.json --header "Content-Type: application/json"
 
-echo "Putting minds-trending-hashtags-shrunk"
-curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-trending-hashtags-shrunk -d @./schema-legacy/minds-trending-hashtags-shrunk.json --header "Content-Type: application/json"
+echo "Putting minds-trending-hashtags"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-trending-hashtags -d @./schema-legacy/minds-trending-hashtags.json --header "Content-Type: application/json"
 
