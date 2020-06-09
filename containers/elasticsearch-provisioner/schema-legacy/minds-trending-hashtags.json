@@ -1,0 +1,30 @@
+{
+    "mappings" : {
+        "tags" : {
+            "_all" : {
+            "enabled" : true
+            },
+            "properties" : {
+                "count" : {
+                    "type" : "long"
+                },
+                "name" : {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256
+                        }
+                    }
+                },
+                "suggest" : {
+                    "type" : "completion",
+                    "analyzer" : "simple",
+                    "preserve_separators" : true,
+                    "preserve_position_increments" : true,
+                    "max_input_length" : 50
+                }
+            }
+        }
+    }
+}
