@@ -78,6 +78,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host localhost:8080;
         proxy_set_header X-NginX-Proxy true;
+        proxy_set_header X-Minds-Locale $locale;
         proxy_pass $upstream;
         proxy_redirect off;
         proxy_http_version 1.1;
