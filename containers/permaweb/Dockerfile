@@ -10,9 +10,3 @@ RUN apk add curl docker git --no-cache && \
 WORKDIR /var/www/Minds/minds-permaweb-server
 
 CMD node server.js
-
-# WORKDIR /
-# COPY wait-for.sh provision-elasticsearch.sh provision-elasticsearch-legacy.sh /provisioner/
-# COPY schema-legacy/ /provisioner/schema-legacy/
-# COPY schema/ /provisioner/schema/
-# ENTRYPOINT ["sh", "./provision-elasticsearch.sh", "elasticsearch"]
