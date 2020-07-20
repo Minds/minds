@@ -5,6 +5,18 @@ version: "2.2"
 services:
 
   ## WEB SERVER / GATEWAY
+  permaweb:
+    build:
+      context: ./containers/permaweb
+      dockerfile: ./Dockerfile
+    mem_limit: 512MB
+    networks:
+      - app
+    ports:
+      - "5000:5000"
+    volumes:
+      - /var/www/Minds/minds-permaweb-server
+      - ./containers/permaweb/.env:/var/www/Minds/minds-permaweb-server/.env   
 
   nginx:
     build:
