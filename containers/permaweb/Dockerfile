@@ -3,7 +3,7 @@ FROM mhart/alpine-node:12
 WORKDIR /var/www/Minds/
 
 RUN apk add curl docker git --no-cache && \
-    git clone https://gitlab.com/benhayward.ben/minds-permaweb-server.git/ && \
+    git clone https://gitlab.com/minds/minds-permaweb-node.git/ && \
     cd minds-permaweb-server && \
     npm i
 
