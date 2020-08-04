@@ -96,6 +96,10 @@ server {
         log_not_found off;
     }
 
+    location = /favicon.ico {
+        alias /var/www/Minds/front/dist/browser/en/assets/favicon.ico;
+    }
+
     location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
