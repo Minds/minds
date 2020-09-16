@@ -19,12 +19,6 @@ module.exports = {
       task: () => exec.in('front', 'npx', ['ng', 'run', 'minds:server:production'], {
         NODE_OPTIONS: '--max_old_space_size=4096'
       })
-    },
-    {
-      title: 'Compiling SSR server',
-      task: () => exec.in('front', 'npm', ['run', 'compile:server'], {
-        NODE_OPTIONS: '--max_old_space_size=4096'
-      })
-    },
+    }
   ])
 };
