@@ -17,7 +17,7 @@ Minds is split into multiple repositories:
 
 ## Development Installation
 
-See our [setup guide](local/README.md) to get your local stack up and running
+See our [installation guide](https://developers.minds.com/docs/getting-started/introduction/) to get your local stack up and running
 
 ## Troubleshooting
 
