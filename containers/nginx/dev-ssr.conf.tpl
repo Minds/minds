@@ -96,6 +96,12 @@ server {
         log_not_found off;
     }
 
+    location /embed-static/ {
+        alias /var/www/Minds/front/dist/embed/;
+        expires 1y;
+        log_not_found off;
+    }
+
     location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
@@ -131,7 +137,7 @@ server {
         fastcgi_pass php-fpm:9000;
         fastcgi_index index.php;
 
-        fastcgi_buffers 64 32k; 
+        fastcgi_buffers 64 32k;
         fastcgi_buffer_size 64k;
 
         include fastcgi_params;
