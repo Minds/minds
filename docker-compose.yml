@@ -31,10 +31,10 @@ services:
     mem_limit: 512MB
     depends_on:
       - cassandra
-      - mongo
       - elasticsearch
       - rabbitmq
       - redis
+      - pulsar
     networks:
       - app
     volumes:
@@ -93,11 +93,6 @@ services:
       retries: 10
       timeout: 5s
       interval: 15s
-
-  mongo:
-    image: mongo:3.4
-    networks:
-      - app
 
   elasticsearch:
     image: elasticsearch:6.6.2
@@ -186,6 +181,20 @@ services:
     depends_on:
       - elasticsearch
 
+  ## Pulsar
+
+  pulsar:
+    image: apachepulsar/pulsar:2.7.1
+    entrypoint: bin/pulsar standalone -nss
+    networks:
+      - app
+    ports:
+      - 6650:6650
+      - 8088:8080
+    volumes:
+      - pulsardata:/pulsar/data
+      - pulsarconf:/pulsar/conf
+
   ## UTILITIES
 
   kibana:
@@ -203,6 +212,8 @@ volumes:
   cassandra-data:
   elasticsearch-data:
   keys:
+  pulsardata:
+  pulsarconf:
 
 networks:
   app:
