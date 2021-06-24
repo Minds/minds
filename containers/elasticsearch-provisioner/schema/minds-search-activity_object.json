@@ -1,0 +1,144 @@
+{
+    "mappings": {
+        "dynamic": "strict",
+        "properties": {
+            "@moderated": {
+                "type": "date"
+            },
+            "@timestamp": {
+                "type": "date"
+            },
+            "@wire_support_tier_expire": {
+                "type": "date"
+            },
+            "access_id": {
+                "type": "keyword"
+            },
+            "blurb": {
+                "type": "text"
+            },
+            "comments:count": {
+                "type": "long"
+            },
+            "comments:count:synced": {
+                "type": "date"
+            },
+            "container_guid": {
+                "type": "keyword"
+            },
+            "custom_type": {
+                "type": "keyword"
+            },
+            "deleted": {
+                "type": "boolean"
+            },
+            "description": {
+                "type": "text"
+            },
+            "entity_guid": {
+                "type": "keyword"
+            },
+            "guid": {
+                "type": "keyword"
+            },
+            "is_portrait": {
+                "type": "boolean"
+            },
+            "is_quoted_post": {
+                "type": "boolean"
+            },
+            "is_remind": {
+                "type": "boolean"
+            },
+            "language": {
+                "type": "keyword"
+            },
+            "license": {
+                "type": "keyword"
+            },
+            "mature": {
+                "type": "boolean"
+            },
+            "message": {
+                "type": "text"
+            },
+            "moderator_guid": {
+                "type": "keyword"
+            },
+            "nsfw": {
+                "type": "integer"
+            },
+            "owner_guid": {
+                "type": "keyword"
+            },
+            "paywall": {
+                "type": "boolean"
+            },
+            "pending": {
+                "type": "boolean"
+            },
+            "public": {
+                "type": "boolean"
+            },
+            "rating": {
+                "type": "long"
+            },
+            "remind_guid": {
+                "type": "keyword"
+            },
+            "subtype": {
+                "type": "keyword"
+            },
+            "tags": {
+                "type": "keyword"
+            },
+            "time_created": {
+                "type": "integer"
+            },
+            "title": {
+                "type": "text"
+            },
+            "type": {
+                "type": "keyword"
+            },
+            "urls": {
+                "type": "nested",
+                "properties": {
+                    "domain": {
+                        "type": "keyword"
+                    },
+                    "full": {
+                        "type": "keyword"
+                    },
+                    "path": {
+                        "type": "keyword"
+                    },
+                    "registered_domain": {
+                        "type": "keyword"
+                    },
+                    "scheme": {
+                        "type": "keyword"
+                    },
+                    "top_level_domain": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "votes:down": {
+                "type": "long"
+            },
+            "votes:down:synced": {
+                "type": "long"
+            },
+            "votes:up": {
+                "type": "long"
+            },
+            "votes:up:synced": {
+                "type": "long"
+            },
+            "wire_support_tier": {
+                "type": "keyword"
+            }
+        }
+    }
+}

@@ -95,9 +95,8 @@ services:
       interval: 15s
 
   elasticsearch:
-    image: elasticsearch:6.6.2
-    entrypoint: /set-permissions-and-start.sh
-    mem_limit: 512MB # keep an eye
+    image: amazon/opendistro-for-elasticsearch:1.13.2
+    mem_limit: 1G # keep an eye
     ulimits:
       nproc: 65536
       memlock:
@@ -107,14 +106,19 @@ services:
         soft: 65536
         hard: 65536
     environment:
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms726m -Xmx726m"
+      - discovery.type=single-node
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - opendistro_security.disabled=true
+      - cluster.routing.allocation.disk.watermark.low=95%
+      - cluster.routing.allocation.disk.watermark.high=99%
+      - cluster.routing.allocation.disk.watermark.flood_stage=99%
     networks:
       - app
     ports:
       - "9200:9200"
     volumes:
-      - ./containers/elasticsearch/set-permissions-and-start.sh:/set-permissions-and-start.sh:cached
-      - elasticsearch-data:/usr/share/elasticsearch/data
+      - opendistro-data:/usr/share/elasticsearch/data
 
   ## CACHE
 
@@ -146,32 +150,6 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
-
-  elasticsearch-legacy:
-    image: elasticsearch:5.6-alpine
-    entrypoint: /clear-data-and-start.sh
-    environment:
-      - "xpack.security.enabled=false"
-      - "http.host=0.0.0.0"
-      - "transport.host=127.0.0.1"
-    networks:
-      - app
-    ports:
-      - "9200:9200"
-    volumes:
-      - ./containers/elasticsearch-legacy/clear-data-and-start.sh:/clear-data-and-start.sh:cached
-      - elasticsearch-data:/usr/share/elasticsearch/data
-
-  elasticsearch-legacy-provisioner:
-    build:
-      context: ./containers/elasticsearch-provisioner
-    entrypoint: sh /provisioner/provision-elasticsearch-legacy.sh elasticsearch-legacy
-    networks:
-      - app
-    depends_on:
-      - elasticsearch-legacy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   elasticsearch-provisioner:
     build:
@@ -211,6 +189,7 @@ services:
 volumes:
   cassandra-data:
   elasticsearch-data:
+  opendistro-data:
   keys:
   pulsardata:
   pulsarconf:

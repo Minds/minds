@@ -1,0 +1,118 @@
+{
+    "mappings": {
+        "dynamic": "strict",
+        "properties": {
+            "@moderated": {
+                "type": "date"
+            },
+            "@timestamp": {
+                "type": "date"
+            },
+            "access_id": {
+                "type": "keyword"
+            },
+            "briefdescription": {
+                "type": "text"
+            },
+            "container_guid": {
+                "type": "keyword"
+            },
+            "deleted": {
+                "type": "boolean"
+            },
+            "email_confirmed_at": {
+                "type": "long"
+            },
+            "group_membership": {
+                "type": "keyword"
+            },
+            "guid": {
+                "type": "keyword"
+            },
+            "language": {
+                "type": "keyword"
+            },
+            "license": {
+                "type": "keyword"
+            },
+            "mature": {
+                "type": "boolean"
+            },
+            "merchant": {
+                "type": "boolean"
+            },
+            "moderator_guid": {
+                "type": "keyword"
+            },
+            "name": {
+                "type": "keyword"
+            },
+            "nsfw": {
+                "type": "integer"
+            },
+            "owner_guid": {
+                "type": "keyword"
+            },
+            "pending": {
+                "type": "boolean"
+            },
+            "plus_expires": {
+                "type": "date"
+            },
+            "pro_expires": {
+                "type": "date"
+            },
+            "public": {
+                "type": "boolean"
+            },
+            "rating": {
+                "type": "long"
+            },
+            "subtype": {
+                "type": "keyword"
+            },
+            "suggest": {
+                "type": "completion",
+                "analyzer": "standard",
+                "preserve_separators": true,
+                "preserve_position_increments": true,
+                "max_input_length": 50
+            },
+            "tags": {
+                "type": "keyword"
+            },
+            "time_created": {
+                "type": "integer"
+            },
+            "type": {
+                "type": "keyword"
+            },
+            "urls": {
+                "type": "nested",
+                "properties": {
+                    "domain": {
+                        "type": "keyword"
+                    },
+                    "full": {
+                        "type": "keyword"
+                    },
+                    "path": {
+                        "type": "keyword"
+                    },
+                    "registered_domain": {
+                        "type": "keyword"
+                    },
+                    "scheme": {
+                        "type": "keyword"
+                    },
+                    "top_level_domain": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "username": {
+                "type": "keyword"
+            }
+        }
+    }
+}
