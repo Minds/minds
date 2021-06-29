@@ -1,0 +1,12 @@
+{
+    "mappings": {
+        "properties": {
+            "guids": {
+                "type": "long"
+            },
+            "user_guid": {
+                "type": "long"
+            }
+        }
+    }
+}
