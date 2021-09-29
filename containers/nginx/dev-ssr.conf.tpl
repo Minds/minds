@@ -50,6 +50,11 @@ server {
         try_files /index.html =404;
     }
 
+    # Explicitly exclude endpoints from caching.
+    if ($request_uri ~ /api/v1/minds/config) {
+        set $no_cache 1;
+    }
+
     location / {
         root /var/www/Minds/front/dist/browser/$locale;
 
