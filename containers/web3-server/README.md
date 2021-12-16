@@ -14,5 +14,5 @@ From there you can run:
 docker-compose build --no-cache web3-server
 docker-compose up web3-server
 ```
-Which should spin up the docker container locally.
 
+Which should spin up the docker container locally.
