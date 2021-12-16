@@ -186,6 +186,21 @@ services:
     ports:
       - "5601:5601"
 
+  ## Web3 Server
+
+  web3-server:
+    build:
+      context: ./containers/web3-server
+      dockerfile: ./Dockerfile
+    mem_limit: 512MB
+    networks:
+      - app
+    ports:
+      - "3333:3333"
+    volumes:
+      - /var/www/Minds/web3-server
+      - ./containers/web3-server/.env:/var/www/Minds/web3-server/.env 
+
 volumes:
   cassandra-data:
   elasticsearch-data:
