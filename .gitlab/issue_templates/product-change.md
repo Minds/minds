@@ -4,7 +4,7 @@
 
 ### Hypothesis
 
-(Describe the propoosed change and how it relates to the target problem)
+(Describe the proposed change and how it relates to the target problem)
 
 ### What is the primary metric that this change is aimed to improve?
 
