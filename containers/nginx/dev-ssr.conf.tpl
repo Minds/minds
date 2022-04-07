@@ -50,6 +50,10 @@ server {
         try_files /index.html =404;
     }
 
+    if ($request_uri ~ /api/v3/friendly-captcha/puzzle) {
+        set $no_cache 1;
+    }
+
     location / {
         root /var/www/Minds/front/dist/browser/$locale;
 
