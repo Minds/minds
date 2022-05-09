@@ -1,0 +1,13 @@
+apiVersion: k3d.io/v1alpha3
+kind: Simple
+volumes:
+  - volume: calico.yaml:/var/lib/rancher/k3s/server/manifests/calico.yaml
+    nodeFilters:
+      - server:*
+      - agent:*
+options:
+  k3s:
+    extraArgs:
+      - arg: --flannel-backend=none
+        nodeFilters:
+          - server:*

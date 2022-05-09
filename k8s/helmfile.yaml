@@ -1,0 +1,46 @@
+repositories:
+  - name: stable
+    url: https://charts.helm.sh/stable
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: pulsar
+    url: https://pulsar.apache.org/charts
+
+helmDefaults:
+  force: true
+
+releases:
+  - chart: bitnami/redis
+    namespace: caching-new
+    createNamespace: true
+    name: redis
+    version: 15.6.7
+    set:
+    - name: "replica.replicaCount"
+      value: 1
+    - name: "image.repository"
+      value: "redis"
+    - name: "image.tag"
+      value: "6.2.6"
+  - chart: pulsar/pulsar
+    namespace: pulsar
+    createNamespace: true
+    name: pulsar
+    version: 2.7.13
+    set:
+    - name: "zookeeper.replicaCount"
+      value: 1
+    - name: "bookkeeper.replicaCount"
+      value: 1
+    - name: "broker.replicaCount"
+      value: 1
+    - name: "proxy.replicaCount"
+      value: 1
+    - name: "monitoring.grafana"
+      value: false
+    - name: "monitoring.prometheus"
+      value: false
+    - name: "monitoring.node_exporter"
+      value: false
+    - name: "monitoring.alert_manager"
+      value: false
