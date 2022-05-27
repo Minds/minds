@@ -33,7 +33,7 @@ server {
 
     # Cache GET requests by default
     if ($request_method = GET){
-        set $no_cache 0;
+        set $no_cache 1;
     }
 
     # Do not cache if we have a cookie set
@@ -88,7 +88,6 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
-        proxy_redirect off;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
@@ -106,12 +105,17 @@ server {
         log_not_found off;
     }
 
-    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe) {
+    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
         add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With,X-No-Cache';
 
+        rewrite ^(.+)$ /index.php last;
+    }
+
+    # Not in block above as did.json is not in the root of the path
+    location ~ (did.json) {
         rewrite ^(.+)$ /index.php last;
     }
 
