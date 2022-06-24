@@ -1,0 +1,56 @@
+# Dev config for local opendistro
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: opendistro
+  serviceName: opendistro
+  template:
+    metadata:
+      labels:
+        name: opendistro
+    spec:
+      containers:
+      - name: elasticsearch
+        image: amazon/opendistro-for-elasticsearch:1.13.3
+        env:
+          - name: discovery.type
+            value: single-node
+        ports:
+        - containerPort: 9300
+          name: transport
+        - containerPort: 9200
+          name: http
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: data
+          #subPath:
+      volumes:
+      - name: "data"
+        persistentVolumeClaim:
+          claimName: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  ports:
+    - port: 9200
+      protocol: TCP
+  clusterIP: None
+  selector:
+    name: opendistro

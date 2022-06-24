@@ -1,0 +1,34 @@
+# Dev config for local rabbitmq
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: rabbitmq
+  serviceName: rabbitmq
+  template:
+    metadata:
+      labels:
+        name: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6-alpine
+        ports:
+        - containerPort: 5672
+          name: rabbitmq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  ports:
+    - port: 5672
+      protocol: TCP
+  clusterIP: None
+  selector:
+    name: rabbitmq

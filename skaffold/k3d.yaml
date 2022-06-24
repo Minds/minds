@@ -1,0 +1,15 @@
+apiVersion: k3d.io/v1alpha3
+kind: Simple
+#name: local-minds
+servers: 1
+agents: 2
+registries:
+  create: 
+    name: myregistry
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer

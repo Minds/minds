@@ -1,0 +1,57 @@
+# Dev config for local cassandra
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cassandra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cassandra
+  serviceName: cassandra
+  template:
+    metadata:
+      labels:
+        name: cassandra
+    spec:
+      containers:
+      - name: cassandra
+        image: cassandra:3.11.11
+        env:
+        - name: CASSANDRA_START_RPC
+          value: "true"
+        - name: MAX_HEAP_SIZE
+          value: 768M
+        - name: HEAP_NEWSIZE
+          value: 512M
+        ports:
+        - containerPort: 9042
+          name: cql
+        volumeMounts:
+        - mountPath: /var/lib/cassandra
+          name: data
+      volumes:
+      - name: "data"
+        persistentVolumeClaim:
+          claimName: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra
+spec:
+  ports:
+    - port: 9042
+      protocol: TCP
+  clusterIP: None
+  selector:
+    name: cassandra

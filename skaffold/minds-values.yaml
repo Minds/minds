@@ -1,0 +1,65 @@
+domain: localhost
+cdn_domain: localhost
+
+tracing:
+  enabled: false
+
+certs:
+  issuer:
+    name: selfsigned-cluster-issuer
+    kind: ClusterIssuer
+
+environments:
+  local:
+    routingCookie: default
+    front:
+      enableNetworkPolicy: false
+      autoscaling:
+        enabled: false
+      ssr:
+        resources:
+          requests:
+            cpu: '750m'
+            memory: '768Mi'
+          limits:
+            cpu: '1'
+            memory: '1Gi'
+            ephemeral-storage: '2Gi'
+    engine:
+      enableNetworkPolicy: false
+      autoscaling:
+        enabled: false
+      resources:
+        requests:
+          cpu: '150m'
+          memory: '1Gi'
+        limits:
+          cpu: '350m'
+          memory: '1.5Gi'
+
+engine:
+  defaultSecrets: true
+
+runners:
+  enableNetworkPolicy: false
+  replicaCount: 1
+  runner:
+    search-indexer:
+      cmd: "QueueRunner run --runner=SearchIndexDispatcher"
+      resources:
+        limits:
+          memory: 1Gi
+          cpu: 250m
+        requests:
+          memory: 256Mi
+          cpu: 25m
+
+sockets:
+  enableNetworkPolicy: false
+
+elasticsearch:
+  server: https://elasticsearch:9200
+
+redis:
+  master: redis
+  slave: redis
