@@ -173,6 +173,17 @@ services:
       - pulsardata:/pulsar/data
       - pulsarconf:/pulsar/conf
 
+
+  ## METASCRAPER SERVER
+
+  metascraper:
+    image: registry.gitlab.com/minds/developers/metascraper-server
+    mem_limit: 512MB
+    networks:
+      - app
+    ports:
+      - "3334:3334"
+
   ## UTILITIES
 
   kibana:
