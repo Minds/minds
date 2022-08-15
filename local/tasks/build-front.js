@@ -6,7 +6,7 @@ module.exports = {
   task: () => new Listr([
     {
       title: 'Installing dependencies',
-      task: () => exec.in('front', 'npm', ['install'])
+      task: () => exec.in('front', 'npm', ['install', '--legacy-peer-deps'])
     },
     {
       title: 'Building app',
