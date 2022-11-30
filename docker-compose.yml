@@ -35,7 +35,7 @@ services:
       - rabbitmq
       - redis
       - pulsar
-      - vitess
+      - mysql
     networks:
       - app
     volumes:
@@ -124,10 +124,12 @@ services:
   ## CACHE
 
   redis:
-    image: redis:4.0-alpine
+    image: redis:6.2.7-alpine
     mem_limit: 100MB # keep an eye
     networks:
       - app
+    ports:
+      - "6379:6379"
 
   ## QUEUE
 
@@ -174,22 +176,29 @@ services:
       - pulsardata:/pulsar/data
       - pulsarconf:/pulsar/conf
 
-  ## Vitess
+  ## MySQL
 
-  vitess:
-    image: registry.gitlab.com/minds/infrastructure/vitess/local:latest
-    # Local image wants to launch bash by default, so override with a continuous sleep
-    command: /bin/bash -c "cd /vt/local && ./101_initial_cluster.sh && while true; do echo sleeping... && sleep 30s; done"
+  mysql:
+    image: mysql:8.0
     networks:
       - app
     ports:
-      - 15000:15000
-      - 15001:15001
-      - 15991:15991
-      - 15999:15999
-      - 15306:15306
+      - 3306:3306
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "changeme"
+      MYSQL_DATABASE: "minds"
     volumes:
-      - vitess:/vt/vtdataroot
+      - mysql:/var/lib/mysql
+
+  mysql-provisioner:
+    build:
+      context: ./containers/mysql-provisioner
+    networks:
+      - app
+    depends_on:
+      - mysql
 
   ## METASCRAPER SERVER
 
@@ -221,7 +230,7 @@ volumes:
   keys:
   pulsardata:
   pulsarconf:
-  vitess:
+  mysql:
 
 networks:
   app:
