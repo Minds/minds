@@ -47,6 +47,7 @@ module.exports.handler = async argv => {
     argv.front && require('../tasks/build-front'),
     argv.stack && require('../tasks/cleanup-stack'),
     argv.stack && require('../tasks/provision-elasticsearch'),
+    argv.stack && require('../tasks/provision-mysql'),
     argv.stack && require('../tasks/install-minds'),
     require('../tasks/restart'),
   ].filter(Boolean), {
