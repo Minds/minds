@@ -50,6 +50,12 @@
             "is_remind": {
                 "type": "boolean"
             },
+            "is_supermind": {
+                "type": "boolean"
+            },
+            "is_supermind_reply": {
+                "type": "boolean"
+            },
             "language": {
                 "type": "keyword"
             },
@@ -87,6 +93,9 @@
                 "type": "keyword"
             },
             "subtype": {
+                "type": "keyword"
+            },
+            "supermind_request_guid": {
                 "type": "keyword"
             },
             "tags": {
