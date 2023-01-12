@@ -48,6 +48,7 @@ module.exports.handler = async argv => {
     argv.stack && require('../tasks/cleanup-stack'),
     argv.stack && require('../tasks/provision-elasticsearch'),
     argv.stack && require('../tasks/provision-mysql'),
+    argv.stack && require('../tasks/wait-for-cassandra'),
     argv.stack && require('../tasks/install-minds'),
     require('../tasks/restart'),
   ].filter(Boolean), {
