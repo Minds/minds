@@ -79,7 +79,8 @@ services:
   ## DATABASES
 
   cassandra:
-    image: cassandra:3.11.1
+    build:
+      context: ./containers/cassandra
     environment:
       - CASSANDRA_START_RPC=true
       - MAX_HEAP_SIZE=768M
@@ -94,6 +95,14 @@ services:
       retries: 10
       timeout: 5s
       interval: 15s
+
+  wait-for-cassandra:
+    build:
+      context: ./containers/wait-for-cassandra
+    networks:
+      - app
+    depends_on:
+      - cassandra
 
   elasticsearch:
     image: amazon/opendistro-for-elasticsearch:1.13.2
