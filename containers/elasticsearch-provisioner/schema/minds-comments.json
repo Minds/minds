@@ -37,7 +37,7 @@
             "deleted": {
                 "type": "boolean"
             },
-            "is_enabled": {
+            "enabled": {
                 "type": "boolean"
             },
             "access_id": {
