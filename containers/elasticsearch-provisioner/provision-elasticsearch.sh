@@ -20,5 +20,6 @@ curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-offcha
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-transactions-onchain -d @./schema/minds-transactions-onchain.json --header "Content-Type: application/json"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-graph-subscriptions -d @./schema/minds-graph-subscriptions.json --header "Content-Type: application/json"
 curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-graph-pass -d @./schema/minds-graph-pass.json --header "Content-Type: application/json"
+curl -s --write-out ' Status: %{http_code}\n' -X PUT http://$1:9200/minds-comments -d @./schema/minds-comments.json --header "Content-Type: application/json"
 
 echo "elastic search is ready!"
