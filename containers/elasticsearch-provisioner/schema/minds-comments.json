@@ -1,0 +1,51 @@
+{
+    "mappings": {
+        "properties": {
+            "@timestamp": {
+                "type": "date"
+            },
+            "updated_at": {
+                "type": "date"
+            },
+            "guid": {
+                "type": "long"
+            },
+            "entity_guid": {
+                "type": "long"
+            },
+            "owner_guid": {
+                "type": "long"
+            },
+            "parent_guid": {
+                "type": "long"
+            },
+            "parent_depth": {
+                "type": "integer"
+            },
+            "body": {
+                "type": "text"
+            },
+            "mature": {
+                "type": "boolean"
+            },
+            "edited": {
+                "type": "boolean"
+            },
+            "spam": {
+                "type": "boolean"
+            },
+            "deleted": {
+                "type": "boolean"
+            },
+            "enabled": {
+                "type": "boolean"
+            },
+            "access_id": {
+                "type": "long"
+            },
+            "group_conversation": {
+                "type": "boolean"
+            }
+        }
+    }
+}
