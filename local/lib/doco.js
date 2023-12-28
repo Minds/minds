@@ -16,6 +16,7 @@ switch (process.platform) {
 
 function buildDefaultArgs() {
   return [
+    'compose',
     '-f',
     'docker-compose.yml',
     '-f',
@@ -30,7 +31,7 @@ function buildEnv() {
 }
 
 module.exports = function (...args) {
-  return exec('docker-compose', [
+  return exec('docker', [
     ...buildDefaultArgs(),
     ...args
   ], buildEnv());

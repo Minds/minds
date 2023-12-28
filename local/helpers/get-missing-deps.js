@@ -15,11 +15,11 @@ module.exports = async function() {
     missingDeps.push('docker');
   }
 
-  try {
-    await exec('docker-compose', ['-v']);
-  } catch (e) {
-    missingDeps.push('docker-compose');
-  }
+  // try {
+  //   await exec('docker-compose', ['-v']);
+  // } catch (e) {
+  //   missingDeps.push('docker-compose');
+  // }
 
   return missingDeps;
 };
