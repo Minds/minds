@@ -13,6 +13,7 @@ services:
     mem_limit: 512MB
     depends_on:
       - php-fpm
+      - php-rr
     networks:
       - app
     ports:
@@ -21,6 +22,7 @@ services:
       - UPSTREAM_ENDPOINT
     volumes:
       - ./front/:/var/www/Minds/front:cached
+      - ./embedded-comments/:/var/www/Minds/embedded-comments
 
   ## APP ENGINE
 
@@ -32,7 +34,6 @@ services:
     depends_on:
       - cassandra
       - elasticsearch
-      - rabbitmq
       - redis
       - pulsar
       - mysql
@@ -43,6 +44,26 @@ services:
       - ./engine/:/var/www/Minds/engine:cached
       - keys:/.dev
 
+  php-rr:
+    build:
+      context: ./engine
+      dockerfile: ./containers/php-rr/Dockerfile.dev
+    mem_limit: 512MB
+    depends_on:
+      - cassandra
+      - elasticsearch
+      - redis
+      - pulsar
+      - mysql
+    networks:
+      - app
+    ports:
+      - "9001:9001"
+      - "2112:2112"
+    volumes:
+      - ./engine/:/var/www/Minds/engine:cached
+      - keys:/.dev
+
   runners:
     build:
       context: ./engine
@@ -50,7 +71,6 @@ services:
     depends_on:
       - cassandra
       - elasticsearch
-      - rabbitmq
       - redis
     networks:
       - app
@@ -75,6 +95,23 @@ services:
       - cassandra
     ports:
       - 8010:3030
+
+  ## Vault
+
+  vault:
+    image: hashicorp/vault
+    networks:
+      - app
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_API_ADDR: "http://0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - 8200:8200
+    volumes:
+      - vault:/vault/file:rw
+    entrypoint: vault server -dev -dev-listen-address="0.0.0.0:8200" -dev-root-token-id="root"
 
   ## DATABASES
 
@@ -140,13 +177,6 @@ services:
     ports:
       - "6379:6379"
 
-  ## QUEUE
-
-  rabbitmq:
-    image: rabbitmq:3.6-alpine
-    networks:
-      - app
-
   ## INSTALLATION ARTIFACTS
 
   installer:
@@ -174,7 +204,7 @@ services:
   ## Pulsar
 
   pulsar:
-    image: apachepulsar/pulsar:2.7.1
+    image: apachepulsar/pulsar:2.11.2
     entrypoint: bin/pulsar standalone -nss
     networks:
       - app
@@ -240,6 +270,7 @@ volumes:
   pulsardata:
   pulsarconf:
   mysql:
+  vault:
 
 networks:
   app:
