@@ -105,7 +105,7 @@ server {
         log_not_found off;
     }
 
-    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known) {
+    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
