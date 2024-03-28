@@ -105,7 +105,7 @@ server {
         log_not_found off;
     }
 
-    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest) {
+    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest|/robots.txt) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
@@ -123,7 +123,7 @@ server {
         add_header 'Access-Control-Allow-Origin' *;
     }
 
-    location ~ ^/(manifest.webmanifest|ngsw-worker.js|ngsw.json|safety-worker.js|worker-basic.min.js)$ {
+    location ~ ^/(manifest.webmanifest|robots.txt|ngsw-worker.js|ngsw.json|safety-worker.js|worker-basic.min.js)$ {
         rewrite /var/www/Minds/front/dist/browser/en/$1 last;
     }
 
