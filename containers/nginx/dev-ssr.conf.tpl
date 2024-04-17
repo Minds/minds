@@ -6,6 +6,8 @@ map $http_upgrade $connection_upgrade {
 server {
     resolver ${DOCKER_RESOLVER} ipv6=off;
 
+    large_client_header_buffers 4 16k;
+
     listen 80;
     listen [::]:80 default ipv6only=on;
     listen 8080;
@@ -80,7 +82,7 @@ server {
         port_in_redirect off;
 
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host localhost:8080;
+        proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy true;
         proxy_set_header X-Minds-Locale $locale;
         proxy_pass $upstream;
@@ -103,6 +105,27 @@ server {
         alias /var/www/Minds/front/dist/embed/;
         expires 1y;
         log_not_found off;
+    }
+
+    location /plugins/embedded-comments {
+        alias /var/www/Minds/embedded-comments/build;
+        index index.html;
+
+        add_header 'Access-Control-Allow-Origin' "$http_origin";
+        add_header 'Access-Control-Allow-Credentials' 'true';
+    }
+
+    location ^~ /api/sockets/ {
+        set $upstream http://sockets:3000;
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+
+        proxy_pass $upstream;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 
     location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest) {
