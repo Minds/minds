@@ -128,7 +128,7 @@ server {
         proxy_set_header Connection "upgrade";
     }
 
-    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest/robots.txt) {
+    location ~ ^(/api|/fs|/icon|/carousel|/emails/unsubscribe|/.well-known|/manifest.webmanifest|/robots.txt) {
         add_header 'Access-Control-Allow-Origin' "$http_origin";
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
