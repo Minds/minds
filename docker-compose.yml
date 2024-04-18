@@ -80,9 +80,11 @@ services:
       - keys:/.dev
 
   sockets:
-    image: minds/sockets
+    build:
+      context: ./sockets
+      dockerfile: ./Dockerfile
     environment:
-      - PORT=3030
+      - PORT=3000
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - JWT_SECRET=<!!! set this to jwt-token in your engine/settings.php !!!>
@@ -93,8 +95,10 @@ services:
     depends_on:
       - redis
       - cassandra
+    volumes:
+      - keys:/.dev
     ports:
-      - 8010:3030
+      - 3000:3000
 
   ## Vault
 
