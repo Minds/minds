@@ -115,6 +115,14 @@ server {
         add_header 'Access-Control-Allow-Credentials' 'true';
     }
 
+    location /plugins/embedded-boosts {
+        alias /var/www/Minds/embedded-boosts/build;
+        index index.html;
+
+        add_header 'Access-Control-Allow-Origin' "$http_origin";
+        add_header 'Access-Control-Allow-Credentials' 'true';
+    }
+
     location ^~ /api/sockets/ {
         set $upstream http://sockets:3000;
 

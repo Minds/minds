@@ -23,6 +23,7 @@ services:
     volumes:
       - ./front/:/var/www/Minds/front:cached
       - ./embedded-comments/:/var/www/Minds/embedded-comments
+      - ./embedded-boosts/:/var/www/Minds/embedded-boosts
 
   ## APP ENGINE
 
@@ -136,6 +137,8 @@ services:
       retries: 10
       timeout: 5s
       interval: 15s
+    ports:
+      - "9042:9042"
 
   wait-for-cassandra:
     build:
@@ -144,7 +147,7 @@ services:
       - app
     depends_on:
       - cassandra
-
+  
   elasticsearch:
     image: amazon/opendistro-for-elasticsearch:1.13.2
     mem_limit: 1G # keep an eye
@@ -246,7 +249,10 @@ services:
   ## METASCRAPER SERVER
 
   metascraper:
-    image: registry.gitlab.com/minds/developers/metascraper-server
+    build:
+      context: ./metascraper-server
+      dockerfile: ./Dockerfile
+    # image: registry.gitlab.com/minds/developers/metascraper-server:latest
     mem_limit: 512MB
     networks:
       - app
