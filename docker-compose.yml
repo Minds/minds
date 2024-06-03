@@ -137,8 +137,6 @@ services:
       retries: 10
       timeout: 5s
       interval: 15s
-    ports:
-      - "9042:9042"
 
   wait-for-cassandra:
     build:
@@ -147,7 +145,7 @@ services:
       - app
     depends_on:
       - cassandra
-  
+
   elasticsearch:
     image: amazon/opendistro-for-elasticsearch:1.13.2
     mem_limit: 1G # keep an eye
@@ -249,10 +247,7 @@ services:
   ## METASCRAPER SERVER
 
   metascraper:
-    build:
-      context: ./metascraper-server
-      dockerfile: ./Dockerfile
-    # image: registry.gitlab.com/minds/developers/metascraper-server:latest
+    image: registry.gitlab.com/minds/developers/metascraper-server
     mem_limit: 512MB
     networks:
       - app
