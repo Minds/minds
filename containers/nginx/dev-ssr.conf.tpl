@@ -112,7 +112,6 @@ server {
         index index.html;
 
         add_header 'Access-Control-Allow-Origin' "$http_origin";
-        add_header 'Access-Control-Allow-Credentials' 'true';
     }
 
     location /plugins/embedded-boosts {
