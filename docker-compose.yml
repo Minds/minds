@@ -23,6 +23,7 @@ services:
     volumes:
       - ./front/:/var/www/Minds/front:cached
       - ./embedded-comments/:/var/www/Minds/embedded-comments
+      - ./embedded-boosts/:/var/www/Minds/embedded-boosts
 
   ## APP ENGINE
 
