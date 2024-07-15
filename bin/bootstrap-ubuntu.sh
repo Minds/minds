@@ -148,6 +148,11 @@ else
     --username=minds \
     --password=password \
     --email=minds@dev.minds.io \
+    --email-public=minds@dev.minds.io \
     --private-key=/var/www/Minds/.dev/minds.pem \
-    --public-key=/var/www/Minds/.dev/minds.pub
+    --public-key=/var/www/Minds/.dev/minds.pub \
+    --email-private-key=/var/www/Minds/.dev/minds.pem \
+    --email-public-key=/var/www/Minds/.dev/minds.pub \
+    --phone-number-private-key=/var/www/Minds/.dev/minds.pem \
+    --phone-number-public-key=/var/www/Minds/.dev/minds.pub
 fi
