@@ -132,6 +132,8 @@ services:
     mem_limit: 1024MB
     volumes:
       - cassandra-data:/var/lib/cassandra
+    ports:
+      - 9042:9042
     healthcheck:
       test: "cqlsh -e 'DESC TABLE system.batches'"
       retries: 10
@@ -147,7 +149,7 @@ services:
       - cassandra
 
   elasticsearch:
-    image: amazon/opendistro-for-elasticsearch:1.13.2
+    image: opensearchproject/opensearch:2.17.1
     mem_limit: 1G # keep an eye
     ulimits:
       nproc: 65536
@@ -161,7 +163,7 @@ services:
       - "ES_JAVA_OPTS=-Xms726m -Xmx726m"
       - discovery.type=single-node
       - DISABLE_INSTALL_DEMO_CONFIG=true
-      - opendistro_security.disabled=true
+      - plugins.security.disabled=true
       - cluster.routing.allocation.disk.watermark.low=95%
       - cluster.routing.allocation.disk.watermark.high=99%
       - cluster.routing.allocation.disk.watermark.flood_stage=99%
@@ -170,7 +172,7 @@ services:
     ports:
       - "9200:9200"
     volumes:
-      - opendistro-data:/usr/share/elasticsearch/data
+      - opendistro-data:/usr/share/opensearch/data
 
   ## CACHE
 
