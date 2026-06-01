@@ -34,3 +34,5 @@ Please report all security issues to [security@minds.com](mailto:security@minds.
 ## License and Copyright
 
 General license and copyright information is located [here](https://developers.minds.com/docs/getting-started/introduction/#license), and the AGPLv3 fine print is available [here](https://developers.minds.com/docs/contributing/license/). In addition, please see the license file of each repository.
+
+<!-- fix #171: Minds <-> Skale Prototype - Layer 2 -->
